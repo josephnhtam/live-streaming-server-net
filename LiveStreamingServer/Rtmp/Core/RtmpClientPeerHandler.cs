@@ -5,7 +5,7 @@ using LiveStreamingServer.Rtmp.Core.Contracts;
 
 namespace LiveStreamingServer.Rtmp.Core
 {
-    public class RtmpClientPeerHandler : IClientPeerHandler
+    public class RtmpClientPeerHandler : IRtmpClientPeerHandler
     {
         private readonly IServer _server;
         private readonly IFixedNetBuffer _netBuffer;
@@ -21,10 +21,10 @@ namespace LiveStreamingServer.Rtmp.Core
             _netBuffer = FixedNetBuffer.Create(512);
         }
 
-        public void Initialize(IClientPeerHandle clientPeer)
+        public void Initialize(IClientPeerHandle clientPeer, IRtmpClientPeerContext peerContext)
         {
             _clientPeer = clientPeer;
-            _peerContext = new RtmpClientPeerContext();
+            _peerContext = peerContext;
         }
 
         public async Task<bool> HandleClientPeerLoopAsync(ReadOnlyNetworkStream networkStream, CancellationToken cancellationToken)

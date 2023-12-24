@@ -1,5 +1,6 @@
 ﻿using LiveStreamingServer.Networking.Contracts;
 using LiveStreamingServer.Newtorking.Contracts;
+using LiveStreamingServer.Rtmp.Core.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LiveStreamingServer.Rtmp.Core
@@ -15,8 +16,8 @@ namespace LiveStreamingServer.Rtmp.Core
 
         public IClientPeerHandler CreateClientPeerHandler(IClientPeerHandle clientPeer)
         {
-            var handler = _services.GetRequiredService<IClientPeerHandler>();
-            handler.Initialize(clientPeer);
+            var handler = _services.GetRequiredService<IRtmpClientPeerHandler>();
+            handler.Initialize(clientPeer, new RtmpClientPeerContext());
             return handler;
         }
     }
