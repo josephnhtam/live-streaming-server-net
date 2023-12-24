@@ -8,37 +8,82 @@ namespace LiveStreamingServer.Rtmp.Core
     public class RtmpClientPeerHandler : IRtmpClientPeerHandler
     {
         private readonly IServer _server;
-        private readonly IFixedNetBuffer _netBuffer;
+        private readonly INetBufferPool _netBufferPool;
 
         private IClientPeerHandle _clientPeer = default!;
         private IRtmpClientPeerContext _peerContext = default!;
 
-        public RtmpClientPeerHandler(IServer server, IClientPeer clientPeer)
+        public RtmpClientPeerHandler(IServer server, INetBufferPool netBufferPool)
         {
             _server = server;
-            _clientPeer = clientPeer;
-
-            _netBuffer = FixedNetBuffer.Create(512);
+            _netBufferPool = netBufferPool;
         }
 
         public void Initialize(IClientPeerHandle clientPeer, IRtmpClientPeerContext peerContext)
         {
             _clientPeer = clientPeer;
             _peerContext = peerContext;
+            _peerContext.State = RtmpClientPeerState.HandshakeDone;
         }
 
         public async Task<bool> HandleClientPeerLoopAsync(ReadOnlyNetworkStream networkStream, CancellationToken cancellationToken)
         {
-            await _netBuffer.ReadExactlyAsync(networkStream, 4, cancellationToken);
+            switch (_peerContext.State)
+            {
+                case RtmpClientPeerState.BeforeHandshake:
+                    return await HandleBeforeHandshakeAsync(_peerContext, networkStream, cancellationToken);
+                case RtmpClientPeerState.HandshakeC0Received:
+                    return await HandleC0ReceivedAsync(_peerContext, networkStream, cancellationToken);
+                case RtmpClientPeerState.HandshakeC1Received:
+                    return await HandleC1ReceivedAsync(_peerContext, networkStream, cancellationToken);
+                case RtmpClientPeerState.HandshakeC2Received:
+                    return await HandleC2ReceivedAsync(_peerContext, networkStream, cancellationToken);
+                default:
+                    return await HandleChunkAsync(_server, _peerContext, networkStream, cancellationToken);
+            }
+        }
 
-            int packageSize = _netBuffer.ReadInt32();
+        private async Task<bool> HandleChunkAsync(IServer server, IRtmpClientPeerContext peerContext, ReadOnlyNetworkStream networkStream, CancellationToken cancellationToken)
+        {
+            var netBuffer = _netBufferPool.ObtainNetBuffer();
 
-            await _netBuffer.ReadExactlyAsync(networkStream, packageSize, cancellationToken);
+            try
+            {
+                await netBuffer.ReadFromAsync(networkStream, 4, cancellationToken);
 
-            string message = _netBuffer.ReadString();
-            Console.WriteLine("server: " + message);
+                int packageSize = netBuffer.ReadInt32();
 
-            return true;
+                await netBuffer.ReadFromAsync(networkStream, packageSize, cancellationToken);
+
+                string message = netBuffer.ReadString();
+                Console.WriteLine("server: " + message);
+
+                return true;
+            }
+            finally
+            {
+                _netBufferPool.RecycleNetBuffer(netBuffer);
+            }
+        }
+
+        private Task<bool> HandleC2ReceivedAsync(IRtmpClientPeerContext peerContext, ReadOnlyNetworkStream networkStream, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        private Task<bool> HandleC1ReceivedAsync(IRtmpClientPeerContext peerContext, ReadOnlyNetworkStream networkStream, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        private Task<bool> HandleC0ReceivedAsync(IRtmpClientPeerContext peerContext, ReadOnlyNetworkStream networkStream, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        private Task<bool> HandleBeforeHandshakeAsync(IRtmpClientPeerContext peerContext, ReadOnlyNetworkStream networkStream, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
         }
     }
 }

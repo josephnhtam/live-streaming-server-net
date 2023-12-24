@@ -22,13 +22,6 @@ namespace LiveStreamingServer.Newtorking
             _reader = new BinaryReader(_stream);
         }
 
-        public NetBuffer(byte[] bytes)
-        {
-            _stream = new MemoryStream(bytes);
-            _writer = new BinaryWriter(_stream);
-            _reader = new BinaryReader(_stream);
-        }
-
         public Stream BufferStream => _stream;
         public int Position { get => (int)_stream.Position; set => _stream.Position = value; }
         public int Size { get; set; }
@@ -56,8 +49,6 @@ namespace LiveStreamingServer.Newtorking
             _stream.SetLength(Size);
             _stream.CopyTo(output, (int)originalLength);
 
-            _stream.SetLength(originalLength);
-
             Reset();
         }
 
@@ -66,6 +57,13 @@ namespace LiveStreamingServer.Newtorking
             _stream.Dispose();
             _writer.Dispose();
             _reader.Dispose();
+        }
+
+        public async Task ReadFromAsync(Stream stream, int bytesCount, CancellationToken cancellationToken = default)
+        {
+            _stream.SetLength(bytesCount);
+            await stream.ReadExactlyAsync(_stream.GetBuffer(), 0, bytesCount, cancellationToken);
+            _stream.Position = 0;
         }
     }
 }

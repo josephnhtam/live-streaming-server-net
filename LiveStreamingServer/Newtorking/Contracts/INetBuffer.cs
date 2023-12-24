@@ -10,6 +10,7 @@
         void Reset();
         void Flush(Stream output);
         void Flush(INetBuffer netBuffer);
+        Task ReadFromAsync(Stream stream, int bytesCount, CancellationToken cancellationToken = default);
 
         bool ReadBoolean();
         byte ReadByte();

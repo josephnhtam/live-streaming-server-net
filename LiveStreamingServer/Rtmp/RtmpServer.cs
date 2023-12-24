@@ -24,6 +24,11 @@ namespace LiveStreamingServer.Rtmp
                     .AddSingleton<IClientPeerHandlerFactory, RtmpClientPeerHandlerFactory>()
                     .AddTransient<IRtmpClientPeerHandler, RtmpClientPeerHandler>();
 
+            services.AddMediatR(options =>
+            {
+                options.RegisterServicesFromAssemblyContaining<RtmpServer>();
+            });
+
             services.AddSingleton<IRtmpServerContext, RtmpServerContext>();
 
             var provider = services.BuildServiceProvider();
