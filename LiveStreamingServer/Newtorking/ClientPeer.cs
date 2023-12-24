@@ -1,5 +1,6 @@
 ﻿using LiveStreamingServer.Networking.Contracts;
 using LiveStreamingServer.Newtorking.Contracts;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Net.Sockets;
 using System.Threading.Channels;
@@ -8,23 +9,27 @@ namespace LiveStreamingServer.Newtorking
 {
     public class ClientPeer : IClientPeer
     {
-        private readonly TcpClient _tcpClient;
         private readonly INetBufferPool _netBufferPool;
         private readonly ILogger? _logger;
         private readonly Channel<INetBuffer> _sendChannel;
+        private TcpClient _tcpClient = default!;
 
-        public uint PeerId { get; }
+        public uint PeerId { get; private set; }
 
-        public ClientPeer(uint peerId, TcpClient tcpClient, INetBufferPool netBufferPool, ILogger? logger)
+        public ClientPeer(IServiceProvider services)
         {
-            PeerId = peerId;
-            _tcpClient = tcpClient;
-            _netBufferPool = netBufferPool;
-            _logger = logger;
+            _netBufferPool = services.GetRequiredService<INetBufferPool>();
+            _logger = services.GetRequiredService<ILogger<ClientPeer>>();
             _sendChannel = Channel.CreateUnbounded<INetBuffer>();
         }
 
-        public bool IsConnected => _tcpClient.Connected;
+        public bool IsConnected => _tcpClient?.Connected ?? false;
+
+        public void Initialize(uint peerId, TcpClient tcpClient)
+        {
+            PeerId = peerId;
+            _tcpClient = tcpClient;
+        }
 
         public async Task RunAsync(IClientPeerHandler handler, CancellationToken stoppingToken)
         {

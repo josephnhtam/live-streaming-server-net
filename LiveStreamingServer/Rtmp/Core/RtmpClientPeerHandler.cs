@@ -8,27 +8,23 @@ namespace LiveStreamingServer.Rtmp.Core
     public class RtmpClientPeerHandler : IClientPeerHandler
     {
         private readonly IServer _server;
-        private readonly IClientPeer _clientPeer;
-        private readonly IRtmpServerContext _serverContext;
-        private readonly IRtmpHandshakeHandler _handshakeHandler;
-        private readonly IRtmpClientPeerContext _peerContext;
-
         private readonly IFixedNetBuffer _netBuffer;
 
-        public RtmpClientPeerHandler(
-            IServer server,
-            IClientPeer clientPeer,
-            IRtmpServerContext severContext,
-            IRtmpClientPeerContext peerContext,
-            IRtmpHandshakeHandler handshakeHandler)
+        private IClientPeerHandle _clientPeer = default!;
+        private IRtmpClientPeerContext _peerContext = default!;
+
+        public RtmpClientPeerHandler(IServer server, IClientPeer clientPeer)
         {
             _server = server;
             _clientPeer = clientPeer;
-            _serverContext = severContext;
-            _handshakeHandler = handshakeHandler;
-            _peerContext = peerContext;
 
             _netBuffer = FixedNetBuffer.Create(512);
+        }
+
+        public void Initialize(IClientPeerHandle clientPeer)
+        {
+            _clientPeer = clientPeer;
+            _peerContext = new RtmpClientPeerContext();
         }
 
         public async Task<bool> HandleClientPeerLoopAsync(ReadOnlyNetworkStream networkStream, CancellationToken cancellationToken)

@@ -1,6 +1,6 @@
 ﻿using LiveStreamingServer.Networking.Contracts;
 using LiveStreamingServer.Newtorking.Contracts;
-using LiveStreamingServer.Utilities;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Collections.Concurrent;
 using System.Net;
@@ -8,20 +8,28 @@ using System.Net.Sockets;
 
 namespace LiveStreamingServer.Newtorking
 {
-    public abstract class Server : IServer
+    public class Server : IServer
     {
         private readonly ConcurrentDictionary<uint, ClientPeerTask> _clientPeerTasks = new();
-        private readonly INetBufferPool _netBufferPool;
-        private readonly ILogger? _logger;
+        private readonly IServiceProvider _services;
+        private readonly IClientPeerHandlerFactory _clientPeerHandlerFactory;
+        private readonly IEnumerable<IServerEventHandler> _serverEventHandlers;
+        private readonly ILogger _logger;
         private int _isStarted;
         private uint _nextClientPeerId;
 
         public bool IsStarted => _isStarted == 1;
-        public IList<IClientPeer> ClientPeers => _clientPeerTasks.Select(x => x.Value.Peer).ToList();
+        public IList<IClientPeerHandle> ClientPeers => _clientPeerTasks.Select(x => x.Value.Peer).OfType<IClientPeerHandle>().ToList();
 
-        public Server(INetBufferPool? netBufferPool, ILogger? logger)
+        public Server(
+            IServiceProvider services,
+            IClientPeerHandlerFactory clientPeerHandlerFactory,
+            IEnumerable<IServerEventHandler> serverEventHandlers,
+            ILogger<Server> logger)
         {
-            _netBufferPool = netBufferPool ?? new NetBufferPool();
+            _services = services;
+            _clientPeerHandlerFactory = clientPeerHandlerFactory;
+            _serverEventHandlers = serverEventHandlers;
             _logger = logger;
         }
 
@@ -78,7 +86,9 @@ namespace LiveStreamingServer.Newtorking
         private void ValidateAndSetStarted()
         {
             if (Interlocked.CompareExchange(ref _isStarted, 1, 0) == 1)
-                throw new InvalidOperationException("The server has been started");
+            {
+                throw new InvalidOperationException("The server can only be started once.");
+            }
         }
 
         private uint GetNextClientPeerId()
@@ -93,22 +103,63 @@ namespace LiveStreamingServer.Newtorking
             return listener;
         }
 
-        private ClientPeer CreateClientPeer(uint clientPeerId, TcpClient tcpClient)
+        private IClientPeer CreateClientPeer(uint clientPeerId, TcpClient tcpClient)
         {
-            return new ClientPeer(clientPeerId, tcpClient, _netBufferPool, _logger);
+            var clientPeer = _services.GetRequiredService<IClientPeer>();
+            clientPeer.Initialize(clientPeerId, tcpClient);
+
+            return clientPeer;
         }
 
-        public IClientPeer? GetClientPeer(uint clientPeerId)
+        public IClientPeerHandle? GetClientPeer(uint clientPeerId)
         {
             return _clientPeerTasks.GetValueOrDefault(clientPeerId)?.Peer;
         }
 
-        protected abstract IClientPeerHandler CreateClientPeerHandler(IClientPeer clientPeer);
-        protected virtual void OnListenerCreated(TcpListener tcpListener) { }
-        protected virtual void OnClientAccepted(TcpClient tcpClient) { }
-        protected virtual void OnClientPeerConnected(IClientPeer clientPeer) { }
-        protected virtual void OnClientPeerDisconnected(IClientPeer clientPeer) { }
-        protected virtual void OnServerStarted() { }
+        private IClientPeerHandler CreateClientPeerHandler(IClientPeerHandle clientPeer)
+        {
+            return _clientPeerHandlerFactory.CreateClientPeerHandler(clientPeer);
+        }
+
+        protected virtual void OnListenerCreated(TcpListener tcpListener)
+        {
+            foreach (var handler in _serverEventHandlers)
+            {
+                handler.OnListenerCreated(tcpListener);
+            }
+        }
+
+        protected virtual void OnClientAccepted(TcpClient tcpClient)
+        {
+            foreach (var handler in _serverEventHandlers)
+            {
+                handler.OnClientAccepted(tcpClient);
+            }
+        }
+
+        protected virtual void OnClientPeerConnected(IClientPeer clientPeer)
+        {
+            foreach (var handler in _serverEventHandlers)
+            {
+                handler.OnClientPeerConnected(clientPeer);
+            }
+        }
+
+        protected virtual void OnClientPeerDisconnected(IClientPeer clientPeer)
+        {
+            foreach (var handler in _serverEventHandlers)
+            {
+                handler.OnClientPeerDisconnected(clientPeer);
+            }
+        }
+
+        protected virtual void OnServerStarted()
+        {
+            foreach (var handler in _serverEventHandlers)
+            {
+                handler.OnServerStarted();
+            }
+        }
 
         private record ClientPeerTask(IClientPeer Peer, Task Task);
     }
