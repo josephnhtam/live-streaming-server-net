@@ -1,8 +1,6 @@
-﻿using LiveStreamingServer.Newtorking;
-using LiveStreamingServer.Rtmp;
-using LiveStreamingServer.Rtmp.Core.Utilities;
+﻿using LiveStreamingServer.Rtmp;
+using Serilog;
 using System.Net;
-using System.Net.Sockets;
 
 namespace LiveStreamingServer.Playground
 {
@@ -11,18 +9,31 @@ namespace LiveStreamingServer.Playground
     {
         static async Task Main(string[] args)
         {
+            var logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .Enrich.FromLogContext()
+                .WriteTo.Console()
+                .CreateLogger();
+
+
             using var cts = new CancellationTokenSource();
             Console.CancelKeyPress += (s, e) =>
             {
-                Console.WriteLine("Stopping...");
+                logger.Information("Stopping...");
                 cts.Cancel();
                 e.Cancel = true;
             };
 
-            var rtmpServer = new RtmpServer();
+            var rtmpServer = RtmpServerBuilder.Create()
+                .ConfigureLogging(options =>
+                {
+                    options.AddSerilog(logger);
+                })
+                .Build();
+
             var runTask = rtmpServer.RunAsync(new IPEndPoint(IPAddress.Any, 1935), cts.Token);
 
-            Console.WriteLine("RTMP server started...");
+            logger.Information("RTMP server started...");
 
             await runTask;
         }

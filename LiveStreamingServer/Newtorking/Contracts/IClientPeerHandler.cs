@@ -1,6 +1,4 @@
-﻿using LiveStreamingServer.Networking.Contracts;
-
-namespace LiveStreamingServer.Newtorking.Contracts
+﻿namespace LiveStreamingServer.Newtorking.Contracts
 {
     public interface IClientPeerHandler
     {

@@ -61,6 +61,8 @@ namespace LiveStreamingServer.Newtorking
                 await sendTask;
             }
             catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { }
+            catch (EndOfStreamException) { }
+            catch (IOException) { }
             catch (Exception ex)
             {
                 _logger?.LogError(ex, "An error occurred");
@@ -68,6 +70,7 @@ namespace LiveStreamingServer.Newtorking
             finally
             {
                 _tcpClient.Close();
+                _logger?.LogDebug("PeerId: {PeerId} disconnected", PeerId);
             }
         }
 

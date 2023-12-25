@@ -1,37 +1,53 @@
 ﻿using LiveStreamingServer.Newtorking;
-using LiveStreamingServer.Rtmp.Core.Contracts;
 using LiveStreamingServer.Rtmp.Core.RtmpMessageHandler.Handshakes;
 using LiveStreamingServer.Rtmp.Core.RtmpMessages;
 using LiveStreamingServer.Rtmp.Core.Utilities;
 using MediatR;
+using Microsoft.Extensions.Logging;
 
 namespace LiveStreamingServer.Rtmp.Core.RtmpMessageHandler
 {
     public class RtmpHandshakeC1RequestHandler : IRequestHandler<RtmpHandshakeC1Request, bool>
     {
+        private readonly ILogger _logger;
+
+        public RtmpHandshakeC1RequestHandler(ILogger<RtmpHandshakeC1RequestHandler> logger)
+        {
+            _logger = logger;
+        }
+
         public async Task<bool> Handle(RtmpHandshakeC1Request request, CancellationToken cancellationToken)
         {
             var incomingBuffer = new NetBuffer(1536);
             await incomingBuffer.ReadFromAsync(request.NetworkStream, 1536, cancellationToken);
 
             var outgoingBuffer = new NetBuffer(1536);
-            if (HandleHandshake(request.PeerContext, incomingBuffer, outgoingBuffer))
+            if (HandleHandshake(request, incomingBuffer, outgoingBuffer))
             {
                 request.PeerContext.State = RtmpClientPeerState.HandshakeC2;
                 request.ClientPeer.Send(outgoingBuffer);
+
+                _logger.LogDebug("PeerId: {PeerId} | C1 Handled", request.ClientPeer.PeerId);
+
                 return true;
             }
+
+            _logger.LogDebug("PeerId: {PeerId} | C1 Handling Failed", request.ClientPeer.PeerId);
 
             return false;
         }
 
-        private bool HandleHandshake(IRtmpClientPeerContext peerContext, NetBuffer incomingBuffer, NetBuffer outgoingBuffer)
+        private bool HandleHandshake(RtmpHandshakeC1Request request, NetBuffer incomingBuffer, NetBuffer outgoingBuffer)
         {
+            var clientPeer = request.ClientPeer;
+            var peerContext = request.PeerContext;
+
             var complexHandshake0 = new ComplexHandshake(incomingBuffer, ComplexHandshakeType.Schema0);
             if (complexHandshake0.ValidateC1())
             {
                 peerContext.HandshakeType = HandshakeType.ComplexHandshake0;
                 complexHandshake0.WriteS0S1S2(outgoingBuffer);
+                _logger.LogDebug("PeerId: {PeerId} | Handshake type: {HandshakeType}", clientPeer.PeerId, nameof(HandshakeType.ComplexHandshake0));
                 return true;
             }
 
@@ -40,6 +56,7 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpMessageHandler
             {
                 peerContext.HandshakeType = HandshakeType.ComplexHandshake1;
                 complexHandshake1.WriteS0S1S2(outgoingBuffer);
+                _logger.LogDebug("PeerId: {PeerId} | Handshake type: {HandshakeType}", clientPeer.PeerId, nameof(HandshakeType.ComplexHandshake1));
                 return true;
             }
 
@@ -48,6 +65,7 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpMessageHandler
             {
                 peerContext.HandshakeType = HandshakeType.SimpleHandshake;
                 simpleHandshake.WriteS0S1S2(outgoingBuffer);
+                _logger.LogDebug("PeerId: {PeerId} | Handshake type: {HandshakeType}", clientPeer.PeerId, nameof(HandshakeType.SimpleHandshake));
                 return true;
             }
 

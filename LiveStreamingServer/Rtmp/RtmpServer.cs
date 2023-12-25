@@ -1,9 +1,4 @@
 ﻿using LiveStreamingServer.Networking.Contracts;
-using LiveStreamingServer.Newtorking;
-using LiveStreamingServer.Newtorking.Contracts;
-using LiveStreamingServer.Rtmp.Core;
-using LiveStreamingServer.Rtmp.Core.Contracts;
-using Microsoft.Extensions.DependencyInjection;
 using System.Net;
 
 namespace LiveStreamingServer.Rtmp
@@ -12,27 +7,9 @@ namespace LiveStreamingServer.Rtmp
     {
         private readonly IServer _server;
 
-        public RtmpServer()
+        internal RtmpServer(IServer server)
         {
-            var services = new ServiceCollection();
-
-            services.AddLogging();
-
-            services.AddSingleton<IServer, Server>()
-                    .AddTransient<IClientPeer, ClientPeer>()
-                    .AddSingleton<INetBufferPool, NetBufferPool>()
-                    .AddSingleton<IClientPeerHandlerFactory, RtmpClientPeerHandlerFactory>()
-                    .AddTransient<IRtmpClientPeerHandler, RtmpClientPeerHandler>();
-
-            services.AddMediatR(options =>
-            {
-                options.RegisterServicesFromAssemblyContaining<RtmpServer>();
-            });
-
-            services.AddSingleton<IRtmpServerContext, RtmpServerContext>();
-
-            var provider = services.BuildServiceProvider();
-            _server = provider.GetRequiredService<IServer>();
+            _server = server;
         }
 
         public bool IsStarted => _server.IsStarted;

@@ -62,6 +62,7 @@ namespace LiveStreamingServer.Rtmp.Core
 
         private async Task<bool> HandleChunkAsync(IServer server, IRtmpClientPeerContext peerContext, ReadOnlyNetworkStream networkStream, CancellationToken cancellationToken)
         {
+            Console.WriteLine("server: HandleChunkAsync");
             var netBuffer = _netBufferPool.ObtainNetBuffer();
 
             try
