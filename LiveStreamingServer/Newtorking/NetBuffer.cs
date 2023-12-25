@@ -22,9 +22,41 @@ namespace LiveStreamingServer.Newtorking
             _reader = new BinaryReader(_stream);
         }
 
-        public Stream BufferStream => _stream;
-        public int Position { get => (int)_stream.Position; set => _stream.Position = value; }
-        public int Size { get; set; }
+        public MemoryStream UnderlyingStream => _stream;
+        public int Position
+        {
+            get => (int)_stream.Position;
+            set
+            {
+                if (_stream.Length < value)
+                {
+                    _stream.SetLength(value);
+                }
+
+                _stream.Position = value;
+            }
+        }
+
+        private int _size;
+        public int Size
+        {
+            get => _size;
+            set
+            {
+                if (_stream.Length < value)
+                {
+                    _stream.SetLength(value);
+                }
+
+                _size = value;
+            }
+        }
+
+        public INetBuffer MoveTo(int position)
+        {
+            Position = position;
+            return this;
+        }
 
         public void Reset()
         {
@@ -36,7 +68,7 @@ namespace LiveStreamingServer.Newtorking
         {
             var size = Size;
 
-            Flush(output.BufferStream);
+            Flush(output.UnderlyingStream);
             output.Position += size;
             output.Size += size;
         }

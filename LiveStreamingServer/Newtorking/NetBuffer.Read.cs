@@ -2,6 +2,11 @@
 {
     public partial class NetBuffer
     {
+        public void ReadBytes(byte[] buffer, int index, int count)
+        {
+            _reader.Read(buffer, index, count);
+        }
+
         public byte[] ReadBytes(int count)
         {
             return _reader.ReadBytes(count);

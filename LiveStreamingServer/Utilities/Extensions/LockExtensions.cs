@@ -1,6 +1,6 @@
-﻿namespace LiveStreamingServer.Utilities
+﻿namespace LiveStreamingServer.Utilities.Extensions
 {
-    public static class Extensions
+    public static class LockExtensions
     {
         public static void Lock(this object obj, Action action)
         {

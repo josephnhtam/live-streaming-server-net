@@ -5,15 +5,18 @@
         int Position { get; set; }
         int Size { get; set; }
 
-        Stream BufferStream { get; }
+        MemoryStream UnderlyingStream { get; }
 
+        INetBuffer MoveTo(int position);
         void Reset();
         void Flush(Stream output);
         void Flush(INetBuffer netBuffer);
         Task ReadFromAsync(Stream stream, int bytesCount, CancellationToken cancellationToken = default);
 
+        void WriteRandomBytes(int count);
         bool ReadBoolean();
         byte ReadByte();
+        void ReadBytes(byte[] buffer, int index, int count);
         byte[] ReadBytes(int count);
         char ReadChar();
         double ReadDouble();

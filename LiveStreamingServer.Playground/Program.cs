@@ -1,12 +1,12 @@
 ﻿using LiveStreamingServer.Newtorking;
 using LiveStreamingServer.Rtmp;
-using Microsoft.Extensions.Logging;
-using System.Buffers;
+using LiveStreamingServer.Rtmp.Core.Utilities;
 using System.Net;
 using System.Net.Sockets;
 
 namespace LiveStreamingServer.Playground
 {
+
     internal class Program
     {
         static async Task Main(string[] args)
@@ -18,6 +18,10 @@ namespace LiveStreamingServer.Playground
             await client.ConnectAsync(IPAddress.Parse("127.0.0.1"), 9999);
             var networkStream = client.GetStream();
 
+            // C0
+            networkStream.WriteByte(0);
+            await networkStream.FlushAsync();
+
             var netBuffer = new NetBuffer();
 
             while (true)
@@ -26,6 +30,7 @@ namespace LiveStreamingServer.Playground
 
                 if (string.IsNullOrEmpty(input))
                     continue;
+
 
                 // Write the message payload
                 netBuffer.Position = 4;

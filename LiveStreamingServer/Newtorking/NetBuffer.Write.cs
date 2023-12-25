@@ -1,10 +1,20 @@
-﻿namespace LiveStreamingServer.Newtorking
+﻿using System.Security.Cryptography;
+
+namespace LiveStreamingServer.Newtorking
 {
     public partial class NetBuffer
     {
         private void RefreshSize()
         {
             Size = Math.Max(Size, Position);
+        }
+
+        public void WriteRandomBytes(int count)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                _stream.WriteByte((byte)RandomNumberGenerator.GetInt32(0, 255));
+            }
         }
 
         public void Write(Memory<byte> memory)
