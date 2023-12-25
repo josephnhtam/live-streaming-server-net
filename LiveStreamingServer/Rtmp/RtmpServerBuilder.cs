@@ -27,7 +27,7 @@ namespace LiveStreamingServer.Rtmp
 
             _services.AddMediatR(options =>
             {
-                options.RegisterServicesFromAssemblyContaining<RtmpServer>();
+                options.RegisterServicesFromAssemblyContaining<RtmpClientPeerHandler>();
             });
 
             _services.AddSingleton<IRtmpServerContext, RtmpServerContext>();
@@ -44,11 +44,10 @@ namespace LiveStreamingServer.Rtmp
             return this;
         }
 
-        public RtmpServer Build()
+        public IServer Build()
         {
             var provider = _services.BuildServiceProvider();
-            var server = provider.GetRequiredService<IServer>();
-            return new RtmpServer(server);
+            return provider.GetRequiredService<IServer>();
         }
     }
 }
