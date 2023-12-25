@@ -2,6 +2,7 @@
 using LiveStreamingServer.Rtmp.Core.Contracts;
 using LiveStreamingServer.Rtmp.Core.RtmpMessageHandler.Handshakes;
 using LiveStreamingServer.Rtmp.Core.RtmpMessages;
+using LiveStreamingServer.Rtmp.Core.Utilities;
 using MediatR;
 
 namespace LiveStreamingServer.Rtmp.Core.RtmpMessageHandler
@@ -16,7 +17,7 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpMessageHandler
             var outgoingBuffer = new NetBuffer(1536);
             if (HandleHandshake(request.PeerContext, incomingBuffer, outgoingBuffer))
             {
-                request.PeerContext.State = RtmpClientPeerState.HandshakeC1Received;
+                request.PeerContext.State = RtmpClientPeerState.HandshakeC2;
                 request.ClientPeer.Send(outgoingBuffer);
                 return true;
             }

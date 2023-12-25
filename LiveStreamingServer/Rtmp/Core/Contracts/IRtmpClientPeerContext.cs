@@ -1,4 +1,4 @@
-﻿using LiveStreamingServer.Rtmp.Core.RtmpMessageHandler.Handshakes;
+﻿using LiveStreamingServer.Rtmp.Core.Utilities;
 
 namespace LiveStreamingServer.Rtmp.Core.Contracts
 {

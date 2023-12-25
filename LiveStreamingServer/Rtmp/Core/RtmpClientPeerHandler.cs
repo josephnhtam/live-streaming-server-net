@@ -66,18 +66,9 @@ namespace LiveStreamingServer.Rtmp.Core
 
             try
             {
-                await netBuffer.ReadFromAsync(networkStream, 4, cancellationToken);
+                await netBuffer.ReadFromAsync(networkStream, 128, cancellationToken);
 
-                int packageSize = netBuffer.ReadInt32();
-                if (packageSize > 1024)
-                {
-                    return false;
-                }
-
-                await netBuffer.ReadFromAsync(networkStream, packageSize, cancellationToken);
-
-                string message = netBuffer.ReadString();
-                Console.WriteLine("server: " + message);
+                Console.WriteLine("server: 128 bytes received");
 
                 return true;
             }

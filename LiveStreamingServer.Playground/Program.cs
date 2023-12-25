@@ -11,38 +11,16 @@ namespace LiveStreamingServer.Playground
     {
         static async Task Main(string[] args)
         {
-            var rtmpServer = new RtmpServer();
-            var runTask = rtmpServer.RunAsync(new IPEndPoint(IPAddress.Any, 9999));
-
-            var client = new TcpClient();
-            await client.ConnectAsync(IPAddress.Parse("127.0.0.1"), 9999);
-            var networkStream = client.GetStream();
-
-            // C0
-            networkStream.WriteByte(0);
-            await networkStream.FlushAsync();
-
-            var netBuffer = new NetBuffer();
-
-            while (true)
+            using var cts = new CancellationTokenSource();
+            Console.CancelKeyPress += (s, e) =>
             {
-                var input = Console.ReadLine();
+                Console.WriteLine("Canceling...");
+                cts.Cancel();
+                e.Cancel = true;
+            };
 
-                if (string.IsNullOrEmpty(input))
-                    continue;
-
-
-                // Write the message payload
-                netBuffer.Position = 4;
-                netBuffer.Write(input);
-
-                // Write the message header
-                netBuffer.Position = 0;
-                netBuffer.Write(netBuffer.Size - 4);
-
-                netBuffer.Flush(networkStream);
-                await networkStream.FlushAsync();
-            }
+            var rtmpServer = new RtmpServer();
+            var runTask = rtmpServer.RunAsync(new IPEndPoint(IPAddress.Any, 9999), cts.Token);
 
             await runTask;
         }
