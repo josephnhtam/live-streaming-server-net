@@ -14,13 +14,15 @@ namespace LiveStreamingServer.Playground
             using var cts = new CancellationTokenSource();
             Console.CancelKeyPress += (s, e) =>
             {
-                Console.WriteLine("Canceling...");
+                Console.WriteLine("Stopping...");
                 cts.Cancel();
                 e.Cancel = true;
             };
 
             var rtmpServer = new RtmpServer();
             var runTask = rtmpServer.RunAsync(new IPEndPoint(IPAddress.Any, 9999), cts.Token);
+
+            Console.WriteLine("RTMP server started...");
 
             await runTask;
         }
