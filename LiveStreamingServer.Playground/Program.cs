@@ -20,7 +20,7 @@ namespace LiveStreamingServer.Playground
             };
 
             var rtmpServer = new RtmpServer();
-            var runTask = rtmpServer.RunAsync(new IPEndPoint(IPAddress.Any, 9999), cts.Token);
+            var runTask = rtmpServer.RunAsync(new IPEndPoint(IPAddress.Any, 1935), cts.Token);
 
             Console.WriteLine("RTMP server started...");
 
