@@ -16,23 +16,23 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpMessageHandler
             _logger = logger;
         }
 
-        public async Task<bool> Handle(RtmpHandshakeC1Message request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(RtmpHandshakeC1Message message, CancellationToken cancellationToken)
         {
             var incomingBuffer = new NetBuffer(1536);
-            await incomingBuffer.CopyStreamData(request.NetworkStream, 1536, cancellationToken);
+            await incomingBuffer.CopyStreamData(message.NetworkStream, 1536, cancellationToken);
 
             var outgoingBuffer = new NetBuffer(1536);
-            if (HandleHandshake(request, incomingBuffer, outgoingBuffer))
+            if (HandleHandshake(message, incomingBuffer, outgoingBuffer))
             {
-                request.PeerContext.State = RtmpClientPeerState.HandshakeC2;
-                request.ClientPeer.Send(outgoingBuffer);
+                message.PeerContext.State = RtmpClientPeerState.HandshakeC2;
+                message.ClientPeer.Send(outgoingBuffer);
 
-                _logger.LogDebug("PeerId: {PeerId} | C1 Handled", request.ClientPeer.PeerId);
+                _logger.LogDebug("PeerId: {PeerId} | C1 Handled", message.ClientPeer.PeerId);
 
                 return true;
             }
 
-            _logger.LogDebug("PeerId: {PeerId} | C1 Handling Failed", request.ClientPeer.PeerId);
+            _logger.LogDebug("PeerId: {PeerId} | C1 Handling Failed", message.ClientPeer.PeerId);
 
             return false;
         }

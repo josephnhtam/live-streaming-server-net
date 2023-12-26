@@ -13,14 +13,14 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpMessageHandler
             _logger = logger;
         }
 
-        public async Task<bool> Handle(RtmpHandshakeC0Message request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(RtmpHandshakeC0Message message, CancellationToken cancellationToken)
         {
             var payload = new byte[1];
-            await request.NetworkStream.ReadExactlyAsync(payload, 0, 1, cancellationToken);
+            await message.NetworkStream.ReadExactlyAsync(payload, 0, 1, cancellationToken);
 
-            request.PeerContext.State = RtmpClientPeerState.HandshakeC1;
+            message.PeerContext.State = RtmpClientPeerState.HandshakeC1;
 
-            _logger.LogDebug("PeerId: {PeerId} | C0 Handled", request.ClientPeer.PeerId);
+            _logger.LogDebug("PeerId: {PeerId} | C0 Handled", message.ClientPeer.PeerId);
 
             return true;
         }

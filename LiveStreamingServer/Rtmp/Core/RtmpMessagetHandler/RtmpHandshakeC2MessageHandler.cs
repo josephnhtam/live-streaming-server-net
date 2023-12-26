@@ -15,14 +15,14 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpMessageHandler
         }
 
         // todo: add validation
-        public async Task<bool> Handle(RtmpHandshakeC2Message request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(RtmpHandshakeC2Message message, CancellationToken cancellationToken)
         {
             var incomingBuffer = new NetBuffer(1536);
-            await incomingBuffer.CopyStreamData(request.NetworkStream, 1536, cancellationToken);
+            await incomingBuffer.CopyStreamData(message.NetworkStream, 1536, cancellationToken);
 
-            request.PeerContext.State = RtmpClientPeerState.HandshakeDone;
+            message.PeerContext.State = RtmpClientPeerState.HandshakeDone;
 
-            _logger.LogDebug("PeerId: {PeerId} | C2 Handled", request.ClientPeer.PeerId);
+            _logger.LogDebug("PeerId: {PeerId} | C2 Handled", message.ClientPeer.PeerId);
 
             return true;
         }
