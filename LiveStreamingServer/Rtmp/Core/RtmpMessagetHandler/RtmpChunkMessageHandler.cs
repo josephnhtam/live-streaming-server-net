@@ -7,13 +7,13 @@ using Microsoft.Extensions.Logging;
 
 namespace LiveStreamingServer.Rtmp.Core.RtmpMessageHandler
 {
-    public class RtmpChunkMessageRequestHandler : IRequestHandler<RtmpChunkMessage, bool>
+    public class RtmpChunkMessageHandler : IRequestHandler<RtmpChunkMessage, bool>
     {
         private readonly INetBufferPool _netBufferPool;
         private readonly IMediator _mediator;
         private readonly ILogger _logger;
 
-        public RtmpChunkMessageRequestHandler(INetBufferPool netBufferPool, IMediator mediator, ILogger<RtmpChunkMessageRequestHandler> logger)
+        public RtmpChunkMessageHandler(INetBufferPool netBufferPool, IMediator mediator, ILogger<RtmpChunkMessageHandler> logger)
         {
             _netBufferPool = netBufferPool;
             _mediator = mediator;

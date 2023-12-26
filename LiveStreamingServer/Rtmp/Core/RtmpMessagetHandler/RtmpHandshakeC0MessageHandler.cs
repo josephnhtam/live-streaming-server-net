@@ -4,11 +4,11 @@ using Microsoft.Extensions.Logging;
 
 namespace LiveStreamingServer.Rtmp.Core.RtmpMessageHandler
 {
-    public class RtmpHandshakeC0RequestHandler : IRequestHandler<RtmpHandshakeC0Message, bool>
+    public class RtmpHandshakeC0MessageHandler : IRequestHandler<RtmpHandshakeC0Message, bool>
     {
         private readonly ILogger _logger;
 
-        public RtmpHandshakeC0RequestHandler(ILogger<RtmpHandshakeC0RequestHandler> logger)
+        public RtmpHandshakeC0MessageHandler(ILogger<RtmpHandshakeC0MessageHandler> logger)
         {
             _logger = logger;
         }
