@@ -5,7 +5,8 @@ using MediatR;
 
 namespace LiveStreamingServer.Rtmp.Core.RtmpMessages
 {
-    public record struct RtmpHandshakeC2Request(
+    public record struct RtmpChunkMessage(
+        IServer Server,
         IClientPeerHandle ClientPeer,
         IRtmpClientPeerContext PeerContext,
         ReadOnlyNetworkStream NetworkStream) : IRequest<bool>;

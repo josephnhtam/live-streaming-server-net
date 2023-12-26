@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace LiveStreamingServer.Rtmp.Core.RtmpMessageHandler
 {
-    public class RtmpHandshakeC1RequestHandler : IRequestHandler<RtmpHandshakeC1Request, bool>
+    public class RtmpHandshakeC1RequestHandler : IRequestHandler<RtmpHandshakeC1Message, bool>
     {
         private readonly ILogger _logger;
 
@@ -16,10 +16,10 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpMessageHandler
             _logger = logger;
         }
 
-        public async Task<bool> Handle(RtmpHandshakeC1Request request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(RtmpHandshakeC1Message request, CancellationToken cancellationToken)
         {
             var incomingBuffer = new NetBuffer(1536);
-            await incomingBuffer.ReadFromAsync(request.NetworkStream, 1536, cancellationToken);
+            await incomingBuffer.CopyStreamData(request.NetworkStream, 1536, cancellationToken);
 
             var outgoingBuffer = new NetBuffer(1536);
             if (HandleHandshake(request, incomingBuffer, outgoingBuffer))
@@ -37,7 +37,7 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpMessageHandler
             return false;
         }
 
-        private bool HandleHandshake(RtmpHandshakeC1Request request, NetBuffer incomingBuffer, NetBuffer outgoingBuffer)
+        private bool HandleHandshake(RtmpHandshakeC1Message request, NetBuffer incomingBuffer, NetBuffer outgoingBuffer)
         {
             var clientPeer = request.ClientPeer;
             var peerContext = request.PeerContext;

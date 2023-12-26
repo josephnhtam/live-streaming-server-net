@@ -91,7 +91,7 @@ namespace LiveStreamingServer.Newtorking
             _reader.Dispose();
         }
 
-        public async Task ReadFromAsync(Stream stream, int bytesCount, CancellationToken cancellationToken = default)
+        public async Task CopyStreamData(Stream stream, int bytesCount, CancellationToken cancellationToken = default)
         {
             _stream.SetLength(bytesCount);
             await stream.ReadExactlyAsync(_stream.GetBuffer(), 0, bytesCount, cancellationToken);

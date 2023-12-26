@@ -6,5 +6,6 @@ namespace LiveStreamingServer.Rtmp.Core.Contracts
     {
         RtmpClientPeerState State { get; set; }
         HandshakeType HandshakeType { get; set; }
+        IRtmpChunkStreamContext GetChunkStreamContext(uint chunkStreamId);
     }
 }
