@@ -1,4 +1,4 @@
-﻿namespace LiveStreamingServer.Rtmp.Core.RtmpMessageHandler.PayloadHandling
+﻿namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler.PayloadHandling
 {
     public enum RtmpMessageTypes : byte
     {

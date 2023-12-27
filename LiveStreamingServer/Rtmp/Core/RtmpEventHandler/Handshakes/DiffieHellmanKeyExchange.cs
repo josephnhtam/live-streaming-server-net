@@ -4,7 +4,7 @@ using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Math;
 using Org.BouncyCastle.Security;
 
-namespace LiveStreamingServer.Rtmp.Core.RtmpMessageHandler.Handshakes
+namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler.Handshakes
 {
     public class DiffieHellmanKeyExchange
     {

@@ -3,7 +3,7 @@ using LiveStreamingServer.Rtmp.Core.Utilities;
 using LiveStreamingServer.Utilities.Extensions;
 using System.Security.Cryptography;
 
-namespace LiveStreamingServer.Rtmp.Core.RtmpMessageHandler.Handshakes
+namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler.Handshakes
 {
     public enum ComplexHandshakeType
     {

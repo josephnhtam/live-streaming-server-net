@@ -2,7 +2,7 @@
 using LiveStreamingServer.Newtorking.Contracts;
 using LiveStreamingServer.Rtmp.Core.Extensions;
 
-namespace LiveStreamingServer.Rtmp.Core.RtmpMessageHandler.Headers
+namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler.Headers
 {
     public record struct ChunkMessageHeaderType0(uint Timestamp, int MessageLength, byte MessageTypeId, uint MessageStreamId)
     {

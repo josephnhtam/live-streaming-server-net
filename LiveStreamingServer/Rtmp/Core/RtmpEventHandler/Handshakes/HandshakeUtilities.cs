@@ -1,4 +1,4 @@
-﻿namespace LiveStreamingServer.Rtmp.Core.RtmpMessageHandler.Handshakes
+﻿namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler.Handshakes
 {
     public static class HandshakeUtilities
     {

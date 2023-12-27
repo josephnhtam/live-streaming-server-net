@@ -3,9 +3,9 @@ using LiveStreamingServer.Newtorking;
 using LiveStreamingServer.Rtmp.Core.Contracts;
 using MediatR;
 
-namespace LiveStreamingServer.Rtmp.Core.RtmpMessages
+namespace LiveStreamingServer.Rtmp.Core.RtmpEvents
 {
-    public record struct RtmpHandshakeC0Message(
+    public record struct RtmpHandshakeC1Event(
         IClientPeerHandle ClientPeer,
         IRtmpClientPeerContext PeerContext,
         ReadOnlyNetworkStream NetworkStream) : IRequest<bool>;

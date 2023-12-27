@@ -1,6 +1,6 @@
 ﻿using LiveStreamingServer.Newtorking.Contracts;
 
-namespace LiveStreamingServer.Rtmp.Core.RtmpMessageHandler.Handshakes
+namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler.Handshakes
 {
     public class SimpleHandshake
     {

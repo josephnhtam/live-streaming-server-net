@@ -2,7 +2,7 @@
 using LiveStreamingServer.Newtorking;
 using LiveStreamingServer.Rtmp.Core.Extensions;
 
-namespace LiveStreamingServer.Rtmp.Core.RtmpMessageHandler.Headers
+namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler.Headers
 {
     public record struct ChunkExtendedTimestampHeader(uint extendedTimestamp)
     {

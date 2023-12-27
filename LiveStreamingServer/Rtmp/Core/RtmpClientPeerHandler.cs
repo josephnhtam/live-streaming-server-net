@@ -2,7 +2,7 @@
 using LiveStreamingServer.Newtorking;
 using LiveStreamingServer.Newtorking.Contracts;
 using LiveStreamingServer.Rtmp.Core.Contracts;
-using LiveStreamingServer.Rtmp.Core.RtmpMessages;
+using LiveStreamingServer.Rtmp.Core.RtmpEvents;
 using MediatR;
 
 namespace LiveStreamingServer.Rtmp.Core
@@ -45,22 +45,22 @@ namespace LiveStreamingServer.Rtmp.Core
 
         private async Task<bool> HandleHandshakeC0(IRtmpClientPeerContext peerContext, ReadOnlyNetworkStream networkStream, CancellationToken cancellationToken)
         {
-            return await _mediator.Send(new RtmpHandshakeC0Message(_clientPeer, peerContext, networkStream), cancellationToken);
+            return await _mediator.Send(new RtmpHandshakeC0Event(_clientPeer, peerContext, networkStream), cancellationToken);
         }
 
         private async Task<bool> HandleHandshakeC1(IRtmpClientPeerContext peerContext, ReadOnlyNetworkStream networkStream, CancellationToken cancellationToken)
         {
-            return await _mediator.Send(new RtmpHandshakeC1Message(_clientPeer, peerContext, networkStream), cancellationToken);
+            return await _mediator.Send(new RtmpHandshakeC1Event(_clientPeer, peerContext, networkStream), cancellationToken);
         }
 
         private async Task<bool> HandleHandshakeC2(IRtmpClientPeerContext peerContext, ReadOnlyNetworkStream networkStream, CancellationToken cancellationToken)
         {
-            return await _mediator.Send(new RtmpHandshakeC2Message(_clientPeer, peerContext, networkStream), cancellationToken);
+            return await _mediator.Send(new RtmpHandshakeC2Event(_clientPeer, peerContext, networkStream), cancellationToken);
         }
 
         private async Task<bool> HandleChunkAsync(IServer server, IRtmpClientPeerContext peerContext, ReadOnlyNetworkStream networkStream, CancellationToken cancellationToken)
         {
-            return await _mediator.Send(new RtmpChunkMessage(server, _clientPeer, peerContext, networkStream), cancellationToken);
+            return await _mediator.Send(new RtmpChunkEvent(server, _clientPeer, peerContext, networkStream), cancellationToken);
         }
     }
 }

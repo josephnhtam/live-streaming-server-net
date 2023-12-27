@@ -1,7 +1,7 @@
 ﻿using LiveStreamingServer.Newtorking.Contracts;
 using LiveStreamingServer.Newtorking;
 
-namespace LiveStreamingServer.Rtmp.Core.RtmpMessageHandler.Headers
+namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler.Headers
 {
     public record struct ChunkBasicHeader(int ChunkType, uint ChunkStreamId)
     {
