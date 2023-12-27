@@ -1,4 +1,5 @@
-﻿using LiveStreamingServer.Rtmp.Core.Contracts;
+﻿using LiveStreamingServer.Newtorking.Contracts;
+using LiveStreamingServer.Rtmp.Core.Contracts;
 
 namespace LiveStreamingServer.Rtmp.Core
 {
@@ -6,13 +7,13 @@ namespace LiveStreamingServer.Rtmp.Core
     {
         public uint ChunkStreamId { get; }
         public int ChunkType { get; set; }
-        public bool IsFirstChunkOfMessage { get; set; }
+        public bool IsFirstChunkOfMessage => PayloadBuffer == null;
         public IRtmpChunkMessageHeaderContext MessageHeader { get; }
+        public INetBuffer? PayloadBuffer { get; set; }
 
         public RtmpChunkStreamContext(uint chunkStreamId)
         {
             ChunkStreamId = chunkStreamId;
-            IsFirstChunkOfMessage = true;
             MessageHeader = new RtmpChunkMessageHeaderContext();
         }
     }
@@ -21,7 +22,7 @@ namespace LiveStreamingServer.Rtmp.Core
     {
         public uint Timestamp { get; set; }
         public uint TimestampDelta { get; set; }
-        public uint MessageLength { get; set; }
+        public int MessageLength { get; set; }
         public int MessageTypeId { get; set; }
         public uint MessageStreamId { get; set; }
         public bool HasExtendedTimestamp { get; set; }

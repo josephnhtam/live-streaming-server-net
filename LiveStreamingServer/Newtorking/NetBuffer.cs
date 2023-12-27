@@ -69,7 +69,6 @@ namespace LiveStreamingServer.Newtorking
             var size = Size;
 
             Flush(output.UnderlyingStream);
-            output.Position += size;
             output.Size += size;
         }
 
@@ -80,6 +79,8 @@ namespace LiveStreamingServer.Newtorking
             _stream.Position = 0;
             _stream.SetLength(Size);
             _stream.CopyTo(output, (int)originalLength);
+            if (_stream.CanSeek)
+                _stream.Position += Size;
 
             Reset();
         }
@@ -95,7 +96,8 @@ namespace LiveStreamingServer.Newtorking
         {
             _stream.SetLength(bytesCount);
             await stream.ReadExactlyAsync(_stream.GetBuffer(), 0, bytesCount, cancellationToken);
-            _stream.Position = 0;
+            Position = 0;
+            Size = bytesCount;
         }
     }
 }

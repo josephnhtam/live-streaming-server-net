@@ -2,6 +2,7 @@
 using LiveStreamingServer.Rtmp.Core.Contracts;
 using LiveStreamingServer.Rtmp.Core.RtmpMessageHandler.Headers;
 using LiveStreamingServer.Rtmp.Core.RtmpMessages;
+using LiveStreamingServer.Rtmp.Core.RtmpMessagetHandler.PayloadHandling.Contracts;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
@@ -10,13 +11,13 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpMessageHandler
     public class RtmpChunkMessageHandler : IRequestHandler<RtmpChunkMessage, bool>
     {
         private readonly INetBufferPool _netBufferPool;
-        private readonly IMediator _mediator;
+        private readonly IRtmpMessageMessagePayloadHandler _payloadHandler;
         private readonly ILogger _logger;
 
-        public RtmpChunkMessageHandler(INetBufferPool netBufferPool, IMediator mediator, ILogger<RtmpChunkMessageHandler> logger)
+        public RtmpChunkMessageHandler(INetBufferPool netBufferPool, IRtmpMessageMessagePayloadHandler payloadHandler, ILogger<RtmpChunkMessageHandler> logger)
         {
             _netBufferPool = netBufferPool;
-            _mediator = mediator;
+            _payloadHandler = payloadHandler;
             _logger = logger;
         }
 
@@ -33,7 +34,7 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpMessageHandler
 
                 var chunkStreamContext = message.PeerContext.GetChunkStreamContext(chunkStreamId);
 
-                return chunkType switch
+                var result = chunkType switch
                 {
                     0 => await HandleChunkType0Async(chunkStreamContext, message, netBuffer, cancellationToken),
                     1 => await HandleChunkType1Async(chunkStreamContext, message, netBuffer, cancellationToken),
@@ -41,6 +42,8 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpMessageHandler
                     3 => await HandleChunkType3Async(chunkStreamContext, message, netBuffer, cancellationToken),
                     _ => throw new ArgumentOutOfRangeException(nameof(chunkType))
                 };
+
+                return await HandlePayloadAsync(chunkStreamContext, message, netBuffer, cancellationToken);
             }
             finally
             {
@@ -73,8 +76,6 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpMessageHandler
                 chunkStreamContext.MessageHeader.Timestamp = messageHeader.Timestamp;
             }
 
-            chunkStreamContext.IsFirstChunkOfMessage = false;
-
             return true;
         }
 
@@ -101,8 +102,6 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpMessageHandler
             }
             chunkStreamContext.MessageHeader.Timestamp += chunkStreamContext.MessageHeader.TimestampDelta;
 
-            chunkStreamContext.IsFirstChunkOfMessage = false;
-
             return true;
         }
 
@@ -128,8 +127,6 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpMessageHandler
             }
             chunkStreamContext.MessageHeader.Timestamp += chunkStreamContext.MessageHeader.TimestampDelta;
 
-            chunkStreamContext.IsFirstChunkOfMessage = false;
-
             return true;
         }
 
@@ -151,9 +148,53 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpMessageHandler
                 chunkStreamContext.MessageHeader.Timestamp += timestampDelta;
             }
 
-            chunkStreamContext.IsFirstChunkOfMessage = false;
+            return true;
+        }
+
+        private async Task<bool> HandlePayloadAsync(IRtmpChunkStreamContext chunkStreamContext, RtmpChunkMessage message, INetBuffer netBuffer, CancellationToken cancellationToken)
+        {
+            if (chunkStreamContext.IsFirstChunkOfMessage)
+            {
+                chunkStreamContext.PayloadBuffer = _netBufferPool.ObtainNetBuffer();
+            }
+
+            var peerContext = message.PeerContext;
+            var payloadBuffer = chunkStreamContext.PayloadBuffer!;
+            int messageLength = chunkStreamContext.MessageHeader.MessageLength;
+
+            if (payloadBuffer.Size < messageLength)
+            {
+                var chunkedPayloadLength = Math.Min(
+                    messageLength - payloadBuffer.Size,
+                    peerContext.InChunkSize - (payloadBuffer.Size % peerContext.InChunkSize)
+                );
+
+                await netBuffer.CopyStreamData(message.NetworkStream, chunkedPayloadLength, cancellationToken);
+                netBuffer.Flush(payloadBuffer);
+            }
+
+            if (payloadBuffer.Size == messageLength)
+            {
+                payloadBuffer.Position = 0;
+                return await DoHandlePayloadAsync(chunkStreamContext, message, cancellationToken);
+            }
 
             return true;
+        }
+
+        private async Task<bool> DoHandlePayloadAsync(IRtmpChunkStreamContext chunkStreamContext, RtmpChunkMessage message, CancellationToken cancellationToken)
+        {
+            var payloadBuffer = chunkStreamContext.PayloadBuffer ?? throw new InvalidOperationException();
+
+            try
+            {
+                return await _payloadHandler.HandleAsync(chunkStreamContext, message, cancellationToken);
+            }
+            finally
+            {
+                chunkStreamContext.PayloadBuffer = null;
+                _netBufferPool.RecycleNetBuffer(payloadBuffer);
+            }
         }
     }
 }
