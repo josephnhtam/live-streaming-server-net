@@ -15,7 +15,6 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpMessageHandler.Handshakes
     public class ComplexHandshake
     {
         private const byte ClientType = 3;
-        private static readonly byte[] Version = [4, 5, 0, 1];
 
         private readonly INetBuffer _incomingBuffer;
         private readonly ComplexHandshakeType _type;
@@ -52,8 +51,10 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpMessageHandler.Handshakes
             int initialPosition = outgoingBuffer.Position;
 
             outgoingBuffer.Write(HandshakeUtilities.GetTime());
-            outgoingBuffer.Write(Version, 0, 4);
+            outgoingBuffer.Write(_incomingBuffer.UnderlyingStream.GetBuffer(), 4, 4);
             outgoingBuffer.WriteRandomBytes(1536 - 8);
+
+            outgoingBuffer.Write(_incomingBuffer.UnderlyingStream.GetBuffer(), 0, 1536);
 
             var c1KeyIndex = KeyBlock.GetKeyIndex(_incomingBuffer, _type);
             var c1Key = KeyBlock.GetProvidedKeyData(_incomingBuffer, c1KeyIndex);
@@ -65,7 +66,7 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpMessageHandler.Handshakes
             var s1DigestData = c1JoinedBytes.CalculateHmacSha256(HandshakeConstants.FMSKey);
             outgoingBuffer.MoveTo(initialPosition + c1DigestDataIndex).Write(s1DigestData, 0, 32);
 
-            outgoingBuffer.MoveTo(outgoingBuffer.Size);
+            outgoingBuffer.MoveTo(initialPosition + 1536);
         }
 
         public void WriteS2(INetBuffer outgoingBuffer)
