@@ -16,7 +16,7 @@ namespace LiveStreamingServer.Rtmp.Core.Contracts
         uint Timestamp { get; set; }
         uint TimestampDelta { get; set; }
         int MessageLength { get; set; }
-        int MessageTypeId { get; set; }
+        byte MessageTypeId { get; set; }
         uint MessageStreamId { get; set; }
         bool HasExtendedTimestamp { get; set; }
     }

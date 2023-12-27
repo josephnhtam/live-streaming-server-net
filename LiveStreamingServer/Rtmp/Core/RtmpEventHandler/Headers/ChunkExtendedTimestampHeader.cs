@@ -1,5 +1,5 @@
-﻿using LiveStreamingServer.Newtorking.Contracts;
-using LiveStreamingServer.Newtorking;
+﻿using LiveStreamingServer.Newtorking;
+using LiveStreamingServer.Newtorking.Contracts;
 using LiveStreamingServer.Rtmp.Core.Extensions;
 
 namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler.Headers

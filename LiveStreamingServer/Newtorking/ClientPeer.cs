@@ -70,7 +70,7 @@ namespace LiveStreamingServer.Newtorking
             finally
             {
                 _tcpClient.Close();
-                _logger?.LogDebug("PeerId: {PeerId} disconnected", PeerId);
+                _logger?.LogDebug("PeerId: {PeerId} | Disconnected", PeerId);
             }
         }
 

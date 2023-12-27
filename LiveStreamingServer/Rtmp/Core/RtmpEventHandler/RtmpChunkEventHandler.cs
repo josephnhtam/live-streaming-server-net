@@ -1,8 +1,8 @@
 ﻿using LiveStreamingServer.Newtorking.Contracts;
 using LiveStreamingServer.Rtmp.Core.Contracts;
 using LiveStreamingServer.Rtmp.Core.RtmpEventHandler.Headers;
+using LiveStreamingServer.Rtmp.Core.RtmpEventHandler.MessageDispatcher.Contracts;
 using LiveStreamingServer.Rtmp.Core.RtmpEvents;
-using LiveStreamingServer.Rtmp.Core.RtmpMessagetHandler.PayloadHandling.Contracts;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
@@ -43,7 +43,7 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler
                     _ => throw new ArgumentOutOfRangeException(nameof(chunkType))
                 };
 
-                return await HandlePayloadAsync(chunkStreamContext, @event, netBuffer, cancellationToken);
+                return result && await HandlePayloadAsync(chunkStreamContext, @event, netBuffer, cancellationToken);
             }
             finally
             {
@@ -188,7 +188,7 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler
 
             try
             {
-                return await _dispatcher.HandleAsync(chunkStreamContext, @event, cancellationToken);
+                return await _dispatcher.DispatchAsync(chunkStreamContext, @event, cancellationToken);
             }
             finally
             {
