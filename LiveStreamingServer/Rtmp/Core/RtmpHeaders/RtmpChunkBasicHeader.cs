@@ -49,7 +49,7 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpHeaders
 
             var firstByte = (ChunkType << 6) | (byte)(chunkStreamIdAttempt & 0x3f);
 
-            netBuffer.Write(firstByte);
+            netBuffer.Write((byte)firstByte);
 
             switch (chunkStreamIdAttempt)
             {
