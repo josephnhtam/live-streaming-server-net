@@ -12,6 +12,7 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpHeaders
         bool HasExtendedTimestamp();
         uint GetTimestamp();
         void SetMessageLength(int messageLength);
+
     }
 
     public record struct RtmpChunkMessageHeaderType0 : IRtmpChunkMessageHeader

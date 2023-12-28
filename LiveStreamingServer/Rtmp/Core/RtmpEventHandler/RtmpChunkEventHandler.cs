@@ -2,9 +2,9 @@
 using LiveStreamingServer.Rtmp.Core.Contracts;
 using LiveStreamingServer.Rtmp.Core.RtmpEventHandler.MessageDispatcher.Contracts;
 using LiveStreamingServer.Rtmp.Core.RtmpEvents;
+using LiveStreamingServer.Rtmp.Core.RtmpHeaders;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using LiveStreamingServer.Rtmp.Core.RtmpHeaders;
 
 namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler
 {

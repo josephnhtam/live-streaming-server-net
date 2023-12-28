@@ -21,22 +21,29 @@ namespace LiveStreamingServer.Rtmp.Core.Services
             Action<INetBuffer> payloadWriter,
             Action? callback) where TRtmpChunkMessageHeader : struct, IRtmpChunkMessageHeader
         {
+            var extendedTimestampHeader = CreateExtendedTimestampHeader(messageHeader);
+
             using var payloadBuffer = _netBufferPool.Obtain();
             payloadWriter.Invoke(payloadBuffer);
             payloadBuffer.MoveTo(0);
-
             messageHeader.SetMessageLength(payloadBuffer.Size);
-
-            RtmpChunkExtendedTimestampHeader? extendedTimestampHeader = null;
-            if (messageHeader.HasExtendedTimestamp())
-            {
-                extendedTimestampHeader = new RtmpChunkExtendedTimestampHeader(messageHeader.GetTimestamp());
-                messageHeader.UseExtendedTimestamp();
-            }
 
             var outChunkSize = (int)peerContext.OutChunkSize;
             SendFirstChunk(peerContext, basicHeader, messageHeader, extendedTimestampHeader, callback, payloadBuffer, outChunkSize);
             SendRemainingChunks(peerContext, basicHeader, extendedTimestampHeader, callback, payloadBuffer, outChunkSize);
+        }
+
+        private static RtmpChunkExtendedTimestampHeader? CreateExtendedTimestampHeader<TRtmpChunkMessageHeader>
+            (TRtmpChunkMessageHeader messageHeader) where TRtmpChunkMessageHeader : struct, IRtmpChunkMessageHeader
+        {
+            if (messageHeader.HasExtendedTimestamp())
+            {
+                var extendedTimestampHeader = new RtmpChunkExtendedTimestampHeader(messageHeader.GetTimestamp());
+                messageHeader.UseExtendedTimestamp();
+                return extendedTimestampHeader;
+            }
+
+            return null;
         }
 
         private static void SendFirstChunk<TRtmpChunkMessageHeader>(
