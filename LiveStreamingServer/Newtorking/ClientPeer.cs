@@ -11,7 +11,7 @@ namespace LiveStreamingServer.Newtorking
     {
         private readonly INetBufferPool _netBufferPool;
         private readonly ILogger? _logger;
-        private readonly Channel<INetBuffer> _sendChannel;
+        private readonly Channel<PendingMessage> _sendChannel;
         private TcpClient _tcpClient = default!;
 
         public uint PeerId { get; private set; }
@@ -20,7 +20,7 @@ namespace LiveStreamingServer.Newtorking
         {
             _netBufferPool = services.GetRequiredService<INetBufferPool>();
             _logger = services.GetRequiredService<ILogger<ClientPeer>>();
-            _sendChannel = Channel.CreateUnbounded<INetBuffer>();
+            _sendChannel = Channel.CreateUnbounded<PendingMessage>();
         }
 
         public bool IsConnected => _tcpClient?.Connected ?? false;
@@ -78,12 +78,13 @@ namespace LiveStreamingServer.Newtorking
         {
             while (!cancellationToken.IsCancellationRequested)
             {
-                var netBuffer = await _sendChannel.Reader.ReadAsync(cancellationToken);
+                var (netBuffer, callback) = await _sendChannel.Reader.ReadAsync(cancellationToken);
 
                 try
                 {
                     netBuffer.Flush(networkStream);
                     await networkStream.FlushAsync(cancellationToken);
+                    callback?.Invoke();
                 }
                 catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { }
                 catch (Exception ex)
@@ -97,12 +98,12 @@ namespace LiveStreamingServer.Newtorking
             }
         }
 
-        public void Send(INetBuffer netBuffer)
+        public void Send(INetBuffer netBuffer, Action? callback)
         {
-            Send(netBuffer.Flush);
+            Send(netBuffer.Flush, callback);
         }
 
-        public void Send(Action<INetBuffer> callback)
+        public void Send(Action<INetBuffer> writer, Action? callback)
         {
             if (!IsConnected) return;
 
@@ -110,7 +111,7 @@ namespace LiveStreamingServer.Newtorking
 
             try
             {
-                callback.Invoke(netBuffer);
+                writer.Invoke(netBuffer);
             }
             catch (Exception)
             {
@@ -118,29 +119,10 @@ namespace LiveStreamingServer.Newtorking
                 throw;
             }
 
-            if (!_sendChannel.Writer.TryWrite(netBuffer))
+            if (!_sendChannel.Writer.TryWrite(new PendingMessage(netBuffer, callback)))
             {
                 throw new Exception("Failed to write to the send channel");
             }
-        }
-
-        public async Task SendAsync(Func<INetBuffer, Task> callback)
-        {
-            if (!IsConnected) return;
-
-            var netBuffer = ObtainNetBuffer();
-
-            try
-            {
-                await callback.Invoke(netBuffer);
-            }
-            catch (Exception)
-            {
-                netBuffer.Dispose();
-                throw;
-            }
-
-            await _sendChannel.Writer.WriteAsync(netBuffer);
         }
 
         private INetBuffer ObtainNetBuffer()
@@ -158,5 +140,7 @@ namespace LiveStreamingServer.Newtorking
             _tcpClient.Dispose();
             return ValueTask.CompletedTask;
         }
+
+        private record struct PendingMessage(INetBuffer NetBuffer, Action? Callback);
     }
 }

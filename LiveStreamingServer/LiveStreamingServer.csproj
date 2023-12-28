@@ -14,4 +14,8 @@
     <PackageReference Include="mtanksl.ActionMessageFormat" Version="1.0.4" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Rtmp\Core\Services\Contracts\" />
+  </ItemGroup>
+
 </Project>

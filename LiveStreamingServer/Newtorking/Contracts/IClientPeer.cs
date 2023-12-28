@@ -14,8 +14,7 @@ namespace LiveStreamingServer.Networking.Contracts
         uint PeerId { get; }
         bool IsConnected { get; }
         void Disconnect();
-        void Send(INetBuffer netBuffer);
-        void Send(Action<INetBuffer> callback);
-        Task SendAsync(Func<INetBuffer, Task> callback);
+        void Send(INetBuffer netBuffer, Action? callback = null);
+        void Send(Action<INetBuffer> writer, Action? callback = null);
     }
 }
