@@ -23,32 +23,25 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler
 
         public async Task<bool> Handle(RtmpChunkEvent @event, CancellationToken cancellationToken)
         {
-            var netBuffer = _netBufferPool.ObtainNetBuffer();
+            using var netBuffer = _netBufferPool.ObtainNetBuffer();
 
-            try
+            var basicHeader = await ChunkBasicHeader.ReadAsync(netBuffer, @event.NetworkStream, cancellationToken);
+
+            var chunkType = basicHeader.ChunkType;
+            var chunkStreamId = basicHeader.ChunkStreamId;
+
+            var chunkStreamContext = @event.PeerContext.GetChunkStreamContext(chunkStreamId);
+
+            var result = chunkType switch
             {
-                var basicHeader = await ChunkBasicHeader.ReadAsync(netBuffer, @event.NetworkStream, cancellationToken);
+                0 => await HandleChunkType0Async(chunkStreamContext, @event, netBuffer, cancellationToken),
+                1 => await HandleChunkType1Async(chunkStreamContext, @event, netBuffer, cancellationToken),
+                2 => await HandleChunkType2Async(chunkStreamContext, @event, netBuffer, cancellationToken),
+                3 => await HandleChunkType3Async(chunkStreamContext, @event, netBuffer, cancellationToken),
+                _ => throw new ArgumentOutOfRangeException(nameof(chunkType))
+            };
 
-                var chunkType = basicHeader.ChunkType;
-                var chunkStreamId = basicHeader.ChunkStreamId;
-
-                var chunkStreamContext = @event.PeerContext.GetChunkStreamContext(chunkStreamId);
-
-                var result = chunkType switch
-                {
-                    0 => await HandleChunkType0Async(chunkStreamContext, @event, netBuffer, cancellationToken),
-                    1 => await HandleChunkType1Async(chunkStreamContext, @event, netBuffer, cancellationToken),
-                    2 => await HandleChunkType2Async(chunkStreamContext, @event, netBuffer, cancellationToken),
-                    3 => await HandleChunkType3Async(chunkStreamContext, @event, netBuffer, cancellationToken),
-                    _ => throw new ArgumentOutOfRangeException(nameof(chunkType))
-                };
-
-                return result && await HandlePayloadAsync(chunkStreamContext, @event, netBuffer, cancellationToken);
-            }
-            finally
-            {
-                _netBufferPool.RecycleNetBuffer(netBuffer);
-            }
+            return result && await HandlePayloadAsync(chunkStreamContext, @event, netBuffer, cancellationToken);
         }
 
         private async Task<bool> HandleChunkType0Async(
@@ -184,17 +177,9 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler
 
         private async Task<bool> DoHandlePayloadAsync(IRtmpChunkStreamContext chunkStreamContext, RtmpChunkEvent @event, CancellationToken cancellationToken)
         {
-            var payloadBuffer = chunkStreamContext.PayloadBuffer ?? throw new InvalidOperationException();
+            using var payloadBuffer = chunkStreamContext.PayloadBuffer ?? throw new InvalidOperationException();
 
-            try
-            {
-                return await _dispatcher.DispatchAsync(chunkStreamContext, @event, cancellationToken);
-            }
-            finally
-            {
-                chunkStreamContext.PayloadBuffer = null;
-                _netBufferPool.RecycleNetBuffer(payloadBuffer);
-            }
+            return await _dispatcher.DispatchAsync(chunkStreamContext, @event, cancellationToken);
         }
     }
 }

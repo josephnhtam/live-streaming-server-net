@@ -1,8 +1,7 @@
 ﻿namespace LiveStreamingServer.Newtorking.Contracts
 {
-    public interface INetBufferPool
+    public interface INetBufferPool: IDisposable
     {
         INetBuffer ObtainNetBuffer();
-        void RecycleNetBuffer(INetBuffer netBuffer);
     }
 }

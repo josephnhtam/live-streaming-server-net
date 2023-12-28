@@ -85,7 +85,7 @@ namespace LiveStreamingServer.Newtorking
             Reset();
         }
 
-        public void Dispose()
+        public virtual void Dispose()
         {
             _stream.Dispose();
             _writer.Dispose();

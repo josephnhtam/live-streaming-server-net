@@ -92,7 +92,7 @@ namespace LiveStreamingServer.Newtorking
                 }
                 finally
                 {
-                    RecycleNetBuffer(netBuffer);
+                    netBuffer.Dispose();
                 }
             }
         }
@@ -114,7 +114,7 @@ namespace LiveStreamingServer.Newtorking
             }
             catch (Exception)
             {
-                RecycleNetBuffer(netBuffer);
+                netBuffer.Dispose();
                 throw;
             }
 
@@ -136,7 +136,7 @@ namespace LiveStreamingServer.Newtorking
             }
             catch (Exception)
             {
-                RecycleNetBuffer(netBuffer);
+                netBuffer.Dispose();
                 throw;
             }
 
@@ -146,11 +146,6 @@ namespace LiveStreamingServer.Newtorking
         private INetBuffer ObtainNetBuffer()
         {
             return _netBufferPool.ObtainNetBuffer();
-        }
-
-        private void RecycleNetBuffer(INetBuffer netBuffer)
-        {
-            _netBufferPool.RecycleNetBuffer(netBuffer);
         }
 
         public void Disconnect()
