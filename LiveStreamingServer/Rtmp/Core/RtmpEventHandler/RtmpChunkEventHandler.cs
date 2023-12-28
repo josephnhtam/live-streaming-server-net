@@ -1,10 +1,10 @@
 ﻿using LiveStreamingServer.Newtorking.Contracts;
 using LiveStreamingServer.Rtmp.Core.Contracts;
-using LiveStreamingServer.Rtmp.Core.RtmpEventHandler.Headers;
 using LiveStreamingServer.Rtmp.Core.RtmpEventHandler.MessageDispatcher.Contracts;
 using LiveStreamingServer.Rtmp.Core.RtmpEvents;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using LiveStreamingServer.Rtmp.Core.RtmpHeaders;
 
 namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler
 {
@@ -25,7 +25,7 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler
         {
             using var netBuffer = _netBufferPool.ObtainNetBuffer();
 
-            var basicHeader = await ChunkBasicHeader.ReadAsync(netBuffer, @event.NetworkStream, cancellationToken);
+            var basicHeader = await RtmpChunkBasicHeader.ReadAsync(netBuffer, @event.NetworkStream, cancellationToken);
 
             var chunkType = basicHeader.ChunkType;
             var chunkStreamId = basicHeader.ChunkStreamId;
@@ -50,7 +50,7 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler
             INetBuffer netBuffer,
             CancellationToken cancellationToken)
         {
-            var messageHeader = await ChunkMessageHeaderType0.ReadAsync(netBuffer, @event.NetworkStream, cancellationToken);
+            var messageHeader = await RtmpChunkMessageHeaderType0.ReadAsync(netBuffer, @event.NetworkStream, cancellationToken);
 
             chunkStreamContext.ChunkType = 0;
             chunkStreamContext.MessageHeader.MessageLength = messageHeader.MessageLength;
@@ -61,7 +61,7 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler
             chunkStreamContext.MessageHeader.HasExtendedTimestamp = messageHeader.Timestamp == 0xffffff;
             if (chunkStreamContext.MessageHeader.HasExtendedTimestamp)
             {
-                var extendedTimestampHeader = await ChunkExtendedTimestampHeader.ReadAsync(netBuffer, @event.NetworkStream, cancellationToken);
+                var extendedTimestampHeader = await RtmpChunkExtendedTimestampHeader.ReadAsync(netBuffer, @event.NetworkStream, cancellationToken);
                 chunkStreamContext.MessageHeader.Timestamp = extendedTimestampHeader.extendedTimestamp;
             }
             else
@@ -77,7 +77,7 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler
             INetBuffer netBuffer,
             CancellationToken cancellationToken)
         {
-            var messageHeader = await ChunkMessageHeaderType1.ReadAsync(netBuffer, @event.NetworkStream, cancellationToken);
+            var messageHeader = await RtmpChunkMessageHeaderType1.ReadAsync(netBuffer, @event.NetworkStream, cancellationToken);
 
             chunkStreamContext.ChunkType = 1;
             chunkStreamContext.MessageHeader.MessageLength = messageHeader.MessageLength;
@@ -86,7 +86,7 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler
             chunkStreamContext.MessageHeader.HasExtendedTimestamp = messageHeader.TimestampDelta == 0xffffff;
             if (chunkStreamContext.MessageHeader.HasExtendedTimestamp)
             {
-                var extendedTimestampHeader = await ChunkExtendedTimestampHeader.ReadAsync(netBuffer, @event.NetworkStream, cancellationToken);
+                var extendedTimestampHeader = await RtmpChunkExtendedTimestampHeader.ReadAsync(netBuffer, @event.NetworkStream, cancellationToken);
                 chunkStreamContext.MessageHeader.TimestampDelta = extendedTimestampHeader.extendedTimestamp;
             }
             else
@@ -104,14 +104,14 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler
             INetBuffer netBuffer,
             CancellationToken cancellationToken)
         {
-            var messageHeader = await ChunkMessageHeaderType2.ReadAsync(netBuffer, @event.NetworkStream, cancellationToken);
+            var messageHeader = await RtmpChunkMessageHeaderType2.ReadAsync(netBuffer, @event.NetworkStream, cancellationToken);
 
             chunkStreamContext.ChunkType = 2;
 
             chunkStreamContext.MessageHeader.HasExtendedTimestamp = messageHeader.TimestampDelta == 0xffffff;
             if (chunkStreamContext.MessageHeader.HasExtendedTimestamp)
             {
-                var extendedTimestampHeader = await ChunkExtendedTimestampHeader.ReadAsync(netBuffer, @event.NetworkStream, cancellationToken);
+                var extendedTimestampHeader = await RtmpChunkExtendedTimestampHeader.ReadAsync(netBuffer, @event.NetworkStream, cancellationToken);
                 chunkStreamContext.MessageHeader.TimestampDelta = extendedTimestampHeader.extendedTimestamp;
             }
             else
@@ -132,7 +132,7 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler
             chunkStreamContext.ChunkType = 3;
 
             var timestampDelta = chunkStreamContext.MessageHeader.HasExtendedTimestamp ?
-                (await ChunkExtendedTimestampHeader.ReadAsync(netBuffer, @event.NetworkStream, cancellationToken)).extendedTimestamp :
+                (await RtmpChunkExtendedTimestampHeader.ReadAsync(netBuffer, @event.NetworkStream, cancellationToken)).extendedTimestamp :
                 chunkStreamContext.MessageHeader.TimestampDelta;
 
             if (chunkStreamContext.IsFirstChunkOfMessage)
