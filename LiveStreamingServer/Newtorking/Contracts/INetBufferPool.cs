@@ -2,6 +2,6 @@
 {
     public interface INetBufferPool: IDisposable
     {
-        INetBuffer ObtainNetBuffer();
+        INetBuffer Obtain();
     }
 }

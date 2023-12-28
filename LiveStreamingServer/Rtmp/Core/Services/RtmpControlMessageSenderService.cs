@@ -6,7 +6,7 @@ using LiveStreamingServer.Rtmp.Core.Services.Contracts;
 
 namespace LiveStreamingServer.Rtmp.Core.Services
 {
-    public class RtmpControlMessageSenderService
+    public class RtmpControlMessageSenderService : IRtmpControlMessageSenderService
     {
         private readonly IRtmpChunkMessageSenderService _chunkMessageSenderService;
 
@@ -22,13 +22,11 @@ namespace LiveStreamingServer.Rtmp.Core.Services
                 peerContext.OutChunkSize = chunkSize;
             }
 
-            _chunkMessageSenderService.Send(peerContext, netBuffer =>
-            {
-                var basicHeader = new RtmpChunkBasicHeader(0, RtmpConstants.ProtocolControlMessageChunkStreamId);
-                var messageHeader = new RtmpChunkMessageHeaderType0(0, 4, RtmpMessageType.SetChunkSize, RtmpConstants.ProtocolControlMessageStreamId);
+            var basicHeader = new RtmpChunkBasicHeader(0, RtmpConstants.ProtocolControlMessageChunkStreamId);
+            var messageHeader = new RtmpChunkMessageHeaderType0(0, RtmpMessageType.SetChunkSize, RtmpConstants.ProtocolControlMessageStreamId);
 
-                basicHeader.Write(netBuffer);
-                messageHeader.Write(netBuffer);
+            _chunkMessageSenderService.Send(peerContext, basicHeader, messageHeader, netBuffer =>
+            {
                 netBuffer.WriteUInt32BigEndian(chunkSize);
             },
             () => peerContext.OutChunkSize = chunkSize);
@@ -36,11 +34,11 @@ namespace LiveStreamingServer.Rtmp.Core.Services
 
         public void AbortMessage(IRtmpClientPeerContext peerContext, uint streamId)
         {
-            _chunkMessageSenderService.Send(peerContext, netBuffer =>
-            {
-                var basicHeader = new RtmpChunkBasicHeader(0, RtmpConstants.ProtocolControlMessageChunkStreamId);
-                var messageHeader = new RtmpChunkMessageHeaderType0(0, 4, RtmpMessageType.AbortMessage, RtmpConstants.ProtocolControlMessageStreamId);
+            var basicHeader = new RtmpChunkBasicHeader(0, RtmpConstants.ProtocolControlMessageChunkStreamId);
+            var messageHeader = new RtmpChunkMessageHeaderType0(0, RtmpMessageType.AbortMessage, RtmpConstants.ProtocolControlMessageStreamId);
 
+            _chunkMessageSenderService.Send(peerContext, basicHeader, messageHeader, netBuffer =>
+            {
                 basicHeader.Write(netBuffer);
                 messageHeader.Write(netBuffer);
                 netBuffer.WriteUInt32BigEndian(streamId);
@@ -49,11 +47,11 @@ namespace LiveStreamingServer.Rtmp.Core.Services
 
         public void Acknowledgement(IRtmpClientPeerContext peerContext, uint sequenceNumber)
         {
-            _chunkMessageSenderService.Send(peerContext, netBuffer =>
-            {
-                var basicHeader = new RtmpChunkBasicHeader(0, RtmpConstants.ProtocolControlMessageChunkStreamId);
-                var messageHeader = new RtmpChunkMessageHeaderType0(0, 4, RtmpMessageType.Acknowledgement, RtmpConstants.ProtocolControlMessageStreamId);
+            var basicHeader = new RtmpChunkBasicHeader(0, RtmpConstants.ProtocolControlMessageChunkStreamId);
+            var messageHeader = new RtmpChunkMessageHeaderType0(0, RtmpMessageType.Acknowledgement, RtmpConstants.ProtocolControlMessageStreamId);
 
+            _chunkMessageSenderService.Send(peerContext, basicHeader, messageHeader, netBuffer =>
+            {
                 basicHeader.Write(netBuffer);
                 messageHeader.Write(netBuffer);
                 netBuffer.WriteUInt32BigEndian(sequenceNumber);
@@ -62,11 +60,11 @@ namespace LiveStreamingServer.Rtmp.Core.Services
 
         public void WindowAcknowledgementSize(IRtmpClientPeerContext peerContext, uint acknowledgementWindowSize)
         {
-            _chunkMessageSenderService.Send(peerContext, netBuffer =>
-            {
-                var basicHeader = new RtmpChunkBasicHeader(0, RtmpConstants.ProtocolControlMessageChunkStreamId);
-                var messageHeader = new RtmpChunkMessageHeaderType0(0, 4, RtmpMessageType.WindowAcknowledgementSize, RtmpConstants.ProtocolControlMessageStreamId);
+            var basicHeader = new RtmpChunkBasicHeader(0, RtmpConstants.ProtocolControlMessageChunkStreamId);
+            var messageHeader = new RtmpChunkMessageHeaderType0(0, RtmpMessageType.WindowAcknowledgementSize, RtmpConstants.ProtocolControlMessageStreamId);
 
+            _chunkMessageSenderService.Send(peerContext, basicHeader, messageHeader, netBuffer =>
+            {
                 basicHeader.Write(netBuffer);
                 messageHeader.Write(netBuffer);
                 netBuffer.WriteUInt32BigEndian(acknowledgementWindowSize);
@@ -75,11 +73,11 @@ namespace LiveStreamingServer.Rtmp.Core.Services
 
         public void SetPeerBandwidth(IRtmpClientPeerContext peerContext, uint acknowledgementWindowSize, PeerBandwidthLimitType limitType)
         {
-            _chunkMessageSenderService.Send(peerContext, netBuffer =>
-            {
-                var basicHeader = new RtmpChunkBasicHeader(0, RtmpConstants.ProtocolControlMessageChunkStreamId);
-                var messageHeader = new RtmpChunkMessageHeaderType0(0, 4, RtmpMessageType.WindowAcknowledgementSize, RtmpConstants.ProtocolControlMessageStreamId);
+            var basicHeader = new RtmpChunkBasicHeader(0, RtmpConstants.ProtocolControlMessageChunkStreamId);
+            var messageHeader = new RtmpChunkMessageHeaderType0(0, 4, RtmpMessageType.WindowAcknowledgementSize, RtmpConstants.ProtocolControlMessageStreamId);
 
+            _chunkMessageSenderService.Send(peerContext, basicHeader, messageHeader, netBuffer =>
+            {
                 basicHeader.Write(netBuffer);
                 messageHeader.Write(netBuffer);
                 netBuffer.WriteUInt32BigEndian(acknowledgementWindowSize);

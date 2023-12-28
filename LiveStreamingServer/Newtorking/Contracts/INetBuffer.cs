@@ -10,7 +10,8 @@
         INetBuffer MoveTo(int position);
         void Reset();
         void Flush(Stream output);
-        void Flush(INetBuffer netBuffer);
+        void Flush(INetBuffer output);
+        void CopyTo(INetBuffer targetBuffer, int bytesCount);
         Task CopyStreamData(Stream stream, int bytesCount, CancellationToken cancellationToken = default);
 
         void WriteRandomBytes(int count);

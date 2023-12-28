@@ -5,6 +5,13 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpHeaders
 {
     public record struct RtmpChunkBasicHeader(int ChunkType, uint ChunkStreamId)
     {
+        public int Size => ChunkStreamId switch
+        {
+            <= 63 => 1,
+            <= 319 => 2,
+            _ => 3
+        };
+
         public static async Task<RtmpChunkBasicHeader> ReadAsync(INetBuffer netBuffer, ReadOnlyNetworkStream networkStream, CancellationToken cancellationToken)
         {
             await netBuffer.CopyStreamData(networkStream, 1, cancellationToken);

@@ -127,7 +127,7 @@ namespace LiveStreamingServer.Newtorking
 
         private INetBuffer ObtainNetBuffer()
         {
-            return _netBufferPool.ObtainNetBuffer();
+            return _netBufferPool.Obtain();
         }
 
         public void Disconnect()

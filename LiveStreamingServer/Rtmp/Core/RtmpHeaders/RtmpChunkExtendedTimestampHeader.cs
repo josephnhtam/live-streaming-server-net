@@ -6,9 +6,12 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpHeaders
 {
     public record struct RtmpChunkExtendedTimestampHeader(uint extendedTimestamp)
     {
+        public const int kSize = 4;
+        public int Size => kSize;
+
         public static async Task<RtmpChunkExtendedTimestampHeader> ReadAsync(INetBuffer netBuffer, ReadOnlyNetworkStream networkStream, CancellationToken cancellationToken)
         {
-            await netBuffer.CopyStreamData(networkStream, 4, cancellationToken);
+            await netBuffer.CopyStreamData(networkStream, kSize, cancellationToken);
 
             var extendedTimestamp = netBuffer.ReadUInt32BigEndian();
 

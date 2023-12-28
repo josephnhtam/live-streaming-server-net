@@ -85,6 +85,19 @@ namespace LiveStreamingServer.Newtorking
             Reset();
         }
 
+        public void CopyTo(INetBuffer targetBuffer, int bytesCount)
+        {
+            if (Position + bytesCount > Size)
+            {
+                throw new ArgumentOutOfRangeException(nameof(bytesCount));
+            }
+
+            var targetBufferPosition = targetBuffer.Position;
+            targetBuffer.Size += bytesCount;
+            _stream.ReadExactly(targetBuffer.UnderlyingStream.GetBuffer(), targetBufferPosition, bytesCount);
+            targetBuffer.Position = targetBufferPosition + bytesCount;
+        }
+
         public virtual void Dispose()
         {
             _stream.Dispose();
