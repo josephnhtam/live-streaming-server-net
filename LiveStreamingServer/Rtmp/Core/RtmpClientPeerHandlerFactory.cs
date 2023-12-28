@@ -17,7 +17,7 @@ namespace LiveStreamingServer.Rtmp.Core
         public IClientPeerHandler CreateClientPeerHandler(IClientPeerHandle clientPeer)
         {
             var handler = _services.GetRequiredService<IRtmpClientPeerHandler>();
-            handler.Initialize(clientPeer, new RtmpClientPeerContext());
+            handler.Initialize(new RtmpClientPeerContext(clientPeer));
             return handler;
         }
     }

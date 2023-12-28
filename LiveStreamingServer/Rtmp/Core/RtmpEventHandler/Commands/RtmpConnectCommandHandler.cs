@@ -19,6 +19,9 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler.Commands
         {
             Console.WriteLine(command.TransactionId);
             Console.WriteLine(JsonSerializer.Serialize(command.CommandObject));
+
+
+
             return Task.FromResult(true);
         }
     }

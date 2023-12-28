@@ -8,21 +8,17 @@ namespace LiveStreamingServer.Rtmp.Core
 {
     public class RtmpClientPeerHandler : IRtmpClientPeerHandler
     {
-        private readonly IServer _server;
         private readonly IMediator _mediator;
 
-        private IClientPeerHandle _clientPeer = default!;
         private IRtmpClientPeerContext _peerContext = default!;
 
-        public RtmpClientPeerHandler(IServer server, IMediator mediator)
+        public RtmpClientPeerHandler(IMediator mediator)
         {
-            _server = server;
             _mediator = mediator;
         }
 
-        public void Initialize(IClientPeerHandle clientPeer, IRtmpClientPeerContext peerContext)
+        public void Initialize(IRtmpClientPeerContext peerContext)
         {
-            _clientPeer = clientPeer;
             _peerContext = peerContext;
             _peerContext.State = RtmpClientPeerState.HandshakeC0;
         }
@@ -38,28 +34,28 @@ namespace LiveStreamingServer.Rtmp.Core
                 case RtmpClientPeerState.HandshakeC2:
                     return await HandleHandshakeC2(_peerContext, networkStream, cancellationToken);
                 default:
-                    return await HandleChunkAsync(_server, _peerContext, networkStream, cancellationToken);
+                    return await HandleChunkAsync(_peerContext, networkStream, cancellationToken);
             }
         }
 
         private async Task<bool> HandleHandshakeC0(IRtmpClientPeerContext peerContext, ReadOnlyNetworkStream networkStream, CancellationToken cancellationToken)
         {
-            return await _mediator.Send(new RtmpHandshakeC0Event(_clientPeer, peerContext, networkStream), cancellationToken);
+            return await _mediator.Send(new RtmpHandshakeC0Event(peerContext, networkStream), cancellationToken);
         }
 
         private async Task<bool> HandleHandshakeC1(IRtmpClientPeerContext peerContext, ReadOnlyNetworkStream networkStream, CancellationToken cancellationToken)
         {
-            return await _mediator.Send(new RtmpHandshakeC1Event(_clientPeer, peerContext, networkStream), cancellationToken);
+            return await _mediator.Send(new RtmpHandshakeC1Event(peerContext, networkStream), cancellationToken);
         }
 
         private async Task<bool> HandleHandshakeC2(IRtmpClientPeerContext peerContext, ReadOnlyNetworkStream networkStream, CancellationToken cancellationToken)
         {
-            return await _mediator.Send(new RtmpHandshakeC2Event(_clientPeer, peerContext, networkStream), cancellationToken);
+            return await _mediator.Send(new RtmpHandshakeC2Event(peerContext, networkStream), cancellationToken);
         }
 
-        private async Task<bool> HandleChunkAsync(IServer server, IRtmpClientPeerContext peerContext, ReadOnlyNetworkStream networkStream, CancellationToken cancellationToken)
+        private async Task<bool> HandleChunkAsync(IRtmpClientPeerContext peerContext, ReadOnlyNetworkStream networkStream, CancellationToken cancellationToken)
         {
-            return await _mediator.Send(new RtmpChunkEvent(server, _clientPeer, peerContext, networkStream), cancellationToken);
+            return await _mediator.Send(new RtmpChunkEvent(peerContext, networkStream), cancellationToken);
         }
     }
 }

@@ -5,6 +5,6 @@ namespace LiveStreamingServer.Rtmp.Core.Contracts
 {
     public interface IRtmpClientPeerHandler : IClientPeerHandler
     {
-        void Initialize(IClientPeerHandle clientPeer, IRtmpClientPeerContext peerContext);
+        void Initialize(IRtmpClientPeerContext peerContext);
     }
 }

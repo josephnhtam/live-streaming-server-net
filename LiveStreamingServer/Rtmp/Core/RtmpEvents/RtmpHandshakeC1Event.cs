@@ -6,7 +6,6 @@ using MediatR;
 namespace LiveStreamingServer.Rtmp.Core.RtmpEvents
 {
     public record struct RtmpHandshakeC1Event(
-        IClientPeerHandle ClientPeer,
         IRtmpClientPeerContext PeerContext,
         ReadOnlyNetworkStream NetworkStream) : IRequest<bool>;
 }

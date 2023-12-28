@@ -22,7 +22,7 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler
 
             @event.PeerContext.State = RtmpClientPeerState.HandshakeDone;
 
-            _logger.LogDebug("PeerId: {PeerId} | Handshake C2 Handled", @event.ClientPeer.PeerId);
+            _logger.LogDebug("PeerId: {PeerId} | Handshake C2 Handled", @event.PeerContext.Peer.PeerId);
 
             return true;
         }

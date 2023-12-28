@@ -25,22 +25,22 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler
             if (HandleHandshake(@event, incomingBuffer, outgoingBuffer))
             {
                 @event.PeerContext.State = RtmpClientPeerState.HandshakeC2;
-                @event.ClientPeer.Send(outgoingBuffer);
+                @event.PeerContext.Peer.Send(outgoingBuffer);
 
-                _logger.LogDebug("PeerId: {PeerId} | Handshake C1 Handled", @event.ClientPeer.PeerId);
+                _logger.LogDebug("PeerId: {PeerId} | Handshake C1 Handled", @event.PeerContext.Peer.PeerId);
 
                 return true;
             }
 
-            _logger.LogDebug("PeerId: {PeerId} | Handshake C1 Handling Failed", @event.ClientPeer.PeerId);
+            _logger.LogDebug("PeerId: {PeerId} | Handshake C1 Handling Failed", @event.PeerContext.Peer.PeerId);
 
             return false;
         }
 
         private bool HandleHandshake(RtmpHandshakeC1Event @event, NetBuffer incomingBuffer, NetBuffer outgoingBuffer)
         {
-            var clientPeer = @event.ClientPeer;
             var peerContext = @event.PeerContext;
+            var clientPeer = peerContext.Peer;
 
             var complexHandshake0 = new ComplexHandshake(incomingBuffer, ComplexHandshakeType.Schema0);
             if (complexHandshake0.ValidateC1())
