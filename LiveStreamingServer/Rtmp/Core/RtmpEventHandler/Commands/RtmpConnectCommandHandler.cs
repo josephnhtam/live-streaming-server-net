@@ -38,6 +38,9 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler.Commands
             var peerContext = message.PeerContext;
 
             _controlMessageSender.SetChunkSize(peerContext, RtmpConstants.DefaultChunkSize);
+            _controlMessageSender.WindowAcknowledgementSize(peerContext, RtmpConstants.DefaultInAcknowledgementWindowSize);
+            _controlMessageSender.SetPeerBandwidth(peerContext, RtmpConstants.DefaultPeerBandwidth, RtmpPeerBandwidthLimitType.Dynamic);
+
             RespondToClient(message, command);
 
             return Task.FromResult(true);
@@ -45,10 +48,12 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler.Commands
 
         public void RespondToClient(RtmpChunkEvent message, RtmpConnectCommand command)
         {
-            var peerContext = message.PeerContext;
-
-            _commandMessageSender.SendCommandMessage(peerContext, 3, "_result", command.TransactionId,
-                [
+            _commandMessageSender.SendCommandMessage(
+                peerContext: message.PeerContext,
+                streamId: 3,
+                commandName: "_result",
+                transactionId: command.TransactionId,
+                parameters: [
                     new Dictionary<string, object>
                     {
                         { "fmsVer", "LS/1,0,0,000" },
