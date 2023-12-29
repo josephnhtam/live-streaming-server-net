@@ -35,8 +35,6 @@ namespace LiveStreamingServer.Rtmp.Core.Services
 
             _chunkMessageSenderService.Send(peerContext, basicHeader, messageHeader, netBuffer =>
             {
-                basicHeader.Write(netBuffer);
-                messageHeader.Write(netBuffer);
                 netBuffer.WriteUInt32BigEndian(streamId);
             });
         }
@@ -48,8 +46,6 @@ namespace LiveStreamingServer.Rtmp.Core.Services
 
             _chunkMessageSenderService.Send(peerContext, basicHeader, messageHeader, netBuffer =>
             {
-                basicHeader.Write(netBuffer);
-                messageHeader.Write(netBuffer);
                 netBuffer.WriteUInt32BigEndian(sequenceNumber);
             });
         }
@@ -61,22 +57,18 @@ namespace LiveStreamingServer.Rtmp.Core.Services
 
             _chunkMessageSenderService.Send(peerContext, basicHeader, messageHeader, netBuffer =>
             {
-                basicHeader.Write(netBuffer);
-                messageHeader.Write(netBuffer);
                 netBuffer.WriteUInt32BigEndian(acknowledgementWindowSize);
             });
         }
 
-        public void SetPeerBandwidth(IRtmpClientPeerContext peerContext, uint acknowledgementWindowSize, PeerBandwidthLimitType limitType)
+        public void SetPeerBandwidth(IRtmpClientPeerContext peerContext, uint peerBandwidth, RtmpPeerBandwidthLimitType limitType)
         {
             var basicHeader = new RtmpChunkBasicHeader(0, RtmpConstants.ProtocolControlMessageChunkStreamId);
-            var messageHeader = new RtmpChunkMessageHeaderType0(0, 4, RtmpMessageType.WindowAcknowledgementSize, RtmpConstants.ProtocolControlMessageStreamId);
+            var messageHeader = new RtmpChunkMessageHeaderType0(0, RtmpMessageType.SetPeerBandwidth, RtmpConstants.ProtocolControlMessageStreamId);
 
             _chunkMessageSenderService.Send(peerContext, basicHeader, messageHeader, netBuffer =>
             {
-                basicHeader.Write(netBuffer);
-                messageHeader.Write(netBuffer);
-                netBuffer.WriteUInt32BigEndian(acknowledgementWindowSize);
+                netBuffer.WriteUInt32BigEndian(peerBandwidth);
                 netBuffer.Write((byte)limitType);
             });
         }
