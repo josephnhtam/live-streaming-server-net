@@ -4,6 +4,7 @@ using LiveStreamingServer.Rtmp.Core.RtmpEventHandler.CommandDispatcher.Contracts
 using LiveStreamingServer.Rtmp.Core.RtmpEvents;
 using LiveStreamingServer.Utilities.Extensions;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using mtanksl.ActionMessageFormat;
 using System.Collections.Concurrent;
 using System.Reflection;
@@ -14,12 +15,14 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler.CommandDispatcher
     {
         private readonly IServiceProvider _services;
         private readonly IRtmpCommandHanlderMap _handlerMap;
+        private readonly ILogger _logger;
         private readonly ConcurrentDictionary<Type, (Type, ParameterInfo[])> _commandParametersMap;
 
-        public RtmpCommandDispatcher(IServiceProvider services, IRtmpCommandHanlderMap handlerMap)
+        public RtmpCommandDispatcher(IServiceProvider services, IRtmpCommandHanlderMap handlerMap, ILogger<RtmpCommandDispatcher> logger)
         {
             _services = services;
             _handlerMap = handlerMap;
+            _logger = logger;
             _commandParametersMap = new ConcurrentDictionary<Type, (Type, ParameterInfo[])>();
         }
 
@@ -34,6 +37,8 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler.CommandDispatcher
             var reader = new AmfReader(bytes);
 
             var commandName = (string)(isUsingAmf3 ? reader.ReadAmf3() : reader.ReadAmf0());
+
+            _logger.LogDebug("PeerId: {PeerId} | Command ({commandName}) received", message.PeerContext.Peer.PeerId, commandName);
 
             var commandHandlerType = _handlerMap.GetHandlerType(commandName) ??
                 throw new InvalidOperationException($"No handler found for command {commandName}");

@@ -17,19 +17,15 @@ namespace LiveStreamingServer.Rtmp.Core.Services
 
         public void SetChunkSize(IRtmpClientPeerContext peerContext, uint chunkSize)
         {
-            if (chunkSize < peerContext.OutChunkSize)
-            {
-                peerContext.OutChunkSize = chunkSize;
-            }
-
             var basicHeader = new RtmpChunkBasicHeader(0, RtmpConstants.ProtocolControlMessageChunkStreamId);
             var messageHeader = new RtmpChunkMessageHeaderType0(0, RtmpMessageType.SetChunkSize, RtmpConstants.ProtocolControlMessageStreamId);
 
             _chunkMessageSenderService.Send(peerContext, basicHeader, messageHeader, netBuffer =>
             {
                 netBuffer.WriteUInt32BigEndian(chunkSize);
-            },
-            () => peerContext.OutChunkSize = chunkSize);
+            });
+
+            peerContext.OutChunkSize = chunkSize;
         }
 
         public void AbortMessage(IRtmpClientPeerContext peerContext, uint streamId)
