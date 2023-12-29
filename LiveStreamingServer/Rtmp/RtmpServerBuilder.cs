@@ -52,7 +52,7 @@ namespace LiveStreamingServer.Rtmp
         private void RegisterRtmpCore()
         {
             _services.AddSingleton<IClientPeerHandlerFactory, RtmpClientPeerHandlerFactory>()
-                                 .AddTransient<IRtmpClientPeerHandler, RtmpClientPeerHandler>();
+                     .AddTransient<IRtmpClientPeerHandler, RtmpClientPeerHandler>();
 
             _services.AddMediatR(options =>
             {
