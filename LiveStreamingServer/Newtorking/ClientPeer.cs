@@ -70,6 +70,7 @@ namespace LiveStreamingServer.Newtorking
             finally
             {
                 _tcpClient.Close();
+                handler.Dispose();
                 _logger?.LogDebug("PeerId: {PeerId} | Disconnected", PeerId);
             }
         }
@@ -123,6 +124,20 @@ namespace LiveStreamingServer.Newtorking
             {
                 throw new Exception("Failed to write to the send channel");
             }
+        }
+
+        public Task SendAsync(INetBuffer netBuffer)
+        {
+            var tcs = new TaskCompletionSource();
+            Send(netBuffer, tcs.SetResult);
+            return tcs.Task;
+        }
+
+        public Task SendAsync(Action<INetBuffer> writer)
+        {
+            var tcs = new TaskCompletionSource();
+            Send(writer, tcs.SetResult);
+            return tcs.Task;
         }
 
         private INetBuffer ObtainNetBuffer()

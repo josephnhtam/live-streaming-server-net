@@ -7,12 +7,14 @@ namespace LiveStreamingServer.Rtmp.Core
 {
     public class RtmpClientPeerHandler : IRtmpClientPeerHandler
     {
+        private readonly IRtmpServerContext _serverContext;
         private readonly IMediator _mediator;
 
         private IRtmpClientPeerContext _peerContext = default!;
 
-        public RtmpClientPeerHandler(IMediator mediator)
+        public RtmpClientPeerHandler(IRtmpServerContext serverContext, IMediator mediator)
         {
+            _serverContext = serverContext;
             _mediator = mediator;
         }
 
@@ -55,6 +57,11 @@ namespace LiveStreamingServer.Rtmp.Core
         private async Task<bool> HandleChunkAsync(IRtmpClientPeerContext peerContext, ReadOnlyNetworkStream networkStream, CancellationToken cancellationToken)
         {
             return await _mediator.Send(new RtmpChunkEvent(peerContext, networkStream), cancellationToken);
+        }
+
+        public void Dispose()
+        {
+            _serverContext.RemoveClientPeerContext(_peerContext);
         }
     }
 }

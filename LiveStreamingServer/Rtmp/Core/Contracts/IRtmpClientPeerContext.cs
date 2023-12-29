@@ -8,10 +8,17 @@ namespace LiveStreamingServer.Rtmp.Core.Contracts
         IClientPeerHandle Peer { get; }
         RtmpClientPeerState State { get; set; }
         HandshakeType HandshakeType { get; set; }
-        IRtmpChunkStreamContext GetChunkStreamContext(uint chunkStreamId);
+
         uint InChunkSize { get; set; }
         uint OutChunkSize { get; set; }
 
-        double GetNextStreamId();
+        string AppName { get; set; }
+        string PublishStreamPath { get; set; }
+        IDictionary<string, string> PublishStreamArguments { get; set; }
+
+        uint PublishStreamId { get; }
+        uint NextPublishStreamId();
+
+        IRtmpChunkStreamContext GetChunkStreamContext(uint chunkStreamId);
     }
 }

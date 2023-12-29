@@ -16,5 +16,7 @@ namespace LiveStreamingServer.Networking.Contracts
         void Disconnect();
         void Send(INetBuffer netBuffer, Action? callback = null);
         void Send(Action<INetBuffer> writer, Action? callback = null);
+        Task SendAsync(INetBuffer netBuffer);
+        Task SendAsync(Action<INetBuffer> writer);
     }
 }

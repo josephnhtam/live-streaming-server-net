@@ -36,6 +36,7 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler.Commands
             _logger.LogDebug("PeerId: {PeerId} | Connect: {CommandObject}", @event.PeerContext.Peer.PeerId, JsonSerializer.Serialize(command.CommandObject));
 
             var peerContext = @event.PeerContext;
+            peerContext.AppName = (string)command.CommandObject["app"];
 
             _controlMessageSender.SetChunkSize(peerContext, RtmpConstants.DefaultChunkSize);
             _controlMessageSender.WindowAcknowledgementSize(peerContext, RtmpConstants.DefaultInAcknowledgementWindowSize);
@@ -46,7 +47,7 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler.Commands
             return Task.FromResult(true);
         }
 
-        public void RespondToClient(RtmpChunkEvent @event, RtmpConnectCommand command)
+        private void RespondToClient(RtmpChunkEvent @event, RtmpConnectCommand command)
         {
             _commandMessageSender.SendCommandMessage(
                 peerContext: @event.PeerContext,
@@ -63,10 +64,10 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler.Commands
                 parameters: [
                     new Dictionary<string, object>
                     {
-                        { "level", "status" },
-                        { "code", "NetConnection.Connect.Success" },
-                        { "description", "Connection succeeded." },
-                        { "objectEncoding", 0 }
+                        { RtmpArgumentNames.Level, RtmpArgumentValues.Status },
+                        { RtmpArgumentNames.Code, RtmpStatusCodes.ConnectSuccess },
+                        { RtmpArgumentNames.Description, "Connection succeeded." },
+                        { RtmpArgumentNames.ObjectEncoding, 0 }
                     }
                 ]
             );

@@ -39,5 +39,12 @@ namespace LiveStreamingServer.Rtmp.Core.Services
                 ], amfEncodingType);
             }, callback);
         }
+
+        public Task SendCommandMessageAsync(IRtmpClientPeerContext peerContext, uint streamId, string commandName, double transactionId, IDictionary<string, object>? commandObject, IList<object?> parameters, AmfEncodingType amfEncodingType = AmfEncodingType.Amf0)
+        {
+            var tcs = new TaskCompletionSource();
+            SendCommandMessage(peerContext, streamId, commandName, transactionId, commandObject, parameters, amfEncodingType, tcs.SetResult);
+            return tcs.Task;
+        }
     }
 }

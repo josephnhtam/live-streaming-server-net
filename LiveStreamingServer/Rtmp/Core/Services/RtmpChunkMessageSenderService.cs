@@ -97,5 +97,12 @@ namespace LiveStreamingServer.Rtmp.Core.Services
                 }, outChunkSize >= remainingPayloadSize ? callback : null);
             }
         }
+
+        public Task SendAsync<TRtmpChunkMessageHeader>(IRtmpClientPeerContext peerContext, RtmpChunkBasicHeader basicHeader, TRtmpChunkMessageHeader messageHeader, Action<INetBuffer> payloadWriter) where TRtmpChunkMessageHeader : struct, IRtmpChunkMessageHeader
+        {
+            var tcs = new TaskCompletionSource();
+            Send(peerContext, basicHeader, messageHeader, payloadWriter, tcs.SetResult);
+            return tcs.Task;
+        }
     }
 }
