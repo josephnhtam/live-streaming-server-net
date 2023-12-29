@@ -73,7 +73,7 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler.Commands
             switch (startPublishingResult)
             {
                 case StartPublishingStreamResult.Succeeded:
-                    _logger.LogInformation("PeerId: {PeerId} | PublishStreamPath: {PublishStreamPath} | Type: {PublishingType} | Start publishing succeeded",
+                    _logger.LogInformation("PeerId: {PeerId} | PublishStreamPath: {PublishStreamPath} | Type: {PublishingType} | Start publishing successfully",
                         @event.PeerContext.Peer.PeerId, peerContext.PublishStreamPath, command.PublishingType);
                     return true;
 
