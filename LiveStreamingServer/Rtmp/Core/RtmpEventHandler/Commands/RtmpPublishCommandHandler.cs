@@ -31,7 +31,10 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler.Commands
             RtmpPublishCommand command,
             CancellationToken cancellationToken)
         {
-            _logger.LogDebug("PeerId: {PeerId} | Publish: {PublishingName} | Type: {PublishingType}", @event.PeerContext.Peer.PeerId, command.PublishingName, command.PublishingType);
+            _logger.LogDebug("PeerId: {PeerId} | Publish: {PublishingName} | Type: {PublishingType}",
+                @event.PeerContext.Peer.PeerId,
+                !string.IsNullOrEmpty(command.PublishingName) ? command.PublishingName : "(Empty)",
+                command.PublishingType);
 
             var peerContext = @event.PeerContext;
 
@@ -56,7 +59,7 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler.Commands
         private static void UpdatePublishContext(RtmpPublishCommand command, IRtmpClientPeerContext peerContext)
         {
             var (streamName, arguments) = ParseStreamName(command);
-            peerContext.PublishStreamPath = $"/{peerContext.AppName}/{streamName}";
+            peerContext.PublishStreamPath = $"/{string.Join('/', [peerContext.AppName, streamName])}";
             peerContext.PublishStreamArguments = arguments;
         }
 
@@ -67,19 +70,19 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler.Commands
             switch (startPublishingResult)
             {
                 case StartPublishingStreamResult.Succeeded:
-                    _logger.LogInformation("PeerId: {PeerId} | Publish: {PublishingName} | Type: {PublishingType} | Start publishing succeeded",
-                        @event.PeerContext.Peer.PeerId, command.PublishingName, command.PublishingType);
+                    _logger.LogInformation("PeerId: {PeerId} | PublishStreamPath: {PublishStreamPath} | Type: {PublishingType} | Start publishing succeeded",
+                        @event.PeerContext.Peer.PeerId, peerContext.PublishStreamPath, command.PublishingType);
                     return true;
 
                 case StartPublishingStreamResult.AlreadyPublishing:
-                    _logger.LogWarning("PeerId: {PeerId} | Publish: {PublishingName} | Type: {PublishingType} | Already publishing",
-                        @event.PeerContext.Peer.PeerId, command.PublishingName, command.PublishingType);
+                    _logger.LogWarning("PeerId: {PeerId} | PublishStreamPath: {PublishStreamPath} | Type: {PublishingType} | Already publishing",
+                        @event.PeerContext.Peer.PeerId, peerContext.PublishStreamPath, command.PublishingType);
                     await SendAlreadyPublishingCommandMessage(peerContext);
                     return false;
 
                 case StartPublishingStreamResult.AlreadyExists:
-                    _logger.LogWarning("PeerId: {PeerId} | Publish: {PublishingName} | Type: {PublishingType} | PublishStreamPath Already exists",
-                        @event.PeerContext.Peer.PeerId, command.PublishingName, command.PublishingType);
+                    _logger.LogWarning("PeerId: {PeerId} | PublishStreamPath: {PublishStreamPath} | Type: {PublishingType} | Already exists",
+                        @event.PeerContext.Peer.PeerId, peerContext.PublishStreamPath, command.PublishingType);
                     await SendAlreadyExistsCommandMessage(peerContext);
                     return false;
 
@@ -92,8 +95,8 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler.Commands
         {
             if (!await AuthorizeAsync(peerContext, command.PublishingType))
             {
-                _logger.LogWarning("PeerId: {PeerId} | Publish: {PublishingName} | Type: {PublishingType} | Authorization failed",
-                    @event.PeerContext.Peer.PeerId, command.PublishingName, command.PublishingType);
+                _logger.LogWarning("PeerId: {PeerId} | PublishStreamPath: {PublishStreamPath} | Type: {PublishingType} | Authorization failed",
+                    @event.PeerContext.Peer.PeerId, peerContext.PublishStreamPath, command.PublishingType);
 
                 await SendAuthorizationFailedCommandMessage(peerContext);
                 return false;
