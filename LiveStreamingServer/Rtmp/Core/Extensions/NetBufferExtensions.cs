@@ -30,7 +30,7 @@ namespace LiveStreamingServer.Rtmp.Core.Extensions
             buffer.Write((byte)value);
         }
 
-        public static void WriteAmf(this INetBuffer buffer, IList<object> values, AmfEncodingType type)
+        public static void WriteAmf(this INetBuffer buffer, IList<object?> values, AmfEncodingType type)
         {
             var writer = new AmfWriter();
 

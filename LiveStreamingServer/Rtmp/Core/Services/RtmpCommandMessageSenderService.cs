@@ -20,7 +20,8 @@ namespace LiveStreamingServer.Rtmp.Core.Services
             uint streamId,
             string commandName,
             double transactionId,
-            IList<object> parameters,
+            IDictionary<string, object>? commandObject,
+            IList<object?> parameters,
             AmfEncodingType amfEncodingType,
             Action? callback)
         {
@@ -33,6 +34,7 @@ namespace LiveStreamingServer.Rtmp.Core.Services
                 netBuffer.WriteAmf([
                     commandName,
                     transactionId,
+                    commandObject,
                     .. parameters
                 ], amfEncodingType);
             }, callback);

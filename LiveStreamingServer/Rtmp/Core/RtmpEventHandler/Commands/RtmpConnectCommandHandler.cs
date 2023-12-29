@@ -53,13 +53,14 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler.Commands
                 streamId: 3,
                 commandName: "_result",
                 transactionId: command.TransactionId,
-                parameters: [
+                commandObject:
                     new Dictionary<string, object>
                     {
                         { "fmsVer", "LS/1,0,0,000" },
                         { "capabilities", 31 },
                         { "mode", 1 }
                     },
+                parameters: [
                     new Dictionary<string, object>
                     {
                         { "level", "status" },

@@ -9,7 +9,8 @@ namespace LiveStreamingServer.Rtmp.Core.Services.Contracts
             uint streamId,
             string commandName,
             double transactionId,
-            IList<object> parameters,
+            IDictionary<string, object>? commandObject,
+            IList<object?> parameters,
             AmfEncodingType amfEncodingType = AmfEncodingType.Amf0,
             Action? callback = null);
     }
