@@ -29,27 +29,27 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler.Commands
 
         public override Task<bool> HandleAsync(
             IRtmpChunkStreamContext chunkStreamContext,
-            RtmpChunkEvent message,
+            RtmpChunkEvent @event,
             RtmpConnectCommand command,
             CancellationToken cancellationToken)
         {
-            _logger.LogDebug("PeerId: {PeerId} | Connect: {CommandObject}", message.PeerContext.Peer.PeerId, JsonSerializer.Serialize(command.CommandObject));
+            _logger.LogDebug("PeerId: {PeerId} | Connect: {CommandObject}", @event.PeerContext.Peer.PeerId, JsonSerializer.Serialize(command.CommandObject));
 
-            var peerContext = message.PeerContext;
+            var peerContext = @event.PeerContext;
 
             _controlMessageSender.SetChunkSize(peerContext, RtmpConstants.DefaultChunkSize);
             _controlMessageSender.WindowAcknowledgementSize(peerContext, RtmpConstants.DefaultInAcknowledgementWindowSize);
             _controlMessageSender.SetPeerBandwidth(peerContext, RtmpConstants.DefaultPeerBandwidth, RtmpPeerBandwidthLimitType.Dynamic);
 
-            RespondToClient(message, command);
+            RespondToClient(@event, command);
 
             return Task.FromResult(true);
         }
 
-        public void RespondToClient(RtmpChunkEvent message, RtmpConnectCommand command)
+        public void RespondToClient(RtmpChunkEvent @event, RtmpConnectCommand command)
         {
             _commandMessageSender.SendCommandMessage(
-                peerContext: message.PeerContext,
+                peerContext: @event.PeerContext,
                 streamId: 3,
                 commandName: "_result",
                 transactionId: command.TransactionId,

@@ -12,7 +12,7 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler.Commands
     {
         public override Task<bool> HandleAsync(
             IRtmpChunkStreamContext chunkStreamContext,
-            RtmpChunkEvent message,
+            RtmpChunkEvent @event,
             RtmpCallCommand command,
             CancellationToken cancellationToken)
         {
