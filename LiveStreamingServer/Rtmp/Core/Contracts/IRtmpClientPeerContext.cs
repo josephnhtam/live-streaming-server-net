@@ -11,5 +11,7 @@ namespace LiveStreamingServer.Rtmp.Core.Contracts
         IRtmpChunkStreamContext GetChunkStreamContext(uint chunkStreamId);
         uint InChunkSize { get; set; }
         uint OutChunkSize { get; set; }
+
+        double GetNextStreamId();
     }
 }

@@ -13,6 +13,8 @@ namespace LiveStreamingServer.Rtmp.Core
         public uint InChunkSize { get; set; } = RtmpConstants.DefaultChunkSize;
         public uint OutChunkSize { get; set; } = RtmpConstants.DefaultChunkSize;
 
+        private int _streamId = 0;
+
         private ConcurrentDictionary<uint, IRtmpChunkStreamContext> _chunkStreamContexts = new();
 
         public RtmpClientPeerContext(IClientPeerHandle peer)
@@ -23,6 +25,11 @@ namespace LiveStreamingServer.Rtmp.Core
         public IRtmpChunkStreamContext GetChunkStreamContext(uint chunkStreamId)
         {
             return _chunkStreamContexts.GetOrAdd(chunkStreamId, new RtmpChunkStreamContext(chunkStreamId));
+        }
+
+        public double GetNextStreamId()
+        {
+            return Interlocked.Add(ref _streamId, 1);
         }
     }
 }
