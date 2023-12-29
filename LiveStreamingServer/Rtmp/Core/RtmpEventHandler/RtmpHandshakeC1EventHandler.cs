@@ -1,4 +1,5 @@
 ﻿using LiveStreamingServer.Newtorking;
+using LiveStreamingServer.Newtorking.Contracts;
 using LiveStreamingServer.Rtmp.Core.RtmpEventHandler.Handshakes;
 using LiveStreamingServer.Rtmp.Core.RtmpEvents;
 using LiveStreamingServer.Rtmp.Core.Utilities;
@@ -9,19 +10,21 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler
 {
     public class RtmpHandshakeC1EventHandler : IRequestHandler<RtmpHandshakeC1Event, bool>
     {
+        private readonly INetBufferPool _netBufferPool;
         private readonly ILogger _logger;
 
-        public RtmpHandshakeC1EventHandler(ILogger<RtmpHandshakeC1EventHandler> logger)
+        public RtmpHandshakeC1EventHandler(INetBufferPool netBufferPool, ILogger<RtmpHandshakeC1EventHandler> logger)
         {
+            _netBufferPool = netBufferPool;
             _logger = logger;
         }
 
         public async Task<bool> Handle(RtmpHandshakeC1Event @event, CancellationToken cancellationToken)
         {
-            var incomingBuffer = new NetBuffer(1536);
+            using var incomingBuffer = _netBufferPool.Obtain();
             await incomingBuffer.CopyStreamData(@event.NetworkStream, 1536, cancellationToken);
 
-            var outgoingBuffer = new NetBuffer(1536);
+            using var outgoingBuffer = _netBufferPool.Obtain();
             if (HandleHandshake(@event, incomingBuffer, outgoingBuffer))
             {
                 @event.PeerContext.State = RtmpClientPeerState.HandshakeC2;
@@ -37,7 +40,7 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler
             return false;
         }
 
-        private bool HandleHandshake(RtmpHandshakeC1Event @event, NetBuffer incomingBuffer, NetBuffer outgoingBuffer)
+        private bool HandleHandshake(RtmpHandshakeC1Event @event, INetBuffer incomingBuffer, INetBuffer outgoingBuffer)
         {
             var peerContext = @event.PeerContext;
             var clientPeer = peerContext.Peer;
