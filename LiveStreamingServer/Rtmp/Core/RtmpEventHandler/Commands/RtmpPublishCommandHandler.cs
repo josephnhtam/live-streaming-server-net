@@ -59,7 +59,10 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler.Commands
         private static void UpdatePublishContext(RtmpPublishCommand command, IRtmpClientPeerContext peerContext)
         {
             var (streamName, arguments) = ParseStreamName(command);
-            peerContext.PublishStreamPath = $"/{string.Join('/', [peerContext.AppName, streamName])}";
+
+            peerContext.PublishStreamPath = $"/{string.Join('/',
+                new string[] { peerContext.AppName, streamName }.Where(s => !string.IsNullOrEmpty(s)).ToArray())}";
+
             peerContext.PublishStreamArguments = arguments;
         }
 
