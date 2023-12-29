@@ -177,9 +177,15 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler
 
         private async Task<bool> DoHandlePayloadAsync(IRtmpChunkStreamContext chunkStreamContext, RtmpChunkEvent @event, CancellationToken cancellationToken)
         {
-            using var payloadBuffer = chunkStreamContext.PayloadBuffer ?? throw new InvalidOperationException();
-
-            return await _dispatcher.DispatchAsync(chunkStreamContext, @event, cancellationToken);
+            try
+            {
+                using var payloadBuffer = chunkStreamContext.PayloadBuffer ?? throw new InvalidOperationException();
+                return await _dispatcher.DispatchAsync(chunkStreamContext, @event, cancellationToken);
+            }
+            finally
+            {
+                chunkStreamContext.PayloadBuffer = null;
+            }
         }
     }
 }

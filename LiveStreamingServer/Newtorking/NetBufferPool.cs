@@ -27,7 +27,7 @@ namespace LiveStreamingServer.Newtorking
 
         public INetBuffer Obtain()
         {
-            if (_poolableNetBuffers.Count > _maxPoolSize)
+            if (_poolableNetBuffers.Count >= _maxPoolSize)
             {
                 return new NetBuffer(_netBufferCapacity);
             }

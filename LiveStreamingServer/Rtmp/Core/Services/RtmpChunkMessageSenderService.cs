@@ -57,8 +57,7 @@ namespace LiveStreamingServer.Rtmp.Core.Services
         {
             var headerSize = basicHeader.Size + messageHeader.Size + (extendedTimestampHeader?.Size ?? 0);
             var remainingPayloadSize = payloadBuffer.Size - payloadBuffer.Position;
-            var desiredPayloadSize = outChunkSize - headerSize;
-            var payloadSize = Math.Min(desiredPayloadSize, remainingPayloadSize);
+            var payloadSize = Math.Min(outChunkSize, remainingPayloadSize);
 
             peerContext.Peer.Send((firstChunkBuffer) =>
             {
@@ -67,7 +66,7 @@ namespace LiveStreamingServer.Rtmp.Core.Services
                 extendedTimestampHeader?.Write(firstChunkBuffer);
 
                 payloadBuffer.CopyTo(firstChunkBuffer, payloadSize);
-            }, desiredPayloadSize >= remainingPayloadSize ? callback : null);
+            }, outChunkSize >= remainingPayloadSize ? callback : null);
         }
 
         private static void SendRemainingChunks(
@@ -87,8 +86,7 @@ namespace LiveStreamingServer.Rtmp.Core.Services
             {
                 var headerSize = chunkBasicHeader.Size + (extendedTimestampHeader?.Size ?? 0);
                 var remainingPayloadSize = payloadBuffer.Size - payloadBuffer.Position;
-                var desiredPayloadSize = outChunkSize - headerSize;
-                var payloadSize = Math.Min(desiredPayloadSize, remainingPayloadSize);
+                var payloadSize = Math.Min(outChunkSize, remainingPayloadSize);
 
                 peerContext.Peer.Send((chunkBuffer) =>
                 {
@@ -96,7 +94,7 @@ namespace LiveStreamingServer.Rtmp.Core.Services
                     extendedTimestampHeader?.Write(chunkBuffer);
 
                     payloadBuffer.CopyTo(chunkBuffer, payloadSize);
-                }, desiredPayloadSize >= remainingPayloadSize ? callback : null);
+                }, outChunkSize >= remainingPayloadSize ? callback : null);
             }
         }
     }
