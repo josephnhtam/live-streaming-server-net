@@ -78,6 +78,29 @@ namespace LiveStreamingServer.Rtmp.Core.Extensions
 
             return results;
         }
+
+        public static IList<object> ReadAmf(this INetBuffer buffer, int bytesCount, AmfEncodingType type)
+        {
+            var data = buffer.ReadBytes(bytesCount);
+            var reader = new AmfReader(data);
+            var results = new List<object>();
+
+            try
+            {
+                while (true)
+                {
+                    var parameter = type == AmfEncodingType.Amf3 ? reader.ReadAmf3() : reader.ReadAmf0();
+
+                    if (parameter is IAmfObject amfObject)
+                        parameter = amfObject.ToObject();
+
+                    results.Add(parameter);
+                }
+            }
+            catch (IndexOutOfRangeException) { }
+
+            return results;
+        }
     }
 
     public enum AmfEncodingType

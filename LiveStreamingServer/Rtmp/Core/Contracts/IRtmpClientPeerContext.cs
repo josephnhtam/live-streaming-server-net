@@ -13,12 +13,28 @@ namespace LiveStreamingServer.Rtmp.Core.Contracts
         uint OutChunkSize { get; set; }
 
         string AppName { get; set; }
-        string PublishStreamPath { get; set; }
-        IDictionary<string, string> PublishStreamArguments { get; set; }
 
-        uint PublishStreamId { get; }
-        uint NextPublishStreamId();
+        IRtmpPublishStreamContext? PublishStreamContext { get; }
+        IRtmpPublishStreamContext CreateNewPublishStream();
 
         IRtmpChunkStreamContext GetChunkStreamContext(uint chunkStreamId);
+    }
+
+    public interface IRtmpPublishStreamContext
+    {
+        uint StreamId { get; }
+        string StreamPath { get; set; }
+        IDictionary<string, string> StreamArguments { get; set; }
+        IPublishStreamMetaData StreamMetaData { get; set; }
+    }
+
+    public interface IPublishStreamMetaData
+    {
+        uint VideoFrameRate { get; }
+        uint VideoWidth { get; }
+        uint VideoHeight { get; }
+
+        uint AudioSampleRate { get; }
+        uint AudioChannels { get; }
     }
 }

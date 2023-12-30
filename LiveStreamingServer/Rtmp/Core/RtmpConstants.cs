@@ -18,6 +18,12 @@
         Dynamic = 2
     }
 
+    public static class RtmpDataMessageConstants
+    {
+        public const string SetDataFrame = "@setDataFrame";
+        public const string OnMetaData = "onMetaData";
+    }
+
     public static class RtmpStatusCodes
     {
         public const string ConnectSuccess = "NetConnection.Connect.Success";

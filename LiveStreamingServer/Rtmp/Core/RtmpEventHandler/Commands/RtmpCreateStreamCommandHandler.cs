@@ -36,7 +36,7 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler.Commands
                 commandName: "_result",
                 transactionId: command.TransactionId,
                 commandObject: null,
-                parameters: [peerContext.NextPublishStreamId()]
+                parameters: [peerContext.CreateNewPublishStream().StreamId]
             );
         }
     }

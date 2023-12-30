@@ -1,7 +1,6 @@
 ﻿using LiveStreamingServer.Rtmp.Core.Contracts;
 using LiveStreamingServer.Rtmp.Core.RtmpEventHandler.CommandDispatcher;
 using LiveStreamingServer.Rtmp.Core.RtmpEventHandler.CommandDispatcher.Attributes;
-using LiveStreamingServer.Rtmp.Core.RtmpEvents;
 using LiveStreamingServer.Rtmp.Core.Services.Contracts;
 using LiveStreamingServer.Rtmp.Core.Services.Extensions;
 using Microsoft.Extensions.Logging;
@@ -36,55 +35,58 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler.Commands
                 !string.IsNullOrEmpty(command.PublishingName) ? command.PublishingName : "(Empty)",
                 command.PublishingType);
 
-            UpdatePublishContext(command, peerContext);
+            var publishStreamContext = peerContext.PublishStreamContext ??
+                throw new InvalidOperationException("Stream is not created yet.");
 
-            if (!await AuthorizeAsync(peerContext, command))
+            UpdatePublishContext(command, peerContext, publishStreamContext);
+
+            if (!await AuthorizeAsync(peerContext, command, publishStreamContext))
                 return false;
 
-            if (!await StartPublishingAsync(peerContext, command))
+            if (!await StartPublishingAsync(peerContext, command, publishStreamContext))
                 return false;
 
-            RespondToClient(peerContext);
+            RespondToClient(peerContext, publishStreamContext);
 
             return true;
         }
 
-        private Task<bool> AuthorizeAsync(IRtmpClientPeerContext peerContext, string publishingType)
+        private Task<bool> AuthorizeAsync(IRtmpClientPeerContext peerContext, IRtmpPublishStreamContext publishStreamContext, string publishingType)
         {
             return Task.FromResult(true);
         }
 
-        private static void UpdatePublishContext(RtmpPublishCommand command, IRtmpClientPeerContext peerContext)
+        private static void UpdatePublishContext(RtmpPublishCommand command, IRtmpClientPeerContext peerContext, IRtmpPublishStreamContext publishStreamContext)
         {
             var (streamName, arguments) = ParseStreamName(command);
 
-            peerContext.PublishStreamPath = $"/{string.Join('/',
+            publishStreamContext.StreamPath = $"/{string.Join('/',
                 new string[] { peerContext.AppName, streamName }.Where(s => !string.IsNullOrEmpty(s)).ToArray())}";
 
-            peerContext.PublishStreamArguments = arguments;
+            publishStreamContext.StreamArguments = arguments;
         }
 
-        private async Task<bool> StartPublishingAsync(IRtmpClientPeerContext peerContext, RtmpPublishCommand command)
+        private async Task<bool> StartPublishingAsync(IRtmpClientPeerContext peerContext, RtmpPublishCommand command, IRtmpPublishStreamContext publishStreamContext)
         {
-            var startPublishingResult = _serverContext.StartPublishingStream(peerContext.PublishStreamPath, peerContext);
+            var startPublishingResult = _serverContext.StartPublishingStream(publishStreamContext.StreamPath, peerContext);
 
             switch (startPublishingResult)
             {
                 case StartPublishingStreamResult.Succeeded:
                     _logger.LogInformation("PeerId: {PeerId} | PublishStreamPath: {PublishStreamPath} | Type: {PublishingType} | Start publishing successfully",
-                        peerContext.Peer.PeerId, peerContext.PublishStreamPath, command.PublishingType);
+                        peerContext.Peer.PeerId, publishStreamContext.StreamPath, command.PublishingType);
                     return true;
 
                 case StartPublishingStreamResult.AlreadyPublishing:
                     _logger.LogWarning("PeerId: {PeerId} | PublishStreamPath: {PublishStreamPath} | Type: {PublishingType} | Already publishing",
-                        peerContext.Peer.PeerId, peerContext.PublishStreamPath, command.PublishingType);
-                    await SendAlreadyPublishingCommandMessage(peerContext);
+                        peerContext.Peer.PeerId, publishStreamContext.StreamPath, command.PublishingType);
+                    await SendAlreadyPublishingCommandMessage(peerContext, publishStreamContext);
                     return false;
 
                 case StartPublishingStreamResult.AlreadyExists:
                     _logger.LogWarning("PeerId: {PeerId} | PublishStreamPath: {PublishStreamPath} | Type: {PublishingType} | Already exists",
-                        peerContext.Peer.PeerId, peerContext.PublishStreamPath, command.PublishingType);
-                    await SendAlreadyExistsCommandMessage(peerContext);
+                        peerContext.Peer.PeerId, publishStreamContext.StreamPath, command.PublishingType);
+                    await SendAlreadyExistsCommandMessage(peerContext, publishStreamContext);
                     return false;
 
                 default:
@@ -92,14 +94,14 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler.Commands
             }
         }
 
-        private async Task<bool> AuthorizeAsync(IRtmpClientPeerContext peerContext, RtmpPublishCommand command)
+        private async Task<bool> AuthorizeAsync(IRtmpClientPeerContext peerContext, RtmpPublishCommand command, IRtmpPublishStreamContext publishStreamContext)
         {
-            if (!await AuthorizeAsync(peerContext, command.PublishingType))
+            if (!await AuthorizeAsync(peerContext, publishStreamContext, command.PublishingType))
             {
                 _logger.LogWarning("PeerId: {PeerId} | PublishStreamPath: {PublishStreamPath} | Type: {PublishingType} | Authorization failed",
-                    peerContext.Peer.PeerId, peerContext.PublishStreamPath, command.PublishingType);
+                    peerContext.Peer.PeerId, publishStreamContext.StreamPath, command.PublishingType);
 
-                await SendAuthorizationFailedCommandMessage(peerContext);
+                await SendAuthorizationFailedCommandMessage(peerContext, publishStreamContext);
                 return false;
             }
 
@@ -122,41 +124,41 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler.Commands
             return (streamName, queryStringMap);
         }
 
-        private async Task SendAlreadyExistsCommandMessage(IRtmpClientPeerContext peerContext)
+        private async Task SendAlreadyExistsCommandMessage(IRtmpClientPeerContext peerContext, IRtmpPublishStreamContext publishStreamContext)
         {
             await _commandMessageSender.SendOnStatusCommandMessageAsync(
                 peerContext,
-                peerContext.PublishStreamId,
+                publishStreamContext.StreamId,
                 RtmpArgumentValues.Error,
                 RtmpStatusCodes.PublishBadName,
                 "Stream already exists.");
         }
 
-        private async Task SendAlreadyPublishingCommandMessage(IRtmpClientPeerContext peerContext)
+        private async Task SendAlreadyPublishingCommandMessage(IRtmpClientPeerContext peerContext, IRtmpPublishStreamContext publishStreamContext)
         {
             await _commandMessageSender.SendOnStatusCommandMessageAsync(
                 peerContext,
-                peerContext.PublishStreamId,
+                publishStreamContext.StreamId,
                 RtmpArgumentValues.Error,
                 RtmpStatusCodes.PublishBadConnection,
                 "Already publishing.");
         }
 
-        private async Task SendAuthorizationFailedCommandMessage(IRtmpClientPeerContext peerContext)
+        private async Task SendAuthorizationFailedCommandMessage(IRtmpClientPeerContext peerContext, IRtmpPublishStreamContext publishStreamContext)
         {
             await _commandMessageSender.SendOnStatusCommandMessageAsync(
                 peerContext,
-                peerContext.PublishStreamId,
+                publishStreamContext.StreamId,
                 RtmpArgumentValues.Error,
                 RtmpStatusCodes.PublishUnauthorized,
                 "Authorization failed.");
         }
 
-        private void RespondToClient(IRtmpClientPeerContext peerContext)
+        private void RespondToClient(IRtmpClientPeerContext peerContext, IRtmpPublishStreamContext publishStreamContext)
         {
             _commandMessageSender.SendOnStatusCommandMessage(
                 peerContext,
-                peerContext.PublishStreamId,
+                publishStreamContext.StreamId,
                 RtmpArgumentValues.Status,
                 RtmpStatusCodes.PublishStart,
                 "Publishing started.");
