@@ -13,6 +13,12 @@ namespace LiveStreamingServer.Rtmp.Core.Services.Contracts
             Action<INetBuffer> payloadWriter,
             Action? callback = null) where TRtmpChunkMessageHeader : struct, IRtmpChunkMessageHeader;
 
+        void Send<TRtmpChunkMessageHeader>(
+            IList<IRtmpClientPeerContext> peerContexts,
+            RtmpChunkBasicHeader basicHeader,
+            TRtmpChunkMessageHeader messageHeader,
+            Action<INetBuffer> payloadWriter) where TRtmpChunkMessageHeader : struct, IRtmpChunkMessageHeader;
+
         Task SendAsync<TRtmpChunkMessageHeader>(
             IRtmpClientPeerContext peerContext,
             RtmpChunkBasicHeader basicHeader,

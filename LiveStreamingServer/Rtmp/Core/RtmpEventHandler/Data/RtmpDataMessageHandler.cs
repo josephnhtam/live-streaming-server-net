@@ -40,7 +40,7 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler.Data
             };
         }
 
-        private static async Task<bool> HandleSetDataFrameAsync(IRtmpClientPeerContext peerContext, object[] amfData)
+        private async Task<bool> HandleSetDataFrameAsync(IRtmpClientPeerContext peerContext, object[] amfData)
         {
             var eventName = amfData[1] as string;
             switch (eventName)
@@ -53,7 +53,7 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler.Data
             }
         }
 
-        private static Task<bool> HandleOnMetaDataAsync(IRtmpClientPeerContext peerContext, IDictionary<string, object> metaData)
+        private Task<bool> HandleOnMetaDataAsync(IRtmpClientPeerContext peerContext, IDictionary<string, object> metaData)
         {
             var publishStreamContext = peerContext.PublishStreamContext
                 ?? throw new InvalidOperationException("Stream is not yet created.");
@@ -71,7 +71,7 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler.Data
             return Task.FromResult(true);
         }
 
-        private static void BroadcastMetaDataToSubscribers(IRtmpClientPeerContext peerContext, IDictionary<string, object> metaData)
+        private void BroadcastMetaDataToSubscribers(IRtmpClientPeerContext peerContext, IDictionary<string, object> metaData)
         {
 
         }

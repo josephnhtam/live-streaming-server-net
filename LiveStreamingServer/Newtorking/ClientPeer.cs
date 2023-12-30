@@ -101,7 +101,7 @@ namespace LiveStreamingServer.Newtorking
 
         public void Send(INetBuffer netBuffer, Action? callback)
         {
-            Send(netBuffer.Flush, callback);
+            Send(netBuffer.CopyAllTo, callback);
         }
 
         public void Send(Action<INetBuffer> writer, Action? callback)

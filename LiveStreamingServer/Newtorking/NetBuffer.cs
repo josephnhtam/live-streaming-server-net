@@ -74,28 +74,35 @@ namespace LiveStreamingServer.Newtorking
 
         public void Flush(Stream output)
         {
-            var originalLength = _stream.Length;
-
             _stream.Position = 0;
             _stream.SetLength(Size);
-            _stream.CopyTo(output, (int)originalLength);
-            if (_stream.CanSeek)
-                _stream.Position += Size;
+            _stream.CopyTo(output);
 
             Reset();
         }
 
-        public void CopyTo(INetBuffer targetBuffer, int bytesCount)
+        public void CopyAllTo(INetBuffer targetBuffer)
+        {
+            var originalPosition = Position;
+            _stream.Position = 0;
+
+            targetBuffer.Size += Size;
+            _stream.ReadExactly(targetBuffer.UnderlyingStream.GetBuffer(), targetBuffer.Position, Size);
+            targetBuffer.Position += Size;
+
+            _stream.Position = originalPosition;
+        }
+
+        public void ReadAndCopyTo(INetBuffer targetBuffer, int bytesCount)
         {
             if (Position + bytesCount > Size)
             {
                 throw new ArgumentOutOfRangeException(nameof(bytesCount));
             }
 
-            var targetBufferPosition = targetBuffer.Position;
             targetBuffer.Size += bytesCount;
-            _stream.ReadExactly(targetBuffer.UnderlyingStream.GetBuffer(), targetBufferPosition, bytesCount);
-            targetBuffer.Position = targetBufferPosition + bytesCount;
+            _stream.ReadExactly(targetBuffer.UnderlyingStream.GetBuffer(), targetBuffer.Position, bytesCount);
+            targetBuffer.Position += bytesCount;
         }
 
         public virtual void Dispose()
