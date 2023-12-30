@@ -6,6 +6,6 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler.CommandDispatcher.Contr
 {
     public interface IRtmpCommandDispatcher
     {
-        Task<bool> DispatchAsync(IRtmpChunkStreamContext chunkStreamContext, RtmpChunkEvent message, INetBuffer payloadBuffer, CancellationToken cancellationToken);
+        Task<bool> DispatchAsync(IRtmpChunkStreamContext chunkStreamContext, IRtmpClientPeerContext peerContext, INetBuffer payloadBuffer, CancellationToken cancellationToken);
     }
 }

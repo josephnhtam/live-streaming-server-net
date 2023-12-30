@@ -18,9 +18,9 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler.CommandDispatcher
             _dispatcher = dispatcher;
         }
 
-        public async Task<bool> HandleAsync(IRtmpChunkStreamContext chunkStreamContext, RtmpChunkEvent message, INetBuffer payloadBuffer, CancellationToken cancellationToken)
+        public async Task<bool> HandleAsync(IRtmpChunkStreamContext chunkStreamContext, IRtmpClientPeerContext peerContext, INetBuffer payloadBuffer, CancellationToken cancellationToken)
         {
-            return await _dispatcher.DispatchAsync(chunkStreamContext, message, payloadBuffer, cancellationToken);
+            return await _dispatcher.DispatchAsync(chunkStreamContext, peerContext, payloadBuffer, cancellationToken);
         }
     }
 }

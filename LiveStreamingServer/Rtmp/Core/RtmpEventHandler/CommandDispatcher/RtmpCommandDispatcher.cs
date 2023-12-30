@@ -28,7 +28,7 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler.CommandDispatcher
 
         public async Task<bool> DispatchAsync(
             IRtmpChunkStreamContext chunkStreamContext,
-            RtmpChunkEvent message,
+            IRtmpClientPeerContext peerContext,
             INetBuffer payloadBuffer,
             CancellationToken cancellationToken)
         {
@@ -38,7 +38,7 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler.CommandDispatcher
 
             var commandName = (string)(isUsingAmf3 ? reader.ReadAmf3() : reader.ReadAmf0());
 
-            _logger.LogDebug("PeerId: {PeerId} | Command ({commandName}) received", message.PeerContext.Peer.PeerId, commandName);
+            _logger.LogDebug("PeerId: {PeerId} | Command ({commandName}) received", peerContext.Peer.PeerId, commandName);
 
             var commandHandlerType = _handlerMap.GetHandlerType(commandName) ??
                 throw new InvalidOperationException($"No handler found for command {commandName}");
@@ -47,8 +47,8 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler.CommandDispatcher
             var commandParameters = ReadParameters(commandParameterInfos, reader, isUsingAmf3);
             var command = Activator.CreateInstance(commandType, commandParameters)!;
 
-            var commandHandler = _services.GetRequiredService(commandHandlerType) as dynamic;
-            return await commandHandler.HandleAsync(chunkStreamContext, message, command, cancellationToken);
+            var commandHandler = (_services.GetRequiredService(commandHandlerType) as RtmpCommandHandler)!;
+            return await commandHandler.HandleAsync(chunkStreamContext, peerContext, command, cancellationToken);
         }
 
         private object[] ReadParameters(ParameterInfo[] commandParameterInfos, AmfReader reader, bool isUsingAmf3)

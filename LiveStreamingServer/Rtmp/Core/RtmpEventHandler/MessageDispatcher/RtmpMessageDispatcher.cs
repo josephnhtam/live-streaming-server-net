@@ -16,14 +16,14 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler.MessageDispatcher
             _handlerMap = handlerMap;
         }
 
-        public async Task<bool> DispatchAsync(IRtmpChunkStreamContext chunkStreamContext, RtmpChunkEvent message, CancellationToken cancellationToken)
+        public async Task<bool> DispatchAsync(IRtmpChunkStreamContext chunkStreamContext, IRtmpClientPeerContext peerContext, CancellationToken cancellationToken)
         {
             var messageTypeId = chunkStreamContext.MessageHeader.MessageTypeId;
             var handlerType = _handlerMap.GetHandlerType(messageTypeId) ??
                 throw new InvalidOperationException($"No handler found for message type {messageTypeId}");
 
             var handler = (_services.GetRequiredService(handlerType) as IRtmpMessageHandler)!;
-            return await handler.HandleAsync(chunkStreamContext, message, chunkStreamContext.PayloadBuffer!, cancellationToken);
+            return await handler.HandleAsync(chunkStreamContext, peerContext, chunkStreamContext.PayloadBuffer!, cancellationToken);
         }
     }
 }

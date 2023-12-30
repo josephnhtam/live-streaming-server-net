@@ -169,18 +169,18 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler
             if (payloadBuffer.Size == messageLength)
             {
                 payloadBuffer.Position = 0;
-                return await DoHandlePayloadAsync(chunkStreamContext, @event, cancellationToken);
+                return await DoHandlePayloadAsync(chunkStreamContext, @event.PeerContext, cancellationToken);
             }
 
             return true;
         }
 
-        private async Task<bool> DoHandlePayloadAsync(IRtmpChunkStreamContext chunkStreamContext, RtmpChunkEvent @event, CancellationToken cancellationToken)
+        private async Task<bool> DoHandlePayloadAsync(IRtmpChunkStreamContext chunkStreamContext, IRtmpClientPeerContext peerContext, CancellationToken cancellationToken)
         {
             try
             {
                 using var payloadBuffer = chunkStreamContext.PayloadBuffer ?? throw new InvalidOperationException();
-                return await _dispatcher.DispatchAsync(chunkStreamContext, @event, cancellationToken);
+                return await _dispatcher.DispatchAsync(chunkStreamContext, peerContext, cancellationToken);
             }
             finally
             {

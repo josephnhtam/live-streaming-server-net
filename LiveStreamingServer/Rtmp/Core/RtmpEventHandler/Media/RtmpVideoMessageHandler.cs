@@ -5,21 +5,21 @@ using LiveStreamingServer.Rtmp.Core.RtmpEventHandler.MessageDispatcher.Contracts
 using LiveStreamingServer.Rtmp.Core.RtmpEvents;
 using Microsoft.Extensions.Logging;
 
-namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler.Audio
+namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler.Media
 {
-    [RtmpMessageType(RtmpMessageType.AudioMessage)]
-    public class RtmpAudioMessageHandler : IRtmpMessageHandler
+    [RtmpMessageType(RtmpMessageType.VideoMessage)]
+    public class RtmpVideoMessageHandler : IRtmpMessageHandler
     {
         private readonly ILogger _logger;
 
-        public RtmpAudioMessageHandler(ILogger<RtmpAudioMessageHandler> logger)
+        public RtmpVideoMessageHandler(ILogger<RtmpVideoMessageHandler> logger)
         {
             _logger = logger;
         }
 
         public Task<bool> HandleAsync(
             IRtmpChunkStreamContext chunkStreamContext,
-            RtmpChunkEvent message,
+            IRtmpClientPeerContext peerContext,
             INetBuffer payloadBuffer,
             CancellationToken cancellationToken)
         {

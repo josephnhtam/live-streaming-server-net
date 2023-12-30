@@ -20,10 +20,12 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler.Data
 
         public Task<bool> HandleAsync(
             IRtmpChunkStreamContext chunkStreamContext,
-            RtmpChunkEvent message,
+            IRtmpClientPeerContext peerContext,
             INetBuffer payloadBuffer,
             CancellationToken cancellationToken)
         {
+
+
             return Task.FromResult(true);
         }
     }
