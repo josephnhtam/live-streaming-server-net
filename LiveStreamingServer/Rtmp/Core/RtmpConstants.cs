@@ -2,6 +2,8 @@
 {
     public static class RtmpConstants
     {
+        public static readonly byte[] ServerVersion = [1, 0, 0, 0];
+
         public const uint DefaultChunkSize = 128;
         public const uint DefaultPeerBandwidth = 500_000;
         public const uint DefaultInAcknowledgementWindowSize = 250_000;

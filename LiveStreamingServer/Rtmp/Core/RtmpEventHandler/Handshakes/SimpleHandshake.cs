@@ -33,7 +33,7 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler.Handshakes
         public void WriteS1(INetBuffer outgoingBuffer)
         {
             outgoingBuffer.Write(HandshakeUtilities.GetTime());
-            outgoingBuffer.Write(_incomingBuffer.UnderlyingStream.GetBuffer(), 4, 4);
+            outgoingBuffer.Write(RtmpConstants.ServerVersion);
             outgoingBuffer.WriteRandomBytes(1536 - 8);
         }
 

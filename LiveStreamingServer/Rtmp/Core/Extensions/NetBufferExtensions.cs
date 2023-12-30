@@ -52,8 +52,7 @@ namespace LiveStreamingServer.Rtmp.Core.Extensions
                     writer.WriteAmf3(value);
             }
 
-            var data = writer.Data;
-            buffer.Write(data, 0, data.Length);
+            buffer.Write(writer.Data);
         }
 
         public static object[] ReadAmf(this INetBuffer buffer, int bytesCount, int valuesCount, AmfEncodingType type)

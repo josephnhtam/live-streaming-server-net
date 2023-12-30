@@ -23,6 +23,12 @@ namespace LiveStreamingServer.Newtorking
             RefreshSize();
         }
 
+        public void Write(byte[] buffer)
+        {
+            _stream.Write(buffer, 0, buffer.Length);
+            RefreshSize();
+        }
+
         public void Write(byte[] buffer, int offset, int count)
         {
             _stream.Write(buffer, offset, count);

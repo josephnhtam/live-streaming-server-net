@@ -33,6 +33,7 @@
 
         void Write(bool value);
         void Write(byte value);
+        void Write(byte[] buffer);
         void Write(byte[] buffer, int offset, int count);
         void Write(char value);
         void Write(double value);

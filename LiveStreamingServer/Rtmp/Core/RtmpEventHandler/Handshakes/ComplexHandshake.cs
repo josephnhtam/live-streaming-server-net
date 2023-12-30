@@ -51,7 +51,7 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler.Handshakes
             int initialPosition = outgoingBuffer.Position;
 
             outgoingBuffer.Write(HandshakeUtilities.GetTime());
-            outgoingBuffer.Write(_incomingBuffer.UnderlyingStream.GetBuffer(), 4, 4);
+            outgoingBuffer.Write(RtmpConstants.ServerVersion);
             outgoingBuffer.WriteRandomBytes(1536 - 8);
 
             outgoingBuffer.Write(_incomingBuffer.UnderlyingStream.GetBuffer(), 0, 1536);
