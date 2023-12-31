@@ -72,18 +72,18 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler.Commands
 
             switch (startPublishingResult)
             {
-                case StartPublishingStreamResult.Succeeded:
+                case PublishingStreamResult.Succeeded:
                     _logger.LogInformation("PeerId: {PeerId} | PublishStreamPath: {PublishStreamPath} | Type: {PublishingType} | Start publishing successfully",
                         peerContext.Peer.PeerId, publishStreamContext.StreamPath, command.PublishingType);
                     return true;
 
-                case StartPublishingStreamResult.AlreadyPublishing:
+                case PublishingStreamResult.AlreadyPublishing:
                     _logger.LogWarning("PeerId: {PeerId} | PublishStreamPath: {PublishStreamPath} | Type: {PublishingType} | Already publishing",
                         peerContext.Peer.PeerId, publishStreamContext.StreamPath, command.PublishingType);
                     await SendAlreadyPublishingCommandMessage(peerContext, publishStreamContext);
                     return false;
 
-                case StartPublishingStreamResult.AlreadyExists:
+                case PublishingStreamResult.AlreadyExists:
                     _logger.LogWarning("PeerId: {PeerId} | PublishStreamPath: {PublishStreamPath} | Type: {PublishingType} | Already exists",
                         peerContext.Peer.PeerId, publishStreamContext.StreamPath, command.PublishingType);
                     await SendAlreadyExistsCommandMessage(peerContext, publishStreamContext);

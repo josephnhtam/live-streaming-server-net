@@ -59,6 +59,8 @@ namespace LiveStreamingServer.Rtmp.Core.Services
             {
                 netBuffer.WriteUInt32BigEndian(acknowledgementWindowSize);
             });
+
+            peerContext.OutWindowAcknowledgementSize = acknowledgementWindowSize;
         }
 
         public void SetPeerBandwidth(IRtmpClientPeerContext peerContext, uint peerBandwidth, RtmpPeerBandwidthLimitType limitType)

@@ -11,10 +11,12 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler.Data
     [RtmpMessageType(RtmpMessageType.DataMessageAmf3)]
     public class RtmpDataMessageHandler : IRtmpMessageHandler
     {
+        private readonly IRtmpServerContext _serverContext;
         private readonly ILogger _logger;
 
-        public RtmpDataMessageHandler(ILogger<RtmpDataMessageHandler> logger)
+        public RtmpDataMessageHandler(IRtmpServerContext serverContext, ILogger<RtmpDataMessageHandler> logger)
         {
+            _serverContext = serverContext;
             _logger = logger;
         }
 

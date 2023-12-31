@@ -12,6 +12,9 @@ namespace LiveStreamingServer.Rtmp.Core.Contracts
         uint InChunkSize { get; set; }
         uint OutChunkSize { get; set; }
 
+        uint InWindowAcknowledgementSize { get; set; }
+        uint OutWindowAcknowledgementSize { get; set; }
+
         string AppName { get; set; }
 
         IRtmpPublishStreamContext? PublishStreamContext { get; }
@@ -26,6 +29,8 @@ namespace LiveStreamingServer.Rtmp.Core.Contracts
         string StreamPath { get; set; }
         IDictionary<string, string> StreamArguments { get; set; }
         IPublishStreamMetaData StreamMetaData { get; set; }
+        byte[]? VideoSequenceHeader { get; set; }
+        byte[]? AudioSequenceHeader { get; set; }
     }
 
     public interface IPublishStreamMetaData

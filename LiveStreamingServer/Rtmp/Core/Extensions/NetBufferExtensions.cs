@@ -1,5 +1,6 @@
 ﻿using LiveStreamingServer.Newtorking.Contracts;
 using mtanksl.ActionMessageFormat;
+using Org.BouncyCastle.Tls;
 
 namespace LiveStreamingServer.Rtmp.Core.Extensions
 {
@@ -15,6 +16,26 @@ namespace LiveStreamingServer.Rtmp.Core.Extensions
             return (uint)((buffer.ReadByte() << 24) | (buffer.ReadByte() << 16) | (buffer.ReadByte() << 8) | buffer.ReadByte());
         }
 
+        public static int ReadInt24BigEndian(this INetBuffer buffer)
+        {
+            var value = (buffer.ReadByte() << 16) | (buffer.ReadByte() << 8) | buffer.ReadByte();
+
+            if ((value & 0x800000) != 0)
+                value |= unchecked((int)0xff000000);
+
+            return value;
+        }
+
+        public static int ReadInt32BigEndian(this INetBuffer buffer)
+        {
+            var value = (buffer.ReadByte() << 24) | (buffer.ReadByte() << 16) | (buffer.ReadByte() << 8) | buffer.ReadByte();
+
+            if ((value & 0x80000000) != 0)
+                value |= unchecked((int)0xff000000);
+
+            return value;
+        }
+
         public static void WriteUInt24BigEndian(this INetBuffer buffer, uint value)
         {
             buffer.Write((byte)(value >> 16));
@@ -23,6 +44,21 @@ namespace LiveStreamingServer.Rtmp.Core.Extensions
         }
 
         public static void WriteUInt32BigEndian(this INetBuffer buffer, uint value)
+        {
+            buffer.Write((byte)(value >> 24));
+            buffer.Write((byte)(value >> 16));
+            buffer.Write((byte)(value >> 8));
+            buffer.Write((byte)value);
+        }
+
+        public static void WriteInt24BigEndian(this INetBuffer buffer, int value)
+        {
+            buffer.Write((byte)(value >> 16));
+            buffer.Write((byte)(value >> 8));
+            buffer.Write((byte)value);
+        }
+
+        public static void WriteInt32BigEndian(this INetBuffer buffer, int value)
         {
             buffer.Write((byte)(value >> 24));
             buffer.Write((byte)(value >> 16));

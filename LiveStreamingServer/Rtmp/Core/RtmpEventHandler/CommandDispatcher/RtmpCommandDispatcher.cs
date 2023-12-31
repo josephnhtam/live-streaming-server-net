@@ -40,8 +40,10 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler.CommandDispatcher
 
             _logger.LogDebug("PeerId: {PeerId} | Command ({commandName}) received", peerContext.Peer.PeerId, commandName);
 
-            var commandHandlerType = _handlerMap.GetHandlerType(commandName) ??
-                throw new InvalidOperationException($"No handler found for command {commandName}");
+            var commandHandlerType = _handlerMap.GetHandlerType(commandName);
+
+            if (commandHandlerType == null)
+                return true;
 
             var (commandType, commandParameterInfos) = GetCommandInfo(commandHandlerType);
             var commandParameters = ReadParameters(commandParameterInfos, reader, isUsingAmf3);

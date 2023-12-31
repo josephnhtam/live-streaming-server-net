@@ -16,6 +16,9 @@ namespace LiveStreamingServer.Rtmp.Core
         public uint InChunkSize { get; set; } = RtmpConstants.DefaultChunkSize;
         public uint OutChunkSize { get; set; } = RtmpConstants.DefaultChunkSize;
 
+        public uint InWindowAcknowledgementSize { get; set; }
+        public uint OutWindowAcknowledgementSize { get; set; }
+
         public string AppName { get; set; } = default!;
 
         public IRtmpPublishStreamContext? PublishStreamContext { get; private set; }
@@ -49,6 +52,8 @@ namespace LiveStreamingServer.Rtmp.Core
         public string StreamPath { get; set; } = default!;
         public IDictionary<string, string> StreamArguments { get; set; } = new Dictionary<string, string>();
         public IPublishStreamMetaData StreamMetaData { get; set; } = default!;
+        public byte[]? VideoSequenceHeader { get; set; }
+        public byte[]? AudioSequenceHeader { get; set; }
 
         public RtmpPublishStreamContext(uint streamId)
         {

@@ -11,6 +11,8 @@
 
         public const uint ProtocolControlMessageChunkStreamId = 2;
         public const uint ProtocolControlMessageStreamId = 0;
+
+        public const uint VideoMessageChunkStreamId = 5;
     }
 
     public enum RtmpPeerBandwidthLimitType : byte
@@ -56,5 +58,31 @@
     {
         public const string Error = "error";
         public const string Status = "status";
+    }
+
+    public enum VideoFrameType : byte
+    {
+        KeyFrame = 1,
+        InterFrame = 2,
+        DisposableInterFrame = 3,
+        GeneratedKeyFrame = 4,
+        VideoInfoOrCommandFrame = 5
+    }
+
+    public enum VideoCodecId : byte
+    {
+        SorensonH263 = 2,
+        ScreenVideo = 3,
+        On2VP6 = 4,
+        On2VP6WithAlphaChannel = 5,
+        ScreenVideoVersion2 = 6,
+        AVC = 7
+    }
+
+    public enum AVCPacketType : byte
+    {
+        SequenceHeader = 0,
+        NALU = 1,
+        EndOfSequence = 2
     }
 }
