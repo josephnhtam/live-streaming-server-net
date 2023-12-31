@@ -50,7 +50,7 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler.Commands
         {
             _commandMessageSender.SendCommandMessage(
                 peerContext: peerContext,
-                streamId: 3,
+                chunkStreamId: 3,
                 commandName: "_result",
                 transactionId: command.TransactionId,
                 commandObject:

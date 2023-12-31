@@ -17,7 +17,7 @@ namespace LiveStreamingServer.Rtmp.Core.Services
 
         public void SendCommandMessage(
             IRtmpClientPeerContext peerContext,
-            uint streamId,
+            uint chunkStreamId,
             string commandName,
             double transactionId,
             IDictionary<string, object>? commandObject,
@@ -25,7 +25,7 @@ namespace LiveStreamingServer.Rtmp.Core.Services
             AmfEncodingType amfEncodingType,
             Action? callback)
         {
-            var basicHeader = new RtmpChunkBasicHeader(0, streamId);
+            var basicHeader = new RtmpChunkBasicHeader(0, chunkStreamId);
             var messageHeader = new RtmpChunkMessageHeaderType0(0,
                 amfEncodingType == AmfEncodingType.Amf0 ? RtmpMessageType.CommandMessageAmf0 : RtmpMessageType.CommandMessageAmf3, 0);
 
@@ -40,10 +40,10 @@ namespace LiveStreamingServer.Rtmp.Core.Services
             }, callback);
         }
 
-        public Task SendCommandMessageAsync(IRtmpClientPeerContext peerContext, uint streamId, string commandName, double transactionId, IDictionary<string, object>? commandObject, IList<object?> parameters, AmfEncodingType amfEncodingType = AmfEncodingType.Amf0)
+        public Task SendCommandMessageAsync(IRtmpClientPeerContext peerContext, uint chunkStreamId, string commandName, double transactionId, IDictionary<string, object>? commandObject, IList<object?> parameters, AmfEncodingType amfEncodingType = AmfEncodingType.Amf0)
         {
             var tcs = new TaskCompletionSource();
-            SendCommandMessage(peerContext, streamId, commandName, transactionId, commandObject, parameters, amfEncodingType, tcs.SetResult);
+            SendCommandMessage(peerContext, chunkStreamId, commandName, transactionId, commandObject, parameters, amfEncodingType, tcs.SetResult);
             return tcs.Task;
         }
     }

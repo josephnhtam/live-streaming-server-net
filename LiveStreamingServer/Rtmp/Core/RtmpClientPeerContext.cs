@@ -7,8 +7,6 @@ namespace LiveStreamingServer.Rtmp.Core
 {
     public class RtmpClientPeerContext : IRtmpClientPeerContext
     {
-        private readonly object _syncLock = new();
-
         public IClientPeerHandle Peer { get; }
         public RtmpClientPeerState State { get; set; } = RtmpClientPeerState.HandshakeC0;
         public HandshakeType HandshakeType { get; set; } = HandshakeType.SimpleHandshake;
@@ -22,6 +20,7 @@ namespace LiveStreamingServer.Rtmp.Core
         public string AppName { get; set; } = default!;
 
         public IRtmpPublishStreamContext? PublishStreamContext { get; private set; }
+        public IRtmpStreamSubscriptionContext? StreamSubscriptionContext { get; private set; }
 
         private uint _publishStreamId;
         private ConcurrentDictionary<uint, IRtmpChunkStreamContext> _chunkStreamContexts = new();
@@ -33,11 +32,16 @@ namespace LiveStreamingServer.Rtmp.Core
 
         public IRtmpPublishStreamContext CreateNewPublishStream()
         {
-            lock (_syncLock)
-            {
-                PublishStreamContext = new RtmpPublishStreamContext(Interlocked.Increment(ref _publishStreamId));
-                return PublishStreamContext;
-            }
+            var newContext = new RtmpPublishStreamContext(Interlocked.Increment(ref _publishStreamId));
+            PublishStreamContext = newContext;
+            return newContext;
+        }
+
+        public IRtmpStreamSubscriptionContext CreateStreamSubscriptionContext(uint chunkStreamId, string streamName, IDictionary<string, string> streamArguments)
+        {
+            var newContext = new RtmpStreamSubscriptionContext(chunkStreamId, streamName, streamArguments);
+            StreamSubscriptionContext = newContext;
+            return newContext;
         }
 
         public IRtmpChunkStreamContext GetChunkStreamContext(uint chunkStreamId)
@@ -48,7 +52,7 @@ namespace LiveStreamingServer.Rtmp.Core
 
     public class RtmpPublishStreamContext : IRtmpPublishStreamContext
     {
-        public uint StreamId { get; }
+        public uint Id { get; }
         public string StreamPath { get; set; } = default!;
         public IDictionary<string, string> StreamArguments { get; set; } = new Dictionary<string, string>();
         public IPublishStreamMetaData StreamMetaData { get; set; } = default!;
@@ -57,7 +61,7 @@ namespace LiveStreamingServer.Rtmp.Core
 
         public RtmpPublishStreamContext(uint streamId)
         {
-            StreamId = streamId;
+            Id = streamId;
         }
     }
 
@@ -82,6 +86,20 @@ namespace LiveStreamingServer.Rtmp.Core
             VideoHeight = videoHeight;
             AudioSampleRate = audioSampleRate;
             AudioChannels = stereo ? 2u : 1u;
+        }
+    }
+
+    public class RtmpStreamSubscriptionContext : IRtmpStreamSubscriptionContext
+    {
+        public uint ChunkStreamId { get; }
+        public string StreamPath { get; }
+        public IDictionary<string, string> StreamArguments { get; }
+
+        public RtmpStreamSubscriptionContext(uint chunkStreamId, string streamName, IDictionary<string, string> streamArguments)
+        {
+            ChunkStreamId = chunkStreamId;
+            StreamPath = streamName;
+            StreamArguments = streamArguments;
         }
     }
 }

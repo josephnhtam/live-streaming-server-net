@@ -20,12 +20,15 @@ namespace LiveStreamingServer.Rtmp.Core.Contracts
         IRtmpPublishStreamContext? PublishStreamContext { get; }
         IRtmpPublishStreamContext CreateNewPublishStream();
 
+        IRtmpStreamSubscriptionContext? StreamSubscriptionContext { get; }
+        IRtmpStreamSubscriptionContext CreateStreamSubscriptionContext(uint chunkStreamId, string streamName, IDictionary<string, string> streamArguments);
+
         IRtmpChunkStreamContext GetChunkStreamContext(uint chunkStreamId);
     }
 
     public interface IRtmpPublishStreamContext
     {
-        uint StreamId { get; }
+        uint Id { get; }
         string StreamPath { get; set; }
         IDictionary<string, string> StreamArguments { get; set; }
         IPublishStreamMetaData StreamMetaData { get; set; }
@@ -41,5 +44,12 @@ namespace LiveStreamingServer.Rtmp.Core.Contracts
 
         uint AudioSampleRate { get; }
         uint AudioChannels { get; }
+    }
+
+    public interface IRtmpStreamSubscriptionContext
+    {
+        uint ChunkStreamId { get; }
+        string StreamPath { get; }
+        IDictionary<string, string> StreamArguments { get; }
     }
 }

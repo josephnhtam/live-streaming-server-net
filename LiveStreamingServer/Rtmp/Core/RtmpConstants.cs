@@ -42,6 +42,8 @@
         public const string PublishUnauthorized = "NetStream.publish.Unauthorized";
         public const string PublishBadName = "NetStream.Publish.BadName";
         public const string PublishBadConnection = "NetStream.Publish.BadConnection";
+        public const string PlayStart = "NetStream.Play.Start";
+        public const string PlayBadConnection = "NetStream.Play.BadConnection";
     }
 
     public static class RtmpArgumentNames

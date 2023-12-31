@@ -26,18 +26,21 @@ namespace LiveStreamingServer.Rtmp.Core
             return _publishingClientPeerContexts.GetValueOrDefault(publishStreamPath);
         }
 
-        public PublishingStreamResult StartPublishingStream(string publishStreamPath, IRtmpClientPeerContext publisherPeerContext)
+        public PublishingStreamResult StartPublishingStream(IRtmpClientPeerContext publisherPeerContext, string streamPath, IDictionary<string, string> streamArguments)
         {
             using var readLock = _publishingRwLock.WriteLock();
 
             if (_publishStreamPaths.ContainsKey(publisherPeerContext))
                 return PublishingStreamResult.AlreadyPublishing;
 
-            if (_publishingClientPeerContexts.ContainsKey(publishStreamPath))
+            if (_publishingClientPeerContexts.ContainsKey(streamPath))
                 return PublishingStreamResult.AlreadyExists;
 
-            _publishStreamPaths.Add(publisherPeerContext, publishStreamPath);
-            _publishingClientPeerContexts.Add(publishStreamPath, publisherPeerContext);
+            publisherPeerContext.PublishStreamContext!.StreamPath = streamPath;
+            publisherPeerContext.PublishStreamContext!.StreamArguments = streamArguments;
+
+            _publishStreamPaths.Add(publisherPeerContext, streamPath);
+            _publishingClientPeerContexts.Add(streamPath, publisherPeerContext);
 
             return PublishingStreamResult.Succeeded;
         }
@@ -75,21 +78,23 @@ namespace LiveStreamingServer.Rtmp.Core
             _publishingClientPeerContexts.Remove(publishStreamPath);
         }
 
-        public SubscribingStreamResult StartSubscribingStream(string publishStreamPath, IRtmpClientPeerContext subscriberPeerContext)
+        public SubscribingStreamResult StartSubscribingStream(IRtmpClientPeerContext subscriberPeerContext, uint chunkStreamId, string streamPath, IDictionary<string, string> streamArguments)
         {
             using var subscribingWriteLock = _subscribingRwLock.WriteLock();
 
-            if (_subscribingClientPeerContexts.TryGetValue(publishStreamPath, out var subscribers))
+            if (!_subscribingClientPeerContexts.TryGetValue(streamPath, out var subscribers))
             {
                 subscribers = new List<IRtmpClientPeerContext>();
-                _subscribingClientPeerContexts[publishStreamPath] = subscribers;
+                _subscribingClientPeerContexts[streamPath] = subscribers;
             }
 
             if (_subscribedStreamPaths.ContainsKey(subscriberPeerContext))
                 return SubscribingStreamResult.AlreadySubscribing;
 
-            subscribers!.Add(subscriberPeerContext);
-            _subscribedStreamPaths.Add(subscriberPeerContext, publishStreamPath);
+            subscriberPeerContext.CreateStreamSubscriptionContext(chunkStreamId, streamPath, streamArguments);
+
+            subscribers.Add(subscriberPeerContext);
+            _subscribedStreamPaths.Add(subscriberPeerContext, streamPath);
 
             return SubscribingStreamResult.Succeeded;
         }

@@ -32,11 +32,11 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler.Commands
         {
             _commandMessageSender.SendCommandMessage(
                 peerContext: peerContext,
-                streamId: 0,
+                chunkStreamId: 0,
                 commandName: "_result",
                 transactionId: command.TransactionId,
                 commandObject: null,
-                parameters: [peerContext.CreateNewPublishStream().StreamId]
+                parameters: [peerContext.CreateNewPublishStream().Id]
             );
         }
     }

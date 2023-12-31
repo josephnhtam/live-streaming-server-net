@@ -6,7 +6,7 @@ namespace LiveStreamingServer.Rtmp.Core.Services.Contracts
     public interface IRtmpCommandMessageSenderService
     {
         void SendCommandMessage(IRtmpClientPeerContext peerContext,
-            uint streamId,
+            uint chunkStreamId,
             string commandName,
             double transactionId,
             IDictionary<string, object>? commandObject,
@@ -15,7 +15,7 @@ namespace LiveStreamingServer.Rtmp.Core.Services.Contracts
             Action? callback = null);
 
         Task SendCommandMessageAsync(IRtmpClientPeerContext peerContext,
-            uint streamId,
+            uint chunkStreamId,
             string commandName,
             double transactionId,
             IDictionary<string, object>? commandObject,

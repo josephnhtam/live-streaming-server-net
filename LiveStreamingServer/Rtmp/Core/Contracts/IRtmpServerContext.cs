@@ -8,10 +8,10 @@ namespace LiveStreamingServer.Rtmp.Core.Contracts
         string? GetPublishStreamPath(IRtmpClientPeerContext publisherPeerContext);
         IRtmpClientPeerContext? GetPublishingClientPeerContext(string publishStreamPath);
 
-        PublishingStreamResult StartPublishingStream(string publishStreamPath, IRtmpClientPeerContext publisherPeerContext);
+        PublishingStreamResult StartPublishingStream(IRtmpClientPeerContext publisherPeerContext, string streamPath, IDictionary<string, string> streamArguments);
         void StopPublishingStream(string publishStreamPath, out IList<IRtmpClientPeerContext> existingSubscribers);
 
-        SubscribingStreamResult StartSubscribingStream(string publishStreamPath, IRtmpClientPeerContext subscriberPeerContext);
+        SubscribingStreamResult StartSubscribingStream(IRtmpClientPeerContext subscriberPeerContext, uint chunkStreamId, string streamPath, IDictionary<string, string> streamArguments);
         void StopSubscribingStream(IRtmpClientPeerContext subscriberPeerContext);
 
         IRentable<IList<IRtmpClientPeerContext>> GetSubscribersLocked(string publishStreamPath);
