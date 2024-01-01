@@ -1,6 +1,7 @@
 ﻿using LiveStreamingServerNet.Rtmp.Contracts;
 using LiveStreamingServerNet.Rtmp.RtmpEventHandler.CommandDispatcher;
 using LiveStreamingServerNet.Rtmp.RtmpEventHandler.CommandDispatcher.Attributes;
+using LiveStreamingServerNet.Rtmp.Services;
 using LiveStreamingServerNet.Rtmp.Services.Contracts;
 using LiveStreamingServerNet.Rtmp.Services.Extensions;
 using LiveStreamingServerNet.Rtmp.Utilities;
@@ -13,13 +14,13 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandler.Commands
     [RtmpCommand("publish")]
     public class RtmpPublishCommandHandler : RtmpCommandHandler<RtmpPublishCommand>
     {
-        private readonly IRtmpServerContext _serverContext;
+        private readonly IRtmpStreamManagerService _streamManager;
         private readonly IRtmpCommandMessageSenderService _commandMessageSender;
         private readonly ILogger _logger;
 
-        public RtmpPublishCommandHandler(IRtmpServerContext serverContext, IRtmpCommandMessageSenderService commandMessageSender, ILogger<RtmpPublishCommandHandler> logger)
+        public RtmpPublishCommandHandler(IRtmpStreamManagerService streamManager, IRtmpCommandMessageSenderService commandMessageSender, ILogger<RtmpPublishCommandHandler> logger)
         {
-            _serverContext = serverContext;
+            _streamManager = streamManager;
             _commandMessageSender = commandMessageSender;
             _logger = logger;
         }
@@ -94,7 +95,7 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandler.Commands
             string streamPath,
             IDictionary<string, string> streamArguments)
         {
-            var startPublishingResult = _serverContext.StartPublishingStream(peerContext, streamPath, streamArguments);
+            var startPublishingResult = _streamManager.StartPublishingStream(peerContext, streamPath, streamArguments, out _);
 
             switch (startPublishingResult)
             {

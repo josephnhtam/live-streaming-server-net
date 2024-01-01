@@ -10,16 +10,16 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandler.Media
     [RtmpMessageType(RtmpMessageType.VideoMessage)]
     public class RtmpVideoMessageHandler : IRtmpMessageHandler
     {
-        private readonly IRtmpServerContext _serverContext;
+        private readonly IRtmpStreamManagerService _streamManager;
         private readonly IRtmpMediaMessageSenderService _mediaMessageSender;
         private readonly ILogger _logger;
 
         public RtmpVideoMessageHandler(
-            IRtmpServerContext serverContext,
+            IRtmpStreamManagerService streamManager,
             IRtmpMediaMessageSenderService mediaMessageSender,
             ILogger<RtmpVideoMessageHandler> logger)
         {
-            _serverContext = serverContext;
+            _streamManager = streamManager;
             _mediaMessageSender = mediaMessageSender;
             _logger = logger;
         }
@@ -46,12 +46,12 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandler.Media
         {
             if (hasSequenceHeader)
             {
-                using var subscribers = _serverContext.GetSubscribersLocked(publishStreamContext.StreamPath);
+                using var subscribers = _streamManager.GetSubscribersLocked(publishStreamContext.StreamPath);
                 BroacastVideoMessageToSubscribers(chunkStreamContext, payloadBuffer, subscribers.Value);
             }
             else
             {
-                var subscribers = _serverContext.GetSubscribers(publishStreamContext.StreamPath);
+                var subscribers = _streamManager.GetSubscribers(publishStreamContext.StreamPath);
                 BroacastVideoMessageToSubscribers(chunkStreamContext, payloadBuffer, subscribers);
             }
         }

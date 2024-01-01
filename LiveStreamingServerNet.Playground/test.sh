@@ -6,4 +6,4 @@ ffmpeg -re \
 -preset fast -vb 3000k -pix_fmt rgb24 \
 -pix_fmt yuv420p \
 -f flv \
-rtmp://localhost
+rtmp://localhost/live/app

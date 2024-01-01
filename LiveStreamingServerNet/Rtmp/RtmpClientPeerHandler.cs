@@ -7,21 +7,23 @@ namespace LiveStreamingServerNet.Rtmp
 {
     public class RtmpClientPeerHandler : IRtmpClientPeerHandler
     {
-        private readonly IRtmpServerContext _serverContext;
         private readonly IMediator _mediator;
+        private readonly IEnumerable<IRtmpServerEventHandler> _serverEventHandlers;
 
         private IRtmpClientPeerContext _peerContext = default!;
 
-        public RtmpClientPeerHandler(IRtmpServerContext serverContext, IMediator mediator)
+        public RtmpClientPeerHandler(IMediator mediator, IEnumerable<IRtmpServerEventHandler> serverEventHandlers)
         {
-            _serverContext = serverContext;
             _mediator = mediator;
+            _serverEventHandlers = serverEventHandlers;
         }
 
         public void Initialize(IRtmpClientPeerContext peerContext)
         {
             _peerContext = peerContext;
             _peerContext.State = RtmpClientPeerState.HandshakeC0;
+
+            OnRtmpClientCreated();
         }
 
         public async Task<bool> HandleClientPeerLoopAsync(ReadOnlyNetworkStream networkStream, CancellationToken cancellationToken)
@@ -61,7 +63,19 @@ namespace LiveStreamingServerNet.Rtmp
 
         public void Dispose()
         {
-            _serverContext.RemoveClientPeerContext(_peerContext);
+            OnRtmpClientDisposed();
+        }
+
+        private void OnRtmpClientCreated()
+        {
+            foreach (var serverEventHandler in _serverEventHandlers)
+                serverEventHandler.OnRtmpClientCreated(_peerContext);
+        }
+
+        private void OnRtmpClientDisposed()
+        {
+            foreach (var serverEventHandler in _serverEventHandlers)
+                serverEventHandler.OnRtmpClientDisposed(_peerContext);
         }
     }
 }

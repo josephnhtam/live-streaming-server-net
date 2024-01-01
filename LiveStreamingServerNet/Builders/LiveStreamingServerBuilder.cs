@@ -10,6 +10,7 @@ using LiveStreamingServerNet.Rtmp.RtmpEventHandler.CommandDispatcher.Contracts;
 using LiveStreamingServerNet.Rtmp.RtmpEventHandler.MessageDispatcher;
 using LiveStreamingServerNet.Rtmp.RtmpEventHandler.MessageDispatcher.Attributes;
 using LiveStreamingServerNet.Rtmp.RtmpEventHandler.MessageDispatcher.Contracts;
+using LiveStreamingServerNet.Rtmp.ServerEventHandlers;
 using LiveStreamingServerNet.Rtmp.Services;
 using LiveStreamingServerNet.Rtmp.Services.Contracts;
 using Microsoft.Extensions.DependencyInjection;
@@ -40,7 +41,10 @@ namespace LiveStreamingServerNet.Builders
             _services.AddSingleton<IRtmpChunkMessageSenderService, RtmpChunkMessageSenderService>()
                      .AddSingleton<IRtmpControlMessageSenderService, RtmpControlMessageSenderService>()
                      .AddSingleton<IRtmpCommandMessageSenderService, RtmpCommandMessageSenderService>()
-                     .AddSingleton<IRtmpMediaMessageSenderService, RtmpMediaMessageSenderService>();
+                     .AddSingleton<IRtmpMediaMessageSenderService, RtmpMediaMessageSenderService>()
+                     .AddSingleton<IRtmpStreamManagerService, RtmpStreamManagerService>();
+
+            _services.AddSingleton<IRtmpServerEventHandler, RtmpServerEventHandler>();
         }
 
         private void RegisterServer()

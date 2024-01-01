@@ -1,6 +1,7 @@
 ﻿using LiveStreamingServerNet.Rtmp.Contracts;
 using LiveStreamingServerNet.Rtmp.RtmpEventHandler.CommandDispatcher;
 using LiveStreamingServerNet.Rtmp.RtmpEventHandler.CommandDispatcher.Attributes;
+using LiveStreamingServerNet.Rtmp.Services;
 using LiveStreamingServerNet.Rtmp.Services.Contracts;
 using LiveStreamingServerNet.Rtmp.Services.Extensions;
 using LiveStreamingServerNet.Rtmp.Utilities;
@@ -13,18 +14,18 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandler.Commands
     [RtmpCommand("play")]
     public class RtmpPlayCommandHandler : RtmpCommandHandler<RtmpPlayCommand>
     {
-        private readonly IRtmpServerContext _serverContext;
+        private readonly IRtmpStreamManagerService _streamManager;
         private readonly IRtmpCommandMessageSenderService _commandMessageSender;
         private readonly IRtmpMediaMessageSenderService _mediaMessageSender;
         private readonly ILogger<RtmpPlayCommandHandler> _logger;
 
         public RtmpPlayCommandHandler(
-            IRtmpServerContext serverContext,
+            IRtmpStreamManagerService streamManager,
             IRtmpCommandMessageSenderService commandMessageSender,
             IRtmpMediaMessageSenderService mediaMessageSender,
             ILogger<RtmpPlayCommandHandler> logger)
         {
-            _serverContext = serverContext;
+            _streamManager = streamManager;
             _commandMessageSender = commandMessageSender;
             _mediaMessageSender = mediaMessageSender;
             _logger = logger;
@@ -91,7 +92,7 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandler.Commands
             string streamPath,
             IDictionary<string, string> streamArguments)
         {
-            var startSubscribingResult = _serverContext.StartSubscribingStream(peerContext, chunkStreamContext.ChunkStreamId, streamPath, streamArguments);
+            var startSubscribingResult = _streamManager.StartSubscribingStream(peerContext, chunkStreamContext.ChunkStreamId, streamPath, streamArguments);
 
             switch (startSubscribingResult)
             {
@@ -115,7 +116,7 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandler.Commands
 
         private void SendCachedHeaderMessages(IRtmpClientPeerContext peerContext, IRtmpChunkStreamContext chunkStreamContext)
         {
-            var publishStreamContext = _serverContext
+            var publishStreamContext = _streamManager
                 .GetPublishingClientPeerContext(peerContext.StreamSubscriptionContext!.StreamPath)?
                 .PublishStreamContext;
 
