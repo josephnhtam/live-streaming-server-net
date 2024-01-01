@@ -73,8 +73,7 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler.Media
                 var aacPackageType = (AACPacketType)payloadBuffer.ReadByte();
                 if (aacPackageType == AACPacketType.SequenceHeader)
                 {
-                    publishStreamContext.VideoSequenceHeader = new byte[payloadBuffer.Size];
-                    payloadBuffer.MoveTo(0).ReadBytes(payloadBuffer.Size);
+                    publishStreamContext.AudioSequenceHeader = payloadBuffer.MoveTo(0).ReadBytes(payloadBuffer.Size);
                     payloadBuffer.MoveTo(0);
                     return true;
                 }

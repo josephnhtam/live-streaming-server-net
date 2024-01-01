@@ -15,12 +15,18 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler.Commands
     {
         private readonly IRtmpServerContext _serverContext;
         private readonly IRtmpCommandMessageSenderService _commandMessageSender;
+        private readonly IRtmpMediaMessageSenderService _mediaMessageSender;
         private readonly ILogger<RtmpPlayCommandHandler> _logger;
 
-        public RtmpPlayCommandHandler(IRtmpServerContext serverContext, IRtmpCommandMessageSenderService commandMessageSender, ILogger<RtmpPlayCommandHandler> logger)
+        public RtmpPlayCommandHandler(
+            IRtmpServerContext serverContext,
+            IRtmpCommandMessageSenderService commandMessageSender,
+            IRtmpMediaMessageSenderService mediaMessageSender,
+            ILogger<RtmpPlayCommandHandler> logger)
         {
             _serverContext = serverContext;
             _commandMessageSender = commandMessageSender;
+            _mediaMessageSender = mediaMessageSender;
             _logger = logger;
         }
 
@@ -93,6 +99,7 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler.Commands
                     _logger.LogInformation("PeerId: {PeerId} | PublishStreamPath: {PublishStreamPath} | Start subscription successfully",
                         peerContext.Peer.PeerId, streamPath);
                     SendSubscriptionStartedMessage(peerContext, chunkStreamContext);
+                    SendCachedHeaderMessages(peerContext, chunkStreamContext);
                     return true;
 
                 case SubscribingStreamResult.AlreadySubscribing:
@@ -103,6 +110,32 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler.Commands
 
                 default:
                     throw new ArgumentOutOfRangeException(nameof(startSubscribingResult), startSubscribingResult, null);
+            }
+        }
+
+        private void SendCachedHeaderMessages(IRtmpClientPeerContext peerContext, IRtmpChunkStreamContext chunkStreamContext)
+        {
+            var publishStreamContext = _serverContext
+                .GetPublishingClientPeerContext(peerContext.StreamSubscriptionContext!.StreamPath)?
+                .PublishStreamContext;
+
+            if (publishStreamContext == null)
+                return;
+
+            var videoSequenceHeader = publishStreamContext.VideoSequenceHeader;
+            if (videoSequenceHeader != null)
+            {
+                _mediaMessageSender.SendVideoMessage(peerContext, chunkStreamContext, (netBuffer) =>
+                    netBuffer.Write(videoSequenceHeader)
+                );
+            }
+
+            var audioSequenceHeader = publishStreamContext.AudioSequenceHeader;
+            if (audioSequenceHeader != null)
+            {
+                _mediaMessageSender.SendAudioMessage(peerContext, chunkStreamContext, (netBuffer) =>
+                    netBuffer.Write(audioSequenceHeader)
+                );
             }
         }
 

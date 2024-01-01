@@ -124,7 +124,6 @@ namespace LiveStreamingServer.Rtmp.Core
         public IList<IRtmpClientPeerContext> GetSubscribers(string publishStreamPath)
         {
             using var readLock = _subscribingRwLock.ReadLock();
-
             return _subscribingClientPeerContexts.GetValueOrDefault(publishStreamPath)?.ToList() ?? new List<IRtmpClientPeerContext>();
         }
     }

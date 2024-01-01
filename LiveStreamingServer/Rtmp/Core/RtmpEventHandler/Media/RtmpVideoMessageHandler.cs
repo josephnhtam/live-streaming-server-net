@@ -74,8 +74,7 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler.Media
                 var avcPackageType = (AVCPacketType)payloadBuffer.ReadByte();
                 if (avcPackageType == AVCPacketType.SequenceHeader)
                 {
-                    publishStreamContext.VideoSequenceHeader = new byte[payloadBuffer.Size];
-                    payloadBuffer.MoveTo(0).ReadBytes(payloadBuffer.Size);
+                    publishStreamContext.VideoSequenceHeader = payloadBuffer.MoveTo(0).ReadBytes(payloadBuffer.Size);
                     payloadBuffer.MoveTo(0);
                     return true;
                 }
