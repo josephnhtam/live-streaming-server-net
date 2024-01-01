@@ -46,5 +46,29 @@ namespace LiveStreamingServerNet.Rtmp.Services
             SendCommandMessage(peerContext, chunkStreamId, commandName, transactionId, commandObject, parameters, amfEncodingType, tcs.SetResult);
             return tcs.Task;
         }
+
+        public void SendCommandMessage(
+            IList<IRtmpClientPeerContext> peerContexts,
+            uint chunkStreamId,
+            string commandName,
+            double transactionId,
+            IDictionary<string, object>? commandObject,
+            IList<object?> parameters,
+            AmfEncodingType amfEncodingType)
+        {
+            var basicHeader = new RtmpChunkBasicHeader(0, chunkStreamId);
+            var messageHeader = new RtmpChunkMessageHeaderType0(0,
+                amfEncodingType == AmfEncodingType.Amf0 ? RtmpMessageType.CommandMessageAmf0 : RtmpMessageType.CommandMessageAmf3, 0);
+
+            _chunkMessageSender.Send(peerContexts, basicHeader, messageHeader, netBuffer =>
+            {
+                netBuffer.WriteAmf([
+                    commandName,
+                    transactionId,
+                    commandObject,
+                    .. parameters
+                ], amfEncodingType);
+            });
+        }
     }
 }

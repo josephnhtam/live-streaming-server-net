@@ -59,6 +59,7 @@
         public const string PublishBadConnection = "NetStream.Publish.BadConnection";
         public const string PlayStart = "NetStream.Play.Start";
         public const string PlayBadConnection = "NetStream.Play.BadConnection";
+        public const string PlayUnpublishNotify = "NetStream.Play.UnpublishNotify";
     }
 
     public static class RtmpArgumentNames

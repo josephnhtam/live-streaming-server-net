@@ -1,5 +1,6 @@
 ﻿using LiveStreamingServerNet.Rtmp.Contracts;
 using LiveStreamingServerNet.Rtmp.Services.Contracts;
+using LiveStreamingServerNet.Rtmp.Services.Extensions;
 
 namespace LiveStreamingServerNet.Rtmp.ServerEventHandlers
 {
@@ -7,11 +8,16 @@ namespace LiveStreamingServerNet.Rtmp.ServerEventHandlers
     {
         private readonly IRtmpStreamManagerService _rtmpStreamManagerService;
         private readonly IRtmpUserControlMessageSenderService _userControlMessageSender;
+        private readonly IRtmpCommandMessageSenderService _commandMessageSenderService;
 
-        public RtmpClientPeerDisposalEventHandler(IRtmpStreamManagerService rtmpStreamManagerService, IRtmpUserControlMessageSenderService userControlMessageSender)
+        public RtmpClientPeerDisposalEventHandler(
+            IRtmpStreamManagerService rtmpStreamManagerService,
+            IRtmpUserControlMessageSenderService userControlMessageSender,
+            IRtmpCommandMessageSenderService commandMessageSenderService)
         {
             _rtmpStreamManagerService = rtmpStreamManagerService;
             _userControlMessageSender = userControlMessageSender;
+            _commandMessageSenderService = commandMessageSenderService;
         }
 
         public void OnRtmpClientCreated(IRtmpClientPeerContext peerContext) { }
@@ -26,7 +32,8 @@ namespace LiveStreamingServerNet.Rtmp.ServerEventHandlers
         {
             if (_rtmpStreamManagerService.StopPublishingStream(peerContext, out var existingSubscriber))
             {
-                _userControlMessageSender.SendStreamEofMessage(existingSubscriber, peerContext.PublishStreamContext!.Id);
+                _userControlMessageSender.SendStreamEofMessage(existingSubscriber);
+                _commandMessageSenderService.SendStreamUnpublishNotify(existingSubscriber);
             }
         }
 
