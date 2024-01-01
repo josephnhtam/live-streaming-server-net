@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34309.116
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet", "LiveStreamingServerNet\LiveStreamingServerNet.csproj", "{8559A0E8-9315-4728-8BD8-B3C49E14DFB7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.Playground", "LiveStreamingServerNet.Playground\LiveStreamingServerNet.Playground.csproj", "{6ED97216-2BBD-4568-991F-4ACD04C17C24}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8559A0E8-9315-4728-8BD8-B3C49E14DFB7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8559A0E8-9315-4728-8BD8-B3C49E14DFB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8559A0E8-9315-4728-8BD8-B3C49E14DFB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8559A0E8-9315-4728-8BD8-B3C49E14DFB7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6ED97216-2BBD-4568-991F-4ACD04C17C24}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6ED97216-2BBD-4568-991F-4ACD04C17C24}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6ED97216-2BBD-4568-991F-4ACD04C17C24}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6ED97216-2BBD-4568-991F-4ACD04C17C24}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0A9A3928-2852-49B9-85EF-F00480E9FE7F}
+	EndGlobalSection
+EndGlobal
