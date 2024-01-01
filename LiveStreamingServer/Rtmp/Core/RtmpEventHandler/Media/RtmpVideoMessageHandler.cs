@@ -2,7 +2,6 @@
 using LiveStreamingServer.Rtmp.Core.Contracts;
 using LiveStreamingServer.Rtmp.Core.RtmpEventHandler.MessageDispatcher.Attributes;
 using LiveStreamingServer.Rtmp.Core.RtmpEventHandler.MessageDispatcher.Contracts;
-using LiveStreamingServer.Rtmp.Core.RtmpHeaders;
 using LiveStreamingServer.Rtmp.Core.Services.Contracts;
 using Microsoft.Extensions.Logging;
 
@@ -12,13 +11,13 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler.Media
     public class RtmpVideoMessageHandler : IRtmpMessageHandler
     {
         private readonly IRtmpServerContext _serverContext;
-        private readonly IRtmpChunkMessageSenderService _chunkMessageSender;
+        private readonly IRtmpMediaMessageSenderService _mediaMessageSender;
         private readonly ILogger _logger;
 
-        public RtmpVideoMessageHandler(IRtmpServerContext serverContext, IRtmpChunkMessageSenderService chunkMessageSender, ILogger<RtmpVideoMessageHandler> logger)
+        public RtmpVideoMessageHandler(IRtmpServerContext serverContext, IRtmpMediaMessageSenderService mediaMessageSender, ILogger<RtmpVideoMessageHandler> logger)
         {
             _serverContext = serverContext;
-            _chunkMessageSender = chunkMessageSender;
+            _mediaMessageSender = mediaMessageSender;
             _logger = logger;
         }
 
@@ -32,12 +31,11 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler.Media
                 throw new InvalidOperationException("Stream is not created yet.");
 
             var hasSequenceHeader = CacheVideoSequenceHeaderIfNeeded(publishStreamContext, payloadBuffer);
-            BroacastVideoMessageToSubscribers(peerContext, chunkStreamContext, publishStreamContext, payloadBuffer, hasSequenceHeader);
+            BroacastVideoMessageToSubscribers(chunkStreamContext, publishStreamContext, payloadBuffer, hasSequenceHeader);
             return Task.FromResult(true);
         }
 
         private void BroacastVideoMessageToSubscribers(
-            IRtmpClientPeerContext peerContext,
             IRtmpChunkStreamContext chunkStreamContext,
             IRtmpPublishStreamContext publishStreamContext,
             INetBuffer payloadBuffer,
@@ -60,11 +58,7 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler.Media
             INetBuffer payloadBuffer,
             IList<IRtmpClientPeerContext> subscribers)
         {
-            var basicHeader = new RtmpChunkBasicHeader(0, RtmpConstants.VideoMessageChunkStreamId);
-            var messageHeader = new RtmpChunkMessageHeaderType0(chunkStreamContext.MessageHeader.Timestamp,
-                RtmpMessageType.VideoMessage, chunkStreamContext.MessageHeader.MessageStreamId);
-
-            _chunkMessageSender.Send(subscribers, basicHeader, messageHeader, payloadBuffer.Flush);
+            _mediaMessageSender.SendVideoMessage(subscribers, chunkStreamContext, payloadBuffer.CopyAllTo);
         }
 
         private static bool CacheVideoSequenceHeaderIfNeeded(

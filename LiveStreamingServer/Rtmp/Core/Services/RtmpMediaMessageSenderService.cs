@@ -1,10 +1,8 @@
 ﻿using LiveStreamingServer.Newtorking.Contracts;
 using LiveStreamingServer.Rtmp.Core.Contracts;
-using LiveStreamingServer.Rtmp.Core.Extensions;
 using LiveStreamingServer.Rtmp.Core.RtmpEventHandler;
 using LiveStreamingServer.Rtmp.Core.RtmpHeaders;
 using LiveStreamingServer.Rtmp.Core.Services.Contracts;
-using System.Transactions;
 
 namespace LiveStreamingServer.Rtmp.Core.Services
 {
@@ -17,64 +15,53 @@ namespace LiveStreamingServer.Rtmp.Core.Services
             _chunkMessageSender = chunkMessageSender;
         }
 
-        public void SendCommandMessage(
-            IRtmpClientPeerContext peerContext,
-            uint streamId,
-            string commandName,
-            double transactionId,
-            IDictionary<string, object>? commandObject,
-            IList<object?> parameters,
-            AmfEncodingType amfEncodingType,
-            Action? callback)
+        public void SendAudioMessage(IRtmpClientPeerContext subscriber, IRtmpChunkStreamContext chunkStreamContext, Action<INetBuffer> payloadWriter, Action? callback = null)
         {
-            var basicHeader = new RtmpChunkBasicHeader(0, streamId);
-            var messageHeader = new RtmpChunkMessageHeaderType0(0,
-                amfEncodingType == AmfEncodingType.Amf0 ? RtmpMessageType.CommandMessageAmf0 : RtmpMessageType.CommandMessageAmf3, 0);
+            var basicHeader = new RtmpChunkBasicHeader(0, RtmpConstants.AudioMessageChunkStreamId);
+            var messageHeader = new RtmpChunkMessageHeaderType0(chunkStreamContext.MessageHeader.Timestamp,
+                RtmpMessageType.AudioMessage, chunkStreamContext.MessageHeader.MessageStreamId);
 
-            _chunkMessageSender.Send(peerContext, basicHeader, messageHeader, netBuffer =>
-            {
-                netBuffer.WriteAmf([
-                    commandName,
-                    transactionId,
-                    commandObject,
-                    .. parameters
-                ], amfEncodingType);
-            }, callback);
+            _chunkMessageSender.Send(subscriber, basicHeader, messageHeader, payloadWriter);
         }
 
-        public void SendAudioMessage<TRtmpChunkMessageHeader>(IRtmpClientPeerContext subscriber, Action<INetBuffer> payloadWriter, Action? callback = null)
+        public void SendAudioMessage(IList<IRtmpClientPeerContext> subscribers, IRtmpChunkStreamContext chunkStreamContext, Action<INetBuffer> payloadWriter)
         {
-            throw new NotImplementedException();
+            var basicHeader = new RtmpChunkBasicHeader(0, RtmpConstants.AudioMessageChunkStreamId);
+            var messageHeader = new RtmpChunkMessageHeaderType0(chunkStreamContext.MessageHeader.Timestamp,
+                RtmpMessageType.AudioMessage, chunkStreamContext.MessageHeader.MessageStreamId);
+
+            _chunkMessageSender.Send(subscribers, basicHeader, messageHeader, payloadWriter);
         }
 
-        public void SendAudioMessage<TRtmpChunkMessageHeader>(IList<IRtmpClientPeerContext> subscribers, Action<INetBuffer> payloadWriter)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task SendAudioMessageAsync<TRtmpChunkMessageHeader>(IRtmpClientPeerContext subscriber, Action<INetBuffer> payloadWriter)
+        public Task SendAudioMessageAsync(IRtmpClientPeerContext subscriber, IRtmpChunkStreamContext chunkStreamContext, Action<INetBuffer> payloadWriter)
         {
             var tcs = new TaskCompletionSource();
-            SendAudioMessage<TRtmpChunkMessageHeader>(subscriber, payloadWriter, tcs.SetResult);
+            SendAudioMessage(subscriber, chunkStreamContext, payloadWriter, tcs.SetResult);
             return tcs.Task;
         }
 
-        public void SendVideoMessage<TRtmpChunkMessageHeader>(IRtmpClientPeerContext subscriber, Action<INetBuffer> payloadWriter, Action? callback = null)
+        public void SendVideoMessage(IRtmpClientPeerContext subscriber, IRtmpChunkStreamContext chunkStreamContext, Action<INetBuffer> payloadWriter, Action? callback = null)
         {
-            //var basicHeader = new RtmpChunkBasicHeader(0, RtmpConstants.VideoMessageChunkStreamId);
-            //var messageHeader = new RtmpChunkMessageHeaderType0(chunkStreamContext.MessageHeader.Timestamp,
-            //    RtmpMessageType.VideoMessage, chunkStreamContext.MessageHeader.MessageStreamId);
+            var basicHeader = new RtmpChunkBasicHeader(0, RtmpConstants.VideoMessageChunkStreamId);
+            var messageHeader = new RtmpChunkMessageHeaderType0(chunkStreamContext.MessageHeader.Timestamp,
+                RtmpMessageType.VideoMessage, chunkStreamContext.MessageHeader.MessageStreamId);
+
+            _chunkMessageSender.Send(subscriber, basicHeader, messageHeader, payloadWriter);
         }
 
-        public void SendVideoMessage<TRtmpChunkMessageHeader>(IList<IRtmpClientPeerContext> subscribers, RtmpChunkBasicHeader basicHeader, TRtmpChunkMessageHeader messageHeader, Action<INetBuffer> payloadWriter)
+        public void SendVideoMessage(IList<IRtmpClientPeerContext> subscribers, IRtmpChunkStreamContext chunkStreamContext, Action<INetBuffer> payloadWriter)
         {
-            throw new NotImplementedException();
+            var basicHeader = new RtmpChunkBasicHeader(0, RtmpConstants.VideoMessageChunkStreamId);
+            var messageHeader = new RtmpChunkMessageHeaderType0(chunkStreamContext.MessageHeader.Timestamp,
+                RtmpMessageType.VideoMessage, chunkStreamContext.MessageHeader.MessageStreamId);
+
+            _chunkMessageSender.Send(subscribers, basicHeader, messageHeader, payloadWriter);
         }
 
-        public Task SendVideoMessageAsync<TRtmpChunkMessageHeader>(IRtmpClientPeerContext subscriber, Action<INetBuffer> payloadWriter)
+        public Task SendVideoMessageAsync(IRtmpClientPeerContext subscriber, IRtmpChunkStreamContext chunkStreamContext, Action<INetBuffer> payloadWriter)
         {
             var tcs = new TaskCompletionSource();
-            SendVideoMessage<TRtmpChunkMessageHeader>(subscriber, payloadWriter, tcs.SetResult);
+            SendVideoMessage(subscriber, chunkStreamContext, payloadWriter, tcs.SetResult);
             return tcs.Task;
         }
     }

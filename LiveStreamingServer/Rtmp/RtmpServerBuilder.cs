@@ -39,7 +39,8 @@ namespace LiveStreamingServer.Rtmp
         {
             _services.AddSingleton<IRtmpChunkMessageSenderService, RtmpChunkMessageSenderService>()
                      .AddSingleton<IRtmpControlMessageSenderService, RtmpControlMessageSenderService>()
-                     .AddSingleton<IRtmpCommandMessageSenderService, RtmpCommandMessageSenderService>();
+                     .AddSingleton<IRtmpCommandMessageSenderService, RtmpCommandMessageSenderService>()
+                     .AddSingleton<IRtmpMediaMessageSenderService, RtmpMediaMessageSenderService>();
         }
 
         private void RegisterServer()

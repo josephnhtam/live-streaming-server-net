@@ -1,37 +1,40 @@
 ﻿using LiveStreamingServer.Newtorking.Contracts;
 using LiveStreamingServer.Rtmp.Core.Contracts;
-using LiveStreamingServer.Rtmp.Core.RtmpHeaders;
 
 namespace LiveStreamingServer.Rtmp.Core.Services.Contracts
 {
     public interface IRtmpMediaMessageSenderService
     {
-        void SendVideoMessage<TRtmpChunkMessageHeader>(
+        void SendVideoMessage(
             IRtmpClientPeerContext subscriber,
+            IRtmpChunkStreamContext chunkStreamContext,
             Action<INetBuffer> payloadWriter,
             Action? callback = null);
 
-        void SendVideoMessage<TRtmpChunkMessageHeader>(
+        void SendVideoMessage(
             IList<IRtmpClientPeerContext> subscribers,
-            RtmpChunkBasicHeader basicHeader,
-            TRtmpChunkMessageHeader messageHeader,
+            IRtmpChunkStreamContext chunkStreamContext,
             Action<INetBuffer> payloadWriter);
 
-        Task SendVideoMessageAsync<TRtmpChunkMessageHeader>(
+        Task SendVideoMessageAsync(
             IRtmpClientPeerContext subscriber,
+            IRtmpChunkStreamContext chunkStreamContext,
             Action<INetBuffer> payloadWriter);
 
-        void SendAudioMessage<TRtmpChunkMessageHeader>(
+        void SendAudioMessage(
             IRtmpClientPeerContext subscriber,
+            IRtmpChunkStreamContext chunkStreamContext,
             Action<INetBuffer> payloadWriter,
             Action? callback = null);
 
-        void SendAudioMessage<TRtmpChunkMessageHeader>(
+        void SendAudioMessage(
             IList<IRtmpClientPeerContext> subscribers,
+            IRtmpChunkStreamContext chunkStreamContext,
             Action<INetBuffer> payloadWriter);
 
-        Task SendAudioMessageAsync<TRtmpChunkMessageHeader>(
+        Task SendAudioMessageAsync(
             IRtmpClientPeerContext subscriber,
+            IRtmpChunkStreamContext chunkStreamContext,
             Action<INetBuffer> payloadWriter);
     }
 }
