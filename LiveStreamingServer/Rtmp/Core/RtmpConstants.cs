@@ -12,6 +12,7 @@
         public const uint ProtocolControlMessageChunkStreamId = 2;
         public const uint ProtocolControlMessageStreamId = 0;
 
+        public const uint AudioMessageChunkStreamId = 4;
         public const uint VideoMessageChunkStreamId = 5;
     }
 
@@ -86,5 +87,29 @@
         SequenceHeader = 0,
         NALU = 1,
         EndOfSequence = 2
+    }
+
+    public enum AudioSoundFormat
+    {
+        LinearPCMPlatformEndian = 0,
+        ADPCM = 1,
+        MP3 = 2,
+        LinearPCMLittleEndian = 3,
+        Nellymoser16kHzMono = 4,
+        Nellymoser8kHzMono = 5,
+        Nellymoser = 6,
+        G711ALawLogarithmicPCM = 7,
+        G711MuLawLogarithmicPCM = 8,
+        Reserved = 9,
+        AAC = 10,
+        Speex = 11,
+        MP38kHz = 14,
+        DeviceSpecificSound = 15
+    }
+
+    public enum AACPacketType
+    {
+        SequenceHeader = 0,
+        Raw = 1
     }
 }
