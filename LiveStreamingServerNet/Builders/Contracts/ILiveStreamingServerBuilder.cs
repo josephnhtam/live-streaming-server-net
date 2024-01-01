@@ -1,7 +1,7 @@
 ﻿using LiveStreamingServerNet.Networking.Contracts;
 using Microsoft.Extensions.Logging;
 
-namespace LiveStreamingServerNet.Contracts
+namespace LiveStreamingServerNet.Builders.Contracts
 {
     public interface ILiveStreamingServerBuilder
     {
