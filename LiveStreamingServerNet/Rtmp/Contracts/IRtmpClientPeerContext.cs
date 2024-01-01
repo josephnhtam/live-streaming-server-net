@@ -1,5 +1,5 @@
 ﻿using LiveStreamingServerNet.Networking.Contracts;
-using LiveStreamingServerNet.Rtmp.RtmpEventHandler.Handshakes;
+using LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Handshakes;
 
 namespace LiveStreamingServerNet.Rtmp.Contracts
 {

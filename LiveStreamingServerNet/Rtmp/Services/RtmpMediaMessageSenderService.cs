@@ -1,6 +1,6 @@
 ﻿using LiveStreamingServerNet.Newtorking.Contracts;
 using LiveStreamingServerNet.Rtmp.Contracts;
-using LiveStreamingServerNet.Rtmp.RtmpEventHandler;
+using LiveStreamingServerNet.Rtmp.RtmpEventHandlers;
 using LiveStreamingServerNet.Rtmp.RtmpHeaders;
 using LiveStreamingServerNet.Rtmp.Services.Contracts;
 
