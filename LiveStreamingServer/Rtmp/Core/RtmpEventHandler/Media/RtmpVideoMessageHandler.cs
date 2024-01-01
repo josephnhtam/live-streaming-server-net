@@ -75,19 +75,19 @@ namespace LiveStreamingServer.Rtmp.Core.RtmpEventHandler.Media
             var frameType = (VideoFrameType)(firstByte >> 4);
             var codecId = (VideoCodecId)(firstByte & 0x0f);
 
-            payloadBuffer.MoveTo(0);
-
             if (frameType == VideoFrameType.KeyFrame && codecId == VideoCodecId.AVC)
             {
                 var avcPackageType = (AVCPacketType)payloadBuffer.ReadByte();
                 if (avcPackageType == AVCPacketType.SequenceHeader)
                 {
                     publishStreamContext.VideoSequenceHeader = new byte[payloadBuffer.Size];
-                    payloadBuffer.ReadBytes(payloadBuffer.Size);
+                    payloadBuffer.MoveTo(0).ReadBytes(payloadBuffer.Size);
                     payloadBuffer.MoveTo(0);
                     return true;
                 }
             }
+
+            payloadBuffer.MoveTo(0);
 
             return false;
         }
