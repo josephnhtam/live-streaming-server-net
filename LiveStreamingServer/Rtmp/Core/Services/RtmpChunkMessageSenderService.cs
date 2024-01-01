@@ -127,6 +127,9 @@ namespace LiveStreamingServer.Rtmp.Core.Services
 
             while (payloadBuffer.Position < payloadBuffer.Size)
             {
+                if (!peerContext.Peer.IsConnected)
+                    return;
+
                 var remainingPayloadSize = payloadBuffer.Size - payloadBuffer.Position;
 
                 peerContext.Peer.Send((chunkBuffer) =>
