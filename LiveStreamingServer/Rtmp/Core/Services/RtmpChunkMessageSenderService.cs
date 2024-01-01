@@ -61,6 +61,7 @@ namespace LiveStreamingServer.Rtmp.Core.Services
 
                 using var groupPayloadBuffer = _netBufferPool.Obtain();
                 payloadBuffer.CopyAllTo(groupPayloadBuffer);
+                groupPayloadBuffer.MoveTo(0);
 
                 SendFirstChunk(peers, basicHeader, messageHeader, extendedTimestampHeader, groupPayloadBuffer, outChunkSize);
                 SendRemainingChunks(peers, basicHeader, extendedTimestampHeader, groupPayloadBuffer, outChunkSize);
