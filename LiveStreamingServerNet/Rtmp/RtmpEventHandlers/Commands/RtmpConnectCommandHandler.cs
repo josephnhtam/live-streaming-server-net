@@ -12,16 +12,16 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Commands
     [RtmpCommand("connect")]
     public class RtmpConnectCommandHandler : RtmpCommandHandler<RtmpConnectCommand>
     {
-        private readonly IRtmpControlMessageSenderService _controlMessageSender;
+        private readonly IRtmpProtocolControlMessageSenderService _protocolControlMessageSender;
         private readonly IRtmpCommandMessageSenderService _commandMessageSender;
         private readonly ILogger<RtmpConnectCommandHandler> _logger;
 
         public RtmpConnectCommandHandler(
-            IRtmpControlMessageSenderService controlMessageSender,
+            IRtmpProtocolControlMessageSenderService protocolControlMessageSender,
             IRtmpCommandMessageSenderService commandMessageSender,
             ILogger<RtmpConnectCommandHandler> logger)
         {
-            _controlMessageSender = controlMessageSender;
+            _protocolControlMessageSender = protocolControlMessageSender;
             _commandMessageSender = commandMessageSender;
             _logger = logger;
         }
@@ -36,9 +36,9 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Commands
 
             peerContext.AppName = (string)command.CommandObject["app"];
 
-            _controlMessageSender.SetChunkSize(peerContext, RtmpConstants.DefaultChunkSize);
-            _controlMessageSender.WindowAcknowledgementSize(peerContext, RtmpConstants.DefaultInAcknowledgementWindowSize);
-            _controlMessageSender.SetPeerBandwidth(peerContext, RtmpConstants.DefaultPeerBandwidth, RtmpPeerBandwidthLimitType.Dynamic);
+            _protocolControlMessageSender.SetChunkSize(peerContext, RtmpConstants.DefaultChunkSize);
+            _protocolControlMessageSender.WindowAcknowledgementSize(peerContext, RtmpConstants.DefaultInAcknowledgementWindowSize);
+            _protocolControlMessageSender.SetPeerBandwidth(peerContext, RtmpConstants.DefaultPeerBandwidth, RtmpPeerBandwidthLimitType.Dynamic);
 
             RespondToClient(peerContext, command);
 

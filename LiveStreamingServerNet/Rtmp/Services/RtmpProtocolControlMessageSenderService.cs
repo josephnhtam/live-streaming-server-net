@@ -6,11 +6,11 @@ using LiveStreamingServerNet.Rtmp.Services.Contracts;
 
 namespace LiveStreamingServerNet.Rtmp.Services
 {
-    public class RtmpControlMessageSenderService : IRtmpControlMessageSenderService
+    public class RtmpProtocolControlMessageSenderService : IRtmpProtocolControlMessageSenderService
     {
         private readonly IRtmpChunkMessageSenderService _chunkMessageSenderService;
 
-        public RtmpControlMessageSenderService(IRtmpChunkMessageSenderService chunkMessageSenderService)
+        public RtmpProtocolControlMessageSenderService(IRtmpChunkMessageSenderService chunkMessageSenderService)
         {
             _chunkMessageSenderService = chunkMessageSenderService;
         }

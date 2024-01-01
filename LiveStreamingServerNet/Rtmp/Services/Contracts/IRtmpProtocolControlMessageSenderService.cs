@@ -2,7 +2,7 @@
 
 namespace LiveStreamingServerNet.Rtmp.Services.Contracts
 {
-    public interface IRtmpControlMessageSenderService
+    public interface IRtmpProtocolControlMessageSenderService
     {
         void AbortMessage(IRtmpClientPeerContext peerContext, uint streamId);
         void Acknowledgement(IRtmpClientPeerContext peerContext, uint sequenceNumber);
