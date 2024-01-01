@@ -9,8 +9,8 @@ namespace LiveStreamingServerNet.Rtmp.Services.Contracts
         string? GetPublishStreamPath(IRtmpClientPeerContext publisherPeerContext);
         IRtmpClientPeerContext? GetPublishingClientPeerContext(string publishStreamPath);
 
-        PublishingStreamResult StartPublishingStream(IRtmpClientPeerContext publisherPeerContext, string streamPath, IDictionary<string, string> streamArguments, out IList<IRtmpClientPeerContext>? existingSubscribers);
-        bool StopPublishingStream(IRtmpClientPeerContext publisherPeerContext, out IList<IRtmpClientPeerContext>? existingSubscribers);
+        PublishingStreamResult StartPublishingStream(IRtmpClientPeerContext publisherPeerContext, string streamPath, IDictionary<string, string> streamArguments, out IList<IRtmpClientPeerContext> existingSubscribers);
+        bool StopPublishingStream(IRtmpClientPeerContext publisherPeerContext, out IList<IRtmpClientPeerContext> existingSubscribers);
 
         SubscribingStreamResult StartSubscribingStream(IRtmpClientPeerContext subscriberPeerContext, uint chunkStreamId, string streamPath, IDictionary<string, string> streamArguments);
         bool StopSubscribingStream(IRtmpClientPeerContext subscriberPeerContext);

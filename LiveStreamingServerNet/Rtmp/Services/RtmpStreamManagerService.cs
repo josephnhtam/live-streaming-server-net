@@ -27,12 +27,12 @@ namespace LiveStreamingServerNet.Rtmp.Services
             return _publishingClientPeerContexts.GetValueOrDefault(publishStreamPath);
         }
 
-        public PublishingStreamResult StartPublishingStream(IRtmpClientPeerContext publisherPeerContext, string streamPath, IDictionary<string, string> streamArguments, out IList<IRtmpClientPeerContext>? existingSubscribers)
+        public PublishingStreamResult StartPublishingStream(IRtmpClientPeerContext publisherPeerContext, string streamPath, IDictionary<string, string> streamArguments, out IList<IRtmpClientPeerContext> existingSubscribers)
         {
             using var readLock = _publishingRwLock.WriteLock();
             using var subscribingWriteLock = _subscribingRwLock.WriteLock();
 
-            existingSubscribers = null;
+            existingSubscribers = null!;
 
             if (_publishStreamPaths.ContainsKey(publisherPeerContext))
                 return PublishingStreamResult.AlreadyPublishing;
@@ -46,17 +46,17 @@ namespace LiveStreamingServerNet.Rtmp.Services
             _publishStreamPaths.Add(publisherPeerContext, streamPath);
             _publishingClientPeerContexts.Add(streamPath, publisherPeerContext);
 
-            existingSubscribers = _subscribingClientPeerContexts.GetValueOrDefault(streamPath)?.ToList();
+            existingSubscribers = _subscribingClientPeerContexts.GetValueOrDefault(streamPath)?.ToList() ?? new List<IRtmpClientPeerContext>();
 
             return PublishingStreamResult.Succeeded;
         }
 
-        public bool StopPublishingStream(IRtmpClientPeerContext publisherPeerContext, out IList<IRtmpClientPeerContext>? existingSubscribers)
+        public bool StopPublishingStream(IRtmpClientPeerContext publisherPeerContext, out IList<IRtmpClientPeerContext> existingSubscribers)
         {
             using var publishingWriteLock = _publishingRwLock.WriteLock();
             using var subscribingWriteLock = _subscribingRwLock.WriteLock();
 
-            existingSubscribers = null;
+            existingSubscribers = null!;
 
             if (!_publishStreamPaths.TryGetValue(publisherPeerContext, out var publishStreamPath))
                 return false;
@@ -64,7 +64,7 @@ namespace LiveStreamingServerNet.Rtmp.Services
             _publishingClientPeerContexts.Remove(publishStreamPath);
             _publishStreamPaths.Remove(publisherPeerContext);
 
-            existingSubscribers = _subscribingClientPeerContexts.GetValueOrDefault(publishStreamPath)?.ToList();
+            existingSubscribers = _subscribingClientPeerContexts.GetValueOrDefault(publishStreamPath)?.ToList() ?? new List<IRtmpClientPeerContext>();
 
             return true;
         }
@@ -106,6 +106,9 @@ namespace LiveStreamingServerNet.Rtmp.Services
             if (_subscribingClientPeerContexts.TryGetValue(publishStreamPath, out var subscribers))
             {
                 subscribers.Remove(subscriberPeerContext);
+
+                if (subscribers.Count == 0)
+                    _subscribingClientPeerContexts.Remove(publishStreamPath);
             }
 
             return true;

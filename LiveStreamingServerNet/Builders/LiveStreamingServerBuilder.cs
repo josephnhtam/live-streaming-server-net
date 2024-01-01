@@ -40,6 +40,7 @@ namespace LiveStreamingServerNet.Builders
         {
             _services.AddSingleton<IRtmpChunkMessageSenderService, RtmpChunkMessageSenderService>()
                      .AddSingleton<IRtmpProtocolControlMessageSenderService, RtmpProtocolControlMessageSenderService>()
+                     .AddSingleton<IRtmpUserControlMessageSenderService, RtmpUserControlMessageSenderService>()
                      .AddSingleton<IRtmpCommandMessageSenderService, RtmpCommandMessageSenderService>()
                      .AddSingleton<IRtmpMediaMessageSenderService, RtmpMediaMessageSenderService>()
                      .AddSingleton<IRtmpStreamManagerService, RtmpStreamManagerService>();

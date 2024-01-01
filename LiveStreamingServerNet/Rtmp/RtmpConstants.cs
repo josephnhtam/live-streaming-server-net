@@ -12,8 +12,22 @@
         public const uint ProtocolControlMessageChunkStreamId = 2;
         public const uint ProtocolControlMessageStreamId = 0;
 
+        public const uint UserControlMessageChunkStreamId = 2;
+        public const uint UserControlMessageStreamId = 0;
+
         public const uint AudioMessageChunkStreamId = 4;
         public const uint VideoMessageChunkStreamId = 5;
+    }
+
+    public static class RtmpUserControlMessageTypes
+    {
+        public const ushort StreamBegin = 0;
+        public const ushort StreamEof = 1;
+        public const ushort StreamDry = 2;
+        public const ushort SetBufferLength = 3;
+        public const ushort StreamIsRecorded = 4;
+        public const ushort PingRequest = 6;
+        public const ushort PingResponse = 7;
     }
 
     public enum RtmpPeerBandwidthLimitType : byte

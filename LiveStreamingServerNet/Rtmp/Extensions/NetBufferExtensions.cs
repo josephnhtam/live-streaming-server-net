@@ -5,6 +5,11 @@ namespace LiveStreamingServerNet.Rtmp.Extensions
 {
     public static class NetBufferExtensions
     {
+        public static ushort ReadUInt16BigEndian(this INetBuffer buffer)
+        {
+            return (ushort)(buffer.ReadByte() << 8 | buffer.ReadByte());
+        }
+
         public static uint ReadUInt24BigEndian(this INetBuffer buffer)
         {
             return (uint)(buffer.ReadByte() << 16 | buffer.ReadByte() << 8 | buffer.ReadByte());
@@ -13,6 +18,16 @@ namespace LiveStreamingServerNet.Rtmp.Extensions
         public static uint ReadUInt32BigEndian(this INetBuffer buffer)
         {
             return (uint)(buffer.ReadByte() << 24 | buffer.ReadByte() << 16 | buffer.ReadByte() << 8 | buffer.ReadByte());
+        }
+
+        public static short ReadInt16BiEndian(this INetBuffer buffer)
+        {
+            var value = buffer.ReadByte() << 8 | buffer.ReadByte();
+
+            if ((value & 0x8000) != 0)
+                value |= unchecked((short)0xffff0000);
+
+            return (short)value;
         }
 
         public static int ReadInt24BigEndian(this INetBuffer buffer)
@@ -35,6 +50,12 @@ namespace LiveStreamingServerNet.Rtmp.Extensions
             return value;
         }
 
+        public static void WriteUint16BigEndian(this INetBuffer buffer, ushort value)
+        {
+            buffer.Write((byte)(value >> 8));
+            buffer.Write((byte)value);
+        }
+
         public static void WriteUInt24BigEndian(this INetBuffer buffer, uint value)
         {
             buffer.Write((byte)(value >> 16));
@@ -46,6 +67,12 @@ namespace LiveStreamingServerNet.Rtmp.Extensions
         {
             buffer.Write((byte)(value >> 24));
             buffer.Write((byte)(value >> 16));
+            buffer.Write((byte)(value >> 8));
+            buffer.Write((byte)value);
+        }
+
+        public static void WriteInt16BigEndian(this INetBuffer buffer, short value)
+        {
             buffer.Write((byte)(value >> 8));
             buffer.Write((byte)value);
         }
