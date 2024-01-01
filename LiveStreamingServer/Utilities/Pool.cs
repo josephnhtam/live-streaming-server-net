@@ -28,5 +28,7 @@ namespace LiveStreamingServer.Utilities
             _recycleCallback?.Invoke(obj);
             _pool.Enqueue(obj);
         }
+
+        public int GetPooledCount() => _pool.Count;
     }
 }
