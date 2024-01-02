@@ -11,16 +11,16 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Media
     public class RtmpAudioMessageHandler : IRtmpMessageHandler
     {
         private readonly IRtmpStreamManagerService _streamManager;
-        private readonly IRtmpMediaMessageSenderService _mediaMessageSender;
+        private readonly IRtmpMediaMessageManagerService _mediaMessageManager;
         private readonly ILogger _logger;
 
         public RtmpAudioMessageHandler(
             IRtmpStreamManagerService streamManager,
-            IRtmpMediaMessageSenderService mediaMessageSender,
+            IRtmpMediaMessageManagerService mediaMessageManager,
             ILogger<RtmpAudioMessageHandler> logger)
         {
             _streamManager = streamManager;
-            _mediaMessageSender = mediaMessageSender;
+            _mediaMessageManager = mediaMessageManager;
             _logger = logger;
         }
 
@@ -47,21 +47,22 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Media
             if (hasSequenceHeader)
             {
                 using var subscribers = _streamManager.GetSubscribersLocked(publishStreamContext.StreamPath);
-                BroacastAudioMessageToSubscribers(chunkStreamContext, payloadBuffer, subscribers.Value);
+                BroacastAudioMessageToSubscribers(chunkStreamContext, false, payloadBuffer, subscribers.Value);
             }
             else
             {
                 var subscribers = _streamManager.GetSubscribers(publishStreamContext.StreamPath);
-                BroacastAudioMessageToSubscribers(chunkStreamContext, payloadBuffer, subscribers);
+                BroacastAudioMessageToSubscribers(chunkStreamContext, true, payloadBuffer, subscribers);
             }
         }
 
         private void BroacastAudioMessageToSubscribers(
             IRtmpChunkStreamContext chunkStreamContext,
+            bool isSkippable,
             INetBuffer payloadBuffer,
             IList<IRtmpClientPeerContext> subscribers)
         {
-            _mediaMessageSender.SendAudioMessage(subscribers, chunkStreamContext, payloadBuffer.Flush);
+            _mediaMessageManager.SendAudioMessage(subscribers, chunkStreamContext, isSkippable, payloadBuffer.Flush);
         }
 
         private static bool CacheAudioSequenceHeaderIfNeeded(

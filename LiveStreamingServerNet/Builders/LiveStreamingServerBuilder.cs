@@ -42,10 +42,10 @@ namespace LiveStreamingServerNet.Builders
                      .AddSingleton<IRtmpProtocolControlMessageSenderService, RtmpProtocolControlMessageSenderService>()
                      .AddSingleton<IRtmpUserControlMessageSenderService, RtmpUserControlMessageSenderService>()
                      .AddSingleton<IRtmpCommandMessageSenderService, RtmpCommandMessageSenderService>()
-                     .AddSingleton<IRtmpMediaMessageSenderService, RtmpMediaMessageSenderService>()
+                     .AddSingleton<IRtmpMediaMessageManagerService, RtmpMediaMessageManagerService>()
                      .AddSingleton<IRtmpStreamManagerService, RtmpStreamManagerService>();
 
-            _services.AddSingleton<IRtmpServerEventHandler, RtmpClientPeerDisposalEventHandler>();
+            _services.AddSingleton<IRtmpServerEventHandler, RtmpClientPeerServerEventHandler>();
         }
 
         private void RegisterServer()

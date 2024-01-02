@@ -16,18 +16,18 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Commands
     {
         private readonly IRtmpStreamManagerService _streamManager;
         private readonly IRtmpCommandMessageSenderService _commandMessageSender;
-        private readonly IRtmpMediaMessageSenderService _mediaMessageSender;
+        private readonly IRtmpMediaMessageManagerService _mediaMessageManager;
         private readonly ILogger<RtmpPlayCommandHandler> _logger;
 
         public RtmpPlayCommandHandler(
             IRtmpStreamManagerService streamManager,
             IRtmpCommandMessageSenderService commandMessageSender,
-            IRtmpMediaMessageSenderService mediaMessageSender,
+            IRtmpMediaMessageManagerService mediaMessageManager,
             ILogger<RtmpPlayCommandHandler> logger)
         {
             _streamManager = streamManager;
             _commandMessageSender = commandMessageSender;
-            _mediaMessageSender = mediaMessageSender;
+            _mediaMessageManager = mediaMessageManager;
             _logger = logger;
         }
 
@@ -126,7 +126,7 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Commands
             var videoSequenceHeader = publishStreamContext.VideoSequenceHeader;
             if (videoSequenceHeader != null)
             {
-                _mediaMessageSender.SendVideoMessage(peerContext, chunkStreamContext, (netBuffer) =>
+                _mediaMessageManager.SendVideoMessage(peerContext, chunkStreamContext, false, (netBuffer) =>
                     netBuffer.Write(videoSequenceHeader)
                 );
             }
@@ -134,7 +134,7 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Commands
             var audioSequenceHeader = publishStreamContext.AudioSequenceHeader;
             if (audioSequenceHeader != null)
             {
-                _mediaMessageSender.SendAudioMessage(peerContext, chunkStreamContext, (netBuffer) =>
+                _mediaMessageManager.SendAudioMessage(peerContext, chunkStreamContext, false, (netBuffer) =>
                     netBuffer.Write(audioSequenceHeader)
                 );
             }

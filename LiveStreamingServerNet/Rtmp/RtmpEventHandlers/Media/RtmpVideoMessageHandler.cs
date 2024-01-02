@@ -11,16 +11,16 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Media
     public class RtmpVideoMessageHandler : IRtmpMessageHandler
     {
         private readonly IRtmpStreamManagerService _streamManager;
-        private readonly IRtmpMediaMessageSenderService _mediaMessageSender;
+        private readonly IRtmpMediaMessageManagerService _mediaMessageManager;
         private readonly ILogger _logger;
 
         public RtmpVideoMessageHandler(
             IRtmpStreamManagerService streamManager,
-            IRtmpMediaMessageSenderService mediaMessageSender,
+            IRtmpMediaMessageManagerService mediaMessageManager,
             ILogger<RtmpVideoMessageHandler> logger)
         {
             _streamManager = streamManager;
-            _mediaMessageSender = mediaMessageSender;
+            _mediaMessageManager = mediaMessageManager;
             _logger = logger;
         }
 
@@ -47,21 +47,22 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Media
             if (hasSequenceHeader)
             {
                 using var subscribers = _streamManager.GetSubscribersLocked(publishStreamContext.StreamPath);
-                BroacastVideoMessageToSubscribers(chunkStreamContext, payloadBuffer, subscribers.Value);
+                BroacastVideoMessageToSubscribers(chunkStreamContext, false, payloadBuffer, subscribers.Value);
             }
             else
             {
                 var subscribers = _streamManager.GetSubscribers(publishStreamContext.StreamPath);
-                BroacastVideoMessageToSubscribers(chunkStreamContext, payloadBuffer, subscribers);
+                BroacastVideoMessageToSubscribers(chunkStreamContext, true, payloadBuffer, subscribers);
             }
         }
 
         private void BroacastVideoMessageToSubscribers(
             IRtmpChunkStreamContext chunkStreamContext,
+            bool isSkippable,
             INetBuffer payloadBuffer,
             IList<IRtmpClientPeerContext> subscribers)
         {
-            _mediaMessageSender.SendVideoMessage(subscribers, chunkStreamContext, payloadBuffer.CopyAllTo);
+            _mediaMessageManager.SendVideoMessage(subscribers, chunkStreamContext, isSkippable, payloadBuffer.CopyAllTo);
         }
 
         private static bool CacheVideoSequenceHeaderIfNeeded(

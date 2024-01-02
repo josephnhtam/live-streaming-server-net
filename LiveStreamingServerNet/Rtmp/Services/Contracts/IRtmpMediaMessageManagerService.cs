@@ -3,38 +3,33 @@ using LiveStreamingServerNet.Rtmp.Contracts;
 
 namespace LiveStreamingServerNet.Rtmp.Services.Contracts
 {
-    public interface IRtmpMediaMessageSenderService
+    public interface IRtmpMediaMessageManagerService
     {
         void SendVideoMessage(
             IRtmpClientPeerContext subscriber,
             IRtmpChunkStreamContext chunkStreamContext,
-            Action<INetBuffer> payloadWriter,
-            Action? callback = null);
+            bool isSkippable,
+            Action<INetBuffer> payloadWriter);
 
         void SendVideoMessage(
             IList<IRtmpClientPeerContext> subscribers,
             IRtmpChunkStreamContext chunkStreamContext,
-            Action<INetBuffer> payloadWriter);
-
-        Task SendVideoMessageAsync(
-            IRtmpClientPeerContext subscriber,
-            IRtmpChunkStreamContext chunkStreamContext,
+            bool isSkippable,
             Action<INetBuffer> payloadWriter);
 
         void SendAudioMessage(
             IRtmpClientPeerContext subscriber,
             IRtmpChunkStreamContext chunkStreamContext,
-            Action<INetBuffer> payloadWriter,
-            Action? callback = null);
+            bool isSkippable,
+            Action<INetBuffer> payloadWriter);
 
         void SendAudioMessage(
             IList<IRtmpClientPeerContext> subscribers,
             IRtmpChunkStreamContext chunkStreamContext,
+            bool isSkippable,
             Action<INetBuffer> payloadWriter);
 
-        Task SendAudioMessageAsync(
-            IRtmpClientPeerContext subscriber,
-            IRtmpChunkStreamContext chunkStreamContext,
-            Action<INetBuffer> payloadWriter);
+        void RegisterClientPeer(IRtmpClientPeerContext peerContext);
+        void UnregisterClientPeer(IRtmpClientPeerContext peerContext);
     }
 }
