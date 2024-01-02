@@ -11,7 +11,7 @@ namespace LiveStreamingServerNet.Newtorking
         private readonly int _maxPoolSize;
         private ConcurrentBag<PoolableNetBuffer> _poolableNetBuffers = new();
 
-        public NetBufferPool(int netBufferCapacity = 512, int maxPoolSize = 128)
+        public NetBufferPool(int netBufferCapacity = 512, int maxPoolSize = -1)
         {
             _pool = new Pool<PoolableNetBuffer>(CreatePoolableNetBuffer);
             _netBufferCapacity = netBufferCapacity;
@@ -27,7 +27,7 @@ namespace LiveStreamingServerNet.Newtorking
 
         public INetBuffer Obtain()
         {
-            if (_poolableNetBuffers.Count >= _maxPoolSize && _pool.GetPooledCount() == 0)
+            if (_maxPoolSize >= 0 && _poolableNetBuffers.Count >= _maxPoolSize && _pool.GetPooledCount() == 0)
             {
                 return new NetBuffer(_netBufferCapacity);
             }

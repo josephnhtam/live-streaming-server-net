@@ -2,6 +2,7 @@
 using LiveStreamingServerNet.Newtorking.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using System.Buffers;
 using System.Net.Sockets;
 using System.Threading.Channels;
 
@@ -79,12 +80,11 @@ namespace LiveStreamingServerNet.Newtorking
         {
             while (!cancellationToken.IsCancellationRequested)
             {
-                var (netBuffer, callback) = await _sendChannel.Reader.ReadAsync(cancellationToken);
+                var (rentedBuffer, bufferSize, callback) = await _sendChannel.Reader.ReadAsync(cancellationToken);
 
                 try
                 {
-                    netBuffer.Flush(networkStream);
-                    await networkStream.FlushAsync(cancellationToken);
+                    await networkStream.WriteAsync(rentedBuffer, 0, bufferSize, cancellationToken);
                     callback?.Invoke();
                 }
                 catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { }
@@ -94,35 +94,57 @@ namespace LiveStreamingServerNet.Newtorking
                 }
                 finally
                 {
-                    netBuffer.Dispose();
+                    ArrayPool<byte>.Shared.Return(rentedBuffer);
                 }
             }
         }
 
         public void Send(INetBuffer netBuffer, Action? callback)
         {
-            Send(netBuffer.CopyAllTo, callback);
+            if (!IsConnected) return;
+
+            var rentedBuffer = ArrayPool<byte>.Shared.Rent(netBuffer.Size);
+
+            try
+            {
+                var originalPosition = netBuffer.Position;
+                netBuffer.MoveTo(0).ReadBytes(rentedBuffer, 0, netBuffer.Size);
+                netBuffer.MoveTo(originalPosition);
+
+                if (!_sendChannel.Writer.TryWrite(new PendingMessage(rentedBuffer, netBuffer.Size, callback)))
+                {
+                    throw new Exception("Failed to write to the send channel");
+                }
+            }
+            catch (Exception)
+            {
+                ArrayPool<byte>.Shared.Return(rentedBuffer);
+                throw;
+            }
         }
 
         public void Send(Action<INetBuffer> writer, Action? callback)
         {
             if (!IsConnected) return;
 
-            var netBuffer = ObtainNetBuffer();
+            using var netBuffer = ObtainNetBuffer();
+            writer.Invoke(netBuffer);
+
+            var rentedBuffer = ArrayPool<byte>.Shared.Rent(netBuffer.Size);
 
             try
             {
-                writer.Invoke(netBuffer);
+                netBuffer.MoveTo(0).ReadBytes(rentedBuffer, 0, netBuffer.Size);
+
+                if (!_sendChannel.Writer.TryWrite(new PendingMessage(rentedBuffer, netBuffer.Size, callback)))
+                {
+                    throw new Exception("Failed to write to the send channel");
+                }
             }
             catch (Exception)
             {
-                netBuffer.Dispose();
+                ArrayPool<byte>.Shared.Return(rentedBuffer);
                 throw;
-            }
-
-            if (!_sendChannel.Writer.TryWrite(new PendingMessage(netBuffer, callback)))
-            {
-                throw new Exception("Failed to write to the send channel");
             }
         }
 
@@ -156,6 +178,6 @@ namespace LiveStreamingServerNet.Newtorking
             return ValueTask.CompletedTask;
         }
 
-        private record struct PendingMessage(INetBuffer NetBuffer, Action? Callback);
+        private record struct PendingMessage(byte[] RentedBuffer, int BufferSize, Action? Callback);
     }
 }
