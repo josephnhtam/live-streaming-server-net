@@ -159,7 +159,6 @@ namespace LiveStreamingServerNet.Rtmp.Services
                     }
                     finally
                     {
-                        //Console.WriteLine("Sent: " + package.Timestamp);
                         ArrayPool<byte>.Shared.Return(package.RentedPayload);
                     }
                 }
