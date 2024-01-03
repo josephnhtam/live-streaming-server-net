@@ -71,7 +71,7 @@ namespace LiveStreamingServerNet.Newtorking
             finally
             {
                 _tcpClient.Close();
-                handler.Dispose();
+                await handler.DisposeAsync();
                 _logger?.LogDebug("PeerId: {PeerId} | Disconnected", PeerId);
             }
         }
@@ -88,6 +88,7 @@ namespace LiveStreamingServerNet.Newtorking
                     callback?.Invoke();
                 }
                 catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { }
+                catch (IOException) { }
                 catch (Exception ex)
                 {
                     _logger?.LogError(ex, "An error occurred while sending data to the client");
