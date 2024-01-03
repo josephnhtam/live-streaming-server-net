@@ -5,10 +5,11 @@ namespace LiveStreamingServerNet.Newtorking.Contracts
 {
     public interface IServerEventHandler
     {
-        void OnListenerCreated(TcpListener tcpListener);
-        void OnClientAccepted(TcpClient tcpClient);
-        void OnClientPeerConnected(IClientPeer clientPeer);
-        void OnClientPeerDisconnected(IClientPeer clientPeer);
-        void OnServerStarted();
+        Task OnListenerCreatedAsync(TcpListener tcpListener);
+        Task OnClientAcceptedAsync(TcpClient tcpClient);
+        Task OnClientPeerConnectedAsync(IClientPeer clientPeer);
+        Task OnClientPeerDisconnectedAsync(IClientPeer clientPeer);
+        Task OnServerStartedAsync();
+        Task OnServerStoppedAsync();
     }
 }

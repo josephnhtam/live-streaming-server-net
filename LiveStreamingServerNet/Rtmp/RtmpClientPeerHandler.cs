@@ -18,12 +18,12 @@ namespace LiveStreamingServerNet.Rtmp
             _serverEventHandlers = serverEventHandlers;
         }
 
-        public void Initialize(IRtmpClientPeerContext peerContext)
+        public async Task InitializeAsync(IRtmpClientPeerContext peerContext)
         {
             _peerContext = peerContext;
             _peerContext.State = RtmpClientPeerState.HandshakeC0;
 
-            OnRtmpClientCreated();
+            await OnRtmpClientCreatedAsync();
         }
 
         public async Task<bool> HandleClientPeerLoopAsync(ReadOnlyNetworkStream networkStream, CancellationToken cancellationToken)
@@ -61,21 +61,21 @@ namespace LiveStreamingServerNet.Rtmp
             return await _mediator.Send(new RtmpChunkEvent(peerContext, networkStream), cancellationToken);
         }
 
-        public void Dispose()
+        public async ValueTask DisposeAsync()
         {
-            OnRtmpClientDisposed();
+            await OnRtmpClientDisposedAsync();
         }
 
-        private void OnRtmpClientCreated()
+        private async Task OnRtmpClientCreatedAsync()
         {
             foreach (var serverEventHandler in _serverEventHandlers)
-                serverEventHandler.OnRtmpClientCreated(_peerContext);
+                await serverEventHandler.OnRtmpClientCreatedAsync(_peerContext);
         }
 
-        private void OnRtmpClientDisposed()
+        private async Task OnRtmpClientDisposedAsync()
         {
             foreach (var serverEventHandler in _serverEventHandlers)
-                serverEventHandler.OnRtmpClientDisposed(_peerContext);
+                await serverEventHandler.OnRtmpClientDisposedAsync(_peerContext);
         }
     }
 }

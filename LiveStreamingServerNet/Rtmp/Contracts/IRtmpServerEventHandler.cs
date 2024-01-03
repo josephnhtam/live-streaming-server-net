@@ -2,7 +2,7 @@
 {
     public interface IRtmpServerEventHandler
     {
-        void OnRtmpClientCreated(IRtmpClientPeerContext peerContext);
-        void OnRtmpClientDisposed(IRtmpClientPeerContext peerContext);
+        Task OnRtmpClientCreatedAsync(IRtmpClientPeerContext peerContext);
+        Task OnRtmpClientDisposedAsync(IRtmpClientPeerContext peerContext);
     }
 }

@@ -3,6 +3,7 @@ using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.Newtorking;
 using LiveStreamingServerNet.Newtorking.Contracts;
 using LiveStreamingServerNet.Rtmp;
+using LiveStreamingServerNet.Rtmp.Configurations;
 using LiveStreamingServerNet.Rtmp.Contracts;
 using LiveStreamingServerNet.Rtmp.RtmpEventHandlers.CommandDispatcher;
 using LiveStreamingServerNet.Rtmp.RtmpEventHandlers.CommandDispatcher.Attributes;
@@ -27,7 +28,8 @@ namespace LiveStreamingServerNet.Builders
         {
             _services = new ServiceCollection();
 
-            _services.AddLogging();
+            _services.AddOptions()
+                     .AddLogging();
 
             RegisterServer();
             RegisterRtmpCore();
@@ -113,9 +115,15 @@ namespace LiveStreamingServerNet.Builders
             return new LiveStreamingServerBuilder();
         }
 
-        public ILiveStreamingServerBuilder ConfigureLogging(Action<ILoggingBuilder> configureLogging)
+        public ILiveStreamingServerBuilder ConfigureLogging(Action<ILoggingBuilder> configure)
         {
-            _services.AddLogging(configureLogging);
+            _services.AddLogging(configure);
+            return this;
+        }
+
+        public ILiveStreamingServerBuilder ConfigureMediaMessage(Action<MediaMessageConfiguration> configure)
+        {
+            _services.Configure(configure);
             return this;
         }
 

@@ -40,7 +40,7 @@ namespace LiveStreamingServerNet.Newtorking
             using var tcpListener = CreateTcpListener(localEndpoint);
             tcpListener.Start();
 
-            OnServerStarted();
+            await OnServerStartedAsync();
 
             _logger?.LogInformation("Server is started");
 
@@ -66,13 +66,15 @@ namespace LiveStreamingServerNet.Newtorking
 
             await Task.WhenAll(_clientPeerTasks.Select(x => x.Value.Task));
 
+            await OnServerStoppedAsync();
+
             _logger?.LogInformation("Server is stopped");
         }
 
         private async Task AcceptClientAsync(TcpListener tcpListener, CancellationToken cancellationToken)
         {
             var client = await tcpListener.AcceptTcpClientAsync(cancellationToken);
-            OnClientAccepted(client);
+            await OnClientAcceptedAsync(client);
 
             var clientPeerId = GetNextClientPeerId();
             var clientPeer = CreateClientPeer(clientPeerId, client);
@@ -81,11 +83,11 @@ namespace LiveStreamingServerNet.Newtorking
             var clientTask = clientPeer.RunAsync(clientPeerHandler, cancellationToken);
 
             _clientPeerTasks.TryAdd(clientPeerId, new(clientPeer, clientTask));
-            OnClientPeerConnected(clientPeer);
+            await OnClientPeerConnectedAsync(clientPeer);
 
             _ = clientTask.ContinueWith(async _ =>
             {
-                OnClientPeerDisconnected(clientPeer);
+                await OnClientPeerDisconnected(clientPeer);
                 _clientPeerTasks.TryRemove(clientPeerId, out var removed);
                 await clientPeer.DisposeAsync();
             });
@@ -107,7 +109,7 @@ namespace LiveStreamingServerNet.Newtorking
         private TcpListener CreateTcpListener(IPEndPoint localEndpoint)
         {
             var listener = new TcpListener(localEndpoint);
-            OnListenerCreated(listener);
+            OnListenerCreatedAsync(listener);
             return listener;
         }
 
@@ -129,43 +131,51 @@ namespace LiveStreamingServerNet.Newtorking
             return _clientPeerHandlerFactory.CreateClientPeerHandler(clientPeer);
         }
 
-        protected virtual void OnListenerCreated(TcpListener tcpListener)
+        private async Task OnListenerCreatedAsync(TcpListener tcpListener)
         {
             foreach (var handler in _serverEventHandlers)
             {
-                handler.OnListenerCreated(tcpListener);
+                await handler.OnListenerCreatedAsync(tcpListener);
             }
         }
 
-        protected virtual void OnClientAccepted(TcpClient tcpClient)
+        private async Task OnClientAcceptedAsync(TcpClient tcpClient)
         {
             foreach (var handler in _serverEventHandlers)
             {
-                handler.OnClientAccepted(tcpClient);
+                await handler.OnClientAcceptedAsync(tcpClient);
             }
         }
 
-        protected virtual void OnClientPeerConnected(IClientPeer clientPeer)
+        private async Task OnClientPeerConnectedAsync(IClientPeer clientPeer)
         {
             foreach (var handler in _serverEventHandlers)
             {
-                handler.OnClientPeerConnected(clientPeer);
+                await handler.OnClientPeerConnectedAsync(clientPeer);
             }
         }
 
-        protected virtual void OnClientPeerDisconnected(IClientPeer clientPeer)
+        private async Task OnClientPeerDisconnected(IClientPeer clientPeer)
         {
             foreach (var handler in _serverEventHandlers)
             {
-                handler.OnClientPeerDisconnected(clientPeer);
+                await handler.OnClientPeerDisconnectedAsync(clientPeer);
             }
         }
 
-        protected virtual void OnServerStarted()
+        private async Task OnServerStartedAsync()
         {
             foreach (var handler in _serverEventHandlers)
             {
-                handler.OnServerStarted();
+                await handler.OnServerStartedAsync();
+            }
+        }
+
+        private async Task OnServerStoppedAsync()
+        {
+            foreach (var handler in _serverEventHandlers)
+            {
+                await handler.OnServerStoppedAsync();
             }
         }
 

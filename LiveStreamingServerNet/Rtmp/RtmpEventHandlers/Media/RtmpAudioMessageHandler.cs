@@ -62,7 +62,7 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Media
             INetBuffer payloadBuffer,
             IList<IRtmpClientPeerContext> subscribers)
         {
-            _mediaMessageManager.SendAudioMessage(subscribers, chunkStreamContext, isSkippable, payloadBuffer.Flush);
+            _mediaMessageManager.EnqueueAudioMessage(subscribers, chunkStreamContext, isSkippable, payloadBuffer.Flush);
         }
 
         private static bool CacheAudioSequenceHeaderIfNeeded(

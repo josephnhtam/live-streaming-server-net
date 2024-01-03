@@ -23,16 +23,18 @@ namespace LiveStreamingServerNet.Rtmp.ServerEventHandlers
             _mediaMessageManager = mediaMessageManager;
         }
 
-        public void OnRtmpClientCreated(IRtmpClientPeerContext peerContext)
+        public Task OnRtmpClientCreatedAsync(IRtmpClientPeerContext peerContext)
         {
             _mediaMessageManager.RegisterClientPeer(peerContext);
+            return Task.CompletedTask;
         }
 
-        public void OnRtmpClientDisposed(IRtmpClientPeerContext peerContext)
+        public Task OnRtmpClientDisposedAsync(IRtmpClientPeerContext peerContext)
         {
             _mediaMessageManager.UnregisterClientPeer(peerContext);
             StopPublishingStreamIfNeeded(peerContext);
             StopSubscribingStreamIfNeeded(peerContext);
+            return Task.CompletedTask;
         }
 
         private void StopPublishingStreamIfNeeded(IRtmpClientPeerContext peerContext)

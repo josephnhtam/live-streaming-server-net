@@ -126,7 +126,7 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Commands
             var videoSequenceHeader = publishStreamContext.VideoSequenceHeader;
             if (videoSequenceHeader != null)
             {
-                _mediaMessageManager.SendVideoMessage(peerContext, chunkStreamContext, false, (netBuffer) =>
+                _mediaMessageManager.EnqueueVideoMessage(peerContext, chunkStreamContext, false, (netBuffer) =>
                     netBuffer.Write(videoSequenceHeader)
                 );
             }
@@ -134,7 +134,7 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Commands
             var audioSequenceHeader = publishStreamContext.AudioSequenceHeader;
             if (audioSequenceHeader != null)
             {
-                _mediaMessageManager.SendAudioMessage(peerContext, chunkStreamContext, false, (netBuffer) =>
+                _mediaMessageManager.EnqueueAudioMessage(peerContext, chunkStreamContext, false, (netBuffer) =>
                     netBuffer.Write(audioSequenceHeader)
                 );
             }

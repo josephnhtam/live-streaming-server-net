@@ -3,27 +3,27 @@ using LiveStreamingServerNet.Rtmp.Contracts;
 
 namespace LiveStreamingServerNet.Rtmp.Services.Contracts
 {
-    public interface IRtmpMediaMessageManagerService
+    public interface IRtmpMediaMessageManagerService : IAsyncDisposable
     {
-        void SendVideoMessage(
+        void EnqueueVideoMessage(
             IRtmpClientPeerContext subscriber,
             IRtmpChunkStreamContext chunkStreamContext,
             bool isSkippable,
             Action<INetBuffer> payloadWriter);
 
-        void SendVideoMessage(
+        void EnqueueVideoMessage(
             IList<IRtmpClientPeerContext> subscribers,
             IRtmpChunkStreamContext chunkStreamContext,
             bool isSkippable,
             Action<INetBuffer> payloadWriter);
 
-        void SendAudioMessage(
+        void EnqueueAudioMessage(
             IRtmpClientPeerContext subscriber,
             IRtmpChunkStreamContext chunkStreamContext,
             bool isSkippable,
             Action<INetBuffer> payloadWriter);
 
-        void SendAudioMessage(
+        void EnqueueAudioMessage(
             IList<IRtmpClientPeerContext> subscribers,
             IRtmpChunkStreamContext chunkStreamContext,
             bool isSkippable,
