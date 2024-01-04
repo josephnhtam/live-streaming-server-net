@@ -83,20 +83,24 @@ namespace LiveStreamingServerNet.Rtmp.Services
             using var netBuffer = _netBufferPool.Obtain();
             payloadWriter(netBuffer);
 
-            var rentedBuffer = ArrayPool<byte>.Shared.Rent(netBuffer.Size);
-            netBuffer.MoveTo(0).ReadBytes(rentedBuffer, 0, netBuffer.Size);
-
-            var mediaPackage = new ClientPeerMediaPackage(
-                mediaType,
-                chunkStreamContext.MessageHeader.Timestamp,
-                chunkStreamContext.MessageHeader.MessageStreamId,
-                rentedBuffer,
-                netBuffer.Size,
-                isSkippable);
-
             foreach (var subscriber in subscribers)
+            {
                 if (_peerMediaContexts.TryGetValue(subscriber, out var mediaContext))
+                {
+                    var rentedBuffer = ArrayPool<byte>.Shared.Rent(netBuffer.Size);
+                    netBuffer.MoveTo(0).ReadBytes(rentedBuffer, 0, netBuffer.Size);
+
+                    var mediaPackage = new ClientPeerMediaPackage(
+                        mediaType,
+                        chunkStreamContext.MessageHeader.Timestamp,
+                        chunkStreamContext.MessageHeader.MessageStreamId,
+                        rentedBuffer,
+                        netBuffer.Size,
+                        isSkippable);
+
                     mediaContext.AddPackage(ref mediaPackage);
+                }
+            }
         }
 
         private async Task SendAudioMessageAsync(IRtmpClientPeerContext subscriber, uint timestamp, uint messageStreamId, byte[] payloadBuffer, int payloadSize, CancellationToken cancellation)
