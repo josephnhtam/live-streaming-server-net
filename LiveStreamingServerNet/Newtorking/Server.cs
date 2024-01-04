@@ -37,7 +37,7 @@ namespace LiveStreamingServerNet.Newtorking
         {
             ValidateAndSetStarted();
 
-            using var tcpListener = CreateTcpListener(localEndpoint);
+            using var tcpListener = await CreateTcpListener(localEndpoint);
             tcpListener.Start();
 
             await OnServerStartedAsync();
@@ -106,10 +106,10 @@ namespace LiveStreamingServerNet.Newtorking
             return Interlocked.Increment(ref _nextClientPeerId);
         }
 
-        private TcpListener CreateTcpListener(IPEndPoint localEndpoint)
+        private async Task<TcpListener> CreateTcpListener(IPEndPoint localEndpoint)
         {
             var listener = new TcpListener(localEndpoint);
-            OnListenerCreatedAsync(listener);
+            await OnListenerCreatedAsync(listener);
             return listener;
         }
 

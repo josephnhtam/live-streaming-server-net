@@ -12,7 +12,7 @@ namespace LiveStreamingServerNet.Newtorking
     {
         private readonly INetBufferPool _netBufferPool;
         private readonly ILogger? _logger;
-        private readonly Channel<PendingMessage> _sendChannel;
+        private readonly Channel<PendingMessage> _pendingMessageChannel;
         private TcpClient _tcpClient = default!;
 
         public uint PeerId { get; private set; }
@@ -21,7 +21,7 @@ namespace LiveStreamingServerNet.Newtorking
         {
             _netBufferPool = services.GetRequiredService<INetBufferPool>();
             _logger = services.GetRequiredService<ILogger<ClientPeer>>();
-            _sendChannel = Channel.CreateUnbounded<PendingMessage>();
+            _pendingMessageChannel = Channel.CreateUnbounded<PendingMessage>();
         }
 
         public bool IsConnected => _tcpClient?.Connected ?? false;
@@ -34,70 +34,37 @@ namespace LiveStreamingServerNet.Newtorking
 
         public async Task RunAsync(IClientPeerHandler handler, CancellationToken stoppingToken)
         {
-            using var cts = CancellationTokenSource.CreateLinkedTokenSource(stoppingToken);
-            var cancellationToken = cts.Token;
-
-            try
+            await using (var outstandingBufferSender = new OutstandingBufferSender(_pendingMessageChannel.Reader, _logger))
             {
-                var networkStream = _tcpClient.GetStream();
-                var readOnlyNetworkStream = new ReadOnlyNetworkStream(networkStream);
-
-                var sendTask = SendOutstandingBuffersAsync(networkStream, cancellationToken);
+                using var cts = CancellationTokenSource.CreateLinkedTokenSource(stoppingToken);
+                var cancellationToken = cts.Token;
 
                 try
                 {
+                    var networkStream = _tcpClient.GetStream();
+                    var readOnlyNetworkStream = new ReadOnlyNetworkStream(networkStream);
+                    outstandingBufferSender.Start(networkStream, cancellationToken);
+
                     while (_tcpClient.Connected && !cancellationToken.IsCancellationRequested)
-                    {
                         if (!await handler.HandleClientPeerLoopAsync(readOnlyNetworkStream, cancellationToken))
-                        {
                             break;
-                        }
-                    }
+                }
+                catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { }
+                catch (Exception ex) when (ex is IOException or EndOfStreamException) { }
+                catch (Exception ex)
+                {
+                    _logger?.LogError(ex, "An error occurred");
                 }
                 finally
                 {
                     cts.Cancel();
                 }
+            }
 
-                await sendTask;
-            }
-            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { }
-            catch (EndOfStreamException) { }
-            catch (IOException) { }
-            catch (Exception ex)
-            {
-                _logger?.LogError(ex, "An error occurred");
-            }
-            finally
-            {
-                _tcpClient.Close();
-                await handler.DisposeAsync();
-                _logger?.LogDebug("PeerId: {PeerId} | Disconnected", PeerId);
-            }
-        }
+            await handler.DisposeAsync();
+            _tcpClient.Close();
 
-        private async Task SendOutstandingBuffersAsync(NetworkStream networkStream, CancellationToken cancellationToken)
-        {
-            while (!cancellationToken.IsCancellationRequested)
-            {
-                var (rentedBuffer, bufferSize, callback) = await _sendChannel.Reader.ReadAsync(cancellationToken);
-
-                try
-                {
-                    await networkStream.WriteAsync(rentedBuffer, 0, bufferSize, cancellationToken);
-                    callback?.Invoke();
-                }
-                catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { }
-                catch (IOException) { }
-                catch (Exception ex)
-                {
-                    _logger?.LogError(ex, "An error occurred while sending data to the client");
-                }
-                finally
-                {
-                    ArrayPool<byte>.Shared.Return(rentedBuffer);
-                }
-            }
+            _logger?.LogDebug("PeerId: {PeerId} | Disconnected", PeerId);
         }
 
         public void Send(INetBuffer netBuffer, Action? callback)
@@ -112,7 +79,7 @@ namespace LiveStreamingServerNet.Newtorking
                 netBuffer.MoveTo(0).ReadBytes(rentedBuffer, 0, netBuffer.Size);
                 netBuffer.MoveTo(originalPosition);
 
-                if (!_sendChannel.Writer.TryWrite(new PendingMessage(rentedBuffer, netBuffer.Size, callback)))
+                if (!_pendingMessageChannel.Writer.TryWrite(new PendingMessage(rentedBuffer, netBuffer.Size, callback)))
                 {
                     throw new Exception("Failed to write to the send channel");
                 }
@@ -137,7 +104,7 @@ namespace LiveStreamingServerNet.Newtorking
             {
                 netBuffer.MoveTo(0).ReadBytes(rentedBuffer, 0, netBuffer.Size);
 
-                if (!_sendChannel.Writer.TryWrite(new PendingMessage(rentedBuffer, netBuffer.Size, callback)))
+                if (!_pendingMessageChannel.Writer.TryWrite(new PendingMessage(rentedBuffer, netBuffer.Size, callback)))
                 {
                     throw new Exception("Failed to write to the send channel");
                 }
@@ -180,5 +147,58 @@ namespace LiveStreamingServerNet.Newtorking
         }
 
         private record struct PendingMessage(byte[] RentedBuffer, int BufferSize, Action? Callback);
+
+        private class OutstandingBufferSender : IAsyncDisposable
+        {
+            private readonly ChannelReader<PendingMessage> _pendingMessageReader;
+            private readonly ILogger? _logger;
+
+            private Task? _task;
+
+            public OutstandingBufferSender(ChannelReader<PendingMessage> pendingMessageReader, ILogger? logger)
+            {
+                _pendingMessageReader = pendingMessageReader;
+                _logger = logger;
+            }
+
+            public void Start(NetworkStream networkStream, CancellationToken cancellationToken)
+            {
+                _task = Task.Run(() => SendOutstandingBuffersAsync(networkStream, cancellationToken));
+            }
+
+            private async Task SendOutstandingBuffersAsync(NetworkStream networkStream, CancellationToken cancellationToken)
+            {
+                try
+                {
+                    while (!cancellationToken.IsCancellationRequested)
+                    {
+                        var (rentedBuffer, bufferSize, callback) = await _pendingMessageReader.ReadAsync(cancellationToken);
+
+                        try
+                        {
+                            await networkStream.WriteAsync(rentedBuffer, 0, bufferSize, cancellationToken);
+                        }
+                        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { }
+                        catch (IOException) { }
+                        catch (Exception ex)
+                        {
+                            _logger?.LogError(ex, "An error occurred while sending data to the client");
+                        }
+                        finally
+                        {
+                            callback?.Invoke();
+                            ArrayPool<byte>.Shared.Return(rentedBuffer);
+                        }
+                    }
+                }
+                catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { }
+            }
+
+            public async ValueTask DisposeAsync()
+            {
+                if (_task != null)
+                    await _task;
+            }
+        }
     }
 }
