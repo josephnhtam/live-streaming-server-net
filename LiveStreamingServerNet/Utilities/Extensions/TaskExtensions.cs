@@ -4,7 +4,7 @@
     {
         public static async Task WithCancellation(this Task task, CancellationToken cancellation)
         {
-            var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellation);
+            using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellation);
 
             try
             {
