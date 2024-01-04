@@ -177,6 +177,11 @@ namespace LiveStreamingServerNet.Rtmp.Services
                 }
             }
             catch (OperationCanceledException) when (cancellation.IsCancellationRequested) { }
+
+            while (context.ReadPackage(out var package))
+            {
+                package.RentedPayload.Unclaim();
+            }
         }
 
         public async ValueTask DisposeAsync()
@@ -213,6 +218,7 @@ namespace LiveStreamingServerNet.Rtmp.Services
 
             public void Stop()
             {
+                _packageChannel.Writer.Complete();
                 _cts.Cancel();
             }
 
@@ -237,6 +243,11 @@ namespace LiveStreamingServerNet.Rtmp.Services
                 var package = await _packageChannel.Reader.ReadAsync(cancellation);
                 Interlocked.Add(ref _outstandingPackagesSize, -package.PayloadSize);
                 return package;
+            }
+
+            public bool ReadPackage(out ClientPeerMediaPackage package)
+            {
+                return _packageChannel.Reader.TryRead(out package);
             }
 
             private bool ShouldSkipPackage(ClientPeerMediaContext context, ref ClientPeerMediaPackage package)
