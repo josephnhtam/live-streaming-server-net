@@ -105,10 +105,8 @@ namespace LiveStreamingServerNet.Rtmp.Services
             var messageHeader = new RtmpChunkMessageHeaderType0(timestamp,
                 RtmpMessageType.AudioMessage, messageStreamId);
 
-            var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellation);
-
             await _chunkMessageSender.SendAsync(subscriber, basicHeader, messageHeader, (netBuffer) => netBuffer.Write(payloadBuffer, 0, payloadSize))
-                                     .WithCancellation(cts.Token);
+                                     .WithCancellation(cancellation);
         }
 
         private async Task SendVideoMessageAsync(IRtmpClientPeerContext subscriber, uint timestamp, uint messageStreamId, byte[] payloadBuffer, int payloadSize, CancellationToken cancellation)
