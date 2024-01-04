@@ -4,6 +4,7 @@ using LiveStreamingServerNet.Rtmp.Contracts;
 using LiveStreamingServerNet.Rtmp.RtmpEventHandlers;
 using LiveStreamingServerNet.Rtmp.RtmpHeaders;
 using LiveStreamingServerNet.Rtmp.Services.Contracts;
+using LiveStreamingServerNet.Utilities;
 using LiveStreamingServerNet.Utilities.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -63,8 +64,8 @@ namespace LiveStreamingServerNet.Rtmp.Services
             using var netBuffer = _netBufferPool.Obtain();
             payloadWriter(netBuffer);
 
-            var rentedBuffer = ArrayPool<byte>.Shared.Rent(netBuffer.Size);
-            netBuffer.MoveTo(0).ReadBytes(rentedBuffer, 0, netBuffer.Size);
+            var rentedBuffer = new RentedBytes(netBuffer.Size);
+            netBuffer.MoveTo(0).ReadBytes(rentedBuffer.Bytes, 0, netBuffer.Size);
 
             var mediaPackage = new ClientPeerMediaPackage(
                 mediaType,
@@ -83,23 +84,24 @@ namespace LiveStreamingServerNet.Rtmp.Services
             using var netBuffer = _netBufferPool.Obtain();
             payloadWriter(netBuffer);
 
+
+            var rentedBuffer = new RentedBytes(netBuffer.Size, subscribers.Count);
+            netBuffer.MoveTo(0).ReadBytes(rentedBuffer.Bytes, 0, netBuffer.Size);
+
+            var mediaPackage = new ClientPeerMediaPackage(
+                mediaType,
+                chunkStreamContext.MessageHeader.Timestamp,
+                chunkStreamContext.MessageHeader.MessageStreamId,
+                rentedBuffer,
+                netBuffer.Size,
+                isSkippable);
+
             foreach (var subscriber in subscribers)
             {
                 if (_peerMediaContexts.TryGetValue(subscriber, out var mediaContext))
-                {
-                    var rentedBuffer = ArrayPool<byte>.Shared.Rent(netBuffer.Size);
-                    netBuffer.MoveTo(0).ReadBytes(rentedBuffer, 0, netBuffer.Size);
-
-                    var mediaPackage = new ClientPeerMediaPackage(
-                        mediaType,
-                        chunkStreamContext.MessageHeader.Timestamp,
-                        chunkStreamContext.MessageHeader.MessageStreamId,
-                        rentedBuffer,
-                        netBuffer.Size,
-                        isSkippable);
-
                     mediaContext.AddPackage(ref mediaPackage);
-                }
+                else
+                    rentedBuffer.Unclaim();
             }
         }
 
@@ -156,10 +158,10 @@ namespace LiveStreamingServerNet.Rtmp.Services
                         switch (package.MediaType)
                         {
                             case MediaType.Video:
-                                await SendVideoMessageAsync(peerContext, package.Timestamp, package.MessageStreamId, package.RentedPayload, package.PayloadSize, cancellation);
+                                await SendVideoMessageAsync(peerContext, package.Timestamp, package.MessageStreamId, package.RentedPayload.Bytes, package.PayloadSize, cancellation);
                                 break;
                             case MediaType.Audio:
-                                await SendAudioMessageAsync(peerContext, package.Timestamp, package.MessageStreamId, package.RentedPayload, package.PayloadSize, cancellation);
+                                await SendAudioMessageAsync(peerContext, package.Timestamp, package.MessageStreamId, package.RentedPayload.Bytes, package.PayloadSize, cancellation);
                                 break;
                         }
                     }
@@ -170,7 +172,7 @@ namespace LiveStreamingServerNet.Rtmp.Services
                     }
                     finally
                     {
-                        ArrayPool<byte>.Shared.Return(package.RentedPayload);
+                        package.RentedPayload.Unclaim();
                     }
                 }
             }
@@ -271,6 +273,6 @@ namespace LiveStreamingServerNet.Rtmp.Services
         }
 
         private enum MediaType { Video, Audio }
-        private record struct ClientPeerMediaPackage(MediaType MediaType, uint Timestamp, uint MessageStreamId, byte[] RentedPayload, int PayloadSize, bool IsSkippable);
+        private record struct ClientPeerMediaPackage(MediaType MediaType, uint Timestamp, uint MessageStreamId, RentedBytes RentedPayload, int PayloadSize, bool IsSkippable);
     }
 }
