@@ -51,14 +51,14 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers
 
             var success = basicHeader.ChunkType switch
             {
-                0 => await HandleChunkType0Async(chunkStreamContext, @event, netBuffer, cancellationToken),
-                1 => await HandleChunkType1Async(chunkStreamContext, @event, netBuffer, cancellationToken),
-                2 => await HandleChunkType2Async(chunkStreamContext, @event, netBuffer, cancellationToken),
-                3 => await HandleChunkType3Async(chunkStreamContext, @event, netBuffer, cancellationToken),
+                0 => await HandleChunkMessageHeaderType0Async(chunkStreamContext, @event, netBuffer, cancellationToken),
+                1 => await HandleChunkMessageHeaderType1Async(chunkStreamContext, @event, netBuffer, cancellationToken),
+                2 => await HandleChunkMessageHeaderType2Async(chunkStreamContext, @event, netBuffer, cancellationToken),
+                3 => await HandleChunkMessageHeaderType3Async(chunkStreamContext, @event, netBuffer, cancellationToken),
                 _ => throw new ArgumentOutOfRangeException(nameof(basicHeader.ChunkType))
             };
 
-            success &= await HandlePayloadAsync(chunkStreamContext, @event, netBuffer, cancellationToken);
+            success &= await HandleChunkEventPayloadAsync(chunkStreamContext, @event, netBuffer, cancellationToken);
             return success;
         }
 
@@ -84,7 +84,7 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers
             }
         }
 
-        private async Task<bool> HandleChunkType0Async(
+        private async Task<bool> HandleChunkMessageHeaderType0Async(
             IRtmpChunkStreamContext chunkStreamContext,
             RtmpChunkEvent @event,
             INetBuffer netBuffer,
@@ -112,7 +112,7 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers
             return true;
         }
 
-        private async Task<bool> HandleChunkType1Async(IRtmpChunkStreamContext chunkStreamContext,
+        private async Task<bool> HandleChunkMessageHeaderType1Async(IRtmpChunkStreamContext chunkStreamContext,
             RtmpChunkEvent @event,
             INetBuffer netBuffer,
             CancellationToken cancellationToken)
@@ -138,7 +138,7 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers
             return true;
         }
 
-        private async Task<bool> HandleChunkType2Async(
+        private async Task<bool> HandleChunkMessageHeaderType2Async(
             IRtmpChunkStreamContext chunkStreamContext,
             RtmpChunkEvent @event,
             INetBuffer netBuffer,
@@ -163,7 +163,7 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers
             return true;
         }
 
-        private async Task<bool> HandleChunkType3Async(
+        private async Task<bool> HandleChunkMessageHeaderType3Async(
             IRtmpChunkStreamContext chunkStreamContext,
             RtmpChunkEvent @event,
             INetBuffer netBuffer,
@@ -184,7 +184,7 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers
             return true;
         }
 
-        private async Task<bool> HandlePayloadAsync(IRtmpChunkStreamContext chunkStreamContext, RtmpChunkEvent @event, INetBuffer netBuffer, CancellationToken cancellationToken)
+        private async Task<bool> HandleChunkEventPayloadAsync(IRtmpChunkStreamContext chunkStreamContext, RtmpChunkEvent @event, INetBuffer netBuffer, CancellationToken cancellationToken)
         {
             if (chunkStreamContext.IsFirstChunkOfMessage)
             {
