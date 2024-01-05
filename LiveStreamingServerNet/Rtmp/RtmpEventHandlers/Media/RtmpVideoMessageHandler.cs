@@ -31,7 +31,7 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Media
             CancellationToken cancellationToken)
         {
             var publishStreamContext = peerContext.PublishStreamContext ??
-                throw new InvalidOperationException("Stream is not created yet.");
+                throw new InvalidOperationException("Stream is not yet published.");
 
             var hasSequenceHeader = CacheVideoSequenceHeaderIfNeeded(publishStreamContext, payloadBuffer);
             BroacastVideoMessageToSubscribers(chunkStreamContext, publishStreamContext, payloadBuffer, hasSequenceHeader);
