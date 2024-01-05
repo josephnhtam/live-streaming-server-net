@@ -47,18 +47,15 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers
         {
             var basicHeader = await RtmpChunkBasicHeader.ReadAsync(netBuffer, @event.NetworkStream, cancellationToken);
 
-            var chunkType = basicHeader.ChunkType;
-            var chunkStreamId = basicHeader.ChunkStreamId;
+            var chunkStreamContext = @event.PeerContext.GetChunkStreamContext(basicHeader.ChunkStreamId);
 
-            var chunkStreamContext = @event.PeerContext.GetChunkStreamContext(chunkStreamId);
-
-            var success = chunkType switch
+            var success = basicHeader.ChunkType switch
             {
                 0 => await HandleChunkType0Async(chunkStreamContext, @event, netBuffer, cancellationToken),
                 1 => await HandleChunkType1Async(chunkStreamContext, @event, netBuffer, cancellationToken),
                 2 => await HandleChunkType2Async(chunkStreamContext, @event, netBuffer, cancellationToken),
                 3 => await HandleChunkType3Async(chunkStreamContext, @event, netBuffer, cancellationToken),
-                _ => throw new ArgumentOutOfRangeException(nameof(chunkType))
+                _ => throw new ArgumentOutOfRangeException(nameof(basicHeader.ChunkType))
             };
 
             success &= await HandlePayloadAsync(chunkStreamContext, @event, netBuffer, cancellationToken);
