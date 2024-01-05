@@ -40,6 +40,9 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Commands
             _logger.LogDebug("PeerId: {PeerId} | Play: {StreamName}",
                 peerContext.Peer.PeerId, !string.IsNullOrEmpty(command.StreamName) ? command.StreamName : "(Empty)");
 
+            if (peerContext.StreamId == null)
+                throw new InvalidOperationException("Stream is not yet created.");
+
             var (streamPath, streamArguments) = ParseSubscriptionContext(command, peerContext);
 
             if (await AuthorizeAsync(peerContext, command, chunkStreamContext, streamPath, streamArguments))

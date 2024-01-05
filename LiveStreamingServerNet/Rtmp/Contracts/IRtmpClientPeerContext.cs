@@ -19,21 +19,24 @@ namespace LiveStreamingServerNet.Rtmp.Contracts
         uint LastAcknowledgedSequenceNumber { get; set; }
 
         string AppName { get; set; }
+        uint? StreamId { get; }
+
+        uint CreateNewStream();
 
         IRtmpPublishStreamContext? PublishStreamContext { get; }
-        IRtmpPublishStreamContext CreateNewPublishStream();
+        IRtmpPublishStreamContext CreatePublishStreamContext(string streamPath, IDictionary<string, string> streamArguments);
 
         IRtmpStreamSubscriptionContext? StreamSubscriptionContext { get; }
-        IRtmpStreamSubscriptionContext CreateStreamSubscriptionContext(uint chunkStreamId, string streamName, IDictionary<string, string> streamArguments);
+        IRtmpStreamSubscriptionContext CreateStreamSubscriptionContext(uint chunkStreamId, string streamPath, IDictionary<string, string> streamArguments);
 
         IRtmpChunkStreamContext GetChunkStreamContext(uint chunkStreamId);
     }
 
     public interface IRtmpPublishStreamContext
     {
-        uint Id { get; }
-        string StreamPath { get; set; }
-        IDictionary<string, string> StreamArguments { get; set; }
+        uint StreamId { get; }
+        string StreamPath { get; }
+        IDictionary<string, string> StreamArguments { get; }
         IPublishStreamMetaData StreamMetaData { get; set; }
         byte[]? VideoSequenceHeader { get; set; }
         byte[]? AudioSequenceHeader { get; set; }
@@ -51,6 +54,7 @@ namespace LiveStreamingServerNet.Rtmp.Contracts
 
     public interface IRtmpStreamSubscriptionContext
     {
+        uint StreamId { get; }
         uint ChunkStreamId { get; }
         string StreamPath { get; }
         IDictionary<string, string> StreamArguments { get; }

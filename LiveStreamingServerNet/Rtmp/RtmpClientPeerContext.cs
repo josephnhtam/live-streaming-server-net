@@ -21,11 +21,13 @@ namespace LiveStreamingServerNet.Rtmp
         public uint LastAcknowledgedSequenceNumber { get; set; }
 
         public string AppName { get; set; } = default!;
+        public uint? StreamId => _isStreamCreated ? _streamId : null;
 
         public IRtmpPublishStreamContext? PublishStreamContext { get; private set; }
         public IRtmpStreamSubscriptionContext? StreamSubscriptionContext { get; private set; }
 
-        private uint _publishStreamId;
+        private uint _streamId;
+        private bool _isStreamCreated;
         private ConcurrentDictionary<uint, IRtmpChunkStreamContext> _chunkStreamContexts = new();
 
         public RtmpClientPeerContext(IClientPeerHandle peer)
@@ -33,16 +35,16 @@ namespace LiveStreamingServerNet.Rtmp
             Peer = peer;
         }
 
-        public IRtmpPublishStreamContext CreateNewPublishStream()
+        public IRtmpPublishStreamContext CreatePublishStreamContext(string streamPath, IDictionary<string, string> streamArguments)
         {
-            var newContext = new RtmpPublishStreamContext(Interlocked.Increment(ref _publishStreamId));
+            var newContext = new RtmpPublishStreamContext(_streamId, streamPath, streamArguments);
             PublishStreamContext = newContext;
             return newContext;
         }
 
-        public IRtmpStreamSubscriptionContext CreateStreamSubscriptionContext(uint chunkStreamId, string streamName, IDictionary<string, string> streamArguments)
+        public IRtmpStreamSubscriptionContext CreateStreamSubscriptionContext(uint chunkStreamId, string streamPath, IDictionary<string, string> streamArguments)
         {
-            var newContext = new RtmpStreamSubscriptionContext(chunkStreamId, streamName, streamArguments);
+            var newContext = new RtmpStreamSubscriptionContext(_streamId, chunkStreamId, streamPath, streamArguments);
             StreamSubscriptionContext = newContext;
             return newContext;
         }
@@ -51,20 +53,29 @@ namespace LiveStreamingServerNet.Rtmp
         {
             return _chunkStreamContexts.GetOrAdd(chunkStreamId, new RtmpChunkStreamContext(chunkStreamId));
         }
+
+        public uint CreateNewStream()
+        {
+            var streamId = Interlocked.Increment(ref _streamId);
+            _isStreamCreated = true;
+            return streamId;
+        }
     }
 
     public class RtmpPublishStreamContext : IRtmpPublishStreamContext
     {
-        public uint Id { get; }
-        public string StreamPath { get; set; } = default!;
-        public IDictionary<string, string> StreamArguments { get; set; } = new Dictionary<string, string>();
+        public uint StreamId { get; }
+        public string StreamPath { get; }
+        public IDictionary<string, string> StreamArguments { get; }
         public IPublishStreamMetaData StreamMetaData { get; set; } = default!;
         public byte[]? VideoSequenceHeader { get; set; }
         public byte[]? AudioSequenceHeader { get; set; }
 
-        public RtmpPublishStreamContext(uint streamId)
+        public RtmpPublishStreamContext(uint streamId, string streamPath, IDictionary<string, string> streamArguments)
         {
-            Id = streamId;
+            StreamId = streamId;
+            StreamPath = streamPath;
+            StreamArguments = streamArguments;
         }
     }
 
@@ -94,14 +105,16 @@ namespace LiveStreamingServerNet.Rtmp
 
     public class RtmpStreamSubscriptionContext : IRtmpStreamSubscriptionContext
     {
+        public uint StreamId { get; }
         public uint ChunkStreamId { get; }
         public string StreamPath { get; }
         public IDictionary<string, string> StreamArguments { get; }
 
-        public RtmpStreamSubscriptionContext(uint chunkStreamId, string streamName, IDictionary<string, string> streamArguments)
+        public RtmpStreamSubscriptionContext(uint streamId, uint chunkStreamId, string streamPath, IDictionary<string, string> streamArguments)
         {
+            StreamId = streamId;
             ChunkStreamId = chunkStreamId;
-            StreamPath = streamName;
+            StreamPath = streamPath;
             StreamArguments = streamArguments;
         }
     }

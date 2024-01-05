@@ -40,8 +40,7 @@ namespace LiveStreamingServerNet.Rtmp.Services
             if (_publishingClientPeerContexts.ContainsKey(streamPath))
                 return PublishingStreamResult.AlreadyExists;
 
-            publisherPeerContext.PublishStreamContext!.StreamPath = streamPath;
-            publisherPeerContext.PublishStreamContext!.StreamArguments = streamArguments;
+            var publishStreamContext = publisherPeerContext.CreatePublishStreamContext(streamPath, streamArguments);
 
             _publishStreamPaths.Add(publisherPeerContext, streamPath);
             _publishingClientPeerContexts.Add(streamPath, publisherPeerContext);

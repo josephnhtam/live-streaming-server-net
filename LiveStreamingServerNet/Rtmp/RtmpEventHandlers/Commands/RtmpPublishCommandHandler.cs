@@ -36,8 +36,8 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Commands
                 !string.IsNullOrEmpty(command.PublishingName) ? command.PublishingName : "(Empty)",
                 command.PublishingType);
 
-            if (peerContext.PublishStreamContext == null)
-                throw new InvalidOperationException("Stream is not created yet.");
+            if (peerContext.StreamId == null)
+                throw new InvalidOperationException("Stream is not yet created.");
 
             var (streamPath, streamArguments) = ParsePublishContext(command, peerContext);
 
