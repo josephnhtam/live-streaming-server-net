@@ -1,5 +1,7 @@
-﻿using LiveStreamingServerNet.Newtorking.Contracts;
+﻿using LiveStreamingServerNet.Newtorking.Configurations;
+using LiveStreamingServerNet.Newtorking.Contracts;
 using LiveStreamingServerNet.Utilities;
+using Microsoft.Extensions.Options;
 using System.Collections.Concurrent;
 
 namespace LiveStreamingServerNet.Newtorking
@@ -11,11 +13,11 @@ namespace LiveStreamingServerNet.Newtorking
         private readonly int _maxPoolSize;
         private ConcurrentBag<PoolableNetBuffer> _poolableNetBuffers = new();
 
-        public NetBufferPool(int netBufferCapacity = 512, int maxPoolSize = -1)
+        public NetBufferPool(IOptions<NetBufferPoolConfiguration> config)
         {
             _pool = new Pool<PoolableNetBuffer>(CreatePoolableNetBuffer);
-            _netBufferCapacity = netBufferCapacity;
-            _maxPoolSize = maxPoolSize;
+            _netBufferCapacity = config.Value.NetBufferCapacity;
+            _maxPoolSize = config.Value.MaxPoolSize;
         }
 
         private PoolableNetBuffer CreatePoolableNetBuffer()

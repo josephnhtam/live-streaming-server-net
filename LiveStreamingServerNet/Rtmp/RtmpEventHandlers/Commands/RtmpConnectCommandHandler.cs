@@ -1,8 +1,10 @@
-﻿using LiveStreamingServerNet.Rtmp.Contracts;
+﻿using LiveStreamingServerNet.Rtmp.Configurations;
+using LiveStreamingServerNet.Rtmp.Contracts;
 using LiveStreamingServerNet.Rtmp.RtmpEventHandlers.CommandDispatcher;
 using LiveStreamingServerNet.Rtmp.RtmpEventHandlers.CommandDispatcher.Attributes;
 using LiveStreamingServerNet.Rtmp.Services.Contracts;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System.Text.Json;
 
 namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Commands
@@ -14,15 +16,18 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Commands
     {
         private readonly IRtmpProtocolControlMessageSenderService _protocolControlMessageSender;
         private readonly IRtmpCommandMessageSenderService _commandMessageSender;
-        private readonly ILogger<RtmpConnectCommandHandler> _logger;
+        private readonly RtmpServerConfiguration _config;
+        private readonly ILogger _logger;
 
         public RtmpConnectCommandHandler(
             IRtmpProtocolControlMessageSenderService protocolControlMessageSender,
             IRtmpCommandMessageSenderService commandMessageSender,
+            IOptions<RtmpServerConfiguration> config,
             ILogger<RtmpConnectCommandHandler> logger)
         {
             _protocolControlMessageSender = protocolControlMessageSender;
             _commandMessageSender = commandMessageSender;
+            _config = config.Value;
             _logger = logger;
         }
 
@@ -36,9 +41,9 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Commands
 
             peerContext.AppName = (string)command.CommandObject["app"];
 
-            _protocolControlMessageSender.SetChunkSize(peerContext, RtmpConstants.DefaultChunkSize);
-            _protocolControlMessageSender.WindowAcknowledgementSize(peerContext, RtmpConstants.DefaultInAcknowledgementWindowSize);
-            _protocolControlMessageSender.SetPeerBandwidth(peerContext, RtmpConstants.DefaultPeerBandwidth, RtmpPeerBandwidthLimitType.Dynamic);
+            _protocolControlMessageSender.SetChunkSize(peerContext, _config.OutChunkSize);
+            _protocolControlMessageSender.WindowAcknowledgementSize(peerContext, _config.OutAcknowledgementWindowSize);
+            _protocolControlMessageSender.SetPeerBandwidth(peerContext, _config.PeerBandwidth, RtmpPeerBandwidthLimitType.Dynamic);
 
             RespondToClient(peerContext, command);
 

@@ -1,6 +1,7 @@
 ﻿using LiveStreamingServerNet.Builders.Contracts;
 using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.Newtorking;
+using LiveStreamingServerNet.Newtorking.Configurations;
 using LiveStreamingServerNet.Newtorking.Contracts;
 using LiveStreamingServerNet.Rtmp;
 using LiveStreamingServerNet.Rtmp.Configurations;
@@ -121,7 +122,19 @@ namespace LiveStreamingServerNet.Builders
             return this;
         }
 
+        public ILiveStreamingServerBuilder ConfigureRtmpServer(Action<RtmpServerConfiguration> configure)
+        {
+            _services.Configure(configure);
+            return this;
+        }
+
         public ILiveStreamingServerBuilder ConfigureMediaMessage(Action<MediaMessageConfiguration> configure)
+        {
+            _services.Configure(configure);
+            return this;
+        }
+
+        public ILiveStreamingServerBuilder ConfigureNetBufferPool(Action<NetBufferPoolConfiguration> configure)
         {
             _services.Configure(configure);
             return this;
