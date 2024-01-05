@@ -3,6 +3,7 @@ using LiveStreamingServerNet.Rtmp.Contracts;
 using LiveStreamingServerNet.Rtmp.RtmpEventHandlers.MessageDispatcher.Contracts;
 using LiveStreamingServerNet.Rtmp.RtmpEvents;
 using LiveStreamingServerNet.Rtmp.RtmpHeaders;
+using LiveStreamingServerNet.Rtmp.Services.Contracts;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
@@ -12,12 +13,18 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers
     {
         private readonly INetBufferPool _netBufferPool;
         private readonly IRtmpMessageDispatcher _dispatcher;
+        private readonly IRtmpProtocolControlMessageSenderService _protocolControlMessageSender;
         private readonly ILogger _logger;
 
-        public RtmpChunkEventHandler(INetBufferPool netBufferPool, IRtmpMessageDispatcher dispatcher, ILogger<RtmpChunkEventHandler> logger)
+        public RtmpChunkEventHandler(
+            INetBufferPool netBufferPool,
+            IRtmpMessageDispatcher dispatcher,
+            IRtmpProtocolControlMessageSenderService protocolControlMessageSender,
+            ILogger<RtmpChunkEventHandler> logger)
         {
             _netBufferPool = netBufferPool;
             _dispatcher = dispatcher;
+            _protocolControlMessageSender = protocolControlMessageSender;
             _logger = logger;
         }
 
@@ -25,6 +32,19 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers
         {
             using var netBuffer = _netBufferPool.Obtain();
 
+            if (await HandleChunkEvent(@event, netBuffer, cancellationToken))
+            {
+                HandleAcknowlegement(@event, netBuffer.Size);
+                return true;
+            }
+
+            _logger.LogError("PeerId: {PeerId} | Failed to handle chunk event", @event.PeerContext.Peer.PeerId);
+
+            return false;
+        }
+
+        private async Task<bool> HandleChunkEvent(RtmpChunkEvent @event, INetBuffer netBuffer, CancellationToken cancellationToken)
+        {
             var basicHeader = await RtmpChunkBasicHeader.ReadAsync(netBuffer, @event.NetworkStream, cancellationToken);
 
             var chunkType = basicHeader.ChunkType;
@@ -32,7 +52,7 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers
 
             var chunkStreamContext = @event.PeerContext.GetChunkStreamContext(chunkStreamId);
 
-            var result = chunkType switch
+            var success = chunkType switch
             {
                 0 => await HandleChunkType0Async(chunkStreamContext, @event, netBuffer, cancellationToken),
                 1 => await HandleChunkType1Async(chunkStreamContext, @event, netBuffer, cancellationToken),
@@ -41,7 +61,30 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers
                 _ => throw new ArgumentOutOfRangeException(nameof(chunkType))
             };
 
-            return result && await HandlePayloadAsync(chunkStreamContext, @event, netBuffer, cancellationToken);
+            success &= await HandlePayloadAsync(chunkStreamContext, @event, netBuffer, cancellationToken);
+            return success;
+        }
+
+        private void HandleAcknowlegement(RtmpChunkEvent @event, int bufferSize)
+        {
+            var peerContext = @event.PeerContext;
+
+            if (peerContext.OutWindowAcknowledgementSize == 0)
+                return;
+
+            peerContext.SequenceNumber += (uint)bufferSize;
+            if ((peerContext.SequenceNumber - peerContext.LastAcknowledgedSequenceNumber) >= peerContext.OutWindowAcknowledgementSize)
+            {
+                peerContext.LastAcknowledgedSequenceNumber = peerContext.SequenceNumber;
+                _protocolControlMessageSender.Acknowledgement(peerContext, peerContext.SequenceNumber);
+
+                const uint overflow = 0xf0000000;
+                if (peerContext.SequenceNumber >= overflow)
+                {
+                    peerContext.SequenceNumber -= overflow;
+                    peerContext.LastAcknowledgedSequenceNumber -= overflow;
+                }
+            }
         }
 
         private async Task<bool> HandleChunkType0Async(
@@ -163,7 +206,7 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers
                 );
 
                 await netBuffer.CopyStreamData(@event.NetworkStream, chunkedPayloadLength, cancellationToken);
-                netBuffer.Flush(payloadBuffer);
+                netBuffer.CopyAllTo(payloadBuffer);
             }
 
             if (payloadBuffer.Size == messageLength)

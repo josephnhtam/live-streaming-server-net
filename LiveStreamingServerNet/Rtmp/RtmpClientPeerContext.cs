@@ -17,6 +17,9 @@ namespace LiveStreamingServerNet.Rtmp
         public uint InWindowAcknowledgementSize { get; set; }
         public uint OutWindowAcknowledgementSize { get; set; }
 
+        public uint SequenceNumber { get; set; }
+        public uint LastAcknowledgedSequenceNumber { get; set; }
+
         public string AppName { get; set; } = default!;
 
         public IRtmpPublishStreamContext? PublishStreamContext { get; private set; }
