@@ -60,6 +60,13 @@ namespace LiveStreamingServerNet.Rtmp
             _isStreamCreated = true;
             return streamId;
         }
+
+        public void DeleteStream()
+        {
+            _isStreamCreated = false;
+            PublishStreamContext = null;
+            StreamSubscriptionContext = null;
+        }
     }
 
     public class RtmpPublishStreamContext : IRtmpPublishStreamContext

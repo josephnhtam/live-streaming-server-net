@@ -22,6 +22,7 @@ namespace LiveStreamingServerNet.Rtmp.Contracts
         uint? StreamId { get; }
 
         uint CreateNewStream();
+        void DeleteStream();
 
         IRtmpPublishStreamContext? PublishStreamContext { get; }
         IRtmpPublishStreamContext CreatePublishStreamContext(string streamPath, IDictionary<string, string> streamArguments);
