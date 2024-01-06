@@ -12,6 +12,8 @@ namespace LiveStreamingServerNet
     {
         private readonly ServiceCollection _services;
 
+        public IServiceCollection Services => _services;
+
         private LiveStreamingServerBuilder()
         {
             _services = new ServiceCollection();
