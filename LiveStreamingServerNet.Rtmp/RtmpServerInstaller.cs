@@ -1,7 +1,4 @@
 ﻿using LiveStreamingServerNet.Networking;
-using LiveStreamingServerNet.Networking.Contracts;
-using LiveStreamingServerNet.Newtorking;
-using LiveStreamingServerNet.Newtorking.Contracts;
 using LiveStreamingServerNet.Rtmp.Contracts;
 using LiveStreamingServerNet.Rtmp.RtmpEventHandlers.CommandDispatcher;
 using LiveStreamingServerNet.Rtmp.RtmpEventHandlers.CommandDispatcher.Attributes;
@@ -13,7 +10,6 @@ using LiveStreamingServerNet.Rtmp.RtmpServerEventHandlers;
 using LiveStreamingServerNet.Rtmp.Services;
 using LiveStreamingServerNet.Rtmp.Services.Contracts;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using System.Reflection;
 
 namespace LiveStreamingServerNet.Rtmp
