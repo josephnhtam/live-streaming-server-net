@@ -3,7 +3,7 @@ using LiveStreamingServerNet.Rtmp.Contracts;
 using LiveStreamingServerNet.Rtmp.Extensions;
 using LiveStreamingServerNet.Rtmp.RtmpEventHandlers.MessageDispatcher.Attributes;
 using LiveStreamingServerNet.Rtmp.RtmpEventHandlers.MessageDispatcher.Contracts;
-using Microsoft.Extensions.Logging;
+using LiveStreamingServerNet.Rtmp.Services.Contracts;
 
 namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Data
 {
@@ -11,13 +11,11 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Data
     [RtmpMessageType(RtmpMessageType.DataMessageAmf3)]
     public class RtmpDataMessageHandler : IRtmpMessageHandler
     {
-        private readonly IRtmpServerContext _serverContext;
-        private readonly ILogger _logger;
+        private readonly IRtmpMediaMessageManagerService _mediaMessageManager;
 
-        public RtmpDataMessageHandler(IRtmpServerContext serverContext, ILogger<RtmpDataMessageHandler> logger)
+        public RtmpDataMessageHandler(IRtmpMediaMessageManagerService mediaMessageManager)
         {
-            _serverContext = serverContext;
-            _logger = logger;
+            _mediaMessageManager = mediaMessageManager;
         }
 
         public async Task<bool> HandleAsync(
@@ -37,29 +35,44 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Data
 
             return commandName switch
             {
-                RtmpDataMessageConstants.SetDataFrame => await HandleSetDataFrameAsync(peerContext, amfData),
+                RtmpDataMessageConstants.SetDataFrame => await HandleSetDataFrameAsync(peerContext, chunkStreamContext, amfData),
                 _ => true
             };
         }
 
-        private async Task<bool> HandleSetDataFrameAsync(IRtmpClientPeerContext peerContext, object[] amfData)
+        private async Task<bool> HandleSetDataFrameAsync(
+            IRtmpClientPeerContext peerContext,
+            IRtmpChunkStreamContext chunkStreamContext,
+            object[] amfData)
         {
             var eventName = amfData[1] as string;
             switch (eventName)
             {
                 case RtmpDataMessageConstants.OnMetaData:
                     var metaData = amfData[2] as IDictionary<string, object>;
-                    return metaData != null ? await HandleOnMetaDataAsync(peerContext, metaData) : true;
+                    return metaData != null ? await HandleOnMetaDataAsync(peerContext, chunkStreamContext, metaData) : true;
                 default:
                     return true;
             }
         }
 
-        private Task<bool> HandleOnMetaDataAsync(IRtmpClientPeerContext peerContext, IDictionary<string, object> metaData)
+        private Task<bool> HandleOnMetaDataAsync(
+            IRtmpClientPeerContext peerContext,
+            IRtmpChunkStreamContext chunkStreamContext,
+            IDictionary<string, object> metaData)
         {
             var publishStreamContext = peerContext.PublishStreamContext
                 ?? throw new InvalidOperationException("Stream is not yet created.");
 
+            CacheStreamMetaData(metaData, publishStreamContext);
+
+            BroadcastMetaDataToSubscribers(peerContext, chunkStreamContext, publishStreamContext);
+
+            return Task.FromResult(true);
+        }
+
+        private static void CacheStreamMetaData(IDictionary<string, object> metaData, IRtmpPublishStreamContext publishStreamContext)
+        {
             publishStreamContext.StreamMetaData = new PublishStreamMetaData(
                 videoFrameRate: (uint)(double)metaData["framerate"],
                 videoWidth: (uint)(double)metaData["width"],
@@ -67,15 +80,18 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Data
                 audioSampleRate: (uint)(double)metaData["audiosamplerate"],
                 stereo: (bool)metaData["stereo"]
             );
-
-            BroadcastMetaDataToSubscribers(peerContext, metaData);
-
-            return Task.FromResult(true);
         }
 
-        private void BroadcastMetaDataToSubscribers(IRtmpClientPeerContext peerContext, IDictionary<string, object> metaData)
+        private void BroadcastMetaDataToSubscribers(
+            IRtmpClientPeerContext peerContext,
+            IRtmpChunkStreamContext chunkStreamContext,
+            IRtmpPublishStreamContext publishStreamContext)
         {
-
+            _mediaMessageManager.SendCachedStreamMetaData(
+                peerContext,
+                publishStreamContext,
+                chunkStreamContext.MessageHeader.Timestamp,
+                chunkStreamContext.MessageHeader.MessageStreamId);
         }
     }
 }

@@ -48,7 +48,7 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Commands
         private void HandleUnpause(IRtmpClientPeerContext peerContext, IRtmpChunkStreamContext chunkStreamContext)
         {
             _userControlMessageSender.SendStreamBeginMessage(peerContext);
-            SendCachedHeaderMessages(peerContext, chunkStreamContext);
+            SendCachedStreamMessages(peerContext, chunkStreamContext);
         }
 
         private void HandlePause(IRtmpClientPeerContext peerContext)
@@ -56,7 +56,7 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Commands
             _userControlMessageSender.SendStreamEofMessage(peerContext);
         }
 
-        private void SendCachedHeaderMessages(IRtmpClientPeerContext peerContext, IRtmpChunkStreamContext chunkStreamContext)
+        private void SendCachedStreamMessages(IRtmpClientPeerContext peerContext, IRtmpChunkStreamContext chunkStreamContext)
         {
             if (peerContext.StreamSubscriptionContext == null)
                 return;
@@ -65,6 +65,11 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Commands
 
             if (publishStreamContext == null)
                 return;
+
+            _mediaMessageManager.SendCachedStreamMetaData(
+                peerContext, publishStreamContext,
+                chunkStreamContext.MessageHeader.Timestamp,
+                chunkStreamContext.MessageHeader.MessageStreamId);
 
             _mediaMessageManager.SendCachedHeaderMessages(
                 peerContext, publishStreamContext,

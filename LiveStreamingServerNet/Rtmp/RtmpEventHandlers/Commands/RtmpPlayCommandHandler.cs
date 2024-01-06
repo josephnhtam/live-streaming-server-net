@@ -100,7 +100,7 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Commands
                 case SubscribingStreamResult.Succeeded:
                     _logger.SubscriptionStarted(peerContext.Peer.PeerId, streamPath);
                     SendSubscriptionStartedMessage(peerContext, chunkStreamContext);
-                    SendCachedHeaderMessages(peerContext, chunkStreamContext);
+                    SendCachedStreamMessages(peerContext, chunkStreamContext);
                     return true;
 
                 case SubscribingStreamResult.AlreadySubscribing:
@@ -118,12 +118,17 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Commands
             }
         }
 
-        private void SendCachedHeaderMessages(IRtmpClientPeerContext peerContext, IRtmpChunkStreamContext chunkStreamContext)
+        private void SendCachedStreamMessages(IRtmpClientPeerContext peerContext, IRtmpChunkStreamContext chunkStreamContext)
         {
             var publishStreamContext = _streamManager.GetPublishStreamContext(peerContext.StreamSubscriptionContext!.StreamPath);
 
             if (publishStreamContext == null)
                 return;
+
+            _mediaMessageManager.SendCachedStreamMetaData(
+                peerContext, publishStreamContext,
+                chunkStreamContext.MessageHeader.Timestamp,
+                chunkStreamContext.MessageHeader.MessageStreamId);
 
             _mediaMessageManager.SendCachedHeaderMessages(
                 peerContext, publishStreamContext,

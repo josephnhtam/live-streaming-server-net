@@ -1,6 +1,7 @@
 ﻿using LiveStreamingServerNet.Newtorking.Contracts;
 using LiveStreamingServerNet.Rtmp.Configurations;
 using LiveStreamingServerNet.Rtmp.Contracts;
+using LiveStreamingServerNet.Rtmp.Extensions;
 using LiveStreamingServerNet.Rtmp.Logging;
 using LiveStreamingServerNet.Rtmp.RtmpEventHandlers;
 using LiveStreamingServerNet.Rtmp.RtmpHeaders;
@@ -73,6 +74,26 @@ namespace LiveStreamingServerNet.Rtmp.Services
                     netBuffer.Write(audioSequenceHeader)
                 );
             }
+        }
+
+        public void SendCachedStreamMetaData(IRtmpClientPeerContext peerContext, IRtmpPublishStreamContext publishStreamContext, uint timestamp, uint streamId)
+        {
+            var basicHeader = new RtmpChunkBasicHeader(0, RtmpConstants.DataMessageChunkStreamId);
+            var messageHeader = new RtmpChunkMessageHeaderType0(timestamp, RtmpMessageType.DataMessageAmf0, streamId);
+
+            _chunkMessageSender.Send(peerContext, basicHeader, messageHeader, (netBuffer) =>
+                netBuffer.WriteAmf([RtmpDataMessageConstants.OnMetaData, publishStreamContext.StreamMetaData], AmfEncodingType.Amf0)
+            );
+        }
+
+        public void SendCachedStreamMetaData(IList<IRtmpClientPeerContext> peerContexts, IRtmpPublishStreamContext publishStreamContext, uint timestamp, uint streamId)
+        {
+            var basicHeader = new RtmpChunkBasicHeader(0, RtmpConstants.DataMessageChunkStreamId);
+            var messageHeader = new RtmpChunkMessageHeaderType0(timestamp, RtmpMessageType.DataMessageAmf0, streamId);
+
+            _chunkMessageSender.Send(peerContexts, basicHeader, messageHeader, (netBuffer) =>
+                netBuffer.WriteAmf([RtmpDataMessageConstants.OnMetaData, publishStreamContext.StreamMetaData], AmfEncodingType.Amf0)
+            );
         }
 
         private void EnqueueMediaMessage(IRtmpClientPeerContext subscriber, MediaType mediaType, uint timestamp, uint streamId, bool isSkippable, Action<INetBuffer> payloadWriter)
