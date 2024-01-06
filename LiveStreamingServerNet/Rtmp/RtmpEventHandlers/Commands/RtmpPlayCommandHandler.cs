@@ -120,9 +120,7 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Commands
 
         private void SendCachedHeaderMessages(IRtmpClientPeerContext peerContext, IRtmpChunkStreamContext chunkStreamContext)
         {
-            var publishStreamContext = _streamManager
-                .GetPublishingClientPeerContext(peerContext.StreamSubscriptionContext!.StreamPath)?
-                .PublishStreamContext;
+            var publishStreamContext = _streamManager.GetPublishStreamContext(peerContext.StreamSubscriptionContext!.StreamPath);
 
             if (publishStreamContext == null)
                 return;

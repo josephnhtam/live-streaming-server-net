@@ -8,6 +8,7 @@ namespace LiveStreamingServerNet.Rtmp.Services.Contracts
         bool IsStreamPathPublishing(string publishStreamPath);
         string? GetPublishStreamPath(IRtmpClientPeerContext publisherPeerContext);
         IRtmpClientPeerContext? GetPublishingClientPeerContext(string publishStreamPath);
+        IRtmpPublishStreamContext? GetPublishStreamContext(string publishStreamPath);
 
         PublishingStreamResult StartPublishingStream(IRtmpClientPeerContext publisherPeerContext, string streamPath, IDictionary<string, string> streamArguments, out IList<IRtmpClientPeerContext> existingSubscribers);
         bool StopPublishingStream(IRtmpClientPeerContext publisherPeerContext, out IList<IRtmpClientPeerContext> existingSubscribers);

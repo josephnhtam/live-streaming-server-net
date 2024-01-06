@@ -27,8 +27,15 @@ namespace LiveStreamingServerNet.Rtmp.Services
             return _publishingClientPeerContexts.GetValueOrDefault(publishStreamPath);
         }
 
+        public IRtmpPublishStreamContext? GetPublishStreamContext(string publishStreamPath)
+        {
+            var publishingClientPeerContext = GetPublishingClientPeerContext(publishStreamPath);
+            return publishingClientPeerContext?.PublishStreamContext;
+        }
+
         public PublishingStreamResult StartPublishingStream(IRtmpClientPeerContext publisherPeerContext, string streamPath, IDictionary<string, string> streamArguments, out IList<IRtmpClientPeerContext> existingSubscribers)
         {
+
             using var publishingWriteLock = _publishingRwLock.WriteLock();
             using var subscribingReadLock = _subscribingRwLock.ReadLock();
 
