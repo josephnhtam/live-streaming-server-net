@@ -127,21 +127,10 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Commands
             if (publishStreamContext == null)
                 return;
 
-            var videoSequenceHeader = publishStreamContext.VideoSequenceHeader;
-            if (videoSequenceHeader != null)
-            {
-                _mediaMessageManager.EnqueueVideoMessage(peerContext, chunkStreamContext, false, (netBuffer) =>
-                    netBuffer.Write(videoSequenceHeader)
-                );
-            }
-
-            var audioSequenceHeader = publishStreamContext.AudioSequenceHeader;
-            if (audioSequenceHeader != null)
-            {
-                _mediaMessageManager.EnqueueAudioMessage(peerContext, chunkStreamContext, false, (netBuffer) =>
-                    netBuffer.Write(audioSequenceHeader)
-                );
-            }
+            _mediaMessageManager.SendCachedHeaderMessages(
+                peerContext, publishStreamContext,
+                chunkStreamContext.MessageHeader.Timestamp,
+                chunkStreamContext.MessageHeader.MessageStreamId);
         }
 
         private void SendAuthorizationFailedCommandMessage(IRtmpClientPeerContext peerContext, IRtmpChunkStreamContext chunkStreamContext)

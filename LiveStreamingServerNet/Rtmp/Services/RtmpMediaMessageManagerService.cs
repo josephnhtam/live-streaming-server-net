@@ -36,27 +36,46 @@ namespace LiveStreamingServerNet.Rtmp.Services
             _logger = logger;
         }
 
-        public void EnqueueAudioMessage(IRtmpClientPeerContext subscriber, IRtmpChunkStreamContext chunkStreamContext, bool isSkippable, Action<INetBuffer> payloadWriter)
+        public void EnqueueAudioMessage(IRtmpClientPeerContext subscriber, uint timestamp, uint streamId, bool isSkippable, Action<INetBuffer> payloadWriter)
         {
-            EnqueueMediaMessage(subscriber, chunkStreamContext, MediaType.Audio, isSkippable, payloadWriter);
+            EnqueueMediaMessage(subscriber, MediaType.Audio, timestamp, streamId, isSkippable, payloadWriter);
         }
 
-        public void EnqueueAudioMessage(IList<IRtmpClientPeerContext> subscribers, IRtmpChunkStreamContext chunkStreamContext, bool isSkippable, Action<INetBuffer> payloadWriter)
+        public void EnqueueAudioMessage(IList<IRtmpClientPeerContext> subscribers, uint timestamp, uint streamId, bool isSkippable, Action<INetBuffer> payloadWriter)
         {
-            EnqueueMediaMessage(subscribers, chunkStreamContext, MediaType.Audio, isSkippable, payloadWriter);
+            EnqueueMediaMessage(subscribers, MediaType.Audio, timestamp, streamId, isSkippable, payloadWriter);
         }
 
-        public void EnqueueVideoMessage(IRtmpClientPeerContext subscriber, IRtmpChunkStreamContext chunkStreamContext, bool isSkippable, Action<INetBuffer> payloadWriter)
+        public void EnqueueVideoMessage(IRtmpClientPeerContext subscriber, uint timestamp, uint streamId, bool isSkippable, Action<INetBuffer> payloadWriter)
         {
-            EnqueueMediaMessage(subscriber, chunkStreamContext, MediaType.Video, isSkippable, payloadWriter);
+            EnqueueMediaMessage(subscriber, MediaType.Video, timestamp, streamId, isSkippable, payloadWriter);
         }
 
-        public void EnqueueVideoMessage(IList<IRtmpClientPeerContext> subscribers, IRtmpChunkStreamContext chunkStreamContext, bool isSkippable, Action<INetBuffer> payloadWriter)
+        public void EnqueueVideoMessage(IList<IRtmpClientPeerContext> subscribers, uint timestamp, uint streamId, bool isSkippable, Action<INetBuffer> payloadWriter)
         {
-            EnqueueMediaMessage(subscribers, chunkStreamContext, MediaType.Video, isSkippable, payloadWriter);
+            EnqueueMediaMessage(subscribers, MediaType.Video, timestamp, streamId, isSkippable, payloadWriter);
         }
 
-        private void EnqueueMediaMessage(IRtmpClientPeerContext subscriber, IRtmpChunkStreamContext chunkStreamContext, MediaType mediaType, bool isSkippable, Action<INetBuffer> payloadWriter)
+        public void SendCachedHeaderMessages(IRtmpClientPeerContext peerContext, IRtmpPublishStreamContext publishStreamContext, uint timestamp, uint streamId)
+        {
+            var videoSequenceHeader = publishStreamContext.VideoSequenceHeader;
+            if (videoSequenceHeader != null)
+            {
+                EnqueueVideoMessage(peerContext, timestamp, streamId, false, (netBuffer) =>
+                    netBuffer.Write(videoSequenceHeader)
+                );
+            }
+
+            var audioSequenceHeader = publishStreamContext.AudioSequenceHeader;
+            if (audioSequenceHeader != null)
+            {
+                EnqueueAudioMessage(peerContext, timestamp, streamId, false, (netBuffer) =>
+                    netBuffer.Write(audioSequenceHeader)
+                );
+            }
+        }
+
+        private void EnqueueMediaMessage(IRtmpClientPeerContext subscriber, MediaType mediaType, uint timestamp, uint streamId, bool isSkippable, Action<INetBuffer> payloadWriter)
         {
             if (!_peerMediaContexts.TryGetValue(subscriber, out var mediaContext))
                 return;
@@ -69,8 +88,8 @@ namespace LiveStreamingServerNet.Rtmp.Services
 
             var mediaPackage = new ClientPeerMediaPackage(
                 mediaType,
-                chunkStreamContext.MessageHeader.Timestamp,
-                chunkStreamContext.MessageHeader.MessageStreamId,
+                timestamp,
+                streamId,
                 rentedBuffer,
                 netBuffer.Size,
                 isSkippable);
@@ -79,7 +98,7 @@ namespace LiveStreamingServerNet.Rtmp.Services
                 throw new Exception("Failed to write to the media channel");
         }
 
-        private void EnqueueMediaMessage(IList<IRtmpClientPeerContext> subscribers, IRtmpChunkStreamContext chunkStreamContext, MediaType mediaType, bool isSkippable, Action<INetBuffer> payloadWriter)
+        private void EnqueueMediaMessage(IList<IRtmpClientPeerContext> subscribers, MediaType mediaType, uint timestamp, uint streamId, bool isSkippable, Action<INetBuffer> payloadWriter)
         {
             using var netBuffer = _netBufferPool.Obtain();
             payloadWriter(netBuffer);
@@ -90,8 +109,8 @@ namespace LiveStreamingServerNet.Rtmp.Services
 
             var mediaPackage = new ClientPeerMediaPackage(
                 mediaType,
-                chunkStreamContext.MessageHeader.Timestamp,
-                chunkStreamContext.MessageHeader.MessageStreamId,
+                timestamp,
+                streamId,
                 rentedBuffer,
                 netBuffer.Size,
                 isSkippable);
@@ -158,10 +177,10 @@ namespace LiveStreamingServerNet.Rtmp.Services
                         switch (package.MediaType)
                         {
                             case MediaType.Video:
-                                await SendVideoMessageAsync(peerContext, package.Timestamp, package.MessageStreamId, package.RentedPayload.Bytes, package.PayloadSize, cancellation);
+                                await SendVideoMessageAsync(peerContext, package.Timestamp, package.StreamId, package.RentedPayload.Bytes, package.PayloadSize, cancellation);
                                 break;
                             case MediaType.Audio:
-                                await SendAudioMessageAsync(peerContext, package.Timestamp, package.MessageStreamId, package.RentedPayload.Bytes, package.PayloadSize, cancellation);
+                                await SendAudioMessageAsync(peerContext, package.Timestamp, package.StreamId, package.RentedPayload.Bytes, package.PayloadSize, cancellation);
                                 break;
                         }
                     }
@@ -284,6 +303,6 @@ namespace LiveStreamingServerNet.Rtmp.Services
         }
 
         private enum MediaType { Video, Audio }
-        private record struct ClientPeerMediaPackage(MediaType MediaType, uint Timestamp, uint MessageStreamId, RentedBuffer RentedPayload, int PayloadSize, bool IsSkippable);
+        private record struct ClientPeerMediaPackage(MediaType MediaType, uint Timestamp, uint StreamId, RentedBuffer RentedPayload, int PayloadSize, bool IsSkippable);
     }
 }

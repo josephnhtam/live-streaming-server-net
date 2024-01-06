@@ -62,7 +62,12 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Media
             INetBuffer payloadBuffer,
             IList<IRtmpClientPeerContext> subscribers)
         {
-            _mediaMessageManager.EnqueueVideoMessage(subscribers, chunkStreamContext, isSkippable, payloadBuffer.CopyAllTo);
+            _mediaMessageManager.EnqueueVideoMessage(
+                subscribers,
+                chunkStreamContext.MessageHeader.Timestamp,
+                chunkStreamContext.MessageHeader.MessageStreamId,
+                isSkippable,
+                payloadBuffer.CopyAllTo);
         }
 
         private static bool CacheVideoSequenceHeaderIfNeeded(

@@ -7,27 +7,37 @@ namespace LiveStreamingServerNet.Rtmp.Services.Contracts
     {
         void EnqueueVideoMessage(
             IRtmpClientPeerContext subscriber,
-            IRtmpChunkStreamContext chunkStreamContext,
+            uint timestamp,
+            uint streamId,
             bool isSkippable,
             Action<INetBuffer> payloadWriter);
 
         void EnqueueVideoMessage(
             IList<IRtmpClientPeerContext> subscribers,
-            IRtmpChunkStreamContext chunkStreamContext,
+            uint timestamp,
+            uint streamId,
             bool isSkippable,
             Action<INetBuffer> payloadWriter);
 
         void EnqueueAudioMessage(
             IRtmpClientPeerContext subscriber,
-            IRtmpChunkStreamContext chunkStreamContext,
+            uint timestamp,
+            uint streamId,
             bool isSkippable,
             Action<INetBuffer> payloadWriter);
 
         void EnqueueAudioMessage(
             IList<IRtmpClientPeerContext> subscribers,
-            IRtmpChunkStreamContext chunkStreamContext,
+            uint timestamp,
+            uint streamId,
             bool isSkippable,
             Action<INetBuffer> payloadWriter);
+
+        void SendCachedHeaderMessages(
+            IRtmpClientPeerContext peerContext,
+            IRtmpPublishStreamContext publishStreamContext,
+            uint timestamp,
+            uint streamId);
 
         void RegisterClientPeer(IRtmpClientPeerContext peerContext);
         void UnregisterClientPeer(IRtmpClientPeerContext peerContext);
