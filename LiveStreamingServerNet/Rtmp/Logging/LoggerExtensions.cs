@@ -55,7 +55,7 @@ namespace LiveStreamingServerNet.Rtmp.Logging
         [LoggerMessage(LogLevel.Error, "PeerId: {PeerId} | Failed to handle chunk event")]
         public static partial void FailedToHandleChunkEvent(this ILogger logger, uint peerId);
 
-        [LoggerMessage(LogLevel.Error, "PeerId: {PeerId} | Handshake C0 Handled")]
+        [LoggerMessage(LogLevel.Debug, "PeerId: {PeerId} | Handshake C0 Handled")]
         public static partial void HandshakeC0Handled(this ILogger logger, uint peerId);
 
         [LoggerMessage(LogLevel.Debug, "PeerId: {PeerId} | Handshake C1 Handled")]
