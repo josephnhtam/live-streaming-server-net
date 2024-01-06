@@ -1,4 +1,5 @@
-﻿using LiveStreamingServerNet.Rtmp.Contracts;
+﻿using LiveStreamingServerNet.Rtmp.Configurations;
+using LiveStreamingServerNet.Rtmp.Contracts;
 using LiveStreamingServerNet.Rtmp.Logging;
 using LiveStreamingServerNet.Rtmp.RtmpEventHandlers.CommandDispatcher;
 using LiveStreamingServerNet.Rtmp.RtmpEventHandlers.CommandDispatcher.Attributes;
@@ -7,6 +8,8 @@ using LiveStreamingServerNet.Rtmp.Services.Contracts;
 using LiveStreamingServerNet.Rtmp.Services.Extensions;
 using LiveStreamingServerNet.Rtmp.Utilities;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using static Org.BouncyCastle.Math.EC.ECCurve;
 
 namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Commands
 {
@@ -18,17 +21,20 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Commands
         private readonly IRtmpStreamManagerService _streamManager;
         private readonly IRtmpCommandMessageSenderService _commandMessageSender;
         private readonly IRtmpMediaMessageManagerService _mediaMessageManager;
+        private readonly RtmpServerConfiguration _config;
         private readonly ILogger<RtmpPlayCommandHandler> _logger;
 
         public RtmpPlayCommandHandler(
             IRtmpStreamManagerService streamManager,
             IRtmpCommandMessageSenderService commandMessageSender,
             IRtmpMediaMessageManagerService mediaMessageManager,
+            IOptions<RtmpServerConfiguration> config,
             ILogger<RtmpPlayCommandHandler> logger)
         {
             _streamManager = streamManager;
             _commandMessageSender = commandMessageSender;
             _mediaMessageManager = mediaMessageManager;
+            _config = config.Value;
             _logger = logger;
         }
 
@@ -136,9 +142,12 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Commands
                 chunkStreamContext.MessageHeader.Timestamp,
                 chunkStreamContext.MessageHeader.MessageStreamId);
 
-            _mediaMessageManager.SendCachedGroupOfPictures(
-                peerContext, publishStreamContext,
-                chunkStreamContext.MessageHeader.MessageStreamId);
+            if (_config.EnableGopCaching)
+            {
+                _mediaMessageManager.SendCachedGroupOfPictures(
+                    peerContext, publishStreamContext,
+                    chunkStreamContext.MessageHeader.MessageStreamId);
+            }
         }
 
         private void CompleteSubscriptionInitialization(IRtmpClientPeerContext peerContext)

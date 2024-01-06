@@ -1,4 +1,5 @@
 ﻿using LiveStreamingServerNet.Newtorking.Contracts;
+using LiveStreamingServerNet.Rtmp.Configurations;
 using LiveStreamingServerNet.Rtmp.Contracts;
 using LiveStreamingServerNet.Rtmp.RtmpEventHandlers.MessageDispatcher.Attributes;
 using LiveStreamingServerNet.Rtmp.RtmpEventHandlers.MessageDispatcher.Contracts;
@@ -6,6 +7,7 @@ using LiveStreamingServerNet.Rtmp.Services.Contracts;
 using LiveStreamingServerNet.Rtmp.Utilities;
 using LiveStreamingServerNet.Utilities;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Media
 {
@@ -14,15 +16,18 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Media
     {
         private readonly IRtmpStreamManagerService _streamManager;
         private readonly IRtmpMediaMessageManagerService _mediaMessageManager;
+        private readonly RtmpServerConfiguration _config;
         private readonly ILogger _logger;
 
         public RtmpAudioMessageHandler(
             IRtmpStreamManagerService streamManager,
             IRtmpMediaMessageManagerService mediaMessageManager,
+            IOptions<RtmpServerConfiguration> config,
             ILogger<RtmpAudioMessageHandler> logger)
         {
             _streamManager = streamManager;
             _mediaMessageManager = mediaMessageManager;
+            _config = config.Value;
             _logger = logger;
         }
 
@@ -72,7 +77,7 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Media
                 payloadBuffer.CopyAllTo);
         }
 
-        private static bool CacheAudioSequence(
+        private bool CacheAudioSequence(
             IRtmpChunkStreamContext chunkStreamContext,
             IRtmpPublishStreamContext publishStreamContext,
             INetBuffer payloadBuffer)
@@ -89,7 +94,7 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Media
                     payloadBuffer.MoveTo(0);
                     return true;
                 }
-                else
+                else if (_config.EnableGopCaching)
                 {
                     CacheGroupOfPictures(publishStreamContext, payloadBuffer, chunkStreamContext.MessageHeader.Timestamp);
                 }
