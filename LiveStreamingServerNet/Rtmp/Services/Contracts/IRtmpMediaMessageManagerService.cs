@@ -39,13 +39,13 @@ namespace LiveStreamingServerNet.Rtmp.Services.Contracts
             uint timestamp,
             uint streamId);
 
-        void SendCachedStreamMetaData(
+        void SendCachedStreamMetaDataMessage(
             IRtmpClientPeerContext peerContext,
             IRtmpPublishStreamContext publishStreamContext,
             uint timestamp,
             uint streamId);
 
-        void SendCachedStreamMetaData(
+        void SendCachedStreamMetaDataMessage(
             IList<IRtmpClientPeerContext> peerContexts,
             IRtmpPublishStreamContext publishStreamContext,
             uint timestamp,

@@ -76,7 +76,7 @@ namespace LiveStreamingServerNet.Rtmp.Services
             }
         }
 
-        public void SendCachedStreamMetaData(IRtmpClientPeerContext peerContext, IRtmpPublishStreamContext publishStreamContext, uint timestamp, uint streamId)
+        public void SendCachedStreamMetaDataMessage(IRtmpClientPeerContext peerContext, IRtmpPublishStreamContext publishStreamContext, uint timestamp, uint streamId)
         {
             var basicHeader = new RtmpChunkBasicHeader(0, RtmpConstants.DataMessageChunkStreamId);
             var messageHeader = new RtmpChunkMessageHeaderType0(timestamp, RtmpMessageType.DataMessageAmf0, streamId);
@@ -86,7 +86,7 @@ namespace LiveStreamingServerNet.Rtmp.Services
             );
         }
 
-        public void SendCachedStreamMetaData(IList<IRtmpClientPeerContext> peerContexts, IRtmpPublishStreamContext publishStreamContext, uint timestamp, uint streamId)
+        public void SendCachedStreamMetaDataMessage(IList<IRtmpClientPeerContext> peerContexts, IRtmpPublishStreamContext publishStreamContext, uint timestamp, uint streamId)
         {
             var basicHeader = new RtmpChunkBasicHeader(0, RtmpConstants.DataMessageChunkStreamId);
             var messageHeader = new RtmpChunkMessageHeaderType0(timestamp, RtmpMessageType.DataMessageAmf0, streamId);

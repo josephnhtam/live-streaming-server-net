@@ -87,7 +87,7 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Data
             IRtmpChunkStreamContext chunkStreamContext,
             IRtmpPublishStreamContext publishStreamContext)
         {
-            _mediaMessageManager.SendCachedStreamMetaData(
+            _mediaMessageManager.SendCachedStreamMetaDataMessage(
                 peerContext,
                 publishStreamContext,
                 chunkStreamContext.MessageHeader.Timestamp,

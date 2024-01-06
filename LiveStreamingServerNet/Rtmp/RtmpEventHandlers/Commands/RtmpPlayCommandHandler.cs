@@ -125,7 +125,7 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Commands
             if (publishStreamContext == null)
                 return;
 
-            _mediaMessageManager.SendCachedStreamMetaData(
+            _mediaMessageManager.SendCachedStreamMetaDataMessage(
                 peerContext, publishStreamContext,
                 chunkStreamContext.MessageHeader.Timestamp,
                 chunkStreamContext.MessageHeader.MessageStreamId);
