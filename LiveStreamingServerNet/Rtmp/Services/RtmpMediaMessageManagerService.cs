@@ -63,7 +63,7 @@ namespace LiveStreamingServerNet.Rtmp.Services
             using var netBuffer = _netBufferPool.Obtain();
             payloadWriter(netBuffer);
 
-            var rentedBuffer = new RentedBytes(netBuffer.Size);
+            var rentedBuffer = new RentedBuffer(netBuffer.Size);
             netBuffer.MoveTo(0).ReadBytes(rentedBuffer.Bytes, 0, netBuffer.Size);
 
             var mediaPackage = new ClientPeerMediaPackage(
@@ -84,7 +84,7 @@ namespace LiveStreamingServerNet.Rtmp.Services
             payloadWriter(netBuffer);
 
 
-            var rentedBuffer = new RentedBytes(netBuffer.Size, subscribers.Count);
+            var rentedBuffer = new RentedBuffer(netBuffer.Size, subscribers.Count);
             netBuffer.MoveTo(0).ReadBytes(rentedBuffer.Bytes, 0, netBuffer.Size);
 
             var mediaPackage = new ClientPeerMediaPackage(
@@ -283,6 +283,6 @@ namespace LiveStreamingServerNet.Rtmp.Services
         }
 
         private enum MediaType { Video, Audio }
-        private record struct ClientPeerMediaPackage(MediaType MediaType, uint Timestamp, uint MessageStreamId, RentedBytes RentedPayload, int PayloadSize, bool IsSkippable);
+        private record struct ClientPeerMediaPackage(MediaType MediaType, uint Timestamp, uint MessageStreamId, RentedBuffer RentedPayload, int PayloadSize, bool IsSkippable);
     }
 }
