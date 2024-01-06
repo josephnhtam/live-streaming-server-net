@@ -18,7 +18,7 @@ namespace LiveStreamingServerNet.Rtmp
         }
     }
 
-    public struct RtmpChunkMessageHeaderContext : IRtmpChunkMessageHeaderContext
+    public class RtmpChunkMessageHeaderContext : IRtmpChunkMessageHeaderContext
     {
         public uint Timestamp { get; set; }
         public uint TimestampDelta { get; set; }
