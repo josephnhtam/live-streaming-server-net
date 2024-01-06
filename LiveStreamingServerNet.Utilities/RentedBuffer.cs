@@ -1,8 +1,9 @@
 ﻿using System.Buffers;
+using LiveStreamingServerNet.Utilities.Contracts;
 
 namespace LiveStreamingServerNet.Utilities
 {
-    public class RentedBuffer
+    public class RentedBuffer : IRentedBuffer
     {
         public byte[] Bytes { get; private set; }
         public int Claimed => _claimed;

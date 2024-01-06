@@ -1,12 +1,11 @@
-﻿using LiveStreamingServerNet.Builders;
-using Serilog;
+﻿using Serilog;
 using System.Net;
 
 namespace LiveStreamingServerNet.Playground
 {
-    internal class Program
+    public static class Program
     {
-        static async Task Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()

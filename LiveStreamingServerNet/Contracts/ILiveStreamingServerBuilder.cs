@@ -3,7 +3,7 @@ using LiveStreamingServerNet.Newtorking.Configurations;
 using LiveStreamingServerNet.Rtmp.Configurations;
 using Microsoft.Extensions.Logging;
 
-namespace LiveStreamingServerNet.Builders.Contracts
+namespace LiveStreamingServerNet.Contracts
 {
     public interface ILiveStreamingServerBuilder
     {

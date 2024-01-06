@@ -7,6 +7,7 @@ using LiveStreamingServerNet.Rtmp.RtmpEventHandlers;
 using LiveStreamingServerNet.Rtmp.RtmpHeaders;
 using LiveStreamingServerNet.Rtmp.Services.Contracts;
 using LiveStreamingServerNet.Utilities;
+using LiveStreamingServerNet.Utilities.Contracts;
 using LiveStreamingServerNet.Utilities.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -347,6 +348,6 @@ namespace LiveStreamingServerNet.Rtmp.Services
         }
 
         private enum MediaType { Video, Audio }
-        private record struct ClientPeerMediaPackage(MediaType MediaType, uint Timestamp, uint StreamId, RentedBuffer RentedPayload, int PayloadSize, bool IsSkippable);
+        private record struct ClientPeerMediaPackage(MediaType MediaType, uint Timestamp, uint StreamId, IRentedBuffer RentedPayload, int PayloadSize, bool IsSkippable);
     }
 }

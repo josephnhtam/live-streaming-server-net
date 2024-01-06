@@ -7,6 +7,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet", "L
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.Playground", "LiveStreamingServerNet.Playground\LiveStreamingServerNet.Playground.csproj", "{6ED97216-2BBD-4568-991F-4ACD04C17C24}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveStreamingServerNet.Networking", "LiveStreamingServerNet.Networking\LiveStreamingServerNet.Networking.csproj", "{15449DED-702C-4A69-BB75-CAFC7613565C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveStreamingServerNet.Utilities", "LiveStreamingServerNet.Utilities\LiveStreamingServerNet.Utilities.csproj", "{CFCD9768-1EA2-4565-A6A7-30750D3D8F40}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveStreamingServerNet.Rtmp", "LiveStreamingServerNet.Rtmp\LiveStreamingServerNet.Rtmp.csproj", "{EBD91510-86A5-49A2-A97B-E2A0AACFB516}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +27,18 @@ Global
 		{6ED97216-2BBD-4568-991F-4ACD04C17C24}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6ED97216-2BBD-4568-991F-4ACD04C17C24}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6ED97216-2BBD-4568-991F-4ACD04C17C24}.Release|Any CPU.Build.0 = Release|Any CPU
+		{15449DED-702C-4A69-BB75-CAFC7613565C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15449DED-702C-4A69-BB75-CAFC7613565C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15449DED-702C-4A69-BB75-CAFC7613565C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15449DED-702C-4A69-BB75-CAFC7613565C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CFCD9768-1EA2-4565-A6A7-30750D3D8F40}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CFCD9768-1EA2-4565-A6A7-30750D3D8F40}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CFCD9768-1EA2-4565-A6A7-30750D3D8F40}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CFCD9768-1EA2-4565-A6A7-30750D3D8F40}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EBD91510-86A5-49A2-A97B-E2A0AACFB516}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EBD91510-86A5-49A2-A97B-E2A0AACFB516}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EBD91510-86A5-49A2-A97B-E2A0AACFB516}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EBD91510-86A5-49A2-A97B-E2A0AACFB516}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,4 +1,4 @@
-﻿using LiveStreamingServerNet.Builders.Contracts;
+﻿using LiveStreamingServerNet.Contracts;
 using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.Newtorking;
 using LiveStreamingServerNet.Newtorking.Configurations;
@@ -19,7 +19,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Reflection;
 
-namespace LiveStreamingServerNet.Builders
+namespace LiveStreamingServerNet
 {
     public class LiveStreamingServerBuilder : ILiveStreamingServerBuilder
     {
