@@ -58,23 +58,5 @@ namespace LiveStreamingServerNet.Rtmp.Services.Extensions
             sender.SendOnStatusCommandMessage(peerContext, publishStreamChunkId, level, code, description, amfEncodingType, tcs.SetResult);
             return tcs.Task;
         }
-
-        public static void SendStreamUnpublishNotify(
-            this IRtmpCommandMessageSenderService sender,
-            IList<IRtmpClientPeerContext> subscribers,
-            AmfEncodingType amfEncodingType = AmfEncodingType.Amf0)
-        {
-            foreach (var subscriberGroup in subscribers.GroupBy(x => x.StreamSubscriptionContext!.ChunkStreamId))
-            {
-                sender.SendOnStatusCommandMessage(
-                    subscriberGroup.ToList(),
-                    subscriberGroup.Key,
-                    RtmpArgumentValues.Status,
-                    RtmpStatusCodes.PlayUnpublishNotify,
-                    "Stream is unpublished.",
-                    amfEncodingType);
-            }
-        }
-
     }
 }

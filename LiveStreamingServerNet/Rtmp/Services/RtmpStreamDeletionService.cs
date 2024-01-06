@@ -1,4 +1,5 @@
 ﻿using LiveStreamingServerNet.Rtmp.Contracts;
+using LiveStreamingServerNet.Rtmp.Extensions;
 using LiveStreamingServerNet.Rtmp.Services.Contracts;
 using LiveStreamingServerNet.Rtmp.Services.Extensions;
 
@@ -30,16 +31,48 @@ namespace LiveStreamingServerNet.Rtmp.Services
 
         private void StopPublishingStreamIfNeeded(IRtmpClientPeerContext peerContext)
         {
-            if (_rtmpStreamManager.StopPublishingStream(peerContext, out var existingSubscriber))
-            {
-                _userControlMessageSender.SendStreamEofMessage(existingSubscriber);
-                _commandMessageSender.SendStreamUnpublishNotify(existingSubscriber);
-            }
+            if (!_rtmpStreamManager.StopPublishingStream(peerContext, out var existingSubscriber))
+                return;
+
+            _userControlMessageSender.SendStreamEofMessage(existingSubscriber);
+            SendStreamUnpublishNotify(existingSubscriber);
         }
 
         private void StopSubscribingStreamIfNeeded(IRtmpClientPeerContext peerContext)
         {
-            _rtmpStreamManager.StopSubscribingStream(peerContext);
+            if (!_rtmpStreamManager.StopSubscribingStream(peerContext))
+                return;
+
+            SendSubscriptionStoppedMessage(peerContext);
+        }
+
+        private void SendStreamUnpublishNotify(
+            IList<IRtmpClientPeerContext> subscribers,
+            AmfEncodingType amfEncodingType = AmfEncodingType.Amf0)
+        {
+            foreach (var subscriberGroup in subscribers.GroupBy(x => x.StreamSubscriptionContext!.ChunkStreamId))
+            {
+                _commandMessageSender.SendOnStatusCommandMessage(
+                    subscriberGroup.ToList(),
+                    subscriberGroup.Key,
+                    RtmpArgumentValues.Status,
+                    RtmpStatusCodes.PlayUnpublishNotify,
+                    "Stream is unpublished.",
+                    amfEncodingType);
+            }
+        }
+
+        private void SendSubscriptionStoppedMessage(
+            IRtmpClientPeerContext subscriber,
+            AmfEncodingType amfEncodingType = AmfEncodingType.Amf0)
+        {
+            _commandMessageSender.SendOnStatusCommandMessage(
+                subscriber,
+                subscriber.StreamSubscriptionContext!.ChunkStreamId,
+                RtmpArgumentValues.Status,
+                RtmpStatusCodes.PlayUnpublishNotify,
+                "Stream is stopped.",
+                amfEncodingType);
         }
     }
 }
