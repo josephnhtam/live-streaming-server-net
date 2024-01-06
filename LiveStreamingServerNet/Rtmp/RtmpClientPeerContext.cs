@@ -117,12 +117,20 @@ namespace LiveStreamingServerNet.Rtmp
         public string StreamPath { get; }
         public IDictionary<string, string> StreamArguments { get; }
 
+        public bool IsPaused { get; set; }
+        public bool IsReceivingAudio { get; set; }
+        public bool IsReceivingVideo { get; set; }
+
         public RtmpStreamSubscriptionContext(uint streamId, uint chunkStreamId, string streamPath, IDictionary<string, string> streamArguments)
         {
             StreamId = streamId;
             ChunkStreamId = chunkStreamId;
             StreamPath = streamPath;
             StreamArguments = streamArguments;
+
+            IsPaused = false;
+            IsReceivingAudio = true;
+            IsReceivingVideo = true;
         }
     }
 }

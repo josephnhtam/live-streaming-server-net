@@ -30,10 +30,17 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Commands
             RtmpPauseCommand command,
             CancellationToken cancellationToken)
         {
-            if (command.Flag)
-                HandlePause(peerContext);
-            else
-                HandleUnpause(peerContext, chunkStreamContext);
+            var subscriptionContext = peerContext.StreamSubscriptionContext;
+
+            if (subscriptionContext != null)
+            {
+                subscriptionContext.IsPaused = command.Flag;
+
+                if (command.Flag)
+                    HandlePause(peerContext);
+                else
+                    HandleUnpause(peerContext, chunkStreamContext);
+            }
 
             return Task.FromResult(true);
         }

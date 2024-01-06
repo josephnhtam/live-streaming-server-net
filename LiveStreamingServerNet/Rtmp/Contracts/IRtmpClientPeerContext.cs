@@ -59,5 +59,9 @@ namespace LiveStreamingServerNet.Rtmp.Contracts
         uint ChunkStreamId { get; }
         string StreamPath { get; }
         IDictionary<string, string> StreamArguments { get; }
+
+        bool IsPaused { get; set; }
+        bool IsReceivingAudio { get; set; }
+        bool IsReceivingVideo { get; set; }
     }
 }

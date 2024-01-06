@@ -100,9 +100,10 @@ namespace LiveStreamingServerNet.Rtmp.Services
 
         private void EnqueueMediaMessage(IList<IRtmpClientPeerContext> subscribers, MediaType mediaType, uint timestamp, uint streamId, bool isSkippable, Action<INetBuffer> payloadWriter)
         {
+            subscribers = subscribers.Where(FilterSubscribers).ToList();
+
             using var netBuffer = _netBufferPool.Obtain();
             payloadWriter(netBuffer);
-
 
             var rentedBuffer = new RentedBuffer(netBuffer.Size, subscribers.Count);
             netBuffer.MoveTo(0).ReadBytes(rentedBuffer.Bytes, 0, netBuffer.Size);
@@ -121,6 +122,28 @@ namespace LiveStreamingServerNet.Rtmp.Services
                     mediaContext.AddPackage(ref mediaPackage);
                 else
                     rentedBuffer.Unclaim();
+            }
+
+            bool FilterSubscribers(IRtmpClientPeerContext subscriber)
+            {
+                var subscriptionContext = subscriber.StreamSubscriptionContext;
+
+                if (subscriptionContext == null)
+                    return false;
+
+                switch (mediaType)
+                {
+                    case MediaType.Audio:
+                        if (!subscriptionContext.IsReceivingAudio)
+                            return false;
+                        break;
+                    case MediaType.Video:
+                        if (!subscriptionContext.IsReceivingVideo)
+                            return false;
+                        break;
+                }
+
+                return true;
             }
         }
 
