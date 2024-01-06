@@ -59,7 +59,7 @@ namespace LiveStreamingServerNet.Rtmp
         {
             var assembly = typeof(RtmpMessageDispatcher).Assembly;
 
-            var handlerMap = assembly.GetExportedTypes()
+            var handlerMap = assembly.GetTypes()
                 .Where(t => t.IsClass && !t.IsAbstract && t.IsAssignableTo(typeof(IRtmpMessageHandler)))
                 .Select(t => (HandlerType: t, MessageType: t.GetCustomAttributes<RtmpMessageTypeAttribute>()))
                 .Where(x => x.MessageType.Any())
@@ -81,7 +81,7 @@ namespace LiveStreamingServerNet.Rtmp
         {
             var assembly = typeof(RtmpCommandDispatcher).Assembly;
 
-            var handlerMap = assembly.GetExportedTypes()
+            var handlerMap = assembly.GetTypes()
                 .Where(t => t.IsClass && !t.IsAbstract && t.IsAssignableTo(typeof(RtmpCommandHandler)))
                 .Select(t => (HandlerType: t, Command: t.GetCustomAttributes<RtmpCommandAttribute>()))
                 .Where(x => x.Command.Any())
