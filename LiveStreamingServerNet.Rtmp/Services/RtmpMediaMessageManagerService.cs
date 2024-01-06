@@ -6,6 +6,7 @@ using LiveStreamingServerNet.Rtmp.Logging;
 using LiveStreamingServerNet.Rtmp.RtmpEventHandlers;
 using LiveStreamingServerNet.Rtmp.RtmpHeaders;
 using LiveStreamingServerNet.Rtmp.Services.Contracts;
+using LiveStreamingServerNet.Rtmp.Utilities;
 using LiveStreamingServerNet.Utilities;
 using LiveStreamingServerNet.Utilities.Contracts;
 using LiveStreamingServerNet.Utilities.Extensions;
@@ -63,17 +64,13 @@ namespace LiveStreamingServerNet.Rtmp.Services
             var videoSequenceHeader = publishStreamContext.VideoSequenceHeader;
             if (videoSequenceHeader != null)
             {
-                EnqueueVideoMessage(peerContext, timestamp, streamId, false, (netBuffer) =>
-                    netBuffer.Write(videoSequenceHeader)
-                );
+                SendMediaPackage(peerContext, MediaType.Video, videoSequenceHeader, videoSequenceHeader.Length, timestamp, streamId);
             }
 
             var audioSequenceHeader = publishStreamContext.AudioSequenceHeader;
             if (audioSequenceHeader != null)
             {
-                EnqueueAudioMessage(peerContext, timestamp, streamId, false, (netBuffer) =>
-                    netBuffer.Write(audioSequenceHeader)
-                );
+                SendMediaPackage(peerContext, MediaType.Audio, audioSequenceHeader, audioSequenceHeader.Length, timestamp, streamId);
             }
         }
 
@@ -97,6 +94,15 @@ namespace LiveStreamingServerNet.Rtmp.Services
             );
         }
 
+        public void SendCachedGroupOfPictures(IRtmpClientPeerContext peerContext, IRtmpPublishStreamContext publishStreamContext, uint streamId)
+        {
+            foreach (var picture in publishStreamContext.GetGroupOfPicturesCache())
+            {
+                SendMediaPackage(peerContext, picture.Type, picture.Payload.Bytes, picture.PayloadSize, picture.Timestamp, streamId);
+                picture.Payload.Unclaim();
+            }
+        }
+
         private void EnqueueMediaMessage(IRtmpClientPeerContext subscriber, MediaType mediaType, uint timestamp, uint streamId, bool isSkippable, Action<INetBuffer> payloadWriter)
         {
             if (!_peerMediaContexts.TryGetValue(subscriber, out var mediaContext))
@@ -116,8 +122,7 @@ namespace LiveStreamingServerNet.Rtmp.Services
                 netBuffer.Size,
                 isSkippable);
 
-            if (!mediaContext.AddPackage(ref mediaPackage))
-                throw new Exception("Failed to write to the media channel");
+            mediaContext.AddPackage(ref mediaPackage);
         }
 
         private void EnqueueMediaMessage(IList<IRtmpClientPeerContext> subscribers, MediaType mediaType, uint timestamp, uint streamId, bool isSkippable, Action<INetBuffer> payloadWriter)
@@ -140,9 +145,7 @@ namespace LiveStreamingServerNet.Rtmp.Services
 
             foreach (var subscriber in subscribers)
             {
-                if (_peerMediaContexts.TryGetValue(subscriber, out var mediaContext))
-                    mediaContext.AddPackage(ref mediaPackage);
-                else
+                if (!_peerMediaContexts.TryGetValue(subscriber, out var mediaContext) || !mediaContext.AddPackage(ref mediaPackage))
                     rentedBuffer.Unclaim();
             }
 
@@ -169,23 +172,40 @@ namespace LiveStreamingServerNet.Rtmp.Services
             }
         }
 
-        private async Task SendAudioMessageAsync(IRtmpClientPeerContext subscriber, uint timestamp, uint messageStreamId, byte[] payloadBuffer, int payloadSize, CancellationToken cancellation)
+        private void SendMediaPackage(IRtmpClientPeerContext peerContext, MediaType type, byte[] payloadBuffer, int payloadSize, uint timestamp, uint streamId)
         {
-            var basicHeader = new RtmpChunkBasicHeader(0, RtmpConstants.AudioMessageChunkStreamId);
-            var messageHeader = new RtmpChunkMessageHeaderType0(timestamp,
-                RtmpMessageType.AudioMessage, messageStreamId);
+            var basicHeader = new RtmpChunkBasicHeader(
+                    0,
+                    type == MediaType.Video ?
+                    RtmpConstants.VideoMessageChunkStreamId :
+                    RtmpConstants.AudioMessageChunkStreamId);
 
-            await _chunkMessageSender.SendAsync(subscriber, basicHeader, messageHeader, (netBuffer) => netBuffer.Write(payloadBuffer, 0, payloadSize))
-                                     .WithCancellation(cancellation);
+            var messageHeader = new RtmpChunkMessageHeaderType0(
+                timestamp,
+                type == MediaType.Video ?
+                RtmpMessageType.VideoMessage :
+                RtmpMessageType.AudioMessage,
+                streamId);
+
+            _chunkMessageSender.Send(peerContext, basicHeader, messageHeader, (netBuffer) => netBuffer.Write(payloadBuffer, 0, payloadSize));
         }
 
-        private async Task SendVideoMessageAsync(IRtmpClientPeerContext subscriber, uint timestamp, uint messageStreamId, byte[] payloadBuffer, int payloadSize, CancellationToken cancellation)
+        private async Task SendMediaPackageAsync(IRtmpClientPeerContext peerContext, MediaType type, byte[] payloadBuffer, int payloadSize, uint timestamp, uint streamId, CancellationToken cancellation)
         {
-            var basicHeader = new RtmpChunkBasicHeader(0, RtmpConstants.VideoMessageChunkStreamId);
-            var messageHeader = new RtmpChunkMessageHeaderType0(timestamp,
-                RtmpMessageType.VideoMessage, messageStreamId);
+            var basicHeader = new RtmpChunkBasicHeader(
+                    0,
+                    type == MediaType.Video ?
+                    RtmpConstants.VideoMessageChunkStreamId :
+                    RtmpConstants.AudioMessageChunkStreamId);
 
-            await _chunkMessageSender.SendAsync(subscriber, basicHeader, messageHeader, (netBuffer) => netBuffer.Write(payloadBuffer, 0, payloadSize))
+            var messageHeader = new RtmpChunkMessageHeaderType0(
+                timestamp,
+                type == MediaType.Video ?
+                RtmpMessageType.VideoMessage :
+                RtmpMessageType.AudioMessage,
+                streamId);
+
+            await _chunkMessageSender.SendAsync(peerContext, basicHeader, messageHeader, (netBuffer) => netBuffer.Write(payloadBuffer, 0, payloadSize))
                                      .WithCancellation(cancellation);
         }
 
@@ -219,15 +239,19 @@ namespace LiveStreamingServerNet.Rtmp.Services
 
                     try
                     {
-                        switch (package.MediaType)
-                        {
-                            case MediaType.Video:
-                                await SendVideoMessageAsync(peerContext, package.Timestamp, package.StreamId, package.RentedPayload.Bytes, package.PayloadSize, cancellation);
-                                break;
-                            case MediaType.Audio:
-                                await SendAudioMessageAsync(peerContext, package.Timestamp, package.StreamId, package.RentedPayload.Bytes, package.PayloadSize, cancellation);
-                                break;
-                        }
+                        if (peerContext.StreamSubscriptionContext == null)
+                            continue;
+
+                        await peerContext.StreamSubscriptionContext.InitializationTask;
+
+                        await SendMediaPackageAsync(
+                            peerContext,
+                            package.MediaType,
+                            package.RentedPayload.Bytes,
+                            package.PayloadSize,
+                            package.Timestamp,
+                            package.StreamId,
+                            cancellation);
                     }
                     catch (OperationCanceledException) when (cancellation.IsCancellationRequested) { }
                     catch (Exception ex)
@@ -347,7 +371,6 @@ namespace LiveStreamingServerNet.Rtmp.Services
             }
         }
 
-        private enum MediaType { Video, Audio }
         private record struct ClientPeerMediaPackage(MediaType MediaType, uint Timestamp, uint StreamId, IRentedBuffer RentedPayload, int PayloadSize, bool IsSkippable);
     }
 }

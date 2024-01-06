@@ -51,6 +51,11 @@ namespace LiveStreamingServerNet.Rtmp.Services.Contracts
             uint timestamp,
             uint streamId);
 
+        void SendCachedGroupOfPictures(
+            IRtmpClientPeerContext peerContext,
+            IRtmpPublishStreamContext publishStreamContext,
+            uint streamId);
+
         void RegisterClientPeer(IRtmpClientPeerContext peerContext);
         void UnregisterClientPeer(IRtmpClientPeerContext peerContext);
     }

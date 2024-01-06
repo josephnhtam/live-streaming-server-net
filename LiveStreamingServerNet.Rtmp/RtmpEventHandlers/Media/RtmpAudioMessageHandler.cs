@@ -3,6 +3,8 @@ using LiveStreamingServerNet.Rtmp.Contracts;
 using LiveStreamingServerNet.Rtmp.RtmpEventHandlers.MessageDispatcher.Attributes;
 using LiveStreamingServerNet.Rtmp.RtmpEventHandlers.MessageDispatcher.Contracts;
 using LiveStreamingServerNet.Rtmp.Services.Contracts;
+using LiveStreamingServerNet.Rtmp.Utilities;
+using LiveStreamingServerNet.Utilities;
 using Microsoft.Extensions.Logging;
 
 namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Media
@@ -33,8 +35,8 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Media
             var publishStreamContext = peerContext.PublishStreamContext ??
                 throw new InvalidOperationException("Stream is not yet published.");
 
-            var hasSequenceHeader = CacheAudioSequenceHeaderIfNeeded(publishStreamContext, payloadBuffer);
-            BroacastAudioMessageToSubscribers(chunkStreamContext, publishStreamContext, payloadBuffer, hasSequenceHeader);
+            var hasHeader = CacheAudioSequence(chunkStreamContext, publishStreamContext, payloadBuffer);
+            BroacastAudioMessageToSubscribers(chunkStreamContext, publishStreamContext, payloadBuffer, hasHeader);
             return Task.FromResult(true);
         }
 
@@ -70,7 +72,8 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Media
                 payloadBuffer.CopyAllTo);
         }
 
-        private static bool CacheAudioSequenceHeaderIfNeeded(
+        private static bool CacheAudioSequence(
+            IRtmpChunkStreamContext chunkStreamContext,
             IRtmpPublishStreamContext publishStreamContext,
             INetBuffer payloadBuffer)
         {
@@ -86,11 +89,24 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Media
                     payloadBuffer.MoveTo(0);
                     return true;
                 }
+                else
+                {
+                    CacheGroupOfPictures(publishStreamContext, payloadBuffer, chunkStreamContext.MessageHeader.Timestamp);
+                }
             }
 
             payloadBuffer.MoveTo(0);
-
             return false;
+        }
+
+        private static void CacheGroupOfPictures(
+            IRtmpPublishStreamContext publishStreamContext,
+            INetBuffer payloadBuffer,
+            uint timestamp)
+        {
+            var rentedCache = new RentedBuffer(payloadBuffer.Size);
+            payloadBuffer.MoveTo(0).ReadBytes(rentedCache.Bytes, 0, payloadBuffer.Size);
+            publishStreamContext.AddPictureCache(new PicturesCache(MediaType.Audio, timestamp, rentedCache, payloadBuffer.Size));
         }
     }
 }

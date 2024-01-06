@@ -1,5 +1,7 @@
 ﻿using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Handshakes;
+using LiveStreamingServerNet.Rtmp.Utilities;
+using LiveStreamingServerNet.Utilities.Contracts;
 
 namespace LiveStreamingServerNet.Rtmp.Contracts
 {
@@ -41,6 +43,10 @@ namespace LiveStreamingServerNet.Rtmp.Contracts
         IPublishStreamMetaData StreamMetaData { get; set; }
         byte[]? VideoSequenceHeader { get; set; }
         byte[]? AudioSequenceHeader { get; set; }
+
+        void AddPictureCache(PicturesCache cache);
+        void ClearGroupOfPicturesCache(bool unclaim = true);
+        IList<PicturesCache> GetGroupOfPicturesCache(bool claim = true);
     }
 
     internal interface IPublishStreamMetaData
@@ -63,5 +69,24 @@ namespace LiveStreamingServerNet.Rtmp.Contracts
         bool IsPaused { get; set; }
         bool IsReceivingAudio { get; set; }
         bool IsReceivingVideo { get; set; }
+
+        Task InitializationTask { get; }
+        void CompleteInitialization();
+    }
+
+    internal record struct PicturesCache
+    {
+        public MediaType Type { get; }
+        public uint Timestamp { get; }
+        public IRentedBuffer Payload { get; }
+        public int PayloadSize { get; }
+
+        public PicturesCache(MediaType type, uint timestamp, IRentedBuffer payload, int payloadSize)
+        {
+            Type = type;
+            Timestamp = timestamp;
+            Payload = payload;
+            PayloadSize = payloadSize;
+        }
     }
 }

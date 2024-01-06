@@ -101,6 +101,7 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Commands
                     _logger.SubscriptionStarted(peerContext.Peer.PeerId, streamPath);
                     SendSubscriptionStartedMessage(peerContext, chunkStreamContext);
                     SendCachedStreamMessages(peerContext, chunkStreamContext);
+                    CompleteSubscriptionInitialization(peerContext);
                     return true;
 
                 case SubscribingStreamResult.AlreadySubscribing:
@@ -134,6 +135,15 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Commands
                 peerContext, publishStreamContext,
                 chunkStreamContext.MessageHeader.Timestamp,
                 chunkStreamContext.MessageHeader.MessageStreamId);
+
+            _mediaMessageManager.SendCachedGroupOfPictures(
+                peerContext, publishStreamContext,
+                chunkStreamContext.MessageHeader.MessageStreamId);
+        }
+
+        private void CompleteSubscriptionInitialization(IRtmpClientPeerContext peerContext)
+        {
+            peerContext.StreamSubscriptionContext!.CompleteInitialization();
         }
 
         private void SendAuthorizationFailedCommandMessage(IRtmpClientPeerContext peerContext, IRtmpChunkStreamContext chunkStreamContext)

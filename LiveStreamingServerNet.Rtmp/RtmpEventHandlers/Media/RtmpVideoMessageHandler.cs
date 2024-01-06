@@ -3,6 +3,8 @@ using LiveStreamingServerNet.Rtmp.Contracts;
 using LiveStreamingServerNet.Rtmp.RtmpEventHandlers.MessageDispatcher.Attributes;
 using LiveStreamingServerNet.Rtmp.RtmpEventHandlers.MessageDispatcher.Contracts;
 using LiveStreamingServerNet.Rtmp.Services.Contracts;
+using LiveStreamingServerNet.Rtmp.Utilities;
+using LiveStreamingServerNet.Utilities;
 using Microsoft.Extensions.Logging;
 
 namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Media
@@ -33,8 +35,8 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Media
             var publishStreamContext = peerContext.PublishStreamContext ??
                 throw new InvalidOperationException("Stream is not yet published.");
 
-            var hasSequenceHeader = CacheVideoSequenceHeaderIfNeeded(publishStreamContext, payloadBuffer);
-            BroacastVideoMessageToSubscribers(chunkStreamContext, publishStreamContext, payloadBuffer, hasSequenceHeader);
+            var hasHeader = CacheVideoSequence(chunkStreamContext, publishStreamContext, payloadBuffer);
+            BroacastVideoMessageToSubscribers(chunkStreamContext, publishStreamContext, payloadBuffer, hasHeader);
             return Task.FromResult(true);
         }
 
@@ -70,7 +72,8 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Media
                 payloadBuffer.CopyAllTo);
         }
 
-        private static bool CacheVideoSequenceHeaderIfNeeded(
+        private static bool CacheVideoSequence(
+            IRtmpChunkStreamContext chunkStreamContext,
             IRtmpPublishStreamContext publishStreamContext,
             INetBuffer payloadBuffer)
         {
@@ -78,20 +81,46 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Media
             var frameType = (VideoFrameType)(firstByte >> 4);
             var codecId = (VideoCodecId)(firstByte & 0x0f);
 
-            if (frameType == VideoFrameType.KeyFrame && codecId == VideoCodecId.AVC)
+            if (codecId == VideoCodecId.AVC)
             {
                 var avcPackageType = (AVCPacketType)payloadBuffer.ReadByte();
-                if (avcPackageType == AVCPacketType.SequenceHeader)
+
+                if (frameType == VideoFrameType.KeyFrame)
+                {
+                    ClearGroupOfPicturesCache(publishStreamContext);
+                }
+
+                if (frameType == VideoFrameType.KeyFrame && avcPackageType == AVCPacketType.SequenceHeader)
                 {
                     publishStreamContext.VideoSequenceHeader = payloadBuffer.MoveTo(0).ReadBytes(payloadBuffer.Size);
                     payloadBuffer.MoveTo(0);
                     return true;
+                }
+
+                if (avcPackageType == AVCPacketType.NALU)
+                {
+                    CacheGroupOfPictures(publishStreamContext, payloadBuffer, chunkStreamContext.MessageHeader.Timestamp);
                 }
             }
 
             payloadBuffer.MoveTo(0);
 
             return false;
+        }
+
+        private static void CacheGroupOfPictures(
+            IRtmpPublishStreamContext publishStreamContext,
+            INetBuffer payloadBuffer,
+            uint timestamp)
+        {
+            var rentedBuffer = new RentedBuffer(payloadBuffer.Size);
+            payloadBuffer.MoveTo(0).ReadBytes(rentedBuffer.Bytes, 0, payloadBuffer.Size);
+            publishStreamContext.AddPictureCache(new PicturesCache(MediaType.Video, timestamp, rentedBuffer, payloadBuffer.Size));
+        }
+
+        private static void ClearGroupOfPicturesCache(IRtmpPublishStreamContext publishStreamContext)
+        {
+            publishStreamContext.ClearGroupOfPicturesCache();
         }
     }
 }

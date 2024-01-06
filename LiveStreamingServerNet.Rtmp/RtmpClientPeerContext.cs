@@ -78,11 +78,49 @@ namespace LiveStreamingServerNet.Rtmp
         public byte[]? VideoSequenceHeader { get; set; }
         public byte[]? AudioSequenceHeader { get; set; }
 
+        private readonly Queue<PicturesCache> _groupOfPicturesCache = new();
+
         public RtmpPublishStreamContext(uint streamId, string streamPath, IDictionary<string, string> streamArguments)
         {
             StreamId = streamId;
             StreamPath = streamPath;
             StreamArguments = streamArguments;
+        }
+
+        public void AddPictureCache(PicturesCache cache)
+        {
+            lock (_groupOfPicturesCache)
+            {
+                _groupOfPicturesCache.Enqueue(cache);
+            }
+        }
+
+        public void ClearGroupOfPicturesCache(bool unclaim)
+        {
+            lock (_groupOfPicturesCache)
+            {
+                if (unclaim)
+                {
+                    foreach (var cache in _groupOfPicturesCache)
+                        cache.Payload.Unclaim();
+                }
+
+                _groupOfPicturesCache.Clear();
+            }
+        }
+
+        public IList<PicturesCache> GetGroupOfPicturesCache(bool claim)
+        {
+            lock (_groupOfPicturesCache)
+            {
+                if (claim)
+                {
+                    foreach (var cache in _groupOfPicturesCache)
+                        cache.Payload.Claim();
+                }
+
+                return new List<PicturesCache>(_groupOfPicturesCache);
+            }
         }
     }
 
@@ -121,6 +159,10 @@ namespace LiveStreamingServerNet.Rtmp
         public bool IsReceivingAudio { get; set; }
         public bool IsReceivingVideo { get; set; }
 
+        public Task InitializationTask => _initializationTcs.Task;
+
+        private readonly TaskCompletionSource _initializationTcs = new();
+
         public RtmpStreamSubscriptionContext(uint streamId, uint chunkStreamId, string streamPath, IDictionary<string, string> streamArguments)
         {
             StreamId = streamId;
@@ -131,6 +173,11 @@ namespace LiveStreamingServerNet.Rtmp
             IsPaused = false;
             IsReceivingAudio = true;
             IsReceivingVideo = true;
+        }
+
+        public void CompleteInitialization()
+        {
+            _initializationTcs.SetResult();
         }
     }
 }
