@@ -18,7 +18,6 @@ namespace LiveStreamingServerNet
             _services = new ServiceCollection();
 
             AddCore();
-            AddServer();
             AddRtmpServer();
         }
 
@@ -31,11 +30,6 @@ namespace LiveStreamingServerNet
         {
             _services.AddOptions()
                      .AddLogging();
-        }
-
-        private void AddServer()
-        {
-            _services.AddServer();
         }
 
         private void AddRtmpServer()
