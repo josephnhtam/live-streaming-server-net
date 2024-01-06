@@ -109,7 +109,13 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Commands
                 case SubscribingStreamResult.AlreadySubscribing:
                     _logger.LogWarning("PeerId: {PeerId} | PublishStreamPath: {PublishStreamPath} | Already subscribing",
                         peerContext.Peer.PeerId, streamPath);
-                    SendAlreadySubscribingCommandMessage(peerContext, chunkStreamContext);
+                    SendBadConnectionCommandMessage(peerContext, chunkStreamContext, "Already subscribing.");
+                    return false;
+
+                case SubscribingStreamResult.AlreadyPublishing:
+                    _logger.LogWarning("PeerId: {PeerId} | PublishStreamPath: {PublishStreamPath} | Already publishing",
+                        peerContext.Peer.PeerId, streamPath);
+                    SendBadConnectionCommandMessage(peerContext, chunkStreamContext, "Already publishing.");
                     return false;
 
                 default:
@@ -163,14 +169,14 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Commands
                 "Stream subscribed.");
         }
 
-        private void SendAlreadySubscribingCommandMessage(IRtmpClientPeerContext peerContext, IRtmpChunkStreamContext chunkStreamContext)
+        private void SendBadConnectionCommandMessage(IRtmpClientPeerContext peerContext, IRtmpChunkStreamContext chunkStreamContext, string reason)
         {
             _commandMessageSender.SendOnStatusCommandMessageAsync(
                 peerContext,
                 chunkStreamContext.ChunkStreamId,
                 RtmpArgumentValues.Error,
                 RtmpStatusCodes.PlayBadConnection,
-                "Already subscribing.");
+                reason);
         }
     }
 }

@@ -105,10 +105,16 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Commands
                     SendPublishingStartedMessage(peerContext, chunkStreamContext);
                     return true;
 
+                case PublishingStreamResult.AlreadySubscribing:
+                    _logger.LogWarning("PeerId: {PeerId} | PublishStreamPath: {PublishStreamPath} | Type: {PublishingType} | Already subscribing",
+                        peerContext.Peer.PeerId, streamPath, command.PublishingType);
+                    SendBadConnectionCommandMessage(peerContext, chunkStreamContext, "Already subscribing.");
+                    return false;
+
                 case PublishingStreamResult.AlreadyPublishing:
                     _logger.LogWarning("PeerId: {PeerId} | PublishStreamPath: {PublishStreamPath} | Type: {PublishingType} | Already publishing",
                         peerContext.Peer.PeerId, streamPath, command.PublishingType);
-                    SendAlreadyPublishingCommandMessage(peerContext, chunkStreamContext);
+                    SendBadConnectionCommandMessage(peerContext, chunkStreamContext, "Already publishing.");
                     return false;
 
                 case PublishingStreamResult.AlreadyExists:
@@ -132,14 +138,14 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Commands
                 "Stream already exists.");
         }
 
-        private void SendAlreadyPublishingCommandMessage(IRtmpClientPeerContext peerContext, IRtmpChunkStreamContext chunkStreamContext)
+        private void SendBadConnectionCommandMessage(IRtmpClientPeerContext peerContext, IRtmpChunkStreamContext chunkStreamContext, string reason)
         {
             _commandMessageSender.SendOnStatusCommandMessage(
                 peerContext,
                 chunkStreamContext.ChunkStreamId,
                 RtmpArgumentValues.Error,
                 RtmpStatusCodes.PublishBadConnection,
-                "Already publishing.");
+                reason);
         }
 
         private void SendAuthorizationFailedCommandMessage(IRtmpClientPeerContext peerContext, IRtmpChunkStreamContext chunkStreamContext)

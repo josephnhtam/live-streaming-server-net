@@ -29,10 +29,13 @@ namespace LiveStreamingServerNet.Rtmp.Services
 
         public PublishingStreamResult StartPublishingStream(IRtmpClientPeerContext publisherPeerContext, string streamPath, IDictionary<string, string> streamArguments, out IList<IRtmpClientPeerContext> existingSubscribers)
         {
-            using var readLock = _publishingRwLock.WriteLock();
-            using var subscribingWriteLock = _subscribingRwLock.WriteLock();
+            using var publishingWriteLock = _publishingRwLock.WriteLock();
+            using var subscribingReadLock = _subscribingRwLock.ReadLock();
 
             existingSubscribers = null!;
+
+            if (_subscribedStreamPaths.ContainsKey(publisherPeerContext))
+                return PublishingStreamResult.AlreadySubscribing;
 
             if (_publishStreamPaths.ContainsKey(publisherPeerContext))
                 return PublishingStreamResult.AlreadyPublishing;
@@ -76,16 +79,20 @@ namespace LiveStreamingServerNet.Rtmp.Services
 
         public SubscribingStreamResult StartSubscribingStream(IRtmpClientPeerContext subscriberPeerContext, uint chunkStreamId, string streamPath, IDictionary<string, string> streamArguments)
         {
+            using var publishingReadLock = _publishingRwLock.ReadLock();
             using var subscribingWriteLock = _subscribingRwLock.WriteLock();
+
+            if (_publishStreamPaths.ContainsKey(subscriberPeerContext))
+                return SubscribingStreamResult.AlreadyPublishing;
+
+            if (_subscribedStreamPaths.ContainsKey(subscriberPeerContext))
+                return SubscribingStreamResult.AlreadySubscribing;
 
             if (!_subscribingClientPeerContexts.TryGetValue(streamPath, out var subscribers))
             {
                 subscribers = new List<IRtmpClientPeerContext>();
                 _subscribingClientPeerContexts[streamPath] = subscribers;
             }
-
-            if (_subscribedStreamPaths.ContainsKey(subscriberPeerContext))
-                return SubscribingStreamResult.AlreadySubscribing;
 
             subscriberPeerContext.CreateStreamSubscriptionContext(chunkStreamId, streamPath, streamArguments);
 
@@ -134,11 +141,13 @@ namespace LiveStreamingServerNet.Rtmp.Services
         Succeeded,
         AlreadyExists,
         AlreadyPublishing,
+        AlreadySubscribing
     }
 
     public enum SubscribingStreamResult
     {
         Succeeded,
+        AlreadyPublishing,
         AlreadySubscribing,
     }
 }
