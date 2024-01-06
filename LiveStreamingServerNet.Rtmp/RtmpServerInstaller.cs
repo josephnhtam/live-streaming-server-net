@@ -47,12 +47,12 @@ namespace LiveStreamingServerNet.Rtmp
         private static IServiceCollection AddRtmpServices(this IServiceCollection services)
         {
             services.AddSingleton<IRtmpChunkMessageSenderService, RtmpChunkMessageSenderService>()
-                     .AddSingleton<IRtmpProtocolControlMessageSenderService, RtmpProtocolControlMessageSenderService>()
-                     .AddSingleton<IRtmpUserControlMessageSenderService, RtmpUserControlMessageSenderService>()
-                     .AddSingleton<IRtmpCommandMessageSenderService, RtmpCommandMessageSenderService>()
-                     .AddSingleton<IRtmpMediaMessageManagerService, RtmpMediaMessageManagerService>()
-                     .AddSingleton<IRtmpStreamManagerService, RtmpStreamManagerService>()
-                     .AddSingleton<IRtmpStreamDeletionService, RtmpStreamDeletionService>();
+                    .AddSingleton<IRtmpProtocolControlMessageSenderService, RtmpProtocolControlMessageSenderService>()
+                    .AddSingleton<IRtmpUserControlMessageSenderService, RtmpUserControlMessageSenderService>()
+                    .AddSingleton<IRtmpCommandMessageSenderService, RtmpCommandMessageSenderService>()
+                    .AddSingleton<IRtmpMediaMessageManagerService, RtmpMediaMessageManagerService>()
+                    .AddSingleton<IRtmpStreamManagerService, RtmpStreamManagerService>()
+                    .AddSingleton<IRtmpStreamDeletionService, RtmpStreamDeletionService>();
 
             services.AddSingleton<IRtmpInternalEventHandler, RtmpClientPeerServerEventHandler>();
 
