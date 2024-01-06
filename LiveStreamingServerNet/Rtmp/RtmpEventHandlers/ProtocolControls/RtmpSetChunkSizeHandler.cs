@@ -1,6 +1,7 @@
 ﻿using LiveStreamingServerNet.Newtorking.Contracts;
 using LiveStreamingServerNet.Rtmp.Contracts;
 using LiveStreamingServerNet.Rtmp.Extensions;
+using LiveStreamingServerNet.Rtmp.Logging;
 using LiveStreamingServerNet.Rtmp.RtmpEventHandlers.MessageDispatcher.Attributes;
 using LiveStreamingServerNet.Rtmp.RtmpEventHandlers.MessageDispatcher.Contracts;
 using Microsoft.Extensions.Logging;
@@ -24,7 +25,7 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.ProtocolControls
             CancellationToken cancellationToken)
         {
             peerContext.InChunkSize = payloadBuffer.ReadUInt32BigEndian();
-            _logger.LogDebug("PeerId: {PeerId} | SetChunkSize: {InChunkSize}", peerContext.Peer.PeerId, peerContext.InChunkSize);
+            _logger.SetChunkSize(peerContext.Peer.PeerId, peerContext.InChunkSize);
             return Task.FromResult(true);
         }
     }

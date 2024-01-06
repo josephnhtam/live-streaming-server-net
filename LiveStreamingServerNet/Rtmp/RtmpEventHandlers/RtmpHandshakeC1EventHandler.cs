@@ -1,4 +1,5 @@
 ﻿using LiveStreamingServerNet.Newtorking.Contracts;
+using LiveStreamingServerNet.Rtmp.Logging;
 using LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Handshakes;
 using LiveStreamingServerNet.Rtmp.RtmpEvents;
 using MediatR;
@@ -28,12 +29,12 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers
                 @event.PeerContext.State = RtmpClientPeerState.HandshakeC2;
                 @event.PeerContext.Peer.Send(outgoingBuffer);
 
-                _logger.LogDebug("PeerId: {PeerId} | Handshake C1 Handled", @event.PeerContext.Peer.PeerId);
+                _logger.HandshakeC1Handled(@event.PeerContext.Peer.PeerId);
 
                 return true;
             }
 
-            _logger.LogDebug("PeerId: {PeerId} | Handshake C1 Handling Failed", @event.PeerContext.Peer.PeerId);
+            _logger.HandshakeC1HandlingFailed(@event.PeerContext.Peer.PeerId);
 
             return false;
         }
@@ -48,7 +49,7 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers
             {
                 peerContext.HandshakeType = HandshakeType.ComplexHandshake0;
                 complexHandshake0.WriteS0S1S2(outgoingBuffer);
-                _logger.LogDebug("PeerId: {PeerId} | Handshake type: {HandshakeType}", clientPeer.PeerId, nameof(HandshakeType.ComplexHandshake0));
+                _logger.HandshakeType(clientPeer.PeerId, nameof(HandshakeType.ComplexHandshake0));
                 return true;
             }
 
@@ -57,7 +58,7 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers
             {
                 peerContext.HandshakeType = HandshakeType.ComplexHandshake1;
                 complexHandshake1.WriteS0S1S2(outgoingBuffer);
-                _logger.LogDebug("PeerId: {PeerId} | Handshake type: {HandshakeType}", clientPeer.PeerId, nameof(HandshakeType.ComplexHandshake1));
+                _logger.HandshakeType(clientPeer.PeerId, nameof(HandshakeType.ComplexHandshake1));
                 return true;
             }
 
@@ -66,7 +67,7 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers
             {
                 peerContext.HandshakeType = HandshakeType.SimpleHandshake;
                 simpleHandshake.WriteS0S1S2(outgoingBuffer);
-                _logger.LogDebug("PeerId: {PeerId} | Handshake type: {HandshakeType}", clientPeer.PeerId, nameof(HandshakeType.SimpleHandshake));
+                _logger.HandshakeType(clientPeer.PeerId, nameof(HandshakeType.SimpleHandshake));
                 return true;
             }
 

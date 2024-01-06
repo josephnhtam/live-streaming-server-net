@@ -1,4 +1,5 @@
 ﻿using LiveStreamingServerNet.Newtorking.Contracts;
+using LiveStreamingServerNet.Rtmp.Logging;
 using LiveStreamingServerNet.Rtmp.RtmpEvents;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -24,7 +25,7 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers
 
             @event.PeerContext.State = RtmpClientPeerState.HandshakeDone;
 
-            _logger.LogDebug("PeerId: {PeerId} | Handshake C2 Handled", @event.PeerContext.Peer.PeerId);
+            _logger.HandshakeC2Handled(@event.PeerContext.Peer.PeerId);
 
             return true;
         }

@@ -1,5 +1,6 @@
 ﻿using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.Newtorking.Contracts;
+using LiveStreamingServerNet.Newtorking.Logging;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Collections.Concurrent;
@@ -42,7 +43,7 @@ namespace LiveStreamingServerNet.Newtorking
 
             await OnServerStartedAsync();
 
-            _logger?.LogInformation("Server is started");
+            _logger.ServerStarted(localEndpoint.ToString());
 
             try
             {
@@ -53,22 +54,22 @@ namespace LiveStreamingServerNet.Newtorking
             }
             catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
             {
-                _logger?.LogInformation("Server is shutting down");
+                _logger.ServerShuttingDown();
             }
             catch (SocketException ex)
             {
-                _logger?.LogError(ex, "An error occurred while accepting a client connection");
+                _logger.AcceptClientError(ex);
             }
             catch (Exception ex)
             {
-                _logger?.LogError(ex, "An error occurred in the server loop");
+                _logger.ServerLoopError(ex);
             }
 
             await Task.WhenAll(_clientPeerTasks.Select(x => x.Value.Task));
 
             await OnServerStoppedAsync();
 
-            _logger?.LogInformation("Server is stopped");
+            _logger.ServerStopped();
         }
 
         private async Task AcceptClientAsync(TcpListener tcpListener, CancellationToken cancellationToken)

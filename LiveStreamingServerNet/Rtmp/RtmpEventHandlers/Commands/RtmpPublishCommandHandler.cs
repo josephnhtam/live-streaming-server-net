@@ -1,4 +1,5 @@
 ﻿using LiveStreamingServerNet.Rtmp.Contracts;
+using LiveStreamingServerNet.Rtmp.Logging;
 using LiveStreamingServerNet.Rtmp.RtmpEventHandlers.CommandDispatcher;
 using LiveStreamingServerNet.Rtmp.RtmpEventHandlers.CommandDispatcher.Attributes;
 using LiveStreamingServerNet.Rtmp.Services;
@@ -31,10 +32,7 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Commands
             RtmpPublishCommand command,
             CancellationToken cancellationToken)
         {
-            _logger.LogDebug("PeerId: {PeerId} | Publish: {PublishingName} | Type: {PublishingType}",
-                peerContext.Peer.PeerId,
-                !string.IsNullOrEmpty(command.PublishingName) ? command.PublishingName : "(Empty)",
-                command.PublishingType);
+            _logger.Publish(peerContext.Peer.PeerId, command.PublishingName, command.PublishingType);
 
             if (peerContext.StreamId == null)
                 throw new InvalidOperationException("Stream is not yet created.");
@@ -78,9 +76,7 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Commands
         {
             if (!await AuthorizeAsync(peerContext, streamPath, streamArguments, command.PublishingType))
             {
-                _logger.LogWarning("PeerId: {PeerId} | PublishStreamPath: {PublishStreamPath} | Type: {PublishingType} | Authorization failed",
-                    peerContext.Peer.PeerId, streamPath, command.PublishingType);
-
+                _logger.AuthorizationFailed(peerContext.Peer.PeerId, streamPath, command.PublishingType);
                 SendAuthorizationFailedCommandMessage(peerContext, chunkStreamContext);
                 return false;
             }
@@ -100,26 +96,22 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Commands
             switch (startPublishingResult)
             {
                 case PublishingStreamResult.Succeeded:
-                    _logger.LogInformation("PeerId: {PeerId} | PublishStreamPath: {PublishStreamPath} | Type: {PublishingType} | Start publishing successfully",
-                        peerContext.Peer.PeerId, streamPath, command.PublishingType);
+                    _logger.PublishingStarted(peerContext.Peer.PeerId, streamPath, command.PublishingType);
                     SendPublishingStartedMessage(peerContext, chunkStreamContext);
                     return true;
 
                 case PublishingStreamResult.AlreadySubscribing:
-                    _logger.LogWarning("PeerId: {PeerId} | PublishStreamPath: {PublishStreamPath} | Type: {PublishingType} | Already subscribing",
-                        peerContext.Peer.PeerId, streamPath, command.PublishingType);
+                    _logger.AlreadySubscribing(peerContext.Peer.PeerId, streamPath);
                     SendBadConnectionCommandMessage(peerContext, chunkStreamContext, "Already subscribing.");
                     return false;
 
                 case PublishingStreamResult.AlreadyPublishing:
-                    _logger.LogWarning("PeerId: {PeerId} | PublishStreamPath: {PublishStreamPath} | Type: {PublishingType} | Already publishing",
-                        peerContext.Peer.PeerId, streamPath, command.PublishingType);
+                    _logger.AlreadyPublishing(peerContext.Peer.PeerId, streamPath);
                     SendBadConnectionCommandMessage(peerContext, chunkStreamContext, "Already publishing.");
                     return false;
 
                 case PublishingStreamResult.AlreadyExists:
-                    _logger.LogWarning("PeerId: {PeerId} | PublishStreamPath: {PublishStreamPath} | Type: {PublishingType} | Already exists",
-                        peerContext.Peer.PeerId, streamPath, command.PublishingType);
+                    _logger.StreamAlreadyExists(peerContext.Peer.PeerId, streamPath, command.PublishingType);
                     SendAlreadyExistsCommandMessage(peerContext, chunkStreamContext);
                     return false;
 

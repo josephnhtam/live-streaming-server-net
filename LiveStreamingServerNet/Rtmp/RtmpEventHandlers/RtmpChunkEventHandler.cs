@@ -1,5 +1,6 @@
 ﻿using LiveStreamingServerNet.Newtorking.Contracts;
 using LiveStreamingServerNet.Rtmp.Contracts;
+using LiveStreamingServerNet.Rtmp.Logging;
 using LiveStreamingServerNet.Rtmp.RtmpEventHandlers.MessageDispatcher.Contracts;
 using LiveStreamingServerNet.Rtmp.RtmpEvents;
 using LiveStreamingServerNet.Rtmp.RtmpHeaders;
@@ -38,7 +39,7 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers
                 return true;
             }
 
-            _logger.LogError("PeerId: {PeerId} | Failed to handle chunk event", @event.PeerContext.Peer.PeerId);
+            _logger.FailedToHandleChunkEvent(@event.PeerContext.Peer.PeerId);
 
             return false;
         }

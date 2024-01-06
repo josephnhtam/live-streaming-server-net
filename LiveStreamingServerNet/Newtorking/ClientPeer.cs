@@ -1,5 +1,6 @@
 ﻿using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.Newtorking.Contracts;
+using LiveStreamingServerNet.Newtorking.Logging;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Buffers;
@@ -11,7 +12,7 @@ namespace LiveStreamingServerNet.Newtorking
     public class ClientPeer : IClientPeer
     {
         private readonly INetBufferPool _netBufferPool;
-        private readonly ILogger? _logger;
+        private readonly ILogger _logger;
         private readonly Channel<PendingMessage> _pendingMessageChannel;
         private TcpClient _tcpClient = default!;
 
@@ -34,7 +35,9 @@ namespace LiveStreamingServerNet.Newtorking
 
         public async Task RunAsync(IClientPeerHandler handler, CancellationToken stoppingToken)
         {
-            await using (var outstandingBufferSender = new OutstandingBufferSender(_pendingMessageChannel.Reader, _logger))
+            _logger.ClientConnected(PeerId);
+
+            await using (var outstandingBufferSender = new OutstandingBufferSender(PeerId, _pendingMessageChannel.Reader, _logger))
             {
                 using var cts = CancellationTokenSource.CreateLinkedTokenSource(stoppingToken);
                 var cancellationToken = cts.Token;
@@ -53,7 +56,7 @@ namespace LiveStreamingServerNet.Newtorking
                 catch (Exception ex) when (ex is IOException or EndOfStreamException) { }
                 catch (Exception ex)
                 {
-                    _logger?.LogError(ex, "An error occurred");
+                    _logger.ClientPeerLoopError(PeerId, ex);
                 }
                 finally
                 {
@@ -64,7 +67,7 @@ namespace LiveStreamingServerNet.Newtorking
             await handler.DisposeAsync();
             _tcpClient.Close();
 
-            _logger?.LogDebug("PeerId: {PeerId} | Disconnected", PeerId);
+            _logger.ClientDisconnected(PeerId);
         }
 
         public void Send(INetBuffer netBuffer, Action? callback)
@@ -150,13 +153,15 @@ namespace LiveStreamingServerNet.Newtorking
 
         private class OutstandingBufferSender : IAsyncDisposable
         {
+            private readonly uint _peerId;
             private readonly ChannelReader<PendingMessage> _pendingMessageReader;
-            private readonly ILogger? _logger;
+            private readonly ILogger _logger;
 
             private Task? _task;
 
-            public OutstandingBufferSender(ChannelReader<PendingMessage> pendingMessageReader, ILogger? logger)
+            public OutstandingBufferSender(uint peerId, ChannelReader<PendingMessage> pendingMessageReader, ILogger logger)
             {
+                _peerId = peerId;
                 _pendingMessageReader = pendingMessageReader;
                 _logger = logger;
             }
@@ -182,7 +187,7 @@ namespace LiveStreamingServerNet.Newtorking
                         catch (IOException) { }
                         catch (Exception ex)
                         {
-                            _logger?.LogError(ex, "An error occurred while sending data to the client");
+                            _logger.SendDataError(_peerId, ex);
                         }
                         finally
                         {

@@ -1,5 +1,6 @@
 ﻿using LiveStreamingServerNet.Rtmp.Configurations;
 using LiveStreamingServerNet.Rtmp.Contracts;
+using LiveStreamingServerNet.Rtmp.Logging;
 using LiveStreamingServerNet.Rtmp.RtmpEventHandlers.CommandDispatcher;
 using LiveStreamingServerNet.Rtmp.RtmpEventHandlers.CommandDispatcher.Attributes;
 using LiveStreamingServerNet.Rtmp.Services.Contracts;
@@ -37,7 +38,7 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Commands
             RtmpConnectCommand command,
             CancellationToken cancellationToken)
         {
-            _logger.LogDebug("PeerId: {PeerId} | Connect: {CommandObject}", peerContext.Peer.PeerId, JsonSerializer.Serialize(command.CommandObject));
+            _logger.Connect(peerContext.Peer.PeerId, command.CommandObject);
 
             peerContext.AppName = (string)command.CommandObject["app"];
 

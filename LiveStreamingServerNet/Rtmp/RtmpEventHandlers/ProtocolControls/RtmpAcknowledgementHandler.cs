@@ -1,5 +1,6 @@
 ﻿using LiveStreamingServerNet.Newtorking.Contracts;
 using LiveStreamingServerNet.Rtmp.Contracts;
+using LiveStreamingServerNet.Rtmp.Logging;
 using LiveStreamingServerNet.Rtmp.RtmpEventHandlers.MessageDispatcher.Attributes;
 using LiveStreamingServerNet.Rtmp.RtmpEventHandlers.MessageDispatcher.Contracts;
 using Microsoft.Extensions.Logging;
@@ -22,7 +23,7 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.ProtocolControls
             INetBuffer payloadBuffer,
             CancellationToken cancellationToken)
         {
-            //_logger.LogDebug("PeerId: {PeerId} | Acknowledgement", peerContext.Peer.PeerId);
+            _logger.AcknowledgementReceived(peerContext.Peer.PeerId);
             return Task.FromResult(true);
         }
     }

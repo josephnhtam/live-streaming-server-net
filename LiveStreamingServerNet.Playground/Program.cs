@@ -14,7 +14,6 @@ namespace LiveStreamingServerNet.Playground
                 .WriteTo.Console()
                 .CreateLogger();
 
-
             using var cts = new CancellationTokenSource();
             var cancellationToken = cts.Token;
 

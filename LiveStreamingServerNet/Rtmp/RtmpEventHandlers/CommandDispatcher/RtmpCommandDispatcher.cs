@@ -1,5 +1,6 @@
 ﻿using LiveStreamingServerNet.Newtorking.Contracts;
 using LiveStreamingServerNet.Rtmp.Contracts;
+using LiveStreamingServerNet.Rtmp.Logging;
 using LiveStreamingServerNet.Rtmp.RtmpEventHandlers.CommandDispatcher.Contracts;
 using LiveStreamingServerNet.Utilities.Extensions;
 using Microsoft.Extensions.DependencyInjection;
@@ -37,7 +38,7 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.CommandDispatcher
 
             var commandName = (string)(isUsingAmf3 ? reader.ReadAmf3() : reader.ReadAmf0());
 
-            _logger.LogDebug("PeerId: {PeerId} | Command ({commandName}) received", peerContext.Peer.PeerId, commandName);
+            _logger.CommandReceived(peerContext.Peer.PeerId, commandName);
 
             var commandHandlerType = _handlerMap.GetHandlerType(commandName);
 

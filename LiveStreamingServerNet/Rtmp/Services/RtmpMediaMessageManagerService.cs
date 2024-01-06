@@ -1,6 +1,7 @@
 ﻿using LiveStreamingServerNet.Newtorking.Contracts;
 using LiveStreamingServerNet.Rtmp.Configurations;
 using LiveStreamingServerNet.Rtmp.Contracts;
+using LiveStreamingServerNet.Rtmp.Logging;
 using LiveStreamingServerNet.Rtmp.RtmpEventHandlers;
 using LiveStreamingServerNet.Rtmp.RtmpHeaders;
 using LiveStreamingServerNet.Rtmp.Services.Contracts;
@@ -167,7 +168,7 @@ namespace LiveStreamingServerNet.Rtmp.Services
                     catch (OperationCanceledException) when (cancellation.IsCancellationRequested) { }
                     catch (Exception ex)
                     {
-                        _logger.LogError(ex, "An error occurred while sending media message");
+                        _logger.FailedToSendMediaMessage(peerContext.Peer.PeerId, ex);
                     }
                     finally
                     {
@@ -262,7 +263,7 @@ namespace LiveStreamingServerNet.Rtmp.Services
                     if (context.OutstandingPackagesSize <= _config.MaxOutstandingMediaMessageSize ||
                         context.OutstandingPackagesCount <= _config.MaxOutstandingMediaMessageCount)
                     {
-                        _logger.LogDebug("PeerId: {PeerId} | Resume media package | Outstanding media message size: {OutstandingPackagesSize} | count: {OutstandingPackagesCount}", PeerContext.Peer.PeerId, context.OutstandingPackagesSize, context.OutstandingPackagesCount);
+                        _logger.ResumeMediaPackage(PeerContext.Peer.PeerId, context.OutstandingPackagesSize, context.OutstandingPackagesCount);
                         _skippingPackage = false;
                         return false;
                     }
@@ -273,7 +274,7 @@ namespace LiveStreamingServerNet.Rtmp.Services
                 if (context.OutstandingPackagesSize > _config.MaxOutstandingMediaMessageSize &&
                     context.OutstandingPackagesCount > _config.MaxOutstandingMediaMessageCount)
                 {
-                    _logger.LogDebug("PeerId: {PeerId} | Skipping media package | Outstanding media message size: {OutstandingPackagesSize} | count: {OutstandingPackagesCount}", PeerContext.Peer.PeerId, context.OutstandingPackagesSize, context.OutstandingPackagesCount);
+                    _logger.PauseMediaPackage(PeerContext.Peer.PeerId, context.OutstandingPackagesSize, context.OutstandingPackagesCount);
                     _skippingPackage = true;
                     return true;
                 }
