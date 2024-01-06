@@ -4,7 +4,7 @@ namespace LiveStreamingServerNet.Utilities
 {
     public class RentedBuffer
     {
-        public byte[] Bytes { get; }
+        public byte[] Bytes { get; private set; }
         public int Claimed => _claimed;
         private int _claimed;
 
@@ -22,7 +22,10 @@ namespace LiveStreamingServerNet.Utilities
         public void Unclaim()
         {
             if (Interlocked.Decrement(ref _claimed) == 0)
+            {
                 ArrayPool<byte>.Shared.Return(Bytes);
+                Bytes = null!;
+            }
         }
     }
 }
