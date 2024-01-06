@@ -4,7 +4,7 @@ using LiveStreamingServerNet.Rtmp.Extensions;
 
 namespace LiveStreamingServerNet.Rtmp.RtmpHeaders
 {
-    public record struct RtmpChunkExtendedTimestampHeader(uint extendedTimestamp)
+    internal record struct RtmpChunkExtendedTimestampHeader(uint extendedTimestamp)
     {
         public const int kSize = 4;
         public int Size => kSize;

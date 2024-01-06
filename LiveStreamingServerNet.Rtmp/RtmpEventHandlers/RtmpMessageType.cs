@@ -1,6 +1,6 @@
 ﻿namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers
 {
-    public static class RtmpMessageType
+    internal static class RtmpMessageType
     {
         /* protocol control messages */
         public const byte SetChunkSize = 1;

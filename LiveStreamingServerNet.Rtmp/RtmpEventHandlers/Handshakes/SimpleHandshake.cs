@@ -2,7 +2,7 @@
 
 namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Handshakes
 {
-    public class SimpleHandshake
+    internal class SimpleHandshake
     {
         private const byte ClientType = 3;
 

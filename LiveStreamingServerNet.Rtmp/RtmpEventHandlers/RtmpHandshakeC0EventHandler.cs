@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 
 namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers
 {
-    public class RtmpHandshakeC0EventHandler : IRequestHandler<RtmpHandshakeC0Event, bool>
+    internal class RtmpHandshakeC0EventHandler : IRequestHandler<RtmpHandshakeC0Event, bool>
     {
         private readonly ILogger _logger;
 

@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.MessageDispatcher
 {
-    public class RtmpMessageDispatcher : IRtmpMessageDispatcher
+    internal class RtmpMessageDispatcher : IRtmpMessageDispatcher
     {
         private readonly IServiceProvider _services;
         private readonly IRtmpMessageHanlderMap _handlerMap;

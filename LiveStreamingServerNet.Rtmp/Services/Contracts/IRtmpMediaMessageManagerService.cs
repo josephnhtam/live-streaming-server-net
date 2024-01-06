@@ -3,7 +3,7 @@ using LiveStreamingServerNet.Rtmp.Contracts;
 
 namespace LiveStreamingServerNet.Rtmp.Services.Contracts
 {
-    public interface IRtmpMediaMessageManagerService : IAsyncDisposable
+    internal interface IRtmpMediaMessageManagerService : IAsyncDisposable
     {
         void EnqueueVideoMessage(
             IRtmpClientPeerContext subscriber,

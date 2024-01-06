@@ -1,5 +1,5 @@
-﻿using System.Buffers;
-using LiveStreamingServerNet.Utilities.Contracts;
+﻿using LiveStreamingServerNet.Utilities.Contracts;
+using System.Buffers;
 
 namespace LiveStreamingServerNet.Utilities
 {

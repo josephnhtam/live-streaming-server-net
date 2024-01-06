@@ -10,10 +10,10 @@ using Microsoft.Extensions.Logging;
 
 namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Commands
 {
-    public record RtmpPublishCommand(double TransactionId, IDictionary<string, object> CommandObject, string PublishingName, string PublishingType);
+    internal record RtmpPublishCommand(double TransactionId, IDictionary<string, object> CommandObject, string PublishingName, string PublishingType);
 
     [RtmpCommand("publish")]
-    public class RtmpPublishCommandHandler : RtmpCommandHandler<RtmpPublishCommand>
+    internal class RtmpPublishCommandHandler : RtmpCommandHandler<RtmpPublishCommand>
     {
         private readonly IRtmpStreamManagerService _streamManager;
         private readonly IRtmpCommandMessageSenderService _commandMessageSender;

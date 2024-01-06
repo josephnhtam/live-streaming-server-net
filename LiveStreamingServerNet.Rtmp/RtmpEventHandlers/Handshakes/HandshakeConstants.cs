@@ -1,6 +1,6 @@
 ﻿namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Handshakes
 {
-    public static class HandshakeConstants
+    internal static class HandshakeConstants
     {
         public static readonly byte[] FPKey = new byte[] {
             0x47, 0x65, 0x6E, 0x75, 0x69, 0x6E, 0x65, 0x20,

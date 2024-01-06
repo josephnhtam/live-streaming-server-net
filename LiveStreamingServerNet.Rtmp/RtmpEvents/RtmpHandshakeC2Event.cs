@@ -4,7 +4,7 @@ using MediatR;
 
 namespace LiveStreamingServerNet.Rtmp.RtmpEvents
 {
-    public record struct RtmpHandshakeC2Event(
+    internal record struct RtmpHandshakeC2Event(
         IRtmpClientPeerContext PeerContext,
         ReadOnlyNetworkStream NetworkStream) : IRequest<bool>;
 }

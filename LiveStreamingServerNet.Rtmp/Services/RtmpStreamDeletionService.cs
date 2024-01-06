@@ -5,7 +5,7 @@ using LiveStreamingServerNet.Rtmp.Services.Extensions;
 
 namespace LiveStreamingServerNet.Rtmp.Services
 {
-    public class RtmpStreamDeletionService : IRtmpStreamDeletionService
+    internal class RtmpStreamDeletionService : IRtmpStreamDeletionService
     {
         private readonly IRtmpStreamManagerService _rtmpStreamManager;
         private readonly IRtmpUserControlMessageSenderService _userControlMessageSender;

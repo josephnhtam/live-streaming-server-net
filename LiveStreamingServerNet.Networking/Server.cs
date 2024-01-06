@@ -9,7 +9,7 @@ using System.Net.Sockets;
 
 namespace LiveStreamingServerNet.Newtorking
 {
-    public class Server : IServer
+    public sealed class Server : IServer
     {
         private readonly ConcurrentDictionary<uint, ClientPeerTask> _clientPeerTasks = new();
         private readonly IServiceProvider _services;

@@ -5,10 +5,10 @@ using LiveStreamingServerNet.Rtmp.Services.Contracts;
 
 namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Commands
 {
-    public record RtmpCreateStreamCommand(double TransactionId, IDictionary<string, object> CommandObject);
+    internal record RtmpCreateStreamCommand(double TransactionId, IDictionary<string, object> CommandObject);
 
     [RtmpCommand("createStream")]
-    public class RtmpCreateStreamCommandHandler : RtmpCommandHandler<RtmpCreateStreamCommand>
+    internal class RtmpCreateStreamCommandHandler : RtmpCommandHandler<RtmpCreateStreamCommand>
     {
         private readonly IRtmpCommandMessageSenderService _commandMessageSender;
 

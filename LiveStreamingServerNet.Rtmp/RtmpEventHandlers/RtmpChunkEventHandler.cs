@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 
 namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers
 {
-    public class RtmpChunkEventHandler : IRequestHandler<RtmpChunkEvent, bool>
+    internal class RtmpChunkEventHandler : IRequestHandler<RtmpChunkEvent, bool>
     {
         private readonly INetBufferPool _netBufferPool;
         private readonly IRtmpMessageDispatcher _dispatcher;

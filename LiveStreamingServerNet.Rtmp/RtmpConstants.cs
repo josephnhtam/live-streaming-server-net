@@ -1,6 +1,6 @@
 ﻿namespace LiveStreamingServerNet.Rtmp
 {
-    public static class RtmpConstants
+    internal static class RtmpConstants
     {
         public static readonly byte[] ServerVersion = [1, 0, 0, 0];
 
@@ -17,7 +17,7 @@
         public const uint DataMessageChunkStreamId = 6;
     }
 
-    public static class RtmpUserControlMessageTypes
+    internal static class RtmpUserControlMessageTypes
     {
         public const ushort StreamBegin = 0;
         public const ushort StreamEof = 1;
@@ -28,20 +28,20 @@
         public const ushort PingResponse = 7;
     }
 
-    public enum RtmpPeerBandwidthLimitType : byte
+    internal enum RtmpPeerBandwidthLimitType : byte
     {
         Hard = 0,
         Soft = 1,
         Dynamic = 2
     }
 
-    public static class RtmpDataMessageConstants
+    internal static class RtmpDataMessageConstants
     {
         public const string SetDataFrame = "@setDataFrame";
         public const string OnMetaData = "onMetaData";
     }
 
-    public static class RtmpStatusCodes
+    internal static class RtmpStatusCodes
     {
         public const string ConnectSuccess = "NetConnection.Connect.Success";
         public const string ConnectRejected = "NetConnection.Connect.Rejected";
@@ -60,7 +60,7 @@
         public const string PlayUnpublishNotify = "NetStream.Play.UnpublishNotify";
     }
 
-    public static class RtmpArgumentNames
+    internal static class RtmpArgumentNames
     {
         public const string Level = "level";
         public const string Code = "code";
@@ -70,13 +70,13 @@
         public const string ObjectEncoding = "objectEncoding";
     }
 
-    public static class RtmpArgumentValues
+    internal static class RtmpArgumentValues
     {
         public const string Error = "error";
         public const string Status = "status";
     }
 
-    public enum VideoFrameType : byte
+    internal enum VideoFrameType : byte
     {
         KeyFrame = 1,
         InterFrame = 2,
@@ -85,7 +85,7 @@
         VideoInfoOrCommandFrame = 5
     }
 
-    public enum VideoCodecId : byte
+    internal enum VideoCodecId : byte
     {
         SorensonH263 = 2,
         ScreenVideo = 3,
@@ -95,14 +95,14 @@
         AVC = 7
     }
 
-    public enum AVCPacketType : byte
+    internal enum AVCPacketType : byte
     {
         SequenceHeader = 0,
         NALU = 1,
         EndOfSequence = 2
     }
 
-    public enum AudioSoundFormat
+    internal enum AudioSoundFormat
     {
         LinearPCMPlatformEndian = 0,
         ADPCM = 1,
@@ -120,7 +120,7 @@
         DeviceSpecificSound = 15
     }
 
-    public enum AACPacketType
+    internal enum AACPacketType
     {
         SequenceHeader = 0,
         Raw = 1

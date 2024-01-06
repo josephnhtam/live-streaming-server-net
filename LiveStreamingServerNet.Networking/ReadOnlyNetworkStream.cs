@@ -2,7 +2,7 @@
 
 namespace LiveStreamingServerNet.Newtorking
 {
-    public class ReadOnlyNetworkStream : Stream
+    public sealed class ReadOnlyNetworkStream : Stream
     {
         private readonly NetworkStream _innerStream;
 

@@ -2,7 +2,7 @@
 
 namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.MessageDispatcher.Contracts
 {
-    public interface IRtmpMessageDispatcher
+    internal interface IRtmpMessageDispatcher
     {
         Task<bool> DispatchAsync(IRtmpChunkStreamContext chunkStreamContext, IRtmpClientPeerContext peerContext, CancellationToken cancellationToken);
     }

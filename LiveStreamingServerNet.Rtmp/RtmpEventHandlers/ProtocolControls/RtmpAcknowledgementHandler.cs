@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.ProtocolControls
 {
     [RtmpMessageType(RtmpMessageType.Acknowledgement)]
-    public class RtmpAcknowledgementHandler : IRtmpMessageHandler
+    internal class RtmpAcknowledgementHandler : IRtmpMessageHandler
     {
         private readonly ILogger _logger;
 

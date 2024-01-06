@@ -1,6 +1,6 @@
 ﻿namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.CommandDispatcher.Contracts
 {
-    public interface IRtmpCommandHanlderMap
+    internal interface IRtmpCommandHanlderMap
     {
         Type? GetHandlerType(string command);
     }

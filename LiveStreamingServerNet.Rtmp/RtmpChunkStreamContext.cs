@@ -3,7 +3,7 @@ using LiveStreamingServerNet.Rtmp.Contracts;
 
 namespace LiveStreamingServerNet.Rtmp
 {
-    public class RtmpChunkStreamContext : IRtmpChunkStreamContext
+    internal class RtmpChunkStreamContext : IRtmpChunkStreamContext
     {
         public uint ChunkStreamId { get; }
         public int ChunkType { get; set; }
@@ -18,7 +18,7 @@ namespace LiveStreamingServerNet.Rtmp
         }
     }
 
-    public class RtmpChunkMessageHeaderContext : IRtmpChunkMessageHeaderContext
+    internal class RtmpChunkMessageHeaderContext : IRtmpChunkMessageHeaderContext
     {
         public uint Timestamp { get; set; }
         public uint TimestampDelta { get; set; }

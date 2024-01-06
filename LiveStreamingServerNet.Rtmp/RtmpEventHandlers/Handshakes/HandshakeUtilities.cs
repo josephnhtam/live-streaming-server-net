@@ -1,6 +1,6 @@
 ﻿namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Handshakes
 {
-    public static class HandshakeUtilities
+    internal static class HandshakeUtilities
     {
         public static int GetTime()
         {

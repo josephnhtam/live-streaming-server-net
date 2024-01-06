@@ -9,7 +9,7 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Data
 {
     [RtmpMessageType(RtmpMessageType.DataMessageAmf0)]
     [RtmpMessageType(RtmpMessageType.DataMessageAmf3)]
-    public class RtmpDataMessageHandler : IRtmpMessageHandler
+    internal class RtmpDataMessageHandler : IRtmpMessageHandler
     {
         private readonly IRtmpMediaMessageManagerService _mediaMessageManager;
 

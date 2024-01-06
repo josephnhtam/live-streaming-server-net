@@ -1,6 +1,6 @@
 ﻿namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Handshakes
 {
-    public enum HandshakeType
+    internal enum HandshakeType
     {
         SimpleHandshake,
         ComplexHandshake0,

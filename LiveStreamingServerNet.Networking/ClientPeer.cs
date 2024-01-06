@@ -9,7 +9,7 @@ using System.Threading.Channels;
 
 namespace LiveStreamingServerNet.Newtorking
 {
-    public class ClientPeer : IClientPeer
+    public sealed class ClientPeer : IClientPeer
     {
         private readonly INetBufferPool _netBufferPool;
         private readonly ILogger _logger;

@@ -1,7 +1,7 @@
 ﻿namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.MessageDispatcher.Attributes
 {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
-    public class RtmpMessageTypeAttribute : Attribute
+    internal class RtmpMessageTypeAttribute : Attribute
     {
         public readonly byte MessageTypeId;
 

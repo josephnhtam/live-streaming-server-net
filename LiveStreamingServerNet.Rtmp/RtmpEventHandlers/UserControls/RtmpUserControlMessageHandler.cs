@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.UserControls
 {
     [RtmpMessageType(RtmpMessageType.UserControlMessage)]
-    public class RtmpUserControlMessageHandler : IRtmpMessageHandler
+    internal class RtmpUserControlMessageHandler : IRtmpMessageHandler
     {
         private readonly ILogger _logger;
 

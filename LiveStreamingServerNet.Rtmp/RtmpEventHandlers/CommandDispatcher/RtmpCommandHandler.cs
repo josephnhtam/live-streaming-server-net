@@ -2,12 +2,12 @@
 
 namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.CommandDispatcher
 {
-    public abstract class RtmpCommandHandler
+    internal abstract class RtmpCommandHandler
     {
         public abstract Task<bool> HandleAsync(IRtmpChunkStreamContext chunkStreamContext, IRtmpClientPeerContext peerContext, object command, CancellationToken cancellationToken);
     }
 
-    public abstract class RtmpCommandHandler<TCommand> : RtmpCommandHandler
+    internal abstract class RtmpCommandHandler<TCommand> : RtmpCommandHandler
     {
         public sealed override Task<bool> HandleAsync(IRtmpChunkStreamContext chunkStreamContext, IRtmpClientPeerContext peerContext, object command, CancellationToken cancellationToken)
         {

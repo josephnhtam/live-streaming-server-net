@@ -6,7 +6,7 @@ using LiveStreamingServerNet.Rtmp.Services.Contracts;
 
 namespace LiveStreamingServerNet.Rtmp.Services
 {
-    public class RtmpCommandMessageSenderService : IRtmpCommandMessageSenderService
+    internal class RtmpCommandMessageSenderService : IRtmpCommandMessageSenderService
     {
         private readonly IRtmpChunkMessageSenderService _chunkMessageSender;
 

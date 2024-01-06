@@ -2,7 +2,7 @@
 
 namespace LiveStreamingServerNet.Rtmp.Services.Contracts
 {
-    public interface IRtmpStreamDeletionService
+    internal interface IRtmpStreamDeletionService
     {
         Task DeleteStream(IRtmpClientPeerContext peerContext);
     }

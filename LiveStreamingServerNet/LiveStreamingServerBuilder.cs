@@ -1,23 +1,11 @@
 ﻿using LiveStreamingServerNet.Contracts;
+using LiveStreamingServerNet.Networking;
 using LiveStreamingServerNet.Networking.Contracts;
-using LiveStreamingServerNet.Newtorking;
 using LiveStreamingServerNet.Newtorking.Configurations;
-using LiveStreamingServerNet.Newtorking.Contracts;
 using LiveStreamingServerNet.Rtmp;
 using LiveStreamingServerNet.Rtmp.Configurations;
-using LiveStreamingServerNet.Rtmp.Contracts;
-using LiveStreamingServerNet.Rtmp.RtmpEventHandlers.CommandDispatcher;
-using LiveStreamingServerNet.Rtmp.RtmpEventHandlers.CommandDispatcher.Attributes;
-using LiveStreamingServerNet.Rtmp.RtmpEventHandlers.CommandDispatcher.Contracts;
-using LiveStreamingServerNet.Rtmp.RtmpEventHandlers.MessageDispatcher;
-using LiveStreamingServerNet.Rtmp.RtmpEventHandlers.MessageDispatcher.Attributes;
-using LiveStreamingServerNet.Rtmp.RtmpEventHandlers.MessageDispatcher.Contracts;
-using LiveStreamingServerNet.Rtmp.ServerEventHandlers;
-using LiveStreamingServerNet.Rtmp.Services;
-using LiveStreamingServerNet.Rtmp.Services.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using System.Reflection;
 
 namespace LiveStreamingServerNet
 {
@@ -29,92 +17,30 @@ namespace LiveStreamingServerNet
         {
             _services = new ServiceCollection();
 
-            _services.AddOptions()
-                     .AddLogging();
-
-            RegisterServer();
-            RegisterRtmpCore();
-            RegisterRtmpMessageHandlers();
-            RegisterRtmpCommandHandlers();
-            RegisterRtmpServices();
-        }
-
-        private void RegisterRtmpServices()
-        {
-            _services.AddSingleton<IRtmpChunkMessageSenderService, RtmpChunkMessageSenderService>()
-                     .AddSingleton<IRtmpProtocolControlMessageSenderService, RtmpProtocolControlMessageSenderService>()
-                     .AddSingleton<IRtmpUserControlMessageSenderService, RtmpUserControlMessageSenderService>()
-                     .AddSingleton<IRtmpCommandMessageSenderService, RtmpCommandMessageSenderService>()
-                     .AddSingleton<IRtmpMediaMessageManagerService, RtmpMediaMessageManagerService>()
-                     .AddSingleton<IRtmpStreamManagerService, RtmpStreamManagerService>()
-                     .AddSingleton<IRtmpStreamDeletionService, RtmpStreamDeletionService>();
-
-            _services.AddSingleton<IRtmpServerEventHandler, RtmpClientPeerServerEventHandler>();
-        }
-
-        private void RegisterServer()
-        {
-            _services.AddSingleton<IServer, Server>()
-                     .AddTransient<IClientPeer, ClientPeer>()
-                     .AddSingleton<INetBufferPool, NetBufferPool>();
-        }
-
-        private void RegisterRtmpCore()
-        {
-            _services.AddSingleton<IClientPeerHandlerFactory, RtmpClientPeerHandlerFactory>()
-                     .AddTransient<IRtmpClientPeerHandler, RtmpClientPeerHandler>();
-
-            _services.AddMediatR(options =>
-            {
-                options.RegisterServicesFromAssemblyContaining<RtmpClientPeerHandler>();
-            });
-
-            _services.AddSingleton<IRtmpServerContext, RtmpServerContext>();
-        }
-
-        private void RegisterRtmpMessageHandlers()
-        {
-            var assembly = typeof(RtmpMessageDispatcher).Assembly;
-
-            var handlerMap = assembly.GetExportedTypes()
-                .Where(t => t.IsClass && !t.IsAbstract && t.IsAssignableTo(typeof(IRtmpMessageHandler)))
-                .Select(t => (HandlerType: t, MessageType: t.GetCustomAttributes<RtmpMessageTypeAttribute>()))
-                .Where(x => x.MessageType.Any())
-                .SelectMany(x => x.MessageType.Select(y => (x.HandlerType, MessageType: y)))
-                .ToDictionary(x => x.MessageType!.MessageTypeId, x => x.HandlerType);
-
-            foreach (var handlerType in handlerMap.Values)
-            {
-                _services.AddSingleton(handlerType);
-            }
-
-            _services.AddSingleton<IRtmpMessageHanlderMap>(new RtmpMessageHanlderMap(handlerMap))
-                     .AddSingleton<IRtmpMessageDispatcher, RtmpMessageDispatcher>();
-        }
-
-        private void RegisterRtmpCommandHandlers()
-        {
-            var assembly = typeof(RtmpCommandDispatcher).Assembly;
-
-            var handlerMap = assembly.GetExportedTypes()
-                .Where(t => t.IsClass && !t.IsAbstract && t.IsAssignableTo(typeof(RtmpCommandHandler)))
-                .Select(t => (HandlerType: t, Command: t.GetCustomAttributes<RtmpCommandAttribute>()))
-                .Where(x => x.Command.Any())
-                .SelectMany(x => x.Command.Select(y => (x.HandlerType, Command: y)))
-                .ToDictionary(x => x.Command!.Name, x => x.HandlerType);
-
-            foreach (var handlerType in handlerMap.Values)
-            {
-                _services.AddSingleton(handlerType);
-            }
-
-            _services.AddSingleton<IRtmpCommandHanlderMap>(new RtmpCommandHanlderMap(handlerMap))
-                     .AddSingleton<IRtmpCommandDispatcher, RtmpCommandDispatcher>();
+            AddCore();
+            AddServer();
+            AddRtmpServer();
         }
 
         public static ILiveStreamingServerBuilder Create()
         {
             return new LiveStreamingServerBuilder();
+        }
+
+        private void AddCore()
+        {
+            _services.AddOptions()
+                     .AddLogging();
+        }
+
+        private void AddServer()
+        {
+            _services.AddServer();
+        }
+
+        private void AddRtmpServer()
+        {
+            _services.AddRtmpServer();
         }
 
         public ILiveStreamingServerBuilder ConfigureLogging(Action<ILoggingBuilder> configure)

@@ -4,10 +4,10 @@ using LiveStreamingServerNet.Rtmp.RtmpEventHandlers.CommandDispatcher.Attributes
 
 namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Commands
 {
-    public record RtmpFCUnpublishCommand(double TransactionId, IDictionary<string, object> CommandObject, string StreamName);
+    internal record RtmpFCUnpublishCommand(double TransactionId, IDictionary<string, object> CommandObject, string StreamName);
 
     [RtmpCommand("FCUnpublish")]
-    public class RtmpFCUnpublishCommandHandler : RtmpCommandHandler<RtmpFCUnpublishCommand>
+    internal class RtmpFCUnpublishCommandHandler : RtmpCommandHandler<RtmpFCUnpublishCommand>
     {
         public override Task<bool> HandleAsync(
             IRtmpChunkStreamContext chunkStreamContext,

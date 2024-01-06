@@ -3,7 +3,7 @@ using LiveStreamingServerNet.Utilities.Contracts;
 
 namespace LiveStreamingServerNet.Rtmp.Services.Contracts
 {
-    public interface IRtmpStreamManagerService
+    internal interface IRtmpStreamManagerService
     {
         bool IsStreamPathPublishing(string publishStreamPath);
         string? GetPublishStreamPath(IRtmpClientPeerContext publisherPeerContext);

@@ -4,10 +4,10 @@ using LiveStreamingServerNet.Rtmp.RtmpEventHandlers.CommandDispatcher.Attributes
 
 namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Commands
 {
-    public record RtmpResultCommand(double TransactionId, IDictionary<string, object> Properties, IDictionary<string, object> Information);
+    internal record RtmpResultCommand(double TransactionId, IDictionary<string, object> Properties, IDictionary<string, object> Information);
 
     [RtmpCommand("_result")]
-    public class RtmpResultCommandHandler : RtmpCommandHandler<RtmpResultCommand>
+    internal class RtmpResultCommandHandler : RtmpCommandHandler<RtmpResultCommand>
     {
         public override Task<bool> HandleAsync(
             IRtmpChunkStreamContext chunkStreamContext,

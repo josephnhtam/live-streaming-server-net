@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Media
 {
     [RtmpMessageType(RtmpMessageType.AudioMessage)]
-    public class RtmpAudioMessageHandler : IRtmpMessageHandler
+    internal class RtmpAudioMessageHandler : IRtmpMessageHandler
     {
         private readonly IRtmpStreamManagerService _streamManager;
         private readonly IRtmpMediaMessageManagerService _mediaMessageManager;

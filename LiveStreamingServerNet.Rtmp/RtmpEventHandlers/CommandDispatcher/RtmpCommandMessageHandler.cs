@@ -8,7 +8,7 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.CommandDispatcher
 {
     [RtmpMessageType(RtmpMessageType.CommandMessageAmf0)]
     [RtmpMessageType(RtmpMessageType.CommandMessageAmf3)]
-    public class RtmpCommandMessageHandler : IRtmpMessageHandler
+    internal class RtmpCommandMessageHandler : IRtmpMessageHandler
     {
         private readonly IRtmpCommandDispatcher _dispatcher;
 

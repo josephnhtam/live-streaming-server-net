@@ -6,7 +6,7 @@ using Open.Threading;
 
 namespace LiveStreamingServerNet.Rtmp.Services
 {
-    public class RtmpStreamManagerService : IRtmpStreamManagerService
+    internal class RtmpStreamManagerService : IRtmpStreamManagerService
     {
         private readonly ReaderWriterLockSlim _publishingRwLock = new();
         private readonly Dictionary<IRtmpClientPeerContext, string> _publishStreamPaths = new();
@@ -143,7 +143,7 @@ namespace LiveStreamingServerNet.Rtmp.Services
         }
     }
 
-    public enum PublishingStreamResult
+    internal enum PublishingStreamResult
     {
         Succeeded,
         AlreadyExists,
@@ -151,7 +151,7 @@ namespace LiveStreamingServerNet.Rtmp.Services
         AlreadySubscribing
     }
 
-    public enum SubscribingStreamResult
+    internal enum SubscribingStreamResult
     {
         Succeeded,
         AlreadyPublishing,

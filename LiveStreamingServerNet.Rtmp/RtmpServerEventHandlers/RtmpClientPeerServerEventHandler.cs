@@ -1,9 +1,9 @@
 ﻿using LiveStreamingServerNet.Rtmp.Contracts;
 using LiveStreamingServerNet.Rtmp.Services.Contracts;
 
-namespace LiveStreamingServerNet.Rtmp.ServerEventHandlers
+namespace LiveStreamingServerNet.Rtmp.RtmpServerEventHandlers
 {
-    public class RtmpClientPeerServerEventHandler : IRtmpServerEventHandler
+    internal class RtmpClientPeerServerEventHandler : IRtmpInternalEventHandler
     {
         private readonly IRtmpMediaMessageManagerService _mediaMessageManager;
         private readonly IRtmpStreamDeletionService _streamDeletionService;

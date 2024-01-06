@@ -2,7 +2,7 @@
 
 namespace LiveStreamingServerNet.Rtmp.Contracts
 {
-    public interface IRtmpChunkStreamContext
+    internal interface IRtmpChunkStreamContext
     {
         uint ChunkStreamId { get; }
         int ChunkType { get; set; }
@@ -11,7 +11,7 @@ namespace LiveStreamingServerNet.Rtmp.Contracts
         INetBuffer? PayloadBuffer { get; set; }
     }
 
-    public interface IRtmpChunkMessageHeaderContext
+    internal interface IRtmpChunkMessageHeaderContext
     {
         uint Timestamp { get; set; }
         uint TimestampDelta { get; set; }

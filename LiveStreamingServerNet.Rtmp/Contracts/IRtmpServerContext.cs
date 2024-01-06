@@ -1,4 +1,4 @@
 ﻿namespace LiveStreamingServerNet.Rtmp.Contracts
 {
-    public interface IRtmpServerContext { }
+    internal interface IRtmpServerContext { }
 }

@@ -2,7 +2,7 @@
 
 namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.CommandDispatcher
 {
-    public class RtmpCommandHanlderMap : IRtmpCommandHanlderMap
+    internal class RtmpCommandHanlderMap : IRtmpCommandHanlderMap
     {
         private readonly IDictionary<string, Type> _handlerMap;
 

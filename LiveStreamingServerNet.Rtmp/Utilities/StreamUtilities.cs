@@ -2,7 +2,7 @@
 
 namespace LiveStreamingServerNet.Rtmp.Utilities
 {
-    public static class StreamUtilities
+    internal static class StreamUtilities
     {
         public static (string, IDictionary<string, string>) ParseStreamPath(string streamNameWithQueryString)
         {

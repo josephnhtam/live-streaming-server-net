@@ -2,5 +2,5 @@
 
 namespace LiveStreamingServerNet.Rtmp
 {
-    public class RtmpServerContext : IRtmpServerContext { }
+    internal class RtmpServerContext : IRtmpServerContext { }
 }

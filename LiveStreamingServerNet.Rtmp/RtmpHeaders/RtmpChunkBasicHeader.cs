@@ -3,7 +3,7 @@ using LiveStreamingServerNet.Newtorking.Contracts;
 
 namespace LiveStreamingServerNet.Rtmp.RtmpHeaders
 {
-    public record struct RtmpChunkBasicHeader(int ChunkType, uint ChunkStreamId)
+    internal record struct RtmpChunkBasicHeader(int ChunkType, uint ChunkStreamId)
     {
         public int Size => ChunkStreamId switch
         {

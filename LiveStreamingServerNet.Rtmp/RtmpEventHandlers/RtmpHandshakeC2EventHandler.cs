@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers
 {
-    public class RtmpHandshakeC2EventHandler : IRequestHandler<RtmpHandshakeC2Event, bool>
+    internal class RtmpHandshakeC2EventHandler : IRequestHandler<RtmpHandshakeC2Event, bool>
     {
         private readonly INetBufferPool _netBufferPool;
         private readonly ILogger _logger;

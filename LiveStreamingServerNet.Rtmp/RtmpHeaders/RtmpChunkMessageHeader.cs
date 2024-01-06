@@ -4,7 +4,7 @@ using LiveStreamingServerNet.Rtmp.Extensions;
 
 namespace LiveStreamingServerNet.Rtmp.RtmpHeaders
 {
-    public interface IRtmpChunkMessageHeader
+    internal interface IRtmpChunkMessageHeader
     {
         int Size { get; }
         void Write(INetBuffer netBuffer);
@@ -15,7 +15,7 @@ namespace LiveStreamingServerNet.Rtmp.RtmpHeaders
 
     }
 
-    public record struct RtmpChunkMessageHeaderType0 : IRtmpChunkMessageHeader
+    internal record struct RtmpChunkMessageHeaderType0 : IRtmpChunkMessageHeader
     {
         public const int kSize = 11;
         public int Size => kSize;
@@ -81,7 +81,7 @@ namespace LiveStreamingServerNet.Rtmp.RtmpHeaders
         }
     }
 
-    public record struct RtmpChunkMessageHeaderType1 : IRtmpChunkMessageHeader
+    internal record struct RtmpChunkMessageHeaderType1 : IRtmpChunkMessageHeader
     {
         public const int kSize = 7;
         public int Size => kSize;
@@ -144,7 +144,7 @@ namespace LiveStreamingServerNet.Rtmp.RtmpHeaders
         }
     }
 
-    public record struct RtmpChunkMessageHeaderType2 : IRtmpChunkMessageHeader
+    internal record struct RtmpChunkMessageHeaderType2 : IRtmpChunkMessageHeader
     {
         public const int kSize = 3;
         public int Size => kSize;

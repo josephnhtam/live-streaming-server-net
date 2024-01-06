@@ -5,10 +5,10 @@ using LiveStreamingServerNet.Rtmp.Services.Contracts;
 
 namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Commands
 {
-    public record RtmpPauseCommand(double TransactionId, IDictionary<string, object> CommandObject, bool Flag, double MilliSeconds);
+    internal record RtmpPauseCommand(double TransactionId, IDictionary<string, object> CommandObject, bool Flag, double MilliSeconds);
 
     [RtmpCommand("pause")]
-    public class RtmpPauseCommandHandler : RtmpCommandHandler<RtmpPauseCommand>
+    internal class RtmpPauseCommandHandler : RtmpCommandHandler<RtmpPauseCommand>
     {
         private readonly IRtmpUserControlMessageSenderService _userControlMessageSender;
         private readonly IRtmpStreamManagerService _streamManager;

@@ -6,7 +6,7 @@ using Org.BouncyCastle.Security;
 
 namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Handshakes
 {
-    public class DiffieHellmanKeyExchange
+    internal class DiffieHellmanKeyExchange
     {
         private readonly DHParameters _dhParams;
 

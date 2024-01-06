@@ -10,10 +10,10 @@ using Microsoft.Extensions.Logging;
 
 namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Commands
 {
-    public record RtmpPlayCommand(double TransactionId, IDictionary<string, object> CommandObject, string StreamName, double Start, double Duration, bool Reset);
+    internal record RtmpPlayCommand(double TransactionId, IDictionary<string, object> CommandObject, string StreamName, double Start, double Duration, bool Reset);
 
     [RtmpCommand("play")]
-    public class RtmpPlayCommandHandler : RtmpCommandHandler<RtmpPlayCommand>
+    internal class RtmpPlayCommandHandler : RtmpCommandHandler<RtmpPlayCommand>
     {
         private readonly IRtmpStreamManagerService _streamManager;
         private readonly IRtmpCommandMessageSenderService _commandMessageSender;

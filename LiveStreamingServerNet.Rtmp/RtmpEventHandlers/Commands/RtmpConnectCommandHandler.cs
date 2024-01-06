@@ -6,14 +6,13 @@ using LiveStreamingServerNet.Rtmp.RtmpEventHandlers.CommandDispatcher.Attributes
 using LiveStreamingServerNet.Rtmp.Services.Contracts;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using System.Text.Json;
 
 namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Commands
 {
-    public record RtmpConnectCommand(double TransactionId, IDictionary<string, object> CommandObject, IDictionary<string, object> Arguments);
+    internal record RtmpConnectCommand(double TransactionId, IDictionary<string, object> CommandObject, IDictionary<string, object> Arguments);
 
     [RtmpCommand("connect")]
-    public class RtmpConnectCommandHandler : RtmpCommandHandler<RtmpConnectCommand>
+    internal class RtmpConnectCommandHandler : RtmpCommandHandler<RtmpConnectCommand>
     {
         private readonly IRtmpProtocolControlMessageSenderService _protocolControlMessageSender;
         private readonly IRtmpCommandMessageSenderService _commandMessageSender;

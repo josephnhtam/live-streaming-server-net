@@ -3,7 +3,7 @@ using LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Handshakes;
 
 namespace LiveStreamingServerNet.Rtmp.Contracts
 {
-    public interface IRtmpClientPeerContext
+    internal interface IRtmpClientPeerContext
     {
         IClientPeerHandle Peer { get; }
         RtmpClientPeerState State { get; set; }
@@ -33,7 +33,7 @@ namespace LiveStreamingServerNet.Rtmp.Contracts
         IRtmpChunkStreamContext GetChunkStreamContext(uint chunkStreamId);
     }
 
-    public interface IRtmpPublishStreamContext
+    internal interface IRtmpPublishStreamContext
     {
         uint StreamId { get; }
         string StreamPath { get; }
@@ -43,7 +43,7 @@ namespace LiveStreamingServerNet.Rtmp.Contracts
         byte[]? AudioSequenceHeader { get; set; }
     }
 
-    public interface IPublishStreamMetaData
+    internal interface IPublishStreamMetaData
     {
         uint VideoFrameRate { get; }
         uint VideoWidth { get; }
@@ -53,7 +53,7 @@ namespace LiveStreamingServerNet.Rtmp.Contracts
         uint AudioChannels { get; }
     }
 
-    public interface IRtmpStreamSubscriptionContext
+    internal interface IRtmpStreamSubscriptionContext
     {
         uint StreamId { get; }
         uint ChunkStreamId { get; }

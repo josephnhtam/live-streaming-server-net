@@ -5,7 +5,7 @@ using System.Collections.Concurrent;
 
 namespace LiveStreamingServerNet.Rtmp
 {
-    public class RtmpClientPeerContext : IRtmpClientPeerContext
+    internal class RtmpClientPeerContext : IRtmpClientPeerContext
     {
         public IClientPeerHandle Peer { get; }
         public RtmpClientPeerState State { get; set; } = RtmpClientPeerState.HandshakeC0;
@@ -69,7 +69,7 @@ namespace LiveStreamingServerNet.Rtmp
         }
     }
 
-    public class RtmpPublishStreamContext : IRtmpPublishStreamContext
+    internal class RtmpPublishStreamContext : IRtmpPublishStreamContext
     {
         public uint StreamId { get; }
         public string StreamPath { get; }
@@ -86,7 +86,7 @@ namespace LiveStreamingServerNet.Rtmp
         }
     }
 
-    public record PublishStreamMetaData : IPublishStreamMetaData
+    internal record PublishStreamMetaData : IPublishStreamMetaData
     {
         public uint VideoFrameRate { get; }
         public uint VideoWidth { get; }
@@ -110,7 +110,7 @@ namespace LiveStreamingServerNet.Rtmp
         }
     }
 
-    public class RtmpStreamSubscriptionContext : IRtmpStreamSubscriptionContext
+    internal class RtmpStreamSubscriptionContext : IRtmpStreamSubscriptionContext
     {
         public uint StreamId { get; }
         public uint ChunkStreamId { get; }

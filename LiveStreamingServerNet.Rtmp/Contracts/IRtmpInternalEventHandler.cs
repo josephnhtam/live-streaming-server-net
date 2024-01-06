@@ -1,6 +1,6 @@
 ﻿namespace LiveStreamingServerNet.Rtmp.Contracts
 {
-    public interface IRtmpServerEventHandler
+    internal interface IRtmpInternalEventHandler
     {
         Task OnRtmpClientCreatedAsync(IRtmpClientPeerContext peerContext);
         Task OnRtmpClientDisposedAsync(IRtmpClientPeerContext peerContext);

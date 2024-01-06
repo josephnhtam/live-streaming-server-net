@@ -4,14 +4,14 @@ using System.Security.Cryptography;
 
 namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Handshakes
 {
-    public enum ComplexHandshakeType
+    internal enum ComplexHandshakeType
     {
         Schema0,
         Schema1
     }
 
     // todo: refactor and optimize
-    public class ComplexHandshake
+    internal class ComplexHandshake
     {
         private const byte ClientType = 3;
 

@@ -16,7 +16,7 @@ using System.Threading.Channels;
 
 namespace LiveStreamingServerNet.Rtmp.Services
 {
-    public class RtmpMediaMessageManagerService : IRtmpMediaMessageManagerService
+    internal class RtmpMediaMessageManagerService : IRtmpMediaMessageManagerService
     {
         private readonly IRtmpChunkMessageSenderService _chunkMessageSender;
         private readonly INetBufferPool _netBufferPool;

@@ -11,7 +11,7 @@ using System.Reflection;
 
 namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.CommandDispatcher
 {
-    public class RtmpCommandDispatcher : IRtmpCommandDispatcher
+    internal class RtmpCommandDispatcher : IRtmpCommandDispatcher
     {
         private readonly IServiceProvider _services;
         private readonly IRtmpCommandHanlderMap _handlerMap;

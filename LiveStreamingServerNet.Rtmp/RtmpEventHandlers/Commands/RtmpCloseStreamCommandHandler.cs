@@ -5,10 +5,10 @@ using LiveStreamingServerNet.Rtmp.Services.Contracts;
 
 namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Commands
 {
-    public record RtmpCloseStreamCommand(double TransactionId, IDictionary<string, object> CommandObject);
+    internal record RtmpCloseStreamCommand(double TransactionId, IDictionary<string, object> CommandObject);
 
     [RtmpCommand("closeStream")]
-    public class RtmpCloseStreamCommandHandler : RtmpCommandHandler<RtmpCloseStreamCommand>
+    internal class RtmpCloseStreamCommandHandler : RtmpCommandHandler<RtmpCloseStreamCommand>
     {
         private readonly IRtmpStreamDeletionService _streamDeletionService;
 

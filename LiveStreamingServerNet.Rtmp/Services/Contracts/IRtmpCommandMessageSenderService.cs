@@ -3,7 +3,7 @@ using LiveStreamingServerNet.Rtmp.Extensions;
 
 namespace LiveStreamingServerNet.Rtmp.Services.Contracts
 {
-    public interface IRtmpCommandMessageSenderService
+    internal interface IRtmpCommandMessageSenderService
     {
         void SendCommandMessage(
             IRtmpClientPeerContext peerContext,

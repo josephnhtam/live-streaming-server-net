@@ -5,14 +5,14 @@ using MediatR;
 
 namespace LiveStreamingServerNet.Rtmp
 {
-    public class RtmpClientPeerHandler : IRtmpClientPeerHandler
+    internal class RtmpClientPeerHandler : IRtmpClientPeerHandler
     {
         private readonly IMediator _mediator;
-        private readonly IEnumerable<IRtmpServerEventHandler> _serverEventHandlers;
+        private readonly IEnumerable<IRtmpInternalEventHandler> _serverEventHandlers;
 
         private IRtmpClientPeerContext _peerContext = default!;
 
-        public RtmpClientPeerHandler(IMediator mediator, IEnumerable<IRtmpServerEventHandler> serverEventHandlers)
+        public RtmpClientPeerHandler(IMediator mediator, IEnumerable<IRtmpInternalEventHandler> serverEventHandlers)
         {
             _mediator = mediator;
             _serverEventHandlers = serverEventHandlers;

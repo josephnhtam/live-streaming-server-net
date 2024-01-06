@@ -4,7 +4,7 @@ using LiveStreamingServerNet.Rtmp.RtmpHeaders;
 
 namespace LiveStreamingServerNet.Rtmp.Services.Contracts
 {
-    public interface IRtmpChunkMessageSenderService
+    internal interface IRtmpChunkMessageSenderService
     {
         void Send<TRtmpChunkMessageHeader>(
             IRtmpClientPeerContext peerContext,

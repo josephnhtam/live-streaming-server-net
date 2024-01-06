@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.ProtocolControls
 {
     [RtmpMessageType(RtmpMessageType.WindowAcknowledgementSize)]
-    public class RtmpWindowAcknowledgementSizeHandler : IRtmpMessageHandler
+    internal class RtmpWindowAcknowledgementSizeHandler : IRtmpMessageHandler
     {
         private readonly ILogger _logger;
 

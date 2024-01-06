@@ -4,7 +4,7 @@ using LiveStreamingServerNet.Rtmp.Services.Contracts;
 
 namespace LiveStreamingServerNet.Rtmp.Services.Extensions
 {
-    public static class RtmpCommandMessageSenderServiceExtensions
+    internal static class RtmpCommandMessageSenderServiceExtensions
     {
         public static void SendOnStatusCommandMessage(
             this IRtmpCommandMessageSenderService sender,

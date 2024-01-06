@@ -2,7 +2,7 @@
 
 namespace LiveStreamingServerNet.Rtmp.Contracts
 {
-    public interface IRtmpClientPeerHandler : IClientPeerHandler
+    internal interface IRtmpClientPeerHandler : IClientPeerHandler
     {
         Task InitializeAsync(IRtmpClientPeerContext peerContext);
     }

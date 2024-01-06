@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace LiveStreamingServerNet.Rtmp
 {
-    public class RtmpClientPeerHandlerFactory : IClientPeerHandlerFactory
+    internal class RtmpClientPeerHandlerFactory : IClientPeerHandlerFactory
     {
         private readonly IServiceProvider _services;
 

@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.ProtocolControls
 {
     [RtmpMessageType(RtmpMessageType.SetChunkSize)]
-    public class RtmpSetChunkSizeHandler : IRtmpMessageHandler
+    internal class RtmpSetChunkSizeHandler : IRtmpMessageHandler
     {
         private readonly ILogger _logger;
 

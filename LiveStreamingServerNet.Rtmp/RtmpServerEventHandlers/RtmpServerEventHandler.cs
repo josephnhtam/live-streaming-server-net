@@ -3,9 +3,9 @@ using LiveStreamingServerNet.Newtorking.Contracts;
 using LiveStreamingServerNet.Rtmp.Services.Contracts;
 using System.Net.Sockets;
 
-namespace LiveStreamingServerNet.Rtmp.ServerEventHandlers
+namespace LiveStreamingServerNet.Rtmp.RtmpServerEventHandlers
 {
-    public class RtmpServerEventHandler : IServerEventHandler
+    internal class RtmpServerEventHandler : IServerEventHandler
     {
         private readonly IRtmpMediaMessageManagerService _mediaMessageManager;
 
