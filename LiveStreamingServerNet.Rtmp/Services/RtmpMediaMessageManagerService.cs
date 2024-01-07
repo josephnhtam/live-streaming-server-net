@@ -129,6 +129,9 @@ namespace LiveStreamingServerNet.Rtmp.Services
         {
             subscribers = subscribers.Where(FilterSubscribers).ToList();
 
+            if (!subscribers.Any())
+                return;
+
             using var netBuffer = _netBufferPool.Obtain();
             payloadWriter(netBuffer);
 
