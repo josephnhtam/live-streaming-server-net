@@ -1,12 +1,10 @@
-﻿using System.Net.Sockets;
-
-namespace LiveStreamingServerNet.Newtorking
+﻿namespace LiveStreamingServerNet.Newtorking
 {
-    public sealed class ReadOnlyNetworkStream : Stream
+    public sealed class ReadOnlyStream : Stream
     {
-        private readonly NetworkStream _innerStream;
+        private readonly Stream _innerStream;
 
-        public ReadOnlyNetworkStream(NetworkStream innerStream)
+        public ReadOnlyStream(Stream innerStream)
         {
             _innerStream = innerStream ?? throw new ArgumentNullException(nameof(innerStream));
         }

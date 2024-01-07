@@ -37,6 +37,8 @@ namespace LiveStreamingServerNet.Newtorking
         {
             _logger.ClientConnected(ClientId);
 
+            Stream? networkStream = null;
+
             await using (var outstandingBufferSender = new OutstandingBufferSender(ClientId, _pendingMessageChannel.Reader, _logger))
             {
                 using var cts = CancellationTokenSource.CreateLinkedTokenSource(stoppingToken);
@@ -44,8 +46,9 @@ namespace LiveStreamingServerNet.Newtorking
 
                 try
                 {
-                    var networkStream = _tcpClient.GetStream();
-                    var readOnlyNetworkStream = new ReadOnlyNetworkStream(networkStream);
+                    networkStream = CreateNetworkStream();
+                    var readOnlyNetworkStream = new ReadOnlyStream(networkStream);
+
                     outstandingBufferSender.Start(networkStream, cancellationToken);
 
                     while (_tcpClient.Connected && !cancellationToken.IsCancellationRequested)
@@ -65,6 +68,7 @@ namespace LiveStreamingServerNet.Newtorking
             }
 
             await handler.DisposeAsync();
+            networkStream?.Dispose();
             _tcpClient.Close();
 
             _logger.ClientDisconnected(ClientId);
@@ -149,6 +153,11 @@ namespace LiveStreamingServerNet.Newtorking
             return ValueTask.CompletedTask;
         }
 
+        private Stream CreateNetworkStream()
+        {
+            return _tcpClient.GetStream();
+        }
+
         private record struct PendingMessage(byte[] RentedBuffer, int BufferSize, Action? Callback);
 
         private class OutstandingBufferSender : IAsyncDisposable
@@ -166,12 +175,12 @@ namespace LiveStreamingServerNet.Newtorking
                 _logger = logger;
             }
 
-            public void Start(NetworkStream networkStream, CancellationToken cancellationToken)
+            public void Start(Stream networkStream, CancellationToken cancellationToken)
             {
                 _task = Task.Run(() => SendOutstandingBuffersAsync(networkStream, cancellationToken));
             }
 
-            private async Task SendOutstandingBuffersAsync(NetworkStream networkStream, CancellationToken cancellationToken)
+            private async Task SendOutstandingBuffersAsync(Stream networkStream, CancellationToken cancellationToken)
             {
                 try
                 {

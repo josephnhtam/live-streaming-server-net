@@ -12,7 +12,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpHeaders
             _ => 3
         };
 
-        public static async Task<RtmpChunkBasicHeader> ReadAsync(INetBuffer netBuffer, ReadOnlyNetworkStream networkStream, CancellationToken cancellationToken)
+        public static async Task<RtmpChunkBasicHeader> ReadAsync(INetBuffer netBuffer, ReadOnlyStream networkStream, CancellationToken cancellationToken)
         {
             await netBuffer.CopyStreamData(networkStream, 1, cancellationToken);
 
