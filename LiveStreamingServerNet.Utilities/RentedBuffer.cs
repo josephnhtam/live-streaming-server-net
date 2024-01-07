@@ -30,7 +30,7 @@ namespace LiveStreamingServerNet.Utilities
             byte[] bytes;
 
             if (Interlocked.Decrement(ref _claimed) <= 0 && (bytes = Interlocked.Exchange(ref _buffer, null!)) != null)
-                ArrayPool<byte>.Shared.Return(_buffer);
+                ArrayPool<byte>.Shared.Return(bytes);
         }
     }
 }
