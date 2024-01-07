@@ -5,14 +5,19 @@ namespace LiveStreamingServerNet.Utilities
 {
     public class RentedBuffer : IRentedBuffer
     {
-        public byte[] Bytes { get; private set; }
+        public byte[] Bytes => _bytes;
         public int Claimed => _claimed;
+
+        private byte[] _bytes;
         private int _claimed;
 
-        public RentedBuffer(int size, int claim = 1)
+        public RentedBuffer(int size, int initialClaim = 1)
         {
-            Bytes = ArrayPool<byte>.Shared.Rent(size);
-            _claimed = claim;
+            if (initialClaim <= 0)
+                throw new ArgumentOutOfRangeException(nameof(initialClaim));
+
+            _bytes = ArrayPool<byte>.Shared.Rent(size);
+            _claimed = initialClaim;
         }
 
         public void Claim()
@@ -22,11 +27,10 @@ namespace LiveStreamingServerNet.Utilities
 
         public void Unclaim()
         {
-            if (Interlocked.Decrement(ref _claimed) == 0)
-            {
-                ArrayPool<byte>.Shared.Return(Bytes);
-                Bytes = null!;
-            }
+            byte[] bytes;
+
+            if (Interlocked.Decrement(ref _claimed) <= 0 && (bytes = Interlocked.Exchange(ref _bytes, null!)) != null)
+                ArrayPool<byte>.Shared.Return(_bytes);
         }
     }
 }
