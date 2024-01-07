@@ -4,10 +4,10 @@ using LiveStreamingServerNet.Utilities.Contracts;
 
 namespace LiveStreamingServerNet.Rtmp.Internal.Contracts
 {
-    internal interface IRtmpClientPeerContext
+    internal interface IRtmpClientContext
     {
-        IClientPeerHandle Peer { get; }
-        RtmpClientPeerState State { get; set; }
+        IClientHandle Client { get; }
+        RtmpClientState State { get; set; }
         HandshakeType HandshakeType { get; set; }
 
         uint InChunkSize { get; set; }

@@ -11,25 +11,25 @@ namespace LiveStreamingServerNet.Newtorking
 {
     public sealed class Server : IServer
     {
-        private readonly ConcurrentDictionary<uint, ClientPeerTask> _clientPeerTasks = new();
+        private readonly ConcurrentDictionary<uint, ClientTask> _clientClientTasks = new();
         private readonly IServiceProvider _services;
-        private readonly IClientPeerHandlerFactory _clientPeerHandlerFactory;
+        private readonly IClientHandlerFactory _clientClientHandlerFactory;
         private readonly IEnumerable<IServerEventHandler> _serverEventHandlers;
         private readonly ILogger _logger;
         private int _isStarted;
-        private uint _nextClientPeerId;
+        private uint _nextClientId;
 
         public bool IsStarted => _isStarted == 1;
-        public IList<IClientPeerHandle> ClientPeers => _clientPeerTasks.Select(x => x.Value.Peer).OfType<IClientPeerHandle>().ToList();
+        public IList<IClientHandle> Clients => _clientClientTasks.Select(x => x.Value.Client).OfType<IClientHandle>().ToList();
 
         public Server(
             IServiceProvider services,
-            IClientPeerHandlerFactory clientPeerHandlerFactory,
+            IClientHandlerFactory clientClientHandlerFactory,
             IEnumerable<IServerEventHandler> serverEventHandlers,
             ILogger<Server> logger)
         {
             _services = services;
-            _clientPeerHandlerFactory = clientPeerHandlerFactory;
+            _clientClientHandlerFactory = clientClientHandlerFactory;
             _serverEventHandlers = serverEventHandlers;
             _logger = logger;
         }
@@ -65,7 +65,7 @@ namespace LiveStreamingServerNet.Newtorking
                 _logger.ServerLoopError(ex);
             }
 
-            await Task.WhenAll(_clientPeerTasks.Select(x => x.Value.Task));
+            await Task.WhenAll(_clientClientTasks.Select(x => x.Value.Task));
 
             await OnServerStoppedAsync();
 
@@ -77,20 +77,20 @@ namespace LiveStreamingServerNet.Newtorking
             var client = await tcpListener.AcceptTcpClientAsync(cancellationToken);
             await OnClientAcceptedAsync(client);
 
-            var clientPeerId = GetNextClientPeerId();
-            var clientPeer = CreateClientPeer(clientPeerId, client);
+            var clientClientId = GetNextClientId();
+            var clientClient = CreateClient(clientClientId, client);
 
-            var clientPeerHandler = CreateClientPeerHandler(clientPeer);
-            var clientTask = clientPeer.RunAsync(clientPeerHandler, cancellationToken);
+            var clientClientHandler = CreateClientHandler(clientClient);
+            var clientTask = clientClient.RunAsync(clientClientHandler, cancellationToken);
 
-            _clientPeerTasks.TryAdd(clientPeerId, new(clientPeer, clientTask));
-            await OnClientPeerConnectedAsync(clientPeer);
+            _clientClientTasks.TryAdd(clientClientId, new(clientClient, clientTask));
+            await OnClientConnectedAsync(clientClient);
 
             _ = clientTask.ContinueWith(async _ =>
             {
-                await OnClientPeerDisconnected(clientPeer);
-                _clientPeerTasks.TryRemove(clientPeerId, out var removed);
-                await clientPeer.DisposeAsync();
+                await OnClientDisconnected(clientClient);
+                _clientClientTasks.TryRemove(clientClientId, out var removed);
+                await clientClient.DisposeAsync();
             });
         }
 
@@ -102,9 +102,9 @@ namespace LiveStreamingServerNet.Newtorking
             }
         }
 
-        private uint GetNextClientPeerId()
+        private uint GetNextClientId()
         {
-            return Interlocked.Increment(ref _nextClientPeerId);
+            return Interlocked.Increment(ref _nextClientId);
         }
 
         private async Task<TcpListener> CreateTcpListener(IPEndPoint localEndpoint)
@@ -114,22 +114,22 @@ namespace LiveStreamingServerNet.Newtorking
             return listener;
         }
 
-        private IClientPeer CreateClientPeer(uint clientPeerId, TcpClient tcpClient)
+        private IClient CreateClient(uint clientClientId, TcpClient tcpClient)
         {
-            var clientPeer = _services.GetRequiredService<IClientPeer>();
-            clientPeer.Initialize(clientPeerId, tcpClient);
+            var clientClient = _services.GetRequiredService<IClient>();
+            clientClient.Initialize(clientClientId, tcpClient);
 
-            return clientPeer;
+            return clientClient;
         }
 
-        public IClientPeerHandle? GetClientPeer(uint clientPeerId)
+        public IClientHandle? GetClient(uint clientClientId)
         {
-            return _clientPeerTasks.GetValueOrDefault(clientPeerId)?.Peer;
+            return _clientClientTasks.GetValueOrDefault(clientClientId)?.Client;
         }
 
-        private IClientPeerHandler CreateClientPeerHandler(IClientPeerHandle clientPeer)
+        private IClientHandler CreateClientHandler(IClientHandle clientClient)
         {
-            return _clientPeerHandlerFactory.CreateClientPeerHandler(clientPeer);
+            return _clientClientHandlerFactory.CreateClientHandler(clientClient);
         }
 
         private async Task OnListenerCreatedAsync(TcpListener tcpListener)
@@ -148,19 +148,19 @@ namespace LiveStreamingServerNet.Newtorking
             }
         }
 
-        private async Task OnClientPeerConnectedAsync(IClientPeer clientPeer)
+        private async Task OnClientConnectedAsync(IClient clientClient)
         {
             foreach (var handler in _serverEventHandlers)
             {
-                await handler.OnClientPeerConnectedAsync(clientPeer);
+                await handler.OnClientConnectedAsync(clientClient);
             }
         }
 
-        private async Task OnClientPeerDisconnected(IClientPeer clientPeer)
+        private async Task OnClientDisconnected(IClient clientClient)
         {
             foreach (var handler in _serverEventHandlers)
             {
-                await handler.OnClientPeerDisconnectedAsync(clientPeer);
+                await handler.OnClientDisconnectedAsync(clientClient);
             }
         }
 
@@ -180,6 +180,6 @@ namespace LiveStreamingServerNet.Newtorking
             }
         }
 
-        private record ClientPeerTask(IClientPeer Peer, Task Task);
+        private record ClientTask(IClient Client, Task Task);
     }
 }

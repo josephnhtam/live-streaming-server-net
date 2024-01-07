@@ -20,16 +20,16 @@ namespace LiveStreamingServerNet.Newtorking.Logging
         [LoggerMessage(LogLevel.Error, "An error occurred in the server loop")]
         public static partial void ServerLoopError(this ILogger logger, Exception exception);
 
-        [LoggerMessage(LogLevel.Error, "PeerId: {PeerId} | An error occurred in the client peer loop")]
-        public static partial void ClientPeerLoopError(this ILogger logger, uint peerId, Exception exception);
+        [LoggerMessage(LogLevel.Error, "ClientId: {ClientId} | An error occurred in the client client loop")]
+        public static partial void ClientLoopError(this ILogger logger, uint clientId, Exception exception);
 
-        [LoggerMessage(LogLevel.Information, "PeerId: {PeerId} | Connected")]
-        public static partial void ClientConnected(this ILogger logger, uint peerId);
+        [LoggerMessage(LogLevel.Information, "ClientId: {ClientId} | Connected")]
+        public static partial void ClientConnected(this ILogger logger, uint clientId);
 
-        [LoggerMessage(LogLevel.Information, "PeerId: {PeerId} | Disconnected")]
-        public static partial void ClientDisconnected(this ILogger logger, uint peerId);
+        [LoggerMessage(LogLevel.Information, "ClientId: {ClientId} | Disconnected")]
+        public static partial void ClientDisconnected(this ILogger logger, uint clientId);
 
-        [LoggerMessage(LogLevel.Error, "PeerId: {PeerId} | An error occurred while sending data to the client")]
-        public static partial void SendDataError(this ILogger logger, uint peerId, Exception exception);
+        [LoggerMessage(LogLevel.Error, "ClientId: {ClientId} | An error occurred while sending data to the client")]
+        public static partial void SendDataError(this ILogger logger, uint clientId, Exception exception);
     }
 }

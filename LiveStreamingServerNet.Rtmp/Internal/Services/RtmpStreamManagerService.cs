@@ -9,31 +9,31 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
     internal class RtmpStreamManagerService : IRtmpStreamManagerService
     {
         private readonly ReaderWriterLockSlim _publishingRwLock = new();
-        private readonly Dictionary<IRtmpClientPeerContext, string> _publishStreamPaths = new();
-        private readonly Dictionary<string, IRtmpClientPeerContext> _publishingClientPeerContexts = new();
+        private readonly Dictionary<IRtmpClientContext, string> _publishStreamPaths = new();
+        private readonly Dictionary<string, IRtmpClientContext> _publishingClientContexts = new();
 
         private readonly ReaderWriterLockSlim _subscribingRwLock = new();
-        private readonly Dictionary<string, List<IRtmpClientPeerContext>> _subscribingClientPeerContexts = new();
-        private readonly Dictionary<IRtmpClientPeerContext, string> _subscribedStreamPaths = new();
+        private readonly Dictionary<string, List<IRtmpClientContext>> _subscribingClientContexts = new();
+        private readonly Dictionary<IRtmpClientContext, string> _subscribedStreamPaths = new();
 
-        public string? GetPublishStreamPath(IRtmpClientPeerContext publisherPeerContext)
+        public string? GetPublishStreamPath(IRtmpClientContext publisherClientContext)
         {
-            return _publishStreamPaths.GetValueOrDefault(publisherPeerContext);
+            return _publishStreamPaths.GetValueOrDefault(publisherClientContext);
         }
 
-        public IRtmpClientPeerContext? GetPublishingClientPeerContext(string publishStreamPath)
+        public IRtmpClientContext? GetPublishingClientContext(string publishStreamPath)
         {
             using var readLock = _publishingRwLock.ReadLock();
-            return _publishingClientPeerContexts.GetValueOrDefault(publishStreamPath);
+            return _publishingClientContexts.GetValueOrDefault(publishStreamPath);
         }
 
         public IRtmpPublishStreamContext? GetPublishStreamContext(string publishStreamPath)
         {
-            var publishingClientPeerContext = GetPublishingClientPeerContext(publishStreamPath);
-            return publishingClientPeerContext?.PublishStreamContext;
+            var publishingClientContext = GetPublishingClientContext(publishStreamPath);
+            return publishingClientContext?.PublishStreamContext;
         }
 
-        public PublishingStreamResult StartPublishingStream(IRtmpClientPeerContext publisherPeerContext, string streamPath, IDictionary<string, string> streamArguments, out IList<IRtmpClientPeerContext> existingSubscribers)
+        public PublishingStreamResult StartPublishingStream(IRtmpClientContext publisherClientContext, string streamPath, IDictionary<string, string> streamArguments, out IList<IRtmpClientContext> existingSubscribers)
         {
 
             using var publishingWriteLock = _publishingRwLock.WriteLock();
@@ -41,39 +41,39 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
 
             existingSubscribers = null!;
 
-            if (_subscribedStreamPaths.ContainsKey(publisherPeerContext))
+            if (_subscribedStreamPaths.ContainsKey(publisherClientContext))
                 return PublishingStreamResult.AlreadySubscribing;
 
-            if (_publishStreamPaths.ContainsKey(publisherPeerContext))
+            if (_publishStreamPaths.ContainsKey(publisherClientContext))
                 return PublishingStreamResult.AlreadyPublishing;
 
-            if (_publishingClientPeerContexts.ContainsKey(streamPath))
+            if (_publishingClientContexts.ContainsKey(streamPath))
                 return PublishingStreamResult.AlreadyExists;
 
-            var publishStreamContext = publisherPeerContext.CreatePublishStreamContext(streamPath, streamArguments);
+            var publishStreamContext = publisherClientContext.CreatePublishStreamContext(streamPath, streamArguments);
 
-            _publishStreamPaths.Add(publisherPeerContext, streamPath);
-            _publishingClientPeerContexts.Add(streamPath, publisherPeerContext);
+            _publishStreamPaths.Add(publisherClientContext, streamPath);
+            _publishingClientContexts.Add(streamPath, publisherClientContext);
 
-            existingSubscribers = _subscribingClientPeerContexts.GetValueOrDefault(streamPath)?.ToList() ?? new List<IRtmpClientPeerContext>();
+            existingSubscribers = _subscribingClientContexts.GetValueOrDefault(streamPath)?.ToList() ?? new List<IRtmpClientContext>();
 
             return PublishingStreamResult.Succeeded;
         }
 
-        public bool StopPublishingStream(IRtmpClientPeerContext publisherPeerContext, out IList<IRtmpClientPeerContext> existingSubscribers)
+        public bool StopPublishingStream(IRtmpClientContext publisherClientContext, out IList<IRtmpClientContext> existingSubscribers)
         {
             using var publishingWriteLock = _publishingRwLock.WriteLock();
             using var subscribingWriteLock = _subscribingRwLock.WriteLock();
 
             existingSubscribers = null!;
 
-            if (!_publishStreamPaths.TryGetValue(publisherPeerContext, out var publishStreamPath))
+            if (!_publishStreamPaths.TryGetValue(publisherClientContext, out var publishStreamPath))
                 return false;
 
-            _publishingClientPeerContexts.Remove(publishStreamPath);
-            _publishStreamPaths.Remove(publisherPeerContext);
+            _publishingClientContexts.Remove(publishStreamPath);
+            _publishStreamPaths.Remove(publisherClientContext);
 
-            existingSubscribers = _subscribingClientPeerContexts.GetValueOrDefault(publishStreamPath)?.ToList() ?? new List<IRtmpClientPeerContext>();
+            existingSubscribers = _subscribingClientContexts.GetValueOrDefault(publishStreamPath)?.ToList() ?? new List<IRtmpClientContext>();
 
             return true;
         }
@@ -81,65 +81,65 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
         public bool IsStreamPathPublishing(string publishStreamPath)
         {
             using var readLock = _publishingRwLock.ReadLock();
-            return _publishingClientPeerContexts.ContainsKey(publishStreamPath);
+            return _publishingClientContexts.ContainsKey(publishStreamPath);
         }
 
-        public SubscribingStreamResult StartSubscribingStream(IRtmpClientPeerContext subscriberPeerContext, uint chunkStreamId, string streamPath, IDictionary<string, string> streamArguments)
+        public SubscribingStreamResult StartSubscribingStream(IRtmpClientContext subscriberClientContext, uint chunkStreamId, string streamPath, IDictionary<string, string> streamArguments)
         {
             using var publishingReadLock = _publishingRwLock.ReadLock();
             using var subscribingWriteLock = _subscribingRwLock.WriteLock();
 
-            if (_publishStreamPaths.ContainsKey(subscriberPeerContext))
+            if (_publishStreamPaths.ContainsKey(subscriberClientContext))
                 return SubscribingStreamResult.AlreadyPublishing;
 
-            if (_subscribedStreamPaths.ContainsKey(subscriberPeerContext))
+            if (_subscribedStreamPaths.ContainsKey(subscriberClientContext))
                 return SubscribingStreamResult.AlreadySubscribing;
 
-            if (!_subscribingClientPeerContexts.TryGetValue(streamPath, out var subscribers))
+            if (!_subscribingClientContexts.TryGetValue(streamPath, out var subscribers))
             {
-                subscribers = new List<IRtmpClientPeerContext>();
-                _subscribingClientPeerContexts[streamPath] = subscribers;
+                subscribers = new List<IRtmpClientContext>();
+                _subscribingClientContexts[streamPath] = subscribers;
             }
 
-            subscriberPeerContext.CreateStreamSubscriptionContext(chunkStreamId, streamPath, streamArguments);
+            subscriberClientContext.CreateStreamSubscriptionContext(chunkStreamId, streamPath, streamArguments);
 
-            subscribers.Add(subscriberPeerContext);
-            _subscribedStreamPaths.Add(subscriberPeerContext, streamPath);
+            subscribers.Add(subscriberClientContext);
+            _subscribedStreamPaths.Add(subscriberClientContext, streamPath);
 
             return SubscribingStreamResult.Succeeded;
         }
 
-        public bool StopSubscribingStream(IRtmpClientPeerContext subscriberPeerContext)
+        public bool StopSubscribingStream(IRtmpClientContext subscriberClientContext)
         {
             using var subscribingWriteLock = _subscribingRwLock.WriteLock();
 
-            if (!_subscribedStreamPaths.Remove(subscriberPeerContext, out var publishStreamPath))
+            if (!_subscribedStreamPaths.Remove(subscriberClientContext, out var publishStreamPath))
                 return false;
 
-            if (_subscribingClientPeerContexts.TryGetValue(publishStreamPath, out var subscribers))
+            if (_subscribingClientContexts.TryGetValue(publishStreamPath, out var subscribers))
             {
-                subscribers.Remove(subscriberPeerContext);
+                subscribers.Remove(subscriberClientContext);
 
                 if (subscribers.Count == 0)
-                    _subscribingClientPeerContexts.Remove(publishStreamPath);
+                    _subscribingClientContexts.Remove(publishStreamPath);
             }
 
             return true;
         }
 
-        public IRentable<IList<IRtmpClientPeerContext>> GetSubscribersLocked(string publishStreamPath)
+        public IRentable<IList<IRtmpClientContext>> GetSubscribersLocked(string publishStreamPath)
         {
             var readLock = _subscribingRwLock.ReadLock();
 
-            return new Rentable<IList<IRtmpClientPeerContext>>(
-                _subscribingClientPeerContexts.GetValueOrDefault(publishStreamPath)?.ToList() ?? new List<IRtmpClientPeerContext>(),
+            return new Rentable<IList<IRtmpClientContext>>(
+                _subscribingClientContexts.GetValueOrDefault(publishStreamPath)?.ToList() ?? new List<IRtmpClientContext>(),
                 readLock.Dispose);
         }
 
-        public IList<IRtmpClientPeerContext> GetSubscribers(string publishStreamPath)
+        public IList<IRtmpClientContext> GetSubscribers(string publishStreamPath)
         {
             using var readLock = _subscribingRwLock.ReadLock();
-            return _subscribingClientPeerContexts.GetValueOrDefault(publishStreamPath)?.ToList() ?? new List<IRtmpClientPeerContext>();
+            return _subscribingClientContexts.GetValueOrDefault(publishStreamPath)?.ToList() ?? new List<IRtmpClientContext>();
         }
     }
 

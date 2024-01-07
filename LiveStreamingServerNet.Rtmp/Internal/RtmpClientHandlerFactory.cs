@@ -5,19 +5,19 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace LiveStreamingServerNet.Rtmp.Internal
 {
-    internal class RtmpClientPeerHandlerFactory : IClientPeerHandlerFactory
+    internal class RtmpClientHandlerFactory : IClientHandlerFactory
     {
         private readonly IServiceProvider _services;
 
-        public RtmpClientPeerHandlerFactory(IServiceProvider services)
+        public RtmpClientHandlerFactory(IServiceProvider services)
         {
             _services = services;
         }
 
-        public IClientPeerHandler CreateClientPeerHandler(IClientPeerHandle clientPeer)
+        public IClientHandler CreateClientHandler(IClientHandle client)
         {
-            var handler = _services.GetRequiredService<IRtmpClientPeerHandler>();
-            handler.InitializeAsync(new RtmpClientPeerContext(clientPeer));
+            var handler = _services.GetRequiredService<IRtmpClientHandler>();
+            handler.InitializeAsync(new RtmpClientContext(client));
             return handler;
         }
     }

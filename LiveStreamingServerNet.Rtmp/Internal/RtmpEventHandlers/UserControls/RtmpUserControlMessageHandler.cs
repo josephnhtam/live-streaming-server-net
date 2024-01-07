@@ -18,7 +18,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.UserControls
 
         public Task<bool> HandleAsync(
             IRtmpChunkStreamContext chunkStreamContext,
-            IRtmpClientPeerContext peerContext,
+            IRtmpClientContext clientContext,
             INetBuffer payloadBuffer,
             CancellationToken cancellationToken)
         {

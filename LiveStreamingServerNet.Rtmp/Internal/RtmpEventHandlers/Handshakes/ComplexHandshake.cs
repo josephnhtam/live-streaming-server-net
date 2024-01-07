@@ -84,9 +84,9 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Handshakes
             outgoingBuffer.Write(s2DigestData, 0, 32);
         }
 
-        private static byte[] ComputeSharedKey(byte[] peerPublicKey)
+        private static byte[] ComputeSharedKey(byte[] clientPublicKey)
         {
-            return peerPublicKey;
+            return clientPublicKey;
         }
 
         internal static class DigestBlock

@@ -33,27 +33,27 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
 
         public override Task<bool> HandleAsync(
             IRtmpChunkStreamContext chunkStreamContext,
-            IRtmpClientPeerContext peerContext,
+            IRtmpClientContext clientContext,
             RtmpConnectCommand command,
             CancellationToken cancellationToken)
         {
-            _logger.Connect(peerContext.Peer.PeerId, command.CommandObject);
+            _logger.Connect(clientContext.Client.ClientId, command.CommandObject);
 
-            peerContext.AppName = (string)command.CommandObject["app"];
+            clientContext.AppName = (string)command.CommandObject["app"];
 
-            _protocolControlMessageSender.SetChunkSize(peerContext, _config.OutChunkSize);
-            _protocolControlMessageSender.WindowAcknowledgementSize(peerContext, _config.OutAcknowledgementWindowSize);
-            _protocolControlMessageSender.SetPeerBandwidth(peerContext, _config.PeerBandwidth, RtmpPeerBandwidthLimitType.Dynamic);
+            _protocolControlMessageSender.SetChunkSize(clientContext, _config.OutChunkSize);
+            _protocolControlMessageSender.WindowAcknowledgementSize(clientContext, _config.OutAcknowledgementWindowSize);
+            _protocolControlMessageSender.SetPeerBandwith(clientContext, _config.PeerBandwith, RtmpPeerBandwithLimitType.Dynamic);
 
-            RespondToClient(peerContext, command);
+            RespondToClient(clientContext, command);
 
             return Task.FromResult(true);
         }
 
-        private void RespondToClient(IRtmpClientPeerContext peerContext, RtmpConnectCommand command)
+        private void RespondToClient(IRtmpClientContext clientContext, RtmpConnectCommand command)
         {
             _commandMessageSender.SendCommandMessage(
-                peerContext: peerContext,
+                clientContext: clientContext,
                 chunkStreamId: 3,
                 commandName: "_result",
                 transactionId: command.TransactionId,

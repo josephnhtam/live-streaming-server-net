@@ -3,15 +3,15 @@ using System.Net.Sockets;
 
 namespace LiveStreamingServerNet.Networking.Contracts
 {
-    public interface IClientPeer : IAsyncDisposable, IClientPeerHandle
+    public interface IClient : IAsyncDisposable, IClientHandle
     {
-        void Initialize(uint peerId, TcpClient tcpClient);
-        Task RunAsync(IClientPeerHandler handler, CancellationToken stoppingToken);
+        void Initialize(uint clientId, TcpClient tcpClient);
+        Task RunAsync(IClientHandler handler, CancellationToken stoppingToken);
     }
 
-    public interface IClientPeerHandle
+    public interface IClientHandle
     {
-        uint PeerId { get; }
+        uint ClientId { get; }
         bool IsConnected { get; }
         void Disconnect();
         void Send(INetBuffer netBuffer, Action? callback = null);

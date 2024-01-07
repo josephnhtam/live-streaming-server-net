@@ -1,6 +1,6 @@
 ﻿namespace LiveStreamingServerNet.Rtmp.Internal
 {
-    internal enum RtmpClientPeerState
+    internal enum RtmpClientState
     {
         HandshakeC0 = 0,
         HandshakeC1 = 1,

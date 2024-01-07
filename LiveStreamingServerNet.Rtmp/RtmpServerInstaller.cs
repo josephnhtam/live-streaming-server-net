@@ -28,12 +28,12 @@ namespace LiveStreamingServerNet.Rtmp
 
         private static IServiceCollection AddRtmpCore(this IServiceCollection services)
         {
-            services.AddServer<RtmpClientPeerHandlerFactory>()
-                    .AddTransient<IRtmpClientPeerHandler, RtmpClientPeerHandler>();
+            services.AddServer<RtmpClientHandlerFactory>()
+                    .AddTransient<IRtmpClientHandler, RtmpClientHandler>();
 
             services.AddMediatR(options =>
             {
-                options.RegisterServicesFromAssemblyContaining<RtmpClientPeerHandler>();
+                options.RegisterServicesFromAssemblyContaining<RtmpClientHandler>();
             });
 
             services.AddSingleton<IRtmpServerContext, RtmpServerContext>();
@@ -51,7 +51,7 @@ namespace LiveStreamingServerNet.Rtmp
                     .AddSingleton<IRtmpStreamManagerService, RtmpStreamManagerService>()
                     .AddSingleton<IRtmpStreamDeletionService, RtmpStreamDeletionService>();
 
-            services.AddSingleton<IRtmpServerEventHandler, RtmpClientPeerServerEventHandler>();
+            services.AddSingleton<IRtmpServerEventHandler, RtmpClientServerEventHandler>();
 
             return services;
         }

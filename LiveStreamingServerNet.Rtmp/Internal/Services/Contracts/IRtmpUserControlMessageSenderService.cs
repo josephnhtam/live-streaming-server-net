@@ -4,10 +4,10 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services.Contracts
 {
     internal interface IRtmpUserControlMessageSenderService
     {
-        void SendStreamBeginMessage(IRtmpClientPeerContext peerContext);
-        void SendStreamBeginMessage(IList<IRtmpClientPeerContext> peerContexts);
+        void SendStreamBeginMessage(IRtmpClientContext clientContext);
+        void SendStreamBeginMessage(IList<IRtmpClientContext> clientContexts);
 
-        void SendStreamEofMessage(IRtmpClientPeerContext peerContext);
-        void SendStreamEofMessage(IList<IRtmpClientPeerContext> peerContexts);
+        void SendStreamEofMessage(IRtmpClientContext clientContext);
+        void SendStreamEofMessage(IList<IRtmpClientContext> clientContexts);
     }
 }

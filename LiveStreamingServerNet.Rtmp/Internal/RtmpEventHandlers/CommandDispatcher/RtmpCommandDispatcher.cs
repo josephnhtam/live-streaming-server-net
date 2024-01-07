@@ -28,7 +28,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.CommandDispatch
 
         public async Task<bool> DispatchAsync(
             IRtmpChunkStreamContext chunkStreamContext,
-            IRtmpClientPeerContext peerContext,
+            IRtmpClientContext clientContext,
             INetBuffer payloadBuffer,
             CancellationToken cancellationToken)
         {
@@ -38,7 +38,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.CommandDispatch
 
             var commandName = (string)(isUsingAmf3 ? reader.ReadAmf3() : reader.ReadAmf0());
 
-            _logger.CommandReceived(peerContext.Peer.PeerId, commandName);
+            _logger.CommandReceived(clientContext.Client.ClientId, commandName);
 
             var commandHandlerType = _handlerMap.GetHandlerType(commandName);
 
@@ -50,7 +50,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.CommandDispatch
             var command = Activator.CreateInstance(commandType, commandParameters)!;
 
             var commandHandler = (_services.GetRequiredService(commandHandlerType) as RtmpCommandHandler)!;
-            return await commandHandler.HandleAsync(chunkStreamContext, peerContext, command, cancellationToken);
+            return await commandHandler.HandleAsync(chunkStreamContext, clientContext, command, cancellationToken);
         }
 
         private object[] ReadParameters(ParameterInfo[] commandParameterInfos, AmfReader reader, bool isUsingAmf3)

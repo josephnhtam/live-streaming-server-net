@@ -19,12 +19,12 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
 
         public override Task<bool> HandleAsync(
             IRtmpChunkStreamContext chunkStreamContext,
-            IRtmpClientPeerContext peerContext,
+            IRtmpClientContext clientContext,
             RtmpCloseStreamCommand command,
             CancellationToken cancellationToken)
         {
-            if (peerContext.StreamId.HasValue)
-                _streamDeletionService.DeleteStream(peerContext);
+            if (clientContext.StreamId.HasValue)
+                _streamDeletionService.DeleteStream(clientContext);
 
             return Task.FromResult(true);
         }

@@ -16,7 +16,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
         }
 
         public void Send<TRtmpChunkMessageHeader>(
-            IRtmpClientPeerContext peerContext,
+            IRtmpClientContext clientContext,
             RtmpChunkBasicHeader basicHeader,
             TRtmpChunkMessageHeader messageHeader,
             Action<INetBuffer> payloadWriter,
@@ -25,51 +25,51 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             var extendedTimestampHeader = CreateExtendedTimestampHeader(messageHeader);
             using var payloadBuffer = CreatePayloadBuffer(ref messageHeader, payloadWriter);
 
-            SendFirstChunk(peerContext, basicHeader, messageHeader, extendedTimestampHeader, callback, payloadBuffer);
-            SendRemainingChunks(peerContext, basicHeader, extendedTimestampHeader, callback, payloadBuffer);
+            SendFirstChunk(clientContext, basicHeader, messageHeader, extendedTimestampHeader, callback, payloadBuffer);
+            SendRemainingChunks(clientContext, basicHeader, extendedTimestampHeader, callback, payloadBuffer);
         }
 
-        public Task SendAsync<TRtmpChunkMessageHeader>(IRtmpClientPeerContext peerContext, RtmpChunkBasicHeader basicHeader, TRtmpChunkMessageHeader messageHeader, Action<INetBuffer> payloadWriter) where TRtmpChunkMessageHeader : struct, IRtmpChunkMessageHeader
+        public Task SendAsync<TRtmpChunkMessageHeader>(IRtmpClientContext clientContext, RtmpChunkBasicHeader basicHeader, TRtmpChunkMessageHeader messageHeader, Action<INetBuffer> payloadWriter) where TRtmpChunkMessageHeader : struct, IRtmpChunkMessageHeader
         {
             var tcs = new TaskCompletionSource();
-            Send(peerContext, basicHeader, messageHeader, payloadWriter, tcs.SetResult);
+            Send(clientContext, basicHeader, messageHeader, payloadWriter, tcs.SetResult);
             return tcs.Task;
         }
 
         public void Send<TRtmpChunkMessageHeader>(
-            IList<IRtmpClientPeerContext> peerContexts,
+            IList<IRtmpClientContext> clientContexts,
             RtmpChunkBasicHeader basicHeader,
             TRtmpChunkMessageHeader messageHeader,
             Action<INetBuffer> payloadWriter) where TRtmpChunkMessageHeader : struct, IRtmpChunkMessageHeader
         {
-            if (!peerContexts.Any())
+            if (!clientContexts.Any())
                 return;
 
-            if (peerContexts.Count == 1)
+            if (clientContexts.Count == 1)
             {
-                Send(peerContexts[0], basicHeader, messageHeader, payloadWriter, null);
+                Send(clientContexts[0], basicHeader, messageHeader, payloadWriter, null);
                 return;
             }
 
             var extendedTimestampHeader = CreateExtendedTimestampHeader(messageHeader);
             using var payloadBuffer = CreatePayloadBuffer(ref messageHeader, payloadWriter);
 
-            foreach (var peersGroup in peerContexts.GroupBy(x => x.OutChunkSize))
+            foreach (var clientsGroup in clientContexts.GroupBy(x => x.OutChunkSize))
             {
-                var outChunkSize = peersGroup.Key;
-                var peers = peersGroup.Select(x => x.Peer).ToList();
+                var outChunkSize = clientsGroup.Key;
+                var clients = clientsGroup.Select(x => x.Client).ToList();
 
                 using var groupPayloadBuffer = _netBufferPool.Obtain();
                 payloadBuffer.CopyAllTo(groupPayloadBuffer);
                 groupPayloadBuffer.MoveTo(0);
 
-                SendFirstChunk(peers, basicHeader, messageHeader, extendedTimestampHeader, groupPayloadBuffer, outChunkSize);
-                SendRemainingChunks(peers, basicHeader, extendedTimestampHeader, groupPayloadBuffer, outChunkSize);
+                SendFirstChunk(clients, basicHeader, messageHeader, extendedTimestampHeader, groupPayloadBuffer, outChunkSize);
+                SendRemainingChunks(clients, basicHeader, extendedTimestampHeader, groupPayloadBuffer, outChunkSize);
             }
         }
 
         private void SendFirstChunk<TRtmpChunkMessageHeader>(
-            IRtmpClientPeerContext peerContext,
+            IRtmpClientContext clientContext,
             RtmpChunkBasicHeader basicHeader,
             TRtmpChunkMessageHeader messageHeader,
             RtmpChunkExtendedTimestampHeader? extendedTimestampHeader,
@@ -77,10 +77,10 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             INetBuffer payloadBuffer)
             where TRtmpChunkMessageHeader : struct, IRtmpChunkMessageHeader
         {
-            var outChunkSize = peerContext.OutChunkSize;
+            var outChunkSize = clientContext.OutChunkSize;
             var remainingPayloadSize = payloadBuffer.Size - payloadBuffer.Position;
 
-            peerContext.Peer.Send((firstChunkBuffer) =>
+            clientContext.Client.Send((firstChunkBuffer) =>
             {
                 WriteToFirstChunkBuffer(
                     firstChunkBuffer,
@@ -93,7 +93,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
         }
 
         private void SendFirstChunk<TRtmpChunkMessageHeader>(
-            IList<IClientPeerHandle> peers,
+            IList<IClientHandle> clients,
             RtmpChunkBasicHeader basicHeader,
             TRtmpChunkMessageHeader messageHeader,
             RtmpChunkExtendedTimestampHeader? extendedTimestampHeader,
@@ -111,29 +111,29 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
                 payloadBuffer,
                 outChunkSize);
 
-            foreach (var peer in peers)
+            foreach (var client in clients)
             {
-                peer.Send(firstChunkBuffer);
+                client.Send(firstChunkBuffer);
             }
         }
 
         private void SendRemainingChunks(
-            IRtmpClientPeerContext peerContext,
+            IRtmpClientContext clientContext,
             RtmpChunkBasicHeader basicHeader,
             RtmpChunkExtendedTimestampHeader? extendedTimestampHeader,
             Action? callback,
             INetBuffer payloadBuffer)
         {
-            var outChunkSize = peerContext.OutChunkSize;
+            var outChunkSize = clientContext.OutChunkSize;
 
             while (payloadBuffer.Position < payloadBuffer.Size)
             {
-                if (!peerContext.Peer.IsConnected)
+                if (!clientContext.Client.IsConnected)
                     return;
 
                 var remainingPayloadSize = payloadBuffer.Size - payloadBuffer.Position;
 
-                peerContext.Peer.Send((chunkBuffer) =>
+                clientContext.Client.Send((chunkBuffer) =>
                 {
                     WriteToRemainingChunkBuffer(chunkBuffer, basicHeader, extendedTimestampHeader, payloadBuffer, outChunkSize);
                 }, outChunkSize >= remainingPayloadSize ? callback : null);
@@ -141,7 +141,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
         }
 
         private void SendRemainingChunks(
-            IList<IClientPeerHandle> peers,
+            IList<IClientHandle> clients,
             RtmpChunkBasicHeader basicHeader,
             RtmpChunkExtendedTimestampHeader? extendedTimestampHeader,
             INetBuffer payloadBuffer,
@@ -153,9 +153,9 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
 
                 WriteToRemainingChunkBuffer(chunkBuffer, basicHeader, extendedTimestampHeader, payloadBuffer, outChunkSize);
 
-                foreach (var peer in peers)
+                foreach (var client in clients)
                 {
-                    peer.Send(chunkBuffer);
+                    client.Send(chunkBuffer);
                 }
             }
         }

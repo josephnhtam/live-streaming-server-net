@@ -32,11 +32,11 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
 
         public Task<bool> HandleAsync(
             IRtmpChunkStreamContext chunkStreamContext,
-            IRtmpClientPeerContext peerContext,
+            IRtmpClientContext clientContext,
             INetBuffer payloadBuffer,
             CancellationToken cancellationToken)
         {
-            var publishStreamContext = peerContext.PublishStreamContext ??
+            var publishStreamContext = clientContext.PublishStreamContext ??
                 throw new InvalidOperationException("Stream is not yet published.");
 
             var hasHeader = CacheAudioSequence(chunkStreamContext, publishStreamContext, payloadBuffer);
@@ -66,7 +66,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
             IRtmpChunkStreamContext chunkStreamContext,
             bool isSkippable,
             INetBuffer payloadBuffer,
-            IList<IRtmpClientPeerContext> subscribers)
+            IList<IRtmpClientContext> subscribers)
         {
             _mediaMessageManager.EnqueueAudioMessage(
                 subscribers,

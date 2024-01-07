@@ -39,7 +39,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
                 return true;
             }
 
-            _logger.FailedToHandleChunkEvent(@event.PeerContext.Peer.PeerId);
+            _logger.FailedToHandleChunkEvent(@event.ClientContext.Client.ClientId);
 
             return false;
         }
@@ -48,7 +48,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
         {
             var basicHeader = await RtmpChunkBasicHeader.ReadAsync(netBuffer, @event.NetworkStream, cancellationToken);
 
-            var chunkStreamContext = @event.PeerContext.GetChunkStreamContext(basicHeader.ChunkStreamId);
+            var chunkStreamContext = @event.ClientContext.GetChunkStreamContext(basicHeader.ChunkStreamId);
 
             var success = basicHeader.ChunkType switch
             {
@@ -65,22 +65,22 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
 
         private void HandleAcknowlegement(RtmpChunkEvent @event, int bufferSize)
         {
-            var peerContext = @event.PeerContext;
+            var clientContext = @event.ClientContext;
 
-            if (peerContext.OutWindowAcknowledgementSize == 0)
+            if (clientContext.OutWindowAcknowledgementSize == 0)
                 return;
 
-            peerContext.SequenceNumber += (uint)bufferSize;
-            if (peerContext.SequenceNumber - peerContext.LastAcknowledgedSequenceNumber >= peerContext.OutWindowAcknowledgementSize)
+            clientContext.SequenceNumber += (uint)bufferSize;
+            if (clientContext.SequenceNumber - clientContext.LastAcknowledgedSequenceNumber >= clientContext.OutWindowAcknowledgementSize)
             {
-                peerContext.LastAcknowledgedSequenceNumber = peerContext.SequenceNumber;
-                _protocolControlMessageSender.Acknowledgement(peerContext, peerContext.SequenceNumber);
+                clientContext.LastAcknowledgedSequenceNumber = clientContext.SequenceNumber;
+                _protocolControlMessageSender.Acknowledgement(clientContext, clientContext.SequenceNumber);
 
                 const uint overflow = 0xf0000000;
-                if (peerContext.SequenceNumber >= overflow)
+                if (clientContext.SequenceNumber >= overflow)
                 {
-                    peerContext.SequenceNumber -= overflow;
-                    peerContext.LastAcknowledgedSequenceNumber -= overflow;
+                    clientContext.SequenceNumber -= overflow;
+                    clientContext.LastAcknowledgedSequenceNumber -= overflow;
                 }
             }
         }
@@ -192,7 +192,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
                 chunkStreamContext.PayloadBuffer = _netBufferPool.Obtain();
             }
 
-            var peerContext = @event.PeerContext;
+            var clientContext = @event.ClientContext;
             var payloadBuffer = chunkStreamContext.PayloadBuffer!;
             int messageLength = chunkStreamContext.MessageHeader.MessageLength;
 
@@ -200,7 +200,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
             {
                 var chunkedPayloadLength = (int)Math.Min(
                     messageLength - payloadBuffer.Size,
-                    peerContext.InChunkSize - payloadBuffer.Size % peerContext.InChunkSize
+                    clientContext.InChunkSize - payloadBuffer.Size % clientContext.InChunkSize
                 );
 
                 await netBuffer.CopyStreamData(@event.NetworkStream, chunkedPayloadLength, cancellationToken);
@@ -210,18 +210,18 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
             if (payloadBuffer.Size == messageLength)
             {
                 payloadBuffer.Position = 0;
-                return await DoHandleChunkEventPayloadAsync(chunkStreamContext, @event.PeerContext, cancellationToken);
+                return await DoHandleChunkEventPayloadAsync(chunkStreamContext, @event.ClientContext, cancellationToken);
             }
 
             return true;
         }
 
-        private async Task<bool> DoHandleChunkEventPayloadAsync(IRtmpChunkStreamContext chunkStreamContext, IRtmpClientPeerContext peerContext, CancellationToken cancellationToken)
+        private async Task<bool> DoHandleChunkEventPayloadAsync(IRtmpChunkStreamContext chunkStreamContext, IRtmpClientContext clientContext, CancellationToken cancellationToken)
         {
             try
             {
                 using var payloadBuffer = chunkStreamContext.PayloadBuffer ?? throw new InvalidOperationException();
-                return await _dispatcher.DispatchAsync(chunkStreamContext, peerContext, cancellationToken);
+                return await _dispatcher.DispatchAsync(chunkStreamContext, clientContext, cancellationToken);
             }
             finally
             {

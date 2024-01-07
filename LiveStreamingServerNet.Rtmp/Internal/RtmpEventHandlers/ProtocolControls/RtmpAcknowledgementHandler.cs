@@ -19,11 +19,11 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.ProtocolControl
 
         public Task<bool> HandleAsync(
             IRtmpChunkStreamContext chunkStreamContext,
-            IRtmpClientPeerContext peerContext,
+            IRtmpClientContext clientContext,
             INetBuffer payloadBuffer,
             CancellationToken cancellationToken)
         {
-            _logger.AcknowledgementReceived(peerContext.Peer.PeerId);
+            _logger.AcknowledgementReceived(clientContext.Client.ClientId);
             return Task.FromResult(true);
         }
     }

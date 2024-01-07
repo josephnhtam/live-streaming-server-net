@@ -19,23 +19,23 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
 
         public override Task<bool> HandleAsync(
             IRtmpChunkStreamContext chunkStreamContext,
-            IRtmpClientPeerContext peerContext,
+            IRtmpClientContext clientContext,
             RtmpCreateStreamCommand command,
             CancellationToken cancellationToken)
         {
-            RespondToClient(peerContext, command);
+            RespondToClient(clientContext, command);
             return Task.FromResult(true);
         }
 
-        public void RespondToClient(IRtmpClientPeerContext peerContext, RtmpCreateStreamCommand command)
+        public void RespondToClient(IRtmpClientContext clientContext, RtmpCreateStreamCommand command)
         {
             _commandMessageSender.SendCommandMessage(
-                peerContext: peerContext,
+                clientContext: clientContext,
                 chunkStreamId: 0,
                 commandName: "_result",
                 transactionId: command.TransactionId,
                 commandObject: null,
-                parameters: [peerContext.CreateNewStream()]
+                parameters: [clientContext.CreateNewStream()]
             );
         }
     }

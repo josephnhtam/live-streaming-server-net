@@ -2,7 +2,7 @@
 {
     internal interface IRtmpServerEventHandler
     {
-        Task OnRtmpClientCreatedAsync(IRtmpClientPeerContext peerContext);
-        Task OnRtmpClientDisposedAsync(IRtmpClientPeerContext peerContext);
+        Task OnRtmpClientCreatedAsync(IRtmpClientContext clientContext);
+        Task OnRtmpClientDisposedAsync(IRtmpClientContext clientContext);
     }
 }

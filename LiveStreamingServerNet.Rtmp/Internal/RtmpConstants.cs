@@ -28,7 +28,7 @@
         public const ushort PingResponse = 7;
     }
 
-    internal enum RtmpPeerBandwidthLimitType : byte
+    internal enum RtmpPeerBandwithLimitType : byte
     {
         Hard = 0,
         Soft = 1,

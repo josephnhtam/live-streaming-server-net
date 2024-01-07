@@ -39,52 +39,52 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
 
         public override async Task<bool> HandleAsync(
             IRtmpChunkStreamContext chunkStreamContext,
-            IRtmpClientPeerContext peerContext,
+            IRtmpClientContext clientContext,
             RtmpPlayCommand command,
             CancellationToken cancellationToken)
         {
-            _logger.Play(peerContext.Peer.PeerId, command.StreamName);
+            _logger.Play(clientContext.Client.ClientId, command.StreamName);
 
-            if (peerContext.StreamId == null)
+            if (clientContext.StreamId == null)
                 throw new InvalidOperationException("Stream is not yet created.");
 
-            var (streamPath, streamArguments) = ParseSubscriptionContext(command, peerContext);
+            var (streamPath, streamArguments) = ParseSubscriptionContext(command, clientContext);
 
-            if (await AuthorizeAsync(peerContext, command, chunkStreamContext, streamPath, streamArguments))
+            if (await AuthorizeAsync(clientContext, command, chunkStreamContext, streamPath, streamArguments))
             {
-                StartSubscribing(peerContext, command, chunkStreamContext, streamPath, streamArguments);
+                StartSubscribing(clientContext, command, chunkStreamContext, streamPath, streamArguments);
             }
 
             return true;
         }
 
-        private Task<bool> AuthorizeAsync(IRtmpClientPeerContext peerContext, string streamPath, IDictionary<string, string> streamArguments)
+        private Task<bool> AuthorizeAsync(IRtmpClientContext clientContext, string streamPath, IDictionary<string, string> streamArguments)
         {
             return Task.FromResult(true);
         }
 
         private static (string StreamPath, IDictionary<string, string> StreamArguments)
-            ParseSubscriptionContext(RtmpPlayCommand command, IRtmpClientPeerContext peerContext)
+            ParseSubscriptionContext(RtmpPlayCommand command, IRtmpClientContext clientContext)
         {
             var (streamName, arguments) = StreamUtilities.ParseStreamPath(command.StreamName);
 
             var streamPath = $"/{string.Join('/',
-                new string[] { peerContext.AppName, streamName }.Where(s => !string.IsNullOrEmpty(s)).ToArray())}";
+                new string[] { clientContext.AppName, streamName }.Where(s => !string.IsNullOrEmpty(s)).ToArray())}";
 
             return (streamPath, arguments);
         }
 
         private async Task<bool> AuthorizeAsync(
-            IRtmpClientPeerContext peerContext,
+            IRtmpClientContext clientContext,
             RtmpPlayCommand command,
             IRtmpChunkStreamContext chunkStreamContext,
             string streamPath,
             IDictionary<string, string> streamArguments)
         {
-            if (!await AuthorizeAsync(peerContext, streamPath, streamArguments))
+            if (!await AuthorizeAsync(clientContext, streamPath, streamArguments))
             {
-                _logger.AuthorizationFailed(peerContext.Peer.PeerId, streamPath);
-                SendAuthorizationFailedCommandMessage(peerContext, chunkStreamContext);
+                _logger.AuthorizationFailed(clientContext.Client.ClientId, streamPath);
+                SendAuthorizationFailedCommandMessage(clientContext, chunkStreamContext);
                 return false;
             }
 
@@ -92,31 +92,31 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
         }
 
         private bool StartSubscribing(
-            IRtmpClientPeerContext peerContext,
+            IRtmpClientContext clientContext,
             RtmpPlayCommand command,
             IRtmpChunkStreamContext chunkStreamContext,
             string streamPath,
             IDictionary<string, string> streamArguments)
         {
-            var startSubscribingResult = _streamManager.StartSubscribingStream(peerContext, chunkStreamContext.ChunkStreamId, streamPath, streamArguments);
+            var startSubscribingResult = _streamManager.StartSubscribingStream(clientContext, chunkStreamContext.ChunkStreamId, streamPath, streamArguments);
 
             switch (startSubscribingResult)
             {
                 case SubscribingStreamResult.Succeeded:
-                    _logger.SubscriptionStarted(peerContext.Peer.PeerId, streamPath);
-                    SendSubscriptionStartedMessage(peerContext, chunkStreamContext);
-                    SendCachedStreamMessages(peerContext, chunkStreamContext);
-                    CompleteSubscriptionInitialization(peerContext);
+                    _logger.SubscriptionStarted(clientContext.Client.ClientId, streamPath);
+                    SendSubscriptionStartedMessage(clientContext, chunkStreamContext);
+                    SendCachedStreamMessages(clientContext, chunkStreamContext);
+                    CompleteSubscriptionInitialization(clientContext);
                     return true;
 
                 case SubscribingStreamResult.AlreadySubscribing:
-                    _logger.AlreadySubscribing(peerContext.Peer.PeerId, streamPath);
-                    SendBadConnectionCommandMessage(peerContext, chunkStreamContext, "Already subscribing.");
+                    _logger.AlreadySubscribing(clientContext.Client.ClientId, streamPath);
+                    SendBadConnectionCommandMessage(clientContext, chunkStreamContext, "Already subscribing.");
                     return false;
 
                 case SubscribingStreamResult.AlreadyPublishing:
-                    _logger.AlreadyPublishing(peerContext.Peer.PeerId, streamPath);
-                    SendBadConnectionCommandMessage(peerContext, chunkStreamContext, "Already publishing.");
+                    _logger.AlreadyPublishing(clientContext.Client.ClientId, streamPath);
+                    SendBadConnectionCommandMessage(clientContext, chunkStreamContext, "Already publishing.");
                     return false;
 
                 default:
@@ -124,60 +124,60 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
             }
         }
 
-        private void SendCachedStreamMessages(IRtmpClientPeerContext peerContext, IRtmpChunkStreamContext chunkStreamContext)
+        private void SendCachedStreamMessages(IRtmpClientContext clientContext, IRtmpChunkStreamContext chunkStreamContext)
         {
-            var publishStreamContext = _streamManager.GetPublishStreamContext(peerContext.StreamSubscriptionContext!.StreamPath);
+            var publishStreamContext = _streamManager.GetPublishStreamContext(clientContext.StreamSubscriptionContext!.StreamPath);
 
             if (publishStreamContext == null)
                 return;
 
             _mediaMessageManager.SendCachedStreamMetaDataMessage(
-                peerContext, publishStreamContext,
+                clientContext, publishStreamContext,
                 chunkStreamContext.MessageHeader.Timestamp,
                 chunkStreamContext.MessageHeader.MessageStreamId);
 
             _mediaMessageManager.SendCachedHeaderMessages(
-                peerContext, publishStreamContext,
+                clientContext, publishStreamContext,
                 chunkStreamContext.MessageHeader.Timestamp,
                 chunkStreamContext.MessageHeader.MessageStreamId);
 
             if (_config.EnableGopCaching)
             {
                 _mediaMessageManager.SendCachedGroupOfPictures(
-                    peerContext, publishStreamContext,
+                    clientContext, publishStreamContext,
                     chunkStreamContext.MessageHeader.MessageStreamId);
             }
         }
 
-        private void CompleteSubscriptionInitialization(IRtmpClientPeerContext peerContext)
+        private void CompleteSubscriptionInitialization(IRtmpClientContext clientContext)
         {
-            peerContext.StreamSubscriptionContext!.CompleteInitialization();
+            clientContext.StreamSubscriptionContext!.CompleteInitialization();
         }
 
-        private void SendAuthorizationFailedCommandMessage(IRtmpClientPeerContext peerContext, IRtmpChunkStreamContext chunkStreamContext)
+        private void SendAuthorizationFailedCommandMessage(IRtmpClientContext clientContext, IRtmpChunkStreamContext chunkStreamContext)
         {
             _commandMessageSender.SendOnStatusCommandMessageAsync(
-                peerContext,
+                clientContext,
                 chunkStreamContext.ChunkStreamId,
                 RtmpArgumentValues.Error,
                 RtmpStatusCodes.PublishUnauthorized,
                 "Authorization failed.");
         }
 
-        private void SendSubscriptionStartedMessage(IRtmpClientPeerContext peerContext, IRtmpChunkStreamContext chunkStreamContext)
+        private void SendSubscriptionStartedMessage(IRtmpClientContext clientContext, IRtmpChunkStreamContext chunkStreamContext)
         {
             _commandMessageSender.SendOnStatusCommandMessageAsync(
-                peerContext,
+                clientContext,
                 chunkStreamContext.ChunkStreamId,
                 RtmpArgumentValues.Status,
                 RtmpStatusCodes.PlayStart,
                 "Stream subscribed.");
         }
 
-        private void SendBadConnectionCommandMessage(IRtmpClientPeerContext peerContext, IRtmpChunkStreamContext chunkStreamContext, string reason)
+        private void SendBadConnectionCommandMessage(IRtmpClientContext clientContext, IRtmpChunkStreamContext chunkStreamContext, string reason)
         {
             _commandMessageSender.SendOnStatusCommandMessageAsync(
-                peerContext,
+                clientContext,
                 chunkStreamContext.ChunkStreamId,
                 RtmpArgumentValues.Error,
                 RtmpStatusCodes.PlayBadConnection,

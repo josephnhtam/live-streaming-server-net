@@ -26,53 +26,53 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
 
         public override Task<bool> HandleAsync(
             IRtmpChunkStreamContext chunkStreamContext,
-            IRtmpClientPeerContext peerContext,
+            IRtmpClientContext clientContext,
             RtmpPauseCommand command,
             CancellationToken cancellationToken)
         {
-            var subscriptionContext = peerContext.StreamSubscriptionContext;
+            var subscriptionContext = clientContext.StreamSubscriptionContext;
 
             if (subscriptionContext != null)
             {
                 subscriptionContext.IsPaused = command.Flag;
 
                 if (command.Flag)
-                    HandlePause(peerContext);
+                    HandlePause(clientContext);
                 else
-                    HandleUnpause(peerContext, chunkStreamContext);
+                    HandleUnpause(clientContext, chunkStreamContext);
             }
 
             return Task.FromResult(true);
         }
 
-        private void HandleUnpause(IRtmpClientPeerContext peerContext, IRtmpChunkStreamContext chunkStreamContext)
+        private void HandleUnpause(IRtmpClientContext clientContext, IRtmpChunkStreamContext chunkStreamContext)
         {
-            _userControlMessageSender.SendStreamBeginMessage(peerContext);
-            SendCachedStreamMessages(peerContext, chunkStreamContext);
+            _userControlMessageSender.SendStreamBeginMessage(clientContext);
+            SendCachedStreamMessages(clientContext, chunkStreamContext);
         }
 
-        private void HandlePause(IRtmpClientPeerContext peerContext)
+        private void HandlePause(IRtmpClientContext clientContext)
         {
-            _userControlMessageSender.SendStreamEofMessage(peerContext);
+            _userControlMessageSender.SendStreamEofMessage(clientContext);
         }
 
-        private void SendCachedStreamMessages(IRtmpClientPeerContext peerContext, IRtmpChunkStreamContext chunkStreamContext)
+        private void SendCachedStreamMessages(IRtmpClientContext clientContext, IRtmpChunkStreamContext chunkStreamContext)
         {
-            if (peerContext.StreamSubscriptionContext == null)
+            if (clientContext.StreamSubscriptionContext == null)
                 return;
 
-            var publishStreamContext = _streamManager.GetPublishStreamContext(peerContext.StreamSubscriptionContext.StreamPath);
+            var publishStreamContext = _streamManager.GetPublishStreamContext(clientContext.StreamSubscriptionContext.StreamPath);
 
             if (publishStreamContext == null)
                 return;
 
             _mediaMessageManager.SendCachedStreamMetaDataMessage(
-                peerContext, publishStreamContext,
+                clientContext, publishStreamContext,
                 chunkStreamContext.MessageHeader.Timestamp,
                 chunkStreamContext.MessageHeader.MessageStreamId);
 
             _mediaMessageManager.SendCachedHeaderMessages(
-                peerContext, publishStreamContext,
+                clientContext, publishStreamContext,
                 chunkStreamContext.MessageHeader.Timestamp,
                 chunkStreamContext.MessageHeader.MessageStreamId);
         }

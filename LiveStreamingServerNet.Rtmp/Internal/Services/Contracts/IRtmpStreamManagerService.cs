@@ -6,17 +6,17 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services.Contracts
     internal interface IRtmpStreamManagerService
     {
         bool IsStreamPathPublishing(string publishStreamPath);
-        string? GetPublishStreamPath(IRtmpClientPeerContext publisherPeerContext);
-        IRtmpClientPeerContext? GetPublishingClientPeerContext(string publishStreamPath);
+        string? GetPublishStreamPath(IRtmpClientContext publisherClientContext);
+        IRtmpClientContext? GetPublishingClientContext(string publishStreamPath);
         IRtmpPublishStreamContext? GetPublishStreamContext(string publishStreamPath);
 
-        PublishingStreamResult StartPublishingStream(IRtmpClientPeerContext publisherPeerContext, string streamPath, IDictionary<string, string> streamArguments, out IList<IRtmpClientPeerContext> existingSubscribers);
-        bool StopPublishingStream(IRtmpClientPeerContext publisherPeerContext, out IList<IRtmpClientPeerContext> existingSubscribers);
+        PublishingStreamResult StartPublishingStream(IRtmpClientContext publisherClientContext, string streamPath, IDictionary<string, string> streamArguments, out IList<IRtmpClientContext> existingSubscribers);
+        bool StopPublishingStream(IRtmpClientContext publisherClientContext, out IList<IRtmpClientContext> existingSubscribers);
 
-        SubscribingStreamResult StartSubscribingStream(IRtmpClientPeerContext subscriberPeerContext, uint chunkStreamId, string streamPath, IDictionary<string, string> streamArguments);
-        bool StopSubscribingStream(IRtmpClientPeerContext subscriberPeerContext);
+        SubscribingStreamResult StartSubscribingStream(IRtmpClientContext subscriberClientContext, uint chunkStreamId, string streamPath, IDictionary<string, string> streamArguments);
+        bool StopSubscribingStream(IRtmpClientContext subscriberClientContext);
 
-        IRentable<IList<IRtmpClientPeerContext>> GetSubscribersLocked(string publishStreamPath);
-        IList<IRtmpClientPeerContext> GetSubscribers(string publishStreamPath);
+        IRentable<IList<IRtmpClientContext>> GetSubscribersLocked(string publishStreamPath);
+        IList<IRtmpClientContext> GetSubscribers(string publishStreamPath);
     }
 }

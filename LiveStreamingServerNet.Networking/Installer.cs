@@ -8,13 +8,13 @@ namespace LiveStreamingServerNet.Networking
 {
     public static class Installer
     {
-        public static IServiceCollection AddServer<TClientPeerHandlerFactory>(this IServiceCollection services)
-            where TClientPeerHandlerFactory : class, IClientPeerHandlerFactory
+        public static IServiceCollection AddServer<TClientHandlerFactory>(this IServiceCollection services)
+            where TClientHandlerFactory : class, IClientHandlerFactory
         {
             services.AddSingleton<IServer, Server>()
-                    .AddTransient<IClientPeer, ClientPeer>();
+                    .AddTransient<IClient, Client>();
 
-            services.AddSingleton<IClientPeerHandlerFactory, TClientPeerHandlerFactory>();
+            services.AddSingleton<IClientHandlerFactory, TClientHandlerFactory>();
 
             services.TryAddSingleton<INetBufferPool, NetBufferPool>();
 

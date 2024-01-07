@@ -20,12 +20,12 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.ProtocolControl
 
         public Task<bool> HandleAsync(
             IRtmpChunkStreamContext chunkStreamContext,
-            IRtmpClientPeerContext peerContext,
+            IRtmpClientContext clientContext,
             INetBuffer payloadBuffer,
             CancellationToken cancellationToken)
         {
-            peerContext.InChunkSize = payloadBuffer.ReadUInt32BigEndian();
-            _logger.SetChunkSize(peerContext.Peer.PeerId, peerContext.InChunkSize);
+            clientContext.InChunkSize = payloadBuffer.ReadUInt32BigEndian();
+            _logger.SetChunkSize(clientContext.Client.ClientId, clientContext.InChunkSize);
             return Task.FromResult(true);
         }
     }

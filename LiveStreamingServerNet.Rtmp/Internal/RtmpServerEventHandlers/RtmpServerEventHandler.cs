@@ -19,12 +19,12 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpServerEventHandlers
             return Task.CompletedTask;
         }
 
-        public Task OnClientPeerConnectedAsync(IClientPeer clientPeer)
+        public Task OnClientConnectedAsync(IClient client)
         {
             return Task.CompletedTask;
         }
 
-        public Task OnClientPeerDisconnectedAsync(IClientPeer clientPeer)
+        public Task OnClientDisconnectedAsync(IClient client)
         {
             return Task.CompletedTask;
         }

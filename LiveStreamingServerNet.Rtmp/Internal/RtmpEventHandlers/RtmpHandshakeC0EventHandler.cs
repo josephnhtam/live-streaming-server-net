@@ -19,9 +19,9 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
             var payload = new byte[1];
             await @event.NetworkStream.ReadExactlyAsync(payload, 0, 1, cancellationToken);
 
-            @event.PeerContext.State = RtmpClientPeerState.HandshakeC1;
+            @event.ClientContext.State = RtmpClientState.HandshakeC1;
 
-            _logger.HandshakeC0Handled(@event.PeerContext.Peer.PeerId);
+            _logger.HandshakeC0Handled(@event.ClientContext.Client.ClientId);
 
             return true;
         }

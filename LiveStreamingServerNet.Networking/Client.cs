@@ -9,35 +9,35 @@ using System.Threading.Channels;
 
 namespace LiveStreamingServerNet.Newtorking
 {
-    public sealed class ClientPeer : IClientPeer
+    public sealed class Client : IClient
     {
         private readonly INetBufferPool _netBufferPool;
         private readonly ILogger _logger;
         private readonly Channel<PendingMessage> _pendingMessageChannel;
         private TcpClient _tcpClient = default!;
 
-        public uint PeerId { get; private set; }
+        public uint ClientId { get; private set; }
 
-        public ClientPeer(IServiceProvider services)
+        public Client(IServiceProvider services)
         {
             _netBufferPool = services.GetRequiredService<INetBufferPool>();
-            _logger = services.GetRequiredService<ILogger<ClientPeer>>();
+            _logger = services.GetRequiredService<ILogger<Client>>();
             _pendingMessageChannel = Channel.CreateUnbounded<PendingMessage>();
         }
 
         public bool IsConnected => _tcpClient?.Connected ?? false;
 
-        public void Initialize(uint peerId, TcpClient tcpClient)
+        public void Initialize(uint clientId, TcpClient tcpClient)
         {
-            PeerId = peerId;
+            ClientId = clientId;
             _tcpClient = tcpClient;
         }
 
-        public async Task RunAsync(IClientPeerHandler handler, CancellationToken stoppingToken)
+        public async Task RunAsync(IClientHandler handler, CancellationToken stoppingToken)
         {
-            _logger.ClientConnected(PeerId);
+            _logger.ClientConnected(ClientId);
 
-            await using (var outstandingBufferSender = new OutstandingBufferSender(PeerId, _pendingMessageChannel.Reader, _logger))
+            await using (var outstandingBufferSender = new OutstandingBufferSender(ClientId, _pendingMessageChannel.Reader, _logger))
             {
                 using var cts = CancellationTokenSource.CreateLinkedTokenSource(stoppingToken);
                 var cancellationToken = cts.Token;
@@ -49,14 +49,14 @@ namespace LiveStreamingServerNet.Newtorking
                     outstandingBufferSender.Start(networkStream, cancellationToken);
 
                     while (_tcpClient.Connected && !cancellationToken.IsCancellationRequested)
-                        if (!await handler.HandleClientPeerLoopAsync(readOnlyNetworkStream, cancellationToken))
+                        if (!await handler.HandleClientLoopAsync(readOnlyNetworkStream, cancellationToken))
                             break;
                 }
                 catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { }
                 catch (Exception ex) when (ex is IOException or EndOfStreamException) { }
                 catch (Exception ex)
                 {
-                    _logger.ClientPeerLoopError(PeerId, ex);
+                    _logger.ClientLoopError(ClientId, ex);
                 }
                 finally
                 {
@@ -67,7 +67,7 @@ namespace LiveStreamingServerNet.Newtorking
             await handler.DisposeAsync();
             _tcpClient.Close();
 
-            _logger.ClientDisconnected(PeerId);
+            _logger.ClientDisconnected(ClientId);
         }
 
         public void Send(INetBuffer netBuffer, Action? callback)
@@ -153,15 +153,15 @@ namespace LiveStreamingServerNet.Newtorking
 
         private class OutstandingBufferSender : IAsyncDisposable
         {
-            private readonly uint _peerId;
+            private readonly uint _clientId;
             private readonly ChannelReader<PendingMessage> _pendingMessageReader;
             private readonly ILogger _logger;
 
             private Task? _task;
 
-            public OutstandingBufferSender(uint peerId, ChannelReader<PendingMessage> pendingMessageReader, ILogger logger)
+            public OutstandingBufferSender(uint clientId, ChannelReader<PendingMessage> pendingMessageReader, ILogger logger)
             {
-                _peerId = peerId;
+                _clientId = clientId;
                 _pendingMessageReader = pendingMessageReader;
                 _logger = logger;
             }
@@ -187,7 +187,7 @@ namespace LiveStreamingServerNet.Newtorking
                         catch (IOException) { }
                         catch (Exception ex)
                         {
-                            _logger.SendDataError(_peerId, ex);
+                            _logger.SendDataError(_clientId, ex);
                         }
                         finally
                         {

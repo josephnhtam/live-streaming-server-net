@@ -6,57 +6,57 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services.Contracts
     internal interface IRtmpMediaMessageManagerService : IAsyncDisposable
     {
         void EnqueueVideoMessage(
-            IRtmpClientPeerContext subscriber,
+            IRtmpClientContext subscriber,
             uint timestamp,
             uint streamId,
             bool isSkippable,
             Action<INetBuffer> payloadWriter);
 
         void EnqueueVideoMessage(
-            IList<IRtmpClientPeerContext> subscribers,
+            IList<IRtmpClientContext> subscribers,
             uint timestamp,
             uint streamId,
             bool isSkippable,
             Action<INetBuffer> payloadWriter);
 
         void EnqueueAudioMessage(
-            IRtmpClientPeerContext subscriber,
+            IRtmpClientContext subscriber,
             uint timestamp,
             uint streamId,
             bool isSkippable,
             Action<INetBuffer> payloadWriter);
 
         void EnqueueAudioMessage(
-            IList<IRtmpClientPeerContext> subscribers,
+            IList<IRtmpClientContext> subscribers,
             uint timestamp,
             uint streamId,
             bool isSkippable,
             Action<INetBuffer> payloadWriter);
 
         void SendCachedHeaderMessages(
-            IRtmpClientPeerContext peerContext,
+            IRtmpClientContext clientContext,
             IRtmpPublishStreamContext publishStreamContext,
             uint timestamp,
             uint streamId);
 
         void SendCachedStreamMetaDataMessage(
-            IRtmpClientPeerContext peerContext,
+            IRtmpClientContext clientContext,
             IRtmpPublishStreamContext publishStreamContext,
             uint timestamp,
             uint streamId);
 
         void SendCachedStreamMetaDataMessage(
-            IList<IRtmpClientPeerContext> peerContexts,
+            IList<IRtmpClientContext> clientContexts,
             IRtmpPublishStreamContext publishStreamContext,
             uint timestamp,
             uint streamId);
 
         void SendCachedGroupOfPictures(
-            IRtmpClientPeerContext peerContext,
+            IRtmpClientContext clientContext,
             IRtmpPublishStreamContext publishStreamContext,
             uint streamId);
 
-        void RegisterClientPeer(IRtmpClientPeerContext peerContext);
-        void UnregisterClientPeer(IRtmpClientPeerContext peerContext);
+        void RegisterClient(IRtmpClientContext clientContext);
+        void UnregisterClient(IRtmpClientContext clientContext);
     }
 }

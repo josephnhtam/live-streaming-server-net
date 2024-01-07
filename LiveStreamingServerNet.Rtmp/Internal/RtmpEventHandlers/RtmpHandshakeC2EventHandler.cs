@@ -23,9 +23,9 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
             using var incomingBuffer = _netBufferPool.Obtain();
             await incomingBuffer.CopyStreamData(@event.NetworkStream, 1536, cancellationToken);
 
-            @event.PeerContext.State = RtmpClientPeerState.HandshakeDone;
+            @event.ClientContext.State = RtmpClientState.HandshakeDone;
 
-            _logger.HandshakeC2Handled(@event.PeerContext.Peer.PeerId);
+            _logger.HandshakeC2Handled(@event.ClientContext.Client.ClientId);
 
             return true;
         }

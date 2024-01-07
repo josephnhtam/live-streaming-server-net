@@ -8,7 +8,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services.Extensions
     {
         public static void SendOnStatusCommandMessage(
             this IRtmpCommandMessageSenderService sender,
-            IRtmpClientPeerContext peerContext,
+            IRtmpClientContext clientContext,
             uint publishStreamChunkId,
             string level,
             string code,
@@ -23,12 +23,12 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services.Extensions
                 { RtmpArgumentNames.Description, description }
             };
 
-            sender.SendCommandMessage(peerContext, publishStreamChunkId, "onStatus", 0, null, [properties], amfEncodingType, callback);
+            sender.SendCommandMessage(clientContext, publishStreamChunkId, "onStatus", 0, null, [properties], amfEncodingType, callback);
         }
 
         public static void SendOnStatusCommandMessage(
             this IRtmpCommandMessageSenderService sender,
-            IList<IRtmpClientPeerContext> peerContexts,
+            IList<IRtmpClientContext> clientContexts,
             uint publishStreamChunkId,
             string level,
             string code,
@@ -42,12 +42,12 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services.Extensions
                 { RtmpArgumentNames.Description, description }
             };
 
-            sender.SendCommandMessage(peerContexts, publishStreamChunkId, "onStatus", 0, null, [properties], amfEncodingType);
+            sender.SendCommandMessage(clientContexts, publishStreamChunkId, "onStatus", 0, null, [properties], amfEncodingType);
         }
 
         public static Task SendOnStatusCommandMessageAsync(
             this IRtmpCommandMessageSenderService sender,
-            IRtmpClientPeerContext peerContext,
+            IRtmpClientContext clientContext,
             uint publishStreamChunkId,
             string level,
             string code,
@@ -55,7 +55,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services.Extensions
             AmfEncodingType amfEncodingType = AmfEncodingType.Amf0)
         {
             var tcs = new TaskCompletionSource();
-            sender.SendOnStatusCommandMessage(peerContext, publishStreamChunkId, level, code, description, amfEncodingType, tcs.SetResult);
+            sender.SendOnStatusCommandMessage(clientContext, publishStreamChunkId, level, code, description, amfEncodingType, tcs.SetResult);
             return tcs.Task;
         }
     }

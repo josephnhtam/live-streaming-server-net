@@ -11,11 +11,11 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
     {
         public override Task<bool> HandleAsync(
             IRtmpChunkStreamContext chunkStreamContext,
-            IRtmpClientPeerContext peerContext,
+            IRtmpClientContext clientContext,
             RtmpReceiveAudioCommand command,
             CancellationToken cancellationToken)
         {
-            var subscriptionContext = peerContext.StreamSubscriptionContext;
+            var subscriptionContext = clientContext.StreamSubscriptionContext;
 
             if (subscriptionContext != null)
             {

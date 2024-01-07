@@ -26,48 +26,48 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
             using var outgoingBuffer = _netBufferPool.Obtain();
             if (HandleHandshake(@event, incomingBuffer, outgoingBuffer))
             {
-                @event.PeerContext.State = RtmpClientPeerState.HandshakeC2;
-                @event.PeerContext.Peer.Send(outgoingBuffer);
+                @event.ClientContext.State = RtmpClientState.HandshakeC2;
+                @event.ClientContext.Client.Send(outgoingBuffer);
 
-                _logger.HandshakeC1Handled(@event.PeerContext.Peer.PeerId);
+                _logger.HandshakeC1Handled(@event.ClientContext.Client.ClientId);
 
                 return true;
             }
 
-            _logger.HandshakeC1HandlingFailed(@event.PeerContext.Peer.PeerId);
+            _logger.HandshakeC1HandlingFailed(@event.ClientContext.Client.ClientId);
 
             return false;
         }
 
         private bool HandleHandshake(RtmpHandshakeC1Event @event, INetBuffer incomingBuffer, INetBuffer outgoingBuffer)
         {
-            var peerContext = @event.PeerContext;
-            var clientPeer = peerContext.Peer;
+            var clientContext = @event.ClientContext;
+            var client = clientContext.Client;
 
             var complexHandshake0 = new ComplexHandshake(incomingBuffer, ComplexHandshakeType.Schema0);
             if (complexHandshake0.ValidateC1())
             {
-                peerContext.HandshakeType = HandshakeType.ComplexHandshake0;
+                clientContext.HandshakeType = HandshakeType.ComplexHandshake0;
                 complexHandshake0.WriteS0S1S2(outgoingBuffer);
-                _logger.HandshakeType(clientPeer.PeerId, nameof(HandshakeType.ComplexHandshake0));
+                _logger.HandshakeType(client.ClientId, nameof(HandshakeType.ComplexHandshake0));
                 return true;
             }
 
             var complexHandshake1 = new ComplexHandshake(incomingBuffer, ComplexHandshakeType.Schema1);
             if (complexHandshake1.ValidateC1())
             {
-                peerContext.HandshakeType = HandshakeType.ComplexHandshake1;
+                clientContext.HandshakeType = HandshakeType.ComplexHandshake1;
                 complexHandshake1.WriteS0S1S2(outgoingBuffer);
-                _logger.HandshakeType(clientPeer.PeerId, nameof(HandshakeType.ComplexHandshake1));
+                _logger.HandshakeType(client.ClientId, nameof(HandshakeType.ComplexHandshake1));
                 return true;
             }
 
             var simpleHandshake = new SimpleHandshake(incomingBuffer);
             if (simpleHandshake.ValidateC1())
             {
-                peerContext.HandshakeType = HandshakeType.SimpleHandshake;
+                clientContext.HandshakeType = HandshakeType.SimpleHandshake;
                 simpleHandshake.WriteS0S1S2(outgoingBuffer);
-                _logger.HandshakeType(clientPeer.PeerId, nameof(HandshakeType.SimpleHandshake));
+                _logger.HandshakeType(client.ClientId, nameof(HandshakeType.SimpleHandshake));
                 return true;
             }
 

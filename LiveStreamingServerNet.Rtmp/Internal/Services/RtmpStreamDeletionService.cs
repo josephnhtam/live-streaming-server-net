@@ -21,32 +21,32 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             _commandMessageSender = commandMessageSender;
         }
 
-        public void DeleteStream(IRtmpClientPeerContext peerContext)
+        public void DeleteStream(IRtmpClientContext clientContext)
         {
-            StopPublishingStreamIfNeeded(peerContext);
-            StopSubscribingStreamIfNeeded(peerContext);
-            peerContext.DeleteStream();
+            StopPublishingStreamIfNeeded(clientContext);
+            StopSubscribingStreamIfNeeded(clientContext);
+            clientContext.DeleteStream();
         }
 
-        private void StopPublishingStreamIfNeeded(IRtmpClientPeerContext peerContext)
+        private void StopPublishingStreamIfNeeded(IRtmpClientContext clientContext)
         {
-            if (!_rtmpStreamManager.StopPublishingStream(peerContext, out var existingSubscriber))
+            if (!_rtmpStreamManager.StopPublishingStream(clientContext, out var existingSubscriber))
                 return;
 
             _userControlMessageSender.SendStreamEofMessage(existingSubscriber);
             SendStreamUnpublishNotify(existingSubscriber);
         }
 
-        private void StopSubscribingStreamIfNeeded(IRtmpClientPeerContext peerContext)
+        private void StopSubscribingStreamIfNeeded(IRtmpClientContext clientContext)
         {
-            if (!_rtmpStreamManager.StopSubscribingStream(peerContext))
+            if (!_rtmpStreamManager.StopSubscribingStream(clientContext))
                 return;
 
-            SendSubscriptionStoppedMessage(peerContext);
+            SendSubscriptionStoppedMessage(clientContext);
         }
 
         private void SendStreamUnpublishNotify(
-            IList<IRtmpClientPeerContext> subscribers,
+            IList<IRtmpClientContext> subscribers,
             AmfEncodingType amfEncodingType = AmfEncodingType.Amf0)
         {
             foreach (var subscriberGroup in subscribers.GroupBy(x => x.StreamSubscriptionContext!.ChunkStreamId))
@@ -62,7 +62,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
         }
 
         private void SendSubscriptionStoppedMessage(
-            IRtmpClientPeerContext subscriber,
+            IRtmpClientContext subscriber,
             AmfEncodingType amfEncodingType = AmfEncodingType.Amf0)
         {
             _commandMessageSender.SendOnStatusCommandMessage(

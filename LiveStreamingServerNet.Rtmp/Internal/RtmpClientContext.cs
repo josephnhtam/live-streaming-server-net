@@ -5,10 +5,10 @@ using System.Collections.Concurrent;
 
 namespace LiveStreamingServerNet.Rtmp.Internal
 {
-    internal class RtmpClientPeerContext : IRtmpClientPeerContext
+    internal class RtmpClientContext : IRtmpClientContext
     {
-        public IClientPeerHandle Peer { get; }
-        public RtmpClientPeerState State { get; set; } = RtmpClientPeerState.HandshakeC0;
+        public IClientHandle Client { get; }
+        public RtmpClientState State { get; set; } = RtmpClientState.HandshakeC0;
         public HandshakeType HandshakeType { get; set; } = HandshakeType.SimpleHandshake;
 
         public uint InChunkSize { get; set; } = RtmpConstants.DefaultChunkSize;
@@ -30,9 +30,9 @@ namespace LiveStreamingServerNet.Rtmp.Internal
         private bool _isStreamCreated;
         private ConcurrentDictionary<uint, IRtmpChunkStreamContext> _chunkStreamContexts = new();
 
-        public RtmpClientPeerContext(IClientPeerHandle peer)
+        public RtmpClientContext(IClientHandle client)
         {
-            Peer = peer;
+            Client = client;
         }
 
         public IRtmpPublishStreamContext CreatePublishStreamContext(string streamPath, IDictionary<string, string> streamArguments)

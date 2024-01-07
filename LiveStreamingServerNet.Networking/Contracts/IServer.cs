@@ -5,8 +5,8 @@ namespace LiveStreamingServerNet.Networking.Contracts
     public interface IServer
     {
         bool IsStarted { get; }
-        IList<IClientPeerHandle> ClientPeers { get; }
-        IClientPeerHandle? GetClientPeer(uint clientPeerId);
+        IList<IClientHandle> Clients { get; }
+        IClientHandle? GetClient(uint clientClientId);
         Task RunAsync(IPEndPoint localEndpoint, CancellationToken cancellationToken = default);
     }
 }

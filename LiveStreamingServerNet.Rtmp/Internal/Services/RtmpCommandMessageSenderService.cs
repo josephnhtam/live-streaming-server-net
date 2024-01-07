@@ -16,7 +16,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
         }
 
         public void SendCommandMessage(
-            IRtmpClientPeerContext peerContext,
+            IRtmpClientContext clientContext,
             uint chunkStreamId,
             string commandName,
             double transactionId,
@@ -29,7 +29,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             var messageHeader = new RtmpChunkMessageHeaderType0(0,
                 amfEncodingType == AmfEncodingType.Amf0 ? RtmpMessageType.CommandMessageAmf0 : RtmpMessageType.CommandMessageAmf3, 0);
 
-            _chunkMessageSender.Send(peerContext, basicHeader, messageHeader, netBuffer =>
+            _chunkMessageSender.Send(clientContext, basicHeader, messageHeader, netBuffer =>
             {
                 netBuffer.WriteAmf([
                     commandName,
@@ -40,15 +40,15 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             }, callback);
         }
 
-        public Task SendCommandMessageAsync(IRtmpClientPeerContext peerContext, uint chunkStreamId, string commandName, double transactionId, IDictionary<string, object>? commandObject, IList<object?> parameters, AmfEncodingType amfEncodingType = AmfEncodingType.Amf0)
+        public Task SendCommandMessageAsync(IRtmpClientContext clientContext, uint chunkStreamId, string commandName, double transactionId, IDictionary<string, object>? commandObject, IList<object?> parameters, AmfEncodingType amfEncodingType = AmfEncodingType.Amf0)
         {
             var tcs = new TaskCompletionSource();
-            SendCommandMessage(peerContext, chunkStreamId, commandName, transactionId, commandObject, parameters, amfEncodingType, tcs.SetResult);
+            SendCommandMessage(clientContext, chunkStreamId, commandName, transactionId, commandObject, parameters, amfEncodingType, tcs.SetResult);
             return tcs.Task;
         }
 
         public void SendCommandMessage(
-            IList<IRtmpClientPeerContext> peerContexts,
+            IList<IRtmpClientContext> clientContexts,
             uint chunkStreamId,
             string commandName,
             double transactionId,
@@ -60,7 +60,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             var messageHeader = new RtmpChunkMessageHeaderType0(0,
                 amfEncodingType == AmfEncodingType.Amf0 ? RtmpMessageType.CommandMessageAmf0 : RtmpMessageType.CommandMessageAmf3, 0);
 
-            _chunkMessageSender.Send(peerContexts, basicHeader, messageHeader, netBuffer =>
+            _chunkMessageSender.Send(clientContexts, basicHeader, messageHeader, netBuffer =>
             {
                 netBuffer.WriteAmf([
                     commandName,

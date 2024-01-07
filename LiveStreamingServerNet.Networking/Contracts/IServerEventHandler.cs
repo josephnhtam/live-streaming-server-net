@@ -7,8 +7,8 @@ namespace LiveStreamingServerNet.Newtorking.Contracts
     {
         Task OnListenerCreatedAsync(TcpListener tcpListener);
         Task OnClientAcceptedAsync(TcpClient tcpClient);
-        Task OnClientPeerConnectedAsync(IClientPeer clientPeer);
-        Task OnClientPeerDisconnectedAsync(IClientPeer clientPeer);
+        Task OnClientConnectedAsync(IClient clientClient);
+        Task OnClientDisconnectedAsync(IClient clientClient);
         Task OnServerStartedAsync();
         Task OnServerStoppedAsync();
     }

@@ -28,9 +28,9 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Handshakes
             PrivateKey = (DHPrivateKeyParameters)keyPair.Private;
         }
 
-        public byte[] ComputeSharedKey(byte[] peerPublicKey)
+        public byte[] ComputeSharedKey(byte[] clientPublicKey)
         {
-            var dhPubKey = new DHPublicKeyParameters(new BigInteger(1, peerPublicKey), _dhParams);
+            var dhPubKey = new DHPublicKeyParameters(new BigInteger(1, clientPublicKey), _dhParams);
 
             var dhAgree = new DHBasicAgreement();
             dhAgree.Init(PrivateKey);

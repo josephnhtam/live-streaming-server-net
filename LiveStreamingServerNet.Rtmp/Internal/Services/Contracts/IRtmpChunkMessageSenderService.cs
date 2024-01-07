@@ -7,20 +7,20 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services.Contracts
     internal interface IRtmpChunkMessageSenderService
     {
         void Send<TRtmpChunkMessageHeader>(
-            IRtmpClientPeerContext peerContext,
+            IRtmpClientContext clientContext,
             RtmpChunkBasicHeader basicHeader,
             TRtmpChunkMessageHeader messageHeader,
             Action<INetBuffer> payloadWriter,
             Action? callback = null) where TRtmpChunkMessageHeader : struct, IRtmpChunkMessageHeader;
 
         void Send<TRtmpChunkMessageHeader>(
-            IList<IRtmpClientPeerContext> peerContexts,
+            IList<IRtmpClientContext> clientContexts,
             RtmpChunkBasicHeader basicHeader,
             TRtmpChunkMessageHeader messageHeader,
             Action<INetBuffer> payloadWriter) where TRtmpChunkMessageHeader : struct, IRtmpChunkMessageHeader;
 
         Task SendAsync<TRtmpChunkMessageHeader>(
-            IRtmpClientPeerContext peerContext,
+            IRtmpClientContext clientContext,
             RtmpChunkBasicHeader basicHeader,
             TRtmpChunkMessageHeader messageHeader,
             Action<INetBuffer> payloadWriter)
