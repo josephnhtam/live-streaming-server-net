@@ -119,7 +119,7 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Media
             uint timestamp)
         {
             var rentedBuffer = new RentedBuffer(payloadBuffer.Size);
-            payloadBuffer.MoveTo(0).ReadBytes(rentedBuffer.Bytes, 0, payloadBuffer.Size);
+            payloadBuffer.MoveTo(0).ReadBytes(rentedBuffer.Buffer, 0, payloadBuffer.Size);
             publishStreamContext.GroupOfPicturesCache.Add(new PicturesCache(MediaType.Video, timestamp, rentedBuffer, payloadBuffer.Size));
         }
 

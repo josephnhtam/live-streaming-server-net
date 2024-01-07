@@ -98,7 +98,7 @@ namespace LiveStreamingServerNet.Rtmp.Services
         {
             foreach (var picture in publishStreamContext.GroupOfPicturesCache.Get())
             {
-                SendMediaPackage(peerContext, picture.Type, picture.Payload.Bytes, picture.PayloadSize, picture.Timestamp, streamId);
+                SendMediaPackage(peerContext, picture.Type, picture.Payload.Buffer, picture.PayloadSize, picture.Timestamp, streamId);
                 picture.Payload.Unclaim();
             }
         }
@@ -112,7 +112,7 @@ namespace LiveStreamingServerNet.Rtmp.Services
             payloadWriter(netBuffer);
 
             var rentedBuffer = new RentedBuffer(netBuffer.Size);
-            netBuffer.MoveTo(0).ReadBytes(rentedBuffer.Bytes, 0, netBuffer.Size);
+            netBuffer.MoveTo(0).ReadBytes(rentedBuffer.Buffer, 0, netBuffer.Size);
 
             var mediaPackage = new ClientPeerMediaPackage(
                 mediaType,
@@ -133,7 +133,7 @@ namespace LiveStreamingServerNet.Rtmp.Services
             payloadWriter(netBuffer);
 
             var rentedBuffer = new RentedBuffer(netBuffer.Size, subscribers.Count);
-            netBuffer.MoveTo(0).ReadBytes(rentedBuffer.Bytes, 0, netBuffer.Size);
+            netBuffer.MoveTo(0).ReadBytes(rentedBuffer.Buffer, 0, netBuffer.Size);
 
             var mediaPackage = new ClientPeerMediaPackage(
                 mediaType,
@@ -247,7 +247,7 @@ namespace LiveStreamingServerNet.Rtmp.Services
                         await SendMediaPackageAsync(
                             peerContext,
                             package.MediaType,
-                            package.RentedPayload.Bytes,
+                            package.RentedPayload.Buffer,
                             package.PayloadSize,
                             package.Timestamp,
                             package.StreamId,

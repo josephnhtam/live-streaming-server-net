@@ -2,7 +2,7 @@
 {
     public interface IRentedBuffer
     {
-        byte[] Bytes { get; }
+        byte[] Buffer { get; }
         int Claimed { get; }
 
         void Claim();
