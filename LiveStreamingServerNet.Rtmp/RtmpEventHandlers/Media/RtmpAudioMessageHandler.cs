@@ -111,7 +111,7 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Media
         {
             var rentedCache = new RentedBuffer(payloadBuffer.Size);
             payloadBuffer.MoveTo(0).ReadBytes(rentedCache.Bytes, 0, payloadBuffer.Size);
-            publishStreamContext.AddPictureCache(new PicturesCache(MediaType.Audio, timestamp, rentedCache, payloadBuffer.Size));
+            publishStreamContext.GroupOfPicturesCache.Add(new PicturesCache(MediaType.Audio, timestamp, rentedCache, payloadBuffer.Size));
         }
     }
 }

@@ -77,17 +77,22 @@ namespace LiveStreamingServerNet.Rtmp
         public IPublishStreamMetaData StreamMetaData { get; set; } = default!;
         public byte[]? VideoSequenceHeader { get; set; }
         public byte[]? AudioSequenceHeader { get; set; }
-
-        private readonly Queue<PicturesCache> _groupOfPicturesCache = new();
+        public IGroupOfPicturesCache GroupOfPicturesCache { get; }
 
         public RtmpPublishStreamContext(uint streamId, string streamPath, IDictionary<string, string> streamArguments)
         {
             StreamId = streamId;
             StreamPath = streamPath;
             StreamArguments = streamArguments;
+            GroupOfPicturesCache = new GroupOfPicturesCache();
         }
+    }
 
-        public void AddPictureCache(PicturesCache cache)
+    internal class GroupOfPicturesCache : IGroupOfPicturesCache
+    {
+        private readonly Queue<PicturesCache> _groupOfPicturesCache = new();
+
+        public void Add(PicturesCache cache)
         {
             lock (_groupOfPicturesCache)
             {
@@ -95,7 +100,7 @@ namespace LiveStreamingServerNet.Rtmp
             }
         }
 
-        public void ClearGroupOfPicturesCache(bool unclaim)
+        public void Clear(bool unclaim)
         {
             lock (_groupOfPicturesCache)
             {
@@ -109,7 +114,7 @@ namespace LiveStreamingServerNet.Rtmp
             }
         }
 
-        public IList<PicturesCache> GetGroupOfPicturesCache(bool claim)
+        public IList<PicturesCache> Get(bool claim)
         {
             lock (_groupOfPicturesCache)
             {

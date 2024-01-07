@@ -120,12 +120,12 @@ namespace LiveStreamingServerNet.Rtmp.RtmpEventHandlers.Media
         {
             var rentedBuffer = new RentedBuffer(payloadBuffer.Size);
             payloadBuffer.MoveTo(0).ReadBytes(rentedBuffer.Bytes, 0, payloadBuffer.Size);
-            publishStreamContext.AddPictureCache(new PicturesCache(MediaType.Video, timestamp, rentedBuffer, payloadBuffer.Size));
+            publishStreamContext.GroupOfPicturesCache.Add(new PicturesCache(MediaType.Video, timestamp, rentedBuffer, payloadBuffer.Size));
         }
 
         private static void ClearGroupOfPicturesCache(IRtmpPublishStreamContext publishStreamContext)
         {
-            publishStreamContext.ClearGroupOfPicturesCache();
+            publishStreamContext.GroupOfPicturesCache.Clear();
         }
     }
 }

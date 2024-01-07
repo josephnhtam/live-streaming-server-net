@@ -96,7 +96,7 @@ namespace LiveStreamingServerNet.Rtmp.Services
 
         public void SendCachedGroupOfPictures(IRtmpClientPeerContext peerContext, IRtmpPublishStreamContext publishStreamContext, uint streamId)
         {
-            foreach (var picture in publishStreamContext.GetGroupOfPicturesCache())
+            foreach (var picture in publishStreamContext.GroupOfPicturesCache.Get())
             {
                 SendMediaPackage(peerContext, picture.Type, picture.Payload.Bytes, picture.PayloadSize, picture.Timestamp, streamId);
                 picture.Payload.Unclaim();

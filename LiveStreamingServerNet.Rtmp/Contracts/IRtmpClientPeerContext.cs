@@ -43,10 +43,7 @@ namespace LiveStreamingServerNet.Rtmp.Contracts
         IPublishStreamMetaData StreamMetaData { get; set; }
         byte[]? VideoSequenceHeader { get; set; }
         byte[]? AudioSequenceHeader { get; set; }
-
-        void AddPictureCache(PicturesCache cache);
-        void ClearGroupOfPicturesCache(bool unclaim = true);
-        IList<PicturesCache> GetGroupOfPicturesCache(bool claim = true);
+        IGroupOfPicturesCache GroupOfPicturesCache { get; }
     }
 
     internal interface IPublishStreamMetaData
@@ -72,6 +69,13 @@ namespace LiveStreamingServerNet.Rtmp.Contracts
 
         Task InitializationTask { get; }
         void CompleteInitialization();
+    }
+
+    internal interface IGroupOfPicturesCache
+    {
+        void Add(PicturesCache cache);
+        void Clear(bool unclaim = true);
+        IList<PicturesCache> Get(bool claim = true);
     }
 
     internal record struct PicturesCache
