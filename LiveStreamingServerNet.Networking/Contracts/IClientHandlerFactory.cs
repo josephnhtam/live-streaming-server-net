@@ -4,6 +4,6 @@ namespace LiveStreamingServerNet.Newtorking.Contracts
 {
     public interface IClientHandlerFactory
     {
-        IClientHandler CreateClientHandler(IClientHandle clientClient);
+        IClientHandler CreateClientHandler(IClientHandle client);
     }
 }

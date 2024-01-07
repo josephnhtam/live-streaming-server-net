@@ -6,7 +6,7 @@ namespace LiveStreamingServerNet.Networking.Contracts
     {
         bool IsStarted { get; }
         IList<IClientHandle> Clients { get; }
-        IClientHandle? GetClient(uint clientClientId);
+        IClientHandle? GetClient(uint clientId);
         Task RunAsync(IPEndPoint localEndpoint, CancellationToken cancellationToken = default);
     }
 }
