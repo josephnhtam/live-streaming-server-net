@@ -1,5 +1,6 @@
-﻿using LiveStreamingServerNet.Networking;
-using LiveStreamingServerNet.Newtorking.Contracts;
+﻿using LiveStreamingServerNet.Networking.Installer;
+using LiveStreamingServerNet.Networking.Installer.Contracts;
+using LiveStreamingServerNet.Rtmp.Installer.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal;
 using LiveStreamingServerNet.Rtmp.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.CommandDispatcher;
@@ -14,25 +15,35 @@ using LiveStreamingServerNet.Rtmp.Internal.Services.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
-namespace LiveStreamingServerNet.Rtmp
+namespace LiveStreamingServerNet.Rtmp.Installer
 {
     public static class RtmpServerInstaller
     {
-        public static IServiceCollection AddRtmpServer(this IServiceCollection services)
+        public static IServiceCollection AddRtmpServer(
+            this IServiceCollection services,
+            Action<IRtmpServerConfigurator>? configureRtmpServer = null,
+            Action<IServerConfigurator>? configureServer = null)
         {
-            return services
-                .AddRtmpCore()
-                .AddRtmpServices()
-                .AddRtmpMessageHandlers()
-                .AddRtmpCommandHandlers()
-                .AddRtmpServerEventDispatchers()
-                .AddRtmpServerEventHandlers();
+            services.AddRtmpCore(configureServer)
+                    .AddRtmpServices()
+                    .AddRtmpMessageHandlers()
+                    .AddRtmpCommandHandlers()
+                    .AddRtmpServerEventDispatchers()
+                    .AddRtmpServerEventHandlers();
+
+            configureRtmpServer?.Invoke(new RtmpServerConfigurator(services));
+
+            return services;
         }
 
-        private static IServiceCollection AddRtmpCore(this IServiceCollection services)
+        private static IServiceCollection AddRtmpCore(this IServiceCollection services, Action<IServerConfigurator>? configureServer)
         {
-            services.AddServer<RtmpClientHandlerFactory>()
-                    .AddTransient<IRtmpClientHandler, RtmpClientHandler>();
+            services.AddServer<RtmpClientHandlerFactory>(options =>
+                {
+                    options.AddServerEventHandler<ServerEventHandler>();
+                    configureServer?.Invoke(options);
+                })
+                .AddTransient<IRtmpClientHandler, RtmpClientHandler>();
 
             services.AddMediatR(options =>
             {
@@ -111,8 +122,6 @@ namespace LiveStreamingServerNet.Rtmp
 
         private static IServiceCollection AddRtmpServerEventHandlers(this IServiceCollection services)
         {
-            services.AddSingleton<IServerEventHandler, ServerEventHandler>();
-
             services.AddSingleton<IRtmpServerConnectionEventHandler, RtmpServerConnectionEventHandler>()
                     .AddSingleton<IRtmpServerConnectionEventHandler, RtmpExternalServerConnectionEventDispatcher>();
 

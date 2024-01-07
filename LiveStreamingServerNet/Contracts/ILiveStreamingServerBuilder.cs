@@ -1,6 +1,6 @@
 ﻿using LiveStreamingServerNet.Networking.Contracts;
-using LiveStreamingServerNet.Newtorking.Configurations;
-using LiveStreamingServerNet.Rtmp.Configurations;
+using LiveStreamingServerNet.Networking.Installer.Contracts;
+using LiveStreamingServerNet.Rtmp.Installer.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -10,9 +10,8 @@ namespace LiveStreamingServerNet.Contracts
     {
         IServiceCollection Services { get; }
         ILiveStreamingServerBuilder ConfigureLogging(Action<ILoggingBuilder> configure);
-        ILiveStreamingServerBuilder ConfigureRtmpServer(Action<RtmpServerConfiguration> configure);
-        ILiveStreamingServerBuilder ConfigureMediaMessage(Action<MediaMessageConfiguration> configure);
-        ILiveStreamingServerBuilder ConfigureNetBufferPool(Action<NetBufferPoolConfiguration> configure);
+        ILiveStreamingServerBuilder ConfigureRtmpServer(Action<IRtmpServerConfigurator> configure);
+        ILiveStreamingServerBuilder ConfigureServer(Action<IServerConfigurator> configure);
         IServer Build();
     }
 }

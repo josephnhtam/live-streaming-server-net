@@ -1,14 +1,15 @@
 ﻿using LiveStreamingServerNet.Networking.Contracts;
+using LiveStreamingServerNet.Networking.Installer.Contracts;
 using LiveStreamingServerNet.Newtorking;
 using LiveStreamingServerNet.Newtorking.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace LiveStreamingServerNet.Networking
+namespace LiveStreamingServerNet.Networking.Installer
 {
-    public static class Installer
+    public static class ServerInstaller
     {
-        public static IServiceCollection AddServer<TClientHandlerFactory>(this IServiceCollection services)
+        public static IServiceCollection AddServer<TClientHandlerFactory>(this IServiceCollection services, Action<IServerConfigurator>? configure = null)
             where TClientHandlerFactory : class, IClientHandlerFactory
         {
             services.AddLogging()
@@ -22,6 +23,8 @@ namespace LiveStreamingServerNet.Networking
                     .AddSingleton<IClientHandlerFactory, TClientHandlerFactory>();
 
             services.TryAddSingleton<INetBufferPool, NetBufferPool>();
+
+            configure?.Invoke(new ServerConfigurator(services));
 
             return services;
         }
