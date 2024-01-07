@@ -20,6 +20,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
         private readonly IRtmpStreamManagerService _streamManager;
         private readonly IRtmpCommandMessageSenderService _commandMessageSender;
         private readonly IRtmpMediaMessageManagerService _mediaMessageManager;
+        private readonly IRtmpServerStreamEventDispatcher _eventDispatch;
         private readonly RtmpServerConfiguration _config;
         private readonly ILogger<RtmpPlayCommandHandler> _logger;
 
@@ -27,12 +28,14 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
             IRtmpStreamManagerService streamManager,
             IRtmpCommandMessageSenderService commandMessageSender,
             IRtmpMediaMessageManagerService mediaMessageManager,
+            IRtmpServerStreamEventDispatcher eventDispatch,
             IOptions<RtmpServerConfiguration> config,
             ILogger<RtmpPlayCommandHandler> logger)
         {
             _streamManager = streamManager;
             _commandMessageSender = commandMessageSender;
             _mediaMessageManager = mediaMessageManager;
+            _eventDispatch = eventDispatch;
             _config = config.Value;
             _logger = logger;
         }
@@ -152,6 +155,11 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
         private void CompleteSubscriptionInitialization(IRtmpClientContext clientContext)
         {
             clientContext.StreamSubscriptionContext!.CompleteInitialization();
+
+            _eventDispatch.RtmpStreamSubscribedAsync(
+                clientContext,
+                clientContext.StreamSubscriptionContext.StreamPath,
+                clientContext.StreamSubscriptionContext.StreamArguments.AsReadOnly());
         }
 
         private void SendAuthorizationFailedCommandMessage(IRtmpClientContext clientContext, IRtmpChunkStreamContext chunkStreamContext)

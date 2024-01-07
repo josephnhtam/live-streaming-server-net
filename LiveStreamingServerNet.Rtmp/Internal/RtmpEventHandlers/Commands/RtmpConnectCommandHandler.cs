@@ -16,17 +16,20 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
     {
         private readonly IRtmpProtocolControlMessageSenderService _protocolControlMessageSender;
         private readonly IRtmpCommandMessageSenderService _commandMessageSender;
+        private readonly IRtmpServerConnectionEventDispatcher _eventDispatcher;
         private readonly RtmpServerConfiguration _config;
         private readonly ILogger _logger;
 
         public RtmpConnectCommandHandler(
             IRtmpProtocolControlMessageSenderService protocolControlMessageSender,
             IRtmpCommandMessageSenderService commandMessageSender,
+            IRtmpServerConnectionEventDispatcher eventDispatcher,
             IOptions<RtmpServerConfiguration> config,
             ILogger<RtmpConnectCommandHandler> logger)
         {
             _protocolControlMessageSender = protocolControlMessageSender;
             _commandMessageSender = commandMessageSender;
+            _eventDispatcher = eventDispatcher;
             _config = config.Value;
             _logger = logger;
         }
@@ -43,9 +46,11 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
 
             _protocolControlMessageSender.SetChunkSize(clientContext, _config.OutChunkSize);
             _protocolControlMessageSender.WindowAcknowledgementSize(clientContext, _config.OutAcknowledgementWindowSize);
-            _protocolControlMessageSender.SetPeerBandwith(clientContext, _config.PeerBandwith, RtmpPeerBandwithLimitType.Dynamic);
+            _protocolControlMessageSender.SetClientBandwidth(clientContext, _config.ClientBandwidth, RtmpClientBandwidthLimitType.Dynamic);
 
             RespondToClient(clientContext, command);
+
+            _eventDispatcher.RtmpClientConnectedAsync(clientContext, command.CommandObject.AsReadOnly(), command.Arguments?.AsReadOnly());
 
             return Task.FromResult(true);
         }

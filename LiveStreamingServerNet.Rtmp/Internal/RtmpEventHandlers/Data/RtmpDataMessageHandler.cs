@@ -12,10 +12,12 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Data
     internal class RtmpDataMessageHandler : IRtmpMessageHandler
     {
         private readonly IRtmpMediaMessageManagerService _mediaMessageManager;
+        private readonly IRtmpServerStreamEventDispatcher _eventDispatcher;
 
-        public RtmpDataMessageHandler(IRtmpMediaMessageManagerService mediaMessageManager)
+        public RtmpDataMessageHandler(IRtmpMediaMessageManagerService mediaMessageManager, IRtmpServerStreamEventDispatcher eventDispatcher)
         {
             _mediaMessageManager = mediaMessageManager;
+            _eventDispatcher = eventDispatcher;
         }
 
         public async Task<bool> HandleAsync(
@@ -67,6 +69,8 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Data
             CacheStreamMetaData(metaData, publishStreamContext);
 
             BroadcastMetaDataToSubscribers(clientContext, chunkStreamContext, publishStreamContext);
+
+            _eventDispatcher.RtmpStreamMetaDataReceived(clientContext, clientContext.PublishStreamContext!.StreamPath, metaData.AsReadOnly());
 
             return Task.FromResult(true);
         }

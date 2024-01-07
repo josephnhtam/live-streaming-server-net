@@ -9,12 +9,12 @@ using System.Net.Sockets;
 
 namespace LiveStreamingServerNet.Newtorking
 {
-    public sealed class Server : IServer
+    internal sealed class Server : IServer
     {
         private readonly ConcurrentDictionary<uint, ClientTask> _clientTasks = new();
         private readonly IServiceProvider _services;
         private readonly IClientHandlerFactory _clientHandlerFactory;
-        private readonly IEnumerable<IServerEventHandler> _serverEventHandlers;
+        private readonly IServerEventDispatcher _eventDispatcher;
         private readonly ILogger _logger;
         private int _isStarted;
         private uint _nextClientId;
@@ -22,15 +22,17 @@ namespace LiveStreamingServerNet.Newtorking
         public bool IsStarted => _isStarted == 1;
         public IList<IClientHandle> Clients => _clientTasks.Select(x => x.Value.Client).OfType<IClientHandle>().ToList();
 
+        IReadOnlyList<IClientHandle> IServerHandle.Clients => Clients.AsReadOnly();
+
         public Server(
             IServiceProvider services,
             IClientHandlerFactory clientHandlerFactory,
-            IEnumerable<IServerEventHandler> serverEventHandlers,
+            IServerEventDispatcher eventDispatcher,
             ILogger<Server> logger)
         {
             _services = services;
             _clientHandlerFactory = clientHandlerFactory;
-            _serverEventHandlers = serverEventHandlers;
+            _eventDispatcher = eventDispatcher;
             _logger = logger;
         }
 
@@ -134,50 +136,32 @@ namespace LiveStreamingServerNet.Newtorking
 
         private async Task OnListenerCreatedAsync(TcpListener tcpListener)
         {
-            foreach (var handler in _serverEventHandlers)
-            {
-                await handler.OnListenerCreatedAsync(tcpListener);
-            }
+            await _eventDispatcher.ListenerCreatedAsync(tcpListener);
         }
 
         private async Task OnClientAcceptedAsync(TcpClient tcpClient)
         {
-            foreach (var handler in _serverEventHandlers)
-            {
-                await handler.OnClientAcceptedAsync(tcpClient);
-            }
+            await _eventDispatcher.ClientAcceptedAsync(tcpClient);
         }
 
         private async Task OnClientConnectedAsync(IClientHandle client)
         {
-            foreach (var handler in _serverEventHandlers)
-            {
-                await handler.OnClientConnectedAsync(client);
-            }
+            await _eventDispatcher.ClientConnectedAsync(client);
         }
 
         private async Task OnClientDisconnected(IClientHandle client)
         {
-            foreach (var handler in _serverEventHandlers)
-            {
-                await handler.OnClientDisconnectedAsync(client);
-            }
+            await _eventDispatcher.ClientDisconnectedAsync(client);
         }
 
         private async Task OnServerStartedAsync()
         {
-            foreach (var handler in _serverEventHandlers)
-            {
-                await handler.OnServerStartedAsync();
-            }
+            await _eventDispatcher.ServerStartedAsync();
         }
 
         private async Task OnServerStoppedAsync()
         {
-            foreach (var handler in _serverEventHandlers)
-            {
-                await handler.OnServerStoppedAsync();
-            }
+            await _eventDispatcher.ServerStoppedAsync();
         }
 
         private record ClientTask(IClient Client, Task Task);

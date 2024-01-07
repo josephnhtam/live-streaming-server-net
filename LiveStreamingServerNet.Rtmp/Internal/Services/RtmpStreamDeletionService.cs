@@ -10,15 +10,18 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
         private readonly IRtmpStreamManagerService _rtmpStreamManager;
         private readonly IRtmpUserControlMessageSenderService _userControlMessageSender;
         private readonly IRtmpCommandMessageSenderService _commandMessageSender;
+        private readonly IRtmpServerStreamEventDispatcher _eventDispatcher;
 
         public RtmpStreamDeletionService(
             IRtmpStreamManagerService rtmpStreamManager,
             IRtmpUserControlMessageSenderService userControlMessageSender,
-            IRtmpCommandMessageSenderService commandMessageSender)
+            IRtmpCommandMessageSenderService commandMessageSender,
+            IRtmpServerStreamEventDispatcher eventDispatcher)
         {
             _rtmpStreamManager = rtmpStreamManager;
             _userControlMessageSender = userControlMessageSender;
             _commandMessageSender = commandMessageSender;
+            _eventDispatcher = eventDispatcher;
         }
 
         public void DeleteStream(IRtmpClientContext clientContext)
@@ -35,6 +38,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
 
             _userControlMessageSender.SendStreamEofMessage(existingSubscriber);
             SendStreamUnpublishNotify(existingSubscriber);
+            _eventDispatcher.RtmpStreamUnpublishedAsync(clientContext, clientContext.PublishStreamContext!.StreamPath);
         }
 
         private void StopSubscribingStreamIfNeeded(IRtmpClientContext clientContext)
@@ -43,6 +47,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
                 return;
 
             SendSubscriptionStoppedMessage(clientContext);
+            _eventDispatcher.RtmpStreamUnsubscribedAsync(clientContext, clientContext.StreamSubscriptionContext!.StreamPath);
         }
 
         private void SendStreamUnpublishNotify(

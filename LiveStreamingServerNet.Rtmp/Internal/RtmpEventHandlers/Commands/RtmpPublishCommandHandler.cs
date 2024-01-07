@@ -17,12 +17,18 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
     {
         private readonly IRtmpStreamManagerService _streamManager;
         private readonly IRtmpCommandMessageSenderService _commandMessageSender;
+        private readonly IRtmpServerStreamEventDispatcher _eventDispatcher;
         private readonly ILogger _logger;
 
-        public RtmpPublishCommandHandler(IRtmpStreamManagerService streamManager, IRtmpCommandMessageSenderService commandMessageSender, ILogger<RtmpPublishCommandHandler> logger)
+        public RtmpPublishCommandHandler(
+            IRtmpStreamManagerService streamManager,
+            IRtmpCommandMessageSenderService commandMessageSender,
+            IRtmpServerStreamEventDispatcher eventDispatcher,
+            ILogger<RtmpPublishCommandHandler> logger)
         {
             _streamManager = streamManager;
             _commandMessageSender = commandMessageSender;
+            _eventDispatcher = eventDispatcher;
             _logger = logger;
         }
 
@@ -98,6 +104,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
                 case PublishingStreamResult.Succeeded:
                     _logger.PublishingStarted(clientContext.Client.ClientId, streamPath, command.PublishingType);
                     SendPublishingStartedMessage(clientContext, chunkStreamContext);
+                    _eventDispatcher.RtmpStreamPublishedAsync(clientContext, streamPath, streamArguments.AsReadOnly());
                     return true;
 
                 case PublishingStreamResult.AlreadySubscribing:

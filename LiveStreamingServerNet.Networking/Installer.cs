@@ -11,10 +11,15 @@ namespace LiveStreamingServerNet.Networking
         public static IServiceCollection AddServer<TClientHandlerFactory>(this IServiceCollection services)
             where TClientHandlerFactory : class, IClientHandlerFactory
         {
+            services.AddLogging()
+                    .AddOptions();
+
             services.AddSingleton<IServer, Server>()
+                    .AddSingleton<IServerHandle>(x => x.GetRequiredService<IServer>())
                     .AddTransient<IClient, Client>();
 
-            services.AddSingleton<IClientHandlerFactory, TClientHandlerFactory>();
+            services.AddSingleton<IServerEventDispatcher, ServerEventDispatcher>()
+                    .AddSingleton<IClientHandlerFactory, TClientHandlerFactory>();
 
             services.TryAddSingleton<INetBufferPool, NetBufferPool>();
 

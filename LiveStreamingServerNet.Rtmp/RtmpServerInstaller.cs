@@ -1,4 +1,5 @@
 ﻿using LiveStreamingServerNet.Networking;
+using LiveStreamingServerNet.Newtorking.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal;
 using LiveStreamingServerNet.Rtmp.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.CommandDispatcher;
@@ -7,7 +8,7 @@ using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.CommandDispatcher.C
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.MessageDispatcher;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.MessageDispatcher.Attributes;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.MessageDispatcher.Contracts;
-using LiveStreamingServerNet.Rtmp.Internal.RtmpServerEventHandlers;
+using LiveStreamingServerNet.Rtmp.Internal.RtmpServerEvents;
 using LiveStreamingServerNet.Rtmp.Internal.Services;
 using LiveStreamingServerNet.Rtmp.Internal.Services.Contracts;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,7 +24,9 @@ namespace LiveStreamingServerNet.Rtmp
                 .AddRtmpCore()
                 .AddRtmpServices()
                 .AddRtmpMessageHandlers()
-                .AddRtmpCommandHandlers();
+                .AddRtmpCommandHandlers()
+                .AddRtmpServerEventDispatchers()
+                .AddRtmpServerEventHandlers();
         }
 
         private static IServiceCollection AddRtmpCore(this IServiceCollection services)
@@ -51,8 +54,6 @@ namespace LiveStreamingServerNet.Rtmp
                     .AddSingleton<IRtmpStreamManagerService, RtmpStreamManagerService>()
                     .AddSingleton<IRtmpStreamDeletionService, RtmpStreamDeletionService>();
 
-            services.AddSingleton<IRtmpServerEventHandler, RtmpClientServerEventHandler>();
-
             return services;
         }
 
@@ -73,7 +74,7 @@ namespace LiveStreamingServerNet.Rtmp
             }
 
             services.AddSingleton<IRtmpMessageHanlderMap>(new RtmpMessageHanlderMap(handlerMap))
-                     .AddSingleton<IRtmpMessageDispatcher, RtmpMessageDispatcher>();
+                    .AddSingleton<IRtmpMessageDispatcher, RtmpMessageDispatcher>();
 
             return services;
         }
@@ -95,7 +96,25 @@ namespace LiveStreamingServerNet.Rtmp
             }
 
             services.AddSingleton<IRtmpCommandHanlderMap>(new RtmpCommandHanlderMap(handlerMap))
-                     .AddSingleton<IRtmpCommandDispatcher, RtmpCommandDispatcher>();
+                    .AddSingleton<IRtmpCommandDispatcher, RtmpCommandDispatcher>();
+
+            return services;
+        }
+
+        private static IServiceCollection AddRtmpServerEventDispatchers(this IServiceCollection services)
+        {
+            services.AddSingleton<IRtmpServerConnectionEventDispatcher, RtmpServerConnectionEventDispatcher>()
+                    .AddSingleton<IRtmpServerStreamEventDispatcher, RtmpServerStreamEventDispatcher>();
+
+            return services;
+        }
+
+        private static IServiceCollection AddRtmpServerEventHandlers(this IServiceCollection services)
+        {
+            services.AddSingleton<IServerEventHandler, ServerEventHandler>();
+
+            services.AddSingleton<IRtmpServerConnectionEventHandler, RtmpServerConnectionEventHandler>()
+                    .AddSingleton<IRtmpServerConnectionEventHandler, RtmpExternalServerConnectionEventDispatcher>();
 
             return services;
         }

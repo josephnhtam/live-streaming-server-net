@@ -18,8 +18,4 @@
     <ProjectReference Include="..\LiveStreamingServerNet.Networking\LiveStreamingServerNet.Networking.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Contracts\" />
-  </ItemGroup>
-
 </Project>

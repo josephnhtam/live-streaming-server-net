@@ -18,19 +18,12 @@ namespace LiveStreamingServerNet
         {
             _services = new ServiceCollection();
 
-            AddCore();
             AddRtmpServer();
         }
 
         public static ILiveStreamingServerBuilder Create()
         {
             return new LiveStreamingServerBuilder();
-        }
-
-        private void AddCore()
-        {
-            _services.AddOptions()
-                     .AddLogging();
         }
 
         private void AddRtmpServer()

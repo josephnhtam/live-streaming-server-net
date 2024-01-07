@@ -63,14 +63,14 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             clientContext.OutWindowAcknowledgementSize = acknowledgementWindowSize;
         }
 
-        public void SetPeerBandwith(IRtmpClientContext clientContext, uint peerBandwith, RtmpPeerBandwithLimitType limitType)
+        public void SetClientBandwidth(IRtmpClientContext clientContext, uint clientBandwidth, RtmpClientBandwidthLimitType limitType)
         {
             var basicHeader = new RtmpChunkBasicHeader(0, RtmpConstants.ProtocolControlMessageChunkStreamId);
-            var messageHeader = new RtmpChunkMessageHeaderType0(0, RtmpMessageType.SetPeerBandwith, RtmpConstants.ProtocolControlMessageStreamId);
+            var messageHeader = new RtmpChunkMessageHeaderType0(0, RtmpMessageType.SetClientBandwidth, RtmpConstants.ProtocolControlMessageStreamId);
 
             _chunkMessageSenderService.Send(clientContext, basicHeader, messageHeader, netBuffer =>
             {
-                netBuffer.WriteUInt32BigEndian(peerBandwith);
+                netBuffer.WriteUInt32BigEndian(clientBandwidth);
                 netBuffer.Write((byte)limitType);
             });
         }

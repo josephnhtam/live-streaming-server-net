@@ -8,14 +8,14 @@ namespace LiveStreamingServerNet.Rtmp.Internal
     internal class RtmpClientHandler : IRtmpClientHandler
     {
         private readonly IMediator _mediator;
-        private readonly IEnumerable<IRtmpServerEventHandler> _serverEventHandlers;
+        private readonly IRtmpServerConnectionEventDispatcher _eventDispatcher;
 
         private IRtmpClientContext _clientContext = default!;
 
-        public RtmpClientHandler(IMediator mediator, IEnumerable<IRtmpServerEventHandler> serverEventHandlers)
+        public RtmpClientHandler(IMediator mediator, IRtmpServerConnectionEventDispatcher eventDispatcher)
         {
             _mediator = mediator;
-            _serverEventHandlers = serverEventHandlers;
+            _eventDispatcher = eventDispatcher;
         }
 
         public async Task InitializeAsync(IRtmpClientContext clientContext)
@@ -68,14 +68,12 @@ namespace LiveStreamingServerNet.Rtmp.Internal
 
         private async Task OnRtmpClientCreatedAsync()
         {
-            foreach (var serverEventHandler in _serverEventHandlers)
-                await serverEventHandler.OnRtmpClientCreatedAsync(_clientContext);
+            await _eventDispatcher.RtmpClientCreatedAsync(_clientContext);
         }
 
         private async Task OnRtmpClientDisposedAsync()
         {
-            foreach (var serverEventHandler in _serverEventHandlers)
-                await serverEventHandler.OnRtmpClientDisposedAsync(_clientContext);
+            await _eventDispatcher.RtmpClientDisposedAsync(_clientContext);
         }
     }
 }

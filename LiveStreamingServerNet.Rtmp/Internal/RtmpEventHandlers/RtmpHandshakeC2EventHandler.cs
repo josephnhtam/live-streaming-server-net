@@ -1,4 +1,5 @@
 ﻿using LiveStreamingServerNet.Newtorking.Contracts;
+using LiveStreamingServerNet.Rtmp.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEvents;
 using LiveStreamingServerNet.Rtmp.Logging;
 using MediatR;
@@ -9,11 +10,16 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
     internal class RtmpHandshakeC2EventHandler : IRequestHandler<RtmpHandshakeC2Event, bool>
     {
         private readonly INetBufferPool _netBufferPool;
+        private readonly IRtmpServerConnectionEventDispatcher _eventDispatcher;
         private readonly ILogger _logger;
 
-        public RtmpHandshakeC2EventHandler(INetBufferPool netBufferPool, ILogger<RtmpHandshakeC2EventHandler> logger)
+        public RtmpHandshakeC2EventHandler(
+            INetBufferPool netBufferPool,
+            IRtmpServerConnectionEventDispatcher eventDispatcher,
+            ILogger<RtmpHandshakeC2EventHandler> logger)
         {
             _netBufferPool = netBufferPool;
+            _eventDispatcher = eventDispatcher;
             _logger = logger;
         }
 
@@ -26,6 +32,8 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
             @event.ClientContext.State = RtmpClientState.HandshakeDone;
 
             _logger.HandshakeC2Handled(@event.ClientContext.Client.ClientId);
+
+            await _eventDispatcher.RtmpClientHandshakeCompleteAsync(@event.ClientContext);
 
             return true;
         }
