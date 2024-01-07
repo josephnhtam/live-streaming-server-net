@@ -22,10 +22,11 @@ namespace LiveStreamingServerNet.Rtmp.RtmpServerEventHandlers
             return Task.CompletedTask;
         }
 
-        public async Task OnRtmpClientDisposedAsync(IRtmpClientPeerContext peerContext)
+        public Task OnRtmpClientDisposedAsync(IRtmpClientPeerContext peerContext)
         {
             _mediaMessageManager.UnregisterClientPeer(peerContext);
-            await _streamDeletionService.DeleteStream(peerContext);
+            _streamDeletionService.DeleteStream(peerContext);
+            return Task.CompletedTask;
         }
     }
 }

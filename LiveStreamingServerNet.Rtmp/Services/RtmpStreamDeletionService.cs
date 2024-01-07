@@ -21,12 +21,11 @@ namespace LiveStreamingServerNet.Rtmp.Services
             _commandMessageSender = commandMessageSender;
         }
 
-        public Task DeleteStream(IRtmpClientPeerContext peerContext)
+        public void DeleteStream(IRtmpClientPeerContext peerContext)
         {
             StopPublishingStreamIfNeeded(peerContext);
             StopSubscribingStreamIfNeeded(peerContext);
             peerContext.DeleteStream();
-            return Task.CompletedTask;
         }
 
         private void StopPublishingStreamIfNeeded(IRtmpClientPeerContext peerContext)
