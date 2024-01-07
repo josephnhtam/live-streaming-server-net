@@ -3,7 +3,7 @@ using LiveStreamingServerNet.Rtmp.Services.Contracts;
 
 namespace LiveStreamingServerNet.Rtmp.RtmpServerEventHandlers
 {
-    internal class RtmpClientPeerServerEventHandler : IRtmpInternalEventHandler
+    internal class RtmpClientPeerServerEventHandler : IRtmpInternalServerEventHandler
     {
         private readonly IRtmpMediaMessageManagerService _mediaMessageManager;
         private readonly IRtmpStreamDeletionService _streamDeletionService;

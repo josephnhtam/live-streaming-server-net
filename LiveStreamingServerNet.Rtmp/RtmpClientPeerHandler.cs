@@ -8,11 +8,11 @@ namespace LiveStreamingServerNet.Rtmp
     internal class RtmpClientPeerHandler : IRtmpClientPeerHandler
     {
         private readonly IMediator _mediator;
-        private readonly IEnumerable<IRtmpInternalEventHandler> _serverEventHandlers;
+        private readonly IEnumerable<IRtmpInternalServerEventHandler> _serverEventHandlers;
 
         private IRtmpClientPeerContext _peerContext = default!;
 
-        public RtmpClientPeerHandler(IMediator mediator, IEnumerable<IRtmpInternalEventHandler> serverEventHandlers)
+        public RtmpClientPeerHandler(IMediator mediator, IEnumerable<IRtmpInternalServerEventHandler> serverEventHandlers)
         {
             _mediator = mediator;
             _serverEventHandlers = serverEventHandlers;

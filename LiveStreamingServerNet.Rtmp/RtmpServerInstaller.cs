@@ -50,7 +50,7 @@ namespace LiveStreamingServerNet.Rtmp
                     .AddSingleton<IRtmpStreamManagerService, RtmpStreamManagerService>()
                     .AddSingleton<IRtmpStreamDeletionService, RtmpStreamDeletionService>();
 
-            services.AddSingleton<IRtmpInternalEventHandler, RtmpClientPeerServerEventHandler>();
+            services.AddSingleton<IRtmpInternalServerEventHandler, RtmpClientPeerServerEventHandler>();
 
             return services;
         }
