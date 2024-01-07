@@ -1,14 +1,15 @@
 ﻿using LiveStreamingServerNet.Networking;
-using LiveStreamingServerNet.Rtmp.Contracts;
-using LiveStreamingServerNet.Rtmp.RtmpEventHandlers.CommandDispatcher;
-using LiveStreamingServerNet.Rtmp.RtmpEventHandlers.CommandDispatcher.Attributes;
-using LiveStreamingServerNet.Rtmp.RtmpEventHandlers.CommandDispatcher.Contracts;
-using LiveStreamingServerNet.Rtmp.RtmpEventHandlers.MessageDispatcher;
-using LiveStreamingServerNet.Rtmp.RtmpEventHandlers.MessageDispatcher.Attributes;
-using LiveStreamingServerNet.Rtmp.RtmpEventHandlers.MessageDispatcher.Contracts;
-using LiveStreamingServerNet.Rtmp.RtmpServerEventHandlers;
-using LiveStreamingServerNet.Rtmp.Services;
-using LiveStreamingServerNet.Rtmp.Services.Contracts;
+using LiveStreamingServerNet.Rtmp.Internal;
+using LiveStreamingServerNet.Rtmp.Internal.Contracts;
+using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.CommandDispatcher;
+using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.CommandDispatcher.Attributes;
+using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.CommandDispatcher.Contracts;
+using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.MessageDispatcher;
+using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.MessageDispatcher.Attributes;
+using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.MessageDispatcher.Contracts;
+using LiveStreamingServerNet.Rtmp.Internal.RtmpServerEventHandlers;
+using LiveStreamingServerNet.Rtmp.Internal.Services;
+using LiveStreamingServerNet.Rtmp.Internal.Services.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
@@ -50,7 +51,7 @@ namespace LiveStreamingServerNet.Rtmp
                     .AddSingleton<IRtmpStreamManagerService, RtmpStreamManagerService>()
                     .AddSingleton<IRtmpStreamDeletionService, RtmpStreamDeletionService>();
 
-            services.AddSingleton<IRtmpInternalServerEventHandler, RtmpClientPeerServerEventHandler>();
+            services.AddSingleton<IRtmpServerEventHandler, RtmpClientPeerServerEventHandler>();
 
             return services;
         }

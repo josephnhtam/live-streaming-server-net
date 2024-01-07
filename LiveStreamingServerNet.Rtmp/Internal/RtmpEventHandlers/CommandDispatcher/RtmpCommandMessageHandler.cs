@@ -1,0 +1,25 @@
+﻿using LiveStreamingServerNet.Newtorking.Contracts;
+using LiveStreamingServerNet.Rtmp.Internal.Contracts;
+using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.CommandDispatcher.Contracts;
+using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.MessageDispatcher.Attributes;
+using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.MessageDispatcher.Contracts;
+
+namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.CommandDispatcher
+{
+    [RtmpMessageType(RtmpMessageType.CommandMessageAmf0)]
+    [RtmpMessageType(RtmpMessageType.CommandMessageAmf3)]
+    internal class RtmpCommandMessageHandler : IRtmpMessageHandler
+    {
+        private readonly IRtmpCommandDispatcher _dispatcher;
+
+        public RtmpCommandMessageHandler(IRtmpCommandDispatcher dispatcher)
+        {
+            _dispatcher = dispatcher;
+        }
+
+        public async Task<bool> HandleAsync(IRtmpChunkStreamContext chunkStreamContext, IRtmpClientPeerContext peerContext, INetBuffer payloadBuffer, CancellationToken cancellationToken)
+        {
+            return await _dispatcher.DispatchAsync(chunkStreamContext, peerContext, payloadBuffer, cancellationToken);
+        }
+    }
+}
