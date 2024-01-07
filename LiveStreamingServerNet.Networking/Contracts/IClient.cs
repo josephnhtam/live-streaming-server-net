@@ -17,12 +17,12 @@ namespace LiveStreamingServerNet.Networking.Contracts
         bool IsConnected { get; }
     }
 
-    public interface IClientControl
+    public interface IClientControl : IClientInfo
     {
         void Disconnect();
     }
 
-    public interface IClientMessageSender
+    public interface IClientMessageSender : IClientControl
     {
         void Send(INetBuffer netBuffer, Action? callback = null);
         void Send(Action<INetBuffer> writer, Action? callback = null);
