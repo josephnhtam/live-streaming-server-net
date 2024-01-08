@@ -97,14 +97,13 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
 
                 if (frameType == VideoFrameType.KeyFrame && avcPackageType == AVCPacketType.SequenceHeader)
                 {
-                    publishStreamContext.VideoSequenceHeader = payloadBuffer.MoveTo(0).ReadBytes(payloadBuffer.Size);
-                    payloadBuffer.MoveTo(0);
+                    _mediaMessageManager.CacheSequenceHeader(publishStreamContext, MediaType.Video, payloadBuffer);
                     return true;
                 }
 
                 if (_config.EnableGopCaching && avcPackageType == AVCPacketType.NALU)
                 {
-                    _mediaMessageManager.CachePictures(publishStreamContext, MediaType.Video, payloadBuffer, chunkStreamContext.MessageHeader.Timestamp);
+                    _mediaMessageManager.CachePicture(publishStreamContext, MediaType.Video, payloadBuffer, chunkStreamContext.MessageHeader.Timestamp);
                 }
             }
 

@@ -89,13 +89,12 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
                 var aacPackageType = (AACPacketType)payloadBuffer.ReadByte();
                 if (aacPackageType == AACPacketType.SequenceHeader)
                 {
-                    publishStreamContext.AudioSequenceHeader = payloadBuffer.MoveTo(0).ReadBytes(payloadBuffer.Size);
-                    payloadBuffer.MoveTo(0);
+                    _mediaMessageManager.CacheSequenceHeader(publishStreamContext, MediaType.Audio, payloadBuffer);
                     return true;
                 }
                 else if (_config.EnableGopCaching)
                 {
-                    _mediaMessageManager.CachePictures(publishStreamContext, MediaType.Audio, payloadBuffer, chunkStreamContext.MessageHeader.Timestamp);
+                    _mediaMessageManager.CachePicture(publishStreamContext, MediaType.Audio, payloadBuffer, chunkStreamContext.MessageHeader.Timestamp);
                 }
             }
 

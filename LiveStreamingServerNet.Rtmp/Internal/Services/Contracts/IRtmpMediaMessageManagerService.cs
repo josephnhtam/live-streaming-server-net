@@ -22,7 +22,12 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services.Contracts
             bool isSkippable,
             Action<INetBuffer> payloadWriter);
 
-        void CachePictures(
+        void CacheSequenceHeader(
+            IRtmpPublishStreamContext publishStreamContext,
+            MediaType mediaType,
+            INetBuffer payloadBuffer);
+
+        void CachePicture(
             IRtmpPublishStreamContext publishStreamContext,
             MediaType mediaType,
             INetBuffer payloadBuffer,
