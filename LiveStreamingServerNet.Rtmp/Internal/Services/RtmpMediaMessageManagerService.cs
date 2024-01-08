@@ -38,26 +38,6 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             _logger = logger;
         }
 
-        public void EnqueueAudioMessage(IRtmpClientContext subscriber, uint timestamp, uint streamId, bool isSkippable, Action<INetBuffer> payloadWriter)
-        {
-            EnqueueMediaMessage(subscriber, MediaType.Audio, timestamp, streamId, isSkippable, payloadWriter);
-        }
-
-        public void EnqueueAudioMessage(IList<IRtmpClientContext> subscribers, uint timestamp, uint streamId, bool isSkippable, Action<INetBuffer> payloadWriter)
-        {
-            EnqueueMediaMessage(subscribers, MediaType.Audio, timestamp, streamId, isSkippable, payloadWriter);
-        }
-
-        public void EnqueueVideoMessage(IRtmpClientContext subscriber, uint timestamp, uint streamId, bool isSkippable, Action<INetBuffer> payloadWriter)
-        {
-            EnqueueMediaMessage(subscriber, MediaType.Video, timestamp, streamId, isSkippable, payloadWriter);
-        }
-
-        public void EnqueueVideoMessage(IList<IRtmpClientContext> subscribers, uint timestamp, uint streamId, bool isSkippable, Action<INetBuffer> payloadWriter)
-        {
-            EnqueueMediaMessage(subscribers, MediaType.Video, timestamp, streamId, isSkippable, payloadWriter);
-        }
-
         public void SendCachedHeaderMessages(IRtmpClientContext clientContext, IRtmpPublishStreamContext publishStreamContext, uint timestamp, uint streamId)
         {
             var videoSequenceHeader = publishStreamContext.VideoSequenceHeader;
@@ -102,7 +82,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             }
         }
 
-        private void EnqueueMediaMessage(IRtmpClientContext subscriber, MediaType mediaType, uint timestamp, uint streamId, bool isSkippable, Action<INetBuffer> payloadWriter)
+        public void EnqueueMediaMessage(IRtmpClientContext subscriber, MediaType mediaType, uint timestamp, uint streamId, bool isSkippable, Action<INetBuffer> payloadWriter)
         {
             if (!_clientMediaContexts.TryGetValue(subscriber, out var mediaContext))
                 return;
@@ -124,7 +104,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             mediaContext.AddPackage(ref mediaPackage);
         }
 
-        private void EnqueueMediaMessage(IList<IRtmpClientContext> subscribers, MediaType mediaType, uint timestamp, uint streamId, bool isSkippable, Action<INetBuffer> payloadWriter)
+        public void EnqueueMediaMessage(IList<IRtmpClientContext> subscribers, MediaType mediaType, uint timestamp, uint streamId, bool isSkippable, Action<INetBuffer> payloadWriter)
         {
             subscribers = subscribers.Where(FilterSubscribers).ToList();
 

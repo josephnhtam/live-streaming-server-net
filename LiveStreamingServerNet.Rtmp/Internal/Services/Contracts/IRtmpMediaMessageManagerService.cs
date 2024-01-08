@@ -5,29 +5,17 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services.Contracts
 {
     internal interface IRtmpMediaMessageManagerService : IAsyncDisposable
     {
-        void EnqueueVideoMessage(
+        void EnqueueMediaMessage(
             IRtmpClientContext subscriber,
+            MediaType mediaType,
             uint timestamp,
             uint streamId,
             bool isSkippable,
             Action<INetBuffer> payloadWriter);
 
-        void EnqueueVideoMessage(
+        void EnqueueMediaMessage(
             IList<IRtmpClientContext> subscribers,
-            uint timestamp,
-            uint streamId,
-            bool isSkippable,
-            Action<INetBuffer> payloadWriter);
-
-        void EnqueueAudioMessage(
-            IRtmpClientContext subscriber,
-            uint timestamp,
-            uint streamId,
-            bool isSkippable,
-            Action<INetBuffer> payloadWriter);
-
-        void EnqueueAudioMessage(
-            IList<IRtmpClientContext> subscribers,
+            MediaType mediaType,
             uint timestamp,
             uint streamId,
             bool isSkippable,

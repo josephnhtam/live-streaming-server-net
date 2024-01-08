@@ -68,8 +68,9 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
             INetBuffer payloadBuffer,
             IList<IRtmpClientContext> subscribers)
         {
-            _mediaMessageManager.EnqueueAudioMessage(
+            _mediaMessageManager.EnqueueMediaMessage(
                 subscribers,
+                MediaType.Audio,
                 chunkStreamContext.MessageHeader.Timestamp,
                 chunkStreamContext.MessageHeader.MessageStreamId,
                 isSkippable,
