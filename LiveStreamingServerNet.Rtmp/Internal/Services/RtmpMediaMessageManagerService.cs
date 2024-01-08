@@ -19,7 +19,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
     internal class RtmpMediaMessageManagerService : IRtmpMediaMessageManagerService
     {
         private readonly IRtmpChunkMessageSenderService _chunkMessageSender;
-        private readonly IRtmpMediaMessageInterctionService _interception;
+        private readonly IRtmpMediaMessageInterceptionService _interception;
         private readonly INetBufferPool _netBufferPool;
         private readonly MediaMessageConfiguration _config;
         private readonly ILogger<RtmpMediaMessageManagerService> _logger;
@@ -29,7 +29,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
 
         public RtmpMediaMessageManagerService(
             IRtmpChunkMessageSenderService chunkMessageSender,
-            IRtmpMediaMessageInterctionService interception,
+            IRtmpMediaMessageInterceptionService interception,
             INetBufferPool netBufferPool,
             IOptions<MediaMessageConfiguration> config,
             ILogger<RtmpMediaMessageManagerService> logger)
