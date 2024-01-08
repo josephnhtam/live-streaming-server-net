@@ -193,7 +193,7 @@ namespace LiveStreamingServerNet.Newtorking
 
             public void Start(Stream networkStream, CancellationToken cancellationToken)
             {
-                _task = Task.Run(() => SendOutstandingBuffersAsync(networkStream, cancellationToken));
+                _task = Task.Run(() => SendOutstandingBuffersAsync(networkStream, cancellationToken), cancellationToken);
             }
 
             private async Task SendOutstandingBuffersAsync(Stream networkStream, CancellationToken cancellationToken)

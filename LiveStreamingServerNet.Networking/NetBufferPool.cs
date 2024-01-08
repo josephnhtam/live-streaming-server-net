@@ -1,6 +1,7 @@
 ﻿using LiveStreamingServerNet.Newtorking.Configurations;
 using LiveStreamingServerNet.Newtorking.Contracts;
 using LiveStreamingServerNet.Utilities;
+using LiveStreamingServerNet.Utilities.Contracts;
 using Microsoft.Extensions.Options;
 using System.Collections.Concurrent;
 
@@ -8,10 +9,10 @@ namespace LiveStreamingServerNet.Newtorking
 {
     public class NetBufferPool : INetBufferPool
     {
-        private readonly IPool<PoolableNetBuffer> _pool;
+        private readonly Pool<PoolableNetBuffer> _pool;
         private readonly int _netBufferCapacity;
         private readonly int _maxPoolSize;
-        private ConcurrentBag<PoolableNetBuffer> _poolableNetBuffers = new();
+        private readonly ConcurrentBag<PoolableNetBuffer> _poolableNetBuffers = new();
 
         public NetBufferPool(IOptions<NetBufferPoolConfiguration> config)
         {
@@ -52,6 +53,7 @@ namespace LiveStreamingServerNet.Newtorking
             {
                 netBuffer.Destroy();
             }
+            GC.SuppressFinalize(this);
         }
     }
 

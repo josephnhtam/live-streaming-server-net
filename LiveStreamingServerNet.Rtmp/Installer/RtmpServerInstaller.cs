@@ -9,7 +9,7 @@ using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.CommandDispatcher.C
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.MessageDispatcher;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.MessageDispatcher.Attributes;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.MessageDispatcher.Contracts;
-using LiveStreamingServerNet.Rtmp.Internal.RtmpServerEvents;
+using LiveStreamingServerNet.Rtmp.Internal.RtmpServerEventHandlers;
 using LiveStreamingServerNet.Rtmp.Internal.Services;
 using LiveStreamingServerNet.Rtmp.Internal.Services.Contracts;
 using Microsoft.Extensions.DependencyInjection;
@@ -46,9 +46,7 @@ namespace LiveStreamingServerNet.Rtmp.Installer
                 .AddTransient<IRtmpClientHandler, RtmpClientHandler>();
 
             services.AddMediatR(options =>
-            {
-                options.RegisterServicesFromAssemblyContaining<RtmpClientHandler>();
-            });
+                options.RegisterServicesFromAssemblyContaining<RtmpClientHandler>());
 
             services.AddSingleton<IRtmpServerContext, RtmpServerContext>();
 
@@ -63,7 +61,8 @@ namespace LiveStreamingServerNet.Rtmp.Installer
                     .AddSingleton<IRtmpCommandMessageSenderService, RtmpCommandMessageSenderService>()
                     .AddSingleton<IRtmpMediaMessageManagerService, RtmpMediaMessageManagerService>()
                     .AddSingleton<IRtmpStreamManagerService, RtmpStreamManagerService>()
-                    .AddSingleton<IRtmpStreamDeletionService, RtmpStreamDeletionService>();
+                    .AddSingleton<IRtmpStreamDeletionService, RtmpStreamDeletionService>()
+                    .AddSingleton<IRtmpMediaMessageInterceptionService, RtmpMediaMessageInterceptionService>();
 
             return services;
         }

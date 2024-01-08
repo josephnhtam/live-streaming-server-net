@@ -4,7 +4,6 @@ using LiveStreamingServerNet.Rtmp.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.MessageDispatcher.Attributes;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.MessageDispatcher.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.Services.Contracts;
-using LiveStreamingServerNet.Utilities;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -16,21 +15,18 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
         private readonly IRtmpStreamManagerService _streamManager;
         private readonly IRtmpMediaMessageManagerService _mediaMessageManager;
         private readonly RtmpServerConfiguration _config;
-        private readonly ILogger _logger;
 
         public RtmpVideoMessageHandler(
             IRtmpStreamManagerService streamManager,
             IRtmpMediaMessageManagerService mediaMessageManager,
-            IOptions<RtmpServerConfiguration> config,
-            ILogger<RtmpVideoMessageHandler> logger)
+            IOptions<RtmpServerConfiguration> config)
         {
             _streamManager = streamManager;
             _mediaMessageManager = mediaMessageManager;
             _config = config.Value;
-            _logger = logger;
         }
 
-        public Task<bool> HandleAsync(
+        public async Task<bool> HandleAsync(
             IRtmpChunkStreamContext chunkStreamContext,
             IRtmpClientContext clientContext,
             INetBuffer payloadBuffer,
@@ -39,12 +35,12 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
             var publishStreamContext = clientContext.PublishStreamContext ??
                 throw new InvalidOperationException("Stream is not yet published.");
 
-            var hasHeader = CacheVideoSequence(chunkStreamContext, publishStreamContext, payloadBuffer);
-            BroacastVideoMessageToSubscribers(chunkStreamContext, publishStreamContext, payloadBuffer, hasHeader);
-            return Task.FromResult(true);
+            var hasHeader = await CacheVideoSequenceAsync(chunkStreamContext, publishStreamContext, payloadBuffer);
+            await BroacastVideoMessageToSubscribersAsync(chunkStreamContext, publishStreamContext, payloadBuffer, hasHeader);
+            return true;
         }
 
-        private void BroacastVideoMessageToSubscribers(
+        private async Task BroacastVideoMessageToSubscribersAsync(
             IRtmpChunkStreamContext chunkStreamContext,
             IRtmpPublishStreamContext publishStreamContext,
             INetBuffer payloadBuffer,
@@ -53,30 +49,32 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
             if (hasSequenceHeader)
             {
                 using var subscribers = _streamManager.GetSubscribersLocked(publishStreamContext.StreamPath);
-                BroacastVideoMessageToSubscribers(chunkStreamContext, false, payloadBuffer, subscribers.Value);
+                await BroacastVideoMessageToSubscribersAsync(chunkStreamContext, publishStreamContext, false, payloadBuffer, subscribers.Value);
             }
             else
             {
                 var subscribers = _streamManager.GetSubscribers(publishStreamContext.StreamPath);
-                BroacastVideoMessageToSubscribers(chunkStreamContext, true, payloadBuffer, subscribers);
+                await BroacastVideoMessageToSubscribersAsync(chunkStreamContext, publishStreamContext, true, payloadBuffer, subscribers);
             }
         }
 
-        private void BroacastVideoMessageToSubscribers(
+        private async Task BroacastVideoMessageToSubscribersAsync(
             IRtmpChunkStreamContext chunkStreamContext,
+            IRtmpPublishStreamContext publishStreamContext,
             bool isSkippable,
             INetBuffer payloadBuffer,
             IList<IRtmpClientContext> subscribers)
         {
-            _mediaMessageManager.EnqueueVideoMessage(
+            await _mediaMessageManager.EnqueueMediaMessageAsync(
+                publishStreamContext,
                 subscribers,
+                MediaType.Video,
                 chunkStreamContext.MessageHeader.Timestamp,
-                chunkStreamContext.MessageHeader.MessageStreamId,
                 isSkippable,
                 payloadBuffer.CopyAllTo);
         }
 
-        private bool CacheVideoSequence(
+        private async Task<bool> CacheVideoSequenceAsync(
             IRtmpChunkStreamContext chunkStreamContext,
             IRtmpPublishStreamContext publishStreamContext,
             INetBuffer payloadBuffer)
@@ -91,40 +89,24 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
 
                 if (_config.EnableGopCaching && frameType == VideoFrameType.KeyFrame)
                 {
-                    ClearGroupOfPicturesCache(publishStreamContext);
+                    await _mediaMessageManager.ClearGroupOfPicturesCacheAsync(publishStreamContext);
                 }
 
                 if (frameType == VideoFrameType.KeyFrame && avcPackageType == AVCPacketType.SequenceHeader)
                 {
-                    publishStreamContext.VideoSequenceHeader = payloadBuffer.MoveTo(0).ReadBytes(payloadBuffer.Size);
-                    payloadBuffer.MoveTo(0);
+                    await _mediaMessageManager.CacheSequenceHeaderAsync(publishStreamContext, MediaType.Video, payloadBuffer);
                     return true;
                 }
 
                 if (_config.EnableGopCaching && avcPackageType == AVCPacketType.NALU)
                 {
-                    CacheGroupOfPictures(publishStreamContext, payloadBuffer, chunkStreamContext.MessageHeader.Timestamp);
+                    await _mediaMessageManager.CachePictureAsync(publishStreamContext, MediaType.Video, payloadBuffer, chunkStreamContext.MessageHeader.Timestamp);
                 }
             }
 
             payloadBuffer.MoveTo(0);
 
             return false;
-        }
-
-        private static void CacheGroupOfPictures(
-            IRtmpPublishStreamContext publishStreamContext,
-            INetBuffer payloadBuffer,
-            uint timestamp)
-        {
-            var rentedBuffer = new RentedBuffer(payloadBuffer.Size);
-            payloadBuffer.MoveTo(0).ReadBytes(rentedBuffer.Buffer, 0, payloadBuffer.Size);
-            publishStreamContext.GroupOfPicturesCache.Add(new PicturesCache(MediaType.Video, timestamp, rentedBuffer, payloadBuffer.Size));
-        }
-
-        private static void ClearGroupOfPicturesCache(IRtmpPublishStreamContext publishStreamContext)
-        {
-            publishStreamContext.GroupOfPicturesCache.Clear();
         }
     }
 }

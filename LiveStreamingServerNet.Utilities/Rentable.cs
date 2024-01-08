@@ -17,6 +17,7 @@ namespace LiveStreamingServerNet.Utilities
         public void Dispose()
         {
             _callback?.Invoke();
+            GC.SuppressFinalize(this);
         }
     }
 }

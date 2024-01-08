@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 
 namespace LiveStreamingServerNet
 {
-    public class LiveStreamingServerBuilder : ILiveStreamingServerBuilder
+    public sealed class LiveStreamingServerBuilder : ILiveStreamingServerBuilder
     {
         private readonly ServiceCollection _services;
         private Action<IRtmpServerConfigurator>? _configureRtmpServer;

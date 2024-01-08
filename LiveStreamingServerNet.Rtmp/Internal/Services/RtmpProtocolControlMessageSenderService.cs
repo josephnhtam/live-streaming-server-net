@@ -21,9 +21,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             var messageHeader = new RtmpChunkMessageHeaderType0(0, RtmpMessageType.SetChunkSize, RtmpConstants.ProtocolControlMessageStreamId);
 
             _chunkMessageSenderService.Send(clientContext, basicHeader, messageHeader, netBuffer =>
-            {
-                netBuffer.WriteUInt32BigEndian(chunkSize);
-            });
+                netBuffer.WriteUInt32BigEndian(chunkSize));
 
             clientContext.OutChunkSize = chunkSize;
         }
@@ -34,9 +32,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             var messageHeader = new RtmpChunkMessageHeaderType0(0, RtmpMessageType.AbortMessage, RtmpConstants.ProtocolControlMessageStreamId);
 
             _chunkMessageSenderService.Send(clientContext, basicHeader, messageHeader, netBuffer =>
-            {
-                netBuffer.WriteUInt32BigEndian(streamId);
-            });
+                netBuffer.WriteUInt32BigEndian(streamId));
         }
 
         public void Acknowledgement(IRtmpClientContext clientContext, uint sequenceNumber)
@@ -45,9 +41,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             var messageHeader = new RtmpChunkMessageHeaderType0(0, RtmpMessageType.Acknowledgement, RtmpConstants.ProtocolControlMessageStreamId);
 
             _chunkMessageSenderService.Send(clientContext, basicHeader, messageHeader, netBuffer =>
-            {
-                netBuffer.WriteUInt32BigEndian(sequenceNumber);
-            });
+                netBuffer.WriteUInt32BigEndian(sequenceNumber));
         }
 
         public void WindowAcknowledgementSize(IRtmpClientContext clientContext, uint acknowledgementWindowSize)

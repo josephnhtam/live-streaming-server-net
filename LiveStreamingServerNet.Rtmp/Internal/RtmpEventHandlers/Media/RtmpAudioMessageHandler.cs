@@ -4,7 +4,6 @@ using LiveStreamingServerNet.Rtmp.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.MessageDispatcher.Attributes;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.MessageDispatcher.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.Services.Contracts;
-using LiveStreamingServerNet.Utilities;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -30,7 +29,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
             _logger = logger;
         }
 
-        public Task<bool> HandleAsync(
+        public async Task<bool> HandleAsync(
             IRtmpChunkStreamContext chunkStreamContext,
             IRtmpClientContext clientContext,
             INetBuffer payloadBuffer,
@@ -39,12 +38,12 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
             var publishStreamContext = clientContext.PublishStreamContext ??
                 throw new InvalidOperationException("Stream is not yet published.");
 
-            var hasHeader = CacheAudioSequence(chunkStreamContext, publishStreamContext, payloadBuffer);
-            BroacastAudioMessageToSubscribers(chunkStreamContext, publishStreamContext, payloadBuffer, hasHeader);
-            return Task.FromResult(true);
+            var hasHeader = await CacheAudioSequenceAsync(chunkStreamContext, publishStreamContext, payloadBuffer);
+            await BroacastAudioMessageToSubscribersAsync(chunkStreamContext, publishStreamContext, payloadBuffer, hasHeader);
+            return true;
         }
 
-        private void BroacastAudioMessageToSubscribers(
+        private async Task BroacastAudioMessageToSubscribersAsync(
             IRtmpChunkStreamContext chunkStreamContext,
             IRtmpPublishStreamContext publishStreamContext,
             INetBuffer payloadBuffer,
@@ -53,30 +52,32 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
             if (hasSequenceHeader)
             {
                 using var subscribers = _streamManager.GetSubscribersLocked(publishStreamContext.StreamPath);
-                BroacastAudioMessageToSubscribers(chunkStreamContext, false, payloadBuffer, subscribers.Value);
+                await BroacastAudioMessageToSubscribersAsync(chunkStreamContext, publishStreamContext, false, payloadBuffer, subscribers.Value);
             }
             else
             {
                 var subscribers = _streamManager.GetSubscribers(publishStreamContext.StreamPath);
-                BroacastAudioMessageToSubscribers(chunkStreamContext, true, payloadBuffer, subscribers);
+                await BroacastAudioMessageToSubscribersAsync(chunkStreamContext, publishStreamContext, true, payloadBuffer, subscribers);
             }
         }
 
-        private void BroacastAudioMessageToSubscribers(
+        private async Task BroacastAudioMessageToSubscribersAsync(
             IRtmpChunkStreamContext chunkStreamContext,
+            IRtmpPublishStreamContext publishStreamContext,
             bool isSkippable,
             INetBuffer payloadBuffer,
             IList<IRtmpClientContext> subscribers)
         {
-            _mediaMessageManager.EnqueueAudioMessage(
+            await _mediaMessageManager.EnqueueMediaMessageAsync(
+                publishStreamContext,
                 subscribers,
+                MediaType.Audio,
                 chunkStreamContext.MessageHeader.Timestamp,
-                chunkStreamContext.MessageHeader.MessageStreamId,
                 isSkippable,
                 payloadBuffer.CopyAllTo);
         }
 
-        private bool CacheAudioSequence(
+        private async Task<bool> CacheAudioSequenceAsync(
             IRtmpChunkStreamContext chunkStreamContext,
             IRtmpPublishStreamContext publishStreamContext,
             INetBuffer payloadBuffer)
@@ -89,28 +90,17 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
                 var aacPackageType = (AACPacketType)payloadBuffer.ReadByte();
                 if (aacPackageType == AACPacketType.SequenceHeader)
                 {
-                    publishStreamContext.AudioSequenceHeader = payloadBuffer.MoveTo(0).ReadBytes(payloadBuffer.Size);
-                    payloadBuffer.MoveTo(0);
+                    await _mediaMessageManager.CacheSequenceHeaderAsync(publishStreamContext, MediaType.Audio, payloadBuffer);
                     return true;
                 }
                 else if (_config.EnableGopCaching)
                 {
-                    CacheGroupOfPictures(publishStreamContext, payloadBuffer, chunkStreamContext.MessageHeader.Timestamp);
+                    await _mediaMessageManager.CachePictureAsync(publishStreamContext, MediaType.Audio, payloadBuffer, chunkStreamContext.MessageHeader.Timestamp);
                 }
             }
 
             payloadBuffer.MoveTo(0);
             return false;
-        }
-
-        private static void CacheGroupOfPictures(
-            IRtmpPublishStreamContext publishStreamContext,
-            INetBuffer payloadBuffer,
-            uint timestamp)
-        {
-            var rentedCache = new RentedBuffer(payloadBuffer.Size);
-            payloadBuffer.MoveTo(0).ReadBytes(rentedCache.Buffer, 0, payloadBuffer.Size);
-            publishStreamContext.GroupOfPicturesCache.Add(new PicturesCache(MediaType.Audio, timestamp, rentedCache, payloadBuffer.Size));
         }
     }
 }

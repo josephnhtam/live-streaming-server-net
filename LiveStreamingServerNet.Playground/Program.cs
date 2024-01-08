@@ -28,9 +28,7 @@ namespace LiveStreamingServerNet.Playground
 
             var liveStreamingServer = LiveStreamingServerBuilder.Create()
                 .ConfigureLogging(options =>
-                {
-                    options.AddSerilog(logger);
-                })
+                    options.AddSerilog(logger))
                 .Build();
 
             var runTask = liveStreamingServer.RunAsync(new IPEndPoint(IPAddress.Any, 1935), cancellationToken);

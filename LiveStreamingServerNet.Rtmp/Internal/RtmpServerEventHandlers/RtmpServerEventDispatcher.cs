@@ -1,10 +1,10 @@
 ﻿using LiveStreamingServerNet.Rtmp.Internal.Contracts;
 
-namespace LiveStreamingServerNet.Rtmp.Internal.RtmpServerEvents
+namespace LiveStreamingServerNet.Rtmp.Internal.RtmpServerEventHandlers
 {
     internal class RtmpServerConnectionEventDispatcher : IRtmpServerConnectionEventDispatcher
     {
-        private IEnumerable<IRtmpServerConnectionEventHandler> _eventHandlers;
+        private readonly IEnumerable<IRtmpServerConnectionEventHandler> _eventHandlers;
 
         public RtmpServerConnectionEventDispatcher(IEnumerable<IRtmpServerConnectionEventHandler> eventHandlers)
         {
@@ -38,7 +38,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpServerEvents
 
     internal class RtmpServerStreamEventDispatcher : IRtmpServerStreamEventDispatcher
     {
-        private IEnumerable<IRtmpServerStreamEventHandler> _eventHandlers;
+        private readonly IEnumerable<IRtmpServerStreamEventHandler> _eventHandlers;
 
         public RtmpServerStreamEventDispatcher(IEnumerable<IRtmpServerStreamEventHandler> eventHandlers)
         {

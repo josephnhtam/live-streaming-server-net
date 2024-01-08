@@ -2,7 +2,7 @@
 using IRtmpExternalServerConnectionEventHandler = LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerConnectionEventHandler;
 using IRtmpExternalServerStreamEventHandler = LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler;
 
-namespace LiveStreamingServerNet.Rtmp.Internal.RtmpServerEvents
+namespace LiveStreamingServerNet.Rtmp.Internal.RtmpServerEventHandlers
 {
     internal class RtmpExternalServerConnectionEventDispatcher : IRtmpServerConnectionEventHandler
     {

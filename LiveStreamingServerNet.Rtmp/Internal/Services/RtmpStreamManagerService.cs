@@ -35,7 +35,6 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
 
         public PublishingStreamResult StartPublishingStream(IRtmpClientContext publisherClientContext, string streamPath, IDictionary<string, string> streamArguments, out IList<IRtmpClientContext> existingSubscribers)
         {
-
             using var publishingWriteLock = _publishingRwLock.WriteLock();
             using var subscribingReadLock = _subscribingRwLock.ReadLock();
 

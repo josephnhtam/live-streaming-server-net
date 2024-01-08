@@ -28,17 +28,13 @@ namespace LiveStreamingServerNet.Rtmp.Internal
 
         public async Task<bool> HandleClientLoopAsync(ReadOnlyStream networkStream, CancellationToken cancellationToken)
         {
-            switch (_clientContext.State)
+            return _clientContext.State switch
             {
-                case RtmpClientState.HandshakeC0:
-                    return await HandleHandshakeC0(_clientContext, networkStream, cancellationToken);
-                case RtmpClientState.HandshakeC1:
-                    return await HandleHandshakeC1(_clientContext, networkStream, cancellationToken);
-                case RtmpClientState.HandshakeC2:
-                    return await HandleHandshakeC2(_clientContext, networkStream, cancellationToken);
-                default:
-                    return await HandleChunkAsync(_clientContext, networkStream, cancellationToken);
-            }
+                RtmpClientState.HandshakeC0 => await HandleHandshakeC0(_clientContext, networkStream, cancellationToken),
+                RtmpClientState.HandshakeC1 => await HandleHandshakeC1(_clientContext, networkStream, cancellationToken),
+                RtmpClientState.HandshakeC2 => await HandleHandshakeC2(_clientContext, networkStream, cancellationToken),
+                _ => await HandleChunkAsync(_clientContext, networkStream, cancellationToken),
+            };
         }
 
         private async Task<bool> HandleHandshakeC0(IRtmpClientContext clientContext, ReadOnlyStream networkStream, CancellationToken cancellationToken)
