@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveStreamingServerNet.Util
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveStreamingServerNet.Rtmp", "LiveStreamingServerNet.Rtmp\LiveStreamingServerNet.Rtmp.csproj", "{EBD91510-86A5-49A2-A97B-E2A0AACFB516}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveStreamingServerNet.Flv", "LiveStreamingServerNet.Flv\LiveStreamingServerNet.Flv.csproj", "{1DB2249D-DEF5-4E2D-AED9-E5429C392C01}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{EBD91510-86A5-49A2-A97B-E2A0AACFB516}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EBD91510-86A5-49A2-A97B-E2A0AACFB516}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EBD91510-86A5-49A2-A97B-E2A0AACFB516}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1DB2249D-DEF5-4E2D-AED9-E5429C392C01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1DB2249D-DEF5-4E2D-AED9-E5429C392C01}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1DB2249D-DEF5-4E2D-AED9-E5429C392C01}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1DB2249D-DEF5-4E2D-AED9-E5429C392C01}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
