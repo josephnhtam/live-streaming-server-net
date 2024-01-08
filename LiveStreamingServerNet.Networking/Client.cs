@@ -1,9 +1,11 @@
-﻿using LiveStreamingServerNet.Networking.Contracts;
+﻿using LiveStreamingServerNet.Networking.Configurations;
+using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.Newtorking.Contracts;
 using LiveStreamingServerNet.Newtorking.Logging;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System.Buffers;
+using System.Net.Security;
 using System.Net.Sockets;
 using System.Threading.Channels;
 
@@ -12,16 +14,18 @@ namespace LiveStreamingServerNet.Newtorking
     internal sealed class Client : IClient
     {
         private readonly INetBufferPool _netBufferPool;
+        private readonly SecurityConfiguration _config;
         private readonly ILogger _logger;
         private readonly Channel<PendingMessage> _pendingMessageChannel;
         private TcpClient _tcpClient = default!;
 
         public uint ClientId { get; private set; }
 
-        public Client(IServiceProvider services)
+        public Client(INetBufferPool netBufferPool, IOptions<SecurityConfiguration> config, ILogger<Client> logger)
         {
-            _netBufferPool = services.GetRequiredService<INetBufferPool>();
-            _logger = services.GetRequiredService<ILogger<Client>>();
+            _netBufferPool = netBufferPool;
+            _config = config.Value;
+            _logger = logger;
             _pendingMessageChannel = Channel.CreateUnbounded<PendingMessage>();
         }
 
@@ -46,11 +50,10 @@ namespace LiveStreamingServerNet.Newtorking
 
                 try
                 {
-                    networkStream = CreateNetworkStream();
-                    var readOnlyNetworkStream = new ReadOnlyStream(networkStream);
-
+                    networkStream = await CreateNetworkStreamAsync();
                     outstandingBufferSender.Start(networkStream, cancellationToken);
 
+                    var readOnlyNetworkStream = new ReadOnlyStream(networkStream);
                     while (_tcpClient.Connected && !cancellationToken.IsCancellationRequested)
                         if (!await handler.HandleClientLoopAsync(readOnlyNetworkStream, cancellationToken))
                             break;
@@ -153,8 +156,21 @@ namespace LiveStreamingServerNet.Newtorking
             return ValueTask.CompletedTask;
         }
 
-        private Stream CreateNetworkStream()
+        private async Task<Stream> CreateNetworkStreamAsync()
         {
+            if (_config.ServerCertificate != null)
+            {
+                var sslStream = new SslStream(_tcpClient.GetStream(), false);
+
+                await sslStream.AuthenticateAsServerAsync(
+                    _config.ServerCertificate,
+                    false,
+                    _config.SslProtocols,
+                    _config.CheckCertificateRevocation);
+
+                return sslStream;
+            }
+
             return _tcpClient.GetStream();
         }
 

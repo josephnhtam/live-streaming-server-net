@@ -1,4 +1,5 @@
-﻿using LiveStreamingServerNet.Networking.Installer.Contracts;
+﻿using LiveStreamingServerNet.Networking.Configurations;
+using LiveStreamingServerNet.Networking.Installer.Contracts;
 using LiveStreamingServerNet.Newtorking.Configurations;
 using LiveStreamingServerNet.Newtorking.Contracts;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,6 +19,14 @@ namespace LiveStreamingServerNet.Networking.Installer
             where TServerEventHandler : class, IServerEventHandler
         {
             Services.AddSingleton<IServerEventHandler, TServerEventHandler>();
+            return this;
+        }
+
+        public IServerConfigurator ConfigureSecurity(Action<SecurityConfiguration>? configure)
+        {
+            if (configure != null)
+                Services.Configure(configure);
+
             return this;
         }
 
