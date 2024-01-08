@@ -38,6 +38,20 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             _logger = logger;
         }
 
+        public void CachePictures(IRtmpPublishStreamContext publishStreamContext, MediaType mediaType, INetBuffer payloadBuffer, uint timestamp)
+        {
+            var originalPosition = payloadBuffer.Position;
+            var rentedBuffer = new RentedBuffer(payloadBuffer.Size);
+            payloadBuffer.MoveTo(0).ReadBytes(rentedBuffer.Buffer, 0, payloadBuffer.Size);
+            publishStreamContext.GroupOfPicturesCache.Add(new PicturesCache(mediaType, timestamp, rentedBuffer, payloadBuffer.Size));
+            payloadBuffer.MoveTo(originalPosition);
+        }
+
+        public void ClearGroupOfPicturesCache(IRtmpPublishStreamContext publishStreamContext)
+        {
+            publishStreamContext.GroupOfPicturesCache.Clear();
+        }
+
         public void SendCachedHeaderMessages(IRtmpClientContext clientContext, IRtmpPublishStreamContext publishStreamContext, uint timestamp, uint streamId)
         {
             var videoSequenceHeader = publishStreamContext.VideoSequenceHeader;

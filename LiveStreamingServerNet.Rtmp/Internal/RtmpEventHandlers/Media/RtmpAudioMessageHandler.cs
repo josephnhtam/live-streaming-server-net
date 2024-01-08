@@ -4,7 +4,6 @@ using LiveStreamingServerNet.Rtmp.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.MessageDispatcher.Attributes;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.MessageDispatcher.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.Services.Contracts;
-using LiveStreamingServerNet.Utilities;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -96,22 +95,12 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
                 }
                 else if (_config.EnableGopCaching)
                 {
-                    CacheGroupOfPictures(publishStreamContext, payloadBuffer, chunkStreamContext.MessageHeader.Timestamp);
+                    _mediaMessageManager.CachePictures(publishStreamContext, MediaType.Audio, payloadBuffer, chunkStreamContext.MessageHeader.Timestamp);
                 }
             }
 
             payloadBuffer.MoveTo(0);
             return false;
-        }
-
-        private static void CacheGroupOfPictures(
-            IRtmpPublishStreamContext publishStreamContext,
-            INetBuffer payloadBuffer,
-            uint timestamp)
-        {
-            var rentedCache = new RentedBuffer(payloadBuffer.Size);
-            payloadBuffer.MoveTo(0).ReadBytes(rentedCache.Buffer, 0, payloadBuffer.Size);
-            publishStreamContext.GroupOfPicturesCache.Add(new PicturesCache(MediaType.Audio, timestamp, rentedCache, payloadBuffer.Size));
         }
     }
 }

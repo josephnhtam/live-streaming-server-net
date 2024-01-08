@@ -92,7 +92,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
 
                 if (_config.EnableGopCaching && frameType == VideoFrameType.KeyFrame)
                 {
-                    ClearGroupOfPicturesCache(publishStreamContext);
+                    _mediaMessageManager.ClearGroupOfPicturesCache(publishStreamContext);
                 }
 
                 if (frameType == VideoFrameType.KeyFrame && avcPackageType == AVCPacketType.SequenceHeader)
@@ -104,28 +104,13 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
 
                 if (_config.EnableGopCaching && avcPackageType == AVCPacketType.NALU)
                 {
-                    CacheGroupOfPictures(publishStreamContext, payloadBuffer, chunkStreamContext.MessageHeader.Timestamp);
+                    _mediaMessageManager.CachePictures(publishStreamContext, MediaType.Video, payloadBuffer, chunkStreamContext.MessageHeader.Timestamp);
                 }
             }
 
             payloadBuffer.MoveTo(0);
 
             return false;
-        }
-
-        private static void CacheGroupOfPictures(
-            IRtmpPublishStreamContext publishStreamContext,
-            INetBuffer payloadBuffer,
-            uint timestamp)
-        {
-            var rentedBuffer = new RentedBuffer(payloadBuffer.Size);
-            payloadBuffer.MoveTo(0).ReadBytes(rentedBuffer.Buffer, 0, payloadBuffer.Size);
-            publishStreamContext.GroupOfPicturesCache.Add(new PicturesCache(MediaType.Video, timestamp, rentedBuffer, payloadBuffer.Size));
-        }
-
-        private static void ClearGroupOfPicturesCache(IRtmpPublishStreamContext publishStreamContext)
-        {
-            publishStreamContext.GroupOfPicturesCache.Clear();
         }
     }
 }

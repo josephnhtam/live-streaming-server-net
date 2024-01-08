@@ -1,5 +1,6 @@
 ﻿using LiveStreamingServerNet.Newtorking.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.Contracts;
+using LiveStreamingServerNet.Utilities;
 
 namespace LiveStreamingServerNet.Rtmp.Internal.Services.Contracts
 {
@@ -20,6 +21,14 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services.Contracts
             uint streamId,
             bool isSkippable,
             Action<INetBuffer> payloadWriter);
+
+        void CachePictures(
+            IRtmpPublishStreamContext publishStreamContext,
+            MediaType mediaType,
+            INetBuffer payloadBuffer,
+            uint timestamp);
+
+        void ClearGroupOfPicturesCache(IRtmpPublishStreamContext publishStreamContext);
 
         void SendCachedHeaderMessages(
             IRtmpClientContext clientContext,
