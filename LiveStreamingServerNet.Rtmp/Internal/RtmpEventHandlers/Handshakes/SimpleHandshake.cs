@@ -4,7 +4,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Handshakes
 {
     internal class SimpleHandshake
     {
-        private const byte ClientType = 3;
+        private const byte _clientType = 3;
 
         private readonly INetBuffer _incomingBuffer;
 
@@ -27,7 +27,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Handshakes
 
         public void WriteS0(INetBuffer outgoingBuffer)
         {
-            outgoingBuffer.Write(ClientType);
+            outgoingBuffer.Write(_clientType);
         }
 
         public void WriteS1(INetBuffer outgoingBuffer)

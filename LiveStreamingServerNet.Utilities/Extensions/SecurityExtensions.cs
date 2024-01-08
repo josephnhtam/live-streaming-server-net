@@ -9,6 +9,5 @@ namespace LiveStreamingServerNet.Utilities.Extensions
             using var hmac = new HMACSHA256(key);
             return hmac.ComputeHash(bytes);
         }
-
     }
 }

@@ -13,7 +13,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Handshakes
     // todo: refactor and optimize
     internal class ComplexHandshake
     {
-        private const byte ClientType = 3;
+        private const byte _clientType = 3;
 
         private readonly INetBuffer _incomingBuffer;
         private readonly ComplexHandshakeType _type;
@@ -42,7 +42,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Handshakes
 
         public void WriteS0(INetBuffer outgoingBuffer)
         {
-            outgoingBuffer.Write(ClientType);
+            outgoingBuffer.Write(_clientType);
         }
 
         public void WriteS1(INetBuffer outgoingBuffer)

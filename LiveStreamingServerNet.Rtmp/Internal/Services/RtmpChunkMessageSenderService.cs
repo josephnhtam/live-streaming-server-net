@@ -134,9 +134,8 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
                 var remainingPayloadSize = payloadBuffer.Size - payloadBuffer.Position;
 
                 clientContext.Client.Send((chunkBuffer) =>
-                {
-                    WriteToRemainingChunkBuffer(chunkBuffer, basicHeader, extendedTimestampHeader, payloadBuffer, outChunkSize);
-                }, outChunkSize >= remainingPayloadSize ? callback : null);
+                    WriteToRemainingChunkBuffer(chunkBuffer, basicHeader, extendedTimestampHeader, payloadBuffer, outChunkSize)
+                , outChunkSize >= remainingPayloadSize ? callback : null);
             }
         }
 

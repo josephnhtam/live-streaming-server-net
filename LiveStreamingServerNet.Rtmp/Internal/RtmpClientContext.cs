@@ -28,7 +28,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal
 
         private uint _streamId;
         private bool _isStreamCreated;
-        private ConcurrentDictionary<uint, IRtmpChunkStreamContext> _chunkStreamContexts = new();
+        private readonly ConcurrentDictionary<uint, IRtmpChunkStreamContext> _chunkStreamContexts = new();
 
         public RtmpClientContext(IClientHandle client)
         {

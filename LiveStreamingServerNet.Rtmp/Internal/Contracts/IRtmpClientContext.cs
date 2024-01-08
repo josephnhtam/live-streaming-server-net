@@ -77,7 +77,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Contracts
         IList<PicturesCache> Get(bool claim = true);
     }
 
-    internal record struct PicturesCache
+    internal readonly record struct PicturesCache
     {
         public MediaType Type { get; }
         public uint Timestamp { get; }
