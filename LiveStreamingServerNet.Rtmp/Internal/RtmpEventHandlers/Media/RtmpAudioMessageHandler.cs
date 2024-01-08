@@ -29,7 +29,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
             _logger = logger;
         }
 
-        public Task<bool> HandleAsync(
+        public async Task<bool> HandleAsync(
             IRtmpChunkStreamContext chunkStreamContext,
             IRtmpClientContext clientContext,
             INetBuffer payloadBuffer,
@@ -38,12 +38,12 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
             var publishStreamContext = clientContext.PublishStreamContext ??
                 throw new InvalidOperationException("Stream is not yet published.");
 
-            var hasHeader = CacheAudioSequence(chunkStreamContext, publishStreamContext, payloadBuffer);
-            BroacastAudioMessageToSubscribers(chunkStreamContext, publishStreamContext, payloadBuffer, hasHeader);
-            return Task.FromResult(true);
+            var hasHeader = await CacheAudioSequenceAsync(chunkStreamContext, publishStreamContext, payloadBuffer);
+            await BroacastAudioMessageToSubscribersAsync(chunkStreamContext, publishStreamContext, payloadBuffer, hasHeader);
+            return true;
         }
 
-        private void BroacastAudioMessageToSubscribers(
+        private async Task BroacastAudioMessageToSubscribersAsync(
             IRtmpChunkStreamContext chunkStreamContext,
             IRtmpPublishStreamContext publishStreamContext,
             INetBuffer payloadBuffer,
@@ -52,31 +52,32 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
             if (hasSequenceHeader)
             {
                 using var subscribers = _streamManager.GetSubscribersLocked(publishStreamContext.StreamPath);
-                BroacastAudioMessageToSubscribers(chunkStreamContext, false, payloadBuffer, subscribers.Value);
+                await BroacastAudioMessageToSubscribersAsync(chunkStreamContext, publishStreamContext, false, payloadBuffer, subscribers.Value);
             }
             else
             {
                 var subscribers = _streamManager.GetSubscribers(publishStreamContext.StreamPath);
-                BroacastAudioMessageToSubscribers(chunkStreamContext, true, payloadBuffer, subscribers);
+                await BroacastAudioMessageToSubscribersAsync(chunkStreamContext, publishStreamContext, true, payloadBuffer, subscribers);
             }
         }
 
-        private void BroacastAudioMessageToSubscribers(
+        private async Task BroacastAudioMessageToSubscribersAsync(
             IRtmpChunkStreamContext chunkStreamContext,
+            IRtmpPublishStreamContext publishStreamContext,
             bool isSkippable,
             INetBuffer payloadBuffer,
             IList<IRtmpClientContext> subscribers)
         {
-            _mediaMessageManager.EnqueueMediaMessage(
+            await _mediaMessageManager.EnqueueMediaMessageAsync(
+                publishStreamContext,
                 subscribers,
                 MediaType.Audio,
                 chunkStreamContext.MessageHeader.Timestamp,
-                chunkStreamContext.MessageHeader.MessageStreamId,
                 isSkippable,
                 payloadBuffer.CopyAllTo);
         }
 
-        private bool CacheAudioSequence(
+        private async Task<bool> CacheAudioSequenceAsync(
             IRtmpChunkStreamContext chunkStreamContext,
             IRtmpPublishStreamContext publishStreamContext,
             INetBuffer payloadBuffer)
@@ -89,12 +90,12 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
                 var aacPackageType = (AACPacketType)payloadBuffer.ReadByte();
                 if (aacPackageType == AACPacketType.SequenceHeader)
                 {
-                    _mediaMessageManager.CacheSequenceHeader(publishStreamContext, MediaType.Audio, payloadBuffer);
+                    await _mediaMessageManager.CacheSequenceHeaderAsync(publishStreamContext, MediaType.Audio, payloadBuffer);
                     return true;
                 }
                 else if (_config.EnableGopCaching)
                 {
-                    _mediaMessageManager.CachePicture(publishStreamContext, MediaType.Audio, payloadBuffer, chunkStreamContext.MessageHeader.Timestamp);
+                    await _mediaMessageManager.CachePictureAsync(publishStreamContext, MediaType.Audio, payloadBuffer, chunkStreamContext.MessageHeader.Timestamp);
                 }
             }
 

@@ -46,9 +46,7 @@ namespace LiveStreamingServerNet.Rtmp.Installer
                 .AddTransient<IRtmpClientHandler, RtmpClientHandler>();
 
             services.AddMediatR(options =>
-            {
-                options.RegisterServicesFromAssemblyContaining<RtmpClientHandler>();
-            });
+                options.RegisterServicesFromAssemblyContaining<RtmpClientHandler>());
 
             services.AddSingleton<IRtmpServerContext, RtmpServerContext>();
 
@@ -63,7 +61,8 @@ namespace LiveStreamingServerNet.Rtmp.Installer
                     .AddSingleton<IRtmpCommandMessageSenderService, RtmpCommandMessageSenderService>()
                     .AddSingleton<IRtmpMediaMessageManagerService, RtmpMediaMessageManagerService>()
                     .AddSingleton<IRtmpStreamManagerService, RtmpStreamManagerService>()
-                    .AddSingleton<IRtmpStreamDeletionService, RtmpStreamDeletionService>();
+                    .AddSingleton<IRtmpStreamDeletionService, RtmpStreamDeletionService>()
+                    .AddSingleton<IRtmpMediaMessageInterctionService, RtmpMediaMessageInterctionService>();
 
             return services;
         }
