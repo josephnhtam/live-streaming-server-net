@@ -9,7 +9,7 @@ using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.CommandDispatcher.C
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.MessageDispatcher;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.MessageDispatcher.Attributes;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.MessageDispatcher.Contracts;
-using LiveStreamingServerNet.Rtmp.Internal.RtmpServerEvents;
+using LiveStreamingServerNet.Rtmp.Internal.RtmpServerEventHandlers;
 using LiveStreamingServerNet.Rtmp.Internal.Services;
 using LiveStreamingServerNet.Rtmp.Internal.Services.Contracts;
 using Microsoft.Extensions.DependencyInjection;

@@ -1,7 +1,7 @@
 ﻿using LiveStreamingServerNet.Rtmp.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.Services.Contracts;
 
-namespace LiveStreamingServerNet.Rtmp.Internal.RtmpServerEvents
+namespace LiveStreamingServerNet.Rtmp.Internal.RtmpServerEventHandlers
 {
     internal class RtmpServerConnectionEventHandler : IRtmpServerConnectionEventHandler
     {

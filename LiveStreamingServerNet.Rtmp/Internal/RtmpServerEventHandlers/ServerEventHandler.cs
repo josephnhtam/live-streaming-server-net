@@ -3,7 +3,7 @@ using LiveStreamingServerNet.Newtorking.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.Services.Contracts;
 using System.Net.Sockets;
 
-namespace LiveStreamingServerNet.Rtmp.Internal.RtmpServerEvents
+namespace LiveStreamingServerNet.Rtmp.Internal.RtmpServerEventHandlers
 {
     internal class ServerEventHandler : IServerEventHandler
     {
