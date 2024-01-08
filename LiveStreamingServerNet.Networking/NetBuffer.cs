@@ -110,6 +110,7 @@ namespace LiveStreamingServerNet.Newtorking
             _stream.Dispose();
             _writer.Dispose();
             _reader.Dispose();
+            GC.SuppressFinalize(this);
         }
 
         public async Task CopyStreamData(Stream stream, int bytesCount, CancellationToken cancellationToken = default)
