@@ -155,7 +155,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             using var netBuffer = _netBufferPool.Obtain();
             payloadWriter(netBuffer);
 
-            var rentedBuffer = new RentedBuffer(netBuffer.Size, subscribers.Count);
+            var rentedBuffer = new RentedBuffer(netBuffer.Size, Math.Max(1, subscribers.Count));
             netBuffer.MoveTo(0).ReadBytes(rentedBuffer.Buffer, 0, netBuffer.Size);
             netBuffer.MoveTo(0);
 
