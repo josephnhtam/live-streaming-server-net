@@ -11,7 +11,9 @@ namespace LiveStreamingServerNet.Demo
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddKeyedSingleton("live-streaming", CreateLiveStreamingServer());
+            IServer liveStreamingServer = CreateLiveStreamingServer();
+
+            builder.Services.AddKeyedSingleton("live-streaming", liveStreamingServer);
             builder.Services.AddHostedService<LiveStreamingServerService>();
 
             builder.Services.AddEndpointsApiExplorer();
@@ -26,7 +28,7 @@ namespace LiveStreamingServerNet.Demo
             }
 
             app.UseHttpsRedirection();
-            app.UseHttpFlv();
+            app.UseHttpFlv(liveStreamingServer);
 
             app.Run();
         }
