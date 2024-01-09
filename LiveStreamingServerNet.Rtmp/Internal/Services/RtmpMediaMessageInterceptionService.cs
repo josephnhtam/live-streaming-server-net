@@ -31,10 +31,10 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
                 await interceptor.OnClearGroupOfPicturesCache(streamPath);
         }
 
-        public async Task EnqueueMediaMessageAsync(string streamPath, MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp, bool isSkippable)
+        public async Task ReceiveMediaMessageAsync(string streamPath, MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp, bool isSkippable)
         {
             foreach (var interceptor in _interceptors)
-                await interceptor.OnEnqueueMediaMessage(streamPath, mediaType, rentedBuffer, timestamp, isSkippable);
+                await interceptor.OnReceiveMediaMessage(streamPath, mediaType, rentedBuffer, timestamp, isSkippable);
         }
     }
 }
