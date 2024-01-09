@@ -54,5 +54,31 @@ namespace LiveStreamingServerNet.Rtmp.Installer
             Services.AddSingleton(implmentationFactory);
             return this;
         }
+
+        public IRtmpServerConfigurator AddConnectionEventHandler<TConnectionEventHandler>()
+            where TConnectionEventHandler : class, IRtmpServerConnectionEventHandler
+        {
+            Services.AddSingleton<IRtmpServerConnectionEventHandler, TConnectionEventHandler>();
+            return this;
+        }
+
+        public IRtmpServerConfigurator AddConnectionEventHandler(Func<IServiceProvider, IRtmpServerConnectionEventHandler> implmentationFactory)
+        {
+            Services.AddSingleton(implmentationFactory);
+            return this;
+        }
+
+        public IRtmpServerConfigurator AddStreamEventHandlerr<TStreamEventHandler>()
+            where TStreamEventHandler : class, IRtmpServerStreamEventHandler
+        {
+            Services.AddSingleton<IRtmpServerStreamEventHandler, TStreamEventHandler>();
+            return this;
+        }
+
+        public IRtmpServerConfigurator AddStreamEventHandler(Func<IServiceProvider, IRtmpServerStreamEventHandler> implmentationFactory)
+        {
+            Services.AddSingleton(implmentationFactory);
+            return this;
+        }
     }
 }
