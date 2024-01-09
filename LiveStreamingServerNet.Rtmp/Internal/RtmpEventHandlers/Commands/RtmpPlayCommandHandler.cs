@@ -1,4 +1,5 @@
 ﻿using LiveStreamingServerNet.Rtmp.Configurations;
+using LiveStreamingServerNet.Rtmp.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.CommandDispatcher;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.CommandDispatcher.Attributes;
@@ -7,6 +8,7 @@ using LiveStreamingServerNet.Rtmp.Internal.Services.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.Services.Extensions;
 using LiveStreamingServerNet.Rtmp.Internal.Utilities;
 using LiveStreamingServerNet.Rtmp.Logging;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -17,6 +19,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
     [RtmpCommand("play")]
     internal class RtmpPlayCommandHandler : RtmpCommandHandler<RtmpPlayCommand>
     {
+        private readonly IServiceProvider _services;
         private readonly IRtmpStreamManagerService _streamManager;
         private readonly IRtmpCommandMessageSenderService _commandMessageSender;
         private readonly IRtmpMediaMessageManagerService _mediaMessageManager;
@@ -25,6 +28,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
         private readonly ILogger<RtmpPlayCommandHandler> _logger;
 
         public RtmpPlayCommandHandler(
+            IServiceProvider services,
             IRtmpStreamManagerService streamManager,
             IRtmpCommandMessageSenderService commandMessageSender,
             IRtmpMediaMessageManagerService mediaMessageManager,
@@ -32,6 +36,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
             IOptions<RtmpServerConfiguration> config,
             ILogger<RtmpPlayCommandHandler> logger)
         {
+            _services = services;
             _streamManager = streamManager;
             _commandMessageSender = commandMessageSender;
             _mediaMessageManager = mediaMessageManager;
@@ -61,9 +66,15 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
             return true;
         }
 
-        private Task<bool> AuthorizeAsync(IRtmpClientContext clientContext, string streamPath, IDictionary<string, string> streamArguments)
+        private async Task<bool> AuthorizeAsync(IRtmpClientContext clientContext, string streamPath, IDictionary<string, string> streamArguments)
         {
-            return Task.FromResult(true);
+            var authorizationHandler = _services.GetService<IRtmpAuthorizationHandler>();
+
+            if (authorizationHandler != null)
+                return await authorizationHandler
+                    .AuthorizeSubscriptionAsync(clientContext.Client, streamPath, streamArguments);
+
+            return true;
         }
 
         private static (string StreamPath, IDictionary<string, string> StreamArguments)

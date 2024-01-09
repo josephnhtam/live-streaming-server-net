@@ -1,4 +1,5 @@
-﻿using LiveStreamingServerNet.Rtmp.Internal.Contracts;
+﻿using LiveStreamingServerNet.Rtmp.Contracts;
+using LiveStreamingServerNet.Rtmp.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.CommandDispatcher;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.CommandDispatcher.Attributes;
 using LiveStreamingServerNet.Rtmp.Internal.Services;
@@ -6,6 +7,7 @@ using LiveStreamingServerNet.Rtmp.Internal.Services.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.Services.Extensions;
 using LiveStreamingServerNet.Rtmp.Internal.Utilities;
 using LiveStreamingServerNet.Rtmp.Logging;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
@@ -15,17 +17,20 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
     [RtmpCommand("publish")]
     internal class RtmpPublishCommandHandler : RtmpCommandHandler<RtmpPublishCommand>
     {
+        private readonly IServiceProvider _services;
         private readonly IRtmpStreamManagerService _streamManager;
         private readonly IRtmpCommandMessageSenderService _commandMessageSender;
         private readonly IRtmpServerStreamEventDispatcher _eventDispatcher;
         private readonly ILogger _logger;
 
         public RtmpPublishCommandHandler(
+            IServiceProvider services,
             IRtmpStreamManagerService streamManager,
             IRtmpCommandMessageSenderService commandMessageSender,
             IRtmpServerStreamEventDispatcher eventDispatcher,
             ILogger<RtmpPublishCommandHandler> logger)
         {
+            _services = services;
             _streamManager = streamManager;
             _commandMessageSender = commandMessageSender;
             _eventDispatcher = eventDispatcher;
@@ -53,13 +58,19 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
             return true;
         }
 
-        private Task<bool> AuthorizeAsync(
+        private async Task<bool> AuthorizeAsync(
             IRtmpClientContext clientContext,
             string streamPath,
             IDictionary<string, string> streamArguments,
             string publishingType)
         {
-            return Task.FromResult(true);
+            var authorizationHandler = _services.GetService<IRtmpAuthorizationHandler>();
+
+            if (authorizationHandler != null)
+                return await authorizationHandler
+                    .AuthorizePublishingAsync(clientContext.Client, streamPath, streamArguments, publishingType);
+
+            return true;
         }
 
         private static (string StreamPath, IDictionary<string, string> StreamArguments)
