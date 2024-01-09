@@ -12,13 +12,13 @@ namespace LiveStreamingServerNet.Newtorking
     internal sealed class Server : IServer
     {
         private readonly ConcurrentDictionary<uint, ClientTask> _clientTasks = new();
-        private readonly IServiceProvider _services;
         private readonly IClientHandlerFactory _clientHandlerFactory;
         private readonly IServerEventDispatcher _eventDispatcher;
         private readonly ILogger _logger;
         private int _isStarted;
         private uint _nextClientId;
 
+        public IServiceProvider Services { get; }
         public bool IsStarted => _isStarted == 1;
         public IList<IClientHandle> Clients => _clientTasks.Select(x => x.Value.Client).OfType<IClientHandle>().ToList();
 
@@ -30,7 +30,7 @@ namespace LiveStreamingServerNet.Newtorking
             IServerEventDispatcher eventDispatcher,
             ILogger<Server> logger)
         {
-            _services = services;
+            Services = services;
             _clientHandlerFactory = clientHandlerFactory;
             _eventDispatcher = eventDispatcher;
             _logger = logger;
@@ -118,7 +118,7 @@ namespace LiveStreamingServerNet.Newtorking
 
         private IClient CreateClient(uint clientId, TcpClient tcpClient)
         {
-            var client = _services.GetRequiredService<IClient>();
+            var client = Services.GetRequiredService<IClient>();
             client.Initialize(clientId, tcpClient);
 
             return client;
