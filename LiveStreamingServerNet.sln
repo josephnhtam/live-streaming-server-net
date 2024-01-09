@@ -5,15 +5,17 @@ VisualStudioVersion = 17.8.34309.116
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet", "LiveStreamingServerNet\LiveStreamingServerNet.csproj", "{8559A0E8-9315-4728-8BD8-B3C49E14DFB7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.Playground", "LiveStreamingServerNet.Playground\LiveStreamingServerNet.Playground.csproj", "{6ED97216-2BBD-4568-991F-4ACD04C17C24}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.Networking", "LiveStreamingServerNet.Networking\LiveStreamingServerNet.Networking.csproj", "{15449DED-702C-4A69-BB75-CAFC7613565C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveStreamingServerNet.Networking", "LiveStreamingServerNet.Networking\LiveStreamingServerNet.Networking.csproj", "{15449DED-702C-4A69-BB75-CAFC7613565C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.Utilities", "LiveStreamingServerNet.Utilities\LiveStreamingServerNet.Utilities.csproj", "{CFCD9768-1EA2-4565-A6A7-30750D3D8F40}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveStreamingServerNet.Utilities", "LiveStreamingServerNet.Utilities\LiveStreamingServerNet.Utilities.csproj", "{CFCD9768-1EA2-4565-A6A7-30750D3D8F40}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.Rtmp", "LiveStreamingServerNet.Rtmp\LiveStreamingServerNet.Rtmp.csproj", "{EBD91510-86A5-49A2-A97B-E2A0AACFB516}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveStreamingServerNet.Rtmp", "LiveStreamingServerNet.Rtmp\LiveStreamingServerNet.Rtmp.csproj", "{EBD91510-86A5-49A2-A97B-E2A0AACFB516}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.Flv", "LiveStreamingServerNet.Flv\LiveStreamingServerNet.Flv.csproj", "{1DB2249D-DEF5-4E2D-AED9-E5429C392C01}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveStreamingServerNet.Flv", "LiveStreamingServerNet.Flv\LiveStreamingServerNet.Flv.csproj", "{1DB2249D-DEF5-4E2D-AED9-E5429C392C01}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Example", "Example", "{45761E33-F086-403D-BB6E-8059F8CC6BA8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveStreamingServerNet.Demo", "LiveStreamingServerNet.Demo\LiveStreamingServerNet.Demo.csproj", "{C48FAA6B-A17E-4A5D-B8D8-C4CD682DEA5B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,10 +27,6 @@ Global
 		{8559A0E8-9315-4728-8BD8-B3C49E14DFB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8559A0E8-9315-4728-8BD8-B3C49E14DFB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8559A0E8-9315-4728-8BD8-B3C49E14DFB7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6ED97216-2BBD-4568-991F-4ACD04C17C24}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6ED97216-2BBD-4568-991F-4ACD04C17C24}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6ED97216-2BBD-4568-991F-4ACD04C17C24}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6ED97216-2BBD-4568-991F-4ACD04C17C24}.Release|Any CPU.Build.0 = Release|Any CPU
 		{15449DED-702C-4A69-BB75-CAFC7613565C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{15449DED-702C-4A69-BB75-CAFC7613565C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{15449DED-702C-4A69-BB75-CAFC7613565C}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -45,9 +43,16 @@ Global
 		{1DB2249D-DEF5-4E2D-AED9-E5429C392C01}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1DB2249D-DEF5-4E2D-AED9-E5429C392C01}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1DB2249D-DEF5-4E2D-AED9-E5429C392C01}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C48FAA6B-A17E-4A5D-B8D8-C4CD682DEA5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C48FAA6B-A17E-4A5D-B8D8-C4CD682DEA5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C48FAA6B-A17E-4A5D-B8D8-C4CD682DEA5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C48FAA6B-A17E-4A5D-B8D8-C4CD682DEA5B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C48FAA6B-A17E-4A5D-B8D8-C4CD682DEA5B} = {45761E33-F086-403D-BB6E-8059F8CC6BA8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0A9A3928-2852-49B9-85EF-F00480E9FE7F}
