@@ -4,6 +4,7 @@ namespace LiveStreamingServerNet.Networking.Contracts
 {
     public interface IServer : IServerHandle
     {
+        IServiceProvider Services { get; }
         Task RunAsync(IPEndPoint localEndpoint, CancellationToken cancellationToken = default);
     }
 
