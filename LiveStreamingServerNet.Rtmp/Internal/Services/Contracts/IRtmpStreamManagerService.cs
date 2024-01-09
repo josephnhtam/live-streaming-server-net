@@ -19,4 +19,19 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services.Contracts
         IRentable<IList<IRtmpClientContext>> GetSubscribersLocked(string publishStreamPath);
         IList<IRtmpClientContext> GetSubscribers(string publishStreamPath);
     }
+
+    internal enum PublishingStreamResult
+    {
+        Succeeded,
+        AlreadyExists,
+        AlreadyPublishing,
+        AlreadySubscribing
+    }
+
+    internal enum SubscribingStreamResult
+    {
+        Succeeded,
+        AlreadyPublishing,
+        AlreadySubscribing,
+    }
 }
