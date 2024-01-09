@@ -19,7 +19,6 @@ namespace LiveStreamingServerNet.Rtmp.Installer
         {
             if (configure != null)
                 Services.Configure(configure);
-
             return this;
         }
 
@@ -27,7 +26,6 @@ namespace LiveStreamingServerNet.Rtmp.Installer
         {
             if (configure != null)
                 Services.Configure(configure);
-
             return this;
         }
 
@@ -35,14 +33,25 @@ namespace LiveStreamingServerNet.Rtmp.Installer
             where TAuthorizationHandler : class, IRtmpAuthorizationHandler
         {
             Services.TryAddSingleton<IRtmpAuthorizationHandler, TAuthorizationHandler>();
-
             return this;
         }
 
         public IRtmpServerConfigurator AddAuthorizationHandler(Func<IServiceProvider, IRtmpAuthorizationHandler> implmentationFactory)
         {
             Services.TryAddSingleton(implmentationFactory);
+            return this;
+        }
 
+        public IRtmpServerConfigurator AddMediaMessageInterceptor<TMediaMessageInterceptor>()
+            where TMediaMessageInterceptor : class, IRtmpMediaMessageInterceptor
+        {
+            Services.AddSingleton<IRtmpMediaMessageInterceptor, TMediaMessageInterceptor>();
+            return this;
+        }
+
+        public IRtmpServerConfigurator AddMediaMessageInterceptor(Func<IServiceProvider, IRtmpMediaMessageInterceptor> implmentationFactory)
+        {
+            Services.AddSingleton(implmentationFactory);
             return this;
         }
     }
