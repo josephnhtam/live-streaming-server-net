@@ -1,6 +1,8 @@
 ﻿using LiveStreamingServerNet.Rtmp.Configurations;
+using LiveStreamingServerNet.Rtmp.Contracts;
 using LiveStreamingServerNet.Rtmp.Installer.Contracts;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace LiveStreamingServerNet.Rtmp.Installer
 {
@@ -25,6 +27,21 @@ namespace LiveStreamingServerNet.Rtmp.Installer
         {
             if (configure != null)
                 Services.Configure(configure);
+
+            return this;
+        }
+
+        public IRtmpServerConfigurator AddAuthorizationHandler<TAuthorizationHandler>()
+            where TAuthorizationHandler : class, IRtmpAuthorizationHandler
+        {
+            Services.TryAddSingleton<IRtmpAuthorizationHandler, TAuthorizationHandler>();
+
+            return this;
+        }
+
+        public IRtmpServerConfigurator AddAuthorizationHandler(Func<IServiceProvider, IRtmpAuthorizationHandler> implmentationFactory)
+        {
+            Services.TryAddSingleton(implmentationFactory);
 
             return this;
         }
