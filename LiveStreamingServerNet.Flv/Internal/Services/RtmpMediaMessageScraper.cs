@@ -8,22 +8,22 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
     {
         public Task OnCachePicture(string streamPath, MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp)
         {
-            throw new NotImplementedException();
+            return Task.CompletedTask;
         }
 
         public Task OnCacheSequenceHeader(string streamPath, MediaType mediaType, byte[] sequenceHeader)
         {
-            throw new NotImplementedException();
+            return Task.CompletedTask;
         }
 
         public Task OnClearGroupOfPicturesCache(string streamPath)
         {
-            throw new NotImplementedException();
+            return Task.CompletedTask;
         }
 
-        public Task OnEnqueueMediaMessage(string streamPath, MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp, bool isSkippable)
+        public Task OnReceiveMediaMessage(string streamPath, MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp, bool isSkippable)
         {
-            throw new NotImplementedException();
+            return Task.CompletedTask;
         }
     }
 }
