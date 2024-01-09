@@ -141,19 +141,4 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             return _subscribingClientContexts.GetValueOrDefault(publishStreamPath)?.ToList() ?? new List<IRtmpClientContext>();
         }
     }
-
-    internal enum PublishingStreamResult
-    {
-        Succeeded,
-        AlreadyExists,
-        AlreadyPublishing,
-        AlreadySubscribing
-    }
-
-    internal enum SubscribingStreamResult
-    {
-        Succeeded,
-        AlreadyPublishing,
-        AlreadySubscribing,
-    }
 }
