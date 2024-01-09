@@ -7,6 +7,6 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services.Contracts
         Task CacheSequenceHeaderAsync(string streamPath, MediaType mediaType, byte[] sequenceHeader);
         Task CachePictureAsync(string streamPath, MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp);
         Task ClearGroupOfPicturesCacheAsync(string streamPath);
-        Task EnqueueMediaMessageAsync(string streamPath, MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp, bool isSkippable);
+        Task ReceiveMediaMessageAsync(string streamPath, MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp, bool isSkippable);
     }
 }

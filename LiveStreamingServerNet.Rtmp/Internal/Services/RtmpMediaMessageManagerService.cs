@@ -152,9 +152,6 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
         {
             subscribers = subscribers.Where(FilterSubscribers).ToList();
 
-            if (!subscribers.Any())
-                return;
-
             using var netBuffer = _netBufferPool.Obtain();
             payloadWriter(netBuffer);
 
@@ -162,7 +159,13 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             netBuffer.MoveTo(0).ReadBytes(rentedBuffer.Buffer, 0, netBuffer.Size);
             netBuffer.MoveTo(0);
 
-            await _interception.EnqueueMediaMessageAsync(publishStreamContext.StreamPath, mediaType, rentedBuffer, timestamp, isSkippable);
+            await _interception.ReceiveMediaMessageAsync(publishStreamContext.StreamPath, mediaType, rentedBuffer, timestamp, isSkippable);
+
+            if (!subscribers.Any())
+            {
+                rentedBuffer.Unclaim();
+                return;
+            }
 
             var mediaPackage = new ClientMediaPackage(
                 mediaType,
