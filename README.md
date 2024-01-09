@@ -19,7 +19,7 @@ var server = LiveStreamingServerBuilder.Create()
 await server.RunAsync(new IPEndPoint(IPAddress.Any, 1935));
 ```
 
-### Publish Live Streams
+### Publish a Live Stream
 
 #### With FFmpeg
 
@@ -35,7 +35,7 @@ ffmpeg -re -i <input_file> -c:v libx264 -c:a aac -f flv rtmp://localhost:1935/li
 2. In the "Settings" window, select the "Stream" tab.
 3. Choose "Custom" as the "Service".
 4. Enter "Server": `rtmp://localhost:1935/live` and "Stream Key": `demo`.
-5. Click "OK" to save the settings
+5. Click "OK" to save the settings.
 6. Click the "Start Streaming" button in OBS Studio to begin sending live stream to the RTMP server.
 
 ### Play the Live Stream
