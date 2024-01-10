@@ -74,7 +74,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal
         public uint StreamId { get; }
         public string StreamPath { get; }
         public IDictionary<string, string> StreamArguments { get; }
-        public IPublishStreamMetaData StreamMetaData { get; set; } = default!;
+        public IDictionary<string, object>? StreamMetaData { get; set; }
         public byte[]? VideoSequenceHeader { get; set; }
         public byte[]? AudioSequenceHeader { get; set; }
         public IGroupOfPicturesCache GroupOfPicturesCache { get; }
@@ -126,30 +126,6 @@ namespace LiveStreamingServerNet.Rtmp.Internal
 
                 return new List<PicturesCache>(_groupOfPicturesCache);
             }
-        }
-    }
-
-    internal record PublishStreamMetaData : IPublishStreamMetaData
-    {
-        public uint VideoFrameRate { get; }
-        public uint VideoWidth { get; }
-        public uint VideoHeight { get; }
-
-        public uint AudioSampleRate { get; }
-        public uint AudioChannels { get; }
-
-        public PublishStreamMetaData(
-            uint videoFrameRate,
-            uint videoWidth,
-            uint videoHeight,
-            uint audioSampleRate,
-            bool stereo)
-        {
-            VideoFrameRate = videoFrameRate;
-            VideoWidth = videoWidth;
-            VideoHeight = videoHeight;
-            AudioSampleRate = audioSampleRate;
-            AudioChannels = stereo ? 2u : 1u;
         }
     }
 

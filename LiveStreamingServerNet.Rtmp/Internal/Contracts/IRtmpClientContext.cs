@@ -39,20 +39,10 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Contracts
         uint StreamId { get; }
         string StreamPath { get; }
         IDictionary<string, string> StreamArguments { get; }
-        IPublishStreamMetaData StreamMetaData { get; set; }
+        IDictionary<string, object>? StreamMetaData { get; set; }
         byte[]? VideoSequenceHeader { get; set; }
         byte[]? AudioSequenceHeader { get; set; }
         IGroupOfPicturesCache GroupOfPicturesCache { get; }
-    }
-
-    internal interface IPublishStreamMetaData
-    {
-        uint VideoFrameRate { get; }
-        uint VideoWidth { get; }
-        uint VideoHeight { get; }
-
-        uint AudioSampleRate { get; }
-        uint AudioChannels { get; }
     }
 
     internal interface IRtmpStreamSubscriptionContext
