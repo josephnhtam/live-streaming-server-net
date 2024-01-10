@@ -1,6 +1,6 @@
 ﻿namespace LiveStreamingServerNet.Flv.Internal.Contracts
 {
-    internal interface IClientStreamWriter
+    internal interface IStreamWriter
     {
         Task WriteAsync(ReadOnlyMemory<byte> buffer, CancellationToken cancellationToken);
     }

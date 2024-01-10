@@ -16,6 +16,8 @@ namespace LiveStreamingServerNet.Demo
             builder.Services.AddKeyedSingleton("live-streaming", liveStreamingServer);
             builder.Services.AddHostedService<LiveStreamingServerService>();
 
+            builder.Services.AddHttpFlv();
+
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 

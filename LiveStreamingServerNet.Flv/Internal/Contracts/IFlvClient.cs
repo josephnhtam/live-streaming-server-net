@@ -1,7 +1,10 @@
 ﻿namespace LiveStreamingServerNet.Flv.Internal.Contracts
 {
-    internal interface IFlvClient
+    internal interface IFlvClient : IAsyncDisposable
     {
-        IClientStreamWriter StreamWriter { get; }
+        IStreamWriter StreamWriter { get; }
+        void Start(IStreamWriter streamWriter, CancellationToken stoppingToken);
+        void Stop();
+        Task UntilComplete();
     }
 }
