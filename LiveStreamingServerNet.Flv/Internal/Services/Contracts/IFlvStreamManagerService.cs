@@ -6,7 +6,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services.Contracts
     {
         bool IsStreamPathPublishing(string publishStreamPath);
 
-        PublishingStreamResult StartPublishingStream(string streamPath, IDictionary<string, string> streamArguments);
+        PublishingStreamResult StartPublishingStream(IFlvStreamContext streamContext, string streamPath, IDictionary<string, string> streamArguments);
         bool StopPublishingStream(string streamPath, out IList<IFlvClient> existingSubscribers);
 
         SubscribingStreamResult StartSubscribingStream(IFlvClient client, string streamPath);
@@ -16,8 +16,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services.Contracts
     internal enum PublishingStreamResult
     {
         Succeeded,
-        AlreadyExists,
-        AlreadyPublishing
+        AlreadyExists
     }
 
     internal enum SubscribingStreamResult

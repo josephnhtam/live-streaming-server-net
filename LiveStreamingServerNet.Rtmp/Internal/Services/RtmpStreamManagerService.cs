@@ -115,13 +115,9 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             if (!_subscribedStreamPaths.Remove(subscriberClientContext, out var publishStreamPath))
                 return false;
 
-            if (_subscribingClientContexts.TryGetValue(publishStreamPath, out var subscribers))
-            {
-                subscribers.Remove(subscriberClientContext);
-
-                if (subscribers.Count == 0)
-                    _subscribingClientContexts.Remove(publishStreamPath);
-            }
+            if (_subscribingClientContexts.TryGetValue(publishStreamPath, out var subscribers) &&
+                subscribers.Remove(subscriberClientContext) && subscribers.Count == 0)
+                _subscribingClientContexts.Remove(publishStreamPath);
 
             return true;
         }
