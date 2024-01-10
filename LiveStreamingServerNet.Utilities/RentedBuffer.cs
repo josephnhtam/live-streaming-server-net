@@ -22,16 +22,16 @@ namespace LiveStreamingServerNet.Utilities
             Size = size;
         }
 
-        public void Claim()
+        public void Claim(int count = 1)
         {
-            Interlocked.Increment(ref _claimed);
+            Interlocked.Add(ref _claimed, count);
         }
 
-        public void Unclaim()
+        public void Unclaim(int count = 1)
         {
             byte[] bytes;
 
-            if (Interlocked.Decrement(ref _claimed) <= 0 && (bytes = Interlocked.Exchange(ref _buffer, null!)) != null)
+            if (Interlocked.Add(ref _claimed, -count) <= 0 && (bytes = Interlocked.Exchange(ref _buffer, null!)) != null)
                 ArrayPool<byte>.Shared.Return(bytes);
         }
     }

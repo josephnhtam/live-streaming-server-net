@@ -1,6 +1,7 @@
 ﻿using LiveStreamingServerNet.Flv.Internal.Contracts;
 using LiveStreamingServerNet.Newtorking.Contracts;
 using LiveStreamingServerNet.Rtmp;
+using LiveStreamingServerNet.Utilities.Contracts;
 
 namespace LiveStreamingServerNet.Flv.Internal.Services.Contracts
 {
@@ -12,17 +13,17 @@ namespace LiveStreamingServerNet.Flv.Internal.Services.Contracts
             MediaType mediaType,
             uint timestamp,
             bool isSkippable,
-            Action<INetBuffer> payloadWriter);
+            IRentedBuffer rentedBuffer);
 
         Task CacheSequenceHeaderAsync(
             IFlvStreamContext streamContext,
             MediaType mediaType,
-            INetBuffer payloadBuffer);
+            byte[] sequenceHeader);
 
         Task CachePictureAsync(
             IFlvStreamContext streamContext,
             MediaType mediaType,
-            INetBuffer payloadBuffer,
+            IRentedBuffer rentedBuffer,
             uint timestamp);
 
         Task ClearGroupOfPicturesCacheAsync(IFlvStreamContext streamContext);

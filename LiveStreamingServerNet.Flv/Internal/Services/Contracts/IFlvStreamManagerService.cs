@@ -7,7 +7,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services.Contracts
     {
         bool IsStreamPathPublishing(string streamPath);
 
-        PublishingStreamResult StartPublishingStream(IFlvStreamContext streamContext, string streamPath, IDictionary<string, string> streamArguments);
+        PublishingStreamResult StartPublishingStream(IFlvStreamContext streamContext);
         bool StopPublishingStream(string streamPath, out IList<IFlvClient> existingSubscribers);
         IFlvStreamContext? GetFlvStreamContext(string streamPath);
 

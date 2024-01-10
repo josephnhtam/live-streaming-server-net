@@ -6,7 +6,7 @@
         int Claimed { get; }
         int Size { get; }
 
-        void Claim();
-        void Unclaim();
+        void Claim(int count = 1);
+        void Unclaim(int count = 1);
     }
 }

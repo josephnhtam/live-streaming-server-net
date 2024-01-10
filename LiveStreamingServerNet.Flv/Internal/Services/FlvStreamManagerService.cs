@@ -21,9 +21,10 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
             return _publishingStreamContexts.ContainsKey(streamPath);
         }
 
-        public PublishingStreamResult StartPublishingStream(IFlvStreamContext streamContext, string streamPath, IDictionary<string, string> streamArguments)
+        public PublishingStreamResult StartPublishingStream(IFlvStreamContext streamContext)
         {
             using var writeLock = _publishingRwLock.WriteLock();
+            var streamPath = streamContext.StreamPath;
 
             if (_publishingStreamContexts.ContainsKey(streamPath))
                 return PublishingStreamResult.AlreadyExists;
