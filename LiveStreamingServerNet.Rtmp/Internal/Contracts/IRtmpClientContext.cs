@@ -82,14 +82,12 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Contracts
         public MediaType Type { get; }
         public uint Timestamp { get; }
         public IRentedBuffer Payload { get; }
-        public int PayloadSize { get; }
 
-        public PicturesCache(MediaType type, uint timestamp, IRentedBuffer payload, int payloadSize)
+        public PicturesCache(MediaType type, uint timestamp, IRentedBuffer payload)
         {
             Type = type;
             Timestamp = timestamp;
             Payload = payload;
-            PayloadSize = payloadSize;
         }
     }
 }
