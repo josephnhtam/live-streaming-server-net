@@ -10,7 +10,7 @@ namespace LiveStreamingServerNet.Flv.Installer
 {
     public static class HttpFlvInstaller
     {
-        public static IRtmpServerConfigurator AddHttpFlv(this IRtmpServerConfigurator configurator)
+        public static IRtmpServerConfigurator AddFlv(this IRtmpServerConfigurator configurator)
         {
             var services = configurator.Services;
 

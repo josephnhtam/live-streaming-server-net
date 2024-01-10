@@ -36,7 +36,7 @@ namespace LiveStreamingServerNet.Demo
         private static IServer CreateLiveStreamingServer()
         {
             return LiveStreamingServerBuilder.Create()
-                .ConfigureRtmpServer(options => options.AddHttpFlv())
+                .ConfigureRtmpServer(options => options.AddFlv())
                 .ConfigureLogging(options => options.AddConsole())
                 .Build();
         }
