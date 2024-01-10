@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace LiveStreamingServerNet.Flv
 {
-    public class FlvHeaderWriter : IFlvHeaderWriter
+    public class HttpFlvHeaderWriter : IHttpFlvHeaderWriter
     {
         public Task WriteHeaderAsync(HttpContext httpContext, string streamPath, IDictionary<string, string> streamArguments, CancellationToken cancellation)
         {

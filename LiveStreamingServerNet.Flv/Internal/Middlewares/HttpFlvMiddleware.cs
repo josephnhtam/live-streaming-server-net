@@ -12,10 +12,10 @@ namespace LiveStreamingServerNet.Flv.Internal.Middlewares
     {
         private readonly IHttpFlvClientFactory _clientFactory;
         private readonly IFlvStreamManagerService _streamManager;
-        private readonly IFlvHeaderWriter _headerWriter;
+        private readonly IHttpFlvHeaderWriter _headerWriter;
         private readonly RequestDelegate _next;
 
-        public HttpFlvMiddleware(IServer server, IFlvHeaderWriter headerWriter, RequestDelegate next)
+        public HttpFlvMiddleware(IServer server, IHttpFlvHeaderWriter headerWriter, RequestDelegate next)
         {
             _clientFactory = server.Services.GetRequiredService<IHttpFlvClientFactory>();
             _streamManager = server.Services.GetRequiredService<IFlvStreamManagerService>();

@@ -15,7 +15,7 @@ namespace LiveStreamingServerNet.Flv.Installer
     {
         public static IServiceCollection AddHttpFlv(this IServiceCollection services)
         {
-            services.AddSingleton<IFlvHeaderWriter, FlvHeaderWriter>();
+            services.AddSingleton<IHttpFlvHeaderWriter, HttpFlvHeaderWriter>();
 
             return services;
         }
