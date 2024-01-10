@@ -108,6 +108,9 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             uint timestamp,
             uint streamId)
         {
+            if (publishStreamContext.StreamMetaData == null)
+                return;
+
             var basicHeader = new RtmpChunkBasicHeader(0, RtmpConstants.DataMessageChunkStreamId);
             var messageHeader = new RtmpChunkMessageHeaderType0(timestamp, RtmpMessageType.DataMessageAmf0, streamId);
 
@@ -122,6 +125,9 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             uint timestamp,
             uint streamId)
         {
+            if (publishStreamContext.StreamMetaData == null)
+                return;
+
             var basicHeader = new RtmpChunkBasicHeader(0, RtmpConstants.DataMessageChunkStreamId);
             var messageHeader = new RtmpChunkMessageHeaderType0(timestamp, RtmpMessageType.DataMessageAmf0, streamId);
 

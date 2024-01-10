@@ -77,13 +77,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Data
 
         private static void CacheStreamMetaData(IDictionary<string, object> metaData, IRtmpPublishStreamContext publishStreamContext)
         {
-            publishStreamContext.StreamMetaData = new PublishStreamMetaData(
-                videoFrameRate: (uint)(double)metaData["framerate"],
-                videoWidth: (uint)(double)metaData["width"],
-                videoHeight: (uint)(double)metaData["height"],
-                audioSampleRate: (uint)(double)metaData["audiosamplerate"],
-                stereo: (bool)metaData["stereo"]
-            );
+            publishStreamContext.StreamMetaData = metaData;
         }
 
         private void BroadcastMetaDataToSubscribers(
