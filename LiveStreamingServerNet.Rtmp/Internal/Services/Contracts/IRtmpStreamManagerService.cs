@@ -5,10 +5,10 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services.Contracts
 {
     internal interface IRtmpStreamManagerService
     {
-        bool IsStreamPathPublishing(string publishStreamPath);
+        bool IsStreamPathPublishing(string streamPath);
         string? GetPublishStreamPath(IRtmpClientContext publisherClientContext);
-        IRtmpClientContext? GetPublishingClientContext(string publishStreamPath);
-        IRtmpPublishStreamContext? GetPublishStreamContext(string publishStreamPath);
+        IRtmpClientContext? GetPublishingClientContext(string streamPath);
+        IRtmpPublishStreamContext? GetPublishStreamContext(string streamPath);
 
         PublishingStreamResult StartPublishingStream(IRtmpClientContext publisherClientContext, string streamPath, IDictionary<string, string> streamArguments, out IList<IRtmpClientContext> existingSubscribers);
         bool StopPublishingStream(IRtmpClientContext publisherClientContext, out IList<IRtmpClientContext> existingSubscribers);
@@ -16,8 +16,8 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services.Contracts
         SubscribingStreamResult StartSubscribingStream(IRtmpClientContext subscriberClientContext, uint chunkStreamId, string streamPath, IDictionary<string, string> streamArguments);
         bool StopSubscribingStream(IRtmpClientContext subscriberClientContext);
 
-        IRentable<IList<IRtmpClientContext>> GetSubscribersLocked(string publishStreamPath);
-        IList<IRtmpClientContext> GetSubscribers(string publishStreamPath);
+        IRentable<IList<IRtmpClientContext>> GetSubscribersLocked(string streamPath);
+        IList<IRtmpClientContext> GetSubscribers(string streamPath);
     }
 
     internal enum PublishingStreamResult
