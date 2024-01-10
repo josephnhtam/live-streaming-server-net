@@ -69,12 +69,12 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             uint timestamp)
         {
             var rentedBuffer = new RentedBuffer(payloadBuffer.Size);
-            payloadBuffer.MoveTo(0).ReadBytes(rentedBuffer.Buffer, 0, payloadBuffer.Size);
+            payloadBuffer.MoveTo(0).ReadBytes(rentedBuffer.Buffer, 0, rentedBuffer.Size);
             payloadBuffer.MoveTo(0);
 
             await _interception.CachePictureAsync(publishStreamContext.StreamPath, mediaType, rentedBuffer, timestamp);
 
-            publishStreamContext.GroupOfPicturesCache.Add(new PicturesCache(mediaType, timestamp, rentedBuffer, payloadBuffer.Size));
+            publishStreamContext.GroupOfPicturesCache.Add(new PicturesCache(mediaType, timestamp, rentedBuffer));
         }
 
         public async Task ClearGroupOfPicturesCacheAsync(IRtmpPublishStreamContext publishStreamContext)
@@ -137,7 +137,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
         {
             foreach (var picture in publishStreamContext.GroupOfPicturesCache.Get())
             {
-                SendMediaPackage(clientContext, picture.Type, picture.Payload.Buffer, picture.PayloadSize, picture.Timestamp, streamId);
+                SendMediaPackage(clientContext, picture.Type, picture.Payload.Buffer, picture.Payload.Size, picture.Timestamp, streamId);
                 picture.Payload.Unclaim();
             }
         }
@@ -156,7 +156,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             payloadWriter(netBuffer);
 
             var rentedBuffer = new RentedBuffer(netBuffer.Size, Math.Max(1, subscribers.Count));
-            netBuffer.MoveTo(0).ReadBytes(rentedBuffer.Buffer, 0, netBuffer.Size);
+            netBuffer.MoveTo(0).ReadBytes(rentedBuffer.Buffer, 0, rentedBuffer.Size);
             netBuffer.MoveTo(0);
 
             await _interception.ReceiveMediaMessageAsync(publishStreamContext.StreamPath, mediaType, rentedBuffer, timestamp, isSkippable);

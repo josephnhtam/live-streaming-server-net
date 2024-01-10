@@ -7,6 +7,7 @@ namespace LiveStreamingServerNet.Utilities
     {
         public byte[] Buffer => _buffer;
         public int Claimed => _claimed;
+        public int Size { get; }
 
         private byte[] _buffer;
         private int _claimed;
@@ -18,6 +19,7 @@ namespace LiveStreamingServerNet.Utilities
 
             _buffer = ArrayPool<byte>.Shared.Rent(size);
             _claimed = initialClaim;
+            Size = size;
         }
 
         public void Claim()
