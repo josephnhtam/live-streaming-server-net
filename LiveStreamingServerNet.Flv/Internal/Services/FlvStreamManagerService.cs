@@ -1,5 +1,7 @@
 ﻿using LiveStreamingServerNet.Flv.Internal.Contracts;
 using LiveStreamingServerNet.Flv.Internal.Services.Contracts;
+using LiveStreamingServerNet.Utilities;
+using LiveStreamingServerNet.Utilities.Contracts;
 using Open.Threading;
 
 namespace LiveStreamingServerNet.Flv.Internal.Services
@@ -13,10 +15,10 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
         private readonly Dictionary<string, List<IFlvClient>> _subscribingClients = new();
         private readonly Dictionary<IFlvClient, string> _subscribedStreamPaths = new();
 
-        public bool IsStreamPathPublishing(string publishStreamPath)
+        public bool IsStreamPathPublishing(string streamPath)
         {
             using var readLock = _publishingRwLock.ReadLock();
-            return _publishingStreamContexts.ContainsKey(publishStreamPath);
+            return _publishingStreamContexts.ContainsKey(streamPath);
         }
 
         public PublishingStreamResult StartPublishingStream(IFlvStreamContext streamContext, string streamPath, IDictionary<string, string> streamArguments)
@@ -49,6 +51,12 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
             return true;
         }
 
+        public IFlvStreamContext? GetFlvStreamContext(string streamPath)
+        {
+            using var readLock = _publishingRwLock.WriteLock();
+            return _publishingStreamContexts.GetValueOrDefault(streamPath);
+        }
+
         public SubscribingStreamResult StartSubscribingStream(IFlvClient client, string streamPath)
         {
             using var publishingReadLock = _publishingRwLock.ReadLock();
@@ -75,16 +83,29 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
         {
             using var subscribingWriteLock = _subscribingRwLock.WriteLock();
 
-            if (!_subscribedStreamPaths.Remove(client, out var publishStreamPath))
+            if (!_subscribedStreamPaths.Remove(client, out var streamPath))
                 return false;
 
-            if (_subscribingClients.TryGetValue(publishStreamPath, out var subscribers))
-            {
-                if (subscribers.Remove(client) && subscribers.Count == 0)
-                    _subscribingClients.Remove(publishStreamPath);
-            }
+            if (_subscribingClients.TryGetValue(streamPath, out var subscribers) &&
+                subscribers.Remove(client) && subscribers.Count == 0)
+                _subscribingClients.Remove(streamPath);
 
             return true;
+        }
+
+        public IRentable<IList<IFlvClient>> GetSubscribersLocked(string streamPath)
+        {
+            var readLock = _subscribingRwLock.ReadLock();
+
+            return new Rentable<IList<IFlvClient>>(
+                _subscribingClients.GetValueOrDefault(streamPath)?.ToList() ?? new List<IFlvClient>(),
+                readLock.Dispose);
+        }
+
+        public IList<IFlvClient> GetSubscribers(string streamPath)
+        {
+            using var readLock = _subscribingRwLock.ReadLock();
+            return _subscribingClients.GetValueOrDefault(streamPath)?.ToList() ?? new List<IFlvClient>();
         }
     }
 }
