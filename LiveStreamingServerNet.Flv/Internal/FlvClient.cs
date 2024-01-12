@@ -1,4 +1,5 @@
 ﻿using LiveStreamingServerNet.Flv.Internal.Contracts;
+using LiveStreamingServerNet.Flv.Internal.Services.Contracts;
 
 namespace LiveStreamingServerNet.Flv.Internal
 {
@@ -10,10 +11,16 @@ namespace LiveStreamingServerNet.Flv.Internal
 
         public Task InitializationTask => _initializationTcs.Task;
         private readonly TaskCompletionSource _initializationTcs = new();
-
         private CancellationTokenSource? _stoppingCts;
         private TaskCompletionSource? _taskCompletionSource;
         private Task? _completeTask;
+
+        private readonly IFlvMediaTagManagerService _mediaTagManager;
+
+        public FlvClient(IFlvMediaTagManagerService mediaTagManager)
+        {
+            _mediaTagManager = mediaTagManager;
+        }
 
         public void Initialize(uint clientId, string streamPath, IStreamWriter streamWriter, CancellationToken stoppingToken)
         {
@@ -26,6 +33,8 @@ namespace LiveStreamingServerNet.Flv.Internal
             _stoppingCts.Token.Register(() => _taskCompletionSource.TrySetResult());
 
             _completeTask = _taskCompletionSource.Task;
+
+            _mediaTagManager.RegisterClient(this);
         }
 
         public void CompleteInitialization()
@@ -45,6 +54,8 @@ namespace LiveStreamingServerNet.Flv.Internal
 
         public async ValueTask DisposeAsync()
         {
+            _mediaTagManager.UnregisterClient(this);
+
             if (_stoppingCts != null)
                 _stoppingCts.Dispose();
 

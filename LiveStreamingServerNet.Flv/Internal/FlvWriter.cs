@@ -10,7 +10,6 @@ namespace LiveStreamingServerNet.Flv.Internal
         private readonly IStreamWriter _streamWriter;
         private readonly INetBuffer _netBuffer;
         private readonly SemaphoreSlim _syncLock;
-        private uint _previousTagSize;
 
         public FlvWriter(IFlvClient client, IStreamWriter streamWriter)
         {
@@ -18,11 +17,6 @@ namespace LiveStreamingServerNet.Flv.Internal
             _streamWriter = streamWriter;
             _netBuffer = new NetBuffer();
             _syncLock = new SemaphoreSlim(1, 1);
-        }
-
-        public void Dispose()
-        {
-            throw new NotImplementedException();
         }
 
         public async Task WriteHeaderAsync(bool allowAudioTags, bool allowVideoTags, CancellationToken cancellationToken)
@@ -36,8 +30,10 @@ namespace LiveStreamingServerNet.Flv.Internal
                 typeFlags |= 0x01;
 
             await _streamWriter.WriteAsync(
-                new byte[] { 0x46, 0x4c, 0x56, 0x01, typeFlags, 0x00, 0x00, 0x09, 0x00, 0x00, 0x00, 0x00 },
-                cancellationToken);
+                new byte[] {
+                    0x46, 0x4c, 0x56, 0x01, typeFlags, 0x00, 0x00, 0x00, 0x09, 0x00, 0x00, 0x00,
+                    0x00, 0x00, 0x00, 0x00
+                }, cancellationToken);
         }
 
         public async Task WriteTagAsync(FlvTagHeader tagHeader, Action<INetBuffer> payloadBufer, CancellationToken cancellationToken)
@@ -46,17 +42,13 @@ namespace LiveStreamingServerNet.Flv.Internal
             {
                 await _syncLock.WaitAsync(cancellationToken);
 
-                _netBuffer.WriteUInt32BigEndian(_previousTagSize);
-
                 tagHeader.Write(_netBuffer);
-
                 payloadBufer.Invoke(_netBuffer);
+                _netBuffer.WriteUInt32BigEndian((uint)_netBuffer.Size);
 
                 await _streamWriter.WriteAsync(
                     new ArraySegment<byte>(_netBuffer.UnderlyingStream.GetBuffer(), 0, _netBuffer.Size),
                     cancellationToken);
-
-                _previousTagSize = (uint)(_netBuffer.Size - 4);
             }
             catch (Exception)
             {

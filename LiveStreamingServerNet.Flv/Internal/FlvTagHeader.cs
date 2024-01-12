@@ -9,7 +9,7 @@ namespace LiveStreamingServerNet.Flv.Internal
             netBuffer.Write((byte)tagType);
             netBuffer.WriteUInt24BigEndian(dataSize);
             netBuffer.WriteUInt24BigEndian(timestamp);
-            netBuffer.WriteUInt24BigEndian(0);
+            netBuffer.WriteUInt32BigEndian(0);
         }
     }
 

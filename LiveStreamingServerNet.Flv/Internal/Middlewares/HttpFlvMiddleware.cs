@@ -12,7 +12,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Middlewares
     {
         private readonly IHttpFlvClientFactory _clientFactory;
         private readonly IFlvStreamManagerService _streamManager;
-        private readonly IFlvMediaTagManagerService _flvTagManager;
+        private readonly IFlvMediaTagManagerService _mediaTagManager;
         private readonly IHttpFlvHeaderWriter _headerWriter;
         private readonly RequestDelegate _next;
 
@@ -20,7 +20,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Middlewares
         {
             _clientFactory = server.Services.GetRequiredService<IHttpFlvClientFactory>();
             _streamManager = server.Services.GetRequiredService<IFlvStreamManagerService>();
-            _flvTagManager = server.Services.GetRequiredService<IFlvMediaTagManagerService>();
+            _mediaTagManager = server.Services.GetRequiredService<IFlvMediaTagManagerService>();
             _headerWriter = headerWriter;
             _next = next;
         }
@@ -87,8 +87,8 @@ namespace LiveStreamingServerNet.Flv.Internal.Middlewares
         {
             var streamContext = _streamManager.GetFlvStreamContext(client.StreamPath)!;
 
-            await _flvTagManager.SendCachedHeaderTagsAsync(client, streamContext, 0, cancellationToken);
-            await _flvTagManager.SendCachedGroupOfPicturesTagsAsync(client, streamContext, cancellationToken);
+            await _mediaTagManager.SendCachedHeaderTagsAsync(client, streamContext, 0, cancellationToken);
+            await _mediaTagManager.SendCachedGroupOfPicturesTagsAsync(client, streamContext, cancellationToken);
         }
 
         private IFlvClient CreateClient(HttpContext context, string streamPath, CancellationToken cancellation)
@@ -108,11 +108,12 @@ namespace LiveStreamingServerNet.Flv.Internal.Middlewares
 
             var path = context.Request.Path.ToString();
             var query = context.Request.QueryString.ToString();
+            var extension = Path.GetExtension(path);
 
-            if (path.Length <= 1)
+            if (path.Length <= 1 || !extension.Equals(".flv", StringComparison.InvariantCultureIgnoreCase))
                 return false;
 
-            streamPath = path.TrimEnd('/');
+            streamPath = path.Substring(0, path.Length - 4);
             streamArguments = QueryHelpers.ParseQuery(query).ToDictionary(x => x.Key, x => x.Value.ToString());
             return true;
         }
