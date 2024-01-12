@@ -122,7 +122,8 @@ namespace LiveStreamingServerNet.Rtmp.Installer
         private static IServiceCollection AddRtmpServerEventHandlers(this IServiceCollection services)
         {
             services.AddSingleton<IRtmpServerConnectionEventHandler, RtmpServerConnectionEventHandler>()
-                    .AddSingleton<IRtmpServerConnectionEventHandler, RtmpExternalServerConnectionEventDispatcher>();
+                    .AddSingleton<IRtmpServerConnectionEventHandler, RtmpExternalServerConnectionEventDispatcher>()
+                    .AddSingleton<IRtmpServerStreamEventHandler, RtmpExternalServerStreamEventDispatcher>();
 
             return services;
         }
