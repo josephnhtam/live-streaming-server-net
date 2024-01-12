@@ -4,7 +4,6 @@ using LiveStreamingServerNet.Rtmp.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.MessageDispatcher.Attributes;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.MessageDispatcher.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.Services.Contracts;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media

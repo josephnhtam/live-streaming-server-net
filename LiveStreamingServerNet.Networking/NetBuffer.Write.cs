@@ -124,5 +124,54 @@ namespace LiveStreamingServerNet.Newtorking
             _writer.Flush();
             RefreshSize();
         }
+
+        public void WriteUint16BigEndian(ushort value)
+        {
+            _writer.Write((byte)(value >> 8));
+            _writer.Write((byte)value);
+            _writer.Flush();
+            RefreshSize();
+        }
+
+        public void WriteUInt24BigEndian(uint value)
+        {
+            _writer.Write((byte)(value >> 16));
+            _writer.Write((byte)(value >> 8));
+            _writer.Write((byte)value);
+            RefreshSize();
+        }
+
+        public void WriteUInt32BigEndian(uint value)
+        {
+            _writer.Write((byte)(value >> 24));
+            _writer.Write((byte)(value >> 16));
+            _writer.Write((byte)(value >> 8));
+            _writer.Write((byte)value);
+            RefreshSize();
+        }
+
+        public void WriteInt16BigEndian(short value)
+        {
+            _writer.Write((byte)(value >> 8));
+            _writer.Write((byte)value);
+            RefreshSize();
+        }
+
+        public void WriteInt24BigEndian(int value)
+        {
+            _writer.Write((byte)(value >> 16));
+            _writer.Write((byte)(value >> 8));
+            _writer.Write((byte)value);
+            RefreshSize();
+        }
+
+        public void WriteInt32BigEndian(int value)
+        {
+            _writer.Write((byte)(value >> 24));
+            _writer.Write((byte)(value >> 16));
+            _writer.Write((byte)(value >> 8));
+            _writer.Write((byte)value);
+            RefreshSize();
+        }
     }
 }

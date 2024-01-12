@@ -71,5 +71,50 @@
         {
             return _reader.ReadChar();
         }
+
+        public ushort ReadUInt16BigEndian()
+        {
+            return (ushort)(_reader.ReadByte() << 8 | _reader.ReadByte());
+        }
+
+        public uint ReadUInt24BigEndian()
+        {
+            return (uint)(_reader.ReadByte() << 16 | _reader.ReadByte() << 8 | _reader.ReadByte());
+        }
+
+        public uint ReadUInt32BigEndian()
+        {
+            return (uint)(_reader.ReadByte() << 24 | _reader.ReadByte() << 16 | _reader.ReadByte() << 8 | _reader.ReadByte());
+        }
+
+        public short ReadInt16BiEndian()
+        {
+            var value = _reader.ReadByte() << 8 | _reader.ReadByte();
+
+            if ((value & 0x8000) != 0)
+                value |= unchecked((short)0xffff0000);
+
+            return (short)value;
+        }
+
+        public int ReadInt24BigEndian()
+        {
+            var value = _reader.ReadByte() << 16 | _reader.ReadByte() << 8 | _reader.ReadByte();
+
+            if ((value & 0x800000) != 0)
+                value |= unchecked((int)0xff000000);
+
+            return value;
+        }
+
+        public int ReadInt32BigEndian()
+        {
+            var value = _reader.ReadByte() << 24 | _reader.ReadByte() << 16 | _reader.ReadByte() << 8 | _reader.ReadByte();
+
+            if ((value & 0x80000000) != 0)
+                value |= unchecked((int)0xff000000);
+
+            return value;
+        }
     }
 }
