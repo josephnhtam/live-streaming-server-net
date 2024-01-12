@@ -1,6 +1,5 @@
 ﻿using LiveStreamingServerNet.Newtorking;
 using LiveStreamingServerNet.Newtorking.Contracts;
-using LiveStreamingServerNet.Rtmp.Internal.Extensions;
 
 namespace LiveStreamingServerNet.Rtmp.Internal.RtmpHeaders
 {
