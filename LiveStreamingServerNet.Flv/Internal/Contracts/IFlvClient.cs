@@ -2,9 +2,13 @@
 {
     internal interface IFlvClient : IAsyncDisposable
     {
-        IStreamWriter StreamWriter { get; }
-        void Start(IStreamWriter streamWriter, CancellationToken stoppingToken);
+        uint ClientId { get; }
+        string StreamPath { get; }
+        IFlvWriter FlvWriter { get; }
+        Task InitializationTask { get; }
+        void Initialize(uint clientId, string streamPath, IStreamWriter streamWriter, CancellationToken stoppingToken);
         void Stop();
+        void CompleteInitialization();
         Task UntilComplete();
     }
 }

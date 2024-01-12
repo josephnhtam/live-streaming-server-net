@@ -12,6 +12,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Middlewares
     {
         private readonly IHttpFlvClientFactory _clientFactory;
         private readonly IFlvStreamManagerService _streamManager;
+        private readonly IFlvMediaTagManagerService _flvTagManager;
         private readonly IHttpFlvHeaderWriter _headerWriter;
         private readonly RequestDelegate _next;
 
@@ -19,6 +20,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Middlewares
         {
             _clientFactory = server.Services.GetRequiredService<IHttpFlvClientFactory>();
             _streamManager = server.Services.GetRequiredService<IFlvStreamManagerService>();
+            _flvTagManager = server.Services.GetRequiredService<IFlvMediaTagManagerService>();
             _headerWriter = headerWriter;
             _next = next;
         }
@@ -42,14 +44,15 @@ namespace LiveStreamingServerNet.Flv.Internal.Middlewares
 
         private async Task SubscribeToStreamAsync(HttpContext context, string streamPath, IDictionary<string, string> streamArguments)
         {
-            await WriteFlvHeaderAsync(context, streamPath, streamArguments, context.RequestAborted);
+            var cancellation = context.RequestAborted;
 
-            await using var client = CreateClient(context);
+            await WriteHttpFlvHeaderAsync(context, streamPath, streamArguments, cancellation);
+
+            await using var client = CreateClient(context, streamPath, cancellation);
             switch (_streamManager.StartSubscribingStream(client, streamPath))
             {
                 case SubscribingStreamResult.Succeeded:
-                    await client.UntilComplete();
-                    _streamManager.StopSubscribingStream(client);
+                    await RunClientAsync(client, cancellation);
                     return;
                 case SubscribingStreamResult.StreamDoesntExist:
                     context.Response.StatusCode = StatusCodes.Status404NotFound;
@@ -59,12 +62,41 @@ namespace LiveStreamingServerNet.Flv.Internal.Middlewares
             }
         }
 
-        private IFlvClient CreateClient(HttpContext context)
+        private async Task RunClientAsync(IFlvClient client, CancellationToken cancellationToken)
         {
-            return _clientFactory.CreateClient(context, context.RequestAborted);
+            try
+            {
+                await SendFlvHeaderAsync(client, cancellationToken);
+                await SendCachedFlvTagsAsync(client, cancellationToken);
+
+                client.CompleteInitialization();
+                await client.UntilComplete();
+            }
+            finally
+            {
+                _streamManager.StopSubscribingStream(client);
+            }
         }
 
-        private async Task WriteFlvHeaderAsync(HttpContext context, string streamPath, IDictionary<string, string> streamArguments, CancellationToken cancellation)
+        private static async Task SendFlvHeaderAsync(IFlvClient client, CancellationToken cancellationToken)
+        {
+            await client.FlvWriter.WriteHeaderAsync(true, true, cancellationToken);
+        }
+
+        private async Task SendCachedFlvTagsAsync(IFlvClient client, CancellationToken cancellationToken)
+        {
+            var streamContext = _streamManager.GetFlvStreamContext(client.StreamPath)!;
+
+            await _flvTagManager.SendCachedHeaderTagsAsync(client, streamContext, 0, cancellationToken);
+            await _flvTagManager.SendCachedGroupOfPicturesTagsAsync(client, streamContext, cancellationToken);
+        }
+
+        private IFlvClient CreateClient(HttpContext context, string streamPath, CancellationToken cancellation)
+        {
+            return _clientFactory.CreateClient(context, streamPath, cancellation);
+        }
+
+        private async Task WriteHttpFlvHeaderAsync(HttpContext context, string streamPath, IDictionary<string, string> streamArguments, CancellationToken cancellation)
         {
             await _headerWriter.WriteHeaderAsync(context, streamPath, streamArguments, cancellation);
         }

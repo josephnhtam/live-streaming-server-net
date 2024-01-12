@@ -9,9 +9,9 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
     internal class RtmpMediaMessageScraper : IRtmpMediaMessageInterceptor
     {
         private readonly IFlvStreamManagerService _streamManager;
-        private readonly IFlvMediaMessageManagerService _mediaMessageManager;
+        private readonly IFlvMediaTagManagerService _mediaMessageManager;
 
-        public RtmpMediaMessageScraper(IFlvStreamManagerService streamManager, IFlvMediaMessageManagerService mediaMessageManager)
+        public RtmpMediaMessageScraper(IFlvStreamManagerService streamManager, IFlvMediaTagManagerService mediaMessageManager)
         {
             _streamManager = streamManager;
             _mediaMessageManager = mediaMessageManager;
@@ -50,7 +50,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
             var rentedBuffer = new RentedBuffer(sequenceHeader.Length, subscribers.Count);
             Array.Copy(sequenceHeader, rentedBuffer.Buffer, sequenceHeader.Length);
 
-            await _mediaMessageManager.EnqueueMediaMessageAsync(streamContext, subscribers, mediaType, 0, false, rentedBuffer);
+            await _mediaMessageManager.EnqueueMediaTagAsync(streamContext, subscribers, mediaType, 0, false, rentedBuffer);
         }
 
         public async Task OnReceiveMediaMessage(string streamPath, MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp, bool isSkippable)
@@ -63,7 +63,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
             if (!subscribers.Any())
                 return;
 
-            await _mediaMessageManager.EnqueueMediaMessageAsync(streamContext, subscribers, mediaType, timestamp, isSkippable, rentedBuffer);
+            await _mediaMessageManager.EnqueueMediaTagAsync(streamContext, subscribers, mediaType, timestamp, isSkippable, rentedBuffer);
         }
     }
 }

@@ -1,13 +1,12 @@
 ﻿using LiveStreamingServerNet.Flv.Internal.Contracts;
-using LiveStreamingServerNet.Newtorking.Contracts;
 using LiveStreamingServerNet.Rtmp;
 using LiveStreamingServerNet.Utilities.Contracts;
 
 namespace LiveStreamingServerNet.Flv.Internal.Services.Contracts
 {
-    internal interface IFlvMediaMessageManagerService
+    internal interface IFlvMediaTagManagerService
     {
-        Task EnqueueMediaMessageAsync(
+        Task EnqueueMediaTagAsync(
             IFlvStreamContext streamContext,
             IList<IFlvClient> subscribers,
             MediaType mediaType,
@@ -28,16 +27,22 @@ namespace LiveStreamingServerNet.Flv.Internal.Services.Contracts
 
         Task ClearGroupOfPicturesCacheAsync(IFlvStreamContext streamContext);
 
-        void SendCachedHeaderMessages(
+        Task SendCachedHeaderTagsAsync(
+            IFlvClient clientContext,
+            IFlvStreamContext streamContext,
+            uint timestamp,
+            CancellationToken cancellation);
+
+        Task SendCachedMetaDataTagAsync(
             IFlvClient client,
             IFlvStreamContext streamContext,
             uint timestamp,
-            uint streamId);
+            CancellationToken cancellation);
 
-        void SendCachedGroupOfPictures(
+        Task SendCachedGroupOfPicturesTagsAsync(
             IFlvClient client,
             IFlvStreamContext streamContext,
-            uint streamId);
+            CancellationToken cancellation);
 
         void RegisterClient(IFlvClient client);
         void UnregisterClient(IFlvClient client);

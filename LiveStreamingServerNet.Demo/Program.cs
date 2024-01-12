@@ -1,7 +1,7 @@
 
 using LiveStreamingServerNet.Demo.BackgroundServices;
-using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.Flv.Installer;
+using LiveStreamingServerNet.Networking.Contracts;
 
 namespace LiveStreamingServerNet.Demo
 {

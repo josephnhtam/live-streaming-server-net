@@ -11,6 +11,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Contracts
         byte[]? VideoSequenceHeader { get; set; }
         byte[]? AudioSequenceHeader { get; set; }
         IGroupOfPicturesCache GroupOfPicturesCache { get; }
+        bool IsReady { get; }
     }
 
     internal interface IGroupOfPicturesCache

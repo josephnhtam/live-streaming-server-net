@@ -9,9 +9,9 @@ namespace LiveStreamingServerNet.Flv
         {
             var response = httpContext.Response;
             response.ContentType = "video/x-flv";
-            response.Headers["Transfer-Encoding"] = "chunked";
-            response.Headers["Cache-Control"] = "no-cache";
-            response.Headers["Connection"] = "keep-alive";
+            //response.Headers["Transfer-Encoding"] = "chunked";
+            //response.Headers["Cache-Control"] = "no-cache";
+            //response.Headers["Connection"] = "keep-alive";
 
             return Task.CompletedTask;
         }

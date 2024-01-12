@@ -15,10 +15,10 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
         private readonly Dictionary<string, List<IFlvClient>> _subscribingClients = new();
         private readonly Dictionary<IFlvClient, string> _subscribedStreamPaths = new();
 
-        public bool IsStreamPathPublishing(string streamPath)
+        public bool IsStreamPathPublishing(string streamPath, bool requireReady)
         {
             using var readLock = _publishingRwLock.ReadLock();
-            return _publishingStreamContexts.ContainsKey(streamPath);
+            return _publishingStreamContexts.TryGetValue(streamPath, out var streamContext) && (!requireReady || streamContext.IsReady);
         }
 
         public PublishingStreamResult StartPublishingStream(IFlvStreamContext streamContext)
@@ -63,11 +63,11 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
             using var publishingReadLock = _publishingRwLock.ReadLock();
             using var subscribingWriteLock = _subscribingRwLock.WriteLock();
 
-            if (_publishingStreamContexts.ContainsKey(streamPath))
-                return SubscribingStreamResult.StreamDoesntExist;
-
             if (_subscribedStreamPaths.ContainsKey(client))
                 return SubscribingStreamResult.AlreadySubscribing;
+
+            if (!_publishingStreamContexts.TryGetValue(streamPath, out var stream) || !stream.IsReady)
+                return SubscribingStreamResult.StreamDoesntExist;
 
             if (!_subscribingClients.TryGetValue(streamPath, out var subscribers))
             {
