@@ -1,6 +1,5 @@
 ﻿using LiveStreamingServerNet.Flv.Configurations;
 using LiveStreamingServerNet.Flv.Installer.Contracts;
-using LiveStreamingServerNet.Rtmp.Installer.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LiveStreamingServerNet.Flv.Installer

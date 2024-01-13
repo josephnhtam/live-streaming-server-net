@@ -9,9 +9,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using System.Net.WebSockets;
 
-namespace LiveStreamingServerNet.Flv.Internal.Middlewares
+namespace LiveStreamingServerNet.Flv.Middlewares
 {
-    internal class WebSocketFlvMiddleware
+    public class WebSocketFlvMiddleware
     {
         private readonly IWebSocketFlvClientFactory _clientFactory;
         private readonly IFlvStreamManagerService _streamManager;

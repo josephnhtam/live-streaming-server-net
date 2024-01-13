@@ -8,9 +8,9 @@ using LiveStreamingServerNet.Networking.Contracts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace LiveStreamingServerNet.Flv.Internal.Middlewares
+namespace LiveStreamingServerNet.Flv.Middlewares
 {
-    internal class HttpFlvMiddleware
+    public class HttpFlvMiddleware
     {
         private readonly IHttpFlvClientFactory _clientFactory;
         private readonly IFlvStreamManagerService _streamManager;
