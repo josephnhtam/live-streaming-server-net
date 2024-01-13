@@ -56,8 +56,8 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Contracts
         bool IsReceivingAudio { get; set; }
         bool IsReceivingVideo { get; set; }
 
-        Task InitializationTask { get; }
         void CompleteInitialization();
+        Task UntilInitializationComplete();
     }
 
     internal interface IGroupOfPicturesCache

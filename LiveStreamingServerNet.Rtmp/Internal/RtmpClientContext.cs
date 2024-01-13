@@ -140,9 +140,8 @@ namespace LiveStreamingServerNet.Rtmp.Internal
         public bool IsReceivingAudio { get; set; }
         public bool IsReceivingVideo { get; set; }
 
-        public Task InitializationTask => _initializationTcs.Task;
-
-        private readonly TaskCompletionSource _initializationTcs = new();
+        private readonly TaskCompletionSource _initializationTcs;
+        private readonly Task _initializationTask;
 
         public RtmpStreamSubscriptionContext(uint streamId, uint chunkStreamId, string streamPath, IDictionary<string, string> streamArguments)
         {
@@ -154,11 +153,19 @@ namespace LiveStreamingServerNet.Rtmp.Internal
             IsPaused = false;
             IsReceivingAudio = true;
             IsReceivingVideo = true;
+
+            _initializationTcs = new TaskCompletionSource();
+            _initializationTask = _initializationTcs.Task;
         }
 
         public void CompleteInitialization()
         {
             _initializationTcs.SetResult();
+        }
+
+        public Task UntilInitializationComplete()
+        {
+            return _initializationTask;
         }
     }
 }
