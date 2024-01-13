@@ -56,7 +56,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
                         if (clientContext.StreamSubscriptionContext == null)
                             continue;
 
-                        await clientContext.StreamSubscriptionContext.InitializationTask;
+                        await clientContext.StreamSubscriptionContext.UntilInitializationComplete();
 
                         await SendMediaPackageAsync(
                             clientContext,
