@@ -7,6 +7,7 @@ namespace LiveStreamingServerNet.Newtorking
     {
         public void WriteRandomBytes(int count)
         {
+            Size = Math.Max(Size, Position + count);
             var writer = GetWriter();
             for (int i = 0; i < count; i++)
                 writer.Write((byte)RandomNumberGenerator.GetInt32(0, 255));
