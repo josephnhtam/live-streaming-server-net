@@ -1,8 +1,8 @@
-﻿using LiveStreamingServerNet.Newtorking.Contracts;
+﻿using System.Runtime.CompilerServices;
 
 namespace LiveStreamingServerNet.Newtorking
 {
-    public partial class NetBuffer : INetBuffer
+    public class NetBuffer : NetBufferBase
     {
         private readonly MemoryStream _stream;
         private readonly BinaryWriter _writer;
@@ -22,8 +22,9 @@ namespace LiveStreamingServerNet.Newtorking
             _reader = new BinaryReader(_stream);
         }
 
-        public MemoryStream UnderlyingStream => _stream;
-        public int Position
+        public override byte[] UnderlyingBuffer => _stream.GetBuffer();
+
+        public override int Position
         {
             get => (int)_stream.Position;
             set
@@ -38,7 +39,7 @@ namespace LiveStreamingServerNet.Newtorking
         }
 
         private int _size;
-        public int Size
+        public override int Size
         {
             get => _size;
             set
@@ -52,73 +53,18 @@ namespace LiveStreamingServerNet.Newtorking
             }
         }
 
-        public INetBuffer MoveTo(int position)
-        {
-            Position = position;
-            return this;
-        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        protected override BinaryWriter GetWriter() => _writer;
 
-        public void Reset()
-        {
-            Position = 0;
-            Size = 0;
-        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        protected override BinaryReader GetReader() => _reader;
 
-        public void Flush(INetBuffer output)
-        {
-            var size = Size;
-
-            Flush(output.UnderlyingStream);
-            output.Size += size;
-        }
-
-        public void Flush(Stream output)
-        {
-            _stream.Position = 0;
-            _stream.SetLength(Size);
-            _stream.CopyTo(output);
-
-            Reset();
-        }
-
-        public void CopyAllTo(INetBuffer targetBuffer)
-        {
-            var originalPosition = Position;
-            _stream.Position = 0;
-
-            targetBuffer.Size += Size;
-            _stream.ReadExactly(targetBuffer.UnderlyingStream.GetBuffer(), targetBuffer.Position, Size);
-            targetBuffer.Position += Size;
-
-            _stream.Position = originalPosition;
-        }
-
-        public void ReadAndCopyTo(INetBuffer targetBuffer, int bytesCount)
-        {
-            if (Position + bytesCount > Size)
-            {
-                throw new ArgumentOutOfRangeException(nameof(bytesCount));
-            }
-
-            targetBuffer.Size += bytesCount;
-            _stream.ReadExactly(targetBuffer.UnderlyingStream.GetBuffer(), targetBuffer.Position, bytesCount);
-            targetBuffer.Position += bytesCount;
-        }
-
-        public virtual void Dispose()
+        public override void Dispose()
         {
             _stream.Dispose();
             _writer.Dispose();
             _reader.Dispose();
             GC.SuppressFinalize(this);
-        }
-
-        public async Task CopyStreamData(Stream stream, int bytesCount, CancellationToken cancellationToken = default)
-        {
-            _stream.SetLength(bytesCount);
-            await stream.ReadExactlyAsync(_stream.GetBuffer(), 0, bytesCount, cancellationToken);
-            Position = 0;
-            Size = bytesCount;
         }
     }
 }

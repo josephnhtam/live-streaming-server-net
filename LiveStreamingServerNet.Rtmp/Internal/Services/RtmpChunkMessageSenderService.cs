@@ -195,7 +195,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             basicHeader.Write(firstChunkBuffer);
             messageHeader.Write(firstChunkBuffer);
             extendedTimestampHeader?.Write(firstChunkBuffer);
-            payloadBuffer.ReadAndCopyTo(firstChunkBuffer, payloadSize);
+            payloadBuffer.ReadAndWriteTo(firstChunkBuffer, payloadSize);
         }
 
         private void WriteToRemainingChunkBuffer(
@@ -212,7 +212,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
 
             chunkBasicHeader.Write(chunkBuffer);
             extendedTimestampHeader?.Write(chunkBuffer);
-            payloadBuffer.ReadAndCopyTo(chunkBuffer, payloadSize);
+            payloadBuffer.ReadAndWriteTo(chunkBuffer, payloadSize);
         }
     }
 }
