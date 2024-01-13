@@ -5,14 +5,14 @@
         int Position { get; set; }
         int Size { get; set; }
 
-        MemoryStream UnderlyingStream { get; }
+        byte[] UnderlyingBuffer { get; }
 
         INetBuffer MoveTo(int position);
         void Reset();
         void Flush(Stream output);
         void Flush(INetBuffer output);
         void CopyAllTo(INetBuffer targetBuffer);
-        void ReadAndCopyTo(INetBuffer targetBuffer, int bytesCount);
+        void ReadAndWriteTo(INetBuffer targetBuffer, int bytesCount);
         Task CopyStreamData(Stream stream, int bytesCount, CancellationToken cancellationToken = default);
 
         void WriteRandomBytes(int count);
