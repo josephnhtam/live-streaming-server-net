@@ -12,8 +12,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\LiveStreamingServerNet.Flv\LiveStreamingServerNet.Flv.csproj" />
-    <ProjectReference Include="..\LiveStreamingServerNet\LiveStreamingServerNet.csproj" />
+    <ProjectReference Include="..\..\src\LiveStreamingServerNet.Flv\LiveStreamingServerNet.Flv.csproj" />
+    <ProjectReference Include="..\..\src\LiveStreamingServerNet\LiveStreamingServerNet.csproj" />
   </ItemGroup>
 
 </Project>
