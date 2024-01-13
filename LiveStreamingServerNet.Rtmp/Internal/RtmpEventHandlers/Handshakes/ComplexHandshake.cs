@@ -53,7 +53,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Handshakes
             outgoingBuffer.Write(RtmpConstants.ServerVersion);
             outgoingBuffer.WriteRandomBytes(1536 - 8);
 
-            outgoingBuffer.Write(_incomingBuffer.UnderlyingStream.GetBuffer(), 0, 1536);
+            outgoingBuffer.Write(_incomingBuffer.UnderlyingBuffer, 0, 1536);
 
             var c1KeyIndex = KeyBlock.GetKeyIndex(_incomingBuffer, _type);
             var c1Key = KeyBlock.GetProvidedKeyData(_incomingBuffer, c1KeyIndex);

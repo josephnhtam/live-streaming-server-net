@@ -39,7 +39,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Handshakes
 
         public void WriteS2(INetBuffer outgoingBuffer)
         {
-            outgoingBuffer.Write(_incomingBuffer.UnderlyingStream.GetBuffer(), 0, 1536);
+            outgoingBuffer.Write(_incomingBuffer.UnderlyingBuffer, 0, 1536);
         }
     }
 }
