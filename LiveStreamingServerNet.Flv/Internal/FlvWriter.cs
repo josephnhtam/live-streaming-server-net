@@ -21,18 +21,25 @@ namespace LiveStreamingServerNet.Flv.Internal
 
         public async Task WriteHeaderAsync(bool allowAudioTags, bool allowVideoTags, CancellationToken cancellationToken)
         {
-            byte typeFlags = 0;
+            try
+            {
+                byte typeFlags = 0;
 
-            if (allowAudioTags)
-                typeFlags |= 0x04;
+                if (allowAudioTags)
+                    typeFlags |= 0x04;
 
-            if (allowVideoTags)
-                typeFlags |= 0x01;
+                if (allowVideoTags)
+                    typeFlags |= 0x01;
 
-            await _streamWriter.WriteAsync(
-                new byte[] {
+                await _streamWriter.WriteAsync(
+                    new byte[] {
                     0x46, 0x4c, 0x56, 0x01, typeFlags, 0x00, 0x00, 0x00, 0x09, 0x00, 0x00, 0x00, 0x00
-                }, cancellationToken);
+                    }, cancellationToken);
+            }
+            catch (Exception)
+            {
+                _client.Stop();
+            }
         }
 
         public async Task WriteTagAsync(FlvTagHeader tagHeader, Action<INetBuffer> payloadBufer, CancellationToken cancellationToken)
