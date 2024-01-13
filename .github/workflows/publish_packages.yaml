@@ -45,7 +45,7 @@ jobs:
       - name: Download Artifacts
         uses: actions/download-artifact@v4
         with:
-          name: nuget-package
+          name: nuget-packages
           path: pack
 
       - name: Push
