@@ -1,4 +1,6 @@
-﻿using LiveStreamingServerNet.Flv.Contracts;
+﻿using LiveStreamingServerNet.Flv.Configurations;
+using LiveStreamingServerNet.Flv.Contracts;
+using LiveStreamingServerNet.Flv.Installer.Contracts;
 using LiveStreamingServerNet.Flv.Internal;
 using LiveStreamingServerNet.Flv.Internal.Contracts;
 using LiveStreamingServerNet.Flv.Internal.HttpClients;
@@ -24,7 +26,7 @@ namespace LiveStreamingServerNet.Flv.Installer
             return services;
         }
 
-        public static IRtmpServerConfigurator AddFlv(this IRtmpServerConfigurator configurator)
+        public static IRtmpServerConfigurator AddFlv(this IRtmpServerConfigurator configurator, Action<IFlvConfigurator>? configure = null)
         {
             var services = configurator.Services;
 
@@ -43,19 +45,19 @@ namespace LiveStreamingServerNet.Flv.Installer
             services.AddSingleton<IFlvStreamManagerService, FlvStreamManagerService>()
                     .AddSingleton<IFlvMediaTagManagerService, FlvMediaTagManagerService>();
 
+            configure?.Invoke(new FlvConfigurator(services));
+
             return configurator;
         }
 
-        public static void UseHttpFlv(this WebApplication webApplication, IServer liveStreamingServer, IStreamPathResolver? streamPathResolver = null)
+        public static void UseHttpFlv(this WebApplication webApplication, IServer liveStreamingServer, HttpFlvOptions? options = null)
         {
-            streamPathResolver ??= new DefaultStreamPathResolver();
-            webApplication.UseMiddleware<HttpFlvMiddleware>(liveStreamingServer, streamPathResolver);
+            webApplication.UseMiddleware<HttpFlvMiddleware>(liveStreamingServer, options);
         }
 
-        public static void UseWebSocketFlv(this WebApplication webApplication, IServer liveStreamingServer, IStreamPathResolver? streamPathResolver = null)
+        public static void UseWebSocketFlv(this WebApplication webApplication, IServer liveStreamingServer, WebSocketFlvOptions? options = null)
         {
-            streamPathResolver ??= new DefaultStreamPathResolver();
-            webApplication.UseMiddleware<WebSocketFlvMiddleware>(liveStreamingServer, streamPathResolver);
+            webApplication.UseMiddleware<WebSocketFlvMiddleware>(liveStreamingServer, options);
         }
     }
 }

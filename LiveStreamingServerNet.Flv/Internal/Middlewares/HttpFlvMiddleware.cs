@@ -1,4 +1,5 @@
-﻿using LiveStreamingServerNet.Flv.Contracts;
+﻿using LiveStreamingServerNet.Flv.Configurations;
+using LiveStreamingServerNet.Flv.Contracts;
 using LiveStreamingServerNet.Flv.Internal.Contracts;
 using LiveStreamingServerNet.Flv.Internal.Extensions;
 using LiveStreamingServerNet.Flv.Internal.HttpClients.Contracts;
@@ -16,14 +17,15 @@ namespace LiveStreamingServerNet.Flv.Internal.Middlewares
         private readonly IStreamPathResolver _streamPathResolver;
         private readonly IHttpFlvHeaderWriter _headerWriter;
         private readonly IFlvClientHandler _clientHandler;
+
         private readonly RequestDelegate _next;
 
-        public HttpFlvMiddleware(IServer server, IStreamPathResolver streamPathResolver, IHttpFlvHeaderWriter headerWriter, RequestDelegate next)
+        public HttpFlvMiddleware(IServer server, HttpFlvOptions? options, IHttpFlvHeaderWriter headerWriter, RequestDelegate next)
         {
             _clientFactory = server.Services.GetRequiredService<IHttpFlvClientFactory>();
             _streamManager = server.Services.GetRequiredService<IFlvStreamManagerService>();
             _clientHandler = server.Services.GetRequiredService<IFlvClientHandler>();
-            _streamPathResolver = streamPathResolver;
+            _streamPathResolver = options?.StreamPathResolver ?? new DefaultStreamPathResolver();
             _headerWriter = headerWriter;
             _next = next;
         }

@@ -1,4 +1,5 @@
-﻿using LiveStreamingServerNet.Flv.Contracts;
+﻿using LiveStreamingServerNet.Flv.Configurations;
+using LiveStreamingServerNet.Flv.Contracts;
 using LiveStreamingServerNet.Flv.Internal.Contracts;
 using LiveStreamingServerNet.Flv.Internal.Extensions;
 using LiveStreamingServerNet.Flv.Internal.Services.Contracts;
@@ -15,15 +16,21 @@ namespace LiveStreamingServerNet.Flv.Internal.Middlewares
         private readonly IWebSocketFlvClientFactory _clientFactory;
         private readonly IFlvStreamManagerService _streamManager;
         private readonly IFlvClientHandler _clientHandler;
+
         private readonly IStreamPathResolver _streamPathResolver;
+        private readonly WebSocketAcceptContext _webSocketAcceptContext;
+
         private readonly RequestDelegate _next;
 
-        public WebSocketFlvMiddleware(IServer server, IStreamPathResolver streamPathResolver, RequestDelegate next)
+        public WebSocketFlvMiddleware(IServer server, WebSocketFlvOptions options, RequestDelegate next)
         {
             _clientFactory = server.Services.GetRequiredService<IWebSocketFlvClientFactory>();
             _streamManager = server.Services.GetRequiredService<IFlvStreamManagerService>();
             _clientHandler = server.Services.GetRequiredService<IFlvClientHandler>();
-            _streamPathResolver = streamPathResolver;
+
+            _streamPathResolver = options?.StreamPathResolver ?? new DefaultStreamPathResolver();
+            _webSocketAcceptContext = options?.WebSocketAcceptContext ?? new WebSocketAcceptContext();
+
             _next = next;
         }
 
@@ -61,7 +68,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Middlewares
         {
             var cancellation = context.RequestAborted;
 
-            var webSocket = await context.WebSockets.AcceptWebSocketAsync();
+            var webSocket = await context.WebSockets.AcceptWebSocketAsync(_webSocketAcceptContext);
             await using var client = CreateClient(webSocket, streamPath, cancellation);
 
             switch (_streamManager.StartSubscribingStream(client, streamPath))
