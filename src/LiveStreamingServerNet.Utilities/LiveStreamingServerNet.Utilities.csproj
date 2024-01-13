@@ -4,7 +4,12 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <VersionPrefix>0.1.0</VersionPrefix>
+    <Authors>Joseph NH Tam</Authors>
+    <Description>This package provides common helper clases.</Description>
+    <PackageTags>live-streaming;rtmp;flv;http-flv;websocket-flv</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <Version>0.1.1</Version>
   </PropertyGroup>
 
 </Project>
