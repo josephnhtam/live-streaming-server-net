@@ -29,7 +29,8 @@ namespace LiveStreamingServerNet.Flv.Installer
 
             services.AddSingleton<IHttpFlvClientFactory, HttpFlvClientFactory>()
                     .AddTransient<IFlvClient, FlvClient>()
-                    .AddTransient<IFlvWriter, FlvWriter>();
+                    .AddTransient<IFlvWriter, FlvWriter>()
+                    .AddSingleton<IFlvClientHandler, FlvClientHandler>();
 
             services.AddSingleton<IFlvStreamManagerService, FlvStreamManagerService>()
                     .AddSingleton<IFlvMediaTagManagerService, FlvMediaTagManagerService>()

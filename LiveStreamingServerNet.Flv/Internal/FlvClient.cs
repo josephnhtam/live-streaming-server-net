@@ -7,15 +7,15 @@ namespace LiveStreamingServerNet.Flv.Internal
     {
         public uint ClientId { get; private set; }
         public string StreamPath { get; private set; } = default!;
+        public CancellationToken StoppingToken { get; private set; } = default!;
         public IFlvWriter FlvWriter { get; }
-
-        public Task InitializationTask => _initializationTcs.Task;
 
         private readonly IFlvMediaTagManagerService _mediaTagManager;
         private readonly TaskCompletionSource _initializationTcs = new();
 
         private CancellationTokenSource? _stoppingCts;
         private TaskCompletionSource? _taskCompletionSource;
+        private Task? _initializationTask;
         private Task? _completeTask;
 
         public FlvClient(IFlvMediaTagManagerService mediaTagManager, IFlvWriter flvWriter)
@@ -31,9 +31,12 @@ namespace LiveStreamingServerNet.Flv.Internal
             FlvWriter.Initialize(this, streamWriter);
 
             _stoppingCts = CancellationTokenSource.CreateLinkedTokenSource(stoppingToken);
+            StoppingToken = _stoppingCts.Token;
+
             _taskCompletionSource = new TaskCompletionSource();
             _stoppingCts.Token.Register(() => _taskCompletionSource.TrySetResult());
 
+            _initializationTask = _initializationTcs.Task;
             _completeTask = _taskCompletionSource.Task;
 
             _mediaTagManager.RegisterClient(this);
@@ -42,6 +45,11 @@ namespace LiveStreamingServerNet.Flv.Internal
         public void CompleteInitialization()
         {
             _initializationTcs.SetResult();
+        }
+
+        public Task UntilIntializationComplete()
+        {
+            return _initializationTask ?? Task.CompletedTask;
         }
 
         public Task UntilComplete()

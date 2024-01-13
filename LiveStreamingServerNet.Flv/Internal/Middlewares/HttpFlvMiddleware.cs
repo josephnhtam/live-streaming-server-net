@@ -12,15 +12,15 @@ namespace LiveStreamingServerNet.Flv.Internal.Middlewares
     {
         private readonly IHttpFlvClientFactory _clientFactory;
         private readonly IFlvStreamManagerService _streamManager;
-        private readonly IFlvMediaTagManagerService _mediaTagManager;
         private readonly IHttpFlvHeaderWriter _headerWriter;
+        private readonly IFlvClientHandler _clientHandler;
         private readonly RequestDelegate _next;
 
         public HttpFlvMiddleware(IServer server, IHttpFlvHeaderWriter headerWriter, RequestDelegate next)
         {
             _clientFactory = server.Services.GetRequiredService<IHttpFlvClientFactory>();
             _streamManager = server.Services.GetRequiredService<IFlvStreamManagerService>();
-            _mediaTagManager = server.Services.GetRequiredService<IFlvMediaTagManagerService>();
+            _clientHandler = server.Services.GetRequiredService<IFlvClientHandler>();
             _headerWriter = headerWriter;
             _next = next;
         }
@@ -42,65 +42,6 @@ namespace LiveStreamingServerNet.Flv.Internal.Middlewares
             await SubscribeToStreamAsync(context, streamPath, streamArguments);
         }
 
-        private async Task SubscribeToStreamAsync(HttpContext context, string streamPath, IDictionary<string, string> streamArguments)
-        {
-            var cancellation = context.RequestAborted;
-
-            await WriteHttpFlvHeaderAsync(context, streamPath, streamArguments, cancellation);
-
-            await using var client = CreateClient(context, streamPath, cancellation);
-            switch (_streamManager.StartSubscribingStream(client, streamPath))
-            {
-                case SubscribingStreamResult.Succeeded:
-                    await RunClientAsync(client, cancellation);
-                    return;
-                case SubscribingStreamResult.StreamDoesntExist:
-                    context.Response.StatusCode = StatusCodes.Status404NotFound;
-                    return;
-                case SubscribingStreamResult.AlreadySubscribing:
-                    throw new InvalidOperationException("Already subscribing");
-            }
-        }
-
-        private async Task RunClientAsync(IFlvClient client, CancellationToken cancellationToken)
-        {
-            try
-            {
-                await SendFlvHeaderAsync(client, cancellationToken);
-                await SendCachedFlvTagsAsync(client, cancellationToken);
-
-                client.CompleteInitialization();
-                await client.UntilComplete();
-            }
-            finally
-            {
-                _streamManager.StopSubscribingStream(client);
-            }
-        }
-
-        private static async Task SendFlvHeaderAsync(IFlvClient client, CancellationToken cancellationToken)
-        {
-            await client.FlvWriter.WriteHeaderAsync(true, true, cancellationToken);
-        }
-
-        private async Task SendCachedFlvTagsAsync(IFlvClient client, CancellationToken cancellationToken)
-        {
-            var streamContext = _streamManager.GetFlvStreamContext(client.StreamPath)!;
-
-            await _mediaTagManager.SendCachedHeaderTagsAsync(client, streamContext, 0, cancellationToken);
-            await _mediaTagManager.SendCachedGroupOfPicturesTagsAsync(client, streamContext, cancellationToken);
-        }
-
-        private IFlvClient CreateClient(HttpContext context, string streamPath, CancellationToken cancellation)
-        {
-            return _clientFactory.CreateClient(context, streamPath, cancellation);
-        }
-
-        private async Task WriteHttpFlvHeaderAsync(HttpContext context, string streamPath, IDictionary<string, string> streamArguments, CancellationToken cancellation)
-        {
-            await _headerWriter.WriteHeaderAsync(context, streamPath, streamArguments, cancellation);
-        }
-
         private static bool GetStreamPathAndArguments(HttpContext context, out string streamPath, out IDictionary<string, string> streamArguments)
         {
             streamPath = default!;
@@ -116,6 +57,30 @@ namespace LiveStreamingServerNet.Flv.Internal.Middlewares
             streamPath = path.Substring(0, path.Length - 4);
             streamArguments = QueryHelpers.ParseQuery(query).ToDictionary(x => x.Key, x => x.Value.ToString());
             return true;
+        }
+
+        private IFlvClient CreateClient(HttpContext context, string streamPath, CancellationToken cancellation)
+        {
+            return _clientFactory.CreateClient(context, streamPath, cancellation);
+        }
+
+        private async Task SubscribeToStreamAsync(HttpContext context, string streamPath, IDictionary<string, string> streamArguments)
+        {
+            var cancellation = context.RequestAborted;
+
+            await using var client = CreateClient(context, streamPath, cancellation);
+            switch (_streamManager.StartSubscribingStream(client, streamPath))
+            {
+                case SubscribingStreamResult.Succeeded:
+                    await _headerWriter.WriteHeaderAsync(context, streamPath, streamArguments, cancellation);
+                    await _clientHandler.RunClientAsync(client);
+                    return;
+                case SubscribingStreamResult.StreamDoesntExist:
+                    context.Response.StatusCode = StatusCodes.Status404NotFound;
+                    return;
+                case SubscribingStreamResult.AlreadySubscribing:
+                    throw new InvalidOperationException("Already subscribing");
+            }
         }
     }
 }

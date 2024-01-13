@@ -48,7 +48,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
 
             try
             {
-                await client.InitializationTask;
+                await client.UntilIntializationComplete();
 
                 while (!cancellation.IsCancellationRequested)
                 {
