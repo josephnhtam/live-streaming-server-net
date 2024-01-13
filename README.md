@@ -64,3 +64,36 @@ ffplay rtmp://localhost:1935/live/demo
 2. Go to the "Media" menu and select "Open Network Stream".
 3. In the "Network" tab, enter the URL: `rtmp://localhost:1935/live/demo`.
 4. Click the "Play" button to start playing the live stream.
+
+## NuGet Packages
+
+<table>
+  <thead>
+    <tr>
+      <th></th>
+      <th>Package</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>LiveStreamingServerNet</th>
+      <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.svg?logo=nuget"></a></td>
+    <tr>
+    <tr>
+      <th>LiveStreamingServerNet.Flv</th>
+      <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet.Flv"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.Flv.svg?logo=nuget"></a></td>
+    <tr>
+    <tr>
+      <th>LiveStreamingServerNet.Networking</th>
+      <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet.Networking"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.Networking.svg?logo=nuget"></a></td>
+    <tr>
+    <tr>
+      <th>LiveStreamingServerNet.Rtmp</th>
+      <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet.Rtmp"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.Rtmp.svg?logo=nuget"></a></td>
+    <tr>
+    <tr>
+    <th>LiveStreamingServerNet.Utilities</th>
+      <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet.Utilities"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.Utilities?logo=nuget"></a></td>
+    <tr>
+  </tbody>
+</table>
