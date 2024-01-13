@@ -92,7 +92,9 @@
         On2VP6 = 4,
         On2VP6WithAlphaChannel = 5,
         ScreenVideoVersion2 = 6,
-        AVC = 7
+        AVC = 7,
+        HVC = 12,
+        Opus = 13
     }
 
     internal enum AVCPacketType : byte
@@ -116,6 +118,7 @@
         Reserved = 9,
         AAC = 10,
         Speex = 11,
+        Opus = 13,
         MP38kHz = 14,
         DeviceSpecificSound = 15
     }

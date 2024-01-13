@@ -82,7 +82,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
             var frameType = (VideoFrameType)(firstByte >> 4);
             var codecId = (VideoCodecId)(firstByte & 0x0f);
 
-            if (codecId == VideoCodecId.AVC)
+            if (codecId is VideoCodecId.AVC or VideoCodecId.HVC or VideoCodecId.Opus)
             {
                 var avcPackageType = (AVCPacketType)payloadBuffer.ReadByte();
 
