@@ -4,6 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <IsPackable>true</IsPackable>
     <Authors>Joseph NH Tam</Authors>
     <Description>This package provides the ASP.NET Core middlewares to serve FLV via HTTP and WebSocket</Description>
     <PackageTags>live-streaming;rtmp;flv;http-flv;websocket-flv</PackageTags>
