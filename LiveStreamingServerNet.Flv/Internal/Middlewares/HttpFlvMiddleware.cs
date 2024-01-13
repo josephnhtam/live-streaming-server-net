@@ -1,5 +1,6 @@
 ﻿using LiveStreamingServerNet.Flv.Contracts;
 using LiveStreamingServerNet.Flv.Internal.Contracts;
+using LiveStreamingServerNet.Flv.Internal.Extensions;
 using LiveStreamingServerNet.Flv.Internal.Services.Contracts;
 using LiveStreamingServerNet.Networking.Contracts;
 using Microsoft.AspNetCore.Http;
@@ -27,12 +28,19 @@ namespace LiveStreamingServerNet.Flv.Internal.Middlewares
 
         public async Task InvokeAsync(HttpContext context)
         {
-            if (!GetStreamPathAndArguments(context, out var streamPath, out var streamArguments))
+            if (!context.ValidateNoEndpointDelegate() ||
+                !context.ValidateGetOrHeadMethod() ||
+                !GetStreamPathAndArguments(context, out var streamPath, out var streamArguments))
             {
                 await _next.Invoke(context);
                 return;
             }
 
+            await TryServeHttpFlv(context, streamPath, streamArguments);
+        }
+
+        private async Task TryServeHttpFlv(HttpContext context, string streamPath, IDictionary<string, string> streamArguments)
+        {
             if (!_streamManager.IsStreamPathPublishing(streamPath))
             {
                 context.Response.StatusCode = StatusCodes.Status404NotFound;
