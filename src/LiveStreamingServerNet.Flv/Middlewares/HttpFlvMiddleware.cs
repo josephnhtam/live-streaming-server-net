@@ -20,12 +20,12 @@ namespace LiveStreamingServerNet.Flv.Middlewares
 
         private readonly RequestDelegate _next;
 
-        public HttpFlvMiddleware(IServer server, HttpFlvOptions? options, IHttpFlvHeaderWriter headerWriter, RequestDelegate next)
+        public HttpFlvMiddleware(IServer server, HttpFlvOptions options, IHttpFlvHeaderWriter headerWriter, RequestDelegate next)
         {
             _clientFactory = server.Services.GetRequiredService<IHttpFlvClientFactory>();
             _streamManager = server.Services.GetRequiredService<IFlvStreamManagerService>();
             _clientHandler = server.Services.GetRequiredService<IFlvClientHandler>();
-            _streamPathResolver = options?.StreamPathResolver ?? new DefaultStreamPathResolver();
+            _streamPathResolver = options.StreamPathResolver ?? new DefaultStreamPathResolver();
             _headerWriter = headerWriter;
             _next = next;
         }

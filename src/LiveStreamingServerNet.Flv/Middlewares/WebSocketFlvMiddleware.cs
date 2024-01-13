@@ -28,8 +28,8 @@ namespace LiveStreamingServerNet.Flv.Middlewares
             _streamManager = server.Services.GetRequiredService<IFlvStreamManagerService>();
             _clientHandler = server.Services.GetRequiredService<IFlvClientHandler>();
 
-            _streamPathResolver = options?.StreamPathResolver ?? new DefaultStreamPathResolver();
-            _webSocketAcceptContext = options?.WebSocketAcceptContext ?? new WebSocketAcceptContext();
+            _streamPathResolver = options.StreamPathResolver ?? new DefaultStreamPathResolver();
+            _webSocketAcceptContext = options.WebSocketAcceptContext ?? new WebSocketAcceptContext();
 
             _next = next;
         }

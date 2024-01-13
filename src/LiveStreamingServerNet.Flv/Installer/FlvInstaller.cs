@@ -52,12 +52,12 @@ namespace LiveStreamingServerNet.Flv.Installer
 
         public static void UseHttpFlv(this WebApplication webApplication, IServer liveStreamingServer, HttpFlvOptions? options = null)
         {
-            webApplication.UseMiddleware<HttpFlvMiddleware>(liveStreamingServer, options);
+            webApplication.UseMiddleware<HttpFlvMiddleware>(liveStreamingServer, options ?? new HttpFlvOptions());
         }
 
         public static void UseWebSocketFlv(this WebApplication webApplication, IServer liveStreamingServer, WebSocketFlvOptions? options = null)
         {
-            webApplication.UseMiddleware<WebSocketFlvMiddleware>(liveStreamingServer, options);
+            webApplication.UseMiddleware<WebSocketFlvMiddleware>(liveStreamingServer, options ?? new WebSocketFlvOptions());
         }
     }
 }
