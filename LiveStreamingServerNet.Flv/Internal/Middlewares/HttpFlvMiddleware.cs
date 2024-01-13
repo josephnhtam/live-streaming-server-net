@@ -106,7 +106,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Middlewares
             streamPath = default!;
             streamArguments = default!;
 
-            var path = context.Request.Path.ToString();
+            var path = context.Request.Path.ToString().TrimEnd('/');
             var query = context.Request.QueryString.ToString();
             var extension = Path.GetExtension(path);
 
