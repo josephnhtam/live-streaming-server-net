@@ -65,7 +65,7 @@ namespace LiveStreamingServerNet.Flv.Internal
                 _netBuffer.WriteUInt32BigEndian((uint)_netBuffer.Size);
 
                 await _streamWriter.WriteAsync(
-                    new ArraySegment<byte>(_netBuffer.UnderlyingStream.GetBuffer(), 0, _netBuffer.Size),
+                    new ArraySegment<byte>(_netBuffer.UnderlyingBuffer, 0, _netBuffer.Size),
                     cancellationToken);
             }
             catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { }
