@@ -12,5 +12,11 @@ namespace LiveStreamingServerNet.Flv.Internal.Logging
 
         [LoggerMessage(LogLevel.Debug, "ClientId: {ClientId} | Pause media package | Outstanding media message size: {OutstandingPackagesSize} | count: {OutstandingPackagesCount}")]
         public static partial void PauseMediaPackage(this ILogger logger, uint clientId, long outstandingPackagesSize, long outstandingPackagesCount);
+
+        [LoggerMessage(LogLevel.Error, "ClientId: {ClientId} | An error occurred while writing FLV header")]
+        public static partial void FailedToWriteFlvHeader(this ILogger logger, uint clientId, Exception ex);
+
+        [LoggerMessage(LogLevel.Error, "ClientId: {ClientId} | An error occurred while writing FLV tag")]
+        public static partial void FailedToWriteFlvTag(this ILogger logger, uint clientId, Exception ex);
     }
 }

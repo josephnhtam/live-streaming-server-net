@@ -1,22 +1,32 @@
 ﻿using LiveStreamingServerNet.Flv.Internal.Contracts;
+using LiveStreamingServerNet.Flv.Internal.Logging;
 using LiveStreamingServerNet.Newtorking;
 using LiveStreamingServerNet.Newtorking.Contracts;
+using Microsoft.Extensions.Logging;
 
 namespace LiveStreamingServerNet.Flv.Internal
 {
     internal class FlvWriter : IFlvWriter
     {
-        private readonly IFlvClient _client;
-        private readonly IStreamWriter _streamWriter;
+        private readonly ILogger _logger;
         private readonly INetBuffer _netBuffer;
         private readonly SemaphoreSlim _syncLock;
 
-        public FlvWriter(IFlvClient client, IStreamWriter streamWriter)
+        private IFlvClient _client = default!;
+        private IStreamWriter _streamWriter = default!;
+
+        public FlvWriter(ILogger<FlvWriter> logger)
+        {
+            _logger = logger;
+
+            _netBuffer = new NetBuffer();
+            _syncLock = new SemaphoreSlim(1, 1);
+        }
+
+        public void Initialize(IFlvClient client, IStreamWriter streamWriter)
         {
             _client = client;
             _streamWriter = streamWriter;
-            _netBuffer = new NetBuffer();
-            _syncLock = new SemaphoreSlim(1, 1);
         }
 
         public async Task WriteHeaderAsync(bool allowAudioTags, bool allowVideoTags, CancellationToken cancellationToken)
@@ -36,8 +46,10 @@ namespace LiveStreamingServerNet.Flv.Internal
                     0x46, 0x4c, 0x56, 0x01, typeFlags, 0x00, 0x00, 0x00, 0x09, 0x00, 0x00, 0x00, 0x00
                     }, cancellationToken);
             }
-            catch (Exception)
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { }
+            catch (Exception ex)
             {
+                _logger.FailedToWriteFlvHeader(_client.ClientId, ex);
                 _client.Stop();
             }
         }
@@ -56,8 +68,10 @@ namespace LiveStreamingServerNet.Flv.Internal
                     new ArraySegment<byte>(_netBuffer.UnderlyingStream.GetBuffer(), 0, _netBuffer.Size),
                     cancellationToken);
             }
-            catch (Exception)
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { }
+            catch (Exception ex)
             {
+                _logger.FailedToWriteFlvTag(_client.ClientId, ex);
                 _client.Stop();
             }
             finally
