@@ -45,7 +45,8 @@ jobs:
       - name: Download Artifacts
         uses: actions/download-artifact@v4
         with:
+          name: nuget-package
           path: pack
 
       - name: Push
-        run: dotnet nuget push "pack/*.nupkg" --source https://api.nuget.org/v3/index.json --skip-duplicate --api-key ${{ env.NUGET_KEY }}
+        run: dotnet nuget push "**/*.nupkg" --source https://api.nuget.org/v3/index.json --skip-duplicate --api-key ${{ env.NUGET_KEY }}
