@@ -1,0 +1,49 @@
+name: Publish Packages
+
+on: workflow_dispatch
+
+jobs:
+  pack:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Dotnet SDK
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 8.x
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --no-restore -c Release
+
+      - name: Pack
+        run: dotnet pack --no-restore -c Release -o ./pack
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: nuget-packages
+          path: pack
+
+  push:
+    runs-on: ubuntu-latest
+    needs: pack
+    env:
+      NUGET_KEY: ${{ secrets.NUGET_KEY }}
+    steps:
+      - name: Setup Dotnet SDK
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 8.x
+
+      - name: Download Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: pack
+
+      - name: Push
+        run: dotnet nuget push "pack/*.nupkg" --skip-duplicate --api-key ${{ env.NUGET_KEY }}
