@@ -1,6 +1,5 @@
 ﻿using LiveStreamingServerNet.Flv.Internal.Contracts;
 using LiveStreamingServerNet.Flv.Internal.Services.Contracts;
-using Microsoft.Extensions.Logging;
 
 namespace LiveStreamingServerNet.Flv.Internal
 {
@@ -11,12 +10,13 @@ namespace LiveStreamingServerNet.Flv.Internal
         public IFlvWriter FlvWriter { get; }
 
         public Task InitializationTask => _initializationTcs.Task;
+
+        private readonly IFlvMediaTagManagerService _mediaTagManager;
         private readonly TaskCompletionSource _initializationTcs = new();
+
         private CancellationTokenSource? _stoppingCts;
         private TaskCompletionSource? _taskCompletionSource;
         private Task? _completeTask;
-
-        private readonly IFlvMediaTagManagerService _mediaTagManager;
 
         public FlvClient(IFlvMediaTagManagerService mediaTagManager, IFlvWriter flvWriter)
         {
