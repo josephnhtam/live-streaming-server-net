@@ -17,7 +17,7 @@ namespace LiveStreamingServerNet.Flv.Internal.WebSocketClients
 
         public IFlvClient CreateClient(WebSocket webSocket, string streamPath, CancellationToken stoppingToken)
         {
-            var clientId = Interlocked.Increment(ref _lastClientId);
+            var clientId = $"WS-{Interlocked.Increment(ref _lastClientId)}";
             var client = _services.GetRequiredService<IFlvClient>();
 
             var streamWriter = new WebSocketStreamWriter(webSocket);

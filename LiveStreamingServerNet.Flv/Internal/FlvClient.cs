@@ -5,7 +5,7 @@ namespace LiveStreamingServerNet.Flv.Internal
 {
     internal class FlvClient : IFlvClient
     {
-        public uint ClientId { get; private set; }
+        public string ClientId { get; private set; }
         public string StreamPath { get; private set; } = default!;
         public CancellationToken StoppingToken { get; private set; } = default!;
         public IFlvWriter FlvWriter { get; }
@@ -24,7 +24,7 @@ namespace LiveStreamingServerNet.Flv.Internal
             FlvWriter = flvWriter;
         }
 
-        public void Initialize(uint clientId, string streamPath, IStreamWriter streamWriter, CancellationToken stoppingToken)
+        public void Initialize(string clientId, string streamPath, IStreamWriter streamWriter, CancellationToken stoppingToken)
         {
             ClientId = clientId;
             StreamPath = streamPath;

@@ -17,7 +17,7 @@ namespace LiveStreamingServerNet.Flv.Internal.HttpClients
 
         public IFlvClient CreateClient(HttpContext context, string streamPath, CancellationToken stoppingToken)
         {
-            var clientId = Interlocked.Increment(ref _lastClientId);
+            var clientId = $"HTTP-{Interlocked.Increment(ref _lastClientId)}";
             var client = _services.GetRequiredService<IFlvClient>();
 
             var streamWriter = new HttpResponseStreamWriter(context.Response);
