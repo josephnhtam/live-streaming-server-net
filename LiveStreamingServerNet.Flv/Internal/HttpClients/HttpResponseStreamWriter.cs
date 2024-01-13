@@ -1,7 +1,7 @@
 ﻿using LiveStreamingServerNet.Flv.Internal.Contracts;
 using Microsoft.AspNetCore.Http;
 
-namespace LiveStreamingServerNet.Flv.Internal
+namespace LiveStreamingServerNet.Flv.Internal.HttpClients
 {
     internal class HttpResponseStreamWriter : IStreamWriter
     {

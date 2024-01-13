@@ -1,8 +1,9 @@
 ﻿using LiveStreamingServerNet.Flv.Internal.Contracts;
+using LiveStreamingServerNet.Flv.Internal.HttpClients.Contracts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace LiveStreamingServerNet.Flv.Internal
+namespace LiveStreamingServerNet.Flv.Internal.HttpClients
 {
     internal class HttpFlvClientFactory : IHttpFlvClientFactory
     {

@@ -1,9 +1,13 @@
 ﻿using LiveStreamingServerNet.Flv.Contracts;
 using LiveStreamingServerNet.Flv.Internal;
 using LiveStreamingServerNet.Flv.Internal.Contracts;
+using LiveStreamingServerNet.Flv.Internal.HttpClients;
+using LiveStreamingServerNet.Flv.Internal.HttpClients.Contracts;
 using LiveStreamingServerNet.Flv.Internal.Middlewares;
 using LiveStreamingServerNet.Flv.Internal.Services;
 using LiveStreamingServerNet.Flv.Internal.Services.Contracts;
+using LiveStreamingServerNet.Flv.Internal.WebSocketClients;
+using LiveStreamingServerNet.Flv.Internal.WebSocketClients.Contracts;
 using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.Rtmp.Installer.Contracts;
 using Microsoft.AspNetCore.Builder;
@@ -11,7 +15,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace LiveStreamingServerNet.Flv.Installer
 {
-    public static class HttpFlvInstaller
+    public static class FlvInstaller
     {
         public static IServiceCollection AddHttpFlv(this IServiceCollection services)
         {
@@ -27,21 +31,31 @@ namespace LiveStreamingServerNet.Flv.Installer
             configurator.AddStreamEventHandlerr<RtmpServerStreamEventListener>()
                         .AddMediaMessageInterceptor<RtmpMediaMessageScraper>();
 
-            services.AddSingleton<IHttpFlvClientFactory, HttpFlvClientFactory>()
-                    .AddTransient<IFlvClient, FlvClient>()
+            services.AddTransient<IFlvClient, FlvClient>()
                     .AddTransient<IFlvWriter, FlvWriter>()
                     .AddSingleton<IFlvClientHandler, FlvClientHandler>();
 
-            services.AddSingleton<IFlvStreamManagerService, FlvStreamManagerService>()
-                    .AddSingleton<IFlvMediaTagManagerService, FlvMediaTagManagerService>()
+            services.AddSingleton<IHttpFlvClientFactory, HttpFlvClientFactory>()
                     .AddSingleton<IHttpFlvHeaderWriter, HttpFlvHeaderWriter>();
+
+            services.AddSingleton<IWebSocketFlvClientFactory, WebSocketFlvClientFactory>();
+
+            services.AddSingleton<IFlvStreamManagerService, FlvStreamManagerService>()
+                    .AddSingleton<IFlvMediaTagManagerService, FlvMediaTagManagerService>();
 
             return configurator;
         }
 
-        public static void UseHttpFlv(this WebApplication webApplication, IServer liveStreamingServer)
+        public static void UseHttpFlv(this WebApplication webApplication, IServer liveStreamingServer, IStreamPathResolver? streamPathResolver = null)
         {
-            webApplication.UseMiddleware<HttpFlvMiddleware>(liveStreamingServer);
+            streamPathResolver ??= new DefaultStreamPathResolver();
+            webApplication.UseMiddleware<HttpFlvMiddleware>(liveStreamingServer, streamPathResolver);
+        }
+
+        public static void UseWebSocketFlv(this WebApplication webApplication, IServer liveStreamingServer, IStreamPathResolver? streamPathResolver = null)
+        {
+            streamPathResolver ??= new DefaultStreamPathResolver();
+            webApplication.UseMiddleware<WebSocketFlvMiddleware>(liveStreamingServer, streamPathResolver);
         }
     }
 }

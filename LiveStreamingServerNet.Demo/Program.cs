@@ -29,7 +29,9 @@ namespace LiveStreamingServerNet.Demo
                 app.UseSwaggerUI();
             }
 
-            app.UseHttpsRedirection();
+            app.UseWebSockets();
+            app.UseWebSocketFlv(liveStreamingServer);
+
             app.UseHttpFlv(liveStreamingServer);
 
             app.Run();

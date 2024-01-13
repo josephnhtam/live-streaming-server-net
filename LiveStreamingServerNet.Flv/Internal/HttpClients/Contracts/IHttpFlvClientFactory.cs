@@ -1,6 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using LiveStreamingServerNet.Flv.Internal.Contracts;
+using Microsoft.AspNetCore.Http;
 
-namespace LiveStreamingServerNet.Flv.Internal.Contracts
+namespace LiveStreamingServerNet.Flv.Internal.HttpClients.Contracts
 {
     internal interface IHttpFlvClientFactory
     {

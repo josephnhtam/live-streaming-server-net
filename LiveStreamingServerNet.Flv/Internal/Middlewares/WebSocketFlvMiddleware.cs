@@ -1,36 +1,35 @@
 ﻿using LiveStreamingServerNet.Flv.Contracts;
 using LiveStreamingServerNet.Flv.Internal.Contracts;
 using LiveStreamingServerNet.Flv.Internal.Extensions;
-using LiveStreamingServerNet.Flv.Internal.HttpClients.Contracts;
 using LiveStreamingServerNet.Flv.Internal.Services.Contracts;
+using LiveStreamingServerNet.Flv.Internal.WebSocketClients.Contracts;
 using LiveStreamingServerNet.Networking.Contracts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using System.Net.WebSockets;
 
 namespace LiveStreamingServerNet.Flv.Internal.Middlewares
 {
-    internal class HttpFlvMiddleware
+    internal class WebSocketFlvMiddleware
     {
-        private readonly IHttpFlvClientFactory _clientFactory;
+        private readonly IWebSocketFlvClientFactory _clientFactory;
         private readonly IFlvStreamManagerService _streamManager;
-        private readonly IStreamPathResolver _streamPathResolver;
-        private readonly IHttpFlvHeaderWriter _headerWriter;
         private readonly IFlvClientHandler _clientHandler;
+        private readonly IStreamPathResolver _streamPathResolver;
         private readonly RequestDelegate _next;
 
-        public HttpFlvMiddleware(IServer server, IStreamPathResolver streamPathResolver, IHttpFlvHeaderWriter headerWriter, RequestDelegate next)
+        public WebSocketFlvMiddleware(IServer server, IStreamPathResolver streamPathResolver, RequestDelegate next)
         {
-            _clientFactory = server.Services.GetRequiredService<IHttpFlvClientFactory>();
+            _clientFactory = server.Services.GetRequiredService<IWebSocketFlvClientFactory>();
             _streamManager = server.Services.GetRequiredService<IFlvStreamManagerService>();
             _clientHandler = server.Services.GetRequiredService<IFlvClientHandler>();
             _streamPathResolver = streamPathResolver;
-            _headerWriter = headerWriter;
             _next = next;
         }
 
         public async Task InvokeAsync(HttpContext context)
         {
-            if (context.WebSockets.IsWebSocketRequest ||
+            if (!context.WebSockets.IsWebSocketRequest ||
                 !context.ValidateNoEndpointDelegate() ||
                 !context.ValidateGetOrHeadMethod() ||
                 !_streamPathResolver.ResolveStreamPathAndArguments(context, out var streamPath, out var streamArguments))
@@ -39,10 +38,10 @@ namespace LiveStreamingServerNet.Flv.Internal.Middlewares
                 return;
             }
 
-            await TryServeHttpFlv(context, streamPath, streamArguments);
+            await TryServeWebSocketFlv(context, streamPath, streamArguments);
         }
 
-        private async Task TryServeHttpFlv(HttpContext context, string streamPath, IDictionary<string, string> streamArguments)
+        private async Task TryServeWebSocketFlv(HttpContext context, string streamPath, IDictionary<string, string> streamArguments)
         {
             if (!_streamManager.IsStreamPathPublishing(streamPath))
             {
@@ -53,21 +52,21 @@ namespace LiveStreamingServerNet.Flv.Internal.Middlewares
             await SubscribeToStreamAsync(context, streamPath, streamArguments);
         }
 
-        private IFlvClient CreateClient(HttpContext context, string streamPath, CancellationToken cancellation)
+        private IFlvClient CreateClient(WebSocket webSocket, string streamPath, CancellationToken cancellation)
         {
-            return _clientFactory.CreateClient(context, streamPath, cancellation);
+            return _clientFactory.CreateClient(webSocket, streamPath, cancellation);
         }
 
         private async Task SubscribeToStreamAsync(HttpContext context, string streamPath, IDictionary<string, string> streamArguments)
         {
             var cancellation = context.RequestAborted;
 
-            await using var client = CreateClient(context, streamPath, cancellation);
+            var webSocket = await context.WebSockets.AcceptWebSocketAsync();
+            await using var client = CreateClient(webSocket, streamPath, cancellation);
 
             switch (_streamManager.StartSubscribingStream(client, streamPath))
             {
                 case SubscribingStreamResult.Succeeded:
-                    await _headerWriter.WriteHeaderAsync(context, streamPath, streamArguments, cancellation);
                     await _clientHandler.RunClientAsync(client);
                     return;
                 case SubscribingStreamResult.StreamDoesntExist:
