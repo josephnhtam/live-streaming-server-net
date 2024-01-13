@@ -4,9 +4,18 @@ This is a .NET implementation of RTMP server.
 
 > This project is still under active development
 
+## Features
+
+- RTMP/RTMPS protocol
+- HTTP-FLV/WebSocket-FLV with ASP.NET CORE
+- GOP caching
+- Custom authorization
+
 ## Quick Start
 
 ### Run the RTMP Server
+
+Create a .NET 8 console application
 
 ```
 using LiveStreamingServerNet;
@@ -16,6 +25,7 @@ using System.Net;
 var server = LiveStreamingServerBuilder.Create()
     .ConfigureLogging(options => options.AddConsole())
     .Build();
+
 await server.RunAsync(new IPEndPoint(IPAddress.Any, 1935));
 ```
 
