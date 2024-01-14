@@ -49,15 +49,20 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
 
             var (streamPath, streamArguments) = ParsePublishContext(command, clientContext);
 
-            if (await AuthorizeAsync(clientContext, command, chunkStreamContext, streamPath, streamArguments))
+            var authorizationResult = await AuthorizeAsync(clientContext, command, chunkStreamContext, streamPath, streamArguments);
+
+            if (authorizationResult.IsAuthorized)
             {
+                streamPath = authorizationResult.StreamPathOverride ?? streamPath;
+                streamArguments = authorizationResult.StreamArgumentsOverride ?? streamArguments;
+
                 StartPublishing(clientContext, command, chunkStreamContext, streamPath, streamArguments);
             }
 
             return true;
         }
 
-        private async ValueTask<bool> AuthorizeAsync(
+        private async ValueTask<AuthorizationResult> AuthorizeAsync(
             IRtmpClientContext clientContext,
             string streamPath,
             IDictionary<string, string> streamArguments,
@@ -66,10 +71,9 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
             var authorizationHandler = _services.GetService<IRtmpAuthorizationHandler>();
 
             if (authorizationHandler != null)
-                return await authorizationHandler
-                    .AuthorizePublishingAsync(clientContext.Client, streamPath, streamArguments, publishingType);
+                return await authorizationHandler.AuthorizePublishingAsync(clientContext.Client, streamPath, streamArguments, publishingType);
 
-            return true;
+            return AuthorizationResult.Authorized();
         }
 
         private static (string StreamPath, IDictionary<string, string> StreamArguments)
@@ -83,21 +87,22 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
             return (streamPath, arguments);
         }
 
-        private async ValueTask<bool> AuthorizeAsync(
+        private async ValueTask<AuthorizationResult> AuthorizeAsync(
             IRtmpClientContext clientContext,
             RtmpPublishCommand command,
             IRtmpChunkStreamContext chunkStreamContext,
             string streamPath,
             IDictionary<string, string> streamArguments)
         {
-            if (!await AuthorizeAsync(clientContext, streamPath, streamArguments, command.PublishingType))
+            var result = await AuthorizeAsync(clientContext, streamPath, streamArguments, command.PublishingType);
+
+            if (!result.IsAuthorized)
             {
-                _logger.AuthorizationFailed(clientContext.Client.ClientId, streamPath, command.PublishingType);
-                SendAuthorizationFailedCommandMessage(clientContext, chunkStreamContext);
-                return false;
+                _logger.AuthorizationFailed(clientContext.Client.ClientId, streamPath, command.PublishingType, result.Reason);
+                SendAuthorizationFailedCommandMessage(clientContext, chunkStreamContext, result.Reason);
             }
 
-            return true;
+            return result;
         }
 
         private bool StartPublishing(
@@ -157,14 +162,14 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
                 reason);
         }
 
-        private void SendAuthorizationFailedCommandMessage(IRtmpClientContext clientContext, IRtmpChunkStreamContext chunkStreamContext)
+        private void SendAuthorizationFailedCommandMessage(IRtmpClientContext clientContext, IRtmpChunkStreamContext chunkStreamContext, string reason)
         {
             _commandMessageSender.SendOnStatusCommandMessage(
                 clientContext,
                 chunkStreamContext.ChunkStreamId,
                 RtmpArgumentValues.Error,
                 RtmpStatusCodes.PublishUnauthorized,
-                "Authorization failed.");
+                reason);
         }
 
         private void SendPublishingStartedMessage(IRtmpClientContext clientContext, IRtmpChunkStreamContext chunkStreamContext)

@@ -16,11 +16,11 @@ namespace LiveStreamingServerNet.Rtmp.Logging
         public static void Play(this ILogger logger, uint clientId, string streamName)
             => PlayCore(logger, clientId, !string.IsNullOrEmpty(streamName) ? streamName : "(Empty)");
 
-        [LoggerMessage(LogLevel.Debug, "ClientId: {ClientId} | StreamPath: {StreamPath} | Authorization failed")]
-        public static partial void AuthorizationFailed(this ILogger logger, uint clientId, string streamPath);
+        [LoggerMessage(LogLevel.Debug, "ClientId: {ClientId} | StreamPath: {StreamPath} | Reason: {Reason} | Authorization failed")]
+        public static partial void AuthorizationFailed(this ILogger logger, uint clientId, string streamPath, string reason);
 
-        [LoggerMessage(LogLevel.Debug, "ClientId: {ClientId} | StreamPath: {StreamPath} | Type:{Type} | Authorization failed")]
-        public static partial void AuthorizationFailed(this ILogger logger, uint clientId, string streamPath, string type);
+        [LoggerMessage(LogLevel.Debug, "ClientId: {ClientId} | StreamPath: {StreamPath} | Type:{Type} | Reason: {Reason} | Authorization failed")]
+        public static partial void AuthorizationFailed(this ILogger logger, uint clientId, string streamPath, string type, string reason);
 
         [LoggerMessage(LogLevel.Debug, "ClientId: {ClientId} | StreamPath: {StreamPath} | Start subscription successfully")]
         public static partial void SubscriptionStarted(this ILogger logger, uint clientId, string streamPath);

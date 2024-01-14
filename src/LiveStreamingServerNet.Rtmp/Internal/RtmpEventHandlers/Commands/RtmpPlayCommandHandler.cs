@@ -57,23 +57,30 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
 
             var (streamPath, streamArguments) = ParseSubscriptionContext(command, clientContext);
 
-            if (await AuthorizeAsync(clientContext, command, chunkStreamContext, streamPath, streamArguments))
+            var authorizationResult = await AuthorizeAsync(clientContext, command, chunkStreamContext, streamPath, streamArguments);
+
+            if (authorizationResult.IsAuthorized)
             {
+                streamPath = authorizationResult.StreamPathOverride ?? streamPath;
+                streamArguments = authorizationResult.StreamArgumentsOverride ?? streamArguments;
+
                 StartSubscribing(clientContext, command, chunkStreamContext, streamPath, streamArguments);
             }
 
             return true;
         }
 
-        private async ValueTask<bool> AuthorizeAsync(IRtmpClientContext clientContext, string streamPath, IDictionary<string, string> streamArguments)
+        private async ValueTask<AuthorizationResult> AuthorizeAsync(
+            IRtmpClientContext clientContext,
+            string streamPath,
+            IDictionary<string, string> streamArguments)
         {
             var authorizationHandler = _services.GetService<IRtmpAuthorizationHandler>();
 
             if (authorizationHandler != null)
-                return await authorizationHandler
-                    .AuthorizeSubscriptionAsync(clientContext.Client, streamPath, streamArguments);
+                return await authorizationHandler.AuthorizeSubscriptionAsync(clientContext.Client, streamPath, streamArguments);
 
-            return true;
+            return AuthorizationResult.Authorized();
         }
 
         private static (string StreamPath, IDictionary<string, string> StreamArguments)
@@ -87,21 +94,22 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
             return (streamPath, arguments);
         }
 
-        private async ValueTask<bool> AuthorizeAsync(
+        private async ValueTask<AuthorizationResult> AuthorizeAsync(
             IRtmpClientContext clientContext,
             RtmpPlayCommand command,
             IRtmpChunkStreamContext chunkStreamContext,
             string streamPath,
             IDictionary<string, string> streamArguments)
         {
-            if (!await AuthorizeAsync(clientContext, streamPath, streamArguments))
+            var result = await AuthorizeAsync(clientContext, streamPath, streamArguments);
+
+            if (!result.IsAuthorized)
             {
-                _logger.AuthorizationFailed(clientContext.Client.ClientId, streamPath);
-                SendAuthorizationFailedCommandMessage(clientContext, chunkStreamContext);
-                return false;
+                _logger.AuthorizationFailed(clientContext.Client.ClientId, streamPath, result.Reason);
+                SendAuthorizationFailedCommandMessage(clientContext, chunkStreamContext, result.Reason);
             }
 
-            return true;
+            return result;
         }
 
         private bool StartSubscribing(
@@ -172,14 +180,14 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
                 clientContext.StreamSubscriptionContext.StreamArguments.AsReadOnly());
         }
 
-        private void SendAuthorizationFailedCommandMessage(IRtmpClientContext clientContext, IRtmpChunkStreamContext chunkStreamContext)
+        private void SendAuthorizationFailedCommandMessage(IRtmpClientContext clientContext, IRtmpChunkStreamContext chunkStreamContext, string reason)
         {
             _commandMessageSender.SendOnStatusCommandMessageAsync(
                 clientContext,
                 chunkStreamContext.ChunkStreamId,
                 RtmpArgumentValues.Error,
                 RtmpStatusCodes.PublishUnauthorized,
-                "Authorization failed.");
+                reason);
         }
 
         private void SendSubscriptionStartedMessage(IRtmpClientContext clientContext, IRtmpChunkStreamContext chunkStreamContext)
