@@ -1,7 +1,8 @@
 
-using LiveStreamingServerNet.Demo.BackgroundServices;
 using LiveStreamingServerNet.Flv.Installer;
 using LiveStreamingServerNet.Networking.Contracts;
+using LiveStreamingServerNet.Networking.Helpers;
+using System.Net;
 
 namespace LiveStreamingServerNet.Demo
 {
@@ -13,8 +14,7 @@ namespace LiveStreamingServerNet.Demo
 
             IServer liveStreamingServer = CreateLiveStreamingServer();
 
-            builder.Services.AddKeyedSingleton("live-streaming", liveStreamingServer);
-            builder.Services.AddHostedService<LiveStreamingServerService>();
+            builder.Services.AddBackgroundServer(liveStreamingServer, new IPEndPoint(IPAddress.Any, 1935));
 
             builder.Services.AddHttpFlv();
 
