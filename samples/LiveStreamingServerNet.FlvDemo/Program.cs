@@ -4,7 +4,7 @@ using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.Networking.Helpers;
 using System.Net;
 
-namespace LiveStreamingServerNet.Demo
+namespace LiveStreamingServerNet.FlvDemo
 {
     public static class Program
     {
