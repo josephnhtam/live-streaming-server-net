@@ -79,6 +79,8 @@ ffplay rtmp://localhost:1935/live/demo
 3. In the "Network" tab, enter the URL: `rtmp://localhost:1935/live/demo`.
 4. Click the "Play" button to start playing the live stream.
 
+---
+
 ### Serve FLV Live Streams
 
 Create a ASP.NET CORE 8 Web API application project and add the dependencies
