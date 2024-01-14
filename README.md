@@ -15,7 +15,15 @@ This is a .NET implementation of RTMP server.
 
 ### Run the RTMP Server
 
-Create a .NET 8 console application
+Create a .NET 8 console application project and add the dependencies
+
+```
+dotnet new console
+dotnet add package LiveStreamingServerNet
+dotnet add package Microsoft.Extensions.Logging.Console
+```
+
+Program.cs
 
 ```
 using LiveStreamingServerNet;
@@ -27,6 +35,12 @@ var server = LiveStreamingServerBuilder.Create()
     .Build();
 
 await server.RunAsync(new IPEndPoint(IPAddress.Any, 1935));
+```
+
+Run the application
+
+```
+dotnet run
 ```
 
 ### Publish a Live Stream
@@ -64,6 +78,66 @@ ffplay rtmp://localhost:1935/live/demo
 2. Go to the "Media" menu and select "Open Network Stream".
 3. In the "Network" tab, enter the URL: `rtmp://localhost:1935/live/demo`.
 4. Click the "Play" button to start playing the live stream.
+
+### Serve FLV Live Streams
+
+Create a ASP.NET CORE 8 Web API application project and add the dependencies
+
+```
+dotnet new webapi
+dotnet add package LiveStreamingServerNet
+dotnet add package LiveStreamingServerNet.Flv
+```
+
+Program.cs
+
+```
+using System.Net;
+using LiveStreamingServerNet;
+using LiveStreamingServerNet.Flv.Installer;
+using LiveStreamingServerNet.Networking.Helpers;
+
+var builder = WebApplication.CreateBuilder(args);
+
+var liveStreamingServer = LiveStreamingServerBuilder.Create()
+    .ConfigureRtmpServer(options => options.AddFlv())
+    .ConfigureLogging(options => options.AddConsole())
+    .Build();
+
+builder.Services.AddBackgroundServer(liveStreamingServer, new IPEndPoint(IPAddress.Any, 1935));
+builder.Services.AddHttpFlv();
+
+var app = builder.Build();
+
+app.UseWebSockets();
+app.UseWebSocketFlv(liveStreamingServer);
+
+app.UseHttpFlv(liveStreamingServer);
+
+app.Run();
+```
+
+Run the application
+
+```
+dotnet run --urls="https://+:8080"
+```
+
+#### Play FLV Live Streams
+
+Given a live stream is published to `rtmp://localhost:1935/live/demo`
+
+**HTTP-FLV**
+
+```
+https://localhost:8080/live/demo.flv
+```
+
+**WebSocket-FLV**
+
+```
+wss://localhost:8080/live/demo.flv
+```
 
 ## NuGet Packages
 
