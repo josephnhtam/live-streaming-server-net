@@ -31,5 +31,8 @@ namespace LiveStreamingServerNet.Newtorking.Logging
 
         [LoggerMessage(LogLevel.Error, "ClientId: {ClientId} | An error occurred while sending data to the client")]
         public static partial void SendDataError(this ILogger logger, uint clientId, Exception exception);
+
+        [LoggerMessage(LogLevel.Error, "ClientId: {ClientId} | An error occurred while disposing outstanding buffer sender")]
+        public static partial void OutstandingBufferSenderDisposeError(this ILogger logger, uint clientId, Exception exception);
     }
 }

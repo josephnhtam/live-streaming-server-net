@@ -6,7 +6,7 @@ namespace LiveStreamingServerNet.Networking.Contracts
     internal interface IClient : IAsyncDisposable, IClientHandle
     {
         void Initialize(uint clientId, TcpClient tcpClient);
-        Task RunAsync(IClientHandler handler, CancellationToken stoppingToken);
+        Task RunAsync(IClientHandler handler, ServerEndPoint serverEndPoint, CancellationToken stoppingToken);
     }
 
     public interface IClientHandle : IClientInfo, IClientControl, IClientMessageSender { }

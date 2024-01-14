@@ -6,9 +6,9 @@ namespace LiveStreamingServerNet.Networking.Helpers
 {
     public static class Extensions
     {
-        public static IServiceCollection AddBackgroundServer(this IServiceCollection services, IServer server, IPEndPoint serverEndPoint)
+        public static IServiceCollection AddBackgroundServer(this IServiceCollection services, IServer server, params ServerEndPoint[] serverEndPoints)
         {
-            return services.AddHostedService(_ => new BackgroundServerService(server, serverEndPoint));
+            return services.AddHostedService(_ => new BackgroundServerService(server, serverEndPoints));
         }
     }
 }

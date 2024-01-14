@@ -12,7 +12,7 @@ namespace LiveStreamingServerNet.Demo
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            IServer liveStreamingServer = CreateLiveStreamingServer();
+            var liveStreamingServer = CreateLiveStreamingServer();
 
             builder.Services.AddBackgroundServer(liveStreamingServer, new IPEndPoint(IPAddress.Any, 1935));
 

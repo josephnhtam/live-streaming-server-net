@@ -54,7 +54,9 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             IList<IRtmpClientContext> subscribers,
             AmfEncodingType amfEncodingType = AmfEncodingType.Amf0)
         {
-            foreach (var subscriberGroup in subscribers.GroupBy(x => x.StreamSubscriptionContext!.ChunkStreamId))
+            foreach (var subscriberGroup in
+                subscribers.Where(x => x.StreamSubscriptionContext != null)
+                           .GroupBy(x => x.StreamSubscriptionContext!.ChunkStreamId))
             {
                 _commandMessageSender.SendOnStatusCommandMessage(
                     subscriberGroup.ToList(),

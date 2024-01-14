@@ -1,4 +1,5 @@
-﻿using LiveStreamingServerNet.Networking.Configurations;
+﻿using LiveStreamingServerNet.Networking;
+using LiveStreamingServerNet.Networking.Configurations;
 using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.Newtorking.Contracts;
 using LiveStreamingServerNet.Newtorking.Logging;
@@ -37,7 +38,7 @@ namespace LiveStreamingServerNet.Newtorking
             _tcpClient = tcpClient;
         }
 
-        public async Task RunAsync(IClientHandler handler, CancellationToken stoppingToken)
+        public async Task RunAsync(IClientHandler handler, ServerEndPoint serverEndPoint, CancellationToken stoppingToken)
         {
             _logger.ClientConnected(ClientId);
 
@@ -50,7 +51,7 @@ namespace LiveStreamingServerNet.Newtorking
 
                 try
                 {
-                    networkStream = await CreateNetworkStreamAsync();
+                    networkStream = await CreateNetworkStreamAsync(serverEndPoint);
                     outstandingBufferSender.Start(networkStream, cancellationToken);
 
                     var readOnlyNetworkStream = new ReadOnlyStream(networkStream);
@@ -156,9 +157,9 @@ namespace LiveStreamingServerNet.Newtorking
             return ValueTask.CompletedTask;
         }
 
-        private async Task<Stream> CreateNetworkStreamAsync()
+        private async Task<Stream> CreateNetworkStreamAsync(ServerEndPoint serverEndPoint)
         {
-            if (_config.ServerCertificate != null)
+            if (serverEndPoint.IsSecure && _config.ServerCertificate != null)
             {
                 var sslStream = new SslStream(_tcpClient.GetStream(), false);
 
@@ -226,8 +227,14 @@ namespace LiveStreamingServerNet.Newtorking
 
             public async ValueTask DisposeAsync()
             {
-                if (_task != null)
-                    await _task;
+                try
+                {
+                    if (_task != null)
+                        await _task;
+                }catch(Exception ex)
+                {
+                    _logger.OutstandingBufferSenderDisposeError(_clientId, ex);
+                }
             }
         }
     }
