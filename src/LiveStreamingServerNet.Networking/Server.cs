@@ -47,10 +47,11 @@ namespace LiveStreamingServerNet.Newtorking
             ValidateAndSetStarted();
 
             Exception? serverException = null;
+            var serverListeners = new List<ServerListener>();
 
             try
             {
-                var serverListeners = await StartServerListeners(serverEndPoints);
+                serverListeners = await StartServerListeners(serverEndPoints);
                 await OnServerStartedAsync();
 
                 await RunServerLoopsAsync(serverListeners, cancellationToken);
@@ -65,6 +66,9 @@ namespace LiveStreamingServerNet.Newtorking
             }
 
             await Task.WhenAll(_clientTasks.Select(x => x.Value.Task));
+
+            foreach (var serverListener in serverListeners)
+                serverListener.TcpListener.Dispose();
 
             await OnServerStoppedAsync();
             _logger.ServerStopped();
