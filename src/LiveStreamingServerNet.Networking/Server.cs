@@ -53,7 +53,6 @@ namespace LiveStreamingServerNet.Newtorking
             {
                 serverListeners = await StartServerListeners(serverEndPoints);
                 await OnServerStartedAsync();
-
                 await RunServerLoopsAsync(serverListeners, cancellationToken);
             }
             catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
@@ -71,7 +70,6 @@ namespace LiveStreamingServerNet.Newtorking
                 serverListener.TcpListener.Dispose();
 
             await OnServerStoppedAsync();
-            _logger.ServerStopped();
 
             if (serverException != null)
                 throw serverException;
@@ -216,11 +214,13 @@ namespace LiveStreamingServerNet.Newtorking
         private async Task OnServerStartedAsync()
         {
             await _eventDispatcher.ServerStartedAsync();
+            _logger.ServerStarted();
         }
 
         private async Task OnServerStoppedAsync()
         {
             await _eventDispatcher.ServerStoppedAsync();
+            _logger.ServerStopped();
         }
 
         private record ServerListener(TcpListener TcpListener, ServerEndPoint ServerEndPoint);

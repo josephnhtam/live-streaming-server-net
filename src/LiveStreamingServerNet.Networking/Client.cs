@@ -231,7 +231,8 @@ namespace LiveStreamingServerNet.Newtorking
                 {
                     if (_task != null)
                         await _task;
-                }catch(Exception ex)
+                }
+                catch (Exception ex)
                 {
                     _logger.OutstandingBufferSenderDisposeError(_clientId, ex);
                 }

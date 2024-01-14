@@ -8,6 +8,9 @@ namespace LiveStreamingServerNet.Newtorking.Logging
         [LoggerMessage(LogLevel.Information, "Server is started | IPEndPoint: {IPEndPoint}")]
         public static partial void ServerStarted(this ILogger logger, string ipEndPoint);
 
+        [LoggerMessage(LogLevel.Information, "Server is started")]
+        public static partial void ServerStarted(this ILogger logger);
+
         [LoggerMessage(LogLevel.Information, "Server is stopped")]
         public static partial void ServerStopped(this ILogger logger);
 
