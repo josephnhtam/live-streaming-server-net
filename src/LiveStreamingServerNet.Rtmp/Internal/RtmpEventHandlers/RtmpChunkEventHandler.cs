@@ -44,7 +44,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
             return false;
         }
 
-        private async Task<bool> HandleChunkEvent(RtmpChunkEvent @event, INetBuffer netBuffer, CancellationToken cancellationToken)
+        private async ValueTask<bool> HandleChunkEvent(RtmpChunkEvent @event, INetBuffer netBuffer, CancellationToken cancellationToken)
         {
             var basicHeader = await RtmpChunkBasicHeader.ReadAsync(netBuffer, @event.NetworkStream, cancellationToken);
 
@@ -85,7 +85,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
             }
         }
 
-        private async Task<bool> HandleChunkMessageHeaderType0Async(
+        private async ValueTask<bool> HandleChunkMessageHeaderType0Async(
             IRtmpChunkStreamContext chunkStreamContext,
             RtmpChunkEvent @event,
             INetBuffer netBuffer,
@@ -113,7 +113,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
             return true;
         }
 
-        private async Task<bool> HandleChunkMessageHeaderType1Async(IRtmpChunkStreamContext chunkStreamContext,
+        private async ValueTask<bool> HandleChunkMessageHeaderType1Async(IRtmpChunkStreamContext chunkStreamContext,
             RtmpChunkEvent @event,
             INetBuffer netBuffer,
             CancellationToken cancellationToken)
@@ -139,7 +139,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
             return true;
         }
 
-        private async Task<bool> HandleChunkMessageHeaderType2Async(
+        private async ValueTask<bool> HandleChunkMessageHeaderType2Async(
             IRtmpChunkStreamContext chunkStreamContext,
             RtmpChunkEvent @event,
             INetBuffer netBuffer,
@@ -164,7 +164,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
             return true;
         }
 
-        private async Task<bool> HandleChunkMessageHeaderType3Async(
+        private async ValueTask<bool> HandleChunkMessageHeaderType3Async(
             IRtmpChunkStreamContext chunkStreamContext,
             RtmpChunkEvent @event,
             INetBuffer netBuffer,
@@ -185,7 +185,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
             return true;
         }
 
-        private async Task<bool> HandleChunkEventPayloadAsync(IRtmpChunkStreamContext chunkStreamContext, RtmpChunkEvent @event, INetBuffer netBuffer, CancellationToken cancellationToken)
+        private async ValueTask<bool> HandleChunkEventPayloadAsync(IRtmpChunkStreamContext chunkStreamContext, RtmpChunkEvent @event, INetBuffer netBuffer, CancellationToken cancellationToken)
         {
             if (chunkStreamContext.IsFirstChunkOfMessage)
             {
@@ -216,7 +216,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
             return true;
         }
 
-        private async Task<bool> DoHandleChunkEventPayloadAsync(IRtmpChunkStreamContext chunkStreamContext, IRtmpClientContext clientContext, CancellationToken cancellationToken)
+        private async ValueTask<bool> DoHandleChunkEventPayloadAsync(IRtmpChunkStreamContext chunkStreamContext, IRtmpClientContext clientContext, CancellationToken cancellationToken)
         {
             try
             {

@@ -17,7 +17,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
             _mediaMessageManager = mediaMessageManager;
         }
 
-        public async Task OnCachePicture(string streamPath, MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp)
+        public async ValueTask OnCachePicture(string streamPath, MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp)
         {
             var streamContext = _streamManager.GetFlvStreamContext(streamPath);
             if (streamContext == null)
@@ -26,7 +26,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
             await _mediaMessageManager.CachePictureAsync(streamContext, mediaType, rentedBuffer, timestamp);
         }
 
-        public async Task OnClearGroupOfPicturesCache(string streamPath)
+        public async ValueTask OnClearGroupOfPicturesCache(string streamPath)
         {
             var streamContext = _streamManager.GetFlvStreamContext(streamPath);
             if (streamContext == null)
@@ -35,7 +35,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
             await _mediaMessageManager.ClearGroupOfPicturesCacheAsync(streamContext);
         }
 
-        public async Task OnCacheSequenceHeader(string streamPath, MediaType mediaType, byte[] sequenceHeader)
+        public async ValueTask OnCacheSequenceHeader(string streamPath, MediaType mediaType, byte[] sequenceHeader)
         {
             var streamContext = _streamManager.GetFlvStreamContext(streamPath);
             if (streamContext == null)
@@ -53,7 +53,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
             await _mediaMessageManager.EnqueueMediaTagAsync(streamContext, subscribers, mediaType, 0, false, rentedBuffer);
         }
 
-        public async Task OnReceiveMediaMessage(string streamPath, MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp, bool isSkippable)
+        public async ValueTask OnReceiveMediaMessage(string streamPath, MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp, bool isSkippable)
         {
             var streamContext = _streamManager.GetFlvStreamContext(streamPath);
             if (streamContext == null)

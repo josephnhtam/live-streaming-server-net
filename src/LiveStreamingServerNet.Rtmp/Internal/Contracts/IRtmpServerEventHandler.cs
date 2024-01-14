@@ -2,20 +2,20 @@
 {
     internal interface IRtmpServerConnectionEventHandler
     {
-        Task OnRtmpClientCreatedAsync(IRtmpClientContext clientContext);
-        Task OnRtmpClientDisposedAsync(IRtmpClientContext clientContext);
+        ValueTask OnRtmpClientCreatedAsync(IRtmpClientContext clientContext);
+        ValueTask OnRtmpClientDisposedAsync(IRtmpClientContext clientContext);
 
-        Task OnRtmpClientHandshakeCompleteAsync(IRtmpClientContext clientId);
-        Task OnRtmpClientConnectedAsync(IRtmpClientContext clientContext, IReadOnlyDictionary<string, object> commandObject, IReadOnlyDictionary<string, object>? arguments);
+        ValueTask OnRtmpClientHandshakeCompleteAsync(IRtmpClientContext clientId);
+        ValueTask OnRtmpClientConnectedAsync(IRtmpClientContext clientContext, IReadOnlyDictionary<string, object> commandObject, IReadOnlyDictionary<string, object>? arguments);
     }
 
     internal interface IRtmpServerStreamEventHandler
     {
-        Task OnRtmpStreamPublishedAsync(IRtmpClientContext clientContext, string streamPath, IReadOnlyDictionary<string, string> streamArguments);
-        Task OnRtmpStreamUnpublishedAsync(IRtmpClientContext clientContext, string streamPath);
-        Task OnRtmpStreamSubscribedAsync(IRtmpClientContext clientContext, string streamPath, IReadOnlyDictionary<string, string> streamArguments);
-        Task OnRtmpStreamUnsubscribedAsync(IRtmpClientContext clientContext, string streamPath);
+        ValueTask OnRtmpStreamPublishedAsync(IRtmpClientContext clientContext, string streamPath, IReadOnlyDictionary<string, string> streamArguments);
+        ValueTask OnRtmpStreamUnpublishedAsync(IRtmpClientContext clientContext, string streamPath);
+        ValueTask OnRtmpStreamSubscribedAsync(IRtmpClientContext clientContext, string streamPath, IReadOnlyDictionary<string, string> streamArguments);
+        ValueTask OnRtmpStreamUnsubscribedAsync(IRtmpClientContext clientContext, string streamPath);
 
-        Task OnRtmpStreamMetaDataReceived(IRtmpClientContext clientContext, string streamPath, IReadOnlyDictionary<string, object> metaData);
+        ValueTask OnRtmpStreamMetaDataReceived(IRtmpClientContext clientContext, string streamPath, IReadOnlyDictionary<string, object> metaData);
     }
 }

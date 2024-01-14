@@ -15,7 +15,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.MessageDispatch
             _handlerMap = handlerMap;
         }
 
-        public async Task<bool> DispatchAsync(IRtmpChunkStreamContext chunkStreamContext, IRtmpClientContext clientContext, CancellationToken cancellationToken)
+        public async ValueTask<bool> DispatchAsync(IRtmpChunkStreamContext chunkStreamContext, IRtmpClientContext clientContext, CancellationToken cancellationToken)
         {
             var messageTypeId = chunkStreamContext.MessageHeader.MessageTypeId;
             var handlerType = _handlerMap.GetHandlerType(messageTypeId) ??

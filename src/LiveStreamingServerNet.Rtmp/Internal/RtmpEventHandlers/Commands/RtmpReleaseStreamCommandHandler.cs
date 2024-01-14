@@ -9,13 +9,13 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
     [RtmpCommand("releaseStream")]
     internal class RtmpReleaseStreamCommandHandler : RtmpCommandHandler<RtmpReleaseStreamCommand>
     {
-        public override Task<bool> HandleAsync(
+        public override ValueTask<bool> HandleAsync(
             IRtmpChunkStreamContext chunkStreamContext,
             IRtmpClientContext clientContext,
             RtmpReleaseStreamCommand command,
             CancellationToken cancellationToken)
         {
-            return Task.FromResult(true);
+            return ValueTask.FromResult(true);
         }
     }
 }

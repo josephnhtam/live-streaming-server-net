@@ -34,7 +34,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
             _logger = logger;
         }
 
-        public override Task<bool> HandleAsync(
+        public override ValueTask<bool> HandleAsync(
             IRtmpChunkStreamContext chunkStreamContext,
             IRtmpClientContext clientContext,
             RtmpConnectCommand command,
@@ -52,7 +52,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
 
             _eventDispatcher.RtmpClientConnectedAsync(clientContext, command.CommandObject.AsReadOnly(), command.Arguments?.AsReadOnly());
 
-            return Task.FromResult(true);
+            return ValueTask.FromResult(true);
         }
 
         private void RespondToClient(IRtmpClientContext clientContext, RtmpConnectCommand command)

@@ -9,7 +9,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
     [RtmpCommand("receiveVideo")]
     internal class RtmpReceiveVideoCommandHandler : RtmpCommandHandler<RtmpReceiveVideoCommand>
     {
-        public override Task<bool> HandleAsync(
+        public override ValueTask<bool> HandleAsync(
             IRtmpChunkStreamContext chunkStreamContext,
             IRtmpClientContext clientContext,
             RtmpReceiveVideoCommand command,
@@ -22,7 +22,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
                 subscriptionContext.IsReceivingVideo = command.Flag;
             }
 
-            return Task.FromResult(true);
+            return ValueTask.FromResult(true);
         }
     }
 }

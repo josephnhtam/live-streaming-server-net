@@ -9,13 +9,13 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
     [RtmpCommand("FCUnpublish")]
     internal class RtmpFCUnpublishCommandHandler : RtmpCommandHandler<RtmpFCUnpublishCommand>
     {
-        public override Task<bool> HandleAsync(
+        public override ValueTask<bool> HandleAsync(
             IRtmpChunkStreamContext chunkStreamContext,
             IRtmpClientContext clientContext,
             RtmpFCUnpublishCommand command,
             CancellationToken cancellationToken)
         {
-            return Task.FromResult(true);
+            return ValueTask.FromResult(true);
         }
     }
 }

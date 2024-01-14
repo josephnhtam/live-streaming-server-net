@@ -36,7 +36,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
             _logger = logger;
         }
 
-        public override async Task<bool> HandleAsync(
+        public override async ValueTask<bool> HandleAsync(
             IRtmpChunkStreamContext chunkStreamContext,
             IRtmpClientContext clientContext,
             RtmpPublishCommand command,
@@ -57,7 +57,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
             return true;
         }
 
-        private async Task<bool> AuthorizeAsync(
+        private async ValueTask<bool> AuthorizeAsync(
             IRtmpClientContext clientContext,
             string streamPath,
             IDictionary<string, string> streamArguments,
@@ -83,7 +83,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
             return (streamPath, arguments);
         }
 
-        private async Task<bool> AuthorizeAsync(
+        private async ValueTask<bool> AuthorizeAsync(
             IRtmpClientContext clientContext,
             RtmpPublishCommand command,
             IRtmpChunkStreamContext chunkStreamContext,

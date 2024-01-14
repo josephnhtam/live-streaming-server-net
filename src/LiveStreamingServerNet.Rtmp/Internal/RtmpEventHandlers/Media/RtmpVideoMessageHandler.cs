@@ -25,7 +25,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
             _config = config.Value;
         }
 
-        public async Task<bool> HandleAsync(
+        public async ValueTask<bool> HandleAsync(
             IRtmpChunkStreamContext chunkStreamContext,
             IRtmpClientContext clientContext,
             INetBuffer payloadBuffer,
@@ -39,7 +39,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
             return true;
         }
 
-        private async Task BroacastVideoMessageToSubscribersAsync(
+        private async ValueTask BroacastVideoMessageToSubscribersAsync(
             IRtmpChunkStreamContext chunkStreamContext,
             IRtmpPublishStreamContext publishStreamContext,
             INetBuffer payloadBuffer,
@@ -57,7 +57,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
             }
         }
 
-        private async Task BroacastVideoMessageToSubscribersAsync(
+        private async ValueTask BroacastVideoMessageToSubscribersAsync(
             IRtmpChunkStreamContext chunkStreamContext,
             IRtmpPublishStreamContext publishStreamContext,
             bool isSkippable,
@@ -73,7 +73,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
                 payloadBuffer.CopyAllTo);
         }
 
-        private async Task<bool> CacheVideoSequenceAsync(
+        private async ValueTask<bool> CacheVideoSequenceAsync(
             IRtmpChunkStreamContext chunkStreamContext,
             IRtmpPublishStreamContext publishStreamContext,
             INetBuffer payloadBuffer)

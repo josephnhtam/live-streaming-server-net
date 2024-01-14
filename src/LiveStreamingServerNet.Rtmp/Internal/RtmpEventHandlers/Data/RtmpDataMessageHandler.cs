@@ -20,7 +20,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Data
             _eventDispatcher = eventDispatcher;
         }
 
-        public async Task<bool> HandleAsync(
+        public async ValueTask<bool> HandleAsync(
             IRtmpChunkStreamContext chunkStreamContext,
             IRtmpClientContext clientContext,
             INetBuffer payloadBuffer,
@@ -42,7 +42,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Data
             };
         }
 
-        private async Task<bool> HandleSetDataFrameAsync(
+        private async ValueTask<bool> HandleSetDataFrameAsync(
             IRtmpClientContext clientContext,
             IRtmpChunkStreamContext chunkStreamContext,
             object[] amfData)
@@ -58,7 +58,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Data
             }
         }
 
-        private Task<bool> HandleOnMetaDataAsync(
+        private ValueTask<bool> HandleOnMetaDataAsync(
             IRtmpClientContext clientContext,
             IRtmpChunkStreamContext chunkStreamContext,
             IDictionary<string, object> metaData)
@@ -72,7 +72,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Data
 
             _eventDispatcher.RtmpStreamMetaDataReceived(clientContext, clientContext.PublishStreamContext!.StreamPath, metaData.AsReadOnly());
 
-            return Task.FromResult(true);
+            return ValueTask.FromResult(true);
         }
 
         private static void CacheStreamMetaData(IDictionary<string, object> metaData, IRtmpPublishStreamContext publishStreamContext)

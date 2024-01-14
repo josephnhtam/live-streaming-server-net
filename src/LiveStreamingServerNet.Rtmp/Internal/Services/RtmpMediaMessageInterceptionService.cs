@@ -13,25 +13,25 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             _interceptors = interceptors;
         }
 
-        public async Task CachePictureAsync(string streamPath, MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp)
+        public async ValueTask CachePictureAsync(string streamPath, MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp)
         {
             foreach (var interceptor in _interceptors)
                 await interceptor.OnCachePicture(streamPath, mediaType, rentedBuffer, timestamp);
         }
 
-        public async Task CacheSequenceHeaderAsync(string streamPath, MediaType mediaType, byte[] sequenceHeader)
+        public async ValueTask CacheSequenceHeaderAsync(string streamPath, MediaType mediaType, byte[] sequenceHeader)
         {
             foreach (var interceptor in _interceptors)
                 await interceptor.OnCacheSequenceHeader(streamPath, mediaType, sequenceHeader);
         }
 
-        public async Task ClearGroupOfPicturesCacheAsync(string streamPath)
+        public async ValueTask ClearGroupOfPicturesCacheAsync(string streamPath)
         {
             foreach (var interceptor in _interceptors)
                 await interceptor.OnClearGroupOfPicturesCache(streamPath);
         }
 
-        public async Task ReceiveMediaMessageAsync(string streamPath, MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp, bool isSkippable)
+        public async ValueTask ReceiveMediaMessageAsync(string streamPath, MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp, bool isSkippable)
         {
             foreach (var interceptor in _interceptors)
                 await interceptor.OnReceiveMediaMessage(streamPath, mediaType, rentedBuffer, timestamp, isSkippable);

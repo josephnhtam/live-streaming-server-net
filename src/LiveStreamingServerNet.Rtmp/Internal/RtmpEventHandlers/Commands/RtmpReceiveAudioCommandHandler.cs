@@ -9,7 +9,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
     [RtmpCommand("receiveAudio")]
     internal class RtmpReceiveAudioCommandHandler : RtmpCommandHandler<RtmpReceiveAudioCommand>
     {
-        public override Task<bool> HandleAsync(
+        public override ValueTask<bool> HandleAsync(
             IRtmpChunkStreamContext chunkStreamContext,
             IRtmpClientContext clientContext,
             RtmpReceiveAudioCommand command,
@@ -22,7 +22,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
                 subscriptionContext.IsReceivingAudio = command.Flag;
             }
 
-            return Task.FromResult(true);
+            return ValueTask.FromResult(true);
         }
     }
 }

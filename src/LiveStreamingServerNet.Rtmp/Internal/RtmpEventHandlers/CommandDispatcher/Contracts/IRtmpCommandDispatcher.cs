@@ -5,6 +5,6 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.CommandDispatch
 {
     internal interface IRtmpCommandDispatcher
     {
-        Task<bool> DispatchAsync(IRtmpChunkStreamContext chunkStreamContext, IRtmpClientContext clientContext, INetBuffer payloadBuffer, CancellationToken cancellationToken);
+        ValueTask<bool> DispatchAsync(IRtmpChunkStreamContext chunkStreamContext, IRtmpClientContext clientContext, INetBuffer payloadBuffer, CancellationToken cancellationToken);
     }
 }

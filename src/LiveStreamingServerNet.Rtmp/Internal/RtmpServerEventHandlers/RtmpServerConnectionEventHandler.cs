@@ -16,27 +16,27 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpServerEventHandlers
             _streamDeletionService = streamDeletionService;
         }
 
-        public Task OnRtmpClientConnectedAsync(IRtmpClientContext clientContext, IReadOnlyDictionary<string, object> commandObject, IReadOnlyDictionary<string, object>? arguments)
+        public ValueTask OnRtmpClientConnectedAsync(IRtmpClientContext clientContext, IReadOnlyDictionary<string, object> commandObject, IReadOnlyDictionary<string, object>? arguments)
         {
             _mediaMessageManager.RegisterClient(clientContext);
-            return Task.CompletedTask;
+            return ValueTask.CompletedTask;
         }
 
-        public Task OnRtmpClientDisposedAsync(IRtmpClientContext clientContext)
+        public ValueTask OnRtmpClientDisposedAsync(IRtmpClientContext clientContext)
         {
             _mediaMessageManager.UnregisterClient(clientContext);
             _streamDeletionService.DeleteStream(clientContext);
-            return Task.CompletedTask;
+            return ValueTask.CompletedTask;
         }
 
-        public Task OnRtmpClientCreatedAsync(IRtmpClientContext clientContext)
+        public ValueTask OnRtmpClientCreatedAsync(IRtmpClientContext clientContext)
         {
-            return Task.CompletedTask;
+            return ValueTask.CompletedTask;
         }
 
-        public Task OnRtmpClientHandshakeCompleteAsync(IRtmpClientContext clientId)
+        public ValueTask OnRtmpClientHandshakeCompleteAsync(IRtmpClientContext clientId)
         {
-            return Task.CompletedTask;
+            return ValueTask.CompletedTask;
         }
     }
 }

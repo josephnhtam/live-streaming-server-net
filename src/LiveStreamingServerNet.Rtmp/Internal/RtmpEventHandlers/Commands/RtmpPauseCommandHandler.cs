@@ -24,7 +24,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
             _mediaMessageManager = mediaMessageManager;
         }
 
-        public override Task<bool> HandleAsync(
+        public override ValueTask<bool> HandleAsync(
             IRtmpChunkStreamContext chunkStreamContext,
             IRtmpClientContext clientContext,
             RtmpPauseCommand command,
@@ -42,7 +42,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
                     HandleUnpause(clientContext, chunkStreamContext);
             }
 
-            return Task.FromResult(true);
+            return ValueTask.FromResult(true);
         }
 
         private void HandleUnpause(IRtmpClientContext clientContext, IRtmpChunkStreamContext chunkStreamContext)

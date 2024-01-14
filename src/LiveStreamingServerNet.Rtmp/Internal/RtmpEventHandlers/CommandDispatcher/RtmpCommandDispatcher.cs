@@ -26,7 +26,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.CommandDispatch
             _commandParametersMap = new ConcurrentDictionary<Type, (Type, ParameterInfo[])>();
         }
 
-        public async Task<bool> DispatchAsync(
+        public async ValueTask<bool> DispatchAsync(
             IRtmpChunkStreamContext chunkStreamContext,
             IRtmpClientContext clientContext,
             INetBuffer payloadBuffer,

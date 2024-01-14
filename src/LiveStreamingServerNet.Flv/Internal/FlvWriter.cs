@@ -29,7 +29,7 @@ namespace LiveStreamingServerNet.Flv.Internal
             _streamWriter = streamWriter;
         }
 
-        public async Task WriteHeaderAsync(bool allowAudioTags, bool allowVideoTags, CancellationToken cancellationToken)
+        public async ValueTask WriteHeaderAsync(bool allowAudioTags, bool allowVideoTags, CancellationToken cancellationToken)
         {
             try
             {
@@ -54,7 +54,7 @@ namespace LiveStreamingServerNet.Flv.Internal
             }
         }
 
-        public async Task WriteTagAsync(FlvTagHeader tagHeader, Action<INetBuffer> payloadBufer, CancellationToken cancellationToken)
+        public async ValueTask WriteTagAsync(FlvTagHeader tagHeader, Action<INetBuffer> payloadBufer, CancellationToken cancellationToken)
         {
             try
             {

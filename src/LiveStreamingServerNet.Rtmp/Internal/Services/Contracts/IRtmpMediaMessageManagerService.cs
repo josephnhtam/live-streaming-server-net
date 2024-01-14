@@ -5,7 +5,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services.Contracts
 {
     internal interface IRtmpMediaMessageManagerService : IAsyncDisposable
     {
-        Task EnqueueMediaMessageAsync(
+        ValueTask EnqueueMediaMessageAsync(
             IRtmpPublishStreamContext publishStreamContext,
             IList<IRtmpClientContext> subscribers,
             MediaType mediaType,
@@ -13,18 +13,18 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services.Contracts
             bool isSkippable,
             Action<INetBuffer> payloadWriter);
 
-        Task CacheSequenceHeaderAsync(
+        ValueTask CacheSequenceHeaderAsync(
             IRtmpPublishStreamContext publishStreamContext,
             MediaType mediaType,
             INetBuffer payloadBuffer);
 
-        Task CachePictureAsync(
+        ValueTask CachePictureAsync(
             IRtmpPublishStreamContext publishStreamContext,
             MediaType mediaType,
             INetBuffer payloadBuffer,
             uint timestamp);
 
-        Task ClearGroupOfPicturesCacheAsync(IRtmpPublishStreamContext publishStreamContext);
+        ValueTask ClearGroupOfPicturesCacheAsync(IRtmpPublishStreamContext publishStreamContext);
 
         void SendCachedHeaderMessages(
             IRtmpClientContext clientContext,

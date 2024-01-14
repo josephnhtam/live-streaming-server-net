@@ -6,7 +6,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services.Contracts
 {
     internal interface IFlvMediaTagManagerService
     {
-        Task EnqueueMediaTagAsync(
+        ValueTask EnqueueMediaTagAsync(
             IFlvStreamContext streamContext,
             IList<IFlvClient> subscribers,
             MediaType mediaType,
@@ -14,32 +14,32 @@ namespace LiveStreamingServerNet.Flv.Internal.Services.Contracts
             bool isSkippable,
             IRentedBuffer rentedBuffer);
 
-        Task CacheSequenceHeaderAsync(
+        ValueTask CacheSequenceHeaderAsync(
             IFlvStreamContext streamContext,
             MediaType mediaType,
             byte[] sequenceHeader);
 
-        Task CachePictureAsync(
+        ValueTask CachePictureAsync(
             IFlvStreamContext streamContext,
             MediaType mediaType,
             IRentedBuffer rentedBuffer,
             uint timestamp);
 
-        Task ClearGroupOfPicturesCacheAsync(IFlvStreamContext streamContext);
+        ValueTask ClearGroupOfPicturesCacheAsync(IFlvStreamContext streamContext);
 
-        Task SendCachedHeaderTagsAsync(
+        ValueTask SendCachedHeaderTagsAsync(
             IFlvClient clientContext,
             IFlvStreamContext streamContext,
             uint timestamp,
             CancellationToken cancellation);
 
-        Task SendCachedMetaDataTagAsync(
+        ValueTask SendCachedMetaDataTagAsync(
             IFlvClient client,
             IFlvStreamContext streamContext,
             uint timestamp,
             CancellationToken cancellation);
 
-        Task SendCachedGroupOfPicturesTagsAsync(
+        ValueTask SendCachedGroupOfPicturesTagsAsync(
             IFlvClient client,
             IFlvStreamContext streamContext,
             CancellationToken cancellation);

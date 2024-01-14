@@ -17,7 +17,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.ProtocolControl
             _logger = logger;
         }
 
-        public Task<bool> HandleAsync(
+        public ValueTask<bool> HandleAsync(
             IRtmpChunkStreamContext chunkStreamContext,
             IRtmpClientContext clientContext,
             INetBuffer payloadBuffer,
@@ -25,7 +25,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.ProtocolControl
         {
             clientContext.InChunkSize = payloadBuffer.ReadUInt32BigEndian();
             _logger.SetChunkSize(clientContext.Client.ClientId, clientContext.InChunkSize);
-            return Task.FromResult(true);
+            return ValueTask.FromResult(true);
         }
     }
 }

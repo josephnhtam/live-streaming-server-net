@@ -21,7 +21,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
             _logger = logger;
         }
 
-        public Task CacheSequenceHeaderAsync(IFlvStreamContext streamContext, MediaType mediaType, byte[] sequenceHeader)
+        public ValueTask CacheSequenceHeaderAsync(IFlvStreamContext streamContext, MediaType mediaType, byte[] sequenceHeader)
         {
             switch (mediaType)
             {
@@ -33,23 +33,23 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
                     break;
             }
 
-            return Task.CompletedTask;
+            return ValueTask.CompletedTask;
         }
 
-        public Task CachePictureAsync(IFlvStreamContext streamContext, MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp)
+        public ValueTask CachePictureAsync(IFlvStreamContext streamContext, MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp)
         {
             rentedBuffer.Claim();
             streamContext.GroupOfPicturesCache.Add(new PicturesCache(mediaType, timestamp, rentedBuffer));
-            return Task.CompletedTask;
+            return ValueTask.CompletedTask;
         }
 
-        public Task ClearGroupOfPicturesCacheAsync(IFlvStreamContext streamContext)
+        public ValueTask ClearGroupOfPicturesCacheAsync(IFlvStreamContext streamContext)
         {
             streamContext.GroupOfPicturesCache.Clear();
-            return Task.CompletedTask;
+            return ValueTask.CompletedTask;
         }
 
-        public async Task SendCachedGroupOfPicturesTagsAsync(IFlvClient client, IFlvStreamContext streamContext, CancellationToken cancellation)
+        public async ValueTask SendCachedGroupOfPicturesTagsAsync(IFlvClient client, IFlvStreamContext streamContext, CancellationToken cancellation)
         {
             foreach (var picture in streamContext.GroupOfPicturesCache.Get())
             {
@@ -58,7 +58,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
             }
         }
 
-        public async Task SendCachedHeaderTagsAsync(IFlvClient client, IFlvStreamContext streamContext, uint timestamp, CancellationToken cancellation)
+        public async ValueTask SendCachedHeaderTagsAsync(IFlvClient client, IFlvStreamContext streamContext, uint timestamp, CancellationToken cancellation)
         {
             var audioSequenceHeader = streamContext.AudioSequenceHeader;
             if (audioSequenceHeader != null)
@@ -73,15 +73,15 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
             }
         }
 
-        public Task SendCachedMetaDataTagAsync(IFlvClient client, IFlvStreamContext streamContext, uint timestamp, CancellationToken cancellation)
+        public ValueTask SendCachedMetaDataTagAsync(IFlvClient client, IFlvStreamContext streamContext, uint timestamp, CancellationToken cancellation)
         {
-            return Task.CompletedTask;
+            return ValueTask.CompletedTask;
         }
 
-        public Task EnqueueMediaTagAsync(IFlvStreamContext streamContext, IList<IFlvClient> subscribers, MediaType mediaType, uint timestamp, bool isSkippable, IRentedBuffer rentedBuffer)
+        public ValueTask EnqueueMediaTagAsync(IFlvStreamContext streamContext, IList<IFlvClient> subscribers, MediaType mediaType, uint timestamp, bool isSkippable, IRentedBuffer rentedBuffer)
         {
             if (!subscribers.Any())
-                return Task.CompletedTask;
+                return ValueTask.CompletedTask;
 
             rentedBuffer.Claim(subscribers.Count);
 
@@ -98,10 +98,10 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
                     rentedBuffer.Unclaim();
             }
 
-            return Task.CompletedTask;
+            return ValueTask.CompletedTask;
         }
 
-        private async Task SendMediaTagAsync(
+        private async ValueTask SendMediaTagAsync(
             IFlvClient client,
             MediaType type,
             byte[] payloadBuffer,

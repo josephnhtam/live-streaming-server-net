@@ -34,7 +34,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             _logger = logger;
         }
 
-        public async Task CacheSequenceHeaderAsync(
+        public async ValueTask CacheSequenceHeaderAsync(
             IRtmpPublishStreamContext publishStreamContext,
             MediaType mediaType,
             INetBuffer payloadBuffer)
@@ -55,7 +55,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             }
         }
 
-        public async Task CachePictureAsync(
+        public async ValueTask CachePictureAsync(
             IRtmpPublishStreamContext publishStreamContext,
             MediaType mediaType,
             INetBuffer payloadBuffer,
@@ -70,7 +70,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             publishStreamContext.GroupOfPicturesCache.Add(new PicturesCache(mediaType, timestamp, rentedBuffer));
         }
 
-        public async Task ClearGroupOfPicturesCacheAsync(IRtmpPublishStreamContext publishStreamContext)
+        public async ValueTask ClearGroupOfPicturesCacheAsync(IRtmpPublishStreamContext publishStreamContext)
         {
             await _interception.ClearGroupOfPicturesCacheAsync(publishStreamContext.StreamPath);
             publishStreamContext.GroupOfPicturesCache.Clear();
@@ -141,7 +141,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             }
         }
 
-        public async Task EnqueueMediaMessageAsync(
+        public async ValueTask EnqueueMediaMessageAsync(
             IRtmpPublishStreamContext publishStreamContext,
             IList<IRtmpClientContext> subscribers,
             MediaType mediaType,

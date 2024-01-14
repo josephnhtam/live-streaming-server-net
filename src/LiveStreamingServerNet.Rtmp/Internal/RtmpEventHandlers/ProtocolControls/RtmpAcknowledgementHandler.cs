@@ -17,14 +17,14 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.ProtocolControl
             _logger = logger;
         }
 
-        public Task<bool> HandleAsync(
+        public ValueTask<bool> HandleAsync(
             IRtmpChunkStreamContext chunkStreamContext,
             IRtmpClientContext clientContext,
             INetBuffer payloadBuffer,
             CancellationToken cancellationToken)
         {
             _logger.AcknowledgementReceived(clientContext.Client.ClientId);
-            return Task.FromResult(true);
+            return ValueTask.FromResult(true);
         }
     }
 }

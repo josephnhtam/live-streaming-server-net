@@ -4,6 +4,6 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.MessageDispatch
 {
     internal interface IRtmpMessageDispatcher
     {
-        Task<bool> DispatchAsync(IRtmpChunkStreamContext chunkStreamContext, IRtmpClientContext clientContext, CancellationToken cancellationToken);
+        ValueTask<bool> DispatchAsync(IRtmpChunkStreamContext chunkStreamContext, IRtmpClientContext clientContext, CancellationToken cancellationToken);
     }
 }

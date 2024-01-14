@@ -2,6 +2,6 @@
 {
     internal interface IStreamWriter
     {
-        Task WriteAsync(ReadOnlyMemory<byte> buffer, CancellationToken cancellationToken);
+        ValueTask WriteAsync(ReadOnlyMemory<byte> buffer, CancellationToken cancellationToken);
     }
 }

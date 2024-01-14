@@ -17,14 +17,14 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
             _commandMessageSender = commandMessageSender;
         }
 
-        public override Task<bool> HandleAsync(
+        public override ValueTask<bool> HandleAsync(
             IRtmpChunkStreamContext chunkStreamContext,
             IRtmpClientContext clientContext,
             RtmpCreateStreamCommand command,
             CancellationToken cancellationToken)
         {
             RespondToClient(clientContext, command);
-            return Task.FromResult(true);
+            return ValueTask.FromResult(true);
         }
 
         public void RespondToClient(IRtmpClientContext clientContext, RtmpCreateStreamCommand command)
