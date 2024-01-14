@@ -1,4 +1,4 @@
-﻿namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.CommandDispatcher.Attributes
+﻿namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands.Dispatcher.Attributes
 {
     [AttributeUsage(AttributeTargets.Class)]
     internal class RtmpCommandAttribute : Attribute

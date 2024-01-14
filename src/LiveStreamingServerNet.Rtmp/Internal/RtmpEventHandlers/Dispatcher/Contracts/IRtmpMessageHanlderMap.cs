@@ -1,4 +1,4 @@
-﻿namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.MessageDispatcher.Contracts
+﻿namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Dispatcher.Contracts
 {
     internal interface IRtmpMessageHanlderMap
     {

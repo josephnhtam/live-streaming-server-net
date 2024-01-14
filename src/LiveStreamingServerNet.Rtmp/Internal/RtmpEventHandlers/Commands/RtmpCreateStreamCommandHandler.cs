@@ -1,6 +1,6 @@
 ﻿using LiveStreamingServerNet.Rtmp.Internal.Contracts;
-using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.CommandDispatcher;
-using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.CommandDispatcher.Attributes;
+using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands.Dispatcher;
+using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands.Dispatcher.Attributes;
 using LiveStreamingServerNet.Rtmp.Internal.Services.Contracts;
 
 namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands

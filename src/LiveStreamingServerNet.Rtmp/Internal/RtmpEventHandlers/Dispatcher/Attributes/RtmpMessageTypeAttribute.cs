@@ -1,4 +1,4 @@
-﻿namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.MessageDispatcher.Attributes
+﻿namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Dispatcher.Attributes
 {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
     internal class RtmpMessageTypeAttribute : Attribute

@@ -1,6 +1,6 @@
 ﻿using LiveStreamingServerNet.Newtorking.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.Contracts;
-using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.CommandDispatcher.Contracts;
+using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands.Dispatcher.Contracts;
 using LiveStreamingServerNet.Rtmp.Logging;
 using LiveStreamingServerNet.Utilities.Extensions;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,7 +9,7 @@ using mtanksl.ActionMessageFormat;
 using System.Collections.Concurrent;
 using System.Reflection;
 
-namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.CommandDispatcher
+namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands.Dispatcher
 {
     internal class RtmpCommandDispatcher : IRtmpCommandDispatcher
     {

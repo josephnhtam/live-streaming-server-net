@@ -1,6 +1,6 @@
-﻿using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.MessageDispatcher.Contracts;
+﻿using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Dispatcher.Contracts;
 
-namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.MessageDispatcher
+namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Dispatcher
 {
     internal class RtmpMessageHanlderMap : IRtmpMessageHanlderMap
     {

@@ -1,6 +1,6 @@
 ﻿using LiveStreamingServerNet.Rtmp.Internal.Contracts;
 
-namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.CommandDispatcher
+namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands.Dispatcher
 {
     internal abstract class RtmpCommandHandler
     {

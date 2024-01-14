@@ -1,8 +1,8 @@
 ﻿using LiveStreamingServerNet.Rtmp.Internal.Contracts;
-using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.MessageDispatcher.Contracts;
+using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Dispatcher.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.MessageDispatcher
+namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Dispatcher
 {
     internal class RtmpMessageDispatcher : IRtmpMessageDispatcher
     {
