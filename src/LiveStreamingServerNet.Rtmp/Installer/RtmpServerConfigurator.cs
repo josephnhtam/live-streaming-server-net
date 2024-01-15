@@ -15,7 +15,7 @@ namespace LiveStreamingServerNet.Rtmp.Installer
             Services = services;
         }
 
-        public IRtmpServerConfigurator ConfigureRtmpServer(Action<RtmpServerConfiguration>? configure)
+        public IRtmpServerConfigurator Configure(Action<RtmpServerConfiguration>? configure)
         {
             if (configure != null)
                 Services.Configure(configure);
