@@ -129,6 +129,8 @@ namespace LiveStreamingServerNet.Newtorking
         private async Task AcceptClientAsync(TcpListener tcpListener, ServerEndPoint serverEndPoint, CancellationToken cancellationToken)
         {
             var tcpClient = await tcpListener.AcceptTcpClientAsync(cancellationToken);
+            tcpClient.NoDelay = true;
+
             await OnClientAcceptedAsync(tcpClient);
 
             var clientId = GetNextClientId();
