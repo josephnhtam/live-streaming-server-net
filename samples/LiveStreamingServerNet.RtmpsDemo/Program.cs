@@ -17,6 +17,7 @@ namespace LiveStreamingServerNet.RtmpsDemo
 
                     options.ServerCertificate = new X509Certificate2(pfxPath, pfxPassword);
                 }))
+                .ConfigureRtmpServer(options => options.Configure(options => options.EnableGopCaching = false))
                 .ConfigureLogging(options => options.AddConsole().SetMinimumLevel(LogLevel.Debug))
                 .Build();
 
