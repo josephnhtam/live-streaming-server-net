@@ -1,4 +1,7 @@
 ﻿namespace LiveStreamingServerNet.Rtmp.Internal.Contracts
 {
-    internal interface IRtmpServerContext { }
+    internal interface IRtmpServerContext
+    {
+        string AuthCode { get; }
+    }
 }
