@@ -17,6 +17,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
     internal class RtmpPublishCommandHandler : RtmpCommandHandler<RtmpPublishCommand>
     {
         private readonly IServiceProvider _services;
+        private readonly IRtmpServerContext _serverContext;
         private readonly IRtmpStreamManagerService _streamManager;
         private readonly IRtmpCommandMessageSenderService _commandMessageSender;
         private readonly IRtmpServerStreamEventDispatcher _eventDispatcher;
@@ -24,12 +25,14 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
 
         public RtmpPublishCommandHandler(
             IServiceProvider services,
+            IRtmpServerContext serverContext,
             IRtmpStreamManagerService streamManager,
             IRtmpCommandMessageSenderService commandMessageSender,
             IRtmpServerStreamEventDispatcher eventDispatcher,
             ILogger<RtmpPublishCommandHandler> logger)
         {
             _services = services;
+            _serverContext = serverContext;
             _streamManager = streamManager;
             _commandMessageSender = commandMessageSender;
             _eventDispatcher = eventDispatcher;
@@ -94,6 +97,9 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
             string streamPath,
             IDictionary<string, string> streamArguments)
         {
+            if (streamArguments.TryGetValue("code", out var authCode) && authCode == _serverContext.AuthCode)
+                return AuthorizationResult.Authorized();
+
             var result = await AuthorizeAsync(clientContext, streamPath, streamArguments, command.PublishingType);
 
             if (!result.IsAuthorized)

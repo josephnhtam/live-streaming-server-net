@@ -19,6 +19,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
     internal class RtmpPlayCommandHandler : RtmpCommandHandler<RtmpPlayCommand>
     {
         private readonly IServiceProvider _services;
+        private readonly IRtmpServerContext _serverContext;
         private readonly IRtmpStreamManagerService _streamManager;
         private readonly IRtmpCommandMessageSenderService _commandMessageSender;
         private readonly IRtmpMediaMessageManagerService _mediaMessageManager;
@@ -28,6 +29,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
 
         public RtmpPlayCommandHandler(
             IServiceProvider services,
+            IRtmpServerContext serverContext,
             IRtmpStreamManagerService streamManager,
             IRtmpCommandMessageSenderService commandMessageSender,
             IRtmpMediaMessageManagerService mediaMessageManager,
@@ -36,6 +38,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
             ILogger<RtmpPlayCommandHandler> logger)
         {
             _services = services;
+            _serverContext = serverContext;
             _streamManager = streamManager;
             _commandMessageSender = commandMessageSender;
             _mediaMessageManager = mediaMessageManager;
@@ -75,6 +78,9 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
             string streamPath,
             IDictionary<string, string> streamArguments)
         {
+            if (streamArguments.TryGetValue("code", out var authCode) && authCode == _serverContext.AuthCode)
+                return AuthorizationResult.Authorized();
+
             var authorizationHandler = _services.GetService<IRtmpAuthorizationHandler>();
 
             if (authorizationHandler != null)
