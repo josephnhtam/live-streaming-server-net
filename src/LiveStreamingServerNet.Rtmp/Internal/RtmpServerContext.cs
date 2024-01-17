@@ -1,4 +1,4 @@
-﻿using LiveStreamingServerNet.Rtmp.Internal.Contracts;
+﻿using LiveStreamingServerNet.Rtmp.Contracts;
 using System.Security.Cryptography;
 
 namespace LiveStreamingServerNet.Rtmp.Internal
