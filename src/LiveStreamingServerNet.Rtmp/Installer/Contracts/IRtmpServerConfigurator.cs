@@ -22,7 +22,7 @@ namespace LiveStreamingServerNet.Rtmp.Installer.Contracts
             where TConnectionEventHandler : class, IRtmpServerConnectionEventHandler;
         IRtmpServerConfigurator AddConnectionEventHandler(Func<IServiceProvider, IRtmpServerConnectionEventHandler> implmentationFactory);
 
-        IRtmpServerConfigurator AddStreamEventHandlerr<TStreamEventHandler>()
+        IRtmpServerConfigurator AddStreamEventHandler<TStreamEventHandler>()
             where TStreamEventHandler : class, IRtmpServerStreamEventHandler;
         IRtmpServerConfigurator AddStreamEventHandler(Func<IServiceProvider, IRtmpServerStreamEventHandler> implmentationFactory);
     }

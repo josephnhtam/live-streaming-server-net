@@ -30,7 +30,7 @@ namespace LiveStreamingServerNet.Flv.Installer
         {
             var services = configurator.Services;
 
-            configurator.AddStreamEventHandlerr<RtmpServerStreamEventListener>()
+            configurator.AddStreamEventHandler<RtmpServerStreamEventListener>()
                         .AddMediaMessageInterceptor<RtmpMediaMessageScraper>();
 
             services.AddTransient<IFlvClient, FlvClient>()

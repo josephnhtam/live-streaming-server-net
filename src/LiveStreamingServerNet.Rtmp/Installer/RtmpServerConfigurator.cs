@@ -68,7 +68,7 @@ namespace LiveStreamingServerNet.Rtmp.Installer
             return this;
         }
 
-        public IRtmpServerConfigurator AddStreamEventHandlerr<TStreamEventHandler>()
+        public IRtmpServerConfigurator AddStreamEventHandler<TStreamEventHandler>()
             where TStreamEventHandler : class, IRtmpServerStreamEventHandler
         {
             Services.AddSingleton<IRtmpServerStreamEventHandler, TStreamEventHandler>();
