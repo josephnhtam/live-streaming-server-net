@@ -8,30 +8,31 @@
 
             foreach (string path in paths)
             {
-                if (FindExecutable(path, executableName))
+                var executable = FindExecutable(path, executableName);
+                if (executable != null)
                 {
-                    return path;
+                    return executable.FullName;
                 }
             }
 
             return null;
         }
 
-        public static bool FindExecutable(string directoryPath, string executableName)
+        public static FileInfo? FindExecutable(string directoryPath, string executableName)
         {
             if (Directory.Exists(directoryPath))
             {
                 IEnumerable<FileInfo> files = new DirectoryInfo(directoryPath).GetFiles();
-                return HasExecutableFile(files, executableName);
+                return DoFindExecutable(files, executableName);
             }
-            return false;
+            return null;
         }
 
-        private static bool HasExecutableFile(IEnumerable<FileInfo> files, string executableName)
+        private static FileInfo? DoFindExecutable(IEnumerable<FileInfo> files, string executableName)
         {
             return files.FirstOrDefault((x) =>
                 x.Name.Equals(executableName, StringComparison.InvariantCultureIgnoreCase) ||
-                x.Name.Equals(executableName + ".exe", StringComparison.InvariantCultureIgnoreCase)) != null;
+                x.Name.Equals(executableName + ".exe", StringComparison.InvariantCultureIgnoreCase));
         }
     }
 }
