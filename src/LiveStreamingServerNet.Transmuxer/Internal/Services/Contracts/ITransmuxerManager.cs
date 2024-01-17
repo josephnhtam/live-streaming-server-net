@@ -2,7 +2,7 @@
 {
     internal interface ITransmuxerManager
     {
-        ValueTask StartRemuxingStreamAsync(string streamPath, IDictionary<string, string> streamArguments);
-        ValueTask StopRemuxingStreamAsync(string streamPath);
+        Task StartRemuxingStreamAsync(string streamPath, IDictionary<string, string> streamArguments);
+        Task StopRemuxingStreamAsync(string streamPath);
     }
 }
