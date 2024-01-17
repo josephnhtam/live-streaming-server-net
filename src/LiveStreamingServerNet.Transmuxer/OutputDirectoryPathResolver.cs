@@ -4,16 +4,16 @@ using Microsoft.Extensions.Options;
 
 namespace LiveStreamingServerNet.Transmuxer
 {
-    public class OutputPathResolver : IOutputPathResolver
+    public class OutputDirectoryPathResolver : IOutputDirectoryPathResolver
     {
         private readonly TransmuxerConfiguration _config;
 
-        public OutputPathResolver(IOptions<TransmuxerConfiguration> config)
+        public OutputDirectoryPathResolver(IOptions<TransmuxerConfiguration> config)
         {
             _config = config.Value;
         }
 
-        public Task<string> ResolveOutputPathAsync(string streamPath, IDictionary<string, string> streamArguments)
+        public Task<string> ResolveOutputDirectoryPathAsync(string streamPath, IDictionary<string, string> streamArguments)
         {
             return Task.FromResult(Path.Combine(_config.OutputDirectoryPath, Guid.NewGuid().ToString()));
         }

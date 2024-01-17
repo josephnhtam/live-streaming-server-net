@@ -2,6 +2,6 @@
 {
     public interface ITransmuxer
     {
-        Task RunAsync(string inputPath, string outputPath, CancellationToken cancellation);
+        Task RunAsync(string inputPath, string outputDirPath, CancellationToken cancellation);
     }
 }

@@ -4,26 +4,26 @@ using System.Diagnostics;
 
 namespace LiveStreamingServerNet.Transmuxer
 {
-    public class FFmpegTransmuxerProcess : ITransmuxer
+    public class FFmpegTransmuxer : ITransmuxer
     {
         private readonly string _ffmpegPath;
         private readonly string _arguments;
 
         private const int _gracefulTerminationSeconds = 5;
 
-        public FFmpegTransmuxerProcess(string ffmpegPath, string arguments)
+        public FFmpegTransmuxer(string ffmpegPath, string arguments)
         {
             _ffmpegPath = ffmpegPath;
             _arguments = arguments;
         }
 
-        public async Task RunAsync(string inputPath, string outputPath, CancellationToken cancellation)
+        public async Task RunAsync(string inputPath, string outputDirPath, CancellationToken cancellation)
         {
             using var process = new Process();
 
             try
             {
-                await RunProcessAsync(inputPath, outputPath, process, cancellation);
+                await RunProcessAsync(inputPath, outputDirPath, process, cancellation);
             }
             catch (Exception ex)
             {
@@ -32,15 +32,15 @@ namespace LiveStreamingServerNet.Transmuxer
                 if (ex is OperationCanceledException && cancellation.IsCancellationRequested)
                     throw;
 
-                throw new TransmuxerProcessException("Error running FFmpeg process", ex);
+                throw new TransmuxerException("Error running FFmpeg process", ex);
             }
         }
 
-        private async Task RunProcessAsync(string inputPath, string outputPath, Process process, CancellationToken cancellation)
+        private async Task RunProcessAsync(string inputPath, string outputDirPath, Process process, CancellationToken cancellation)
         {
             var arguments = _arguments
                 .Replace("{inputPath}", inputPath, StringComparison.InvariantCultureIgnoreCase)
-                .Replace("{outputPath}", outputPath, StringComparison.InvariantCultureIgnoreCase);
+                .Replace("{outputDirPath}", outputDirPath, StringComparison.InvariantCultureIgnoreCase);
 
             process.StartInfo = new ProcessStartInfo
             {
@@ -51,7 +51,7 @@ namespace LiveStreamingServerNet.Transmuxer
             };
 
             if (!process.Start())
-                throw new TransmuxerProcessException("Error starting FFmpeg process");
+                throw new TransmuxerException("Error starting FFmpeg process");
 
             await process.WaitForExitAsync(cancellation);
         }
@@ -68,7 +68,7 @@ namespace LiveStreamingServerNet.Transmuxer
                 catch (OperationCanceledException) { }
                 catch (Exception shutdownEx)
                 {
-                    throw new TransmuxerProcessException("Error shutting down FFmpeg process", shutdownEx);
+                    throw new TransmuxerException("Error shutting down FFmpeg process", shutdownEx);
                 }
             }
 

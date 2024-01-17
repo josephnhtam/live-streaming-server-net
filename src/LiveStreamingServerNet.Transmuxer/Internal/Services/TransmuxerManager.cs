@@ -9,19 +9,19 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Services
     {
         private readonly ITransmuxerFactory _transmuxerFactory;
         private readonly IInputPathResolver _inputPathResolver;
-        private readonly IOutputPathResolver _outputPathResolver;
+        private readonly IOutputDirectoryPathResolver _outputDirPathResolver;
         private readonly ITransmuxerEventDispatcher _eventDispatcher;
         private readonly ConcurrentDictionary<string, TransmuxerTask> _transmuxerTasks;
 
         public TransmuxerManager(
             ITransmuxerFactory transmuxerFactory,
             IInputPathResolver inputPathResolver,
-            IOutputPathResolver outputPathResolver,
+            IOutputDirectoryPathResolver outputDirPathResolver,
             ITransmuxerEventDispatcher eventDispatcher)
         {
             _transmuxerFactory = transmuxerFactory;
             _inputPathResolver = inputPathResolver;
-            _outputPathResolver = outputPathResolver;
+            _outputDirPathResolver = outputDirPathResolver;
             _eventDispatcher = eventDispatcher;
             _transmuxerTasks = new ConcurrentDictionary<string, TransmuxerTask>();
         }
@@ -32,20 +32,20 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Services
 
             var transmuxer = await _transmuxerFactory.CreateAsync(streamPath, streamArguments);
             var inputPath = await _inputPathResolver.ResolveInputPathAsync(streamPath, streamArguments);
-            var outputPath = await _outputPathResolver.ResolveOutputPathAsync(streamPath, streamArguments);
+            var outputDirPath = await _outputDirPathResolver.ResolveOutputDirectoryPathAsync(streamPath, streamArguments);
 
             var cts = new CancellationTokenSource();
-            var task = Task.Run(() => transmuxer.RunAsync(inputPath, outputPath, cts.Token));
+            var task = Task.Run(() => transmuxer.RunAsync(inputPath, outputDirPath, cts.Token));
 
-            _transmuxerTasks[streamPath] = new TransmuxerTask(streamPath, streamArguments, inputPath, outputPath, task, cts);
-            await _eventDispatcher.TransmuxerStartedAsync(inputPath, outputPath, streamPath, streamArguments);
+            _transmuxerTasks[streamPath] = new TransmuxerTask(streamPath, streamArguments, inputPath, outputDirPath, task, cts);
+            await _eventDispatcher.TransmuxerStartedAsync(inputPath, outputDirPath, streamPath, streamArguments);
 
             _ = task.ContinueWith(async _ =>
             {
                 if (!_transmuxerTasks.TryRemove(streamPath, out var task))
                     return;
 
-                await _eventDispatcher.TransmuxerStoppedAsync(task.InputPath, task.OutputPath, task.StreamPath, task.StreamArguments);
+                await _eventDispatcher.TransmuxerStoppedAsync(task.InputPath, task.OutputDirPath, task.StreamPath, task.StreamArguments);
             });
         }
 
@@ -66,7 +66,7 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Services
             string StreamPath,
             IDictionary<string, string> StreamArguments,
             string InputPath,
-            string OutputPath,
+            string OutputDirPath,
             Task Task,
             CancellationTokenSource Cts);
     }
