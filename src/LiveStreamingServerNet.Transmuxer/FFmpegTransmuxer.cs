@@ -4,7 +4,7 @@ using System.Diagnostics;
 
 namespace LiveStreamingServerNet.Transmuxer
 {
-    public class FFmpegTransmuxerProcess : ITransmuxerProcess
+    public class FFmpegTransmuxerProcess : ITransmuxer
     {
         private readonly string _ffmpegPath;
         private readonly string _arguments;
