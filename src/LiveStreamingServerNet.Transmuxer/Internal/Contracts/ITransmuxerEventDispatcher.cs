@@ -2,7 +2,7 @@
 {
     internal interface ITransmuxerEventDispatcher
     {
-        Task TransmuxerStartedAsync(string inputPath, string outputDirPath, string streamPath, IDictionary<string, string> streamArguments);
-        Task TransmuxerStoppedAsync(string inputPath, string outputDirPath, string streamPath, IDictionary<string, string> streamArguments);
+        Task TransmuxerStartedAsync(string inputPath, string outputPath, string streamPath, IDictionary<string, string> streamArguments);
+        Task TransmuxerStoppedAsync(string inputPath, string outputPath, string streamPath, IDictionary<string, string> streamArguments);
     }
 }

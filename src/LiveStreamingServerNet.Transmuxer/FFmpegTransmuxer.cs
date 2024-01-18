@@ -17,13 +17,19 @@ namespace LiveStreamingServerNet.Transmuxer
             _arguments = arguments;
         }
 
-        public async Task RunAsync(string inputPath, string outputDirPath, CancellationToken cancellation)
+        public async Task RunAsync(string inputPath, string outputDirPath, OnTransmuxerStarted? onStarted, OnTransmuxerEnded? onEnded, CancellationToken cancellation)
         {
+            new DirectoryInfo(outputDirPath).Create();
+            var outputPath = Path.Combine(outputDirPath, "output.m3u8");
+
             using var process = new Process();
 
             try
             {
-                await RunProcessAsync(inputPath, outputDirPath, process, cancellation);
+                await RunProcessAsync(inputPath, outputPath, process, onStarted, cancellation);
+
+                if (process.ExitCode != 0)
+                    throw new TransmuxerException($"FFmpeg process exited with code {process.ExitCode}");
             }
             catch (Exception ex)
             {
@@ -34,24 +40,32 @@ namespace LiveStreamingServerNet.Transmuxer
 
                 throw new TransmuxerException("Error running FFmpeg process", ex);
             }
+            finally
+            {
+                if (onEnded != null)
+                    await onEnded.Invoke(outputPath);
+            }
         }
 
-        private async Task RunProcessAsync(string inputPath, string outputDirPath, Process process, CancellationToken cancellation)
+        private async Task RunProcessAsync(string inputPath, string outputPath, Process process, OnTransmuxerStarted? onStarted, CancellationToken cancellation)
         {
             var arguments = _arguments
                 .Replace("{inputPath}", inputPath, StringComparison.InvariantCultureIgnoreCase)
-                .Replace("{outputDirPath}", outputDirPath, StringComparison.InvariantCultureIgnoreCase);
+                .Replace("{outputPath}", outputPath, StringComparison.InvariantCultureIgnoreCase);
 
             process.StartInfo = new ProcessStartInfo
             {
                 FileName = _ffmpegPath,
                 Arguments = arguments,
-                CreateNoWindow = true,
-                UseShellExecute = false
+                CreateNoWindow = false,
+                UseShellExecute = true
             };
 
             if (!process.Start())
                 throw new TransmuxerException("Error starting FFmpeg process");
+
+            if (onStarted != null)
+                await onStarted.Invoke(outputPath);
 
             await process.WaitForExitAsync(cancellation);
         }

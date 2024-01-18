@@ -14,12 +14,12 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Services
 
         public async ValueTask OnRtmpStreamPublishedAsync(uint clientId, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
-            await _transmuxerManager.StartRemuxingStreamAsync(streamPath, streamArguments.ToDictionary());
+            await _transmuxerManager.StartRemuxingStreamAsync(clientId, streamPath, streamArguments.ToDictionary());
         }
 
         public async ValueTask OnRtmpStreamUnpublishedAsync(uint clientId, string streamPath)
         {
-            await _transmuxerManager.StopRemuxingStreamAsync(streamPath);
+            await _transmuxerManager.StopRemuxingStreamAsync(clientId, streamPath);
         }
 
         public ValueTask OnRtmpStreamMetaDataReceived(uint clientId, string streamPath, IReadOnlyDictionary<string, object> metaData)
