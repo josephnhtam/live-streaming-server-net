@@ -8,19 +8,21 @@ namespace LiveStreamingServerNet.Transmuxer
     {
         private readonly string _ffmpegPath;
         private readonly string _arguments;
+        private readonly string _outputFileName;
 
         private const int _gracefulTerminationSeconds = 5;
 
-        public FFmpegTransmuxer(string ffmpegPath, string arguments)
+        public FFmpegTransmuxer(string ffmpegPath, string arguments, string outputFileName)
         {
             _ffmpegPath = ffmpegPath;
             _arguments = arguments;
+            _outputFileName = outputFileName;
         }
 
         public async Task RunAsync(string inputPath, string outputDirPath, OnTransmuxerStarted? onStarted, OnTransmuxerEnded? onEnded, CancellationToken cancellation)
         {
             new DirectoryInfo(outputDirPath).Create();
-            var outputPath = Path.Combine(outputDirPath, "output.m3u8");
+            var outputPath = Path.Combine(outputDirPath, _outputFileName);
 
             using var process = new Process();
 

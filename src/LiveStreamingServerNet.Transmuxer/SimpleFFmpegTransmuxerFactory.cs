@@ -15,7 +15,7 @@ namespace LiveStreamingServerNet.Transmuxer
 
         public Task<ITransmuxer> CreateAsync(string streamPath, IDictionary<string, string> streamArguments)
         {
-            var process = new FFmpegTransmuxer(_config.FFmpegPath, _config.FFmpegTransmuxerArguments);
+            var process = new FFmpegTransmuxer(_config.FFmpegPath, _config.FFmpegTransmuxerArguments, _config.OutputFileName);
             return Task.FromResult<ITransmuxer>(process);
         }
     }
