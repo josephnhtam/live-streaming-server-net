@@ -19,6 +19,7 @@ namespace LiveStreamingServerNet.Newtorking
         private readonly ILogger _logger;
         private readonly Channel<PendingMessage> _pendingMessageChannel;
         private TcpClient _tcpClient = default!;
+        private CancellationTokenSource? _cts;
 
         public uint ClientId { get; private set; }
 
@@ -46,8 +47,8 @@ namespace LiveStreamingServerNet.Newtorking
 
             await using (var outstandingBufferSender = new OutstandingBufferSender(ClientId, _pendingMessageChannel.Reader, _logger))
             {
-                using var cts = CancellationTokenSource.CreateLinkedTokenSource(stoppingToken);
-                var cancellationToken = cts.Token;
+                _cts = CancellationTokenSource.CreateLinkedTokenSource(stoppingToken);
+                var cancellationToken = _cts.Token;
 
                 try
                 {
@@ -67,7 +68,7 @@ namespace LiveStreamingServerNet.Newtorking
                 }
                 finally
                 {
-                    cts.Cancel();
+                    _cts.Cancel();
                 }
             }
 
@@ -148,7 +149,7 @@ namespace LiveStreamingServerNet.Newtorking
 
         public void Disconnect()
         {
-            _tcpClient.Close();
+            _cts?.Cancel();
         }
 
         public ValueTask DisposeAsync()
