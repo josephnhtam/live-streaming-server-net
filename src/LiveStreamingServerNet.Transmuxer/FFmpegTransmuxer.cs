@@ -21,7 +21,12 @@ namespace LiveStreamingServerNet.Transmuxer
             _gracefulTerminationSeconds = gracefulTerminationSeconds;
         }
 
-        public async Task RunAsync(string inputPath, string outputDirPath, OnTransmuxerStarted? onStarted, OnTransmuxerEnded? onEnded, CancellationToken cancellation)
+        public async Task RunAsync(
+            string inputPath,
+            string outputDirPath,
+            OnTransmuxerStarted? onStarted,
+            OnTransmuxerEnded? onEnded,
+            CancellationToken cancellation)
         {
             new DirectoryInfo(outputDirPath).Create();
             var outputPath = Path.Combine(outputDirPath, _outputFileName);

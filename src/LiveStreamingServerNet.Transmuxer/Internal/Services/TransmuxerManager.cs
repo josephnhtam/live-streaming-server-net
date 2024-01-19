@@ -60,16 +60,25 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Services
 
             try
             {
-                await transmuxer.RunAsync(inputPath, outputDirPath,
-                    (outputPath) => _eventDispatcher.TransmuxerStartedAsync(inputPath, outputPath, streamPath, streamArguments),
-                    (outputPath) => _eventDispatcher.TransmuxerStoppedAsync(inputPath, outputPath, streamPath, streamArguments),
-                    cts.Token);
+                await transmuxer.RunAsync(inputPath, outputDirPath, TransmuxerStarted, TransmuxerStopped, cts.Token);
             }
             catch (OperationCanceledException) when (cts.IsCancellationRequested) { }
             catch (Exception ex)
             {
                 _logger.TransmuxerError(inputPath, outputDirPath, streamPath, ex);
                 _server.GetClient(clientId)?.Disconnect();
+            }
+
+            async Task TransmuxerStarted(string outputPath)
+            {
+                _logger.TransmuxerStarted(inputPath, outputPath, streamPath);
+                await _eventDispatcher.TransmuxerStartedAsync(inputPath, outputPath, streamPath, streamArguments);
+            }
+
+            async Task TransmuxerStopped(string outputPath)
+            {
+                _logger.TransmuxerStopped(inputPath, outputPath, streamPath);
+                await _eventDispatcher.TransmuxerStoppedAsync(inputPath, outputPath, streamPath, streamArguments);
             }
         }
 
