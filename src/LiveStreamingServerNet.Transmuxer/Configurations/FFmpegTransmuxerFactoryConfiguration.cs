@@ -14,7 +14,7 @@ namespace LiveStreamingServerNet.Transmuxer.Configurations
         public FFmpegTransmuxerFactoryConfiguration()
         {
             FFmpegPath = ExecutableFinder.FindExecutableFromPATH("ffmpeg") ?? string.Empty;
-            FFmpegTransmuxerArguments = "-i {inputPath} -c:v libx264 -preset ultrafast -tune zerolatency -c:a aac -hls_time 1 -hls_list_size 5 -seg_duration 3 -hls_playlist_type event {outputPath}";
+            FFmpegTransmuxerArguments = "-i {inputPath} -c:v libx264 -c:a aac -preset ultrafast -tune zerolatency -x264-params keyint=15:min-keyint=15 -hls_time 1 -hls_flags delete_segments -hls_list_size 20 -f hls {outputPath}";
             OutputFileName = "output.m3u8";
         }
     }
