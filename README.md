@@ -6,6 +6,7 @@ This is a .NET implementation of RTMP server.
 
 - RTMP/RTMPS protocol
 - HTTP-FLV/WebSocket-FLV with ASP.NET CORE
+- Remuxing RTMP streams into HLS/DASH streams
 - GOP caching
 - Custom authorization
 
