@@ -49,7 +49,7 @@ namespace LiveStreamingServerNet.HlsDemo
         private static IServer CreateLiveStreamingServer()
         {
             return LiveStreamingServerBuilder.Create()
-                .ConfigureRtmpServer(options => options.AddTransmuxer())
+                .ConfigureRtmpServer(options => options.AddTransmuxer().UseFFmpeg())
                 .ConfigureLogging(options => options.AddConsole())
                 .Build();
         }

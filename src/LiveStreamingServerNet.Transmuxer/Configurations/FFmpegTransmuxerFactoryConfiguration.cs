@@ -2,13 +2,16 @@
 
 namespace LiveStreamingServerNet.Transmuxer.Configurations
 {
-    public class SimpleFFmpegTransmuxerConfiguration
+    public class FFmpegTransmuxerFactoryConfiguration
     {
-        public required string FFmpegPath { get; set; }
-        public required string FFmpegTransmuxerArguments { get; set; }
-        public required string OutputFileName { get; set; }
+        public string FFmpegPath { get; set; }
+        public string FFmpegTransmuxerArguments { get; set; }
+        public string OutputFileName { get; set; }
 
-        public SimpleFFmpegTransmuxerConfiguration()
+        public bool CreateWindow { get; set; } = true;
+        public int GracefulShutdownTimeoutSeconds { get; set; } = 5;
+
+        public FFmpegTransmuxerFactoryConfiguration()
         {
             FFmpegPath = ExecutableFinder.FindExecutableFromPATH("ffmpeg") ?? string.Empty;
             FFmpegTransmuxerArguments = "-i {inputPath} -c:v libx264 -preset ultrafast -tune zerolatency -c:a aac -hls_time 1 -hls_list_size 5 -seg_duration 3 -hls_playlist_type event {outputPath}";

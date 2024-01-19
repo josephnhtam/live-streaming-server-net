@@ -9,14 +9,16 @@ namespace LiveStreamingServerNet.Transmuxer
         private readonly string _ffmpegPath;
         private readonly string _arguments;
         private readonly string _outputFileName;
+        private readonly bool _createWindow;
+        private readonly int _gracefulTerminationSeconds;
 
-        private const int _gracefulTerminationSeconds = 5;
-
-        public FFmpegTransmuxer(string ffmpegPath, string arguments, string outputFileName)
+        public FFmpegTransmuxer(string ffmpegPath, string arguments, string outputFileName, bool createWindow, int gracefulTerminationSeconds)
         {
             _ffmpegPath = ffmpegPath;
             _arguments = arguments;
             _outputFileName = outputFileName;
+            _createWindow = createWindow;
+            _gracefulTerminationSeconds = gracefulTerminationSeconds;
         }
 
         public async Task RunAsync(string inputPath, string outputDirPath, OnTransmuxerStarted? onStarted, OnTransmuxerEnded? onEnded, CancellationToken cancellation)
@@ -59,8 +61,8 @@ namespace LiveStreamingServerNet.Transmuxer
             {
                 FileName = _ffmpegPath,
                 Arguments = arguments,
-                CreateNoWindow = false,
-                UseShellExecute = true
+                CreateNoWindow = !_createWindow,
+                UseShellExecute = _createWindow
             };
 
             if (!process.Start())

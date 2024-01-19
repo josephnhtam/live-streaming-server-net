@@ -9,9 +9,9 @@ namespace LiveStreamingServerNet.Transmuxer
     public class InputPathResolver : IInputPathResolver
     {
         private readonly IRtmpServerContext _serverContext;
-        private readonly TransmuxerConfiguration _config;
+        private readonly RemuxingConfiguration _config;
 
-        public InputPathResolver(IRtmpServerContext serverContext, IOptions<TransmuxerConfiguration> config)
+        public InputPathResolver(IRtmpServerContext serverContext, IOptions<RemuxingConfiguration> config)
         {
             _config = config.Value;
             _serverContext = serverContext;

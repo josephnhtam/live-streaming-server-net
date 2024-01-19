@@ -1,5 +1,6 @@
 ﻿using LiveStreamingServerNet.Rtmp.Installer.Contracts;
 using LiveStreamingServerNet.Transmuxer.Contracts;
+using LiveStreamingServerNet.Transmuxer.Installer.Contracts;
 using LiveStreamingServerNet.Transmuxer.Internal;
 using LiveStreamingServerNet.Transmuxer.Internal.Contracts;
 using LiveStreamingServerNet.Transmuxer.Internal.Services;
@@ -11,11 +12,10 @@ namespace LiveStreamingServerNet.Transmuxer.Installer
 {
     public static class TransmuxerInstaller
     {
-        public static IRtmpServerConfigurator AddTransmuxer(this IRtmpServerConfigurator rtmpServerConfigurator)
+        public static ITransmuxerBuilder AddTransmuxer(this IRtmpServerConfigurator rtmpServerConfigurator)
         {
             var services = rtmpServerConfigurator.Services;
 
-            services.TryAddSingleton<ITransmuxerFactory, SimpleFFmpegTransmuxerFactory>();
             services.TryAddSingleton<IInputPathResolver, InputPathResolver>();
             services.TryAddSingleton<IOutputDirectoryPathResolver, OutputDirectoryPathResolver>();
 
@@ -24,7 +24,17 @@ namespace LiveStreamingServerNet.Transmuxer.Installer
 
             rtmpServerConfigurator.AddStreamEventHandler<RtmpServerStreamEventListener>();
 
-            return rtmpServerConfigurator;
+            return new TransmuxerBuilder(services);
+        }
+    }
+
+    public class TransmuxerBuilder : ITransmuxerBuilder
+    {
+        public IServiceCollection Services { get; }
+
+        public TransmuxerBuilder(IServiceCollection services)
+        {
+            Services = services;
         }
     }
 }

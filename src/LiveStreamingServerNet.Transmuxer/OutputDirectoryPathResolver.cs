@@ -6,9 +6,9 @@ namespace LiveStreamingServerNet.Transmuxer
 {
     public class OutputDirectoryPathResolver : IOutputDirectoryPathResolver
     {
-        private readonly TransmuxerConfiguration _config;
+        private readonly RemuxingConfiguration _config;
 
-        public OutputDirectoryPathResolver(IOptions<TransmuxerConfiguration> config)
+        public OutputDirectoryPathResolver(IOptions<RemuxingConfiguration> config)
         {
             _config = config.Value;
         }
