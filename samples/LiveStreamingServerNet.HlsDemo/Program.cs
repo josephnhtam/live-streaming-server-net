@@ -1,9 +1,9 @@
-using LiveStreamingServerNet.Transmuxer.Installer;
 using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.Networking.Helpers;
-using System.Net;
-using Microsoft.Extensions.FileProviders;
+using LiveStreamingServerNet.Transmuxer.Installer;
 using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.Extensions.FileProviders;
+using System.Net;
 using System.Reflection;
 
 namespace LiveStreamingServerNet.HlsDemo

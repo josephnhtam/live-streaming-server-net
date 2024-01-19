@@ -1,4 +1,5 @@
-﻿using LiveStreamingServerNet.Transmuxer.Contracts;
+﻿using LiveStreamingServerNet.Transmuxer.Configurations;
+using LiveStreamingServerNet.Transmuxer.Contracts;
 using LiveStreamingServerNet.Transmuxer.Installer.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -24,6 +25,14 @@ namespace LiveStreamingServerNet.Transmuxer.Installer
             where TOutputDirectoryPathResolver : class, IOutputDirectoryPathResolver
         {
             Services.AddSingleton<IOutputDirectoryPathResolver, TOutputDirectoryPathResolver>();
+            return this;
+        }
+
+        public ITransmuxerConfigurator Configure(Action<RemuxingConfiguration>? configure)
+        {
+            if (configure != null)
+                Services.Configure(configure);
+
             return this;
         }
     }

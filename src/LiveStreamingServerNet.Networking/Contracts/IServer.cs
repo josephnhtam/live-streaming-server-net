@@ -1,6 +1,4 @@
-﻿using System.Net;
-
-namespace LiveStreamingServerNet.Networking.Contracts
+﻿namespace LiveStreamingServerNet.Networking.Contracts
 {
     public interface IServer : IServerHandle
     {
