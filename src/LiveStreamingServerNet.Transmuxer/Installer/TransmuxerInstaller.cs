@@ -12,17 +12,21 @@ namespace LiveStreamingServerNet.Transmuxer.Installer
 {
     public static class TransmuxerInstaller
     {
-        public static ITransmuxerBuilder AddTransmuxer(this IRtmpServerConfigurator rtmpServerConfigurator)
+        public static ITransmuxerBuilder AddTransmuxer(
+            this IRtmpServerConfigurator rtmpServerConfigurator,
+            Action<ITransmuxerConfigurator>? configure = null)
         {
             var services = rtmpServerConfigurator.Services;
-
-            services.TryAddSingleton<IInputPathResolver, InputPathResolver>();
-            services.TryAddSingleton<IOutputDirectoryPathResolver, OutputDirectoryPathResolver>();
 
             services.AddSingleton<ITransmuxerEventDispatcher, TransmuxerEventDispatcher>()
                     .AddSingleton<ITransmuxerManager, TransmuxerManager>();
 
             rtmpServerConfigurator.AddStreamEventHandler<RtmpServerStreamEventListener>();
+
+            configure?.Invoke(new TransmuxerConfigurator(services));
+
+            services.TryAddSingleton<IInputPathResolver, InputPathResolver>();
+            services.TryAddSingleton<IOutputDirectoryPathResolver, OutputDirectoryPathResolver>();
 
             return new TransmuxerBuilder(services);
         }
