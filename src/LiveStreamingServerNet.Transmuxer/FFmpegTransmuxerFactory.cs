@@ -8,14 +8,15 @@ namespace LiveStreamingServerNet.Transmuxer
     {
         private readonly FFmpegTransmuxerFactoryConfiguration _config;
 
-        public FFmpegTransmuxerFactory(IOptions<FFmpegTransmuxerFactoryConfiguration> config)
+        public FFmpegTransmuxerFactory(FFmpegTransmuxerFactoryConfiguration config)
         {
-            _config = config.Value;
+            _config = config;
         }
 
         public Task<ITransmuxer> CreateAsync(string streamPath, IDictionary<string, string> streamArguments)
         {
             var process = new FFmpegTransmuxer(
+                _config.TransmuxerIdentifier,
                 _config.FFmpegPath,
                 _config.FFmpegTransmuxerArguments,
                 _config.OutputFileName,

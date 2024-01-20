@@ -12,16 +12,16 @@ namespace LiveStreamingServerNet.Transmuxer.Internal
             _handlers = handlers;
         }
 
-        public async Task TransmuxerStartedAsync(uint clientId, string inputPath, string outputPath, string streamPath, IDictionary<string, string> streamArguments)
+        public async Task TransmuxerStartedAsync(uint clientId, string identifier, string inputPath, string outputPath, string streamPath, IDictionary<string, string> streamArguments)
         {
             foreach (var handler in _handlers)
-                await handler.OnTransmuxerStartedAsync(clientId, inputPath, outputPath, streamPath, streamArguments);
+                await handler.OnTransmuxerStartedAsync(clientId, identifier, inputPath, outputPath, streamPath, streamArguments);
         }
 
-        public async Task TransmuxerStoppedAsync(uint clientId, string inputPath, string outputPath, string streamPath, IDictionary<string, string> streamArguments)
+        public async Task TransmuxerStoppedAsync(uint clientId, string identifier, string inputPath, string outputPath, string streamPath, IDictionary<string, string> streamArguments)
         {
             foreach (var handler in _handlers)
-                await handler.OnTransmuxerStoppedAsync(clientId, inputPath, outputPath, streamPath, streamArguments);
+                await handler.OnTransmuxerStoppedAsync(clientId, identifier, inputPath, outputPath, streamPath, streamArguments);
         }
     }
 }

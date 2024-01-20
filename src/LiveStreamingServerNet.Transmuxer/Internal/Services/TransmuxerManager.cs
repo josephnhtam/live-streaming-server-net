@@ -11,7 +11,7 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Services
     internal class TransmuxerManager : ITransmuxerManager, IAsyncDisposable
     {
         private readonly IServer _server;
-        private readonly ITransmuxerFactory _transmuxerFactory;
+        private readonly IEnumerable<ITransmuxerFactory> _transmuxerFactories;
         private readonly IInputPathResolver _inputPathResolver;
         private readonly IOutputDirectoryPathResolver _outputDirPathResolver;
         private readonly ITransmuxerEventDispatcher _eventDispatcher;
@@ -20,14 +20,14 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Services
 
         public TransmuxerManager(
             IServer server,
-            ITransmuxerFactory transmuxerFactory,
+            IEnumerable<ITransmuxerFactory> transmuxerFactories,
             IInputPathResolver inputPathResolver,
             IOutputDirectoryPathResolver outputDirPathResolver,
             ITransmuxerEventDispatcher eventDispatcher,
             ILogger<TransmuxerManager> logger)
         {
             _server = server;
-            _transmuxerFactory = transmuxerFactory;
+            _transmuxerFactories = transmuxerFactories;
             _inputPathResolver = inputPathResolver;
             _outputDirPathResolver = outputDirPathResolver;
             _eventDispatcher = eventDispatcher;
@@ -37,15 +37,39 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Services
 
         public async Task StartRemuxingStreamAsync(uint clientId, string streamPath, IDictionary<string, string> _streamArguments)
         {
+            var cts = new CancellationTokenSource();
             var streamArguments = new Dictionary<string, string>(_streamArguments).AsReadOnly();
 
-            var transmuxer = await _transmuxerFactory.CreateAsync(streamPath, streamArguments);
-
-            var cts = new CancellationTokenSource();
-            var task = Task.Run(() => RunTransmuxer(transmuxer, clientId, streamPath, streamArguments, cts));
+            var transmuxers = await CreateTransmuxers(streamPath, streamArguments);
+            var task = RunTransmuxers(transmuxers, clientId, streamPath, streamArguments, cts);
 
             _transmuxerTasks[streamPath] = new TransmuxerTask(task, cts);
             _ = task.ContinueWith(_ => _transmuxerTasks.TryRemove(streamPath, out var task));
+        }
+
+        private async Task<IList<ITransmuxer>> CreateTransmuxers(string streamPath, IDictionary<string, string> streamArguments)
+        {
+            var transmuxers = new List<ITransmuxer>();
+
+            foreach (var transmuxerFactor in _transmuxerFactories)
+                transmuxers.Add(await transmuxerFactor.CreateAsync(streamPath, streamArguments));
+
+            return transmuxers;
+        }
+
+        private async Task RunTransmuxers(
+            IList<ITransmuxer> transmuxers,
+            uint clientId,
+            string streamPath,
+            IDictionary<string, string> streamArguments,
+            CancellationTokenSource cts)
+        {
+            var tasks = new List<Task>();
+
+            foreach (var transmuxer in transmuxers)
+                tasks.Add(Task.Run(() => RunTransmuxer(transmuxer, clientId, streamPath, streamArguments, cts)));
+
+            await Task.WhenAll(tasks);
         }
 
         private async Task RunTransmuxer(
@@ -69,16 +93,16 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Services
                 _server.GetClient(clientId)?.Disconnect();
             }
 
-            async Task TransmuxerStarted(string outputPath)
+            async Task TransmuxerStarted(string identifier, string outputPath)
             {
-                _logger.TransmuxerStarted(inputPath, outputPath, streamPath);
-                await _eventDispatcher.TransmuxerStartedAsync(clientId, inputPath, outputPath, streamPath, streamArguments);
+                _logger.TransmuxerStarted(identifier, inputPath, outputPath, streamPath);
+                await _eventDispatcher.TransmuxerStartedAsync(clientId, identifier, inputPath, outputPath, streamPath, streamArguments);
             }
 
-            async Task TransmuxerStopped(string outputPath)
+            async Task TransmuxerStopped(string identifier, string outputPath)
             {
-                _logger.TransmuxerStopped(inputPath, outputPath, streamPath);
-                await _eventDispatcher.TransmuxerStoppedAsync(clientId, inputPath, outputPath, streamPath, streamArguments);
+                _logger.TransmuxerStopped(identifier, inputPath, outputPath, streamPath);
+                await _eventDispatcher.TransmuxerStoppedAsync(clientId, identifier, inputPath, outputPath, streamPath, streamArguments);
             }
         }
 

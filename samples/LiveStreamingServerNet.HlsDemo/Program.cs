@@ -70,7 +70,7 @@ namespace LiveStreamingServerNet.HlsDemo
                             })
                             .AddTransmuxerEventHandler<TransmuxerEventListener>()
                         )
-                        .UseFFmpeg(options =>
+                        .AddFFmpeg(options =>
                         {
                             options.FFmpegPath = ExecutableFinder.FindExecutableFromPATH("ffmpeg")!;
                             options.CreateWindow = true;
@@ -91,17 +91,17 @@ namespace LiveStreamingServerNet.HlsDemo
                 _logger = logger;
             }
 
-            public Task OnTransmuxerStartedAsync(uint clientId, string inputPath, string outputPath, string streamPath, IDictionary<string, string> streamArguments)
+            public Task OnTransmuxerStartedAsync(uint clientId, string identifier, string inputPath, string outputPath, string streamPath, IDictionary<string, string> streamArguments)
             {
                 outputPath = Path.GetRelativePath(_config.OutputDirectoryPath, outputPath);
-                _logger.LogInformation($"Transmuxer started: {inputPath} -> {outputPath}");
+                _logger.LogInformation($"Transmuxer ({identifier}) started: {inputPath} -> {outputPath}");
                 return Task.CompletedTask;
             }
 
-            public Task OnTransmuxerStoppedAsync(uint clientId, string inputPath, string outputPath, string streamPath, IDictionary<string, string> streamArguments)
+            public Task OnTransmuxerStoppedAsync(uint clientId, string identifier, string inputPath, string outputPath, string streamPath, IDictionary<string, string> streamArguments)
             {
                 outputPath = Path.GetRelativePath(_config.OutputDirectoryPath, outputPath);
-                _logger.LogInformation($"Transmuxer stopped: {inputPath} -> {outputPath}");
+                _logger.LogInformation($"Transmuxer ({identifier}) stopped: {inputPath} -> {outputPath}");
                 return Task.CompletedTask;
             }
         }

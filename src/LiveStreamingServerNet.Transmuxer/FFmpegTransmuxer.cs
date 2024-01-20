@@ -6,14 +6,16 @@ namespace LiveStreamingServerNet.Transmuxer
 {
     public class FFmpegTransmuxer : ITransmuxer
     {
+        private readonly string _identifier;
         private readonly string _ffmpegPath;
         private readonly string _arguments;
         private readonly string _outputFileName;
         private readonly bool _createWindow;
         private readonly int _gracefulTerminationSeconds;
 
-        public FFmpegTransmuxer(string ffmpegPath, string arguments, string outputFileName, bool createWindow, int gracefulTerminationSeconds)
+        public FFmpegTransmuxer(string identifier, string ffmpegPath, string arguments, string outputFileName, bool createWindow, int gracefulTerminationSeconds)
         {
+            _identifier = identifier;
             _ffmpegPath = ffmpegPath;
             _arguments = arguments;
             _outputFileName = outputFileName;
@@ -52,7 +54,7 @@ namespace LiveStreamingServerNet.Transmuxer
             finally
             {
                 if (onEnded != null)
-                    await onEnded.Invoke(outputPath);
+                    await onEnded.Invoke(_identifier, outputPath);
             }
         }
 
@@ -74,7 +76,7 @@ namespace LiveStreamingServerNet.Transmuxer
                 throw new TransmuxerException("Error starting FFmpeg process");
 
             if (onStarted != null)
-                await onStarted.Invoke(outputPath);
+                await onStarted.Invoke(_identifier, outputPath);
 
             await process.WaitForExitAsync(cancellation);
         }

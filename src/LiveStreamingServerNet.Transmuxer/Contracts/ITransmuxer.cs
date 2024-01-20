@@ -1,7 +1,7 @@
 ﻿namespace LiveStreamingServerNet.Transmuxer.Contracts
 {
-    public delegate Task OnTransmuxerStarted(string outputPath);
-    public delegate Task OnTransmuxerEnded(string outputPath);
+    public delegate Task OnTransmuxerStarted(string identifier, string outputPath);
+    public delegate Task OnTransmuxerEnded(string identifier, string outputPath);
 
     public interface ITransmuxer
     {
