@@ -84,9 +84,10 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
 
             if (codecId is VideoCodecId.AVC or VideoCodecId.HVC or VideoCodecId.Opus)
             {
+                publishStreamContext.GroupOfPicturesCacheActivated = _config.EnableGopCaching;
                 var avcPackageType = (AVCPacketType)payloadBuffer.ReadByte();
 
-                if (_config.EnableGopCaching && frameType == VideoFrameType.KeyFrame)
+                if (publishStreamContext.GroupOfPicturesCacheActivated && frameType == VideoFrameType.KeyFrame)
                 {
                     await _mediaMessageManager.ClearGroupOfPicturesCacheAsync(publishStreamContext);
                 }
@@ -97,13 +98,14 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
                     return true;
                 }
 
-                if (_config.EnableGopCaching && avcPackageType == AVCPacketType.NALU)
+                if (publishStreamContext.GroupOfPicturesCacheActivated && avcPackageType == AVCPacketType.NALU)
                 {
                     await _mediaMessageManager.CachePictureAsync(publishStreamContext, MediaType.Video, payloadBuffer, chunkStreamContext.MessageHeader.Timestamp);
                 }
             }
-            else if (_config.EnableGopCaching)
+            else if (publishStreamContext.GroupOfPicturesCacheActivated)
             {
+                publishStreamContext.GroupOfPicturesCacheActivated = false;
                 await _mediaMessageManager.ClearGroupOfPicturesCacheAsync(publishStreamContext);
             }
 

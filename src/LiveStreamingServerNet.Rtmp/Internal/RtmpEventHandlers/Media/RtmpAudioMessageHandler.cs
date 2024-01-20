@@ -93,7 +93,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
                     await _mediaMessageManager.CacheSequenceHeaderAsync(publishStreamContext, MediaType.Audio, payloadBuffer);
                     return true;
                 }
-                else if (_config.EnableGopCaching)
+                else if (publishStreamContext.GroupOfPicturesCacheActivated)
                 {
                     await _mediaMessageManager.CachePictureAsync(publishStreamContext, MediaType.Audio, payloadBuffer, chunkStreamContext.MessageHeader.Timestamp);
                 }

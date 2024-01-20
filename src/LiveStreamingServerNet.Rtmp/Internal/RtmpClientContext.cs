@@ -77,6 +77,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal
         public IDictionary<string, object>? StreamMetaData { get; set; }
         public byte[]? VideoSequenceHeader { get; set; }
         public byte[]? AudioSequenceHeader { get; set; }
+        public bool GroupOfPicturesCacheActivated { get; set; }
         public IGroupOfPicturesCache GroupOfPicturesCache { get; }
 
         public RtmpPublishStreamContext(uint streamId, string streamPath, IDictionary<string, string> streamArguments)

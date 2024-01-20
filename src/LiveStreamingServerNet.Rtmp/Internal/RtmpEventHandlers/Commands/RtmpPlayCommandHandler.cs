@@ -24,7 +24,6 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
         private readonly IRtmpCommandMessageSenderService _commandMessageSender;
         private readonly IRtmpMediaMessageManagerService _mediaMessageManager;
         private readonly IRtmpServerStreamEventDispatcher _eventDispatch;
-        private readonly RtmpServerConfiguration _config;
         private readonly ILogger<RtmpPlayCommandHandler> _logger;
 
         public RtmpPlayCommandHandler(
@@ -34,7 +33,6 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
             IRtmpCommandMessageSenderService commandMessageSender,
             IRtmpMediaMessageManagerService mediaMessageManager,
             IRtmpServerStreamEventDispatcher eventDispatch,
-            IOptions<RtmpServerConfiguration> config,
             ILogger<RtmpPlayCommandHandler> logger)
         {
             _services = services;
@@ -43,7 +41,6 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
             _commandMessageSender = commandMessageSender;
             _mediaMessageManager = mediaMessageManager;
             _eventDispatch = eventDispatch;
-            _config = config.Value;
             _logger = logger;
         }
 
@@ -168,7 +165,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
                 chunkStreamContext.MessageHeader.Timestamp,
                 chunkStreamContext.MessageHeader.MessageStreamId);
 
-            if (_config.EnableGopCaching)
+            if (publishStreamContext.GroupOfPicturesCacheActivated)
             {
                 _mediaMessageManager.SendCachedGroupOfPictures(
                     clientContext, publishStreamContext,

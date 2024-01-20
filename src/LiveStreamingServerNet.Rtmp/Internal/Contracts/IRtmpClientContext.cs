@@ -42,6 +42,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Contracts
         IDictionary<string, object>? StreamMetaData { get; set; }
         byte[]? VideoSequenceHeader { get; set; }
         byte[]? AudioSequenceHeader { get; set; }
+        bool GroupOfPicturesCacheActivated { get; set; }
         IGroupOfPicturesCache GroupOfPicturesCache { get; }
     }
 
