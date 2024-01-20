@@ -72,13 +72,13 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Services
             async Task TransmuxerStarted(string outputPath)
             {
                 _logger.TransmuxerStarted(inputPath, outputPath, streamPath);
-                await _eventDispatcher.TransmuxerStartedAsync(inputPath, outputPath, streamPath, streamArguments);
+                await _eventDispatcher.TransmuxerStartedAsync(clientId, inputPath, outputPath, streamPath, streamArguments);
             }
 
             async Task TransmuxerStopped(string outputPath)
             {
                 _logger.TransmuxerStopped(inputPath, outputPath, streamPath);
-                await _eventDispatcher.TransmuxerStoppedAsync(inputPath, outputPath, streamPath, streamArguments);
+                await _eventDispatcher.TransmuxerStoppedAsync(clientId, inputPath, outputPath, streamPath, streamArguments);
             }
         }
 
