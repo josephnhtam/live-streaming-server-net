@@ -20,7 +20,6 @@ namespace LiveStreamingServerNet.Transmuxer
                 _config.FFmpegPath,
                 _config.FFmpegTransmuxerArguments,
                 _config.OutputFileName,
-                _config.CreateWindow,
                 _config.GracefulShutdownTimeoutSeconds);
 
             return Task.FromResult<ITransmuxer>(process);

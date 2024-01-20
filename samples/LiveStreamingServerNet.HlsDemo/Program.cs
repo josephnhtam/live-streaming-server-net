@@ -73,7 +73,6 @@ namespace LiveStreamingServerNet.HlsDemo
                         .AddFFmpeg(options =>
                         {
                             options.FFmpegPath = ExecutableFinder.FindExecutableFromPATH("ffmpeg")!;
-                            options.CreateWindow = true;
                         })
                 )
                 .ConfigureLogging(options => options.AddConsole())
