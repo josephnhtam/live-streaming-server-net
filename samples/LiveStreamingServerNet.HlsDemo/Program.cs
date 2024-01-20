@@ -17,6 +17,7 @@ namespace LiveStreamingServerNet.HlsDemo
         public static void Main(string[] args)
         {
             var trasmuxerOutputPath = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly()!.Location)!, "TransmuxerOutput");
+            new DirectoryInfo(trasmuxerOutputPath).Create();
 
             var builder = WebApplication.CreateBuilder(args);
 
@@ -48,8 +49,6 @@ namespace LiveStreamingServerNet.HlsDemo
 
         private static (PhysicalFileProvider, FileExtensionContentTypeProvider) CreateProviders(string trasmuxerOutputPath)
         {
-            new DirectoryInfo(trasmuxerOutputPath).Create();
-
             var fileProvider = new PhysicalFileProvider(trasmuxerOutputPath);
 
             var contentTypeProvider = new FileExtensionContentTypeProvider();
