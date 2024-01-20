@@ -1,4 +1,5 @@
 ﻿using LiveStreamingServerNet.Networking;
+using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.Transmuxer.Installer;
 using Microsoft.Extensions.Logging;
 using System.Net;
@@ -10,7 +11,26 @@ namespace LiveStreamingServerNet.RtmpsDemo
     {
         public static async Task Main()
         {
-            var server = LiveStreamingServerBuilder.Create()
+            IServer liveStreamingServer = CreateLiveStreamingServer();
+
+            IList<ServerEndPoint> endPoints =
+                [new ServerEndPoint(new IPEndPoint(IPAddress.Any, 1935), false),
+                    new ServerEndPoint(new IPEndPoint(IPAddress.Any, 443), true)];
+
+            using var cts = new CancellationTokenSource();
+
+            Console.CancelKeyPress += (s, e) =>
+            {
+                cts.Cancel();
+                e.Cancel = true;
+            };
+
+            await liveStreamingServer.RunAsync(endPoints, cts.Token);
+        }
+
+        private static IServer CreateLiveStreamingServer()
+        {
+            return LiveStreamingServerBuilder.Create()
                 .ConfigureServer(options => options.ConfigureSecurity(options =>
                 {
                     var pfxPath = Environment.GetEnvironmentVariable("CERT_PFX_PATH")!;
@@ -26,20 +46,6 @@ namespace LiveStreamingServerNet.RtmpsDemo
                 })
                 .ConfigureLogging(options => options.AddConsole().SetMinimumLevel(LogLevel.Debug))
                 .Build();
-
-            IList<ServerEndPoint> endPoints =
-                [new ServerEndPoint(new IPEndPoint(IPAddress.Any, 1935), false),
-                    new ServerEndPoint(new IPEndPoint(IPAddress.Any, 443), true)];
-
-            using var cts = new CancellationTokenSource();
-
-            Console.CancelKeyPress += (s, e) =>
-            {
-                cts.Cancel();
-                e.Cancel = true;
-            };
-
-            await server.RunAsync(endPoints, cts.Token);
         }
     }
 }
