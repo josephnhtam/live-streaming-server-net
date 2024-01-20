@@ -14,10 +14,24 @@ namespace LiveStreamingServerNet.Transmuxer.Installer
             Services = services;
         }
 
+        public ITransmuxerConfigurator Configure(Action<RemuxingConfiguration>? configure)
+        {
+            if (configure != null)
+                Services.Configure(configure);
+
+            return this;
+        }
+
         public ITransmuxerConfigurator UseInputPathResolver<TInputPathResolver>()
             where TInputPathResolver : class, IInputPathResolver
         {
             Services.AddSingleton<IInputPathResolver, TInputPathResolver>();
+            return this;
+        }
+
+        public ITransmuxerConfigurator UseInputPathResolver(Func<IServiceProvider, IInputPathResolver> implmentationFactory)
+        {
+            Services.AddSingleton(implmentationFactory);
             return this;
         }
 
@@ -28,11 +42,22 @@ namespace LiveStreamingServerNet.Transmuxer.Installer
             return this;
         }
 
-        public ITransmuxerConfigurator Configure(Action<RemuxingConfiguration>? configure)
+        public ITransmuxerConfigurator UserOutputDirectoryPathResolver(Func<IServiceProvider, IOutputDirectoryPathResolver> implmentationFactory)
         {
-            if (configure != null)
-                Services.Configure(configure);
+            Services.AddSingleton(implmentationFactory);
+            return this;
+        }
 
+        public ITransmuxerConfigurator AddTransmuxerEventHandler<TTransmuxerEventHandler>()
+            where TTransmuxerEventHandler : class, ITransmuxerEventHandler
+        {
+            Services.AddSingleton<ITransmuxerEventHandler, TTransmuxerEventHandler>();
+            return this;
+        }
+
+        public ITransmuxerConfigurator AddTransmuxerEventHandler(Func<IServiceProvider, ITransmuxerEventHandler> implmentationFactory)
+        {
+            Services.AddSingleton(implmentationFactory);
             return this;
         }
     }
