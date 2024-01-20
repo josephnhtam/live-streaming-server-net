@@ -102,6 +102,10 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
                     await _mediaMessageManager.CachePictureAsync(publishStreamContext, MediaType.Video, payloadBuffer, chunkStreamContext.MessageHeader.Timestamp);
                 }
             }
+            else if (_config.EnableGopCaching)
+            {
+                await _mediaMessageManager.ClearGroupOfPicturesCacheAsync(publishStreamContext);
+            }
 
             payloadBuffer.MoveTo(0);
 
