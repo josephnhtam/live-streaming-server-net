@@ -1,4 +1,5 @@
-﻿using LiveStreamingServerNet.Rtmp.Installer.Contracts;
+﻿using LiveStreamingServerNet.Newtorking.Contracts;
+using LiveStreamingServerNet.Rtmp.Installer.Contracts;
 using LiveStreamingServerNet.Transmuxer.Contracts;
 using LiveStreamingServerNet.Transmuxer.Installer.Contracts;
 using LiveStreamingServerNet.Transmuxer.Internal;
@@ -21,6 +22,7 @@ namespace LiveStreamingServerNet.Transmuxer.Installer
             services.AddSingleton<ITransmuxerEventDispatcher, TransmuxerEventDispatcher>()
                     .AddSingleton<ITransmuxerManager, TransmuxerManager>();
 
+            services.AddSingleton<IServerEventHandler, ServerEventHandler>();
             rtmpServerConfigurator.AddStreamEventHandler<RtmpServerStreamEventListener>();
 
             configure?.Invoke(new TransmuxerConfigurator(services));

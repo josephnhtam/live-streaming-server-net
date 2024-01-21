@@ -8,7 +8,7 @@ using System.Collections.Concurrent;
 
 namespace LiveStreamingServerNet.Transmuxer.Internal.Services
 {
-    internal class TransmuxerManager : ITransmuxerManager, IAsyncDisposable
+    internal class TransmuxerManager : ITransmuxerManager
     {
         private readonly IServer _server;
         private readonly IEnumerable<ITransmuxerFactory> _transmuxerFactories;
