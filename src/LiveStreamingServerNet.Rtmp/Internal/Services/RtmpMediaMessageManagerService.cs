@@ -5,6 +5,7 @@ using LiveStreamingServerNet.Rtmp.Internal.Extensions;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpHeaders;
 using LiveStreamingServerNet.Rtmp.Internal.Services.Contracts;
+using LiveStreamingServerNet.Rtmp.Logging;
 using LiveStreamingServerNet.Utilities;
 using LiveStreamingServerNet.Utilities.Extensions;
 using Microsoft.Extensions.Logging;
@@ -61,12 +62,17 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             INetBuffer payloadBuffer,
             uint timestamp)
         {
+            if (publishStreamContext.GroupOfPicturesCache.Size >= _config.MaxGroupOfPicturesCacheSize)
+            {
+                _logger.ReachedMaxGopCacheSize(publishStreamContext.StreamPath);
+                await ClearGroupOfPicturesCacheAsync(publishStreamContext);
+            }
+
             var rentedBuffer = new RentedBuffer(payloadBuffer.Size);
             payloadBuffer.MoveTo(0).ReadBytes(rentedBuffer.Buffer, 0, rentedBuffer.Size);
             payloadBuffer.MoveTo(0);
 
             await _interception.CachePictureAsync(publishStreamContext.StreamPath, mediaType, rentedBuffer, timestamp);
-
             publishStreamContext.GroupOfPicturesCache.Add(new PicturesCache(mediaType, timestamp, rentedBuffer));
         }
 

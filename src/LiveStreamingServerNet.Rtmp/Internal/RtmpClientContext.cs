@@ -91,6 +91,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal
 
     internal class GroupOfPicturesCache : IGroupOfPicturesCache
     {
+        public long Size { get; private set; }
         private readonly Queue<PicturesCache> _groupOfPicturesCache = new();
 
         public void Add(PicturesCache cache)
@@ -98,6 +99,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal
             lock (_groupOfPicturesCache)
             {
                 _groupOfPicturesCache.Enqueue(cache);
+                Size += cache.Payload.Size;
             }
         }
 
@@ -112,6 +114,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal
                 }
 
                 _groupOfPicturesCache.Clear();
+                Size = 0;
             }
         }
 

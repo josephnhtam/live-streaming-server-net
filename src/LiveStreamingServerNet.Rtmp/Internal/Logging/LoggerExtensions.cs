@@ -81,5 +81,8 @@ namespace LiveStreamingServerNet.Rtmp.Logging
 
         [LoggerMessage(LogLevel.Debug, "ClientId: {ClientId} | Pause media package | Outstanding media message size: {OutstandingPackagesSize} | count: {OutstandingPackagesCount}")]
         public static partial void PauseMediaPackage(this ILogger logger, uint clientId, long outstandingPackagesSize, long outstandingPackagesCount);
+
+        [LoggerMessage(LogLevel.Debug, "StreamPath: {StreamPath} | Reached max GOP cache size")]
+        public static partial void ReachedMaxGopCacheSize(this ILogger logger, string streamPath);
     }
 }

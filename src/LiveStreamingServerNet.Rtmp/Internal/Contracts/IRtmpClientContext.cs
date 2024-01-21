@@ -63,6 +63,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Contracts
 
     internal interface IGroupOfPicturesCache
     {
+        long Size { get; }
         void Add(PicturesCache cache);
         void Clear(bool unclaim = true);
         IList<PicturesCache> Get(bool claim = true);
