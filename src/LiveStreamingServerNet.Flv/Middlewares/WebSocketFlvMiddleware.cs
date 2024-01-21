@@ -19,6 +19,7 @@ namespace LiveStreamingServerNet.Flv.Middlewares
 
         private readonly IStreamPathResolver _streamPathResolver;
         private readonly WebSocketAcceptContext _webSocketAcceptContext;
+        private readonly Func<FlvStreamContext, Task<bool>>? _onPrepareResponse;
 
         private readonly RequestDelegate _next;
 
@@ -30,6 +31,8 @@ namespace LiveStreamingServerNet.Flv.Middlewares
 
             _streamPathResolver = options.StreamPathResolver ?? new DefaultStreamPathResolver();
             _webSocketAcceptContext = options.WebSocketAcceptContext ?? new WebSocketAcceptContext();
+
+            _onPrepareResponse = options.OnPrepareResponse;
 
             _next = next;
         }
@@ -44,6 +47,9 @@ namespace LiveStreamingServerNet.Flv.Middlewares
                 await _next.Invoke(context);
                 return;
             }
+
+            if (_onPrepareResponse != null && !await _onPrepareResponse(new FlvStreamContext(context, streamPath, streamArguments)))
+                return;
 
             await TryServeWebSocketFlv(context, streamPath, streamArguments);
         }

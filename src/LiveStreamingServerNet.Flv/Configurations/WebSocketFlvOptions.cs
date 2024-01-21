@@ -7,5 +7,6 @@ namespace LiveStreamingServerNet.Flv.Configurations
     {
         public IStreamPathResolver? StreamPathResolver { get; set; }
         public WebSocketAcceptContext? WebSocketAcceptContext { get; set; }
+        public Func<FlvStreamContext, Task<bool>>? OnPrepareResponse { get; set; }
     }
 }

@@ -14,9 +14,12 @@ namespace LiveStreamingServerNet.Flv.Middlewares
     {
         private readonly IHttpFlvClientFactory _clientFactory;
         private readonly IFlvStreamManagerService _streamManager;
-        private readonly IStreamPathResolver _streamPathResolver;
-        private readonly IHttpFlvHeaderWriter _headerWriter;
         private readonly IFlvClientHandler _clientHandler;
+
+        private readonly IStreamPathResolver _streamPathResolver;
+        private readonly Func<FlvStreamContext, Task<bool>>? _onPrepareResponse;
+
+        private readonly IHttpFlvHeaderWriter _headerWriter;
 
         private readonly RequestDelegate _next;
 
@@ -26,6 +29,7 @@ namespace LiveStreamingServerNet.Flv.Middlewares
             _streamManager = server.Services.GetRequiredService<IFlvStreamManagerService>();
             _clientHandler = server.Services.GetRequiredService<IFlvClientHandler>();
             _streamPathResolver = options.StreamPathResolver ?? new DefaultStreamPathResolver();
+            _onPrepareResponse = options.OnPrepareResponse;
             _headerWriter = headerWriter;
             _next = next;
         }
@@ -40,6 +44,9 @@ namespace LiveStreamingServerNet.Flv.Middlewares
                 await _next.Invoke(context);
                 return;
             }
+
+            if (_onPrepareResponse != null && !await _onPrepareResponse(new FlvStreamContext(context, streamPath, streamArguments)))
+                return;
 
             await TryServeHttpFlv(context, streamPath, streamArguments);
         }
