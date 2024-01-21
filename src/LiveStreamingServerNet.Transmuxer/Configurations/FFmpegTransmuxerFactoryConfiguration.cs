@@ -22,8 +22,8 @@ namespace LiveStreamingServerNet.Transmuxer.Configurations
 
         public static Task<string> DefaultOutputPathResolver(string streamPath, IDictionary<string, string> streamArguments)
         {
-            var outputDir = Path.GetDirectoryName(Assembly.GetEntryAssembly()!.Location)!;
-            return Task.FromResult(Path.Combine(outputDir, streamPath.Trim('/'), "output.m3u8"));
+            var entryDirectory = Path.GetDirectoryName(Assembly.GetEntryAssembly()!.Location)!;
+            return Task.FromResult(Path.Combine(entryDirectory, "Output", streamPath.Trim('/'), "output.m3u8"));
         }
     }
 
