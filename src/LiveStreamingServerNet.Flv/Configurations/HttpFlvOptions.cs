@@ -1,5 +1,4 @@
 ﻿using LiveStreamingServerNet.Flv.Contracts;
-using Microsoft.AspNetCore.Http;
 
 namespace LiveStreamingServerNet.Flv.Configurations
 {

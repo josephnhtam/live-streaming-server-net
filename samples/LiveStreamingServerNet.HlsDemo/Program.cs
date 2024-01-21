@@ -1,12 +1,10 @@
 using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.Networking.Helpers;
-using LiveStreamingServerNet.Transmuxer.Configurations;
 using LiveStreamingServerNet.Transmuxer.Contracts;
 using LiveStreamingServerNet.Transmuxer.Installer;
 using LiveStreamingServerNet.Transmuxer.Internal.Utilities;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.FileProviders;
-using Microsoft.Extensions.Options;
 using System.Net;
 using System.Reflection;
 
@@ -63,16 +61,14 @@ namespace LiveStreamingServerNet.HlsDemo
                 .ConfigureRtmpServer(options =>
                     options
                         .AddTransmuxer(options =>
-                            options.Configure(options =>
-                            {
-                                options.InputBasePath = "rtmp://localhost:1935";
-                                options.OutputDirectoryPath = trasmuxerOutputPath;
-                            })
-                            .AddTransmuxerEventHandler<TransmuxerEventListener>()
+                            options.AddTransmuxerEventHandler(svc =>
+                                new TransmuxerEventListener(trasmuxerOutputPath, svc.GetRequiredService<ILogger<TransmuxerEventListener>>()))
                         )
                         .AddFFmpeg(options =>
                         {
                             options.FFmpegPath = ExecutableFinder.FindExecutableFromPATH("ffmpeg")!;
+                            options.OutputPathResolver = (streamPath, streamArguments)
+                                => Task.FromResult(Path.Combine(trasmuxerOutputPath, streamPath.Trim('/'), "output.m3u8"));
                         })
                 )
                 .ConfigureLogging(options => options.AddConsole())
@@ -81,25 +77,25 @@ namespace LiveStreamingServerNet.HlsDemo
 
         public class TransmuxerEventListener : ITransmuxerEventHandler
         {
-            private readonly RemuxingConfiguration _config;
-            private readonly ILogger<TransmuxerEventListener> _logger;
+            private readonly string _trasmuxerOutputPath;
+            private readonly ILogger _logger;
 
-            public TransmuxerEventListener(IOptions<RemuxingConfiguration> config, ILogger<TransmuxerEventListener> logger)
+            public TransmuxerEventListener(string trasmuxerOutputPath, ILogger<TransmuxerEventListener> logger)
             {
-                _config = config.Value;
+                _trasmuxerOutputPath = trasmuxerOutputPath;
                 _logger = logger;
             }
 
             public Task OnTransmuxerStartedAsync(uint clientId, string identifier, string inputPath, string outputPath, string streamPath, IDictionary<string, string> streamArguments)
             {
-                outputPath = Path.GetRelativePath(_config.OutputDirectoryPath, outputPath);
+                outputPath = Path.GetRelativePath(_trasmuxerOutputPath, outputPath);
                 _logger.LogInformation($"Transmuxer ({identifier}) started: {inputPath} -> {outputPath}");
                 return Task.CompletedTask;
             }
 
             public Task OnTransmuxerStoppedAsync(uint clientId, string identifier, string inputPath, string outputPath, string streamPath, IDictionary<string, string> streamArguments)
             {
-                outputPath = Path.GetRelativePath(_config.OutputDirectoryPath, outputPath);
+                outputPath = Path.GetRelativePath(_trasmuxerOutputPath, outputPath);
                 _logger.LogInformation($"Transmuxer ({identifier}) stopped: {inputPath} -> {outputPath}");
                 return Task.CompletedTask;
             }

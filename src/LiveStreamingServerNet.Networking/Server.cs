@@ -23,6 +23,7 @@ namespace LiveStreamingServerNet.Newtorking
         public bool IsStarted => _isStarted == 1;
         public IList<IClientHandle> Clients => GetClientHandles();
 
+        public IReadOnlyList<ServerEndPoint>? EndPoints { get; private set; }
         IReadOnlyList<IClientHandle> IServerHandle.Clients => Clients.AsReadOnly();
 
         public Server(
@@ -95,6 +96,8 @@ namespace LiveStreamingServerNet.Newtorking
 
                 _logger.ServerStarted(serverEndPoint.LocalEndPoint.ToString());
             }
+
+            EndPoints = new List<ServerEndPoint>(serverEndPoints).AsReadOnly();
 
             return serverListeners;
         }

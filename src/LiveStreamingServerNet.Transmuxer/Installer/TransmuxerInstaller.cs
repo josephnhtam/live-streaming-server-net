@@ -25,8 +25,7 @@ namespace LiveStreamingServerNet.Transmuxer.Installer
 
             configure?.Invoke(new TransmuxerConfigurator(services));
 
-            services.TryAddSingleton<IInputPathResolver, InputPathResolver>();
-            services.TryAddSingleton<IOutputDirectoryPathResolver, OutputDirectoryPathResolver>();
+            services.TryAddSingleton<IInputPathResolver, DefaultInputPathResolver>();
 
             return new TransmuxerBuilder(services);
         }

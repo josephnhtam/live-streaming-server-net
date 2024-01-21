@@ -13,7 +13,6 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Services
         private readonly IServer _server;
         private readonly IEnumerable<ITransmuxerFactory> _transmuxerFactories;
         private readonly IInputPathResolver _inputPathResolver;
-        private readonly IOutputDirectoryPathResolver _outputDirPathResolver;
         private readonly ITransmuxerEventDispatcher _eventDispatcher;
         private readonly ILogger _logger;
         private readonly ConcurrentDictionary<string, TransmuxerTask> _transmuxerTasks;
@@ -22,14 +21,12 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Services
             IServer server,
             IEnumerable<ITransmuxerFactory> transmuxerFactories,
             IInputPathResolver inputPathResolver,
-            IOutputDirectoryPathResolver outputDirPathResolver,
             ITransmuxerEventDispatcher eventDispatcher,
             ILogger<TransmuxerManager> logger)
         {
             _server = server;
             _transmuxerFactories = transmuxerFactories;
             _inputPathResolver = inputPathResolver;
-            _outputDirPathResolver = outputDirPathResolver;
             _eventDispatcher = eventDispatcher;
             _logger = logger;
             _transmuxerTasks = new ConcurrentDictionary<string, TransmuxerTask>();
@@ -80,16 +77,15 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Services
             CancellationTokenSource cts)
         {
             var inputPath = await _inputPathResolver.ResolveInputPathAsync(streamPath, streamArguments);
-            var outputDirPath = await _outputDirPathResolver.ResolveOutputDirectoryPathAsync(streamPath, streamArguments);
 
             try
             {
-                await transmuxer.RunAsync(inputPath, outputDirPath, TransmuxerStarted, TransmuxerStopped, cts.Token);
+                await transmuxer.RunAsync(inputPath, TransmuxerStarted, TransmuxerStopped, cts.Token);
             }
             catch (OperationCanceledException) when (cts.IsCancellationRequested) { }
             catch (Exception ex)
             {
-                _logger.TransmuxerError(inputPath, outputDirPath, streamPath, ex);
+                _logger.TransmuxerError(inputPath, streamPath, ex);
                 _server.GetClient(clientId)?.Disconnect();
             }
 

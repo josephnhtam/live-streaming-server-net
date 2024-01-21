@@ -1,6 +1,5 @@
 ﻿using LiveStreamingServerNet.Transmuxer.Configurations;
 using LiveStreamingServerNet.Transmuxer.Contracts;
-using Microsoft.Extensions.Options;
 
 namespace LiveStreamingServerNet.Transmuxer
 {
@@ -13,16 +12,14 @@ namespace LiveStreamingServerNet.Transmuxer
             _config = config;
         }
 
-        public Task<ITransmuxer> CreateAsync(string streamPath, IDictionary<string, string> streamArguments)
+        public async Task<ITransmuxer> CreateAsync(string streamPath, IDictionary<string, string> streamArguments)
         {
-            var process = new FFmpegTransmuxer(
+            return new FFmpegTransmuxer(
                 _config.TransmuxerIdentifier,
                 _config.FFmpegPath,
                 _config.FFmpegTransmuxerArguments,
-                _config.OutputFileName,
-                _config.GracefulShutdownTimeoutSeconds);
-
-            return Task.FromResult<ITransmuxer>(process);
+                _config.GracefulShutdownTimeoutSeconds,
+                await _config.OutputPathResolver.Invoke(streamPath, streamArguments));
         }
     }
 }

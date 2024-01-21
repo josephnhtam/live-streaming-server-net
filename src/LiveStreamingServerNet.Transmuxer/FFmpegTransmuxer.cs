@@ -9,29 +9,26 @@ namespace LiveStreamingServerNet.Transmuxer
         private readonly string _identifier;
         private readonly string _ffmpegPath;
         private readonly string _arguments;
-        private readonly string _outputFileName;
         private readonly int _gracefulTerminationSeconds;
+        private readonly string _outputPath;
 
-        public FFmpegTransmuxer(string identifier, string ffmpegPath, string arguments, string outputFileName, int gracefulTerminationSeconds)
+        public FFmpegTransmuxer(string identifier, string ffmpegPath, string arguments, int gracefulTerminationSeconds, string outputPath)
         {
             _identifier = identifier;
             _ffmpegPath = ffmpegPath;
             _arguments = arguments;
-            _outputFileName = outputFileName;
             _gracefulTerminationSeconds = gracefulTerminationSeconds;
+            _outputPath = outputPath;
         }
 
         public async Task RunAsync(
             string inputPath,
-            string outputDirPath,
             OnTransmuxerStarted? onStarted,
             OnTransmuxerEnded? onEnded,
             CancellationToken cancellation)
         {
-            new DirectoryInfo(outputDirPath).Create();
-            var outputPath = Path.Combine(outputDirPath, _outputFileName);
-
-            await RunProcessAsync(inputPath, outputPath, onStarted, onEnded, cancellation);
+            new DirectoryInfo(Path.GetDirectoryName(_outputPath)!).Create();
+            await RunProcessAsync(inputPath, _outputPath, onStarted, onEnded, cancellation);
         }
 
         private async Task RunProcessAsync(string inputPath, string outputPath, OnTransmuxerStarted? onStarted, OnTransmuxerEnded? onEnded, CancellationToken cancellation)

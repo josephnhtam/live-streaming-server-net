@@ -5,6 +5,6 @@
 
     public interface ITransmuxer
     {
-        Task RunAsync(string inputPath, string outputDirPath, OnTransmuxerStarted? onStarted, OnTransmuxerEnded? onEnded, CancellationToken cancellation);
+        Task RunAsync(string inputPath, OnTransmuxerStarted? onStarted, OnTransmuxerEnded? onEnded, CancellationToken cancellation);
     }
 }

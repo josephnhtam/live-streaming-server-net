@@ -10,6 +10,7 @@
     public interface IServerHandle
     {
         bool IsStarted { get; }
+        IReadOnlyList<ServerEndPoint>? EndPoints { get; }
         IReadOnlyList<IClientHandle> Clients { get; }
         IClientHandle? GetClient(uint clientId);
     }

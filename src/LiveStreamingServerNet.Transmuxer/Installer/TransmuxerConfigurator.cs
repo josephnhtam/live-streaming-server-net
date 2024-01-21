@@ -1,5 +1,4 @@
-﻿using LiveStreamingServerNet.Transmuxer.Configurations;
-using LiveStreamingServerNet.Transmuxer.Contracts;
+﻿using LiveStreamingServerNet.Transmuxer.Contracts;
 using LiveStreamingServerNet.Transmuxer.Installer.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -14,14 +13,6 @@ namespace LiveStreamingServerNet.Transmuxer.Installer
             Services = services;
         }
 
-        public ITransmuxerConfigurator Configure(Action<RemuxingConfiguration>? configure)
-        {
-            if (configure != null)
-                Services.Configure(configure);
-
-            return this;
-        }
-
         public ITransmuxerConfigurator UseInputPathResolver<TInputPathResolver>()
             where TInputPathResolver : class, IInputPathResolver
         {
@@ -30,19 +21,6 @@ namespace LiveStreamingServerNet.Transmuxer.Installer
         }
 
         public ITransmuxerConfigurator UseInputPathResolver(Func<IServiceProvider, IInputPathResolver> implmentationFactory)
-        {
-            Services.AddSingleton(implmentationFactory);
-            return this;
-        }
-
-        public ITransmuxerConfigurator UserOutputDirectoryPathResolver<TOutputDirectoryPathResolver>()
-            where TOutputDirectoryPathResolver : class, IOutputDirectoryPathResolver
-        {
-            Services.AddSingleton<IOutputDirectoryPathResolver, TOutputDirectoryPathResolver>();
-            return this;
-        }
-
-        public ITransmuxerConfigurator UserOutputDirectoryPathResolver(Func<IServiceProvider, IOutputDirectoryPathResolver> implmentationFactory)
         {
             Services.AddSingleton(implmentationFactory);
             return this;
