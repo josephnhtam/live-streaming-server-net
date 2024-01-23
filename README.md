@@ -10,6 +10,11 @@ This is a .NET implementation of RTMP server.
 - GOP caching
 - Custom authorization
 
+## Roadmap
+
+ - Admin panel
+ - Kubernetes operator
+
 ## Quick Start
 
 ### Run the RTMP Server
@@ -145,8 +150,8 @@ wss://localhost:8080/live/demo.flv
 <table>
   <thead>
     <tr>
-      <th></th>
       <th>Package</th>
+      <th>Latest Version</th>
     </tr>
   </thead>
   <tbody>
