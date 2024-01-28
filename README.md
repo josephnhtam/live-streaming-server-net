@@ -111,7 +111,6 @@ var liveStreamingServer = LiveStreamingServerBuilder.Create()
     .Build();
 
 builder.Services.AddBackgroundServer(liveStreamingServer, new IPEndPoint(IPAddress.Any, 1935));
-builder.Services.AddHttpFlv();
 
 var app = builder.Build();
 

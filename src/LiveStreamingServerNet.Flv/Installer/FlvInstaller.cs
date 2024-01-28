@@ -19,13 +19,6 @@ namespace LiveStreamingServerNet.Flv.Installer
 {
     public static class FlvInstaller
     {
-        public static IServiceCollection AddHttpFlv(this IServiceCollection services)
-        {
-            services.AddSingleton<IHttpFlvHeaderWriter, HttpFlvHeaderWriter>();
-
-            return services;
-        }
-
         public static IRtmpServerConfigurator AddFlv(this IRtmpServerConfigurator configurator, Action<IFlvConfigurator>? configure = null)
         {
             var services = configurator.Services;
@@ -37,8 +30,7 @@ namespace LiveStreamingServerNet.Flv.Installer
                     .AddTransient<IFlvWriter, FlvWriter>()
                     .AddSingleton<IFlvClientHandler, FlvClientHandler>();
 
-            services.AddSingleton<IHttpFlvClientFactory, HttpFlvClientFactory>()
-                    .AddSingleton<IHttpFlvHeaderWriter, HttpFlvHeaderWriter>();
+            services.AddSingleton<IHttpFlvClientFactory, HttpFlvClientFactory>();
 
             services.AddSingleton<IWebSocketFlvClientFactory, WebSocketFlvClientFactory>();
 

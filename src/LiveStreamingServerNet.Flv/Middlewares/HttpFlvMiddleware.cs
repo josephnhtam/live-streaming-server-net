@@ -19,18 +19,15 @@ namespace LiveStreamingServerNet.Flv.Middlewares
         private readonly IStreamPathResolver _streamPathResolver;
         private readonly Func<FlvStreamContext, Task<bool>>? _onPrepareResponse;
 
-        private readonly IHttpFlvHeaderWriter _headerWriter;
-
         private readonly RequestDelegate _next;
 
-        public HttpFlvMiddleware(IServer server, HttpFlvOptions options, IHttpFlvHeaderWriter headerWriter, RequestDelegate next)
+        public HttpFlvMiddleware(IServer server, HttpFlvOptions options, RequestDelegate next)
         {
             _clientFactory = server.Services.GetRequiredService<IHttpFlvClientFactory>();
             _streamManager = server.Services.GetRequiredService<IFlvStreamManagerService>();
             _clientHandler = server.Services.GetRequiredService<IFlvClientHandler>();
             _streamPathResolver = options.StreamPathResolver ?? new DefaultStreamPathResolver();
             _onPrepareResponse = options.OnPrepareResponse;
-            _headerWriter = headerWriter;
             _next = next;
         }
 
@@ -45,10 +42,17 @@ namespace LiveStreamingServerNet.Flv.Middlewares
                 return;
             }
 
+            WriteResponseHeader(context);
+
             if (_onPrepareResponse != null && !await _onPrepareResponse(new FlvStreamContext(context, streamPath, streamArguments)))
                 return;
 
             await TryServeHttpFlv(context, streamPath, streamArguments);
+        }
+
+        private static void WriteResponseHeader(HttpContext context)
+        {
+            context.Response.ContentType = "video/x-flv";
         }
 
         private async Task TryServeHttpFlv(HttpContext context, string streamPath, IDictionary<string, string> streamArguments)
@@ -76,7 +80,6 @@ namespace LiveStreamingServerNet.Flv.Middlewares
             switch (_streamManager.StartSubscribingStream(client, streamPath))
             {
                 case SubscribingStreamResult.Succeeded:
-                    await _headerWriter.WriteHeaderAsync(context, streamPath, streamArguments, cancellation);
                     await _clientHandler.RunClientAsync(client);
                     return;
                 case SubscribingStreamResult.StreamDoesntExist:
