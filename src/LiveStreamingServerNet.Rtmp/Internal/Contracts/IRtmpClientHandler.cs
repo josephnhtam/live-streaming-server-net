@@ -2,8 +2,5 @@
 
 namespace LiveStreamingServerNet.Rtmp.Internal.Contracts
 {
-    internal interface IRtmpClientHandler : IClientHandler
-    {
-        Task InitializeAsync(IRtmpClientContext clientContext);
-    }
+    internal interface IRtmpClientHandler : IClientHandler { }
 }

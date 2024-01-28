@@ -10,8 +10,6 @@ namespace LiveStreamingServerNet.Networking.Contracts
         Task RunAsync(IClientHandler handler, ServerEndPoint serverEndPoint, CancellationToken stoppingToken);
     }
 
-    public interface IClientHandle : IClientInfo, IClientControl, IClientMessageSender { }
-
     public interface IClientInfo
     {
         uint ClientId { get; }
@@ -25,7 +23,7 @@ namespace LiveStreamingServerNet.Networking.Contracts
         void Disconnect();
     }
 
-    public interface IClientMessageSender : IClientControl
+    public interface IClientHandle : IClientControl
     {
         void Send(INetBuffer netBuffer, Action? callback = null);
         void Send(Action<INetBuffer> writer, Action? callback = null);

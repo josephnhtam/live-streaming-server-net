@@ -139,7 +139,7 @@ namespace LiveStreamingServerNet.Newtorking
             var clientId = GetNextClientId();
             var client = CreateClient(clientId, tcpClient);
 
-            var clientHandler = CreateClientHandler(client);
+            var clientHandler = CreateClientHandler();
             var clientTask = client.RunAsync(clientHandler, serverEndPoint, cancellationToken);
 
             _clientTasks.TryAdd(clientId, new(client, clientTask));
@@ -191,9 +191,9 @@ namespace LiveStreamingServerNet.Newtorking
             return _clientTasks.GetValueOrDefault(clientId)?.Client;
         }
 
-        private IClientHandler CreateClientHandler(IClientHandle client)
+        private IClientHandler CreateClientHandler()
         {
-            return _clientHandlerFactory.CreateClientHandler(client);
+            return _clientHandlerFactory.CreateClientHandler();
         }
 
         private async Task OnListenerCreatedAsync(TcpListener tcpListener)

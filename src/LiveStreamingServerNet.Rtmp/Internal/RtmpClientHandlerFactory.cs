@@ -14,11 +14,9 @@ namespace LiveStreamingServerNet.Rtmp.Internal
             _services = services;
         }
 
-        public IClientHandler CreateClientHandler(IClientHandle client)
+        public IClientHandler CreateClientHandler()
         {
-            var handler = _services.GetRequiredService<IRtmpClientHandler>();
-            handler.InitializeAsync(new RtmpClientContext(client));
-            return handler;
+            return _services.GetRequiredService<IRtmpClientHandler>();
         }
     }
 }

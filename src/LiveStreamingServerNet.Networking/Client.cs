@@ -47,8 +47,9 @@ namespace LiveStreamingServerNet.Newtorking
         {
             _logger.ClientConnected(ClientId);
 
-            Stream? networkStream = null;
+            await handler.InitializeAsync(this);
 
+            Stream? networkStream = null;
             await using (var outstandingBufferSender = new OutstandingBufferSender(ClientId, _pendingMessageChannel.Reader, _logger))
             {
                 _cts = CancellationTokenSource.CreateLinkedTokenSource(stoppingToken);

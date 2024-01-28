@@ -1,9 +1,7 @@
-﻿using LiveStreamingServerNet.Networking.Contracts;
-
-namespace LiveStreamingServerNet.Newtorking.Contracts
+﻿namespace LiveStreamingServerNet.Newtorking.Contracts
 {
     public interface IClientHandlerFactory
     {
-        IClientHandler CreateClientHandler(IClientHandle client);
+        IClientHandler CreateClientHandler();
     }
 }

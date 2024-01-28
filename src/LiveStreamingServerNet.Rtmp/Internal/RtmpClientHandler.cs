@@ -1,4 +1,5 @@
-﻿using LiveStreamingServerNet.Newtorking;
+﻿using LiveStreamingServerNet.Networking.Contracts;
+using LiveStreamingServerNet.Newtorking;
 using LiveStreamingServerNet.Rtmp.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEvents;
 using MediatR;
@@ -18,9 +19,9 @@ namespace LiveStreamingServerNet.Rtmp.Internal
             _eventDispatcher = eventDispatcher;
         }
 
-        public async Task InitializeAsync(IRtmpClientContext clientContext)
+        public async Task InitializeAsync(IClientHandle client)
         {
-            _clientContext = clientContext;
+            _clientContext = new RtmpClientContext(client);
             _clientContext.State = RtmpClientState.HandshakeC0;
 
             await OnRtmpClientCreatedAsync();
