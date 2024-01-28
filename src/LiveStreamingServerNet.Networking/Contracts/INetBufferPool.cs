@@ -1,4 +1,4 @@
-﻿namespace LiveStreamingServerNet.Newtorking.Contracts
+﻿namespace LiveStreamingServerNet.Networking.Contracts
 {
     public interface INetBufferPool : IDisposable
     {

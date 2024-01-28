@@ -1,4 +1,4 @@
-﻿using LiveStreamingServerNet.Newtorking.Contracts;
+﻿using LiveStreamingServerNet.Networking.Contracts;
 using mtanksl.ActionMessageFormat;
 
 namespace LiveStreamingServerNet.Rtmp.Internal.Extensions

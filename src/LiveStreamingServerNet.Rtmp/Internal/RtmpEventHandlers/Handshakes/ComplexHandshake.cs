@@ -1,4 +1,4 @@
-﻿using LiveStreamingServerNet.Newtorking.Contracts;
+﻿using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.Utilities.Extensions;
 using System.Security.Cryptography;
 

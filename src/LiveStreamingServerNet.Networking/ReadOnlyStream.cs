@@ -1,4 +1,4 @@
-﻿namespace LiveStreamingServerNet.Newtorking
+﻿namespace LiveStreamingServerNet.Networking
 {
     public sealed class ReadOnlyStream : Stream
     {

@@ -1,5 +1,5 @@
-﻿using LiveStreamingServerNet.Networking.Contracts;
-using LiveStreamingServerNet.Newtorking;
+﻿using LiveStreamingServerNet.Networking;
+using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEvents;
 using MediatR;

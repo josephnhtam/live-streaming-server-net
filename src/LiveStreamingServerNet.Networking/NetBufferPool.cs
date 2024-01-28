@@ -1,10 +1,10 @@
-﻿using LiveStreamingServerNet.Newtorking.Configurations;
-using LiveStreamingServerNet.Newtorking.Contracts;
+﻿using LiveStreamingServerNet.Networking.Configurations;
+using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.Utilities;
 using Microsoft.Extensions.Options;
 using System.Collections.Concurrent;
 
-namespace LiveStreamingServerNet.Newtorking
+namespace LiveStreamingServerNet.Networking
 {
     public class NetBufferPool : INetBufferPool
     {

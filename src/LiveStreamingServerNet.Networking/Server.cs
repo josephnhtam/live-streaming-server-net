@@ -1,14 +1,12 @@
-﻿using LiveStreamingServerNet.Networking;
-using LiveStreamingServerNet.Networking.Contracts;
-using LiveStreamingServerNet.Newtorking.Contracts;
-using LiveStreamingServerNet.Newtorking.Logging;
+﻿using LiveStreamingServerNet.Networking.Contracts;
+using LiveStreamingServerNet.Networking.Logging;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Collections.Concurrent;
 using System.Net;
 using System.Net.Sockets;
 
-namespace LiveStreamingServerNet.Newtorking
+namespace LiveStreamingServerNet.Networking
 {
     internal sealed class Server : IServer
     {

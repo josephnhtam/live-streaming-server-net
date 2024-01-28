@@ -1,4 +1,4 @@
-﻿using LiveStreamingServerNet.Newtorking.Contracts;
+﻿using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.Rtmp.Installer.Contracts;
 using LiveStreamingServerNet.Transmuxer.Contracts;
 using LiveStreamingServerNet.Transmuxer.Installer.Contracts;

@@ -1,6 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 
-namespace LiveStreamingServerNet.Newtorking
+namespace LiveStreamingServerNet.Networking
 {
     public class NetBuffer : NetBufferBase
     {

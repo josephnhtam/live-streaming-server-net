@@ -1,7 +1,6 @@
 ﻿using LiveStreamingServerNet.Networking.Configurations;
+using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.Networking.Installer.Contracts;
-using LiveStreamingServerNet.Newtorking.Configurations;
-using LiveStreamingServerNet.Newtorking.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LiveStreamingServerNet.Networking.Installer

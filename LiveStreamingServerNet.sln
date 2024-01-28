@@ -21,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.FlvD
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.Transmuxer", "src\LiveStreamingServerNet.Transmuxer\LiveStreamingServerNet.Transmuxer.csproj", "{FB345474-9A61-461D-BB31-28C20823F187}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveStreamingServerNet.HlsDemo", "samples\LiveStreamingServerNet.HlsDemo\LiveStreamingServerNet.HlsDemo.csproj", "{3C0C2F0E-E274-4F36-8CB1-CF60441FA46A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.HlsDemo", "samples\LiveStreamingServerNet.HlsDemo\LiveStreamingServerNet.HlsDemo.csproj", "{3C0C2F0E-E274-4F36-8CB1-CF60441FA46A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

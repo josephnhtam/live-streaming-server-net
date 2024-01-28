@@ -1,8 +1,6 @@
-﻿using LiveStreamingServerNet.Networking;
-using LiveStreamingServerNet.Networking.Configurations;
+﻿using LiveStreamingServerNet.Networking.Configurations;
 using LiveStreamingServerNet.Networking.Contracts;
-using LiveStreamingServerNet.Newtorking.Contracts;
-using LiveStreamingServerNet.Newtorking.Logging;
+using LiveStreamingServerNet.Networking.Logging;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Buffers;
@@ -11,7 +9,7 @@ using System.Net.Security;
 using System.Net.Sockets;
 using System.Threading.Channels;
 
-namespace LiveStreamingServerNet.Newtorking
+namespace LiveStreamingServerNet.Networking
 {
     internal sealed class Client : IClient
     {

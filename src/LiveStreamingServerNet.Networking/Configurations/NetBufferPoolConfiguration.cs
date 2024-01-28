@@ -1,4 +1,4 @@
-﻿namespace LiveStreamingServerNet.Newtorking.Configurations
+﻿namespace LiveStreamingServerNet.Networking.Configurations
 {
     public class NetBufferPoolConfiguration
     {

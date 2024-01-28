@@ -1,4 +1,4 @@
-﻿using LiveStreamingServerNet.Newtorking.Contracts;
+﻿using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.Contracts;
 
 namespace LiveStreamingServerNet.Rtmp.Internal.Services.Contracts

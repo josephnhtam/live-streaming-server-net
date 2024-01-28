@@ -1,6 +1,4 @@
-﻿using LiveStreamingServerNet.Networking.Contracts;
-
-namespace LiveStreamingServerNet.Newtorking.Contracts
+﻿namespace LiveStreamingServerNet.Networking.Contracts
 {
     public interface IClientHandler : IAsyncDisposable
     {

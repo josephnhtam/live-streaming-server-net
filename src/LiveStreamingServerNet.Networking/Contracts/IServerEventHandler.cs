@@ -1,7 +1,6 @@
-﻿using LiveStreamingServerNet.Networking.Contracts;
-using System.Net.Sockets;
+﻿using System.Net.Sockets;
 
-namespace LiveStreamingServerNet.Newtorking.Contracts
+namespace LiveStreamingServerNet.Networking.Contracts
 {
     public interface IServerEventHandler
     {

@@ -1,6 +1,6 @@
-﻿using LiveStreamingServerNet.Newtorking.Contracts;
+﻿using LiveStreamingServerNet.Networking.Contracts;
 
-namespace LiveStreamingServerNet.Newtorking
+namespace LiveStreamingServerNet.Networking
 {
     public abstract partial class NetBufferBase : INetBuffer
     {

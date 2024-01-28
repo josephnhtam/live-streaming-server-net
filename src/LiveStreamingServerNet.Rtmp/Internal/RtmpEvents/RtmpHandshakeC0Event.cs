@@ -1,4 +1,4 @@
-﻿using LiveStreamingServerNet.Newtorking;
+﻿using LiveStreamingServerNet.Networking;
 using LiveStreamingServerNet.Rtmp.Internal.Contracts;
 using MediatR;
 

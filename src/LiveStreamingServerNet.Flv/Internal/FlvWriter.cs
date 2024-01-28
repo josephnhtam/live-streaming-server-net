@@ -1,7 +1,7 @@
 ﻿using LiveStreamingServerNet.Flv.Internal.Contracts;
 using LiveStreamingServerNet.Flv.Internal.Logging;
-using LiveStreamingServerNet.Newtorking;
-using LiveStreamingServerNet.Newtorking.Contracts;
+using LiveStreamingServerNet.Networking;
+using LiveStreamingServerNet.Networking.Contracts;
 using Microsoft.Extensions.Logging;
 
 namespace LiveStreamingServerNet.Flv.Internal
