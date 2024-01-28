@@ -6,6 +6,7 @@ using LiveStreamingServerNet.Newtorking.Logging;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Buffers;
+using System.Net;
 using System.Net.Security;
 using System.Net.Sockets;
 using System.Threading.Channels;
@@ -32,6 +33,9 @@ namespace LiveStreamingServerNet.Newtorking
         }
 
         public bool IsConnected => _tcpClient?.Connected ?? false;
+
+        public EndPoint LocalEndPoint => _tcpClient.Client.LocalEndPoint!;
+        public EndPoint RemoteEndPoint => _tcpClient.Client.RemoteEndPoint!;
 
         public void Initialize(uint clientId, TcpClient tcpClient)
         {

@@ -1,4 +1,5 @@
 ﻿using LiveStreamingServerNet.Newtorking.Contracts;
+using System.Net;
 using System.Net.Sockets;
 
 namespace LiveStreamingServerNet.Networking.Contracts
@@ -15,6 +16,8 @@ namespace LiveStreamingServerNet.Networking.Contracts
     {
         uint ClientId { get; }
         bool IsConnected { get; }
+        EndPoint LocalEndPoint { get; }
+        EndPoint RemoteEndPoint { get; }
     }
 
     public interface IClientControl : IClientInfo
