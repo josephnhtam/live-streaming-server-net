@@ -1,32 +1,40 @@
 ﻿using LiveStreamingServerNet.Rtmp.Contracts;
+using LiveStreamingServerNet.Standalone.Internal.Services.Contracts;
 
 namespace LiveStreamingServerNet.Standalone.Internal
 {
     internal class RtmpServerStreamEventListener : IRtmpServerStreamEventHandler
     {
-        public ValueTask OnRtmpStreamMetaDataReceived(uint clientId, string streamPath, IReadOnlyDictionary<string, object> metaData)
+        private readonly IRtmpStreamManagerService _streamManager;
+
+        public RtmpServerStreamEventListener(IRtmpStreamManagerService streamManager)
         {
-            throw new NotImplementedException();
+            _streamManager = streamManager;
         }
 
-        public ValueTask OnRtmpStreamPublishedAsync(uint clientId, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
+        public async ValueTask OnRtmpStreamMetaDataReceived(uint clientId, string streamPath, IReadOnlyDictionary<string, object> metaData)
         {
-            throw new NotImplementedException();
+            await _streamManager.RtmpStreamMetaDataReceived(clientId, streamPath, metaData.ToDictionary());
         }
 
-        public ValueTask OnRtmpStreamSubscribedAsync(uint clientId, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
+        public async ValueTask OnRtmpStreamPublishedAsync(uint clientId, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
-            throw new NotImplementedException();
+            await _streamManager.RtmpStreamPublishedAsync(clientId, streamPath, streamArguments.ToDictionary());
         }
 
-        public ValueTask OnRtmpStreamUnpublishedAsync(uint clientId, string streamPath)
+        public async ValueTask OnRtmpStreamSubscribedAsync(uint clientId, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
-            throw new NotImplementedException();
+            await _streamManager.RtmpStreamSubscribedAsync(clientId, streamPath, streamArguments.ToDictionary());
         }
 
-        public ValueTask OnRtmpStreamUnsubscribedAsync(uint clientId, string streamPath)
+        public async ValueTask OnRtmpStreamUnpublishedAsync(uint clientId, string streamPath)
         {
-            throw new NotImplementedException();
+            await _streamManager.RtmpStreamUnpublishedAsync(clientId, streamPath);
+        }
+
+        public async ValueTask OnRtmpStreamUnsubscribedAsync(uint clientId, string streamPath)
+        {
+            await _streamManager.RtmpStreamUnsubscribedAsync(clientId, streamPath);
         }
     }
 }

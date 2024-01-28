@@ -14,9 +14,9 @@ namespace LiveStreamingServerNet.Standalone.Internal.Services
         private readonly IMediator _mediator;
         private readonly ConcurrentDictionary<string, RtmpPublishStream> _publishStreams = new();
 
-        public RtmpStreamManagerService(IMediator mediator)
+        public RtmpStreamManagerService(IServer server, IMediator mediator)
         {
-            //_server = server;
+            _server = server;
             _mediator = mediator;
         }
 
