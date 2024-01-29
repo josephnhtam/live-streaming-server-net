@@ -20,9 +20,7 @@ namespace LiveStreamingServerNet.Standalone.Internal.Services
         {
             var (page, pageSize, filter) = request;
 
-            var streams = _streamManagerService.GetStreams()
-                .OrderByDescending(x => x.StartTime)
-                .AsEnumerable();
+            var streams = _streamManagerService.GetStreams().AsEnumerable();
 
             if (!string.IsNullOrWhiteSpace(filter))
                 streams = streams.Where(x => x.StreamPath.Contains(filter, StringComparison.OrdinalIgnoreCase));
@@ -30,6 +28,7 @@ namespace LiveStreamingServerNet.Standalone.Internal.Services
             var totalCount = streams.Count();
 
             var result = streams
+                .OrderByDescending(x => x.StartTime)
                 .Skip(Math.Max(0, page - 1) * pageSize)
                 .Take(pageSize)
                 .Select(s => s.ToDto())
