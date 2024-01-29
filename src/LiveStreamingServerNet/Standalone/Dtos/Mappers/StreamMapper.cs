@@ -13,20 +13,31 @@ namespace LiveStreamingServerNet.Standalone.Dtos.Mappers
 
             if (stream.MetaData != null)
             {
-                dto.VideoCodecId = (int)stream.MetaData.GetValueOrDefault("videocodecid", 0);
-                dto.Height = (int)stream.MetaData.GetValueOrDefault("height", 0);
-                dto.Weight = (int)stream.MetaData.GetValueOrDefault("width", 0);
-                dto.Framerate = (int)stream.MetaData.GetValueOrDefault("framerate", 0);
+                dto.VideoCodecId = stream.MetaData.GetIntValue("videocodecid", 0);
+                dto.Height = stream.MetaData.GetIntValue("height", 0);
+                dto.Weight = stream.MetaData.GetIntValue("width", 0);
+                dto.Framerate = stream.MetaData.GetIntValue("framerate", 0);
 
-                dto.AudioCodecId = (int)stream.MetaData.GetValueOrDefault("audiocodecid", 0);
-                dto.AudioSampleRate = (int)stream.MetaData.GetValueOrDefault("audiosamplerate", 0);
-                dto.AudioChannels = (int)stream.MetaData.GetValueOrDefault("audiochannels", 0);
+                dto.AudioCodecId = stream.MetaData.GetIntValue("audiocodecid", 0);
+                dto.AudioSampleRate = stream.MetaData.GetIntValue("audiosamplerate", 0);
+                dto.AudioChannels = stream.MetaData.GetIntValue("audiochannels", 0);
 
-                if (dto.AudioChannels == 0 && stream.MetaData.TryGetValue("stereo", out var _stereo) && _stereo is bool stereo)
-                    dto.AudioChannels = stereo ? 2 : 1;
+                if (dto.AudioChannels == 0 && stream.MetaData.TryGetValue("stereo", out var _stereoValue) && _stereoValue is bool stereoValue)
+                    dto.AudioChannels = stereoValue ? 2 : 1;
             }
 
             return dto;
+        }
+
+        private static int GetIntValue(this IReadOnlyDictionary<string, object> dictionary, string key, int defaultValue)
+        {
+            if (dictionary.TryGetValue(key, out var _doublValue) && _doublValue is double doubleValue)
+                return (int)doubleValue;
+
+            if (dictionary.TryGetValue(key, out var _intValue) && _intValue is int intValue)
+                return intValue;
+
+            return defaultValue;
         }
 
         [MapProperty([nameof(IRtmpPublishStream.Client), nameof(IClientControl.ClientId)], [nameof(StreamDto.ClientId)])]
