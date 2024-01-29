@@ -1,4 +1,4 @@
-﻿namespace LiveStreamingServerNet.Standalone.Dtos
+﻿namespace LiveStreamingServerNet.Common.Dtos
 {
     public record GetStreamsResponse(IList<StreamDto> Streams, int TotalCount);
 }

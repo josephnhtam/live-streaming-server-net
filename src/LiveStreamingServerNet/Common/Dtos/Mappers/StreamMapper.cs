@@ -1,4 +1,5 @@
-﻿using LiveStreamingServerNet.Networking.Contracts;
+﻿using LiveStreamingServerNet.Common.Dtos;
+using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.Standalone.Internal.Contracts;
 using Riok.Mapperly.Abstractions;
 
@@ -15,7 +16,7 @@ namespace LiveStreamingServerNet.Standalone.Dtos.Mappers
             {
                 dto.VideoCodecId = stream.MetaData.GetIntValue("videocodecid", 0);
                 dto.Height = stream.MetaData.GetIntValue("height", 0);
-                dto.Weight = stream.MetaData.GetIntValue("width", 0);
+                dto.Width = stream.MetaData.GetIntValue("width", 0);
                 dto.Framerate = stream.MetaData.GetIntValue("framerate", 0);
 
                 dto.AudioCodecId = stream.MetaData.GetIntValue("audiocodecid", 0);

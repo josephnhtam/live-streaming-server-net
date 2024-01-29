@@ -1,9 +1,11 @@
-﻿using LiveStreamingServerNet.Networking.Contracts;
-using LiveStreamingServerNet.Standalone.Dtos;
+﻿using LiveStreamingServerNet.Common.Dtos;
+using LiveStreamingServerNet.Common.EndpointMiddlewares;
+using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.Standalone.Services.Contracts;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -13,18 +15,29 @@ namespace LiveStreamingServerNet.Standalone.Endpoints
     {
         public static IEndpointRouteBuilder MapRtmpStreamManagerApiEndpoints(this IEndpointRouteBuilder builder, IServer server)
         {
-            var group = builder.MapGroup("api/v1/streams");
+            var group = builder
+                .MapGroup("api/v1/streams")
+                .AddEndpointFilter<ApiExceptionEndpointFilter>();
 
             group.MapGet("/", GetStreams(server));
+            group.MapDelete("/", DeleteStream(server));
 
             return builder;
         }
 
         public static Delegate GetStreams(IServer server) =>
-            Ok<GetStreamsResponse> ([AsParameters] GetStreamsRequest request) =>
+            async Task<Ok<GetStreamsResponse>> ([AsParameters] GetStreamsRequest request) =>
             {
                 var apiService = server.Services.GetRequiredService<IRtmpStreamManagerApiService>();
-                return TypedResults.Ok(apiService.GetStreams(request));
+                return TypedResults.Ok(await apiService.GetStreamsAsync(request));
+            };
+
+        public static Delegate DeleteStream(IServer server) =>
+            async Task<Ok> ([FromQuery] string streamId) =>
+            {
+                var apiService = server.Services.GetRequiredService<IRtmpStreamManagerApiService>();
+                await apiService.DeleteStreamAsync(streamId);
+                return TypedResults.Ok();
             };
     }
 }

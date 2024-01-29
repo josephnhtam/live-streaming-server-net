@@ -6,6 +6,7 @@ namespace LiveStreamingServerNet.Standalone.Internal
 {
     internal class RtmpPublishStream : IRtmpPublishStream
     {
+        public string Id { get; }
         public IClientControl Client { get; }
         public string StreamPath { get; }
         public DateTime StartTime { get; }
@@ -18,6 +19,7 @@ namespace LiveStreamingServerNet.Standalone.Internal
 
         public RtmpPublishStream(IClientControl client, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
+            Id = Guid.NewGuid().ToString();
             Client = client;
             StreamPath = streamPath;
             StartTime = DateTime.UtcNow;

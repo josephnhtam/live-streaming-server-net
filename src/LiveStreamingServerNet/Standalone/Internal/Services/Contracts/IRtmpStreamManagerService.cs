@@ -10,7 +10,7 @@ namespace LiveStreamingServerNet.Standalone.Internal.Services.Contracts
         Task RtmpStreamUnsubscribedAsync(uint clientId, string streamPath);
         Task RtmpStreamMetaDataReceived(uint clientId, string streamPath, IReadOnlyDictionary<string, object> metaData);
 
-        IRtmpPublishStream? GetStream(string streamPath);
+        IRtmpPublishStream? GetStream(string id);
         IList<IRtmpPublishStream> GetStreams();
     }
 }

@@ -1,11 +1,10 @@
-﻿using LiveStreamingServerNet.Standalone.Dtos;
+﻿using LiveStreamingServerNet.Common.Dtos;
 
 namespace LiveStreamingServerNet.Standalone.Services.Contracts
 {
     internal interface IRtmpStreamManagerApiService
     {
-        GetStreamsResponse GetStreams(GetStreamsRequest request);
+        Task<GetStreamsResponse> GetStreamsAsync(GetStreamsRequest request);
+        Task DeleteStreamAsync(string streamId);
     }
-
-    public record GetStreamsRequest(int page, int pageSize, string? filter);
 }

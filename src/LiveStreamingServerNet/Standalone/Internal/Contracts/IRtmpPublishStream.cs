@@ -4,6 +4,7 @@ namespace LiveStreamingServerNet.Standalone.Internal.Contracts
 {
     internal interface IRtmpPublishStream
     {
+        string Id { get; }
         IClientControl Client { get; }
         string StreamPath { get; }
         DateTime StartTime { get; }
