@@ -1,6 +1,7 @@
 ﻿using LiveStreamingServerNet.Networking.Configurations;
 using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.Networking.Logging;
+using LiveStreamingServerNet.Utilities.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Buffers;
@@ -19,6 +20,7 @@ namespace LiveStreamingServerNet.Networking
         private readonly Channel<PendingMessage> _pendingMessageChannel;
         private TcpClient _tcpClient = default!;
         private CancellationTokenSource? _cts;
+        private TaskCompletionSource _stoppedTcs = new();
 
         public uint ClientId { get; private set; }
 
@@ -155,9 +157,16 @@ namespace LiveStreamingServerNet.Networking
             _cts?.Cancel();
         }
 
+        public async Task DisconnectAsync(CancellationToken cancellation)
+        {
+            Disconnect();
+            await _stoppedTcs.Task.WithCancellation(cancellation);
+        }
+
         public ValueTask DisposeAsync()
         {
             _tcpClient.Dispose();
+            _stoppedTcs.TrySetResult();
             return ValueTask.CompletedTask;
         }
 

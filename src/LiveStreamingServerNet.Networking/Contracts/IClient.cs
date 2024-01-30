@@ -20,6 +20,7 @@ namespace LiveStreamingServerNet.Networking.Contracts
     public interface IClientControl : IClientInfo
     {
         void Disconnect();
+        Task DisconnectAsync(CancellationToken cancellation = default);
     }
 
     public interface IClientHandle : IClientControl

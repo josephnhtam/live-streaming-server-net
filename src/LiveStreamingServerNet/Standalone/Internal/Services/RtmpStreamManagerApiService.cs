@@ -37,16 +37,14 @@ namespace LiveStreamingServerNet.Standalone.Internal.Services
             return Task.FromResult(new GetStreamsResponse(result, totalCount));
         }
 
-        public Task DeleteStreamAsync(string streamId)
+        public async Task DeleteStreamAsync(string streamId, CancellationToken cancellation)
         {
             var stream = _streamManagerService.GetStream(streamId);
 
             if (stream == null)
                 throw new ApiException(StatusCodes.Status404NotFound, $"Stream ({streamId}) not found.");
 
-            stream.Client.Disconnect();
-
-            return Task.CompletedTask;
+            await stream.Client.DisconnectAsync(cancellation);
         }
     }
 }
