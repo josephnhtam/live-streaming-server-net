@@ -23,6 +23,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.Tran
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.HlsDemo", "samples\LiveStreamingServerNet.HlsDemo\LiveStreamingServerNet.HlsDemo.csproj", "{3C0C2F0E-E274-4F36-8CB1-CF60441FA46A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveStreamingServerNet.StandaloneDemo", "samples\LiveStreamingServerNet.StandaloneDemo\LiveStreamingServerNet.StandaloneDemo.csproj", "{B4B870FA-2634-46E5-9586-05E5CACF6D6F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -65,6 +67,10 @@ Global
 		{3C0C2F0E-E274-4F36-8CB1-CF60441FA46A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3C0C2F0E-E274-4F36-8CB1-CF60441FA46A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3C0C2F0E-E274-4F36-8CB1-CF60441FA46A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B4B870FA-2634-46E5-9586-05E5CACF6D6F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4B870FA-2634-46E5-9586-05E5CACF6D6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B4B870FA-2634-46E5-9586-05E5CACF6D6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B4B870FA-2634-46E5-9586-05E5CACF6D6F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -73,6 +79,7 @@ Global
 		{A5FEB456-1069-4498-A3E1-53DAE0E219F2} = {45761E33-F086-403D-BB6E-8059F8CC6BA8}
 		{F67288DC-13C8-4765-900D-325DB79994DD} = {45761E33-F086-403D-BB6E-8059F8CC6BA8}
 		{3C0C2F0E-E274-4F36-8CB1-CF60441FA46A} = {45761E33-F086-403D-BB6E-8059F8CC6BA8}
+		{B4B870FA-2634-46E5-9586-05E5CACF6D6F} = {45761E33-F086-403D-BB6E-8059F8CC6BA8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0A9A3928-2852-49B9-85EF-F00480E9FE7F}
