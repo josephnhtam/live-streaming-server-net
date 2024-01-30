@@ -4,11 +4,11 @@ namespace LiveStreamingServerNet.Standalone.Internal.Services.Contracts
 {
     internal interface IRtmpStreamManagerService
     {
-        Task RtmpStreamPublishedAsync(uint clientId, string streamPath, IReadOnlyDictionary<string, string> streamArguments);
-        Task RtmpStreamUnpublishedAsync(uint clientId, string streamPath);
-        Task RtmpStreamSubscribedAsync(uint clientId, string streamPath, IReadOnlyDictionary<string, string> streamArguments);
-        Task RtmpStreamUnsubscribedAsync(uint clientId, string streamPath);
-        Task RtmpStreamMetaDataReceived(uint clientId, string streamPath, IReadOnlyDictionary<string, object> metaData);
+        ValueTask RtmpStreamPublishedAsync(uint clientId, string streamPath, IReadOnlyDictionary<string, string> streamArguments);
+        ValueTask RtmpStreamUnpublishedAsync(uint clientId, string streamPath);
+        ValueTask RtmpStreamSubscribedAsync(uint clientId, string streamPath, IReadOnlyDictionary<string, string> streamArguments);
+        ValueTask RtmpStreamUnsubscribedAsync(uint clientId, string streamPath);
+        ValueTask RtmpStreamMetaDataReceived(uint clientId, string streamPath, IReadOnlyDictionary<string, object> metaData);
 
         IRtmpPublishStream? GetStream(string id);
         IList<IRtmpPublishStream> GetStreams();
