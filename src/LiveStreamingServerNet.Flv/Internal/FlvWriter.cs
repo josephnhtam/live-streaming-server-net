@@ -81,10 +81,17 @@ namespace LiveStreamingServerNet.Flv.Internal
             }
         }
 
-        public ValueTask DisposeAsync()
+        public async ValueTask DisposeAsync()
         {
-            _netBuffer.Dispose();
-            return ValueTask.CompletedTask;
+            try
+            {
+                await _syncLock.WaitAsync();
+                _netBuffer.Dispose();
+            }
+            finally
+            {
+                _syncLock.Release();
+            }
         }
     }
 }
