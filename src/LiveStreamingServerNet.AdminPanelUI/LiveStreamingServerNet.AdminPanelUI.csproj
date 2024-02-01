@@ -10,7 +10,7 @@
     <PackageTags>live-streaming;rtmp;flv;http-flv</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <Version>0.5.1</Version>
+    <Version>0.5.2</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -19,12 +19,11 @@
 
   <ItemGroup>
     <Content Include="$(SolutionDir)admin-panel-ui/dist/**" LinkBase="admin-panel-ui">
-      <IncludeInPackage>true</IncludeInPackage>
-      <CopyToOutput>true</CopyToOutput>
-      <BuildAction>Content</BuildAction>
-      <copyToOutput>true</copyToOutput>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <PackageCopyToOutput>true</PackageCopyToOutput>
+      <PackageFlatten>false</PackageFlatten>
+      <Pack>true</Pack>
     </Content>
-</ItemGroup>
+  </ItemGroup>
 
 </Project>
