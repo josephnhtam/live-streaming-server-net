@@ -1,4 +1,4 @@
-
+using LiveStreamingServerNet.AdminPanelUI;
 using LiveStreamingServerNet.Flv.Installer;
 using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.Networking.Helpers;
@@ -42,6 +42,7 @@ namespace LiveStreamingServerNet.StandaloneDemo
             app.UseHttpFlv(liveStreamingServer);
 
             app.MapStandaloneServerApiEndPoints(liveStreamingServer);
+            app.UseAdminPanelUI(new AdminPanelUIOptions { BasePath = "/ui", HasHttpFlvPreview = true });
 
             app.Run();
         }

@@ -1,0 +1,9 @@
+{
+  "short_name": "Admin Panel",
+  "name": "LiveStreamServer.Net Admin Panel",
+  "icons": [],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}

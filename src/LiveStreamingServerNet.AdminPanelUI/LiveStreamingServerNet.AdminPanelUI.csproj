@@ -6,8 +6,8 @@
     <Nullable>enable</Nullable>
     <IsPackable>true</IsPackable>
     <Authors>Joseph NH Tam</Authors>
-    <Description>This package provides the ASP.NET Core middlewares to serve FLV via HTTP and WebSocket.</Description>
-    <PackageTags>live-streaming;rtmp;flv;http-flv;websocket-flv</PackageTags>
+    <Description>This package provides the Admin Panel UI for LiveStreamingServer.NET.</Description>
+    <PackageTags>live-streaming;rtmp;flv;http-flv</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <Version>0.5.0</Version>
@@ -15,11 +15,10 @@
 
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
-    <PackageReference Include="Open.Threading.ReadWrite" Version="2.0.3" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\LiveStreamingServerNet.Rtmp\LiveStreamingServerNet.Rtmp.csproj" />
-  </ItemGroup>
+    <None Include="$(SolutionDir)admin-panel-ui/dist/**" LinkBase="admin-panel-ui" CopyToOutputDirectory="PreserveNewest" />
+</ItemGroup>
 
 </Project>
