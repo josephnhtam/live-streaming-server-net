@@ -18,12 +18,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="$(SolutionDir)admin-panel-ui/dist/**" LinkBase="admin-panel-ui" CopyToOutputDirectory="PreserveNewest">
+    <Content Include="$(SolutionDir)admin-panel-ui/dist/**" LinkBase="admin-panel-ui">
       <IncludeInPackage>true</IncludeInPackage>
       <CopyToOutput>true</CopyToOutput>
       <BuildAction>Content</BuildAction>
       <copyToOutput>true</copyToOutput>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
 </ItemGroup>
 
