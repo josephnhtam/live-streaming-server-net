@@ -6,28 +6,27 @@ namespace LiveStreamingServerNet.AdminPanelUI
     internal struct AdminPanelUIFileContext
     {
         private readonly AdminPanelUIOptions _options;
-        private readonly RequestDelegate _next;
 
-        public AdminPanelUIFileContext(RequestDelegate next, AdminPanelUIOptions options)
+        public AdminPanelUIFileContext(AdminPanelUIOptions options)
         {
             ArgumentNullException.ThrowIfNull(options.FileProvider);
             ArgumentNullException.ThrowIfNull(options.ContentTypeProvider);
 
             _options = options;
-            _next = next;
         }
 
-        public async Task ServeAdminPanelUI(HttpContext context)
+        public async Task<bool> ServeAdminPanelUI(HttpContext context)
         {
-            await _next.Invoke(context);
-
             if (await TryServeEnvConfig(context))
-                return;
+                return true;
 
             if (await TryServeFile(context))
-                return;
+                return true;
 
-            await TryServeIndex(context);
+            if (await TryServeIndex(context))
+                return true;
+
+            return false;
         }
 
         private async Task<bool> TryServeEnvConfig(HttpContext context)
