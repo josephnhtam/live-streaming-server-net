@@ -9,10 +9,10 @@ This is a .NET implementation of RTMP server.
 - Remuxing RTMP streams into HLS/DASH streams
 - GOP caching
 - Custom authorization
+- Admin Panel
 
 ## Roadmap
 
- - Admin panel
  - Kubernetes operator
 
 ## Quick Start
