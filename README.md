@@ -13,7 +13,7 @@ This is a .NET implementation of RTMP server.
 
 ## Roadmap
 
- - Kubernetes operator
+- Kubernetes operator
 
 ## Quick Start
 
@@ -144,6 +144,18 @@ https://localhost:8080/live/demo.flv
 wss://localhost:8080/live/demo.flv
 ```
 
+#### Remux RTMP Streams into HLS Streams with FFmpeg
+
+Please refer to the [LiveStreamServerNet.HlsDemo](https://github.com/josephnhtam/live-streaming-server-net/tree/master/samples/LiveStreamingServerNet.HlsDemo)
+
+## Admin Panel
+
+![Admin Panel](images/admin-panel.jpeg)
+
+![HTTP-FLV Preview](images/http-flv-preview.jpeg)
+
+Please refer to the [LiveStreamServerNet.StandaloneDemo](https://github.com/josephnhtam/live-streaming-server-net/tree/master/samples/LiveStreamingServerNet.StandaloneDemo)
+
 ## NuGet Packages
 
 <table>
@@ -157,6 +169,10 @@ wss://localhost:8080/live/demo.flv
     <tr>
       <th>LiveStreamingServerNet</th>
       <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.svg?logo=nuget"></a></td>
+    </tr>
+    <tr>
+      <th>LiveStreamingServerNet.AdminPanelUI</th>
+      <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet.AdminPanelUI"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.AdminPanelUI.svg?logo=nuget"></a></td>
     </tr>
     <tr>
       <th>LiveStreamingServerNet.Flv</th>
