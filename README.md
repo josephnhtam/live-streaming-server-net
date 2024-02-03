@@ -34,7 +34,7 @@ using LiveStreamingServerNet;
 using Microsoft.Extensions.Logging;
 using System.Net;
 
-var server = LiveStreamingServerBuilder.Create()
+await using var server = LiveStreamingServerBuilder.Create()
     .ConfigureLogging(options => options.AddConsole())
     .Build();
 
@@ -105,7 +105,7 @@ using LiveStreamingServerNet.Networking.Helpers;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var liveStreamingServer = LiveStreamingServerBuilder.Create()
+await using var liveStreamingServer = LiveStreamingServerBuilder.Create()
     .ConfigureRtmpServer(options => options.AddFlv())
     .ConfigureLogging(options => options.AddConsole())
     .Build();
@@ -119,7 +119,7 @@ app.UseWebSocketFlv(liveStreamingServer);
 
 app.UseHttpFlv(liveStreamingServer);
 
-app.Run();
+await app.RunAsync();
 ```
 
 Run the application

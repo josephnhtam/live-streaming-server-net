@@ -1,5 +1,4 @@
 ﻿using LiveStreamingServerNet.Networking;
-using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.Transmuxer.Installer;
 using Microsoft.Extensions.Logging;
 using System.Net;
@@ -11,7 +10,7 @@ namespace LiveStreamingServerNet.RtmpsDemo
     {
         public static async Task Main()
         {
-            IServer liveStreamingServer = CreateLiveStreamingServer();
+            await using var liveStreamingServer = CreateLiveStreamingServer();
 
             IList<ServerEndPoint> endPoints =
                 [new ServerEndPoint(new IPEndPoint(IPAddress.Any, 1935), false),
@@ -28,7 +27,7 @@ namespace LiveStreamingServerNet.RtmpsDemo
             await liveStreamingServer.RunAsync(endPoints, cts.Token);
         }
 
-        private static IServer CreateLiveStreamingServer()
+        private static ILiveStreamingServer CreateLiveStreamingServer()
         {
             return LiveStreamingServerBuilder.Create()
                 .ConfigureServer(options => options.ConfigureSecurity(options =>

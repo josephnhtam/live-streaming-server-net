@@ -1,6 +1,5 @@
 
 using LiveStreamingServerNet.Flv.Installer;
-using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.Networking.Helpers;
 using System.Net;
 
@@ -8,11 +7,11 @@ namespace LiveStreamingServerNet.FlvDemo
 {
     public static class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
-            var builder = WebApplication.CreateBuilder(args);
+            await using var liveStreamingServer = CreateLiveStreamingServer();
 
-            var liveStreamingServer = CreateLiveStreamingServer();
+            var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddBackgroundServer(liveStreamingServer, new IPEndPoint(IPAddress.Any, 1935));
 
@@ -23,10 +22,10 @@ namespace LiveStreamingServerNet.FlvDemo
 
             app.UseHttpFlv(liveStreamingServer);
 
-            app.Run();
+            await app.RunAsync();
         }
 
-        private static IServer CreateLiveStreamingServer()
+        private static ILiveStreamingServer CreateLiveStreamingServer()
         {
             return LiveStreamingServerBuilder.Create()
                 .ConfigureRtmpServer(options => options.AddFlv())

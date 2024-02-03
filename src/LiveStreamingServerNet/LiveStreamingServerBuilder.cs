@@ -1,5 +1,4 @@
 ﻿using LiveStreamingServerNet.Contracts;
-using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.Networking.Installer.Contracts;
 using LiveStreamingServerNet.Rtmp.Installer;
 using LiveStreamingServerNet.Rtmp.Installer.Contracts;
@@ -44,12 +43,12 @@ namespace LiveStreamingServerNet
             return this;
         }
 
-        public IServer Build()
+        public ILiveStreamingServer Build()
         {
             _services.AddRtmpServer(_configureRtmpServer, _configureServer);
 
             var provider = _services.BuildServiceProvider();
-            return provider.GetRequiredService<IServer>();
+            return new LiveStreamingServer(provider);
         }
     }
 }

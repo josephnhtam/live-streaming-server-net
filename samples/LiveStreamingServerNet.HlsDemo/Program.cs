@@ -1,4 +1,3 @@
-using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.Networking.Helpers;
 using LiveStreamingServerNet.Transmuxer.Contracts;
 using LiveStreamingServerNet.Transmuxer.Installer;
@@ -12,14 +11,14 @@ namespace LiveStreamingServerNet.HlsDemo
 {
     public static class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var trasmuxerOutputPath = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly()!.Location)!, "TransmuxerOutput");
             new DirectoryInfo(trasmuxerOutputPath).Create();
 
-            var builder = WebApplication.CreateBuilder(args);
+            await using var liveStreamingServer = CreateLiveStreamingServer(trasmuxerOutputPath);
 
-            var liveStreamingServer = CreateLiveStreamingServer(trasmuxerOutputPath);
+            var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddBackgroundServer(liveStreamingServer, new IPEndPoint(IPAddress.Any, 1935));
 
@@ -42,7 +41,7 @@ namespace LiveStreamingServerNet.HlsDemo
                 ContentTypeProvider = contentTypeProvider
             });
 
-            app.Run();
+            await app.RunAsync();
         }
 
         private static (PhysicalFileProvider, FileExtensionContentTypeProvider) CreateProviders(string trasmuxerOutputPath)
@@ -55,7 +54,7 @@ namespace LiveStreamingServerNet.HlsDemo
             return (fileProvider, contentTypeProvider);
         }
 
-        private static IServer CreateLiveStreamingServer(string trasmuxerOutputPath)
+        private static ILiveStreamingServer CreateLiveStreamingServer(string trasmuxerOutputPath)
         {
             return LiveStreamingServerBuilder.Create()
                 .ConfigureRtmpServer(options =>

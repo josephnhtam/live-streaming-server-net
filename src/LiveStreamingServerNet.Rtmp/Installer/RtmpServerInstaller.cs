@@ -38,11 +38,7 @@ namespace LiveStreamingServerNet.Rtmp.Installer
 
         private static IServiceCollection AddRtmpCore(this IServiceCollection services, Action<IServerConfigurator>? configureServer)
         {
-            services.AddServer<RtmpClientHandlerFactory>(options =>
-                {
-                    options.AddServerEventHandler<ServerEventHandler>();
-                    configureServer?.Invoke(options);
-                })
+            services.AddServer<RtmpClientHandlerFactory>(options => configureServer?.Invoke(options))
                 .AddTransient<IRtmpClientHandler, RtmpClientHandler>();
 
             services.AddMediatR(options =>
