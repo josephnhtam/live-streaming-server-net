@@ -13,6 +13,7 @@ This open-source project provides an implementation of an RTMP live streaming se
 
 ## Roadmap
 
+- Native AOT support
 - Kubernetes operator
 
 ## Quick Start
