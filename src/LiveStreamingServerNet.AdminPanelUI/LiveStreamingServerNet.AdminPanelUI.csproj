@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="$(SolutionDir)admin-panel-ui/dist/**" LinkBase="admin-panel-ui">
+    <Content Include="../../admin-panel-ui/dist/**" LinkBase="admin-panel-ui">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <PackageCopyToOutput>true</PackageCopyToOutput>
       <PackageFlatten>false</PackageFlatten>
