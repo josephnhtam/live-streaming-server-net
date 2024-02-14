@@ -10,7 +10,6 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Handshakes
         Schema1
     }
 
-    // todo: refactor and optimize
     internal class ComplexHandshake
     {
         private const byte _clientType = 3;
