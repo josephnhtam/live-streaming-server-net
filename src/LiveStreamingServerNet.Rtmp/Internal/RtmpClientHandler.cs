@@ -29,31 +29,33 @@ namespace LiveStreamingServerNet.Rtmp.Internal
 
         public async Task<bool> HandleClientLoopAsync(ReadOnlyStream networkStream, CancellationToken cancellationToken)
         {
-            return _clientContext.State switch
+            var result = _clientContext.State switch
             {
                 RtmpClientState.HandshakeC0 => await HandleHandshakeC0(_clientContext, networkStream, cancellationToken),
                 RtmpClientState.HandshakeC1 => await HandleHandshakeC1(_clientContext, networkStream, cancellationToken),
                 RtmpClientState.HandshakeC2 => await HandleHandshakeC2(_clientContext, networkStream, cancellationToken),
                 _ => await HandleChunkAsync(_clientContext, networkStream, cancellationToken),
             };
+
+            return result.Succeeded;
         }
 
-        private async Task<bool> HandleHandshakeC0(IRtmpClientContext clientContext, ReadOnlyStream networkStream, CancellationToken cancellationToken)
+        private async Task<RtmpEventConsumingResult> HandleHandshakeC0(IRtmpClientContext clientContext, ReadOnlyStream networkStream, CancellationToken cancellationToken)
         {
             return await _mediator.Send(new RtmpHandshakeC0Event(clientContext, networkStream), cancellationToken);
         }
 
-        private async Task<bool> HandleHandshakeC1(IRtmpClientContext clientContext, ReadOnlyStream networkStream, CancellationToken cancellationToken)
+        private async Task<RtmpEventConsumingResult> HandleHandshakeC1(IRtmpClientContext clientContext, ReadOnlyStream networkStream, CancellationToken cancellationToken)
         {
             return await _mediator.Send(new RtmpHandshakeC1Event(clientContext, networkStream), cancellationToken);
         }
 
-        private async Task<bool> HandleHandshakeC2(IRtmpClientContext clientContext, ReadOnlyStream networkStream, CancellationToken cancellationToken)
+        private async Task<RtmpEventConsumingResult> HandleHandshakeC2(IRtmpClientContext clientContext, ReadOnlyStream networkStream, CancellationToken cancellationToken)
         {
             return await _mediator.Send(new RtmpHandshakeC2Event(clientContext, networkStream), cancellationToken);
         }
 
-        private async Task<bool> HandleChunkAsync(IRtmpClientContext clientContext, ReadOnlyStream networkStream, CancellationToken cancellationToken)
+        private async Task<RtmpEventConsumingResult> HandleChunkAsync(IRtmpClientContext clientContext, ReadOnlyStream networkStream, CancellationToken cancellationToken)
         {
             return await _mediator.Send(new RtmpChunkEvent(clientContext, networkStream), cancellationToken);
         }

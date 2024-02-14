@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 
 namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
 {
-    internal class RtmpChunkEventHandler : IRequestHandler<RtmpChunkEvent, bool>
+    internal class RtmpChunkEventHandler : IRequestHandler<RtmpChunkEvent, RtmpEventConsumingResult>
     {
         private readonly INetBufferPool _netBufferPool;
         private readonly IRtmpMessageDispatcher _dispatcher;
@@ -29,22 +29,23 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
             _logger = logger;
         }
 
-        public async Task<bool> Handle(RtmpChunkEvent @event, CancellationToken cancellationToken)
+        public async Task<RtmpEventConsumingResult> Handle(RtmpChunkEvent @event, CancellationToken cancellationToken)
         {
             using var netBuffer = _netBufferPool.Obtain();
 
-            if (await HandleChunkEvent(@event, netBuffer, cancellationToken))
+            var result = await HandleChunkEvent(@event, netBuffer, cancellationToken);
+            if (result.Succeeded)
             {
                 HandleAcknowlegement(@event, netBuffer.Size);
-                return true;
+                return result;
             }
 
             _logger.FailedToHandleChunkEvent(@event.ClientContext.Client.ClientId);
 
-            return false;
+            return result;
         }
 
-        private async ValueTask<bool> HandleChunkEvent(RtmpChunkEvent @event, INetBuffer netBuffer, CancellationToken cancellationToken)
+        private async ValueTask<RtmpEventConsumingResult> HandleChunkEvent(RtmpChunkEvent @event, INetBuffer netBuffer, CancellationToken cancellationToken)
         {
             var basicHeader = await RtmpChunkBasicHeader.ReadAsync(netBuffer, @event.NetworkStream, cancellationToken);
 
@@ -60,7 +61,8 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
             };
 
             success &= await HandleChunkEventPayloadAsync(chunkStreamContext, @event, netBuffer, cancellationToken);
-            return success;
+
+            return new RtmpEventConsumingResult(success, chunkStreamContext.MessageHeader.MessageLength);
         }
 
         private void HandleAcknowlegement(RtmpChunkEvent @event, int bufferSize)

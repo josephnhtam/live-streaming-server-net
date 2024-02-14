@@ -7,10 +7,12 @@ using Microsoft.Extensions.Logging;
 
 namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
 {
-    internal class RtmpHandshakeC1EventHandler : IRequestHandler<RtmpHandshakeC1Event, bool>
+    internal class RtmpHandshakeC1EventHandler : IRequestHandler<RtmpHandshakeC1Event, RtmpEventConsumingResult>
     {
         private readonly INetBufferPool _netBufferPool;
         private readonly ILogger _logger;
+
+        private const int HandshakeC1Size = 1536;
 
         public RtmpHandshakeC1EventHandler(INetBufferPool netBufferPool, ILogger<RtmpHandshakeC1EventHandler> logger)
         {
@@ -18,10 +20,10 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
             _logger = logger;
         }
 
-        public async Task<bool> Handle(RtmpHandshakeC1Event @event, CancellationToken cancellationToken)
+        public async Task<RtmpEventConsumingResult> Handle(RtmpHandshakeC1Event @event, CancellationToken cancellationToken)
         {
             using var incomingBuffer = _netBufferPool.Obtain();
-            await incomingBuffer.CopyStreamData(@event.NetworkStream, 1536, cancellationToken);
+            await incomingBuffer.CopyStreamData(@event.NetworkStream, HandshakeC1Size, cancellationToken);
 
             using var outgoingBuffer = _netBufferPool.Obtain();
             if (HandleHandshake(@event, incomingBuffer, outgoingBuffer))
@@ -31,12 +33,12 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
 
                 _logger.HandshakeC1Handled(@event.ClientContext.Client.ClientId);
 
-                return true;
+                return new RtmpEventConsumingResult(true, HandshakeC1Size);
             }
 
             _logger.HandshakeC1HandlingFailed(@event.ClientContext.Client.ClientId);
 
-            return false;
+            return new RtmpEventConsumingResult(false, HandshakeC1Size);
         }
 
         private bool HandleHandshake(RtmpHandshakeC1Event @event, INetBuffer incomingBuffer, INetBuffer outgoingBuffer)

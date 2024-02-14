@@ -6,5 +6,5 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEvents
 {
     internal record struct RtmpHandshakeC1Event(
         IRtmpClientContext ClientContext,
-        ReadOnlyStream NetworkStream) : IRequest<bool>;
+        ReadOnlyStream NetworkStream) : IRequest<RtmpEventConsumingResult>;
 }

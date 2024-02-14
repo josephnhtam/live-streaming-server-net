@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 
 namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
 {
-    internal class RtmpHandshakeC0EventHandler : IRequestHandler<RtmpHandshakeC0Event, bool>
+    internal class RtmpHandshakeC0EventHandler : IRequestHandler<RtmpHandshakeC0Event, RtmpEventConsumingResult>
     {
         private readonly ILogger _logger;
 
@@ -14,7 +14,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
             _logger = logger;
         }
 
-        public async Task<bool> Handle(RtmpHandshakeC0Event @event, CancellationToken cancellationToken)
+        public async Task<RtmpEventConsumingResult> Handle(RtmpHandshakeC0Event @event, CancellationToken cancellationToken)
         {
             var payload = new byte[1];
             await @event.NetworkStream.ReadExactlyAsync(payload, 0, 1, cancellationToken);
@@ -23,7 +23,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
 
             _logger.HandshakeC0Handled(@event.ClientContext.Client.ClientId);
 
-            return true;
+            return new RtmpEventConsumingResult(true, 1);
         }
     }
 }

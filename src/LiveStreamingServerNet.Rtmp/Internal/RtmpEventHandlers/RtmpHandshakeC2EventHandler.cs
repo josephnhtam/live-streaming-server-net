@@ -7,11 +7,13 @@ using Microsoft.Extensions.Logging;
 
 namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
 {
-    internal class RtmpHandshakeC2EventHandler : IRequestHandler<RtmpHandshakeC2Event, bool>
+    internal class RtmpHandshakeC2EventHandler : IRequestHandler<RtmpHandshakeC2Event, RtmpEventConsumingResult>
     {
         private readonly INetBufferPool _netBufferPool;
         private readonly IRtmpServerConnectionEventDispatcher _eventDispatcher;
         private readonly ILogger _logger;
+
+        private const int HandshakeC2Size = 1536;
 
         public RtmpHandshakeC2EventHandler(
             INetBufferPool netBufferPool,
@@ -24,10 +26,10 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
         }
 
         // todo: add validation
-        public async Task<bool> Handle(RtmpHandshakeC2Event @event, CancellationToken cancellationToken)
+        public async Task<RtmpEventConsumingResult> Handle(RtmpHandshakeC2Event @event, CancellationToken cancellationToken)
         {
             using var incomingBuffer = _netBufferPool.Obtain();
-            await incomingBuffer.CopyStreamData(@event.NetworkStream, 1536, cancellationToken);
+            await incomingBuffer.CopyStreamData(@event.NetworkStream, HandshakeC2Size, cancellationToken);
 
             @event.ClientContext.State = RtmpClientState.HandshakeDone;
 
@@ -35,7 +37,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
 
             await _eventDispatcher.RtmpClientHandshakeCompleteAsync(@event.ClientContext);
 
-            return true;
+            return new RtmpEventConsumingResult(true, HandshakeC2Size);
         }
     }
 }
