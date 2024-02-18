@@ -33,6 +33,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal
         public RtmpClientContext(IClientHandle client)
         {
             Client = client;
+            State = RtmpClientState.HandshakeC0;
         }
 
         public IRtmpPublishStreamContext CreatePublishStreamContext(string streamPath, IDictionary<string, string> streamArguments)

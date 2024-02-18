@@ -212,13 +212,13 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
             if (payloadBuffer.Size == messageLength)
             {
                 payloadBuffer.Position = 0;
-                return await DoHandleChunkEventPayloadAsync(chunkStreamContext, @event.ClientContext, cancellationToken);
+                return await DispatchRtmpMessageAsync(chunkStreamContext, @event.ClientContext, cancellationToken);
             }
 
             return true;
         }
 
-        private async ValueTask<bool> DoHandleChunkEventPayloadAsync(IRtmpChunkStreamContext chunkStreamContext, IRtmpClientContext clientContext, CancellationToken cancellationToken)
+        private async ValueTask<bool> DispatchRtmpMessageAsync(IRtmpChunkStreamContext chunkStreamContext, IRtmpClientContext clientContext, CancellationToken cancellationToken)
         {
             try
             {

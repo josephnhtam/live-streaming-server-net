@@ -2,7 +2,11 @@
 using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEvents;
+using LiveStreamingServerNet.Rtmp.Logging;
+using LiveStreamingServerNet.Rtmp.RateLimiting.Contracts;
 using MediatR;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace LiveStreamingServerNet.Rtmp.Internal
 {
@@ -10,20 +14,26 @@ namespace LiveStreamingServerNet.Rtmp.Internal
     {
         private readonly IMediator _mediator;
         private readonly IRtmpServerConnectionEventDispatcher _eventDispatcher;
+        private readonly ILogger _logger;
+        private readonly IBandwidthLimiter? _bandwidthLimiter;
 
         private IRtmpClientContext _clientContext = default!;
 
-        public RtmpClientHandler(IMediator mediator, IRtmpServerConnectionEventDispatcher eventDispatcher)
+        public RtmpClientHandler(
+            IServiceProvider services,
+            IMediator mediator,
+            IRtmpServerConnectionEventDispatcher eventDispatcher,
+            ILogger<RtmpClientHandler> logger)
         {
             _mediator = mediator;
             _eventDispatcher = eventDispatcher;
+            _logger = logger;
+            _bandwidthLimiter = services.GetService<IBandwidthLimiter>();
         }
 
         public async Task InitializeAsync(IClientHandle client)
         {
             _clientContext = new RtmpClientContext(client);
-            _clientContext.State = RtmpClientState.HandshakeC0;
-
             await OnRtmpClientCreatedAsync();
         }
 
@@ -36,6 +46,12 @@ namespace LiveStreamingServerNet.Rtmp.Internal
                 RtmpClientState.HandshakeC2 => await HandleHandshakeC2(_clientContext, networkStream, cancellationToken),
                 _ => await HandleChunkAsync(_clientContext, networkStream, cancellationToken),
             };
+
+            if (result.Succeeded && _bandwidthLimiter != null && !_bandwidthLimiter.ConsumeBandwidth(result.ConsumedBytes))
+            {
+                _logger.ExceededBandwidthLimit(_clientContext.Client.ClientId);
+                return false;
+            }
 
             return result.Succeeded;
         }

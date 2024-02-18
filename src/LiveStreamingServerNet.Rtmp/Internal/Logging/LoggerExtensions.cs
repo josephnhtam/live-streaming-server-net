@@ -84,5 +84,8 @@ namespace LiveStreamingServerNet.Rtmp.Logging
 
         [LoggerMessage(LogLevel.Debug, "StreamPath: {StreamPath} | Reached max GOP cache size")]
         public static partial void ReachedMaxGopCacheSize(this ILogger logger, string streamPath);
+
+        [LoggerMessage(LogLevel.Warning, "ClientId: {ClientId} | Exceeded bandwidth limit")]
+        public static partial void ExceededBandwidthLimit(this ILogger logger, uint clientId);
     }
 }

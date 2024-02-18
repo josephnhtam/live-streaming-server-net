@@ -1,6 +1,8 @@
 ﻿using LiveStreamingServerNet.Rtmp.Configurations;
 using LiveStreamingServerNet.Rtmp.Contracts;
+using LiveStreamingServerNet.Rtmp.RateLimiting.Contracts;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace LiveStreamingServerNet.Rtmp.Installer.Contracts
 {
@@ -25,5 +27,9 @@ namespace LiveStreamingServerNet.Rtmp.Installer.Contracts
         IRtmpServerConfigurator AddStreamEventHandler<TStreamEventHandler>()
             where TStreamEventHandler : class, IRtmpServerStreamEventHandler;
         IRtmpServerConfigurator AddStreamEventHandler(Func<IServiceProvider, IRtmpServerStreamEventHandler> implmentationFactory);
+
+        IRtmpServerConfigurator AddBandwidthLimiter(long bytesPerSecond);
+        IRtmpServerConfigurator AddBandwidthLimiter(long bytesPerSecond, long bytesLimit);
+        IRtmpServerConfigurator AddBandwidthLimiter(Func<IServiceProvider, IBandwidthLimiter> factory);
     }
 }
