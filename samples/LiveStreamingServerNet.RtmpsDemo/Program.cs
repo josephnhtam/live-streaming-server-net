@@ -1,5 +1,4 @@
 ﻿using LiveStreamingServerNet.Networking;
-using LiveStreamingServerNet.Transmuxer.Installer;
 using Microsoft.Extensions.Logging;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
@@ -38,11 +37,8 @@ namespace LiveStreamingServerNet.RtmpsDemo
                     options.ServerCertificate = new X509Certificate2(pfxPath, pfxPassword);
                 }))
                 .ConfigureRtmpServer(options =>
-                {
-                    options.Configure(options => options.EnableGopCaching = false);
-
-                    options.AddTransmuxer();
-                })
+                    options.Configure(options => options.EnableGopCaching = true)
+                )
                 .ConfigureLogging(options => options.AddConsole().SetMinimumLevel(LogLevel.Debug))
                 .Build();
         }
