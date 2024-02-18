@@ -2,7 +2,6 @@
 using LiveStreamingServerNet.Standalone.Internal.Contracts;
 using LiveStreamingServerNet.Standalone.Internal.Services.Contracts;
 using System.Collections.Concurrent;
-using System.Diagnostics;
 
 namespace LiveStreamingServerNet.Standalone.Internal.Services
 {
@@ -17,16 +16,17 @@ namespace LiveStreamingServerNet.Standalone.Internal.Services
             _server = server;
         }
 
-        private IClientControl GetClient(uint clientId)
+        private IClientControl? GetClient(uint clientId)
         {
-            var client = _server.GetClient(clientId);
-            Debug.Assert(client != null, $"Client ({clientId}) not found");
-            return client;
+            return _server.GetClient(clientId);
         }
 
         public ValueTask RtmpStreamPublishedAsync(uint clientId, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
             var client = GetClient(clientId);
+            if (client == null)
+                return ValueTask.CompletedTask;
+
             var stream = new RtmpPublishStream(client, streamPath, new Dictionary<string, string>(streamArguments));
 
             if (_publishStreams.TryAdd(streamPath, stream))
@@ -46,6 +46,9 @@ namespace LiveStreamingServerNet.Standalone.Internal.Services
         public ValueTask RtmpStreamSubscribedAsync(uint clientId, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
             var subscriberClient = GetClient(clientId);
+            if (subscriberClient == null)
+                return ValueTask.CompletedTask;
+
             if (_publishStreams.TryGetValue(streamPath, out var publishStream))
                 publishStream.AddSubscriber(subscriberClient);
 
