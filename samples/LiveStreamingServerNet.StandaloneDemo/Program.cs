@@ -11,7 +11,7 @@ namespace LiveStreamingServerNet.StandaloneDemo
     {
         public static async Task Main(string[] args)
         {
-            var liveStreamingServer = CreateLiveStreamingServer();
+            await using var liveStreamingServer = CreateLiveStreamingServer();
 
             var builder = WebApplication.CreateBuilder(args);
 
@@ -28,7 +28,6 @@ namespace LiveStreamingServerNet.StandaloneDemo
             app.UseAdminPanelUI(new AdminPanelUIOptions { BasePath = "/ui", HasHttpFlvPreview = true });
 
             await app.RunAsync();
-            await liveStreamingServer.DisposeAsync();
         }
 
         private static ILiveStreamingServer CreateLiveStreamingServer()
