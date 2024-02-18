@@ -87,7 +87,6 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpHeaders
         public uint TimestampDelta { get; private set; }
         public int MessageLength { get; private set; }
         public byte MessageTypeId { get; }
-        public uint MessageStreamId { get; }
 
         public RtmpChunkMessageHeaderType1(uint timestampDelta, int messageLength, byte messageTypeId)
         {
