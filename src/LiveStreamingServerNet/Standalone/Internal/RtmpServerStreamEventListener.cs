@@ -14,17 +14,17 @@ namespace LiveStreamingServerNet.Standalone.Internal
 
         public async ValueTask OnRtmpStreamMetaDataReceived(uint clientId, string streamPath, IReadOnlyDictionary<string, object> metaData)
         {
-            await _streamManager.RtmpStreamMetaDataReceived(clientId, streamPath, metaData.ToDictionary());
+            await _streamManager.RtmpStreamMetaDataReceived(clientId, streamPath, metaData);
         }
 
         public async ValueTask OnRtmpStreamPublishedAsync(uint clientId, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
-            await _streamManager.RtmpStreamPublishedAsync(clientId, streamPath, streamArguments.ToDictionary());
+            await _streamManager.RtmpStreamPublishedAsync(clientId, streamPath, streamArguments);
         }
 
         public async ValueTask OnRtmpStreamSubscribedAsync(uint clientId, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
-            await _streamManager.RtmpStreamSubscribedAsync(clientId, streamPath, streamArguments.ToDictionary());
+            await _streamManager.RtmpStreamSubscribedAsync(clientId, streamPath, streamArguments);
         }
 
         public async ValueTask OnRtmpStreamUnpublishedAsync(uint clientId, string streamPath)
