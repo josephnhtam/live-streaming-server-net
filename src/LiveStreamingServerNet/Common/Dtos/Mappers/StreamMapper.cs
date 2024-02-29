@@ -41,7 +41,10 @@ namespace LiveStreamingServerNet.Standalone.Dtos.Mappers
             return defaultValue;
         }
 
-        [MapProperty([nameof(IRtmpPublishStream.Client), nameof(IClientControl.ClientId)], [nameof(StreamDto.ClientId)])]
+        [MapProperty(
+            source: new string[]
+                { nameof(IRtmpPublishStream.Client), nameof(IClientControl.ClientId) },
+            target: new string[] { nameof(StreamDto.ClientId) })]
         public static partial StreamDto ConvertToDto(IRtmpPublishStream stream);
     }
 }

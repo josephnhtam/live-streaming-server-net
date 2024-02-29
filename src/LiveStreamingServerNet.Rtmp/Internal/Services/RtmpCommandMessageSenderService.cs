@@ -21,7 +21,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             string commandName,
             double transactionId,
             IDictionary<string, object>? commandObject,
-            IList<object?> parameters,
+            IList<object?> initialParameters,
             AmfEncodingType amfEncodingType,
             Action? callback)
         {
@@ -31,12 +31,8 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
 
             _chunkMessageSender.Send(clientContext, basicHeader, messageHeader, netBuffer =>
             {
-                netBuffer.WriteAmf([
-                    commandName,
-                    transactionId,
-                    commandObject,
-                    .. parameters
-                ], amfEncodingType);
+                var parameters = GetParameters(commandName, transactionId, commandObject, initialParameters);
+                netBuffer.WriteAmf(parameters, amfEncodingType);
             }, callback);
         }
 
@@ -53,7 +49,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             string commandName,
             double transactionId,
             IDictionary<string, object>? commandObject,
-            IList<object?> parameters,
+            IList<object?> initialParameters,
             AmfEncodingType amfEncodingType)
         {
             var basicHeader = new RtmpChunkBasicHeader(0, chunkStreamId);
@@ -62,13 +58,22 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
 
             _chunkMessageSender.Send(clientContexts, basicHeader, messageHeader, netBuffer =>
             {
-                netBuffer.WriteAmf([
-                    commandName,
-                    transactionId,
-                    commandObject,
-                    .. parameters
-                ], amfEncodingType);
+                var parameters = GetParameters(commandName, transactionId, commandObject, initialParameters);
+                netBuffer.WriteAmf(parameters, amfEncodingType);
             });
+        }
+
+        static List<object?> GetParameters(string commandName, double transactionId,
+            IDictionary<string, object>? commandObject, IList<object?> initialParameters)
+        {
+            var additionalParameters = new List<object?>
+            {
+                commandName,
+                transactionId,
+                commandObject
+            };
+
+            return additionalParameters.Concat(initialParameters).ToList();
         }
     }
 }
