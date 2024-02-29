@@ -23,7 +23,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services.Extensions
                 { RtmpArgumentNames.Description, description }
             };
 
-            sender.SendCommandMessage(clientContext, publishStreamChunkId, "onStatus", 0, null, [properties], amfEncodingType, callback);
+            sender.SendCommandMessage(clientContext, publishStreamChunkId, "onStatus", 0, null, new List<object?> { properties }, amfEncodingType, callback);
         }
 
         public static void SendOnStatusCommandMessage(
@@ -42,7 +42,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services.Extensions
                 { RtmpArgumentNames.Description, description }
             };
 
-            sender.SendCommandMessage(clientContexts, publishStreamChunkId, "onStatus", 0, null, [properties], amfEncodingType);
+            sender.SendCommandMessage(clientContexts, publishStreamChunkId, "onStatus", 0, null, new List<object?> { properties }, amfEncodingType);
         }
 
         public static Task SendOnStatusCommandMessageAsync(

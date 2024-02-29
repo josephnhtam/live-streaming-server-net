@@ -38,7 +38,10 @@ namespace LiveStreamingServerNet.Networking
 
         public Task RunAsync(ServerEndPoint serverEndPoint, CancellationToken cancellationToken = default)
         {
-            return RunAsync([serverEndPoint], cancellationToken);
+            return RunAsync(new List<ServerEndPoint>
+            {
+                serverEndPoint
+            }, cancellationToken);
         }
 
         public async Task RunAsync(IList<ServerEndPoint> serverEndPoints, CancellationToken cancellationToken = default)
