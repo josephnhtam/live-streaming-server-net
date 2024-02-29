@@ -35,7 +35,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
                 commandName: "_result",
                 transactionId: command.TransactionId,
                 commandObject: null,
-                parameters: [clientContext.CreateNewStream()]
+                parameters: new List<object?> { clientContext.CreateNewStream() }
             );
         }
     }

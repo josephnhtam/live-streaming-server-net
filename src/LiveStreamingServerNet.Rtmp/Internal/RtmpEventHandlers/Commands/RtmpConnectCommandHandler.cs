@@ -69,7 +69,8 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
                         { "capabilities", 31 },
                         { "mode", 1 }
                     },
-                parameters: [
+                parameters: new List<object?>
+                {
                     new Dictionary<string, object>
                     {
                         { RtmpArgumentNames.Level, RtmpArgumentValues.Status },
@@ -77,7 +78,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
                         { RtmpArgumentNames.Description, "Connection succeeded." },
                         { RtmpArgumentNames.ObjectEncoding, 0 }
                     }
-                ]
+                }
             );
         }
     }

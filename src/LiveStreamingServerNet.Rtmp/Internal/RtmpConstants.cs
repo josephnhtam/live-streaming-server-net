@@ -2,7 +2,7 @@
 {
     internal static class RtmpConstants
     {
-        public static readonly byte[] ServerVersion = [1, 0, 0, 0];
+        public static readonly byte[] ServerVersion = { 1, 0, 0, 0 };
 
         public const uint DefaultChunkSize = 128;
 

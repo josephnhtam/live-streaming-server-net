@@ -114,7 +114,11 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             var messageHeader = new RtmpChunkMessageHeaderType0(timestamp, RtmpMessageType.DataMessageAmf0, streamId);
 
             _chunkMessageSender.Send(clientContext, basicHeader, messageHeader, (netBuffer) =>
-                netBuffer.WriteAmf([RtmpDataMessageConstants.OnMetaData, publishStreamContext.StreamMetaData], AmfEncodingType.Amf0)
+                netBuffer.WriteAmf(new List<object?>
+                {
+                    RtmpDataMessageConstants.OnMetaData,
+                    publishStreamContext.StreamMetaData
+                }, AmfEncodingType.Amf0)
             );
         }
 
@@ -131,7 +135,11 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             var messageHeader = new RtmpChunkMessageHeaderType0(timestamp, RtmpMessageType.DataMessageAmf0, streamId);
 
             _chunkMessageSender.Send(clientContexts, basicHeader, messageHeader, (netBuffer) =>
-                netBuffer.WriteAmf([RtmpDataMessageConstants.OnMetaData, publishStreamContext.StreamMetaData], AmfEncodingType.Amf0)
+                netBuffer.WriteAmf(new List<object?>
+                {
+                    RtmpDataMessageConstants.OnMetaData,
+                    publishStreamContext.StreamMetaData
+                }, AmfEncodingType.Amf0)
             );
         }
 
