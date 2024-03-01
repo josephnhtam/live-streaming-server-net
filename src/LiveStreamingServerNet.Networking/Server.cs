@@ -69,10 +69,7 @@ namespace LiveStreamingServerNet.Networking
             await Task.WhenAll(_clientTasks.Select(x => x.Value.Task));
 
             foreach (var serverListener in serverListeners)
-            {
-                // Dispose in Net8.0 calls the stop method but is not available in Net7.0
                 serverListener.TcpListener.Stop();
-            }
 
             await OnServerStoppedAsync();
 

@@ -1,6 +1,5 @@
 ﻿using LiveStreamingServerNet.Rtmp.RateLimiting.Contracts;
 using System.Diagnostics;
-using LiveStreamingServerNet.Utilities.Extensions;
 
 namespace LiveStreamingServerNet.Rtmp.RateLimiting
 {
@@ -15,8 +14,8 @@ namespace LiveStreamingServerNet.Rtmp.RateLimiting
 
         public BandwidthLimiter(long bytesPerSecond, long bytesLimit)
         {
-            ThrowHelper.ThrowIfLessThanOrEqual(bytesPerSecond, 0);
-            ThrowHelper.ThrowIfLessThanOrEqual(bytesLimit, 0);
+            if (bytesPerSecond < 0) throw new ArgumentOutOfRangeException(nameof(bytesPerSecond));
+            if (bytesLimit < 0) throw new ArgumentOutOfRangeException(nameof(bytesLimit));
 
             _bytesPerSecond = bytesPerSecond;
             _bytesLimit = bytesLimit;

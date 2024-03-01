@@ -1,6 +1,5 @@
 ﻿using LiveStreamingServerNet.Rtmp.Contracts;
 using LiveStreamingServerNet.Transmuxer.Internal.Services.Contracts;
-using LiveStreamingServerNet.Utilities.Extensions;
 
 namespace LiveStreamingServerNet.Transmuxer.Internal.Services
 {
@@ -15,7 +14,7 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Services
 
         public async ValueTask OnRtmpStreamPublishedAsync(uint clientId, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
-            await _transmuxerManager.StartRemuxingStreamAsync(clientId, streamPath, streamArguments.ToDictionary());
+            await _transmuxerManager.StartRemuxingStreamAsync(clientId, streamPath, new Dictionary<string, string>(streamArguments));
         }
 
         public async ValueTask OnRtmpStreamUnpublishedAsync(uint clientId, string streamPath)
