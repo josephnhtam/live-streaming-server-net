@@ -1,5 +1,4 @@
 ﻿using mtanksl.ActionMessageFormat;
-using LiveStreamingServerNet.Utilities.Extensions;
 
 namespace LiveStreamingServerNet.Rtmp.Internal.Extensions
 {
@@ -9,7 +8,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Extensions
         {
             var amf0Object = new Amf0Object();
             amf0Object.ClassName = string.Empty;
-            amf0Object.DynamicMembersAndValues = keyValuePairs as Dictionary<string, object?> ?? keyValuePairs.ToDictionary();
+            amf0Object.DynamicMembersAndValues = keyValuePairs as Dictionary<string, object?> ?? new Dictionary<string, object?>(keyValuePairs);
             amfWriter.WriteAmf0(amf0Object);
         }
 
@@ -17,7 +16,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Extensions
         {
             var amf0Object = new Amf3Object();
             amf0Object.Trait.IsDynamic = true;
-            amf0Object.DynamicMembersAndValues = keyValuePairs as Dictionary<string, object?> ?? keyValuePairs.ToDictionary();
+            amf0Object.DynamicMembersAndValues = keyValuePairs as Dictionary<string, object?> ?? new Dictionary<string, object?>(keyValuePairs);
             amfWriter.WriteAmf0(amf0Object);
         }
     }

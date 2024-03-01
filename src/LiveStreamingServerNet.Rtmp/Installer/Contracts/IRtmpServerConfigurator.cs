@@ -2,7 +2,6 @@
 using LiveStreamingServerNet.Rtmp.Contracts;
 using LiveStreamingServerNet.Rtmp.RateLimiting.Contracts;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace LiveStreamingServerNet.Rtmp.Installer.Contracts
 {
