@@ -12,6 +12,10 @@ namespace LiveStreamingServerNet.Rtmp.Installer.Contracts
         IRtmpServerConfigurator Configure(Action<RtmpServerConfiguration>? configure);
         IRtmpServerConfigurator ConfigureMediaMessage(Action<MediaMessageConfiguration>? configure);
 
+        IRtmpServerConfigurator AddAuthCodeProvider<TAuthCodeProvider>()
+            where TAuthCodeProvider : class, IAuthCodeProvider;
+        IRtmpServerConfigurator AddAuthCodeProvider(Func<IServiceProvider, IAuthCodeProvider> implmentationFactory);
+
         IRtmpServerConfigurator AddAuthorizationHandler<TAuthorizationHandler>()
             where TAuthorizationHandler : class, IAuthorizationHandler;
         IRtmpServerConfigurator AddAuthorizationHandler(Func<IServiceProvider, IAuthorizationHandler> implmentationFactory);

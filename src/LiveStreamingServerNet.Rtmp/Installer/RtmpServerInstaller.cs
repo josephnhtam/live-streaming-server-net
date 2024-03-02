@@ -1,5 +1,7 @@
 ﻿using LiveStreamingServerNet.Networking.Installer;
 using LiveStreamingServerNet.Networking.Installer.Contracts;
+using LiveStreamingServerNet.Rtmp.Auth;
+using LiveStreamingServerNet.Rtmp.Auth.Contracts;
 using LiveStreamingServerNet.Rtmp.Installer.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal;
 using LiveStreamingServerNet.Rtmp.Internal.Contracts;
@@ -13,6 +15,7 @@ using LiveStreamingServerNet.Rtmp.Internal.RtmpServerEventHandlers;
 using LiveStreamingServerNet.Rtmp.Internal.Services;
 using LiveStreamingServerNet.Rtmp.Internal.Services.Contracts;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using System.Reflection;
 
 namespace LiveStreamingServerNet.Rtmp.Installer
@@ -32,6 +35,15 @@ namespace LiveStreamingServerNet.Rtmp.Installer
                     .AddRtmpServerEventHandlers();
 
             configureRtmpServer?.Invoke(new RtmpServerConfigurator(services));
+
+            services.AddDefaults();
+
+            return services;
+        }
+
+        private static IServiceCollection AddDefaults(this IServiceCollection services)
+        {
+            services.TryAddSingleton<IAuthCodeProvider, RandomHexAuthCodeProvider>();
 
             return services;
         }

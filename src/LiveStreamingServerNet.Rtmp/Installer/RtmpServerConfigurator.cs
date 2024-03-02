@@ -32,6 +32,19 @@ namespace LiveStreamingServerNet.Rtmp.Installer
             return this;
         }
 
+        public IRtmpServerConfigurator AddAuthCodeProvider<TAuthCodeProvider>()
+            where TAuthCodeProvider : class, IAuthCodeProvider
+        {
+            Services.TryAddSingleton<IAuthCodeProvider, TAuthCodeProvider>();
+            return this;
+        }
+
+        public IRtmpServerConfigurator AddAuthCodeProvider(Func<IServiceProvider, IAuthCodeProvider> implmentationFactory)
+        {
+            Services.TryAddSingleton(implmentationFactory);
+            return this;
+        }
+
         public IRtmpServerConfigurator AddAuthorizationHandler<TAuthorizationHandler>()
             where TAuthorizationHandler : class, IAuthorizationHandler
         {
