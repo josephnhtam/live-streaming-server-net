@@ -9,22 +9,22 @@
 
         private AuthorizationResult() { }
 
-        public static AuthorizationResult Authorized(string? StreamPathOverride = null, IDictionary<string, string>? StreamArgumentsOverride = null)
+        public static AuthorizationResult Authorized(string? streamPathOverride = null, IDictionary<string, string>? streamArgumentsOverride = null)
         {
             return new AuthorizationResult
             {
                 IsAuthorized = true,
-                StreamPathOverride = StreamPathOverride,
-                StreamArgumentsOverride = StreamArgumentsOverride
+                StreamPathOverride = streamPathOverride,
+                StreamArgumentsOverride = streamArgumentsOverride
             };
         }
 
-        public static AuthorizationResult Unauthorized(string Reason)
+        public static AuthorizationResult Unauthorized(string reason)
         {
             return new AuthorizationResult
             {
                 IsAuthorized = false,
-                Reason = Reason
+                Reason = reason
             };
         }
     }
