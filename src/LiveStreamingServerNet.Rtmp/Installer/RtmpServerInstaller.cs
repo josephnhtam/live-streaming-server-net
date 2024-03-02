@@ -113,7 +113,7 @@ namespace LiveStreamingServerNet.Rtmp.Installer
                 services.AddSingleton(handlerType);
             }
 
-            services.AddSingleton<IRtmpCommandHanlderMap>(new RtmpCommandHanlderMap(handlerMap))
+            services.AddSingleton<IRtmpCommandHanlderMap>(new RtmpCommandHandlerMap(handlerMap))
                     .AddSingleton<IRtmpCommandDispatcher, RtmpCommandDispatcher>();
 
             return services;
