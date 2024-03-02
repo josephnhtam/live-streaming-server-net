@@ -1,4 +1,5 @@
-﻿using LiveStreamingServerNet.Rtmp.Contracts;
+﻿using LiveStreamingServerNet.Rtmp.Auth.Contracts;
+using LiveStreamingServerNet.Rtmp.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands.Dispatcher;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands.Dispatcher.Attributes;
@@ -71,7 +72,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
             IDictionary<string, string> streamArguments,
             string publishingType)
         {
-            var authorizationHandler = _services.GetService<IRtmpAuthorizationHandler>();
+            var authorizationHandler = _services.GetService<IAuthorizationHandler>();
 
             if (authorizationHandler != null)
                 return await authorizationHandler.AuthorizePublishingAsync(clientContext.Client, streamPath, streamArguments, publishingType);

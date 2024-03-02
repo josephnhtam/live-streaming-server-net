@@ -1,4 +1,5 @@
-﻿using LiveStreamingServerNet.Rtmp.Configurations;
+﻿using LiveStreamingServerNet.Rtmp.Auth.Contracts;
+using LiveStreamingServerNet.Rtmp.Configurations;
 using LiveStreamingServerNet.Rtmp.Contracts;
 using LiveStreamingServerNet.Rtmp.RateLimiting.Contracts;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,8 +13,8 @@ namespace LiveStreamingServerNet.Rtmp.Installer.Contracts
         IRtmpServerConfigurator ConfigureMediaMessage(Action<MediaMessageConfiguration>? configure);
 
         IRtmpServerConfigurator AddAuthorizationHandler<TAuthorizationHandler>()
-            where TAuthorizationHandler : class, IRtmpAuthorizationHandler;
-        IRtmpServerConfigurator AddAuthorizationHandler(Func<IServiceProvider, IRtmpAuthorizationHandler> implmentationFactory);
+            where TAuthorizationHandler : class, IAuthorizationHandler;
+        IRtmpServerConfigurator AddAuthorizationHandler(Func<IServiceProvider, IAuthorizationHandler> implmentationFactory);
 
         IRtmpServerConfigurator AddMediaMessageInterceptor<TMediaMessageInterceptor>()
             where TMediaMessageInterceptor : class, IRtmpMediaMessageInterceptor;

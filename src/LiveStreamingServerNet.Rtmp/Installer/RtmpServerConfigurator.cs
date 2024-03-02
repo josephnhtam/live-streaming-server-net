@@ -1,4 +1,5 @@
-﻿using LiveStreamingServerNet.Rtmp.Configurations;
+﻿using LiveStreamingServerNet.Rtmp.Auth.Contracts;
+using LiveStreamingServerNet.Rtmp.Configurations;
 using LiveStreamingServerNet.Rtmp.Contracts;
 using LiveStreamingServerNet.Rtmp.Installer.Contracts;
 using LiveStreamingServerNet.Rtmp.RateLimiting;
@@ -32,13 +33,13 @@ namespace LiveStreamingServerNet.Rtmp.Installer
         }
 
         public IRtmpServerConfigurator AddAuthorizationHandler<TAuthorizationHandler>()
-            where TAuthorizationHandler : class, IRtmpAuthorizationHandler
+            where TAuthorizationHandler : class, IAuthorizationHandler
         {
-            Services.TryAddSingleton<IRtmpAuthorizationHandler, TAuthorizationHandler>();
+            Services.TryAddSingleton<IAuthorizationHandler, TAuthorizationHandler>();
             return this;
         }
 
-        public IRtmpServerConfigurator AddAuthorizationHandler(Func<IServiceProvider, IRtmpAuthorizationHandler> implmentationFactory)
+        public IRtmpServerConfigurator AddAuthorizationHandler(Func<IServiceProvider, IAuthorizationHandler> implmentationFactory)
         {
             Services.TryAddSingleton(implmentationFactory);
             return this;

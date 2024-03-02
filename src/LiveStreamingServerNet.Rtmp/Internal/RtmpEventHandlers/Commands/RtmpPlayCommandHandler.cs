@@ -1,4 +1,5 @@
-﻿using LiveStreamingServerNet.Rtmp.Contracts;
+﻿using LiveStreamingServerNet.Rtmp.Auth.Contracts;
+using LiveStreamingServerNet.Rtmp.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands.Dispatcher;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands.Dispatcher.Attributes;
@@ -76,7 +77,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
             if (streamArguments.TryGetValue("code", out var authCode) && authCode == _serverContext.AuthCode)
                 return AuthorizationResult.Authorized();
 
-            var authorizationHandler = _services.GetService<IRtmpAuthorizationHandler>();
+            var authorizationHandler = _services.GetService<IAuthorizationHandler>();
 
             if (authorizationHandler != null)
                 return await authorizationHandler.AuthorizeSubscriptionAsync(clientContext.Client, streamPath, streamArguments);
