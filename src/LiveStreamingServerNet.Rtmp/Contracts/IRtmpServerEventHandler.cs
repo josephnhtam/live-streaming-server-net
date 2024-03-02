@@ -18,6 +18,6 @@ namespace LiveStreamingServerNet.Rtmp.Contracts
         ValueTask OnRtmpStreamSubscribedAsync(uint clientId, string streamPath, IReadOnlyDictionary<string, string> streamArguments);
         ValueTask OnRtmpStreamUnsubscribedAsync(uint clientId, string streamPath);
 
-        ValueTask OnRtmpStreamMetaDataReceived(uint clientId, string streamPath, IReadOnlyDictionary<string, object> metaData);
+        ValueTask OnRtmpStreamMetaDataReceivedAsync(uint clientId, string streamPath, IReadOnlyDictionary<string, object> metaData);
     }
 }

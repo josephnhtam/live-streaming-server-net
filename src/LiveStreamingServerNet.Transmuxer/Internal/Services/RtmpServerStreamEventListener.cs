@@ -22,7 +22,7 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Services
             await _transmuxerManager.StopRemuxingStreamAsync(clientId, streamPath);
         }
 
-        public ValueTask OnRtmpStreamMetaDataReceived(uint clientId, string streamPath, IReadOnlyDictionary<string, object> metaData)
+        public ValueTask OnRtmpStreamMetaDataReceivedAsync(uint clientId, string streamPath, IReadOnlyDictionary<string, object> metaData)
         {
             return ValueTask.CompletedTask;
         }

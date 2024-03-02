@@ -70,7 +70,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Data
 
             BroadcastMetaDataToSubscribers(clientContext, chunkStreamContext, publishStreamContext);
 
-            _eventDispatcher.RtmpStreamMetaDataReceived(clientContext, clientContext.PublishStreamContext!.StreamPath, metaData.AsReadOnly());
+            _eventDispatcher.RtmpStreamMetaDataReceivedAsync(clientContext, clientContext.PublishStreamContext!.StreamPath, metaData.AsReadOnly());
 
             return ValueTask.FromResult(true);
         }

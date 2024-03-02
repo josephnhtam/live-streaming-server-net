@@ -30,7 +30,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
             return ValueTask.CompletedTask;
         }
 
-        public ValueTask OnRtmpStreamMetaDataReceived(uint clientId, string streamPath, IReadOnlyDictionary<string, object> metaData)
+        public ValueTask OnRtmpStreamMetaDataReceivedAsync(uint clientId, string streamPath, IReadOnlyDictionary<string, object> metaData)
         {
             var streamContext = _streamManager.GetFlvStreamContext(streamPath);
 

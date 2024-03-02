@@ -16,6 +16,6 @@
         ValueTask RtmpStreamSubscribedAsync(IRtmpClientContext clientContext, string streamPath, IReadOnlyDictionary<string, string> streamArguments);
         ValueTask RtmpStreamUnsubscribedAsync(IRtmpClientContext clientContext, string streamPath);
 
-        ValueTask RtmpStreamMetaDataReceived(IRtmpClientContext clientContext, string streamPath, IReadOnlyDictionary<string, object> metaData);
+        ValueTask RtmpStreamMetaDataReceivedAsync(IRtmpClientContext clientContext, string streamPath, IReadOnlyDictionary<string, object> metaData);
     }
 }

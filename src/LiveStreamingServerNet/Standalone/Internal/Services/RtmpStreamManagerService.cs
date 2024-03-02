@@ -63,7 +63,7 @@ namespace LiveStreamingServerNet.Standalone.Internal.Services
             return ValueTask.CompletedTask;
         }
 
-        public ValueTask RtmpStreamMetaDataReceived(uint clientId, string streamPath, IReadOnlyDictionary<string, object> metaData)
+        public ValueTask RtmpStreamMetaDataReceivedAsync(uint clientId, string streamPath, IReadOnlyDictionary<string, object> metaData)
         {
             if (_publishStreams.TryGetValue(streamPath, out var publishStream))
                 publishStream.UpdateMetaData(metaData);

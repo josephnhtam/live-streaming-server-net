@@ -62,10 +62,10 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpServerEventHandlers
             return _eventHandlers;
         }
 
-        public async ValueTask OnRtmpStreamMetaDataReceived(IRtmpClientContext clientContext, string streamPath, IReadOnlyDictionary<string, object> metaData)
+        public async ValueTask OnRtmpStreamMetaDataReceivedAsync(IRtmpClientContext clientContext, string streamPath, IReadOnlyDictionary<string, object> metaData)
         {
             foreach (var eventHandler in GetEventHandlers())
-                await eventHandler.OnRtmpStreamMetaDataReceived(clientContext.Client.ClientId, streamPath, metaData);
+                await eventHandler.OnRtmpStreamMetaDataReceivedAsync(clientContext.Client.ClientId, streamPath, metaData);
         }
 
         public async ValueTask OnRtmpStreamPublishedAsync(IRtmpClientContext clientContext, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
