@@ -3,7 +3,7 @@ using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.Standalone.Internal.Contracts;
 using Riok.Mapperly.Abstractions;
 
-namespace LiveStreamingServerNet.Standalone.Dtos.Mappers
+namespace LiveStreamingServerNet.Standalone.Internal.Mappers
 {
     [Mapper]
     internal static partial class StreamMapper

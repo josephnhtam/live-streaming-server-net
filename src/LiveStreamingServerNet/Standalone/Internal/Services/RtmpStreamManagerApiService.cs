@@ -1,6 +1,6 @@
 ﻿using LiveStreamingServerNet.Common.Dtos;
 using LiveStreamingServerNet.Common.Exceptions;
-using LiveStreamingServerNet.Standalone.Dtos.Mappers;
+using LiveStreamingServerNet.Standalone.Internal.Mappers;
 using LiveStreamingServerNet.Standalone.Internal.Services.Contracts;
 using LiveStreamingServerNet.Standalone.Services.Contracts;
 using Microsoft.AspNetCore.Http;
