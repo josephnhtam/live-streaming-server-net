@@ -3,7 +3,7 @@ using System.Buffers;
 
 namespace LiveStreamingServerNet.Utilities
 {
-    public class RentedBuffer : IRentedBuffer
+    public sealed class RentedBuffer : IRentedBuffer
     {
         public byte[] Buffer => _buffer;
         public int Claimed => _claimed;

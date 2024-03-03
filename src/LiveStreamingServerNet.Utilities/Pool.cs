@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 
 namespace LiveStreamingServerNet.Utilities
 {
-    public class Pool<TObject> : IPool<TObject> where TObject : class
+    public sealed class Pool<TObject> : IPool<TObject> where TObject : class
     {
         private readonly ConcurrentQueue<TObject> _pool;
         private readonly Func<TObject> _objectFactory;

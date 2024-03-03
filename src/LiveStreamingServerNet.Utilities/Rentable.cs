@@ -2,7 +2,7 @@
 
 namespace LiveStreamingServerNet.Utilities
 {
-    public class Rentable<T> : IRentable<T>
+    public sealed class Rentable<T> : IRentable<T>
     {
         private readonly Action? _callback;
 
