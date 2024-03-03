@@ -13,8 +13,7 @@ This open-source project provides an implementation of an RTMP live streaming se
 
 ## Roadmap
 
-- Native AOT support
-- Kubernetes operator
+- **Custom Kubernetes Operator**: The objective is to achieve horizontal autoscaling by scaling out the pods when more streams are published, and scaling in the pods when streams are deleted, all without affecting the existing connections.
 
 ## Quick Start
 
