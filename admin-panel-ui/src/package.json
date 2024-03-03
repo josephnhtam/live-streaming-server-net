@@ -4,7 +4,7 @@
   "private": true,
   "homepage": "live-streaming-server-net-admin-panel-ui",
   "dependencies": {
-    "@emotion/react": "^11.11.3",
+    "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.0",
     "@fontsource/inter": "^5.0.16",
     "@mui/icons-material": "^5.15.5",
