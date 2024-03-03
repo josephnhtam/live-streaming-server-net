@@ -6,7 +6,7 @@ using System.Collections.Concurrent;
 
 namespace LiveStreamingServerNet.Networking
 {
-    public class NetBufferPool : INetBufferPool
+    public sealed class NetBufferPool : INetBufferPool
     {
         private readonly Pool<PoolableNetBuffer> _pool;
         private readonly int _netBufferCapacity;
@@ -56,7 +56,7 @@ namespace LiveStreamingServerNet.Networking
         }
     }
 
-    internal class PoolableNetBuffer : NetBuffer
+    internal sealed class PoolableNetBuffer : NetBuffer
     {
         private readonly NetBufferPool _pool;
         private int _inPool;

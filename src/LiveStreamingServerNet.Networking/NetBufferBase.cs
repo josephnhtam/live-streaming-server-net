@@ -61,6 +61,12 @@ namespace LiveStreamingServerNet.Networking
         protected abstract BinaryWriter GetWriter();
         protected abstract BinaryReader GetReader();
 
-        public virtual void Dispose() { }
+        public virtual void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing) { }
     }
 }

@@ -8,6 +8,8 @@ namespace LiveStreamingServerNet.Networking
         private readonly BinaryWriter _writer;
         private readonly BinaryReader _reader;
 
+        private bool _isDisposed;
+
         public NetBuffer()
         {
             _stream = new MemoryStream();
@@ -59,12 +61,17 @@ namespace LiveStreamingServerNet.Networking
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected override BinaryReader GetReader() => _reader;
 
-        public override void Dispose()
+        protected override void Dispose(bool disposing)
         {
-            _stream.Dispose();
-            _writer.Dispose();
-            _reader.Dispose();
-            GC.SuppressFinalize(this);
+            base.Dispose(disposing);
+
+            if (disposing && !_isDisposed)
+            {
+                _stream.Dispose();
+                _writer.Dispose();
+                _reader.Dispose();
+                _isDisposed = true;
+            }
         }
     }
 }
