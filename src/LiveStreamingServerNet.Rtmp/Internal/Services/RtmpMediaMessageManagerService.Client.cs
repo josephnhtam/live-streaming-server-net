@@ -157,8 +157,8 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
 
                 if (_skippingPackage)
                 {
-                    if (context.OutstandingPackagesSize <= _config.MaxOutstandingMediaMessageSize ||
-                        context.OutstandingPackagesCount <= _config.MaxOutstandingMediaMessageCount)
+                    if (context.OutstandingPackagesSize <= _config.TargetOutstandingMediaMessageSize &&
+                        context.OutstandingPackagesCount <= _config.TargetOutstandingMediaMessageCount)
                     {
                         _logger.ResumeMediaPackage(ClientContext.Client.ClientId, context.OutstandingPackagesSize, context.OutstandingPackagesCount);
                         _skippingPackage = false;
@@ -168,7 +168,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
                     return true;
                 }
 
-                if (context.OutstandingPackagesSize > _config.MaxOutstandingMediaMessageSize &&
+                if (context.OutstandingPackagesSize > _config.MaxOutstandingMediaMessageSize ||
                     context.OutstandingPackagesCount > _config.MaxOutstandingMediaMessageCount)
                 {
                     _logger.PauseMediaPackage(ClientContext.Client.ClientId, context.OutstandingPackagesSize, context.OutstandingPackagesCount);
