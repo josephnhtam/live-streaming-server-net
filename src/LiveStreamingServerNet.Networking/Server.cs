@@ -107,26 +107,26 @@ namespace LiveStreamingServerNet.Networking
         {
             var cancellationToken = cts.Token;
 
-            try
+            while (!cancellationToken.IsCancellationRequested)
             {
-                while (!cancellationToken.IsCancellationRequested)
+                try
+                {
                     await AcceptClientAsync(tcpListener, serverEndPoint, cancellationToken);
-            }
-            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
-            {
-                throw;
-            }
-            catch (SocketException ex)
-            {
-                _logger.AcceptClientError(ex);
-                cts.Cancel();
-                throw;
-            }
-            catch (Exception ex)
-            {
-                _logger.ServerLoopError(ex);
-                cts.Cancel();
-                throw;
+                }
+                catch (SocketException ex)
+                {
+                    _logger.AcceptClientError(ex);
+                }
+                catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+                {
+                    throw;
+                }
+                catch (Exception ex)
+                {
+                    _logger.ServerLoopError(ex);
+                    cts.Cancel();
+                    throw;
+                }
             }
         }
 
