@@ -3,21 +3,23 @@ using LiveStreamingServerNet.Networking.Installer.Contracts;
 using LiveStreamingServerNet.Rtmp.Installer;
 using LiveStreamingServerNet.Rtmp.Installer.Contracts;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 namespace LiveStreamingServerNet
 {
     public sealed class LiveStreamingServerBuilder : ILiveStreamingServerBuilder
     {
-        private readonly ServiceCollection _services;
+        private readonly HostApplicationBuilder _builder;
+
         private Action<IRtmpServerConfigurator>? _configureRtmpServer;
         private Action<IServerConfigurator>? _configureServer;
 
-        public IServiceCollection Services => _services;
+        public IServiceCollection Services => _builder.Services;
 
         private LiveStreamingServerBuilder()
         {
-            _services = new ServiceCollection();
+            _builder = Host.CreateEmptyApplicationBuilder(default);
         }
 
         public static ILiveStreamingServerBuilder Create()
@@ -27,7 +29,7 @@ namespace LiveStreamingServerNet
 
         public ILiveStreamingServerBuilder ConfigureLogging(Action<ILoggingBuilder> configure)
         {
-            _services.AddLogging(configure);
+            Services.AddLogging(configure);
             return this;
         }
 
@@ -45,10 +47,9 @@ namespace LiveStreamingServerNet
 
         public ILiveStreamingServer Build()
         {
-            _services.AddRtmpServer(_configureRtmpServer, _configureServer);
+            Services.AddRtmpServer(_configureRtmpServer, _configureServer);
 
-            var provider = _services.BuildServiceProvider();
-            return new LiveStreamingServer(provider);
+            return new LiveStreamingServer(_builder.Build());
         }
     }
 }

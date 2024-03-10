@@ -1,22 +1,24 @@
 ﻿using LiveStreamingServerNet.Networking;
 using LiveStreamingServerNet.Networking.Contracts;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace LiveStreamingServerNet
 {
     internal class LiveStreamingServer : ILiveStreamingServer
     {
-        private readonly ServiceProvider _serviceProvider;
+        private readonly IHost _host;
         private readonly IServer _server;
 
         public IServiceProvider Services => _server.Services;
         public bool IsStarted => _server.IsStarted;
         public IReadOnlyList<ServerEndPoint>? EndPoints => _server.EndPoints;
         public IReadOnlyList<IClientHandle> Clients => _server.Clients;
-        public LiveStreamingServer(ServiceProvider serviceProvider)
+
+        public LiveStreamingServer(IHost host)
         {
-            _serviceProvider = serviceProvider;
-            _server = _serviceProvider.GetRequiredService<IServer>();
+            _host = host;
+            _server = _host.Services.GetRequiredService<IServer>();
         }
 
         public IClientHandle? GetClient(uint clientId) => _server.GetClient(clientId);
@@ -28,6 +30,9 @@ namespace LiveStreamingServerNet
             => _server.RunAsync(serverEndPoints, cancellationToken);
 
         public ValueTask DisposeAsync()
-            => _serviceProvider.DisposeAsync();
+        {
+            _host.Dispose();
+            return ValueTask.CompletedTask;
+        }
     }
 }
