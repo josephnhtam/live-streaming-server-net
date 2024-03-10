@@ -2,5 +2,5 @@
 
 namespace LiveStreamingServerNet
 {
-    public interface ILiveStreamingServer : IServer, IAsyncDisposable { }
+    public interface ILiveStreamingServer : IServer, IDisposable, IAsyncDisposable { }
 }

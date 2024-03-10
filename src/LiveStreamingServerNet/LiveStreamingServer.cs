@@ -29,6 +29,11 @@ namespace LiveStreamingServerNet
         public Task RunAsync(IList<ServerEndPoint> serverEndPoints, CancellationToken cancellationToken = default)
             => _server.RunAsync(serverEndPoints, cancellationToken);
 
+        public void Dispose()
+        {
+            _host.Dispose();
+        }
+
         public ValueTask DisposeAsync()
         {
             _host.Dispose();

@@ -11,7 +11,7 @@ namespace LiveStreamingServerNet.StandaloneDemo
     {
         public static async Task Main(string[] args)
         {
-            await using var liveStreamingServer = CreateLiveStreamingServer();
+            using var liveStreamingServer = CreateLiveStreamingServer();
 
             var builder = WebApplication.CreateBuilder(args);
 

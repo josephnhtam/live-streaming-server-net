@@ -9,7 +9,7 @@ namespace LiveStreamingServerNet.RtmpsDemo
     {
         public static async Task Main()
         {
-            await using var liveStreamingServer = CreateLiveStreamingServer();
+            using var liveStreamingServer = CreateLiveStreamingServer();
 
             IList<ServerEndPoint> endPoints =
                 [new ServerEndPoint(new IPEndPoint(IPAddress.Any, 1935), false),
