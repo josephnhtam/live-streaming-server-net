@@ -47,15 +47,15 @@ namespace LiveStreamingServerNet.Networking
         {
             _logger.ClientConnected(ClientId);
 
-            await handler.InitializeAsync(this);
-
+            _cts = CancellationTokenSource.CreateLinkedTokenSource(stoppingToken);
+            var cancellationToken = _cts.Token;
             Stream? networkStream = null;
-            await using (var outstandingBufferSender = new OutstandingBufferSender(ClientId, _pendingMessageChannel.Reader, _logger))
-            {
-                _cts = CancellationTokenSource.CreateLinkedTokenSource(stoppingToken);
-                var cancellationToken = _cts.Token;
 
-                try
+            try
+            {
+                await handler.InitializeAsync(this);
+
+                await using (var outstandingBufferSender = new OutstandingBufferSender(ClientId, _pendingMessageChannel.Reader, _logger))
                 {
                     networkStream = await CreateNetworkStreamAsync(serverEndPoint);
                     outstandingBufferSender.Start(networkStream, cancellationToken);
@@ -65,16 +65,16 @@ namespace LiveStreamingServerNet.Networking
                         if (!await handler.HandleClientLoopAsync(readOnlyNetworkStream, cancellationToken))
                             break;
                 }
-                catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { }
-                catch (Exception ex) when (ex is IOException or EndOfStreamException) { }
-                catch (Exception ex)
-                {
-                    _logger.ClientLoopError(ClientId, ex);
-                }
-                finally
-                {
-                    _cts.Cancel();
-                }
+            }
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { }
+            catch (Exception ex) when (ex is IOException or EndOfStreamException) { }
+            catch (Exception ex)
+            {
+                _logger.ClientLoopError(ClientId, ex);
+            }
+            finally
+            {
+                _cts.Cancel();
             }
 
             await handler.DisposeAsync();
