@@ -4,7 +4,6 @@ using LiveStreamingServerNet.KubernetesPod.Internal.Logging;
 using LiveStreamingServerNet.KubernetesPod.Internal.Services.Contracts;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using System.Text.Json;
 
 namespace LiveStreamingServerNet.KubernetesPod.Internal.HostedServices
 {
@@ -23,17 +22,15 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.HostedServices
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            while (!stoppingToken.IsCancellationRequested)
+            try
             {
-                try
-                {
-                    await WatchPod(stoppingToken);
-                }
-                catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested) { }
-                catch (Exception ex)
-                {
-                    _logger.ErrorWatchingPod(ex);
-                }
+                await WatchPod(stoppingToken);
+            }
+            catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested) { }
+            catch (Exception ex)
+            {
+                _logger.ErrorWatchingPod(ex);
+                throw;
             }
         }
 

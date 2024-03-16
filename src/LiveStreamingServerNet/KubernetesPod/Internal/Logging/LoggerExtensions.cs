@@ -12,5 +12,11 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Logging
 
         [LoggerMessage(LogLevel.Error, "An error occurred when patching the pod | JsonPatch: {JsonPatch}")]
         public static partial void ErrorPatchingPod(this ILogger logger, string jsonPatch, Exception exception);
+
+        [LoggerMessage(LogLevel.Information, "Restarting watcher as no event is received since {LastEventTime}")]
+        public static partial void RestartingWatcher(this ILogger logger, DateTimeOffset lastEventTime);
+
+        [LoggerMessage(LogLevel.Information, "Ignoring error occurred when watching the pod")]
+        public static partial void IgnoringWatchingPodError(this ILogger logger, Exception exception);
     }
 }
