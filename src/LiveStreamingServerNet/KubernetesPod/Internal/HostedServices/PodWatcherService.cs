@@ -46,8 +46,8 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.HostedServices
                 if (eventType != WatchEventType.Added && eventType != WatchEventType.Modified)
                     continue;
 
-                var labels = new Dictionary<string, string>(pod.Labels());
-                var annotataions = new Dictionary<string, string>(pod.Annotations());
+                var labels = pod.Labels() ?? new Dictionary<string, string>();
+                var annotataions = pod.Annotations() ?? new Dictionary<string, string>();
 
                 await _lifetimeManager.ReconcileAsync(labels, annotataions);
             }
