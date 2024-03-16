@@ -1,19 +1,19 @@
-﻿using LiveStreamingServerNet.KubernetesPod.Internal.Logging;
+﻿using LiveStreamingServerNet.KubernetesPod.Configurations;
+using LiveStreamingServerNet.KubernetesPod.Internal.Logging;
 using LiveStreamingServerNet.KubernetesPod.Internal.Services.Contracts;
 using LiveStreamingServerNet.Networking.Contracts;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
 {
     internal class PodLifetimeManager : IPodLifetimeManager
     {
-        private const string IsPendingStopLabel = "live-streaming-server-net/pending-stop";
-        private const string StreamCountAnnotation = "stream-count";
-
         private readonly IKubernetesContext _kubernetesContext;
         private readonly IHostApplicationLifetime _appLifetime;
         private readonly ILogger _logger;
+        private readonly KubernetesPodConfiguration _config;
 
         private int _streamCount;
         private bool _isPendingStop;
@@ -21,16 +21,21 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
         public int StreamCount => _streamCount;
         public bool IsPendingStop => _isPendingStop;
 
-        public PodLifetimeManager(IKubernetesContext kubernetesContext, IHostApplicationLifetime appLifetime, ILogger<PodLifetimeManager> logger)
+        public PodLifetimeManager(
+            IKubernetesContext kubernetesContext,
+            IHostApplicationLifetime appLifetime,
+            ILogger<PodLifetimeManager> logger,
+            IOptions<KubernetesPodConfiguration> config)
         {
             _kubernetesContext = kubernetesContext;
             _appLifetime = appLifetime;
             _logger = logger;
+            _config = config.Value;
         }
 
         public async ValueTask ReconcileAsync(IDictionary<string, string> labels, IDictionary<string, string> annotations)
         {
-            if (!labels.TryGetValue(IsPendingStopLabel, out var isPendingStopStr))
+            if (!labels.TryGetValue(_config.LabelPendingStop, out var isPendingStopStr))
             {
                 _isPendingStop = false;
                 return;
@@ -60,7 +65,7 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
         private async Task UpdatePodAsync()
         {
             await _kubernetesContext.PatchPodAsync(builder =>
-                builder.SetAnnotation(StreamCountAnnotation, _streamCount.ToString())
+                builder.SetAnnotation(_config.AnnotationStreamCount, _streamCount.ToString())
             );
         }
 
