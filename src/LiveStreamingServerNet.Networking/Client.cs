@@ -57,17 +57,28 @@ namespace LiveStreamingServerNet.Networking
 
                 await using (var outstandingBufferSender = new OutstandingBufferSender(ClientId, _pendingMessageChannel.Reader, _logger))
                 {
-                    networkStream = await CreateNetworkStreamAsync(serverEndPoint);
-                    outstandingBufferSender.Start(networkStream, cancellationToken);
+                    try
+                    {
+                        networkStream = await CreateNetworkStreamAsync(serverEndPoint);
+                        outstandingBufferSender.Start(networkStream, cancellationToken);
 
-                    var readOnlyNetworkStream = new ReadOnlyStream(networkStream);
-                    while (_tcpClient.Connected && !cancellationToken.IsCancellationRequested)
-                        if (!await handler.HandleClientLoopAsync(readOnlyNetworkStream, cancellationToken))
-                            break;
+                        var readOnlyNetworkStream = new ReadOnlyStream(networkStream);
+                        while (_tcpClient.Connected && !cancellationToken.IsCancellationRequested)
+                            if (!await handler.HandleClientLoopAsync(readOnlyNetworkStream, cancellationToken))
+                                break;
+                    }
+                    catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { }
+                    catch (Exception ex) when (ex is IOException or EndOfStreamException) { }
+                    catch (Exception)
+                    {
+                        throw;
+                    }
+                    finally
+                    {
+                        _cts.Cancel();
+                    }
                 }
             }
-            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { }
-            catch (Exception ex) when (ex is IOException or EndOfStreamException) { }
             catch (Exception ex)
             {
                 _logger.ClientLoopError(ClientId, ex);
