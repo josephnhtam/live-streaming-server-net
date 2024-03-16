@@ -10,7 +10,7 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Services.Contracts
         string PodName { get; }
         Task<V1Pod> GetPodAsync(CancellationToken cancellationToken);
         Task PatchPodAsync(Action<IPodPatcherBuilder> configureBuilder);
-        IAsyncEnumerable<(WatchEventType, V1Pod)> WatchPodAsync(CancellationToken cancellationToken);
+        IAsyncEnumerable<(WatchEventType, V1Pod)> WatchPodAsync(CancellationToken cancellationToken = default, TimeSpan? reconnectCheck = null);
     }
 
     internal interface IPodPatcherBuilder
