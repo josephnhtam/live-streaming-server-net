@@ -8,7 +8,7 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
 {
     internal class PodLifetimeManager : IPodLifetimeManager
     {
-        private const string IsPendingStopLabel = "pending-stop";
+        private const string IsPendingStopLabel = "live-streaming-server-net/pending-stop";
         private const string StreamCountAnnotation = "stream-count";
 
         private readonly IKubernetesContext _kubernetesContext;
