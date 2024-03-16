@@ -37,5 +37,23 @@ namespace LiveStreamingServerNet.Networking.Logging
 
         [LoggerMessage(LogLevel.Error, "ClientId: {ClientId} | An error occurred while disposing outstanding buffer sender")]
         public static partial void OutstandingBufferSenderDisposeError(this ILogger logger, uint clientId, Exception exception);
+
+        [LoggerMessage(LogLevel.Error, "An error occurred while dispatching listener created event")]
+        public static partial void DispatchingListenerCreatedEventError(this ILogger logger, Exception ex);
+
+        [LoggerMessage(LogLevel.Error, "An error occurred while dispatching client accepted event")]
+        public static partial void DispatchingClientAcceptedEventError(this ILogger logger, Exception ex);
+
+        [LoggerMessage(LogLevel.Error, "An error occurred while dispatching client connected event")]
+        public static partial void DispatchingClientConnectedEventError(this ILogger logger, Exception ex);
+
+        [LoggerMessage(LogLevel.Error, "An error occurred while dispatching client disconnected event")]
+        public static partial void DispatchingClientDisconnectedEventError(this ILogger logger, Exception ex);
+
+        [LoggerMessage(LogLevel.Error, "An error occurred while dispatching server started event")]
+        public static partial void DispatchingServerStartedEventError(this ILogger logger, Exception ex);
+
+        [LoggerMessage(LogLevel.Error, "An error occurred while dispatching server stopped event")]
+        public static partial void DispatchingServerStoppedEventError(this ILogger logger, Exception ex);
     }
 }
