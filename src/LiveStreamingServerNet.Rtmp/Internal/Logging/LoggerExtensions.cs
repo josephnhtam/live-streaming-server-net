@@ -87,5 +87,32 @@ namespace LiveStreamingServerNet.Rtmp.Logging
 
         [LoggerMessage(LogLevel.Warning, "ClientId: {ClientId} | Exceeded bandwidth limit")]
         public static partial void ExceededBandwidthLimit(this ILogger logger, uint clientId);
+
+        [LoggerMessage(LogLevel.Error, "ClientId: {ClientId} | An error occurred while dispatching RTMP client connected event")]
+        public static partial void DispatchingRtmpClientConnectedEventError(this ILogger logger, uint clientId, Exception ex);
+
+        [LoggerMessage(LogLevel.Error, "ClientId: {ClientId} | An error occurred while dispatching RTMP client created event")]
+        public static partial void DispatchingRtmpClientCreatedEventError(this ILogger logger, uint clientId, Exception ex);
+
+        [LoggerMessage(LogLevel.Error, "ClientId: {ClientId} | An error occurred while dispatching RTMP client disposed event")]
+        public static partial void DispatchingRtmpClientDisposedEventError(this ILogger logger, uint clientId, Exception ex);
+
+        [LoggerMessage(LogLevel.Error, "ClientId: {ClientId} | An error occurred while dispatching RTMP client handshake complete event")]
+        public static partial void DispatchingRtmpClientHandshakeCompleteEventError(this ILogger logger, uint clientId, Exception ex);
+
+        [LoggerMessage(LogLevel.Error, "ClientId: {ClientId} | An error occurred while dispatching RTMP stream metadata recevied event")]
+        public static partial void DispatchingRtmpStreamMetaDataReceivedEventError(this ILogger logger, uint clientId, Exception ex);
+
+        [LoggerMessage(LogLevel.Error, "ClientId: {ClientId} | An error occurred while dispatching RTMP stream published event")]
+        public static partial void DispatchingRtmpStreamPublishedEventError(this ILogger logger, uint clientId, Exception ex);
+
+        [LoggerMessage(LogLevel.Error, "ClientId: {ClientId} | An error occurred while dispatching RTMP stream unpublished event")]
+        public static partial void DispatchingRtmpStreamUnpublishedEventError(this ILogger logger, uint clientId, Exception ex);
+
+        [LoggerMessage(LogLevel.Error, "ClientId: {ClientId} | An error occurred while dispatching RTMP stream subscribed event")]
+        public static partial void DispatchingRtmpStreamSubscribedEventError(this ILogger logger, uint clientId, Exception ex);
+
+        [LoggerMessage(LogLevel.Error, "ClientId: {ClientId} | An error occurred while dispatching RTMP stream unsubscribed event")]
+        public static partial void DispatchingRtmpStreamUnsubscribedEventError(this ILogger logger, uint clientId, Exception ex);
     }
 }

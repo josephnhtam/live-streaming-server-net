@@ -9,7 +9,7 @@ namespace LiveStreamingServerNet.Networking
     internal class ServerEventDispatcher : IServerEventDispatcher
     {
         private readonly IServiceProvider _services;
-        private readonly ILogger<ServerEventDispatcher> _logger;
+        private readonly ILogger _logger;
         private IServerEventHandler[]? _eventHandlers;
 
         public ServerEventDispatcher(IServiceProvider services, ILogger<ServerEventDispatcher> logger)

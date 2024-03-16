@@ -9,7 +9,7 @@ namespace LiveStreamingServerNet.Transmuxer.Internal
     internal class TransmuxerEventDispatcher : ITransmuxerEventDispatcher
     {
         private readonly IServiceProvider _services;
-        private readonly ILogger<TransmuxerEventDispatcher> _logger;
+        private readonly ILogger _logger;
 
         private ITransmuxerEventHandler[]? _eventHandlers;
 
