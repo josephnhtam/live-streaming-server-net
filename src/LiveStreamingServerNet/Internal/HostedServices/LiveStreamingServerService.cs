@@ -1,7 +1,7 @@
-﻿using Microsoft.Extensions.Hosting;
+﻿using LiveStreamingServerNet.Internal.HostedServices.Contracts;
 using LiveStreamingServerNet.Networking;
 using LiveStreamingServerNet.Networking.Contracts;
-using LiveStreamingServerNet.Internal.HostedServices.Contracts;
+using Microsoft.Extensions.Hosting;
 
 namespace LiveStreamingServerNet.Internal.HostedService
 {
