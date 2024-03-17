@@ -5,7 +5,7 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Services.Contracts
 {
     internal interface IKubernetesContext
     {
-        Kubernetes KubernetesClient { get; }
+        IKubernetes KubernetesClient { get; }
         string PodNamespace { get; }
         string PodName { get; }
         Task<V1Pod> GetPodAsync(CancellationToken cancellationToken);

@@ -14,7 +14,7 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
 {
     internal class KubernetesContext : IKubernetesContext
     {
-        public Kubernetes KubernetesClient { get; }
+        public IKubernetes KubernetesClient { get; }
         public string PodNamespace { get; }
         public string PodName { get; }
 
@@ -31,7 +31,7 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
             PodName = GetPodName();
         }
 
-        private Kubernetes CreateKubernetesClient()
+        private IKubernetes CreateKubernetesClient()
         {
             var kubeConfig = KubernetesClientConfiguration.InClusterConfig();
             return new Kubernetes(kubeConfig);

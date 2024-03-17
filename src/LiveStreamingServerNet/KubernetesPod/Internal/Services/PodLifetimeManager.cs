@@ -1,10 +1,8 @@
-﻿using LiveStreamingServerNet.KubernetesPod.Configurations;
-using LiveStreamingServerNet.KubernetesPod.Internal.Logging;
+﻿using LiveStreamingServerNet.KubernetesPod.Internal.Logging;
 using LiveStreamingServerNet.KubernetesPod.Internal.Services.Contracts;
 using LiveStreamingServerNet.Networking.Contracts;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
 {
@@ -13,7 +11,6 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
         private readonly IKubernetesContext _kubernetesContext;
         private readonly IHostApplicationLifetime _appLifetime;
         private readonly ILogger _logger;
-        private readonly KubernetesPodConfiguration _config;
 
         private int _streamCount;
         private bool _isPendingStop;
@@ -24,18 +21,16 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
         public PodLifetimeManager(
             IKubernetesContext kubernetesContext,
             IHostApplicationLifetime appLifetime,
-            ILogger<PodLifetimeManager> logger,
-            IOptions<KubernetesPodConfiguration> config)
+            ILogger<PodLifetimeManager> logger)
         {
             _kubernetesContext = kubernetesContext;
             _appLifetime = appLifetime;
             _logger = logger;
-            _config = config.Value;
         }
 
         public async ValueTask ReconcileAsync(IDictionary<string, string> labels, IDictionary<string, string> annotations)
         {
-            if (!labels.TryGetValue(_config.LabelPendingStop, out var isPendingStopStr))
+            if (!labels.TryGetValue(Constants.PendingStopLabel, out var isPendingStopStr))
             {
                 _isPendingStop = false;
                 return;
@@ -65,7 +60,7 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
         private async Task UpdatePodAsync()
         {
             await _kubernetesContext.PatchPodAsync(builder =>
-                builder.SetAnnotation(_config.AnnotationStreamCount, _streamCount.ToString())
+                builder.SetAnnotation(Constants.StreamsCountAnnotation, _streamCount.ToString())
             );
         }
 
