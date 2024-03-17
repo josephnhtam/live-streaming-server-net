@@ -34,13 +34,3824 @@ spec:
                 format: float
                 nullable: false
                 type: number
+              podStreamsLimit:
+                format: int32
+                nullable: false
+                type: integer
               podSpec:
                 nullable: false
                 properties:
-                  streamsLimit:
-                    format: int32
-                    nullable: false
+                  activeDeadlineSeconds:
+                    format: int64
+                    nullable: true
                     type: integer
+                  affinity:
+                    nullable: false
+                    properties:
+                      nodeAffinity:
+                        nullable: false
+                        properties:
+                          preferredDuringSchedulingIgnoredDuringExecution:
+                            items:
+                              properties:
+                                preference:
+                                  nullable: false
+                                  properties:
+                                    matchExpressions:
+                                      items:
+                                        properties:
+                                          key:
+                                            nullable: false
+                                            type: string
+                                          operator:
+                                            nullable: false
+                                            type: string
+                                          values:
+                                            items:
+                                              nullable: false
+                                              type: string
+                                            nullable: false
+                                            type: array
+                                        type: object
+                                      nullable: false
+                                      type: array
+                                    matchFields:
+                                      items:
+                                        properties:
+                                          key:
+                                            nullable: false
+                                            type: string
+                                          operator:
+                                            nullable: false
+                                            type: string
+                                          values:
+                                            items:
+                                              nullable: false
+                                              type: string
+                                            nullable: false
+                                            type: array
+                                        type: object
+                                      nullable: false
+                                      type: array
+                                  type: object
+                                weight:
+                                  format: int32
+                                  nullable: false
+                                  type: integer
+                              type: object
+                            nullable: false
+                            type: array
+                          requiredDuringSchedulingIgnoredDuringExecution:
+                            nullable: false
+                            properties:
+                              nodeSelectorTerms:
+                                items:
+                                  properties:
+                                    matchExpressions:
+                                      items:
+                                        properties:
+                                          key:
+                                            nullable: false
+                                            type: string
+                                          operator:
+                                            nullable: false
+                                            type: string
+                                          values:
+                                            items:
+                                              nullable: false
+                                              type: string
+                                            nullable: false
+                                            type: array
+                                        type: object
+                                      nullable: false
+                                      type: array
+                                    matchFields:
+                                      items:
+                                        properties:
+                                          key:
+                                            nullable: false
+                                            type: string
+                                          operator:
+                                            nullable: false
+                                            type: string
+                                          values:
+                                            items:
+                                              nullable: false
+                                              type: string
+                                            nullable: false
+                                            type: array
+                                        type: object
+                                      nullable: false
+                                      type: array
+                                  type: object
+                                nullable: false
+                                type: array
+                            type: object
+                        type: object
+                      podAffinity:
+                        nullable: false
+                        properties:
+                          preferredDuringSchedulingIgnoredDuringExecution:
+                            items:
+                              properties:
+                                podAffinityTerm:
+                                  nullable: false
+                                  properties:
+                                    labelSelector:
+                                      nullable: false
+                                      properties:
+                                        matchExpressions:
+                                          items:
+                                            properties:
+                                              key:
+                                                nullable: false
+                                                type: string
+                                              operator:
+                                                nullable: false
+                                                type: string
+                                              values:
+                                                items:
+                                                  nullable: false
+                                                  type: string
+                                                nullable: false
+                                                type: array
+                                            type: object
+                                          nullable: false
+                                          type: array
+                                        matchLabels:
+                                          additionalProperties:
+                                            nullable: false
+                                            type: string
+                                          nullable: false
+                                          type: object
+                                      type: object
+                                    namespaceSelector:
+                                      nullable: false
+                                      properties:
+                                        matchExpressions:
+                                          items:
+                                            properties:
+                                              key:
+                                                nullable: false
+                                                type: string
+                                              operator:
+                                                nullable: false
+                                                type: string
+                                              values:
+                                                items:
+                                                  nullable: false
+                                                  type: string
+                                                nullable: false
+                                                type: array
+                                            type: object
+                                          nullable: false
+                                          type: array
+                                        matchLabels:
+                                          additionalProperties:
+                                            nullable: false
+                                            type: string
+                                          nullable: false
+                                          type: object
+                                      type: object
+                                    namespaces:
+                                      items:
+                                        nullable: false
+                                        type: string
+                                      nullable: false
+                                      type: array
+                                    topologyKey:
+                                      nullable: false
+                                      type: string
+                                  type: object
+                                weight:
+                                  format: int32
+                                  nullable: false
+                                  type: integer
+                              type: object
+                            nullable: false
+                            type: array
+                          requiredDuringSchedulingIgnoredDuringExecution:
+                            items:
+                              properties:
+                                labelSelector:
+                                  nullable: false
+                                  properties:
+                                    matchExpressions:
+                                      items:
+                                        properties:
+                                          key:
+                                            nullable: false
+                                            type: string
+                                          operator:
+                                            nullable: false
+                                            type: string
+                                          values:
+                                            items:
+                                              nullable: false
+                                              type: string
+                                            nullable: false
+                                            type: array
+                                        type: object
+                                      nullable: false
+                                      type: array
+                                    matchLabels:
+                                      additionalProperties:
+                                        nullable: false
+                                        type: string
+                                      nullable: false
+                                      type: object
+                                  type: object
+                                namespaceSelector:
+                                  nullable: false
+                                  properties:
+                                    matchExpressions:
+                                      items:
+                                        properties:
+                                          key:
+                                            nullable: false
+                                            type: string
+                                          operator:
+                                            nullable: false
+                                            type: string
+                                          values:
+                                            items:
+                                              nullable: false
+                                              type: string
+                                            nullable: false
+                                            type: array
+                                        type: object
+                                      nullable: false
+                                      type: array
+                                    matchLabels:
+                                      additionalProperties:
+                                        nullable: false
+                                        type: string
+                                      nullable: false
+                                      type: object
+                                  type: object
+                                namespaces:
+                                  items:
+                                    nullable: false
+                                    type: string
+                                  nullable: false
+                                  type: array
+                                topologyKey:
+                                  nullable: false
+                                  type: string
+                              type: object
+                            nullable: false
+                            type: array
+                        type: object
+                      podAntiAffinity:
+                        nullable: false
+                        properties:
+                          preferredDuringSchedulingIgnoredDuringExecution:
+                            items:
+                              properties:
+                                podAffinityTerm:
+                                  nullable: false
+                                  properties:
+                                    labelSelector:
+                                      nullable: false
+                                      properties:
+                                        matchExpressions:
+                                          items:
+                                            properties:
+                                              key:
+                                                nullable: false
+                                                type: string
+                                              operator:
+                                                nullable: false
+                                                type: string
+                                              values:
+                                                items:
+                                                  nullable: false
+                                                  type: string
+                                                nullable: false
+                                                type: array
+                                            type: object
+                                          nullable: false
+                                          type: array
+                                        matchLabels:
+                                          additionalProperties:
+                                            nullable: false
+                                            type: string
+                                          nullable: false
+                                          type: object
+                                      type: object
+                                    namespaceSelector:
+                                      nullable: false
+                                      properties:
+                                        matchExpressions:
+                                          items:
+                                            properties:
+                                              key:
+                                                nullable: false
+                                                type: string
+                                              operator:
+                                                nullable: false
+                                                type: string
+                                              values:
+                                                items:
+                                                  nullable: false
+                                                  type: string
+                                                nullable: false
+                                                type: array
+                                            type: object
+                                          nullable: false
+                                          type: array
+                                        matchLabels:
+                                          additionalProperties:
+                                            nullable: false
+                                            type: string
+                                          nullable: false
+                                          type: object
+                                      type: object
+                                    namespaces:
+                                      items:
+                                        nullable: false
+                                        type: string
+                                      nullable: false
+                                      type: array
+                                    topologyKey:
+                                      nullable: false
+                                      type: string
+                                  type: object
+                                weight:
+                                  format: int32
+                                  nullable: false
+                                  type: integer
+                              type: object
+                            nullable: false
+                            type: array
+                          requiredDuringSchedulingIgnoredDuringExecution:
+                            items:
+                              properties:
+                                labelSelector:
+                                  nullable: false
+                                  properties:
+                                    matchExpressions:
+                                      items:
+                                        properties:
+                                          key:
+                                            nullable: false
+                                            type: string
+                                          operator:
+                                            nullable: false
+                                            type: string
+                                          values:
+                                            items:
+                                              nullable: false
+                                              type: string
+                                            nullable: false
+                                            type: array
+                                        type: object
+                                      nullable: false
+                                      type: array
+                                    matchLabels:
+                                      additionalProperties:
+                                        nullable: false
+                                        type: string
+                                      nullable: false
+                                      type: object
+                                  type: object
+                                namespaceSelector:
+                                  nullable: false
+                                  properties:
+                                    matchExpressions:
+                                      items:
+                                        properties:
+                                          key:
+                                            nullable: false
+                                            type: string
+                                          operator:
+                                            nullable: false
+                                            type: string
+                                          values:
+                                            items:
+                                              nullable: false
+                                              type: string
+                                            nullable: false
+                                            type: array
+                                        type: object
+                                      nullable: false
+                                      type: array
+                                    matchLabels:
+                                      additionalProperties:
+                                        nullable: false
+                                        type: string
+                                      nullable: false
+                                      type: object
+                                  type: object
+                                namespaces:
+                                  items:
+                                    nullable: false
+                                    type: string
+                                  nullable: false
+                                  type: array
+                                topologyKey:
+                                  nullable: false
+                                  type: string
+                              type: object
+                            nullable: false
+                            type: array
+                        type: object
+                    type: object
+                  automountServiceAccountToken:
+                    nullable: true
+                    type: boolean
+                  containers:
+                    items:
+                      properties:
+                        args:
+                          items:
+                            nullable: false
+                            type: string
+                          nullable: false
+                          type: array
+                        command:
+                          items:
+                            nullable: false
+                            type: string
+                          nullable: false
+                          type: array
+                        env:
+                          items:
+                            properties:
+                              name:
+                                nullable: false
+                                type: string
+                              value:
+                                nullable: false
+                                type: string
+                              valueFrom:
+                                nullable: false
+                                properties:
+                                  configMapKeyRef:
+                                    nullable: false
+                                    properties:
+                                      key:
+                                        nullable: false
+                                        type: string
+                                      name:
+                                        nullable: false
+                                        type: string
+                                      optional:
+                                        nullable: true
+                                        type: boolean
+                                    type: object
+                                  fieldRef:
+                                    nullable: false
+                                    properties:
+                                      apiVersion:
+                                        nullable: false
+                                        type: string
+                                      fieldPath:
+                                        nullable: false
+                                        type: string
+                                    type: object
+                                  resourceFieldRef:
+                                    nullable: false
+                                    properties:
+                                      containerName:
+                                        nullable: false
+                                        type: string
+                                      divisor:
+                                        nullable: false
+                                        properties:
+                                          format:
+                                            enum:
+                                            - DecimalExponent
+                                            - BinarySI
+                                            - DecimalSI
+                                            nullable: false
+                                            type: string
+                                          value:
+                                            nullable: false
+                                            type: string
+                                        type: object
+                                      resource:
+                                        nullable: false
+                                        type: string
+                                    type: object
+                                  secretKeyRef:
+                                    nullable: false
+                                    properties:
+                                      key:
+                                        nullable: false
+                                        type: string
+                                      name:
+                                        nullable: false
+                                        type: string
+                                      optional:
+                                        nullable: true
+                                        type: boolean
+                                    type: object
+                                type: object
+                            type: object
+                          nullable: false
+                          type: array
+                        envFrom:
+                          items:
+                            properties:
+                              configMapRef:
+                                nullable: false
+                                properties:
+                                  name:
+                                    nullable: false
+                                    type: string
+                                  optional:
+                                    nullable: true
+                                    type: boolean
+                                type: object
+                              prefix:
+                                nullable: false
+                                type: string
+                              secretRef:
+                                nullable: false
+                                properties:
+                                  name:
+                                    nullable: false
+                                    type: string
+                                  optional:
+                                    nullable: true
+                                    type: boolean
+                                type: object
+                            type: object
+                          nullable: false
+                          type: array
+                        image:
+                          nullable: false
+                          type: string
+                        imagePullPolicy:
+                          nullable: false
+                          type: string
+                        lifecycle:
+                          nullable: false
+                          properties:
+                            postStart:
+                              nullable: false
+                              properties:
+                                exec:
+                                  nullable: false
+                                  properties:
+                                    command:
+                                      items:
+                                        nullable: false
+                                        type: string
+                                      nullable: false
+                                      type: array
+                                  type: object
+                                httpGet:
+                                  nullable: false
+                                  properties:
+                                    host:
+                                      nullable: false
+                                      type: string
+                                    httpHeaders:
+                                      items:
+                                        properties:
+                                          name:
+                                            nullable: false
+                                            type: string
+                                          value:
+                                            nullable: false
+                                            type: string
+                                        type: object
+                                      nullable: false
+                                      type: array
+                                    path:
+                                      nullable: false
+                                      type: string
+                                    port:
+                                      nullable: false
+                                      x-kubernetes-int-or-string: true
+                                    scheme:
+                                      nullable: false
+                                      type: string
+                                  type: object
+                                tcpSocket:
+                                  nullable: false
+                                  properties:
+                                    host:
+                                      nullable: false
+                                      type: string
+                                    port:
+                                      nullable: false
+                                      x-kubernetes-int-or-string: true
+                                  type: object
+                              type: object
+                            preStop:
+                              nullable: false
+                              properties:
+                                exec:
+                                  nullable: false
+                                  properties:
+                                    command:
+                                      items:
+                                        nullable: false
+                                        type: string
+                                      nullable: false
+                                      type: array
+                                  type: object
+                                httpGet:
+                                  nullable: false
+                                  properties:
+                                    host:
+                                      nullable: false
+                                      type: string
+                                    httpHeaders:
+                                      items:
+                                        properties:
+                                          name:
+                                            nullable: false
+                                            type: string
+                                          value:
+                                            nullable: false
+                                            type: string
+                                        type: object
+                                      nullable: false
+                                      type: array
+                                    path:
+                                      nullable: false
+                                      type: string
+                                    port:
+                                      nullable: false
+                                      x-kubernetes-int-or-string: true
+                                    scheme:
+                                      nullable: false
+                                      type: string
+                                  type: object
+                                tcpSocket:
+                                  nullable: false
+                                  properties:
+                                    host:
+                                      nullable: false
+                                      type: string
+                                    port:
+                                      nullable: false
+                                      x-kubernetes-int-or-string: true
+                                  type: object
+                              type: object
+                          type: object
+                        livenessProbe:
+                          nullable: false
+                          properties:
+                            exec:
+                              nullable: false
+                              properties:
+                                command:
+                                  items:
+                                    nullable: false
+                                    type: string
+                                  nullable: false
+                                  type: array
+                              type: object
+                            failureThreshold:
+                              format: int32
+                              nullable: true
+                              type: integer
+                            grpc:
+                              nullable: false
+                              properties:
+                                port:
+                                  format: int32
+                                  nullable: false
+                                  type: integer
+                                service:
+                                  nullable: false
+                                  type: string
+                              type: object
+                            httpGet:
+                              nullable: false
+                              properties:
+                                host:
+                                  nullable: false
+                                  type: string
+                                httpHeaders:
+                                  items:
+                                    properties:
+                                      name:
+                                        nullable: false
+                                        type: string
+                                      value:
+                                        nullable: false
+                                        type: string
+                                    type: object
+                                  nullable: false
+                                  type: array
+                                path:
+                                  nullable: false
+                                  type: string
+                                port:
+                                  nullable: false
+                                  x-kubernetes-int-or-string: true
+                                scheme:
+                                  nullable: false
+                                  type: string
+                              type: object
+                            initialDelaySeconds:
+                              format: int32
+                              nullable: true
+                              type: integer
+                            periodSeconds:
+                              format: int32
+                              nullable: true
+                              type: integer
+                            successThreshold:
+                              format: int32
+                              nullable: true
+                              type: integer
+                            tcpSocket:
+                              nullable: false
+                              properties:
+                                host:
+                                  nullable: false
+                                  type: string
+                                port:
+                                  nullable: false
+                                  x-kubernetes-int-or-string: true
+                              type: object
+                            terminationGracePeriodSeconds:
+                              format: int64
+                              nullable: true
+                              type: integer
+                            timeoutSeconds:
+                              format: int32
+                              nullable: true
+                              type: integer
+                          type: object
+                        name:
+                          nullable: false
+                          type: string
+                        ports:
+                          items:
+                            properties:
+                              containerPort:
+                                format: int32
+                                nullable: false
+                                type: integer
+                              hostIP:
+                                nullable: false
+                                type: string
+                              hostPort:
+                                format: int32
+                                nullable: true
+                                type: integer
+                              name:
+                                nullable: false
+                                type: string
+                              protocol:
+                                nullable: false
+                                type: string
+                            type: object
+                          nullable: false
+                          type: array
+                        readinessProbe:
+                          nullable: false
+                          properties:
+                            exec:
+                              nullable: false
+                              properties:
+                                command:
+                                  items:
+                                    nullable: false
+                                    type: string
+                                  nullable: false
+                                  type: array
+                              type: object
+                            failureThreshold:
+                              format: int32
+                              nullable: true
+                              type: integer
+                            grpc:
+                              nullable: false
+                              properties:
+                                port:
+                                  format: int32
+                                  nullable: false
+                                  type: integer
+                                service:
+                                  nullable: false
+                                  type: string
+                              type: object
+                            httpGet:
+                              nullable: false
+                              properties:
+                                host:
+                                  nullable: false
+                                  type: string
+                                httpHeaders:
+                                  items:
+                                    properties:
+                                      name:
+                                        nullable: false
+                                        type: string
+                                      value:
+                                        nullable: false
+                                        type: string
+                                    type: object
+                                  nullable: false
+                                  type: array
+                                path:
+                                  nullable: false
+                                  type: string
+                                port:
+                                  nullable: false
+                                  x-kubernetes-int-or-string: true
+                                scheme:
+                                  nullable: false
+                                  type: string
+                              type: object
+                            initialDelaySeconds:
+                              format: int32
+                              nullable: true
+                              type: integer
+                            periodSeconds:
+                              format: int32
+                              nullable: true
+                              type: integer
+                            successThreshold:
+                              format: int32
+                              nullable: true
+                              type: integer
+                            tcpSocket:
+                              nullable: false
+                              properties:
+                                host:
+                                  nullable: false
+                                  type: string
+                                port:
+                                  nullable: false
+                                  x-kubernetes-int-or-string: true
+                              type: object
+                            terminationGracePeriodSeconds:
+                              format: int64
+                              nullable: true
+                              type: integer
+                            timeoutSeconds:
+                              format: int32
+                              nullable: true
+                              type: integer
+                          type: object
+                        resizePolicy:
+                          items:
+                            properties:
+                              resourceName:
+                                nullable: false
+                                type: string
+                              restartPolicy:
+                                nullable: false
+                                type: string
+                            type: object
+                          nullable: false
+                          type: array
+                        resources:
+                          nullable: false
+                          properties:
+                            claims:
+                              items:
+                                properties:
+                                  name:
+                                    nullable: false
+                                    type: string
+                                type: object
+                              nullable: false
+                              type: array
+                            limits:
+                              additionalProperties:
+                                properties:
+                                  format:
+                                    enum:
+                                    - DecimalExponent
+                                    - BinarySI
+                                    - DecimalSI
+                                    nullable: false
+                                    type: string
+                                  value:
+                                    nullable: false
+                                    type: string
+                                type: object
+                              nullable: false
+                              type: object
+                            requests:
+                              additionalProperties:
+                                properties:
+                                  format:
+                                    enum:
+                                    - DecimalExponent
+                                    - BinarySI
+                                    - DecimalSI
+                                    nullable: false
+                                    type: string
+                                  value:
+                                    nullable: false
+                                    type: string
+                                type: object
+                              nullable: false
+                              type: object
+                          type: object
+                        restartPolicy:
+                          nullable: false
+                          type: string
+                        securityContext:
+                          nullable: false
+                          properties:
+                            allowPrivilegeEscalation:
+                              nullable: true
+                              type: boolean
+                            capabilities:
+                              nullable: false
+                              properties:
+                                add:
+                                  items:
+                                    nullable: false
+                                    type: string
+                                  nullable: false
+                                  type: array
+                                drop:
+                                  items:
+                                    nullable: false
+                                    type: string
+                                  nullable: false
+                                  type: array
+                              type: object
+                            privileged:
+                              nullable: true
+                              type: boolean
+                            procMount:
+                              nullable: false
+                              type: string
+                            readOnlyRootFilesystem:
+                              nullable: true
+                              type: boolean
+                            runAsGroup:
+                              format: int64
+                              nullable: true
+                              type: integer
+                            runAsNonRoot:
+                              nullable: true
+                              type: boolean
+                            runAsUser:
+                              format: int64
+                              nullable: true
+                              type: integer
+                            seLinuxOptions:
+                              nullable: false
+                              properties:
+                                level:
+                                  nullable: false
+                                  type: string
+                                role:
+                                  nullable: false
+                                  type: string
+                                type:
+                                  nullable: false
+                                  type: string
+                                user:
+                                  nullable: false
+                                  type: string
+                              type: object
+                            seccompProfile:
+                              nullable: false
+                              properties:
+                                localhostProfile:
+                                  nullable: false
+                                  type: string
+                                type:
+                                  nullable: false
+                                  type: string
+                              type: object
+                            windowsOptions:
+                              nullable: false
+                              properties:
+                                gmsaCredentialSpec:
+                                  nullable: false
+                                  type: string
+                                gmsaCredentialSpecName:
+                                  nullable: false
+                                  type: string
+                                hostProcess:
+                                  nullable: true
+                                  type: boolean
+                                runAsUserName:
+                                  nullable: false
+                                  type: string
+                              type: object
+                          type: object
+                        startupProbe:
+                          nullable: false
+                          properties:
+                            exec:
+                              nullable: false
+                              properties:
+                                command:
+                                  items:
+                                    nullable: false
+                                    type: string
+                                  nullable: false
+                                  type: array
+                              type: object
+                            failureThreshold:
+                              format: int32
+                              nullable: true
+                              type: integer
+                            grpc:
+                              nullable: false
+                              properties:
+                                port:
+                                  format: int32
+                                  nullable: false
+                                  type: integer
+                                service:
+                                  nullable: false
+                                  type: string
+                              type: object
+                            httpGet:
+                              nullable: false
+                              properties:
+                                host:
+                                  nullable: false
+                                  type: string
+                                httpHeaders:
+                                  items:
+                                    properties:
+                                      name:
+                                        nullable: false
+                                        type: string
+                                      value:
+                                        nullable: false
+                                        type: string
+                                    type: object
+                                  nullable: false
+                                  type: array
+                                path:
+                                  nullable: false
+                                  type: string
+                                port:
+                                  nullable: false
+                                  x-kubernetes-int-or-string: true
+                                scheme:
+                                  nullable: false
+                                  type: string
+                              type: object
+                            initialDelaySeconds:
+                              format: int32
+                              nullable: true
+                              type: integer
+                            periodSeconds:
+                              format: int32
+                              nullable: true
+                              type: integer
+                            successThreshold:
+                              format: int32
+                              nullable: true
+                              type: integer
+                            tcpSocket:
+                              nullable: false
+                              properties:
+                                host:
+                                  nullable: false
+                                  type: string
+                                port:
+                                  nullable: false
+                                  x-kubernetes-int-or-string: true
+                              type: object
+                            terminationGracePeriodSeconds:
+                              format: int64
+                              nullable: true
+                              type: integer
+                            timeoutSeconds:
+                              format: int32
+                              nullable: true
+                              type: integer
+                          type: object
+                        stdin:
+                          nullable: true
+                          type: boolean
+                        stdinOnce:
+                          nullable: true
+                          type: boolean
+                        terminationMessagePath:
+                          nullable: false
+                          type: string
+                        terminationMessagePolicy:
+                          nullable: false
+                          type: string
+                        tty:
+                          nullable: true
+                          type: boolean
+                        volumeDevices:
+                          items:
+                            properties:
+                              devicePath:
+                                nullable: false
+                                type: string
+                              name:
+                                nullable: false
+                                type: string
+                            type: object
+                          nullable: false
+                          type: array
+                        volumeMounts:
+                          items:
+                            properties:
+                              mountPath:
+                                nullable: false
+                                type: string
+                              mountPropagation:
+                                nullable: false
+                                type: string
+                              name:
+                                nullable: false
+                                type: string
+                              readOnly:
+                                nullable: true
+                                type: boolean
+                              subPath:
+                                nullable: false
+                                type: string
+                              subPathExpr:
+                                nullable: false
+                                type: string
+                            type: object
+                          nullable: false
+                          type: array
+                        workingDir:
+                          nullable: false
+                          type: string
+                      type: object
+                    nullable: false
+                    type: array
+                  dnsConfig:
+                    nullable: false
+                    properties:
+                      nameservers:
+                        items:
+                          nullable: false
+                          type: string
+                        nullable: false
+                        type: array
+                      options:
+                        items:
+                          properties:
+                            name:
+                              nullable: false
+                              type: string
+                            value:
+                              nullable: false
+                              type: string
+                          type: object
+                        nullable: false
+                        type: array
+                      searches:
+                        items:
+                          nullable: false
+                          type: string
+                        nullable: false
+                        type: array
+                    type: object
+                  dnsPolicy:
+                    nullable: false
+                    type: string
+                  enableServiceLinks:
+                    nullable: true
+                    type: boolean
+                  ephemeralContainers:
+                    items:
+                      properties:
+                        args:
+                          items:
+                            nullable: false
+                            type: string
+                          nullable: false
+                          type: array
+                        command:
+                          items:
+                            nullable: false
+                            type: string
+                          nullable: false
+                          type: array
+                        env:
+                          items:
+                            properties:
+                              name:
+                                nullable: false
+                                type: string
+                              value:
+                                nullable: false
+                                type: string
+                              valueFrom:
+                                nullable: false
+                                properties:
+                                  configMapKeyRef:
+                                    nullable: false
+                                    properties:
+                                      key:
+                                        nullable: false
+                                        type: string
+                                      name:
+                                        nullable: false
+                                        type: string
+                                      optional:
+                                        nullable: true
+                                        type: boolean
+                                    type: object
+                                  fieldRef:
+                                    nullable: false
+                                    properties:
+                                      apiVersion:
+                                        nullable: false
+                                        type: string
+                                      fieldPath:
+                                        nullable: false
+                                        type: string
+                                    type: object
+                                  resourceFieldRef:
+                                    nullable: false
+                                    properties:
+                                      containerName:
+                                        nullable: false
+                                        type: string
+                                      divisor:
+                                        nullable: false
+                                        properties:
+                                          format:
+                                            enum:
+                                            - DecimalExponent
+                                            - BinarySI
+                                            - DecimalSI
+                                            nullable: false
+                                            type: string
+                                          value:
+                                            nullable: false
+                                            type: string
+                                        type: object
+                                      resource:
+                                        nullable: false
+                                        type: string
+                                    type: object
+                                  secretKeyRef:
+                                    nullable: false
+                                    properties:
+                                      key:
+                                        nullable: false
+                                        type: string
+                                      name:
+                                        nullable: false
+                                        type: string
+                                      optional:
+                                        nullable: true
+                                        type: boolean
+                                    type: object
+                                type: object
+                            type: object
+                          nullable: false
+                          type: array
+                        envFrom:
+                          items:
+                            properties:
+                              configMapRef:
+                                nullable: false
+                                properties:
+                                  name:
+                                    nullable: false
+                                    type: string
+                                  optional:
+                                    nullable: true
+                                    type: boolean
+                                type: object
+                              prefix:
+                                nullable: false
+                                type: string
+                              secretRef:
+                                nullable: false
+                                properties:
+                                  name:
+                                    nullable: false
+                                    type: string
+                                  optional:
+                                    nullable: true
+                                    type: boolean
+                                type: object
+                            type: object
+                          nullable: false
+                          type: array
+                        image:
+                          nullable: false
+                          type: string
+                        imagePullPolicy:
+                          nullable: false
+                          type: string
+                        lifecycle:
+                          nullable: false
+                          properties:
+                            postStart:
+                              nullable: false
+                              properties:
+                                exec:
+                                  nullable: false
+                                  properties:
+                                    command:
+                                      items:
+                                        nullable: false
+                                        type: string
+                                      nullable: false
+                                      type: array
+                                  type: object
+                                httpGet:
+                                  nullable: false
+                                  properties:
+                                    host:
+                                      nullable: false
+                                      type: string
+                                    httpHeaders:
+                                      items:
+                                        properties:
+                                          name:
+                                            nullable: false
+                                            type: string
+                                          value:
+                                            nullable: false
+                                            type: string
+                                        type: object
+                                      nullable: false
+                                      type: array
+                                    path:
+                                      nullable: false
+                                      type: string
+                                    port:
+                                      nullable: false
+                                      x-kubernetes-int-or-string: true
+                                    scheme:
+                                      nullable: false
+                                      type: string
+                                  type: object
+                                tcpSocket:
+                                  nullable: false
+                                  properties:
+                                    host:
+                                      nullable: false
+                                      type: string
+                                    port:
+                                      nullable: false
+                                      x-kubernetes-int-or-string: true
+                                  type: object
+                              type: object
+                            preStop:
+                              nullable: false
+                              properties:
+                                exec:
+                                  nullable: false
+                                  properties:
+                                    command:
+                                      items:
+                                        nullable: false
+                                        type: string
+                                      nullable: false
+                                      type: array
+                                  type: object
+                                httpGet:
+                                  nullable: false
+                                  properties:
+                                    host:
+                                      nullable: false
+                                      type: string
+                                    httpHeaders:
+                                      items:
+                                        properties:
+                                          name:
+                                            nullable: false
+                                            type: string
+                                          value:
+                                            nullable: false
+                                            type: string
+                                        type: object
+                                      nullable: false
+                                      type: array
+                                    path:
+                                      nullable: false
+                                      type: string
+                                    port:
+                                      nullable: false
+                                      x-kubernetes-int-or-string: true
+                                    scheme:
+                                      nullable: false
+                                      type: string
+                                  type: object
+                                tcpSocket:
+                                  nullable: false
+                                  properties:
+                                    host:
+                                      nullable: false
+                                      type: string
+                                    port:
+                                      nullable: false
+                                      x-kubernetes-int-or-string: true
+                                  type: object
+                              type: object
+                          type: object
+                        livenessProbe:
+                          nullable: false
+                          properties:
+                            exec:
+                              nullable: false
+                              properties:
+                                command:
+                                  items:
+                                    nullable: false
+                                    type: string
+                                  nullable: false
+                                  type: array
+                              type: object
+                            failureThreshold:
+                              format: int32
+                              nullable: true
+                              type: integer
+                            grpc:
+                              nullable: false
+                              properties:
+                                port:
+                                  format: int32
+                                  nullable: false
+                                  type: integer
+                                service:
+                                  nullable: false
+                                  type: string
+                              type: object
+                            httpGet:
+                              nullable: false
+                              properties:
+                                host:
+                                  nullable: false
+                                  type: string
+                                httpHeaders:
+                                  items:
+                                    properties:
+                                      name:
+                                        nullable: false
+                                        type: string
+                                      value:
+                                        nullable: false
+                                        type: string
+                                    type: object
+                                  nullable: false
+                                  type: array
+                                path:
+                                  nullable: false
+                                  type: string
+                                port:
+                                  nullable: false
+                                  x-kubernetes-int-or-string: true
+                                scheme:
+                                  nullable: false
+                                  type: string
+                              type: object
+                            initialDelaySeconds:
+                              format: int32
+                              nullable: true
+                              type: integer
+                            periodSeconds:
+                              format: int32
+                              nullable: true
+                              type: integer
+                            successThreshold:
+                              format: int32
+                              nullable: true
+                              type: integer
+                            tcpSocket:
+                              nullable: false
+                              properties:
+                                host:
+                                  nullable: false
+                                  type: string
+                                port:
+                                  nullable: false
+                                  x-kubernetes-int-or-string: true
+                              type: object
+                            terminationGracePeriodSeconds:
+                              format: int64
+                              nullable: true
+                              type: integer
+                            timeoutSeconds:
+                              format: int32
+                              nullable: true
+                              type: integer
+                          type: object
+                        name:
+                          nullable: false
+                          type: string
+                        ports:
+                          items:
+                            properties:
+                              containerPort:
+                                format: int32
+                                nullable: false
+                                type: integer
+                              hostIP:
+                                nullable: false
+                                type: string
+                              hostPort:
+                                format: int32
+                                nullable: true
+                                type: integer
+                              name:
+                                nullable: false
+                                type: string
+                              protocol:
+                                nullable: false
+                                type: string
+                            type: object
+                          nullable: false
+                          type: array
+                        readinessProbe:
+                          nullable: false
+                          properties:
+                            exec:
+                              nullable: false
+                              properties:
+                                command:
+                                  items:
+                                    nullable: false
+                                    type: string
+                                  nullable: false
+                                  type: array
+                              type: object
+                            failureThreshold:
+                              format: int32
+                              nullable: true
+                              type: integer
+                            grpc:
+                              nullable: false
+                              properties:
+                                port:
+                                  format: int32
+                                  nullable: false
+                                  type: integer
+                                service:
+                                  nullable: false
+                                  type: string
+                              type: object
+                            httpGet:
+                              nullable: false
+                              properties:
+                                host:
+                                  nullable: false
+                                  type: string
+                                httpHeaders:
+                                  items:
+                                    properties:
+                                      name:
+                                        nullable: false
+                                        type: string
+                                      value:
+                                        nullable: false
+                                        type: string
+                                    type: object
+                                  nullable: false
+                                  type: array
+                                path:
+                                  nullable: false
+                                  type: string
+                                port:
+                                  nullable: false
+                                  x-kubernetes-int-or-string: true
+                                scheme:
+                                  nullable: false
+                                  type: string
+                              type: object
+                            initialDelaySeconds:
+                              format: int32
+                              nullable: true
+                              type: integer
+                            periodSeconds:
+                              format: int32
+                              nullable: true
+                              type: integer
+                            successThreshold:
+                              format: int32
+                              nullable: true
+                              type: integer
+                            tcpSocket:
+                              nullable: false
+                              properties:
+                                host:
+                                  nullable: false
+                                  type: string
+                                port:
+                                  nullable: false
+                                  x-kubernetes-int-or-string: true
+                              type: object
+                            terminationGracePeriodSeconds:
+                              format: int64
+                              nullable: true
+                              type: integer
+                            timeoutSeconds:
+                              format: int32
+                              nullable: true
+                              type: integer
+                          type: object
+                        resizePolicy:
+                          items:
+                            properties:
+                              resourceName:
+                                nullable: false
+                                type: string
+                              restartPolicy:
+                                nullable: false
+                                type: string
+                            type: object
+                          nullable: false
+                          type: array
+                        resources:
+                          nullable: false
+                          properties:
+                            claims:
+                              items:
+                                properties:
+                                  name:
+                                    nullable: false
+                                    type: string
+                                type: object
+                              nullable: false
+                              type: array
+                            limits:
+                              additionalProperties:
+                                properties:
+                                  format:
+                                    enum:
+                                    - DecimalExponent
+                                    - BinarySI
+                                    - DecimalSI
+                                    nullable: false
+                                    type: string
+                                  value:
+                                    nullable: false
+                                    type: string
+                                type: object
+                              nullable: false
+                              type: object
+                            requests:
+                              additionalProperties:
+                                properties:
+                                  format:
+                                    enum:
+                                    - DecimalExponent
+                                    - BinarySI
+                                    - DecimalSI
+                                    nullable: false
+                                    type: string
+                                  value:
+                                    nullable: false
+                                    type: string
+                                type: object
+                              nullable: false
+                              type: object
+                          type: object
+                        restartPolicy:
+                          nullable: false
+                          type: string
+                        securityContext:
+                          nullable: false
+                          properties:
+                            allowPrivilegeEscalation:
+                              nullable: true
+                              type: boolean
+                            capabilities:
+                              nullable: false
+                              properties:
+                                add:
+                                  items:
+                                    nullable: false
+                                    type: string
+                                  nullable: false
+                                  type: array
+                                drop:
+                                  items:
+                                    nullable: false
+                                    type: string
+                                  nullable: false
+                                  type: array
+                              type: object
+                            privileged:
+                              nullable: true
+                              type: boolean
+                            procMount:
+                              nullable: false
+                              type: string
+                            readOnlyRootFilesystem:
+                              nullable: true
+                              type: boolean
+                            runAsGroup:
+                              format: int64
+                              nullable: true
+                              type: integer
+                            runAsNonRoot:
+                              nullable: true
+                              type: boolean
+                            runAsUser:
+                              format: int64
+                              nullable: true
+                              type: integer
+                            seLinuxOptions:
+                              nullable: false
+                              properties:
+                                level:
+                                  nullable: false
+                                  type: string
+                                role:
+                                  nullable: false
+                                  type: string
+                                type:
+                                  nullable: false
+                                  type: string
+                                user:
+                                  nullable: false
+                                  type: string
+                              type: object
+                            seccompProfile:
+                              nullable: false
+                              properties:
+                                localhostProfile:
+                                  nullable: false
+                                  type: string
+                                type:
+                                  nullable: false
+                                  type: string
+                              type: object
+                            windowsOptions:
+                              nullable: false
+                              properties:
+                                gmsaCredentialSpec:
+                                  nullable: false
+                                  type: string
+                                gmsaCredentialSpecName:
+                                  nullable: false
+                                  type: string
+                                hostProcess:
+                                  nullable: true
+                                  type: boolean
+                                runAsUserName:
+                                  nullable: false
+                                  type: string
+                              type: object
+                          type: object
+                        startupProbe:
+                          nullable: false
+                          properties:
+                            exec:
+                              nullable: false
+                              properties:
+                                command:
+                                  items:
+                                    nullable: false
+                                    type: string
+                                  nullable: false
+                                  type: array
+                              type: object
+                            failureThreshold:
+                              format: int32
+                              nullable: true
+                              type: integer
+                            grpc:
+                              nullable: false
+                              properties:
+                                port:
+                                  format: int32
+                                  nullable: false
+                                  type: integer
+                                service:
+                                  nullable: false
+                                  type: string
+                              type: object
+                            httpGet:
+                              nullable: false
+                              properties:
+                                host:
+                                  nullable: false
+                                  type: string
+                                httpHeaders:
+                                  items:
+                                    properties:
+                                      name:
+                                        nullable: false
+                                        type: string
+                                      value:
+                                        nullable: false
+                                        type: string
+                                    type: object
+                                  nullable: false
+                                  type: array
+                                path:
+                                  nullable: false
+                                  type: string
+                                port:
+                                  nullable: false
+                                  x-kubernetes-int-or-string: true
+                                scheme:
+                                  nullable: false
+                                  type: string
+                              type: object
+                            initialDelaySeconds:
+                              format: int32
+                              nullable: true
+                              type: integer
+                            periodSeconds:
+                              format: int32
+                              nullable: true
+                              type: integer
+                            successThreshold:
+                              format: int32
+                              nullable: true
+                              type: integer
+                            tcpSocket:
+                              nullable: false
+                              properties:
+                                host:
+                                  nullable: false
+                                  type: string
+                                port:
+                                  nullable: false
+                                  x-kubernetes-int-or-string: true
+                              type: object
+                            terminationGracePeriodSeconds:
+                              format: int64
+                              nullable: true
+                              type: integer
+                            timeoutSeconds:
+                              format: int32
+                              nullable: true
+                              type: integer
+                          type: object
+                        stdin:
+                          nullable: true
+                          type: boolean
+                        stdinOnce:
+                          nullable: true
+                          type: boolean
+                        targetContainerName:
+                          nullable: false
+                          type: string
+                        terminationMessagePath:
+                          nullable: false
+                          type: string
+                        terminationMessagePolicy:
+                          nullable: false
+                          type: string
+                        tty:
+                          nullable: true
+                          type: boolean
+                        volumeDevices:
+                          items:
+                            properties:
+                              devicePath:
+                                nullable: false
+                                type: string
+                              name:
+                                nullable: false
+                                type: string
+                            type: object
+                          nullable: false
+                          type: array
+                        volumeMounts:
+                          items:
+                            properties:
+                              mountPath:
+                                nullable: false
+                                type: string
+                              mountPropagation:
+                                nullable: false
+                                type: string
+                              name:
+                                nullable: false
+                                type: string
+                              readOnly:
+                                nullable: true
+                                type: boolean
+                              subPath:
+                                nullable: false
+                                type: string
+                              subPathExpr:
+                                nullable: false
+                                type: string
+                            type: object
+                          nullable: false
+                          type: array
+                        workingDir:
+                          nullable: false
+                          type: string
+                      type: object
+                    nullable: false
+                    type: array
+                  hostAliases:
+                    items:
+                      properties:
+                        hostnames:
+                          items:
+                            nullable: false
+                            type: string
+                          nullable: false
+                          type: array
+                        ip:
+                          nullable: false
+                          type: string
+                      type: object
+                    nullable: false
+                    type: array
+                  hostIPC:
+                    nullable: true
+                    type: boolean
+                  hostNetwork:
+                    nullable: true
+                    type: boolean
+                  hostPID:
+                    nullable: true
+                    type: boolean
+                  hostUsers:
+                    nullable: true
+                    type: boolean
+                  hostname:
+                    nullable: false
+                    type: string
+                  imagePullSecrets:
+                    items:
+                      properties:
+                        name:
+                          nullable: false
+                          type: string
+                      type: object
+                    nullable: false
+                    type: array
+                  initContainers:
+                    items:
+                      properties:
+                        args:
+                          items:
+                            nullable: false
+                            type: string
+                          nullable: false
+                          type: array
+                        command:
+                          items:
+                            nullable: false
+                            type: string
+                          nullable: false
+                          type: array
+                        env:
+                          items:
+                            properties:
+                              name:
+                                nullable: false
+                                type: string
+                              value:
+                                nullable: false
+                                type: string
+                              valueFrom:
+                                nullable: false
+                                properties:
+                                  configMapKeyRef:
+                                    nullable: false
+                                    properties:
+                                      key:
+                                        nullable: false
+                                        type: string
+                                      name:
+                                        nullable: false
+                                        type: string
+                                      optional:
+                                        nullable: true
+                                        type: boolean
+                                    type: object
+                                  fieldRef:
+                                    nullable: false
+                                    properties:
+                                      apiVersion:
+                                        nullable: false
+                                        type: string
+                                      fieldPath:
+                                        nullable: false
+                                        type: string
+                                    type: object
+                                  resourceFieldRef:
+                                    nullable: false
+                                    properties:
+                                      containerName:
+                                        nullable: false
+                                        type: string
+                                      divisor:
+                                        nullable: false
+                                        properties:
+                                          format:
+                                            enum:
+                                            - DecimalExponent
+                                            - BinarySI
+                                            - DecimalSI
+                                            nullable: false
+                                            type: string
+                                          value:
+                                            nullable: false
+                                            type: string
+                                        type: object
+                                      resource:
+                                        nullable: false
+                                        type: string
+                                    type: object
+                                  secretKeyRef:
+                                    nullable: false
+                                    properties:
+                                      key:
+                                        nullable: false
+                                        type: string
+                                      name:
+                                        nullable: false
+                                        type: string
+                                      optional:
+                                        nullable: true
+                                        type: boolean
+                                    type: object
+                                type: object
+                            type: object
+                          nullable: false
+                          type: array
+                        envFrom:
+                          items:
+                            properties:
+                              configMapRef:
+                                nullable: false
+                                properties:
+                                  name:
+                                    nullable: false
+                                    type: string
+                                  optional:
+                                    nullable: true
+                                    type: boolean
+                                type: object
+                              prefix:
+                                nullable: false
+                                type: string
+                              secretRef:
+                                nullable: false
+                                properties:
+                                  name:
+                                    nullable: false
+                                    type: string
+                                  optional:
+                                    nullable: true
+                                    type: boolean
+                                type: object
+                            type: object
+                          nullable: false
+                          type: array
+                        image:
+                          nullable: false
+                          type: string
+                        imagePullPolicy:
+                          nullable: false
+                          type: string
+                        lifecycle:
+                          nullable: false
+                          properties:
+                            postStart:
+                              nullable: false
+                              properties:
+                                exec:
+                                  nullable: false
+                                  properties:
+                                    command:
+                                      items:
+                                        nullable: false
+                                        type: string
+                                      nullable: false
+                                      type: array
+                                  type: object
+                                httpGet:
+                                  nullable: false
+                                  properties:
+                                    host:
+                                      nullable: false
+                                      type: string
+                                    httpHeaders:
+                                      items:
+                                        properties:
+                                          name:
+                                            nullable: false
+                                            type: string
+                                          value:
+                                            nullable: false
+                                            type: string
+                                        type: object
+                                      nullable: false
+                                      type: array
+                                    path:
+                                      nullable: false
+                                      type: string
+                                    port:
+                                      nullable: false
+                                      x-kubernetes-int-or-string: true
+                                    scheme:
+                                      nullable: false
+                                      type: string
+                                  type: object
+                                tcpSocket:
+                                  nullable: false
+                                  properties:
+                                    host:
+                                      nullable: false
+                                      type: string
+                                    port:
+                                      nullable: false
+                                      x-kubernetes-int-or-string: true
+                                  type: object
+                              type: object
+                            preStop:
+                              nullable: false
+                              properties:
+                                exec:
+                                  nullable: false
+                                  properties:
+                                    command:
+                                      items:
+                                        nullable: false
+                                        type: string
+                                      nullable: false
+                                      type: array
+                                  type: object
+                                httpGet:
+                                  nullable: false
+                                  properties:
+                                    host:
+                                      nullable: false
+                                      type: string
+                                    httpHeaders:
+                                      items:
+                                        properties:
+                                          name:
+                                            nullable: false
+                                            type: string
+                                          value:
+                                            nullable: false
+                                            type: string
+                                        type: object
+                                      nullable: false
+                                      type: array
+                                    path:
+                                      nullable: false
+                                      type: string
+                                    port:
+                                      nullable: false
+                                      x-kubernetes-int-or-string: true
+                                    scheme:
+                                      nullable: false
+                                      type: string
+                                  type: object
+                                tcpSocket:
+                                  nullable: false
+                                  properties:
+                                    host:
+                                      nullable: false
+                                      type: string
+                                    port:
+                                      nullable: false
+                                      x-kubernetes-int-or-string: true
+                                  type: object
+                              type: object
+                          type: object
+                        livenessProbe:
+                          nullable: false
+                          properties:
+                            exec:
+                              nullable: false
+                              properties:
+                                command:
+                                  items:
+                                    nullable: false
+                                    type: string
+                                  nullable: false
+                                  type: array
+                              type: object
+                            failureThreshold:
+                              format: int32
+                              nullable: true
+                              type: integer
+                            grpc:
+                              nullable: false
+                              properties:
+                                port:
+                                  format: int32
+                                  nullable: false
+                                  type: integer
+                                service:
+                                  nullable: false
+                                  type: string
+                              type: object
+                            httpGet:
+                              nullable: false
+                              properties:
+                                host:
+                                  nullable: false
+                                  type: string
+                                httpHeaders:
+                                  items:
+                                    properties:
+                                      name:
+                                        nullable: false
+                                        type: string
+                                      value:
+                                        nullable: false
+                                        type: string
+                                    type: object
+                                  nullable: false
+                                  type: array
+                                path:
+                                  nullable: false
+                                  type: string
+                                port:
+                                  nullable: false
+                                  x-kubernetes-int-or-string: true
+                                scheme:
+                                  nullable: false
+                                  type: string
+                              type: object
+                            initialDelaySeconds:
+                              format: int32
+                              nullable: true
+                              type: integer
+                            periodSeconds:
+                              format: int32
+                              nullable: true
+                              type: integer
+                            successThreshold:
+                              format: int32
+                              nullable: true
+                              type: integer
+                            tcpSocket:
+                              nullable: false
+                              properties:
+                                host:
+                                  nullable: false
+                                  type: string
+                                port:
+                                  nullable: false
+                                  x-kubernetes-int-or-string: true
+                              type: object
+                            terminationGracePeriodSeconds:
+                              format: int64
+                              nullable: true
+                              type: integer
+                            timeoutSeconds:
+                              format: int32
+                              nullable: true
+                              type: integer
+                          type: object
+                        name:
+                          nullable: false
+                          type: string
+                        ports:
+                          items:
+                            properties:
+                              containerPort:
+                                format: int32
+                                nullable: false
+                                type: integer
+                              hostIP:
+                                nullable: false
+                                type: string
+                              hostPort:
+                                format: int32
+                                nullable: true
+                                type: integer
+                              name:
+                                nullable: false
+                                type: string
+                              protocol:
+                                nullable: false
+                                type: string
+                            type: object
+                          nullable: false
+                          type: array
+                        readinessProbe:
+                          nullable: false
+                          properties:
+                            exec:
+                              nullable: false
+                              properties:
+                                command:
+                                  items:
+                                    nullable: false
+                                    type: string
+                                  nullable: false
+                                  type: array
+                              type: object
+                            failureThreshold:
+                              format: int32
+                              nullable: true
+                              type: integer
+                            grpc:
+                              nullable: false
+                              properties:
+                                port:
+                                  format: int32
+                                  nullable: false
+                                  type: integer
+                                service:
+                                  nullable: false
+                                  type: string
+                              type: object
+                            httpGet:
+                              nullable: false
+                              properties:
+                                host:
+                                  nullable: false
+                                  type: string
+                                httpHeaders:
+                                  items:
+                                    properties:
+                                      name:
+                                        nullable: false
+                                        type: string
+                                      value:
+                                        nullable: false
+                                        type: string
+                                    type: object
+                                  nullable: false
+                                  type: array
+                                path:
+                                  nullable: false
+                                  type: string
+                                port:
+                                  nullable: false
+                                  x-kubernetes-int-or-string: true
+                                scheme:
+                                  nullable: false
+                                  type: string
+                              type: object
+                            initialDelaySeconds:
+                              format: int32
+                              nullable: true
+                              type: integer
+                            periodSeconds:
+                              format: int32
+                              nullable: true
+                              type: integer
+                            successThreshold:
+                              format: int32
+                              nullable: true
+                              type: integer
+                            tcpSocket:
+                              nullable: false
+                              properties:
+                                host:
+                                  nullable: false
+                                  type: string
+                                port:
+                                  nullable: false
+                                  x-kubernetes-int-or-string: true
+                              type: object
+                            terminationGracePeriodSeconds:
+                              format: int64
+                              nullable: true
+                              type: integer
+                            timeoutSeconds:
+                              format: int32
+                              nullable: true
+                              type: integer
+                          type: object
+                        resizePolicy:
+                          items:
+                            properties:
+                              resourceName:
+                                nullable: false
+                                type: string
+                              restartPolicy:
+                                nullable: false
+                                type: string
+                            type: object
+                          nullable: false
+                          type: array
+                        resources:
+                          nullable: false
+                          properties:
+                            claims:
+                              items:
+                                properties:
+                                  name:
+                                    nullable: false
+                                    type: string
+                                type: object
+                              nullable: false
+                              type: array
+                            limits:
+                              additionalProperties:
+                                properties:
+                                  format:
+                                    enum:
+                                    - DecimalExponent
+                                    - BinarySI
+                                    - DecimalSI
+                                    nullable: false
+                                    type: string
+                                  value:
+                                    nullable: false
+                                    type: string
+                                type: object
+                              nullable: false
+                              type: object
+                            requests:
+                              additionalProperties:
+                                properties:
+                                  format:
+                                    enum:
+                                    - DecimalExponent
+                                    - BinarySI
+                                    - DecimalSI
+                                    nullable: false
+                                    type: string
+                                  value:
+                                    nullable: false
+                                    type: string
+                                type: object
+                              nullable: false
+                              type: object
+                          type: object
+                        restartPolicy:
+                          nullable: false
+                          type: string
+                        securityContext:
+                          nullable: false
+                          properties:
+                            allowPrivilegeEscalation:
+                              nullable: true
+                              type: boolean
+                            capabilities:
+                              nullable: false
+                              properties:
+                                add:
+                                  items:
+                                    nullable: false
+                                    type: string
+                                  nullable: false
+                                  type: array
+                                drop:
+                                  items:
+                                    nullable: false
+                                    type: string
+                                  nullable: false
+                                  type: array
+                              type: object
+                            privileged:
+                              nullable: true
+                              type: boolean
+                            procMount:
+                              nullable: false
+                              type: string
+                            readOnlyRootFilesystem:
+                              nullable: true
+                              type: boolean
+                            runAsGroup:
+                              format: int64
+                              nullable: true
+                              type: integer
+                            runAsNonRoot:
+                              nullable: true
+                              type: boolean
+                            runAsUser:
+                              format: int64
+                              nullable: true
+                              type: integer
+                            seLinuxOptions:
+                              nullable: false
+                              properties:
+                                level:
+                                  nullable: false
+                                  type: string
+                                role:
+                                  nullable: false
+                                  type: string
+                                type:
+                                  nullable: false
+                                  type: string
+                                user:
+                                  nullable: false
+                                  type: string
+                              type: object
+                            seccompProfile:
+                              nullable: false
+                              properties:
+                                localhostProfile:
+                                  nullable: false
+                                  type: string
+                                type:
+                                  nullable: false
+                                  type: string
+                              type: object
+                            windowsOptions:
+                              nullable: false
+                              properties:
+                                gmsaCredentialSpec:
+                                  nullable: false
+                                  type: string
+                                gmsaCredentialSpecName:
+                                  nullable: false
+                                  type: string
+                                hostProcess:
+                                  nullable: true
+                                  type: boolean
+                                runAsUserName:
+                                  nullable: false
+                                  type: string
+                              type: object
+                          type: object
+                        startupProbe:
+                          nullable: false
+                          properties:
+                            exec:
+                              nullable: false
+                              properties:
+                                command:
+                                  items:
+                                    nullable: false
+                                    type: string
+                                  nullable: false
+                                  type: array
+                              type: object
+                            failureThreshold:
+                              format: int32
+                              nullable: true
+                              type: integer
+                            grpc:
+                              nullable: false
+                              properties:
+                                port:
+                                  format: int32
+                                  nullable: false
+                                  type: integer
+                                service:
+                                  nullable: false
+                                  type: string
+                              type: object
+                            httpGet:
+                              nullable: false
+                              properties:
+                                host:
+                                  nullable: false
+                                  type: string
+                                httpHeaders:
+                                  items:
+                                    properties:
+                                      name:
+                                        nullable: false
+                                        type: string
+                                      value:
+                                        nullable: false
+                                        type: string
+                                    type: object
+                                  nullable: false
+                                  type: array
+                                path:
+                                  nullable: false
+                                  type: string
+                                port:
+                                  nullable: false
+                                  x-kubernetes-int-or-string: true
+                                scheme:
+                                  nullable: false
+                                  type: string
+                              type: object
+                            initialDelaySeconds:
+                              format: int32
+                              nullable: true
+                              type: integer
+                            periodSeconds:
+                              format: int32
+                              nullable: true
+                              type: integer
+                            successThreshold:
+                              format: int32
+                              nullable: true
+                              type: integer
+                            tcpSocket:
+                              nullable: false
+                              properties:
+                                host:
+                                  nullable: false
+                                  type: string
+                                port:
+                                  nullable: false
+                                  x-kubernetes-int-or-string: true
+                              type: object
+                            terminationGracePeriodSeconds:
+                              format: int64
+                              nullable: true
+                              type: integer
+                            timeoutSeconds:
+                              format: int32
+                              nullable: true
+                              type: integer
+                          type: object
+                        stdin:
+                          nullable: true
+                          type: boolean
+                        stdinOnce:
+                          nullable: true
+                          type: boolean
+                        terminationMessagePath:
+                          nullable: false
+                          type: string
+                        terminationMessagePolicy:
+                          nullable: false
+                          type: string
+                        tty:
+                          nullable: true
+                          type: boolean
+                        volumeDevices:
+                          items:
+                            properties:
+                              devicePath:
+                                nullable: false
+                                type: string
+                              name:
+                                nullable: false
+                                type: string
+                            type: object
+                          nullable: false
+                          type: array
+                        volumeMounts:
+                          items:
+                            properties:
+                              mountPath:
+                                nullable: false
+                                type: string
+                              mountPropagation:
+                                nullable: false
+                                type: string
+                              name:
+                                nullable: false
+                                type: string
+                              readOnly:
+                                nullable: true
+                                type: boolean
+                              subPath:
+                                nullable: false
+                                type: string
+                              subPathExpr:
+                                nullable: false
+                                type: string
+                            type: object
+                          nullable: false
+                          type: array
+                        workingDir:
+                          nullable: false
+                          type: string
+                      type: object
+                    nullable: false
+                    type: array
+                  nodeName:
+                    nullable: false
+                    type: string
+                  nodeSelector:
+                    additionalProperties:
+                      nullable: false
+                      type: string
+                    nullable: false
+                    type: object
+                  os:
+                    nullable: false
+                    properties:
+                      name:
+                        nullable: false
+                        type: string
+                    type: object
+                  overhead:
+                    additionalProperties:
+                      properties:
+                        format:
+                          enum:
+                          - DecimalExponent
+                          - BinarySI
+                          - DecimalSI
+                          nullable: false
+                          type: string
+                        value:
+                          nullable: false
+                          type: string
+                      type: object
+                    nullable: false
+                    type: object
+                  preemptionPolicy:
+                    nullable: false
+                    type: string
+                  priority:
+                    format: int32
+                    nullable: true
+                    type: integer
+                  priorityClassName:
+                    nullable: false
+                    type: string
+                  readinessGates:
+                    items:
+                      properties:
+                        conditionType:
+                          nullable: false
+                          type: string
+                      type: object
+                    nullable: false
+                    type: array
+                  resourceClaims:
+                    items:
+                      properties:
+                        name:
+                          nullable: false
+                          type: string
+                        source:
+                          nullable: false
+                          properties:
+                            resourceClaimName:
+                              nullable: false
+                              type: string
+                            resourceClaimTemplateName:
+                              nullable: false
+                              type: string
+                          type: object
+                      type: object
+                    nullable: false
+                    type: array
+                  restartPolicy:
+                    nullable: false
+                    type: string
+                  runtimeClassName:
+                    nullable: false
+                    type: string
+                  schedulerName:
+                    nullable: false
+                    type: string
+                  schedulingGates:
+                    items:
+                      properties:
+                        name:
+                          nullable: false
+                          type: string
+                      type: object
+                    nullable: false
+                    type: array
+                  securityContext:
+                    nullable: false
+                    properties:
+                      fsGroup:
+                        format: int64
+                        nullable: true
+                        type: integer
+                      fsGroupChangePolicy:
+                        nullable: false
+                        type: string
+                      runAsGroup:
+                        format: int64
+                        nullable: true
+                        type: integer
+                      runAsNonRoot:
+                        nullable: true
+                        type: boolean
+                      runAsUser:
+                        format: int64
+                        nullable: true
+                        type: integer
+                      seLinuxOptions:
+                        nullable: false
+                        properties:
+                          level:
+                            nullable: false
+                            type: string
+                          role:
+                            nullable: false
+                            type: string
+                          type:
+                            nullable: false
+                            type: string
+                          user:
+                            nullable: false
+                            type: string
+                        type: object
+                      seccompProfile:
+                        nullable: false
+                        properties:
+                          localhostProfile:
+                            nullable: false
+                            type: string
+                          type:
+                            nullable: false
+                            type: string
+                        type: object
+                      supplementalGroups:
+                        items:
+                          format: int64
+                          nullable: true
+                          type: integer
+                        nullable: true
+                        type: array
+                      sysctls:
+                        items:
+                          properties:
+                            name:
+                              nullable: false
+                              type: string
+                            value:
+                              nullable: false
+                              type: string
+                          type: object
+                        nullable: false
+                        type: array
+                      windowsOptions:
+                        nullable: false
+                        properties:
+                          gmsaCredentialSpec:
+                            nullable: false
+                            type: string
+                          gmsaCredentialSpecName:
+                            nullable: false
+                            type: string
+                          hostProcess:
+                            nullable: true
+                            type: boolean
+                          runAsUserName:
+                            nullable: false
+                            type: string
+                        type: object
+                    type: object
+                  serviceAccount:
+                    nullable: false
+                    type: string
+                  serviceAccountName:
+                    nullable: false
+                    type: string
+                  setHostnameAsFQDN:
+                    nullable: true
+                    type: boolean
+                  shareProcessNamespace:
+                    nullable: true
+                    type: boolean
+                  subdomain:
+                    nullable: false
+                    type: string
+                  terminationGracePeriodSeconds:
+                    format: int64
+                    nullable: true
+                    type: integer
+                  tolerations:
+                    items:
+                      properties:
+                        effect:
+                          nullable: false
+                          type: string
+                        key:
+                          nullable: false
+                          type: string
+                        operator:
+                          nullable: false
+                          type: string
+                        tolerationSeconds:
+                          format: int64
+                          nullable: true
+                          type: integer
+                        value:
+                          nullable: false
+                          type: string
+                      type: object
+                    nullable: false
+                    type: array
+                  topologySpreadConstraints:
+                    items:
+                      properties:
+                        labelSelector:
+                          nullable: false
+                          properties:
+                            matchExpressions:
+                              items:
+                                properties:
+                                  key:
+                                    nullable: false
+                                    type: string
+                                  operator:
+                                    nullable: false
+                                    type: string
+                                  values:
+                                    items:
+                                      nullable: false
+                                      type: string
+                                    nullable: false
+                                    type: array
+                                type: object
+                              nullable: false
+                              type: array
+                            matchLabels:
+                              additionalProperties:
+                                nullable: false
+                                type: string
+                              nullable: false
+                              type: object
+                          type: object
+                        matchLabelKeys:
+                          items:
+                            nullable: false
+                            type: string
+                          nullable: false
+                          type: array
+                        maxSkew:
+                          format: int32
+                          nullable: false
+                          type: integer
+                        minDomains:
+                          format: int32
+                          nullable: true
+                          type: integer
+                        nodeAffinityPolicy:
+                          nullable: false
+                          type: string
+                        nodeTaintsPolicy:
+                          nullable: false
+                          type: string
+                        topologyKey:
+                          nullable: false
+                          type: string
+                        whenUnsatisfiable:
+                          nullable: false
+                          type: string
+                      type: object
+                    nullable: false
+                    type: array
+                  volumes:
+                    items:
+                      properties:
+                        awsElasticBlockStore:
+                          nullable: false
+                          properties:
+                            fsType:
+                              nullable: false
+                              type: string
+                            partition:
+                              format: int32
+                              nullable: true
+                              type: integer
+                            readOnly:
+                              nullable: true
+                              type: boolean
+                            volumeID:
+                              nullable: false
+                              type: string
+                          type: object
+                        azureDisk:
+                          nullable: false
+                          properties:
+                            cachingMode:
+                              nullable: false
+                              type: string
+                            diskName:
+                              nullable: false
+                              type: string
+                            diskURI:
+                              nullable: false
+                              type: string
+                            fsType:
+                              nullable: false
+                              type: string
+                            kind:
+                              nullable: false
+                              type: string
+                            readOnly:
+                              nullable: true
+                              type: boolean
+                          type: object
+                        azureFile:
+                          nullable: false
+                          properties:
+                            readOnly:
+                              nullable: true
+                              type: boolean
+                            secretName:
+                              nullable: false
+                              type: string
+                            shareName:
+                              nullable: false
+                              type: string
+                          type: object
+                        cephfs:
+                          nullable: false
+                          properties:
+                            monitors:
+                              items:
+                                nullable: false
+                                type: string
+                              nullable: false
+                              type: array
+                            path:
+                              nullable: false
+                              type: string
+                            readOnly:
+                              nullable: true
+                              type: boolean
+                            secretFile:
+                              nullable: false
+                              type: string
+                            secretRef:
+                              nullable: false
+                              properties:
+                                name:
+                                  nullable: false
+                                  type: string
+                              type: object
+                            user:
+                              nullable: false
+                              type: string
+                          type: object
+                        cinder:
+                          nullable: false
+                          properties:
+                            fsType:
+                              nullable: false
+                              type: string
+                            readOnly:
+                              nullable: true
+                              type: boolean
+                            secretRef:
+                              nullable: false
+                              properties:
+                                name:
+                                  nullable: false
+                                  type: string
+                              type: object
+                            volumeID:
+                              nullable: false
+                              type: string
+                          type: object
+                        configMap:
+                          nullable: false
+                          properties:
+                            defaultMode:
+                              format: int32
+                              nullable: true
+                              type: integer
+                            items:
+                              items:
+                                properties:
+                                  key:
+                                    nullable: false
+                                    type: string
+                                  mode:
+                                    format: int32
+                                    nullable: true
+                                    type: integer
+                                  path:
+                                    nullable: false
+                                    type: string
+                                type: object
+                              nullable: false
+                              type: array
+                            name:
+                              nullable: false
+                              type: string
+                            optional:
+                              nullable: true
+                              type: boolean
+                          type: object
+                        csi:
+                          nullable: false
+                          properties:
+                            driver:
+                              nullable: false
+                              type: string
+                            fsType:
+                              nullable: false
+                              type: string
+                            nodePublishSecretRef:
+                              nullable: false
+                              properties:
+                                name:
+                                  nullable: false
+                                  type: string
+                              type: object
+                            readOnly:
+                              nullable: true
+                              type: boolean
+                            volumeAttributes:
+                              additionalProperties:
+                                nullable: false
+                                type: string
+                              nullable: false
+                              type: object
+                          type: object
+                        downwardAPI:
+                          nullable: false
+                          properties:
+                            defaultMode:
+                              format: int32
+                              nullable: true
+                              type: integer
+                            items:
+                              items:
+                                properties:
+                                  fieldRef:
+                                    nullable: false
+                                    properties:
+                                      apiVersion:
+                                        nullable: false
+                                        type: string
+                                      fieldPath:
+                                        nullable: false
+                                        type: string
+                                    type: object
+                                  mode:
+                                    format: int32
+                                    nullable: true
+                                    type: integer
+                                  path:
+                                    nullable: false
+                                    type: string
+                                  resourceFieldRef:
+                                    nullable: false
+                                    properties:
+                                      containerName:
+                                        nullable: false
+                                        type: string
+                                      divisor:
+                                        nullable: false
+                                        properties:
+                                          format:
+                                            enum:
+                                            - DecimalExponent
+                                            - BinarySI
+                                            - DecimalSI
+                                            nullable: false
+                                            type: string
+                                          value:
+                                            nullable: false
+                                            type: string
+                                        type: object
+                                      resource:
+                                        nullable: false
+                                        type: string
+                                    type: object
+                                type: object
+                              nullable: false
+                              type: array
+                          type: object
+                        emptyDir:
+                          nullable: false
+                          properties:
+                            medium:
+                              nullable: false
+                              type: string
+                            sizeLimit:
+                              nullable: false
+                              properties:
+                                format:
+                                  enum:
+                                  - DecimalExponent
+                                  - BinarySI
+                                  - DecimalSI
+                                  nullable: false
+                                  type: string
+                                value:
+                                  nullable: false
+                                  type: string
+                              type: object
+                          type: object
+                        ephemeral:
+                          nullable: false
+                          properties:
+                            volumeClaimTemplate:
+                              nullable: false
+                              properties:
+                                metadata:
+                                  nullable: false
+                                  type: object
+                                spec:
+                                  nullable: false
+                                  properties:
+                                    accessModes:
+                                      items:
+                                        nullable: false
+                                        type: string
+                                      nullable: false
+                                      type: array
+                                    dataSource:
+                                      nullable: false
+                                      properties:
+                                        apiGroup:
+                                          nullable: false
+                                          type: string
+                                        kind:
+                                          nullable: false
+                                          type: string
+                                        name:
+                                          nullable: false
+                                          type: string
+                                      type: object
+                                    dataSourceRef:
+                                      nullable: false
+                                      properties:
+                                        apiGroup:
+                                          nullable: false
+                                          type: string
+                                        kind:
+                                          nullable: false
+                                          type: string
+                                        name:
+                                          nullable: false
+                                          type: string
+                                        namespace:
+                                          nullable: false
+                                          type: string
+                                      type: object
+                                    resources:
+                                      nullable: false
+                                      properties:
+                                        claims:
+                                          items:
+                                            properties:
+                                              name:
+                                                nullable: false
+                                                type: string
+                                            type: object
+                                          nullable: false
+                                          type: array
+                                        limits:
+                                          additionalProperties:
+                                            properties:
+                                              format:
+                                                enum:
+                                                - DecimalExponent
+                                                - BinarySI
+                                                - DecimalSI
+                                                nullable: false
+                                                type: string
+                                              value:
+                                                nullable: false
+                                                type: string
+                                            type: object
+                                          nullable: false
+                                          type: object
+                                        requests:
+                                          additionalProperties:
+                                            properties:
+                                              format:
+                                                enum:
+                                                - DecimalExponent
+                                                - BinarySI
+                                                - DecimalSI
+                                                nullable: false
+                                                type: string
+                                              value:
+                                                nullable: false
+                                                type: string
+                                            type: object
+                                          nullable: false
+                                          type: object
+                                      type: object
+                                    selector:
+                                      nullable: false
+                                      properties:
+                                        matchExpressions:
+                                          items:
+                                            properties:
+                                              key:
+                                                nullable: false
+                                                type: string
+                                              operator:
+                                                nullable: false
+                                                type: string
+                                              values:
+                                                items:
+                                                  nullable: false
+                                                  type: string
+                                                nullable: false
+                                                type: array
+                                            type: object
+                                          nullable: false
+                                          type: array
+                                        matchLabels:
+                                          additionalProperties:
+                                            nullable: false
+                                            type: string
+                                          nullable: false
+                                          type: object
+                                      type: object
+                                    storageClassName:
+                                      nullable: false
+                                      type: string
+                                    volumeMode:
+                                      nullable: false
+                                      type: string
+                                    volumeName:
+                                      nullable: false
+                                      type: string
+                                  type: object
+                              type: object
+                          type: object
+                        fc:
+                          nullable: false
+                          properties:
+                            fsType:
+                              nullable: false
+                              type: string
+                            lun:
+                              format: int32
+                              nullable: true
+                              type: integer
+                            readOnly:
+                              nullable: true
+                              type: boolean
+                            targetWWNs:
+                              items:
+                                nullable: false
+                                type: string
+                              nullable: false
+                              type: array
+                            wwids:
+                              items:
+                                nullable: false
+                                type: string
+                              nullable: false
+                              type: array
+                          type: object
+                        flexVolume:
+                          nullable: false
+                          properties:
+                            driver:
+                              nullable: false
+                              type: string
+                            fsType:
+                              nullable: false
+                              type: string
+                            options:
+                              additionalProperties:
+                                nullable: false
+                                type: string
+                              nullable: false
+                              type: object
+                            readOnly:
+                              nullable: true
+                              type: boolean
+                            secretRef:
+                              nullable: false
+                              properties:
+                                name:
+                                  nullable: false
+                                  type: string
+                              type: object
+                          type: object
+                        flocker:
+                          nullable: false
+                          properties:
+                            datasetName:
+                              nullable: false
+                              type: string
+                            datasetUUID:
+                              nullable: false
+                              type: string
+                          type: object
+                        gcePersistentDisk:
+                          nullable: false
+                          properties:
+                            fsType:
+                              nullable: false
+                              type: string
+                            partition:
+                              format: int32
+                              nullable: true
+                              type: integer
+                            pdName:
+                              nullable: false
+                              type: string
+                            readOnly:
+                              nullable: true
+                              type: boolean
+                          type: object
+                        gitRepo:
+                          nullable: false
+                          properties:
+                            directory:
+                              nullable: false
+                              type: string
+                            repository:
+                              nullable: false
+                              type: string
+                            revision:
+                              nullable: false
+                              type: string
+                          type: object
+                        glusterfs:
+                          nullable: false
+                          properties:
+                            endpoints:
+                              nullable: false
+                              type: string
+                            path:
+                              nullable: false
+                              type: string
+                            readOnly:
+                              nullable: true
+                              type: boolean
+                          type: object
+                        hostPath:
+                          nullable: false
+                          properties:
+                            path:
+                              nullable: false
+                              type: string
+                            type:
+                              nullable: false
+                              type: string
+                          type: object
+                        iscsi:
+                          nullable: false
+                          properties:
+                            chapAuthDiscovery:
+                              nullable: true
+                              type: boolean
+                            chapAuthSession:
+                              nullable: true
+                              type: boolean
+                            fsType:
+                              nullable: false
+                              type: string
+                            initiatorName:
+                              nullable: false
+                              type: string
+                            iqn:
+                              nullable: false
+                              type: string
+                            iscsiInterface:
+                              nullable: false
+                              type: string
+                            lun:
+                              format: int32
+                              nullable: false
+                              type: integer
+                            portals:
+                              items:
+                                nullable: false
+                                type: string
+                              nullable: false
+                              type: array
+                            readOnly:
+                              nullable: true
+                              type: boolean
+                            secretRef:
+                              nullable: false
+                              properties:
+                                name:
+                                  nullable: false
+                                  type: string
+                              type: object
+                            targetPortal:
+                              nullable: false
+                              type: string
+                          type: object
+                        name:
+                          nullable: false
+                          type: string
+                        nfs:
+                          nullable: false
+                          properties:
+                            path:
+                              nullable: false
+                              type: string
+                            readOnly:
+                              nullable: true
+                              type: boolean
+                            server:
+                              nullable: false
+                              type: string
+                          type: object
+                        persistentVolumeClaim:
+                          nullable: false
+                          properties:
+                            claimName:
+                              nullable: false
+                              type: string
+                            readOnly:
+                              nullable: true
+                              type: boolean
+                          type: object
+                        photonPersistentDisk:
+                          nullable: false
+                          properties:
+                            fsType:
+                              nullable: false
+                              type: string
+                            pdID:
+                              nullable: false
+                              type: string
+                          type: object
+                        portworxVolume:
+                          nullable: false
+                          properties:
+                            fsType:
+                              nullable: false
+                              type: string
+                            readOnly:
+                              nullable: true
+                              type: boolean
+                            volumeID:
+                              nullable: false
+                              type: string
+                          type: object
+                        projected:
+                          nullable: false
+                          properties:
+                            defaultMode:
+                              format: int32
+                              nullable: true
+                              type: integer
+                            sources:
+                              items:
+                                properties:
+                                  configMap:
+                                    nullable: false
+                                    properties:
+                                      items:
+                                        items:
+                                          properties:
+                                            key:
+                                              nullable: false
+                                              type: string
+                                            mode:
+                                              format: int32
+                                              nullable: true
+                                              type: integer
+                                            path:
+                                              nullable: false
+                                              type: string
+                                          type: object
+                                        nullable: false
+                                        type: array
+                                      name:
+                                        nullable: false
+                                        type: string
+                                      optional:
+                                        nullable: true
+                                        type: boolean
+                                    type: object
+                                  downwardAPI:
+                                    nullable: false
+                                    properties:
+                                      items:
+                                        items:
+                                          properties:
+                                            fieldRef:
+                                              nullable: false
+                                              properties:
+                                                apiVersion:
+                                                  nullable: false
+                                                  type: string
+                                                fieldPath:
+                                                  nullable: false
+                                                  type: string
+                                              type: object
+                                            mode:
+                                              format: int32
+                                              nullable: true
+                                              type: integer
+                                            path:
+                                              nullable: false
+                                              type: string
+                                            resourceFieldRef:
+                                              nullable: false
+                                              properties:
+                                                containerName:
+                                                  nullable: false
+                                                  type: string
+                                                divisor:
+                                                  nullable: false
+                                                  properties:
+                                                    format:
+                                                      enum:
+                                                      - DecimalExponent
+                                                      - BinarySI
+                                                      - DecimalSI
+                                                      nullable: false
+                                                      type: string
+                                                    value:
+                                                      nullable: false
+                                                      type: string
+                                                  type: object
+                                                resource:
+                                                  nullable: false
+                                                  type: string
+                                              type: object
+                                          type: object
+                                        nullable: false
+                                        type: array
+                                    type: object
+                                  secret:
+                                    nullable: false
+                                    properties:
+                                      items:
+                                        items:
+                                          properties:
+                                            key:
+                                              nullable: false
+                                              type: string
+                                            mode:
+                                              format: int32
+                                              nullable: true
+                                              type: integer
+                                            path:
+                                              nullable: false
+                                              type: string
+                                          type: object
+                                        nullable: false
+                                        type: array
+                                      name:
+                                        nullable: false
+                                        type: string
+                                      optional:
+                                        nullable: true
+                                        type: boolean
+                                    type: object
+                                  serviceAccountToken:
+                                    nullable: false
+                                    properties:
+                                      audience:
+                                        nullable: false
+                                        type: string
+                                      expirationSeconds:
+                                        format: int64
+                                        nullable: true
+                                        type: integer
+                                      path:
+                                        nullable: false
+                                        type: string
+                                    type: object
+                                type: object
+                              nullable: false
+                              type: array
+                          type: object
+                        quobyte:
+                          nullable: false
+                          properties:
+                            group:
+                              nullable: false
+                              type: string
+                            readOnly:
+                              nullable: true
+                              type: boolean
+                            registry:
+                              nullable: false
+                              type: string
+                            tenant:
+                              nullable: false
+                              type: string
+                            user:
+                              nullable: false
+                              type: string
+                            volume:
+                              nullable: false
+                              type: string
+                          type: object
+                        rbd:
+                          nullable: false
+                          properties:
+                            fsType:
+                              nullable: false
+                              type: string
+                            image:
+                              nullable: false
+                              type: string
+                            keyring:
+                              nullable: false
+                              type: string
+                            monitors:
+                              items:
+                                nullable: false
+                                type: string
+                              nullable: false
+                              type: array
+                            pool:
+                              nullable: false
+                              type: string
+                            readOnly:
+                              nullable: true
+                              type: boolean
+                            secretRef:
+                              nullable: false
+                              properties:
+                                name:
+                                  nullable: false
+                                  type: string
+                              type: object
+                            user:
+                              nullable: false
+                              type: string
+                          type: object
+                        scaleIO:
+                          nullable: false
+                          properties:
+                            fsType:
+                              nullable: false
+                              type: string
+                            gateway:
+                              nullable: false
+                              type: string
+                            protectionDomain:
+                              nullable: false
+                              type: string
+                            readOnly:
+                              nullable: true
+                              type: boolean
+                            secretRef:
+                              nullable: false
+                              properties:
+                                name:
+                                  nullable: false
+                                  type: string
+                              type: object
+                            sslEnabled:
+                              nullable: true
+                              type: boolean
+                            storageMode:
+                              nullable: false
+                              type: string
+                            storagePool:
+                              nullable: false
+                              type: string
+                            system:
+                              nullable: false
+                              type: string
+                            volumeName:
+                              nullable: false
+                              type: string
+                          type: object
+                        secret:
+                          nullable: false
+                          properties:
+                            defaultMode:
+                              format: int32
+                              nullable: true
+                              type: integer
+                            items:
+                              items:
+                                properties:
+                                  key:
+                                    nullable: false
+                                    type: string
+                                  mode:
+                                    format: int32
+                                    nullable: true
+                                    type: integer
+                                  path:
+                                    nullable: false
+                                    type: string
+                                type: object
+                              nullable: false
+                              type: array
+                            optional:
+                              nullable: true
+                              type: boolean
+                            secretName:
+                              nullable: false
+                              type: string
+                          type: object
+                        storageos:
+                          nullable: false
+                          properties:
+                            fsType:
+                              nullable: false
+                              type: string
+                            readOnly:
+                              nullable: true
+                              type: boolean
+                            secretRef:
+                              nullable: false
+                              properties:
+                                name:
+                                  nullable: false
+                                  type: string
+                              type: object
+                            volumeName:
+                              nullable: false
+                              type: string
+                            volumeNamespace:
+                              nullable: false
+                              type: string
+                          type: object
+                        vsphereVolume:
+                          nullable: false
+                          properties:
+                            fsType:
+                              nullable: false
+                              type: string
+                            storagePolicyID:
+                              nullable: false
+                              type: string
+                            storagePolicyName:
+                              nullable: false
+                              type: string
+                            volumePath:
+                              nullable: false
+                              type: string
+                          type: object
+                      type: object
+                    nullable: false
+                    type: array
                 type: object
             type: object
         type: object

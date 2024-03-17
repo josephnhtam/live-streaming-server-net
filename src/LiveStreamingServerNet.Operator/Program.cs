@@ -1,5 +1,6 @@
 using KubeOps.Operator;
 using LiveStreamingServerNet.Operator.Installers;
+using Polly;
 
 namespace LiveStreamingServerNet.Operator
 {
@@ -10,10 +11,13 @@ namespace LiveStreamingServerNet.Operator
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddKubernetes()
-                            .AddControllerServices();
+                            .AddControllerServices()
+                            .AddResiliencePipelines();
 
             builder.Services.AddKubernetesOperator()
                             .RegisterComponents();
+
+            builder.Services.AddHealthChecks();
 
             var app = builder.Build();
 

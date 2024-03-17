@@ -11,17 +11,13 @@ namespace LiveStreamingServerNet.Operator.Entities
             public int MinReplicas { get; set; } = 1;
             public int MaxReplicas { get; set; } = 10;
             public float TargetUtilization { get; set; } = 0.75f;
-            public PodSpec PodSpec { get; set; } = new();
+            public int PodStreamsLimit { get; set; } = 4;
+            public V1PodSpec PodSpec { get; set; } = new();
         }
 
         public class EntityStatus
         {
 
-        }
-
-        public class PodSpec
-        {
-            public int StreamsLimit { get; set; } = 8;
         }
     }
 }
