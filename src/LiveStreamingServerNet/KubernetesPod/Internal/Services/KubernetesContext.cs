@@ -159,7 +159,7 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
             }
             catch (Exception ex)
             {
-                _logger.ErrorPatchingPod(JsonSerializer.Serialize(patch.Content), ex);
+                _logger.PatchingPodError(JsonSerializer.Serialize(patch.Content), ex);
                 throw;
             }
         }
