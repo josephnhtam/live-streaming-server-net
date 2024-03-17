@@ -3,10 +3,11 @@ using k8s.Models;
 using LiveStreamingServerNet.KubernetesPod.Configurations;
 using LiveStreamingServerNet.KubernetesPod.Internal.Logging;
 using LiveStreamingServerNet.KubernetesPod.Internal.Services.Contracts;
+using LiveStreamingServerNet.KubernetesPod.Utilities;
+using LiveStreamingServerNet.KubernetesPod.Utilities.Contracts;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json.Serialization;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 
@@ -170,46 +171,6 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
             {
                 _logger.ErrorPatchingPod(jsonPatch, ex);
                 throw;
-            }
-        }
-
-        internal class PodPatcherBuilder : IPodPatcherBuilder
-        {
-            private readonly JsonPatchDocument<V1Pod> _doc;
-
-            public PodPatcherBuilder()
-            {
-                _doc = new JsonPatchDocument<V1Pod>();
-                _doc.ContractResolver = new DefaultContractResolver { NamingStrategy = new CamelCaseNamingStrategy() };
-            }
-
-            public IPodPatcherBuilder SetLabel(string key, string value)
-            {
-                _doc.Replace(x => x.Metadata.Labels[key], value);
-                return this;
-            }
-
-            public IPodPatcherBuilder RemoveLabel(string key)
-            {
-                _doc.Remove(x => x.Metadata.Labels[key]);
-                return this;
-            }
-
-            public IPodPatcherBuilder SetAnnotation(string key, string value)
-            {
-                _doc.Replace(x => x.Metadata.Annotations[key], value);
-                return this;
-            }
-
-            public IPodPatcherBuilder RemoveAnnotation(string key)
-            {
-                _doc.Remove(x => x.Metadata.Annotations[key]);
-                return this;
-            }
-
-            public JsonPatchDocument<V1Pod> Build()
-            {
-                return _doc;
             }
         }
     }
