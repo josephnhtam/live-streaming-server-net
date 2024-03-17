@@ -29,7 +29,7 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.HostedServices
             catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested) { }
             catch (Exception ex)
             {
-                _logger.ErrorWatchingPod(ex);
+                _logger.WatchingPodError(ex);
                 throw;
             }
         }
