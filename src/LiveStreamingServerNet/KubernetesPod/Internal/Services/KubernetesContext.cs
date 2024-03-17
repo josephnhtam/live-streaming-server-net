@@ -146,30 +146,20 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
 
         public async Task PatchPodAsync(Action<IPodPatcherBuilder> configureBuilder)
         {
-            var builder = new PodPatcherBuilder();
+            var builder = PodPatcherBuilder.Create();
             configureBuilder.Invoke(builder);
             await PatchPodAsync(builder.Build());
         }
 
-        private async Task PatchPodAsync(JsonPatchDocument<V1Pod> doc)
+        private async Task PatchPodAsync(V1Patch patch)
         {
-            var jsonPatch = JsonSerializer.Serialize(
-                doc.Operations.Select(o => new
-                {
-                    o.op,
-                    o.path,
-                    o.value
-                })
-            );
-
             try
             {
-                var patch = new V1Patch(jsonPatch, V1Patch.PatchType.JsonPatch);
                 await KubernetesClient.CoreV1.PatchNamespacedPodAsync(patch, PodName, PodNamespace);
             }
             catch (Exception ex)
             {
-                _logger.ErrorPatchingPod(jsonPatch, ex);
+                _logger.ErrorPatchingPod(JsonSerializer.Serialize(patch.Content), ex);
                 throw;
             }
         }
