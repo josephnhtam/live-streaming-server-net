@@ -1,0 +1,16 @@
+namespace: LiveStreamingServerNET.Operator-system
+namePrefix: LiveStreamingServerNET.Operator-
+commonLabels:
+  operator: LiveStreamingServerNET.Operator
+resources:
+- operator-role.yaml
+- operator-role-binding.yaml
+- deployment.yaml
+- clusters_live-streaming-server_net.yaml
+- namespace.yaml
+images:
+- name: operator
+  newName: accessible-docker-image
+  newTag: latest
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
