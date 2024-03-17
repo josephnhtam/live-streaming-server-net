@@ -2,6 +2,7 @@
 using LiveStreamingServerNet.Operator.Utilities.Contracts;
 using Microsoft.AspNetCore.JsonPatch;
 using Newtonsoft.Json.Serialization;
+using System.Text.Json;
 
 namespace LiveStreamingServerNet.Operator.Utilities
 {
@@ -9,10 +10,15 @@ namespace LiveStreamingServerNet.Operator.Utilities
     {
         private readonly JsonPatchDocument<V1Pod> _doc;
 
-        public PodPatcherBuilder()
+        private PodPatcherBuilder()
         {
             _doc = new JsonPatchDocument<V1Pod>();
             _doc.ContractResolver = new DefaultContractResolver { NamingStrategy = new CamelCaseNamingStrategy() };
+        }
+
+        public static PodPatcherBuilder Create()
+        {
+            return new PodPatcherBuilder();
         }
 
         public IPodPatcherBuilder SetLabel(string key, string value)
@@ -39,9 +45,18 @@ namespace LiveStreamingServerNet.Operator.Utilities
             return this;
         }
 
-        public JsonPatchDocument<V1Pod> Build()
+        public V1Patch Build()
         {
-            return _doc;
+            var jsonPatch = JsonSerializer.Serialize(
+                _doc.Operations.Select(o => new
+                {
+                    o.op,
+                    o.path,
+                    o.value
+                })
+            );
+
+            return new V1Patch(jsonPatch, V1Patch.PatchType.JsonPatch);
         }
     }
 }

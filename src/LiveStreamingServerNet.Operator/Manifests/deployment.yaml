@@ -22,6 +22,7 @@ spec:
             fieldRef:
               fieldPath: metadata.namespace
         image: operator
+        imagePullPolicy: Never
         name: operator
         resources:
           limits:

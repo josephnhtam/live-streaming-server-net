@@ -34,7 +34,7 @@ namespace LiveStreamingServerNet.Operator.Services
             List<PodStateChange> podStateChanges,
             ClusterState currentState)
         {
-            var requiredAvailability = desiredPodsCountDelta * entity.Spec.PodSpec.StreamsLimit;
+            var requiredAvailability = desiredPodsCountDelta * entity.Spec.PodStreamsLimit;
             var availabilityRecovered = 0;
 
             var podsToRemovePendingStop = currentState.PodStates
@@ -49,10 +49,10 @@ namespace LiveStreamingServerNet.Operator.Services
                     break;
 
                 podStateChanges.Add(new PodStateChange(pod.PodName, false));
-                availabilityRecovered += entity.Spec.PodSpec.StreamsLimit - pod.StreamsCount;
+                availabilityRecovered += entity.Spec.PodStreamsLimit - pod.StreamsCount;
             }
 
-            desiredPodsCountDelta = Math.Max(0, desiredPodsCountDelta - (availabilityRecovered / entity.Spec.PodSpec.StreamsLimit));
+            desiredPodsCountDelta = Math.Max(0, desiredPodsCountDelta - (availabilityRecovered / entity.Spec.PodStreamsLimit));
         }
 
         private void AddPendingStops(
@@ -78,7 +78,7 @@ namespace LiveStreamingServerNet.Operator.Services
         private int CalculateDesiredPodsCount(V1LiveStreamingServerCluster entity, ClusterState currentState)
         {
             var currentUtilization = (float)currentState.PodStates.Where(p => !p.PendingStop).Sum(p => p.StreamsCount) /
-                (currentState.PodsCount * entity.Spec.PodSpec.StreamsLimit);
+                (currentState.PodsCount * entity.Spec.PodStreamsLimit);
 
             return (int)Math.Ceiling(currentState.PodsCount * (currentUtilization / entity.Spec.TargetUtilization));
         }

@@ -4,6 +4,7 @@ using KubeOps.Abstractions.Queue;
 using KubeOps.Abstractions.Rbac;
 using LiveStreamingServerNet.Operator.Entities;
 using LiveStreamingServerNet.Operator.Services.Contracts;
+using System.Text.Json;
 
 namespace LiveStreamingServerNet.Operator.Controllers
 {
@@ -31,10 +32,20 @@ namespace LiveStreamingServerNet.Operator.Controllers
 
         public async Task ReconcileAsync(V1LiveStreamingServerCluster entity, CancellationToken cancellationToken)
         {
+            Console.WriteLine("###ReconcileAsync###");
+
             try
             {
                 var currentState = await _clusterStateRetriver.GetClusterStateAsync(cancellationToken);
+
+                Console.WriteLine("===CurrentState===");
+                Console.WriteLine(JsonSerializer.Serialize(currentState));
+
                 var desiredStateChange = await _desiredStateCalculator.CalculateDesiredStateChange(entity, currentState, cancellationToken);
+
+                Console.WriteLine("===DesiredStateChange===");
+                Console.WriteLine(JsonSerializer.Serialize(currentState));
+
                 await _desiredStateApplier.ApplyDesiredStateAsync(entity, currentState, desiredStateChange, cancellationToken);
             }
             catch (Exception ex)
@@ -45,6 +56,8 @@ namespace LiveStreamingServerNet.Operator.Controllers
             {
                 _requeue(entity, TimeSpan.FromSeconds(5));
             }
+
+            Console.WriteLine("#####################");
         }
 
         public Task DeletedAsync(V1LiveStreamingServerCluster entity, CancellationToken cancellationToken)
