@@ -77,10 +77,15 @@ namespace LiveStreamingServerNet.Operator.Services
 
         private int CalculateDesiredPodsCount(V1LiveStreamingServerCluster entity, ClusterState currentState)
         {
+            if (currentState.PodsCount == 0)
+                return entity.Spec.MinReplicas;
+
             var currentUtilization = (float)currentState.PodStates.Where(p => !p.PendingStop).Sum(p => p.StreamsCount) /
                 (currentState.PodsCount * entity.Spec.PodStreamsLimit);
 
-            return (int)Math.Ceiling(currentState.PodsCount * (currentUtilization / entity.Spec.TargetUtilization));
+            var desiredPodsCount = (int)Math.Ceiling(currentState.PodsCount * (currentUtilization / entity.Spec.TargetUtilization));
+
+            return Math.Clamp(desiredPodsCount, entity.Spec.MinReplicas, entity.Spec.MaxReplicas);
         }
     }
 }

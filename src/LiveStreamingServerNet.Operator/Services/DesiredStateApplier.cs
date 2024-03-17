@@ -3,6 +3,7 @@ using k8s.Models;
 using KubeOps.Abstractions.Events;
 using KubeOps.KubernetesClient;
 using LiveStreamingServerNet.Operator.Entities;
+using LiveStreamingServerNet.Operator.Logging;
 using LiveStreamingServerNet.Operator.Models;
 using LiveStreamingServerNet.Operator.Services.Contracts;
 using LiveStreamingServerNet.Operator.Utilities;
@@ -50,8 +51,16 @@ namespace LiveStreamingServerNet.Operator.Services
             if (podCountDelta <= 0)
                 return;
 
-            var podSpec = entity.Spec.PodSpec;
-            podSpec.RestartPolicy = "Never";
+            var template = entity.Spec.Template;
+
+            template.Metadata.Labels ??= new Dictionary<string, string>();
+            template.Metadata.Labels[Constants.AppLabel] = Constants.AppLabelValue;
+            template.Metadata.Labels[Constants.PendingStopLabel] = "false";
+
+            template.Metadata.Annotations ??= new Dictionary<string, string>();
+            template.Metadata.Annotations[Constants.StreamsCountAnnotation] = "0";
+
+            template.Spec.RestartPolicy = "Never";
 
             await Task.WhenAll(Enumerable.Range(0, podCountDelta).Select(async _ =>
             {
@@ -59,27 +68,22 @@ namespace LiveStreamingServerNet.Operator.Services
                 {
                     Metadata = new V1ObjectMeta
                     {
-                        Name = $"live-streaming-server-net-pod-job-{Guid.NewGuid()}",
-                        NamespaceProperty = _podNamespace
+                        GenerateName = "live-streaming-server-net-job-",
+                        NamespaceProperty = _podNamespace,
+                        OwnerReferences = new List<V1OwnerReference>
+                        {
+                            new V1OwnerReference(
+                                apiVersion: entity.ApiVersion,
+                                kind: entity.Kind,
+                                name: entity.Name(),
+                                uid: entity.Uid()
+                            )
+                        }
                     },
                     Spec = new V1JobSpec
                     {
-                        Template = new V1PodTemplateSpec
-                        {
-                            Metadata = new V1ObjectMeta
-                            {
-                                Labels = new Dictionary<string, string>
-                                {
-                                    [Constants.PendingStopLabel] = "false"
-                                },
-                                Annotations = new Dictionary<string, string>
-                                {
-                                    [Constants.StreamsCountAnnotation] = "0"
-                                }
-                            },
-                            Spec = podSpec
-                        }
-                    }
+                        Template = template
+                    },
                 };
 
                 try
@@ -91,6 +95,7 @@ namespace LiveStreamingServerNet.Operator.Services
                 }
                 catch (Exception ex)
                 {
+                    _logger.CreatingJobError(ex);
                 }
             }));
         }
@@ -117,7 +122,7 @@ namespace LiveStreamingServerNet.Operator.Services
                 }
                 catch (Exception ex)
                 {
-                    //_logger.ErrorPatchingPod(JsonSerializer.Serialize(patch.Content), ex);
+                    _logger.PatchingPodError(ex);
                 }
             }));
         }

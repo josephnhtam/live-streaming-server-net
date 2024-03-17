@@ -7,9 +7,10 @@ namespace LiveStreamingServerNet.Operator.Installers
     {
         public static IServiceCollection AddControllerServices(this IServiceCollection services)
         {
-            services.AddSingleton<IDesiredStateCalculator, DesiredStateCalculator>()
-                    .AddSingleton<IClusterStateRetriver, ClusterStateRetriver>()
-                    .AddSingleton<IDesiredStateStabilizer, DesiredStateStabilizer>();
+            services.AddSingleton<IClusterStateRetriver, ClusterStateRetriver>()
+                    .AddSingleton<IDesiredStateCalculator, DesiredStateCalculator>()
+                    .AddSingleton<IDesiredStateStabilizer, DesiredStateStabilizer>()
+                    .AddSingleton<IDesiredStateApplier, DesiredStateApplier>();
             return services;
         }
     }

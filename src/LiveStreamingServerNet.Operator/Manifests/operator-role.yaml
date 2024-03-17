@@ -4,21 +4,6 @@ metadata:
   name: operator-role
 rules:
 - apiGroups:
-  - ""
-  resources:
-  - events
-  verbs:
-  - get
-  - list
-  - create
-  - update
-- apiGroups:
-  - coordination.k8s.io
-  resources:
-  - leases
-  verbs:
-  - '*'
-- apiGroups:
   - live-streaming-server.net
   resources:
   - clusters
@@ -38,6 +23,21 @@ rules:
   - get
   - list
   - patch
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - get
+  - list
+  - create
+  - update
+- apiGroups:
+  - coordination.k8s.io
+  resources:
+  - leases
+  verbs:
+  - '*'
 - apiGroups:
   - live-streaming-server.net
   resources:

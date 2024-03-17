@@ -1,5 +1,6 @@
 ﻿using k8s.Models;
 using KubeOps.Abstractions.Entities;
+using KubeOps.Abstractions.Entities.Attributes;
 
 namespace LiveStreamingServerNet.Operator.Entities
 {
@@ -12,7 +13,10 @@ namespace LiveStreamingServerNet.Operator.Entities
             public int MaxReplicas { get; set; } = 10;
             public float TargetUtilization { get; set; } = 0.75f;
             public int PodStreamsLimit { get; set; } = 4;
-            public V1PodSpec PodSpec { get; set; } = new();
+
+            [Required]
+            [EmbeddedResource]
+            public V1PodTemplateSpec Template { get; set; } = new();
         }
 
         public class EntityStatus

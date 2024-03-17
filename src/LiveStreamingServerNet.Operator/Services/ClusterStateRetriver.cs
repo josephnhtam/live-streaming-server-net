@@ -26,7 +26,7 @@ namespace LiveStreamingServerNet.Operator.Services
             {
                 var podList = await _client.CoreV1.ListNamespacedPodAsync(
                     namespaceParameter: _podsNamespace,
-                    labelSelector: Constants.StreamingServerPodLabelSelector,
+                    labelSelector: $"{Constants.AppLabel}={Constants.AppLabelValue}",
                     cancellationToken: cancellationToken);
 
                 podStates.AddRange(podList.Items.Select(ResolvePodState));
@@ -42,7 +42,7 @@ namespace LiveStreamingServerNet.Operator.Services
             var podName = pod.Metadata.Name;
             var startTime = pod.Status.StartTime;
             var pendingStop = bool.TryParse(pod.GetLabel(Constants.PendingStopLabel), out var _pendingStop) && _pendingStop;
-            var streamCount = int.TryParse(pod.GetLabel(Constants.StreamsCountAnnotation), out var _streamCount) ? _streamCount : 0;
+            var streamCount = int.TryParse(pod.GetAnnotation(Constants.StreamsCountAnnotation), out var _streamCount) ? _streamCount : 0;
 
             return new PodState(podName, pendingStop, streamCount, startTime);
         }

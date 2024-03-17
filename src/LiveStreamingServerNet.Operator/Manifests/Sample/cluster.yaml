@@ -1,0 +1,46 @@
+apiVersion: live-streaming-server.net/v1
+kind: Cluster
+metadata:
+  name: live-streaming-server-net-cluster
+  namespace: live-streaming-server-net
+spec:
+  minReplicas: 1
+  maxReplicas: 10
+  targetUtilization: 0.75
+  podStreamsLimit: 4
+  
+  template:
+    apiVersion: v1
+    kind: Pod
+    metadata:
+      name: live-streaming-server-net-pod
+      labels:
+        app: live-streaming-server-net
+    spec:
+      containers:
+      - name: live-streaming-server-net
+        image: IMAGE
+        imagePullPolicy: Never
+        resources:
+          limits:
+            cpu: 200m
+            memory: 500Mi
+          requests:
+            cpu: 100m
+            memory: 200Mi
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        ports:
+        - containerPort:  80
+          name:  http
+        - containerPort: 1935
+          name: rtmp
+      restartPolicy: OnFailure
+      serviceAccountName: service-account
