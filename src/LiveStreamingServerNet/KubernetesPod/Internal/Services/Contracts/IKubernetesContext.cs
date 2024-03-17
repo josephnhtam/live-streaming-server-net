@@ -1,5 +1,6 @@
 ﻿using k8s;
 using k8s.Models;
+using LiveStreamingServerNet.KubernetesPod.Utilities.Contracts;
 
 namespace LiveStreamingServerNet.KubernetesPod.Internal.Services.Contracts
 {
@@ -11,13 +12,5 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Services.Contracts
         Task<V1Pod> GetPodAsync(CancellationToken cancellationToken);
         Task PatchPodAsync(Action<IPodPatcherBuilder> configureBuilder);
         IAsyncEnumerable<(WatchEventType, V1Pod)> WatchPodAsync(CancellationToken cancellationToken = default, TimeSpan? reconnectCheck = null);
-    }
-
-    internal interface IPodPatcherBuilder
-    {
-        IPodPatcherBuilder SetLabel(string key, string value);
-        IPodPatcherBuilder RemoveLabel(string key);
-        IPodPatcherBuilder SetAnnotation(string key, string value);
-        IPodPatcherBuilder RemoveAnnotation(string key);
     }
 }
