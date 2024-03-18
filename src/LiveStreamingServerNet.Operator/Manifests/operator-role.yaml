@@ -10,19 +10,11 @@ rules:
   verbs:
   - '*'
 - apiGroups:
-  - batch
-  resources:
-  - jobs
-  verbs:
-  - create
-- apiGroups:
   - ""
   resources:
   - pods
   verbs:
-  - get
-  - list
-  - patch
+  - '*'
 - apiGroups:
   - ""
   resources:
@@ -42,14 +34,6 @@ rules:
   - live-streaming-server.net
   resources:
   - clusters/status
-  verbs:
-  - get
-  - update
-  - patch
-- apiGroups:
-  - batch
-  resources:
-  - jobs/status
   verbs:
   - get
   - update

@@ -6,7 +6,7 @@ metadata:
 spec:
   minReplicas: 1
   maxReplicas: 10
-  targetUtilization: 0.75
+  targetUtilization: 0.1
   podStreamsLimit: 4
   
   template:

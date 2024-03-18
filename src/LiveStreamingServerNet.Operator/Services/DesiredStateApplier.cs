@@ -64,12 +64,18 @@ namespace LiveStreamingServerNet.Operator.Services
 
             await Task.WhenAll(Enumerable.Range(0, podCountDelta).Select(async _ =>
             {
-                var job = new V1Job
+                var pod = new V1Pod
                 {
                     Metadata = new V1ObjectMeta
                     {
-                        GenerateName = "live-streaming-server-net-job-",
+                        GenerateName = !string.IsNullOrEmpty(template.Metadata.GenerateName) ?
+                                       template.Metadata.GenerateName :
+                                       $"{template.Metadata.Name}-",
+
                         NamespaceProperty = _podNamespace,
+                        Labels = template.Metadata.Labels,
+                        Annotations = template.Metadata.Annotations,
+
                         OwnerReferences = new List<V1OwnerReference>
                         {
                             new V1OwnerReference(
@@ -80,18 +86,15 @@ namespace LiveStreamingServerNet.Operator.Services
                             )
                         }
                     },
-                    Spec = new V1JobSpec
-                    {
-                        Template = template
-                    },
+                    Spec = template.Spec,
                 };
 
                 try
                 {
                     await _pipeline.ExecuteAsync(async (cancellationToken) =>
-                        await _client.BatchV1.CreateNamespacedJobAsync(job, _podNamespace, cancellationToken: cancellationToken),
+                        await _client.CoreV1.CreateNamespacedPodAsync(pod, _podNamespace, cancellationToken: cancellationToken),
                         cancellationToken
-                    );
+                    ); ;
                 }
                 catch (Exception ex)
                 {
@@ -105,7 +108,7 @@ namespace LiveStreamingServerNet.Operator.Services
             await Task.WhenAll(podStateChanges.Select(async (podStateChange) =>
             {
                 var podPatchBuilder = PodPatcherBuilder.Create();
-                podPatchBuilder.SetAnnotation(Constants.PendingStopLabel, podStateChange.PendingStop.ToString());
+                podPatchBuilder.SetLabel(Constants.PendingStopLabel, podStateChange.PendingStop.ToString());
                 var patch = podPatchBuilder.Build();
 
                 try

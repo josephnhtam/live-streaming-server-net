@@ -15,7 +15,7 @@ namespace LiveStreamingServerNet.Operator.Installers
                         ShouldHandle = new PredicateBuilder().Handle<KubernetesException>(),
                         BackoffType = DelayBackoffType.Exponential,
                         Delay = TimeSpan.FromMilliseconds(200),
-                        MaxDelay = TimeSpan.FromSeconds(1),
+                        MaxDelay = TimeSpan.FromSeconds(1)
                     })
             );
 

@@ -11,5 +11,15 @@
         }
     }
 
-    public record PodState(string PodName, bool PendingStop, int StreamsCount, DateTime? StartTime);
+    public record PodState(string PodName, bool PendingStop, int StreamsCount, PodPhase phase, DateTime? StartTime);
+
+    public enum PodPhase
+    {
+        Unknown = -1,
+        Pending = 0,
+        Running = 1,
+        Terminating = 3,
+        Succeeded = 4,
+        Failed = 5
+    }
 }

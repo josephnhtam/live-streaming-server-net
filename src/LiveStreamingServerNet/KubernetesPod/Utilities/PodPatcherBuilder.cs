@@ -23,26 +23,31 @@ namespace LiveStreamingServerNet.KubernetesPod.Utilities
 
         public IPodPatcherBuilder SetLabel(string key, string value)
         {
-            _doc.Replace(x => x.Metadata.Labels[key], value);
+            _doc.Replace(x => x.Metadata.Labels[NormalizeKey(key)], value);
             return this;
         }
 
         public IPodPatcherBuilder RemoveLabel(string key)
         {
-            _doc.Remove(x => x.Metadata.Labels[key]);
+            _doc.Remove(x => x.Metadata.Labels[NormalizeKey(key)]);
             return this;
         }
 
         public IPodPatcherBuilder SetAnnotation(string key, string value)
         {
-            _doc.Replace(x => x.Metadata.Annotations[key], value);
+            _doc.Replace(x => x.Metadata.Annotations[NormalizeKey(key)], value);
             return this;
         }
 
         public IPodPatcherBuilder RemoveAnnotation(string key)
         {
-            _doc.Remove(x => x.Metadata.Annotations[key]);
+            _doc.Remove(x => x.Metadata.Annotations[NormalizeKey(key)]);
             return this;
+        }
+
+        private string NormalizeKey(string key)
+        {
+            return key.Replace("/", "~1");
         }
 
         public V1Patch Build()
