@@ -5,7 +5,6 @@ using KubeOps.Abstractions.Rbac;
 using LiveStreamingServerNet.Operator.Entities;
 using LiveStreamingServerNet.Operator.Logging;
 using LiveStreamingServerNet.Operator.Services.Contracts;
-using System.Text.Json;
 
 namespace LiveStreamingServerNet.Operator.Controllers
 {
@@ -17,6 +16,7 @@ namespace LiveStreamingServerNet.Operator.Controllers
         private readonly IClusterStateRetriver _clusterStateRetriver;
         private readonly IDesiredStateCalculator _desiredStateCalculator;
         private readonly IDesiredStateApplier _desiredStateApplier;
+        private readonly IPodCleaner _podCleaner;
         private readonly ILogger _logger;
 
         public V1LiveStreamingServerClusterController(
@@ -24,12 +24,14 @@ namespace LiveStreamingServerNet.Operator.Controllers
             IClusterStateRetriver clusterStateRetriver,
             IDesiredStateCalculator desiredStateCalculator,
             IDesiredStateApplier desiredStateApplier,
+            IPodCleaner podCleaner,
             ILogger<V1LiveStreamingServerClusterController> logger)
         {
             _requeue = requeue;
             _clusterStateRetriver = clusterStateRetriver;
             _desiredStateCalculator = desiredStateCalculator;
             _desiredStateApplier = desiredStateApplier;
+            _podCleaner = podCleaner;
             _logger = logger;
         }
 
@@ -38,16 +40,14 @@ namespace LiveStreamingServerNet.Operator.Controllers
             try
             {
                 var currentState = await _clusterStateRetriver.GetClusterStateAsync(cancellationToken);
-
-                Console.WriteLine("===CurrentState===");
-                Console.WriteLine(JsonSerializer.Serialize(currentState));
+                _logger.LogCurrentState(currentState);
 
                 var desiredStateChange = await _desiredStateCalculator.CalculateDesiredStateChange(entity, currentState, cancellationToken);
-
-                Console.WriteLine("===DesiredStateChange===");
-                Console.WriteLine(JsonSerializer.Serialize(desiredStateChange));
+                _logger.LogDesiredClusterStateChange(desiredStateChange);
 
                 await _desiredStateApplier.ApplyDesiredStateAsync(entity, currentState, desiredStateChange, cancellationToken);
+
+                await _podCleaner.PerformPodCleanupAsync(currentState, cancellationToken);
             }
             catch (Exception ex)
             {

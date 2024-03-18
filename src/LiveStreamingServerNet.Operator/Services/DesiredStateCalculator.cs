@@ -11,7 +11,7 @@ namespace LiveStreamingServerNet.Operator.Services
             ClusterState currentState,
             CancellationToken cancellationToken)
         {
-            var activePodStates = currentState.PodStates.Where(x => x.phase <= PodPhase.Running).ToList();
+            var activePodStates = currentState.PodStates.Where(x => x.Phase <= PodPhase.Running).ToList();
             var podStateChanges = new List<PodStateChange>();
 
             var desiredPodsCount = CalculateDesiredPodsCount(entity, activePodStates);

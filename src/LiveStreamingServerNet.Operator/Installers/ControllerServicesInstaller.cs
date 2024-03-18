@@ -1,5 +1,5 @@
-﻿using LiveStreamingServerNet.Operator.Services.Contracts;
-using LiveStreamingServerNet.Operator.Services;
+﻿using LiveStreamingServerNet.Operator.Services;
+using LiveStreamingServerNet.Operator.Services.Contracts;
 
 namespace LiveStreamingServerNet.Operator.Installers
 {
@@ -10,7 +10,9 @@ namespace LiveStreamingServerNet.Operator.Installers
             services.AddSingleton<IClusterStateRetriver, ClusterStateRetriver>()
                     .AddSingleton<IDesiredStateCalculator, DesiredStateCalculator>()
                     .AddSingleton<IDesiredStateStabilizer, DesiredStateStabilizer>()
-                    .AddSingleton<IDesiredStateApplier, DesiredStateApplier>();
+                    .AddSingleton<IDesiredStateApplier, DesiredStateApplier>()
+                    .AddSingleton<IPodCleaner, PodCleaner>();
+
             return services;
         }
     }
