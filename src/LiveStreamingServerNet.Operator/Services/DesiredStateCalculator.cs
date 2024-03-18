@@ -16,7 +16,9 @@ namespace LiveStreamingServerNet.Operator.Services
 
             var desiredPodsCount = CalculateDesiredPodsCount(entity, activePodStates);
 
-            var desiredPodsCountDelta = desiredPodsCount - currentState.PodStates.Where(p => !p.PendingStop).Count();
+            var desiredPodsCountDelta =
+                desiredPodsCount - currentState.PodStates.Where(p => !p.PendingStop && p.Phase < PodPhase.Terminating).Count();
+
             if (desiredPodsCountDelta > 0)
             {
                 RemovePendingStops(ref desiredPodsCountDelta, entity, podStateChanges, activePodStates);
@@ -39,7 +41,7 @@ namespace LiveStreamingServerNet.Operator.Services
             var availabilityRecovered = 0;
 
             var podsToRemovePendingStop = activePodStates
-                .Where(p => p.PendingStop && p.StartTime.HasValue)
+                .Where(p => p.PendingStop && p.StartTime.HasValue && p.Phase < PodPhase.Terminating)
                 .OrderBy(p => p.StreamsCount)
                 .ThenBy(p => p.StartTime)
                 .ToList();
@@ -64,7 +66,7 @@ namespace LiveStreamingServerNet.Operator.Services
             desiredPodsCountDelta = Math.Abs(desiredPodsCountDelta);
 
             var podsToAddPendingStop = activePodStates
-                .Where(p => !p.PendingStop && p.StartTime.HasValue)
+                .Where(p => !p.PendingStop && p.StartTime.HasValue && p.Phase < PodPhase.Terminating)
                 .OrderBy(p => p.StreamsCount)
                 .ThenBy(p => p.StartTime)
                 .ToList();
@@ -81,8 +83,8 @@ namespace LiveStreamingServerNet.Operator.Services
             if (activePodStates.Count == 0)
                 return entity.Spec.MinReplicas;
 
-            var currentUtilization = (float)activePodStates.Where(p => !p.PendingStop).Sum(p => p.StreamsCount) /
-                (activePodStates.Count * entity.Spec.PodStreamsLimit);
+            var currentUtilization = (float)activePodStates.Where(p => !p.PendingStop && p.Phase < PodPhase.Terminating)
+                .Sum(p => p.StreamsCount) / (activePodStates.Count * entity.Spec.PodStreamsLimit);
 
             var desiredPodsCount = (int)Math.Ceiling(activePodStates.Count * (currentUtilization / entity.Spec.TargetUtilization));
 
