@@ -10,8 +10,7 @@ using System.Text.Json;
 namespace LiveStreamingServerNet.Operator.Controllers
 {
     [EntityRbac(typeof(V1LiveStreamingServerCluster), Verbs = RbacVerb.All)]
-    [EntityRbac(typeof(V1Job), Verbs = RbacVerb.Create)]
-    [EntityRbac(typeof(V1Pod), Verbs = RbacVerb.Get | RbacVerb.List | RbacVerb.Patch)]
+    [EntityRbac(typeof(V1Pod), Verbs = RbacVerb.All)]
     public class V1LiveStreamingServerClusterController : IEntityController<V1LiveStreamingServerCluster>
     {
         private readonly EntityRequeue<V1LiveStreamingServerCluster> _requeue;

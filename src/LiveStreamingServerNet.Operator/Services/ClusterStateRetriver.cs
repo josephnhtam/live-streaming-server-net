@@ -44,7 +44,18 @@ namespace LiveStreamingServerNet.Operator.Services
             var pendingStop = bool.TryParse(pod.GetLabel(Constants.PendingStopLabel), out var _pendingStop) && _pendingStop;
             var streamCount = int.TryParse(pod.GetAnnotation(Constants.StreamsCountAnnotation), out var _streamCount) ? _streamCount : 0;
 
-            return new PodState(podName, pendingStop, streamCount, startTime);
+            var phase = pod.Metadata.DeletionTimestamp.HasValue ?
+                PodPhase.Terminating :
+                pod.Status.Phase.ToLower() switch
+                {
+                    "pending" => PodPhase.Pending,
+                    "running" => PodPhase.Running,
+                    "succeeded" => PodPhase.Succeeded,
+                    "failed" => PodPhase.Failed,
+                    _ => PodPhase.Unknown
+                };
+
+            return new PodState(podName, pendingStop, streamCount, phase, startTime);
         }
     }
 }
