@@ -108,7 +108,7 @@ namespace LiveStreamingServerNet.Operator.Services
             await Task.WhenAll(podStateChanges.Select(async (podStateChange) =>
             {
                 var podPatchBuilder = PodPatcherBuilder.Create();
-                podPatchBuilder.SetLabel(Constants.PendingStopLabel, podStateChange.PendingStop.ToString());
+                podPatchBuilder.SetLabel(Constants.PendingStopLabel, podStateChange.PendingStop.ToString().ToLower());
                 var patch = podPatchBuilder.Build();
 
                 try
