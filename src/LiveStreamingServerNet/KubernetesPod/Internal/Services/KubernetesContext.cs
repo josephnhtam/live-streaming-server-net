@@ -5,7 +5,6 @@ using LiveStreamingServerNet.KubernetesPod.Internal.Logging;
 using LiveStreamingServerNet.KubernetesPod.Internal.Services.Contracts;
 using LiveStreamingServerNet.KubernetesPod.Utilities;
 using LiveStreamingServerNet.KubernetesPod.Utilities.Contracts;
-using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Runtime.CompilerServices;

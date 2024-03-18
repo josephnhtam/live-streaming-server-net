@@ -1,5 +1,5 @@
-﻿using LiveStreamingServerNet.Operator.Models;
-using LiveStreamingServerNet.Operator.Entities;
+﻿using LiveStreamingServerNet.Operator.Entities;
+using LiveStreamingServerNet.Operator.Models;
 
 namespace LiveStreamingServerNet.Operator.Services.Contracts
 {

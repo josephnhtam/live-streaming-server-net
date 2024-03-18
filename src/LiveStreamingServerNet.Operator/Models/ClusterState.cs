@@ -11,7 +11,7 @@
         }
     }
 
-    public record PodState(string PodName, bool PendingStop, int StreamsCount, PodPhase phase, DateTime? StartTime);
+    public record PodState(string PodName, bool PendingStop, int StreamsCount, PodPhase Phase, DateTime? StartTime);
 
     public enum PodPhase
     {

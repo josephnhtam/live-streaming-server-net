@@ -16,10 +16,10 @@ namespace LiveStreamingServerNet.Operator.Services
         private readonly IKubernetes _client;
         private readonly IKubernetesClient _operatorClient;
         private readonly EventPublisher _eventPublisher;
+        private readonly ResiliencePipeline _pipeline;
         private readonly ILogger _logger;
 
         private readonly string _podNamespace;
-        private readonly ResiliencePipeline _pipeline;
 
         public DesiredStateApplier(
             IKubernetes client,
@@ -69,8 +69,8 @@ namespace LiveStreamingServerNet.Operator.Services
                     Metadata = new V1ObjectMeta
                     {
                         GenerateName = !string.IsNullOrEmpty(template.Metadata.GenerateName) ?
-                                       template.Metadata.GenerateName :
-                                       $"{template.Metadata.Name}-",
+                            template.Metadata.GenerateName :
+                            $"{template.Metadata.Name}-",
 
                         NamespaceProperty = _podNamespace,
                         Labels = template.Metadata.Labels,
@@ -94,7 +94,7 @@ namespace LiveStreamingServerNet.Operator.Services
                     await _pipeline.ExecuteAsync(async (cancellationToken) =>
                         await _client.CoreV1.CreateNamespacedPodAsync(pod, _podNamespace, cancellationToken: cancellationToken),
                         cancellationToken
-                    ); ;
+                    );
                 }
                 catch (Exception ex)
                 {
@@ -125,7 +125,7 @@ namespace LiveStreamingServerNet.Operator.Services
                 }
                 catch (Exception ex)
                 {
-                    _logger.PatchingPodError(ex);
+                    _logger.PatchingPodError(podStateChange.PodName, ex);
                 }
             }));
         }

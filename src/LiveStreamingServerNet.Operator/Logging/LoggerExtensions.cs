@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using LiveStreamingServerNet.Operator.Models;
+using System.Text.Json;
 
 namespace LiveStreamingServerNet.Operator.Logging
 {
@@ -10,7 +11,22 @@ namespace LiveStreamingServerNet.Operator.Logging
         [LoggerMessage(LogLevel.Error, "An error occurred when creating a job")]
         public static partial void CreatingJobError(this ILogger logger, Exception exception);
 
-        [LoggerMessage(LogLevel.Error, "An error occurred when patching a pod")]
-        public static partial void PatchingPodError(this ILogger logger, Exception exception);
+        [LoggerMessage(LogLevel.Error, "An error occurred when patching the pod {PodName}")]
+        public static partial void PatchingPodError(this ILogger logger, string podName, Exception exception);
+
+        [LoggerMessage(LogLevel.Error, "An error occurred when deleting the pod {PodName}")]
+        public static partial void DeletingPodError(this ILogger logger, string podName, Exception exception);
+
+        public static void LogCurrentState(this ILogger logger, ClusterState clusterState)
+            => LogCurrentStateCore(logger, JsonSerializer.Serialize(clusterState));
+
+        [LoggerMessage(LogLevel.Information, "Current State | {ClusterState}")]
+        private static partial void LogCurrentStateCore(this ILogger logger, string clusterState);
+
+        public static void LogDesiredClusterStateChange(this ILogger logger, DesiredClusterStateChange desiredClusterStateChange)
+            => LogDesiredClusterStateChangeCore(logger, JsonSerializer.Serialize(desiredClusterStateChange));
+
+        [LoggerMessage(LogLevel.Information, "Desired State Change | {DesiredClusterStateChange}")]
+        private static partial void LogDesiredClusterStateChangeCore(this ILogger logger, string desiredClusterStateChange);
     }
 }

@@ -6,6 +6,7 @@ metadata:
 spec:
   selector:
     app: live-streaming-server-net
+    live-streaming-server-net/pending-stop: "false"
   type: LoadBalancer
   ports:
   - name: http
