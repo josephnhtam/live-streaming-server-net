@@ -11,7 +11,8 @@ namespace LiveStreamingServerNet.Operator.Installers
                     .AddSingleton<IDesiredStateCalculator, DesiredStateCalculator>()
                     .AddSingleton<IDesiredStateStabilizer, DesiredStateStabilizer>()
                     .AddSingleton<IDesiredStateApplier, DesiredStateApplier>()
-                    .AddSingleton<IPodCleaner, PodCleaner>();
+                    .AddSingleton<IPodCleaner, PodCleaner>()
+                    .AddSingleton<IClusterScaler, ClusterScaler>();
 
             return services;
         }

@@ -13,25 +13,16 @@ namespace LiveStreamingServerNet.Operator.Controllers
     public class V1LiveStreamingServerClusterController : IEntityController<V1LiveStreamingServerCluster>
     {
         private readonly EntityRequeue<V1LiveStreamingServerCluster> _requeue;
-        private readonly IClusterStateRetriver _clusterStateRetriver;
-        private readonly IDesiredStateCalculator _desiredStateCalculator;
-        private readonly IDesiredStateApplier _desiredStateApplier;
-        private readonly IPodCleaner _podCleaner;
+        private readonly IClusterScaler _clusterScaler;
         private readonly ILogger _logger;
 
         public V1LiveStreamingServerClusterController(
             EntityRequeue<V1LiveStreamingServerCluster> requeue,
-            IClusterStateRetriver clusterStateRetriver,
-            IDesiredStateCalculator desiredStateCalculator,
-            IDesiredStateApplier desiredStateApplier,
-            IPodCleaner podCleaner,
+            IClusterScaler clusterScaler,
             ILogger<V1LiveStreamingServerClusterController> logger)
         {
             _requeue = requeue;
-            _clusterStateRetriver = clusterStateRetriver;
-            _desiredStateCalculator = desiredStateCalculator;
-            _desiredStateApplier = desiredStateApplier;
-            _podCleaner = podCleaner;
+            _clusterScaler = clusterScaler;
             _logger = logger;
         }
 
@@ -39,15 +30,7 @@ namespace LiveStreamingServerNet.Operator.Controllers
         {
             try
             {
-                var currentState = await _clusterStateRetriver.GetClusterStateAsync(cancellationToken);
-                _logger.LogCurrentState(currentState);
-
-                var desiredStateChange = await _desiredStateCalculator.CalculateDesiredStateChange(entity, currentState, cancellationToken);
-                _logger.LogDesiredClusterStateChange(desiredStateChange);
-
-                await _desiredStateApplier.ApplyDesiredStateAsync(entity, currentState, desiredStateChange, cancellationToken);
-
-                await _podCleaner.PerformPodCleanupAsync(currentState, cancellationToken);
+                await _clusterScaler.ScaleClusterAsync(entity, cancellationToken);
             }
             catch (Exception ex)
             {

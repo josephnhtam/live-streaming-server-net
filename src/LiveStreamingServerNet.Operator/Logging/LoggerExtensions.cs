@@ -8,8 +8,11 @@ namespace LiveStreamingServerNet.Operator.Logging
         [LoggerMessage(LogLevel.Error, "An error occurred when reconciling")]
         public static partial void ReconilingError(this ILogger logger, Exception exception);
 
-        [LoggerMessage(LogLevel.Error, "An error occurred when creating a job")]
-        public static partial void CreatingJobError(this ILogger logger, Exception exception);
+        [LoggerMessage(LogLevel.Error, "An error occurred when scaling the cluster")]
+        public static partial void ScalingClusterError(this ILogger logger, Exception exception);
+
+        [LoggerMessage(LogLevel.Error, "An error occurred when creating a pod")]
+        public static partial void CreatingPodError(this ILogger logger, Exception exception);
 
         [LoggerMessage(LogLevel.Error, "An error occurred when patching the pod {PodName}")]
         public static partial void PatchingPodError(this ILogger logger, string podName, Exception exception);
