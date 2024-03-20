@@ -98,7 +98,7 @@ namespace LiveStreamingServerNet.Operator.Services
                 }
                 catch (Exception ex)
                 {
-                    _logger.CreatingJobError(ex);
+                    _logger.CreatingPodError(ex);
                 }
             }));
         }
