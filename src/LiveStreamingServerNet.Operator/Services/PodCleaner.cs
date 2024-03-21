@@ -29,7 +29,7 @@ namespace LiveStreamingServerNet.Operator.Services
 
         public async Task PerformPodCleanupAsync(ClusterState currentState, CancellationToken cancellationToken)
         {
-            var completePods = currentState.PodStates.Where(p => p.Phase >= PodPhase.Succeeded);
+            var completePods = currentState.Pods.Where(p => p.Phase >= PodPhase.Succeeded);
 
             await Task.WhenAll(completePods.Select(async pod =>
                 {
