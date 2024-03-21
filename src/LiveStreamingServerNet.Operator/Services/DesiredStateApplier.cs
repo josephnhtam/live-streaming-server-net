@@ -43,12 +43,12 @@ namespace LiveStreamingServerNet.Operator.Services
             CancellationToken cancellationToken)
         {
             await ApplyPodStateChangesAsync(desiredStateChange.PodStateChanges, cancellationToken);
-            await CreateNewPodsAsync(entity, desiredStateChange.PodsCountDelta, cancellationToken);
+            await CreateNewPodsAsync(entity, desiredStateChange.PodsIncrement, cancellationToken);
         }
 
-        private async Task CreateNewPodsAsync(V1LiveStreamingServerCluster entity, int podCountDelta, CancellationToken cancellationToken)
+        private async Task CreateNewPodsAsync(V1LiveStreamingServerCluster entity, uint podsIncrement, CancellationToken cancellationToken)
         {
-            if (podCountDelta <= 0)
+            if (podsIncrement == 0)
                 return;
 
             var template = entity.Spec.Template;
@@ -62,7 +62,7 @@ namespace LiveStreamingServerNet.Operator.Services
 
             template.Spec.RestartPolicy = "Never";
 
-            await Task.WhenAll(Enumerable.Range(0, podCountDelta).Select(async _ =>
+            await Task.WhenAll(Enumerable.Range(0, (int)podsIncrement).Select(async _ =>
             {
                 var pod = new V1Pod
                 {

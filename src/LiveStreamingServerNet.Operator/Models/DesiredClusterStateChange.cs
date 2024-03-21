@@ -2,12 +2,12 @@
 {
     public class DesiredClusterStateChange
     {
-        public int PodsCountDelta { get; }
+        public uint PodsIncrement { get; }
         public IReadOnlyList<PodStateChange> PodStateChanges { get; }
 
-        public DesiredClusterStateChange(int podCountDelta, IReadOnlyList<PodStateChange> podStateChanges)
+        public DesiredClusterStateChange(uint podsIncrement, IReadOnlyList<PodStateChange> podStateChanges)
         {
-            PodsCountDelta = podCountDelta;
+            PodsIncrement = podsIncrement;
             PodStateChanges = podStateChanges;
         }
     }
