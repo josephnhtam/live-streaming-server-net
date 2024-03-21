@@ -2,12 +2,13 @@
 {
     public class ClusterState
     {
-        public int PodsCount => PodStates.Count;
-        public IReadOnlyList<PodState> PodStates { get; }
+        public IReadOnlyList<PodState> Pods { get; }
+        public IReadOnlyList<PodState> ActivePods { get; }
 
-        public ClusterState(IReadOnlyList<PodState> podStates)
+        public ClusterState(IReadOnlyList<PodState> pods)
         {
-            PodStates = podStates;
+            Pods = pods;
+            ActivePods = pods.Where(x => x.Phase <= PodPhase.Running && !x.PendingStop).ToList();
         }
     }
 

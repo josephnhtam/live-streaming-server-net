@@ -19,7 +19,7 @@ namespace LiveStreamingServerNet.Operator.Services
 
         public async Task<ClusterState> GetClusterStateAsync(CancellationToken cancellationToken)
         {
-            var podStates = new List<PodState>();
+            var pods = new List<PodState>();
 
             bool hasNext = false;
             do
@@ -29,12 +29,12 @@ namespace LiveStreamingServerNet.Operator.Services
                     labelSelector: $"{Constants.AppLabel}={Constants.AppLabelValue}",
                     cancellationToken: cancellationToken);
 
-                podStates.AddRange(podList.Items.Select(ResolvePodState));
+                pods.AddRange(podList.Items.Select(ResolvePodState));
 
                 hasNext = !string.IsNullOrEmpty(podList.Continue());
             } while (hasNext);
 
-            return new ClusterState(podStates);
+            return new ClusterState(pods);
         }
 
         private static PodState ResolvePodState(V1Pod pod)
