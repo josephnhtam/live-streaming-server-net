@@ -12,12 +12,40 @@ namespace LiveStreamingServerNet.Operator.Services
             CancellationToken cancellationToken)
         {
             var activePodStates = currentState.PodStates.Where(x => x.Phase <= PodPhase.Running).ToList();
+
+            var currentUtilization = CalculateUtilization(entity, activePodStates);
+            var desiredPodsCount = CalculateDesiredPodsCount(entity, activePodStates, currentUtilization);
+            var desiredStateChanges = CalculateStateChanges(entity, currentState, activePodStates, desiredPodsCount);
+
+            if (activePodStates.Count > entity.Spec.MinReplicas)
+            {
+                var predictedUtilization = PredictUtilization(entity, activePodStates, desiredStateChanges);
+
+                if (!AreStateChangesValid(entity, currentUtilization, predictedUtilization))
+                    desiredStateChanges = new DesiredClusterStateChange(0, new List<PodStateChange>());
+            }
+
+            return ValueTask.FromResult(desiredStateChanges);
+        }
+
+        private static bool AreStateChangesValid(V1LiveStreamingServerCluster entity, float currentUtilization, float predictedUtilization)
+        {
+            if (currentUtilization < entity.Spec.TargetUtilization)
+                return predictedUtilization >= currentUtilization && predictedUtilization <= entity.Spec.TargetUtilization;
+
+            return predictedUtilization < currentUtilization;
+        }
+
+        private DesiredClusterStateChange CalculateStateChanges(
+            V1LiveStreamingServerCluster entity,
+            ClusterState currentState,
+            List<PodState> activePodStates,
+            int desiredPodsCount)
+        {
             var podStateChanges = new List<PodStateChange>();
 
-            var desiredPodsCount = CalculateDesiredPodsCount(entity, activePodStates);
-
             var desiredPodsCountDelta =
-                desiredPodsCount - currentState.PodStates.Where(p => !p.PendingStop && p.Phase < PodPhase.Terminating).Count();
+                            desiredPodsCount - currentState.PodStates.Where(p => !p.PendingStop && p.Phase < PodPhase.Terminating).Count();
 
             if (desiredPodsCountDelta > 0)
             {
@@ -28,7 +56,7 @@ namespace LiveStreamingServerNet.Operator.Services
                 AddPendingStops(desiredPodsCountDelta, podStateChanges, activePodStates);
             }
 
-            return ValueTask.FromResult(new DesiredClusterStateChange(desiredPodsCountDelta, podStateChanges));
+            return new DesiredClusterStateChange((uint)Math.Max(0, desiredPodsCountDelta), podStateChanges);
         }
 
         private void RemovePendingStops(
@@ -78,17 +106,41 @@ namespace LiveStreamingServerNet.Operator.Services
             }
         }
 
-        private int CalculateDesiredPodsCount(V1LiveStreamingServerCluster entity, IReadOnlyList<PodState> activePodStates)
+        private static int CalculateDesiredPodsCount(V1LiveStreamingServerCluster entity, IReadOnlyList<PodState> activePodStates, float currentUtilization)
         {
             if (activePodStates.Count == 0)
                 return entity.Spec.MinReplicas;
 
-            var currentUtilization = (float)activePodStates.Where(p => !p.PendingStop && p.Phase < PodPhase.Terminating)
-                .Sum(p => p.StreamsCount) / (activePodStates.Count * entity.Spec.PodStreamsLimit);
-
             var desiredPodsCount = (int)Math.Ceiling(activePodStates.Count * (currentUtilization / entity.Spec.TargetUtilization));
-
             return Math.Clamp(desiredPodsCount, entity.Spec.MinReplicas, entity.Spec.MaxReplicas);
+        }
+
+        private static float CalculateUtilization(V1LiveStreamingServerCluster entity, IReadOnlyList<PodState> activePodStates)
+        {
+            return (float)activePodStates.Where(p => !p.PendingStop).Sum(p => p.StreamsCount) / (activePodStates.Count * entity.Spec.PodStreamsLimit);
+        }
+
+        private static float PredictUtilization(V1LiveStreamingServerCluster entity,
+            IReadOnlyList<PodState> activePodStates, DesiredClusterStateChange stateChanges)
+        {
+            var predictedActivePodStates = new List<PodState>(activePodStates);
+            var podStateChanges = stateChanges.PodStateChanges.ToDictionary(x => x.PodName);
+
+            for (int i = 0; i < predictedActivePodStates.Count; i++)
+            {
+                PodState podState = predictedActivePodStates[i];
+
+                if (podStateChanges.TryGetValue(podState.PodName, out var change))
+                {
+                    podState = podState with { PendingStop = change.PendingStop };
+                    predictedActivePodStates[i] = podState;
+                }
+            }
+
+            for (int i = 0; i < stateChanges.PodsIncrement; i++)
+                predictedActivePodStates.Add(new PodState(Guid.NewGuid().ToString(), false, 0, PodPhase.Running, DateTime.UtcNow));
+
+            return CalculateUtilization(entity, predictedActivePodStates);
         }
     }
 }
