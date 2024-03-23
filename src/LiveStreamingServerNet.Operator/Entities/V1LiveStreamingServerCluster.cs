@@ -32,7 +32,9 @@ namespace LiveStreamingServerNet.Operator.Entities
 
         public class EntityStatus
         {
-
+            public int ActivePods { get; set; }
+            public int PendingStopPods { get; set; }
+            public int TotalStreams { get; set; }
         }
     }
 }

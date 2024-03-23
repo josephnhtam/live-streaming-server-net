@@ -17,7 +17,19 @@ spec:
         properties:
           status:
             nullable: false
-            properties: {}
+            properties:
+              activePods:
+                format: int32
+                nullable: false
+                type: integer
+              pendingStopPods:
+                format: int32
+                nullable: false
+                type: integer
+              totalStreams:
+                format: int32
+                nullable: false
+                type: integer
             type: object
           spec:
             nullable: false

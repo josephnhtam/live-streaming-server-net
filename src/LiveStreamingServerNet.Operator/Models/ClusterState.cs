@@ -4,11 +4,15 @@
     {
         public IReadOnlyList<PodState> Pods { get; }
         public IReadOnlyList<PodState> ActivePods { get; }
+        public IReadOnlyList<PodState> PendingStopPods { get; }
+        public int TotalStreams { get; }
 
         public ClusterState(IReadOnlyList<PodState> pods)
         {
             Pods = pods;
             ActivePods = pods.Where(x => x.Phase <= PodPhase.Running && !x.PendingStop).ToList();
+            PendingStopPods = pods.Where(x => x.Phase <= PodPhase.Running && x.PendingStop).ToList();
+            TotalStreams = pods.Where(x => x.Phase <= PodPhase.Running).Sum(x => x.StreamsCount);
         }
     }
 
