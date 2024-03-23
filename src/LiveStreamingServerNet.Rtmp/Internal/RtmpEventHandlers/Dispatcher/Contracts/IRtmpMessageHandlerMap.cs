@@ -1,6 +1,6 @@
 ﻿namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Dispatcher.Contracts
 {
-    internal interface IRtmpMessageHanlderMap
+    internal interface IRtmpMessageHandlerMap
     {
         Type? GetHandlerType(byte messageTypeId);
     }

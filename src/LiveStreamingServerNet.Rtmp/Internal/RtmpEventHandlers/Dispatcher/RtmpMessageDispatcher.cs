@@ -7,9 +7,9 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Dispatcher
     internal class RtmpMessageDispatcher : IRtmpMessageDispatcher
     {
         private readonly IServiceProvider _services;
-        private readonly IRtmpMessageHanlderMap _handlerMap;
+        private readonly IRtmpMessageHandlerMap _handlerMap;
 
-        public RtmpMessageDispatcher(IServiceProvider services, IRtmpMessageHanlderMap handlerMap)
+        public RtmpMessageDispatcher(IServiceProvider services, IRtmpMessageHandlerMap handlerMap)
         {
             _services = services;
             _handlerMap = handlerMap;
