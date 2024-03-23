@@ -23,34 +23,58 @@ spec:
             nullable: false
             properties:
               minReplicas:
+                description: The minimum number of replicas.
+                exclusiveMinimum: false
                 format: int32
+                minimum: 1.0
                 nullable: false
                 type: integer
               maxReplicas:
+                description: The maximum number of replicas.
+                exclusiveMinimum: false
                 format: int32
+                minimum: 1.0
                 nullable: false
                 type: integer
               podStreamsLimit:
+                description: The maximum number of streams that a single pod can publish.
+                exclusiveMinimum: false
                 format: int32
+                minimum: 1.0
                 nullable: false
                 type: integer
               targetUtilization:
+                description: The target utilization rate for the pod.
+                exclusiveMaximum: true
+                exclusiveMinimum: false
                 format: float
+                maximum: 1.0
+                minimum: 0.0
                 nullable: false
                 type: number
-              syncPeriodSecond:
+              syncPeriodSeconds:
+                description: The time interval of resource audits to maintain the desired state across the cluster of pods.
+                exclusiveMinimum: false
                 format: int32
+                minimum: 1.0
                 nullable: false
                 type: integer
               scaleUpStabilizationWindowSeconds:
+                description: The stabilization window for scaling up.
+                exclusiveMinimum: false
                 format: int32
+                minimum: 0.0
                 nullable: false
                 type: integer
               scaleDownStabilizationWindowSeconds:
+                description: The stabilization window for scaling down.
+                exclusiveMinimum: false
                 format: int32
+                minimum: 0.0
                 nullable: false
                 type: integer
               template:
+                description: The pod template of live streaming server.
                 nullable: false
                 type: object
                 x-kubernetes-embedded-resource: true
