@@ -55,14 +55,13 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
 
             var authorizationResult = await AuthorizeAsync(clientContext, command, chunkStreamContext, streamPath, streamArguments);
 
-            if (authorizationResult.IsAuthorized)
-            {
-                streamPath = authorizationResult.StreamPathOverride ?? streamPath;
-                streamArguments = authorizationResult.StreamArgumentsOverride ?? streamArguments;
+            if (!authorizationResult.IsAuthorized)
+                return false;
 
-                StartPublishing(clientContext, command, chunkStreamContext, streamPath, streamArguments);
-            }
+            streamPath = authorizationResult.StreamPathOverride ?? streamPath;
+            streamArguments = authorizationResult.StreamArgumentsOverride ?? streamArguments;
 
+            StartPublishing(clientContext, command, chunkStreamContext, streamPath, streamArguments);
             return true;
         }
 
@@ -116,7 +115,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
             if (!result.IsAuthorized)
             {
                 _logger.AuthorizationFailed(clientContext.Client.ClientId, streamPath, command.PublishingType, result.Reason);
-                SendAuthorizationFailedCommandMessage(clientContext, chunkStreamContext, result.Reason);
+                await SendAuthorizationFailedCommandMessageAsync(clientContext, chunkStreamContext, result.Reason);
             }
 
             return result;
@@ -179,9 +178,9 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
                 reason);
         }
 
-        private void SendAuthorizationFailedCommandMessage(IRtmpClientContext clientContext, IRtmpChunkStreamContext chunkStreamContext, string reason)
+        private async Task SendAuthorizationFailedCommandMessageAsync(IRtmpClientContext clientContext, IRtmpChunkStreamContext chunkStreamContext, string reason)
         {
-            _commandMessageSender.SendOnStatusCommandMessage(
+            await _commandMessageSender.SendOnStatusCommandMessageAsync(
                 clientContext,
                 chunkStreamContext.ChunkStreamId,
                 RtmpArgumentValues.Error,
