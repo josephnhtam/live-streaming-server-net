@@ -9,10 +9,10 @@ namespace LiveStreamingServerNet.Operator.Installers
         {
             services.AddSingleton<IClusterStateRetriver, ClusterStateRetriver>()
                     .AddSingleton<IDesiredStateCalculator, DesiredStateCalculator>()
-                    .AddSingleton<IDesiredStateStabilizer, DesiredStateStabilizer>()
                     .AddSingleton<IDesiredStateApplier, DesiredStateApplier>()
                     .AddSingleton<IPodCleaner, PodCleaner>()
-                    .AddSingleton<IClusterScaler, ClusterScaler>();
+                    .AddSingleton<IClusterScaler, ClusterScaler>()
+                    .AddTransient<ITargetReplicasStabilizer, TargetReplicasStabilizer>();
 
             return services;
         }

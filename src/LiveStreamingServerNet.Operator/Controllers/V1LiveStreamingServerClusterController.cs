@@ -38,7 +38,7 @@ namespace LiveStreamingServerNet.Operator.Controllers
             }
             finally
             {
-                _requeue(entity, TimeSpan.FromSeconds(5));
+                _requeue(entity, TimeSpan.FromSeconds(entity.Spec.SyncPeriodSecond));
             }
         }
 

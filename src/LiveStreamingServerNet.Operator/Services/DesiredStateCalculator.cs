@@ -6,6 +6,13 @@ namespace LiveStreamingServerNet.Operator.Services
 {
     public class DesiredStateCalculator : IDesiredStateCalculator
     {
+        private readonly ITargetReplicasStabilizer _targetReplicasStabilizer;
+
+        public DesiredStateCalculator(ITargetReplicasStabilizer targetReplicasStabilizer)
+        {
+            _targetReplicasStabilizer = targetReplicasStabilizer;
+        }
+
         public ValueTask<DesiredClusterStateChange> CalculateDesiredStateChange(
             V1LiveStreamingServerCluster entity,
             ClusterState currentState,
@@ -15,7 +22,7 @@ namespace LiveStreamingServerNet.Operator.Services
             var desiredPodsCount = CalculateDesiredPodsCount(entity, currentState, currentUtilization);
             var desiredStateChanges = CalculateStateChanges(entity, currentState, desiredPodsCount);
 
-            if (currentState.ActivePods.Count > entity.Spec.MinReplicas)
+            if (currentState.ActivePods.Count >= entity.Spec.MinReplicas)
             {
                 var predictedUtilization = PredictUtilization(entity, currentState, desiredStateChanges);
 
@@ -102,12 +109,12 @@ namespace LiveStreamingServerNet.Operator.Services
             }
         }
 
-        private static int CalculateDesiredPodsCount(V1LiveStreamingServerCluster entity, ClusterState currentState, float currentUtilization)
+        private int CalculateDesiredPodsCount(V1LiveStreamingServerCluster entity, ClusterState currentState, float currentUtilization)
         {
-            if (currentState.ActivePods.Count <= entity.Spec.MinReplicas)
-                return entity.Spec.MinReplicas;
-
             var desiredPodsCount = (int)Math.Ceiling(currentState.ActivePods.Count * (currentUtilization / entity.Spec.TargetUtilization));
+
+            desiredPodsCount = _targetReplicasStabilizer.StabilizeTargetReplicas(entity, currentState.ActivePods.Count, desiredPodsCount);
+
             return Math.Clamp(desiredPodsCount, entity.Spec.MinReplicas, entity.Spec.MaxReplicas);
         }
 

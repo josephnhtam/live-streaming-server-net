@@ -6,8 +6,13 @@ metadata:
 spec:
   minReplicas: 1
   maxReplicas: 10
-  targetUtilization: 0.5
+
   podStreamsLimit: 2
+  targetUtilization: 0.5
+  
+  syncPeriodSecond: 5
+  scaleUpStabilizationWindowSeconds: 0
+  scaleDownStabilizationWindowSeconds: 30
   
   template:
     apiVersion: v1
