@@ -48,13 +48,13 @@ namespace LiveStreamingServerNet.Rtmp.Installer
         public IRtmpServerConfigurator AddAuthorizationHandler<TAuthorizationHandler>()
             where TAuthorizationHandler : class, IAuthorizationHandler
         {
-            Services.TryAddSingleton<IAuthorizationHandler, TAuthorizationHandler>();
+            Services.AddSingleton<IAuthorizationHandler, TAuthorizationHandler>();
             return this;
         }
 
         public IRtmpServerConfigurator AddAuthorizationHandler(Func<IServiceProvider, IAuthorizationHandler> implmentationFactory)
         {
-            Services.TryAddSingleton(implmentationFactory);
+            Services.AddSingleton(implmentationFactory);
             return this;
         }
 

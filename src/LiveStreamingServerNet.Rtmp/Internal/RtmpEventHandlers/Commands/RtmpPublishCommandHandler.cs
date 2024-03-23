@@ -72,12 +72,22 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
             IDictionary<string, string> streamArguments,
             string publishingType)
         {
-            var authorizationHandler = _services.GetService<IAuthorizationHandler>();
+            if (streamArguments.TryGetValue("code", out var authCode) && authCode == _serverContext.AuthCode)
+                return AuthorizationResult.Authorized();
 
-            if (authorizationHandler != null)
-                return await authorizationHandler.AuthorizePublishingAsync(clientContext.Client, streamPath, streamArguments, publishingType);
+            foreach (var authorizationHandler in _services.GetServices<IAuthorizationHandler>().OrderBy(x => x.GetOrder()))
+            {
+                var result = await authorizationHandler.AuthorizePublishingAsync(
+                    clientContext.Client, streamPath, new Dictionary<string, string>(streamArguments), publishingType);
 
-            return AuthorizationResult.Authorized();
+                if (!result.IsAuthorized)
+                    return result;
+
+                streamPath = result.StreamPathOverride ?? streamPath;
+                streamArguments = result.StreamArgumentsOverride ?? streamArguments;
+            }
+
+            return AuthorizationResult.Authorized(streamPath, streamArguments);
         }
 
         private static (string StreamPath, IDictionary<string, string> StreamArguments)

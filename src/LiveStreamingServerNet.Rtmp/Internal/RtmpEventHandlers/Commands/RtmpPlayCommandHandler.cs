@@ -77,12 +77,19 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
             if (streamArguments.TryGetValue("code", out var authCode) && authCode == _serverContext.AuthCode)
                 return AuthorizationResult.Authorized();
 
-            var authorizationHandler = _services.GetService<IAuthorizationHandler>();
+            foreach (var authorizationHandler in _services.GetServices<IAuthorizationHandler>().OrderBy(x => x.GetOrder()))
+            {
+                var result = await authorizationHandler.AuthorizeSubscriptionAsync(
+                    clientContext.Client, streamPath, new Dictionary<string, string>(streamArguments));
 
-            if (authorizationHandler != null)
-                return await authorizationHandler.AuthorizeSubscriptionAsync(clientContext.Client, streamPath, streamArguments);
+                if (!result.IsAuthorized)
+                    return result;
 
-            return AuthorizationResult.Authorized();
+                streamPath = result.StreamPathOverride ?? streamPath;
+                streamArguments = result.StreamArgumentsOverride ?? streamArguments;
+            }
+
+            return AuthorizationResult.Authorized(streamPath, streamArguments);
         }
 
         private static (string StreamPath, IDictionary<string, string> StreamArguments)
