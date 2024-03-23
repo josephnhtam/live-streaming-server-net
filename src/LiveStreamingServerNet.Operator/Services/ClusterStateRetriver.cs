@@ -26,7 +26,7 @@ namespace LiveStreamingServerNet.Operator.Services
             {
                 var podList = await _client.CoreV1.ListNamespacedPodAsync(
                     namespaceParameter: _podsNamespace,
-                    labelSelector: $"{PodConstants.AppLabel}={PodConstants.AppLabelValue}",
+                    labelSelector: $"{PodConstants.TypeLabel}={PodConstants.TypeValue}",
                     cancellationToken: cancellationToken);
 
                 pods.AddRange(podList.Items.Select(ResolvePodState));
