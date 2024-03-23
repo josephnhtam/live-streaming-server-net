@@ -18,12 +18,12 @@ spec:
     apiVersion: v1
     kind: Pod
     metadata:
-      name: live-streaming-server-net-pod
+      name: live-streaming-server-pod
       labels:
-        app: live-streaming-server-net
+        app: live-streaming-server
     spec:
       containers:
-      - name: live-streaming-server-net
+      - name: live-streaming-server
         image: IMAGE
         imagePullPolicy: Never
         resources:

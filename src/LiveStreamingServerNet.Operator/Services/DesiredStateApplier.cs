@@ -99,7 +99,7 @@ namespace LiveStreamingServerNet.Operator.Services
             var template = entity.Spec.Template;
 
             template.Metadata.Labels ??= new Dictionary<string, string>();
-            template.Metadata.Labels[PodConstants.AppLabel] = PodConstants.AppLabelValue;
+            template.Metadata.Labels[PodConstants.TypeLabel] = PodConstants.TypeValue;
             template.Metadata.Labels[PodConstants.PendingStopLabel] = "false";
             template.Metadata.Labels[PodConstants.StreamsLimitReachedLabel] = "false";
 
