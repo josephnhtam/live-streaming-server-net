@@ -99,20 +99,20 @@ namespace LiveStreamingServerNet.Operator.Services
             var template = entity.Spec.Template;
 
             template.Metadata.Labels ??= new Dictionary<string, string>();
-            template.Metadata.Labels[Constants.AppLabel] = Constants.AppLabelValue;
-            template.Metadata.Labels[Constants.PendingStopLabel] = "false";
-            template.Metadata.Labels[Constants.LimitReachedLabel] = "false";
+            template.Metadata.Labels[PodConstants.AppLabel] = PodConstants.AppLabelValue;
+            template.Metadata.Labels[PodConstants.PendingStopLabel] = "false";
+            template.Metadata.Labels[PodConstants.LimitReachedLabel] = "false";
 
             template.Metadata.Annotations ??= new Dictionary<string, string>();
-            template.Metadata.Annotations[Constants.StreamsCountAnnotation] = "0";
-            template.Metadata.Annotations[Constants.StreamsLimitAnnotation] = entity.Spec.PodStreamsLimit.ToString();
+            template.Metadata.Annotations[PodConstants.StreamsCountAnnotation] = "0";
+            template.Metadata.Annotations[PodConstants.StreamsLimitAnnotation] = entity.Spec.PodStreamsLimit.ToString();
 
             template.Spec.RestartPolicy = "Never";
 
             foreach (var container in template.Spec.Containers)
             {
                 container.Env ??= new List<V1EnvVar>();
-                container.Env.Add(new V1EnvVar(Constants.StreamsLimitEnv, entity.Spec.PodStreamsLimit.ToString()));
+                container.Env.Add(new V1EnvVar(PodConstants.StreamsLimitEnv, entity.Spec.PodStreamsLimit.ToString()));
             }
 
             return template;
@@ -123,7 +123,7 @@ namespace LiveStreamingServerNet.Operator.Services
             await Task.WhenAll(podStateChanges.Select(async (podStateChange) =>
             {
                 var podPatchBuilder = PodPatcherBuilder.Create();
-                podPatchBuilder.SetLabel(Constants.PendingStopLabel, podStateChange.PendingStop.ToString().ToLower());
+                podPatchBuilder.SetLabel(PodConstants.PendingStopLabel, podStateChange.PendingStop.ToString().ToLower());
                 var patch = podPatchBuilder.Build();
 
                 try
