@@ -30,7 +30,7 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
 
         public async ValueTask ReconcileAsync(IDictionary<string, string> labels, IDictionary<string, string> annotations)
         {
-            if (!labels.TryGetValue(Constants.PendingStopLabel, out var isPendingStopStr))
+            if (!labels.TryGetValue(PodConstants.PendingStopLabel, out var isPendingStopStr))
             {
                 _isPendingStop = false;
                 return;
@@ -60,7 +60,7 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
         private async Task UpdatePodAsync()
         {
             await _kubernetesContext.PatchPodAsync(builder =>
-                builder.SetAnnotation(Constants.StreamsCountAnnotation, _streamCount.ToString())
+                builder.SetAnnotation(PodConstants.StreamsCountAnnotation, _streamCount.ToString())
             );
         }
 
