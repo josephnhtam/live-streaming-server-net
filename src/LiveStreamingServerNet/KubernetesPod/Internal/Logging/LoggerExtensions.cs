@@ -18,5 +18,11 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Logging
 
         [LoggerMessage(LogLevel.Information, "Ignoring error occurred when watching the pod")]
         public static partial void IgnoringWatchingPodError(this ILogger logger, Exception exception);
+
+        [LoggerMessage(LogLevel.Warning, "ClientId: {ClientId} | Client IStreams limit reached")]
+        public static partial void StreamsLimitReached(this ILogger logger, uint clientId);
+
+        [LoggerMessage(LogLevel.Warning, "ClientId: {ClientId} | Pod is pending stop")]
+        public static partial void PodPendingStop(this ILogger logger, uint clientId);
     }
 }

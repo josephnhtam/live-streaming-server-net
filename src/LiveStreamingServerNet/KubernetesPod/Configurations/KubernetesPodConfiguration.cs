@@ -2,7 +2,7 @@
 {
     public class KubernetesPodConfiguration
     {
-        public string PodNamespaceEnvironmentVariableName { get; set; } = "POD_NAMESPACE";
-        public string PodNameEnvironmentVariableName { get; set; } = "POD_NAME";
+        public bool BlockPublishingWhenPendingStop { get; set; } = true;
+        public bool BlockPublishingWhenLimitReached { get; set; } = true;
     }
 }

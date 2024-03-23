@@ -7,6 +7,7 @@ spec:
   selector:
     app: live-streaming-server-net
     live-streaming-server-net/pending-stop: "false"
+    live-streaming-server-net/streams-limit-reached: "false"
   type: LoadBalancer
   ports:
   - name: http

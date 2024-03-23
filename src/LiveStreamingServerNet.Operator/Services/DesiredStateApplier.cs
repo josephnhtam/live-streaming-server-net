@@ -101,7 +101,7 @@ namespace LiveStreamingServerNet.Operator.Services
             template.Metadata.Labels ??= new Dictionary<string, string>();
             template.Metadata.Labels[PodConstants.AppLabel] = PodConstants.AppLabelValue;
             template.Metadata.Labels[PodConstants.PendingStopLabel] = "false";
-            template.Metadata.Labels[PodConstants.LimitReachedLabel] = "false";
+            template.Metadata.Labels[PodConstants.StreamsLimitReachedLabel] = "false";
 
             template.Metadata.Annotations ??= new Dictionary<string, string>();
             template.Metadata.Annotations[PodConstants.StreamsCountAnnotation] = "0";

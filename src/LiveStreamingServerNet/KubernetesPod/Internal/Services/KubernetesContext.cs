@@ -1,12 +1,10 @@
 ﻿using k8s;
 using k8s.Models;
-using LiveStreamingServerNet.KubernetesPod.Configurations;
 using LiveStreamingServerNet.KubernetesPod.Internal.Logging;
 using LiveStreamingServerNet.KubernetesPod.Internal.Services.Contracts;
 using LiveStreamingServerNet.KubernetesPod.Utilities;
 using LiveStreamingServerNet.KubernetesPod.Utilities.Contracts;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 
@@ -18,12 +16,10 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
         public string PodNamespace { get; }
         public string PodName { get; }
 
-        private readonly KubernetesPodConfiguration _config;
         private readonly ILogger _logger;
 
-        public KubernetesContext(IOptions<KubernetesPodConfiguration> config, ILogger<KubernetesContext> logger)
+        public KubernetesContext(ILogger<KubernetesContext> logger)
         {
-            _config = config.Value;
             _logger = logger;
 
             KubernetesClient = CreateKubernetesClient();
@@ -39,14 +35,14 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
 
         private string GetPodNamespace()
         {
-            return Environment.GetEnvironmentVariable(_config.PodNamespaceEnvironmentVariableName) ??
-                throw new InvalidOperationException($"Environment variable '{_config.PodNamespaceEnvironmentVariableName}' is not set.");
+            return Environment.GetEnvironmentVariable(PodConstants.PodNamespaceEnv) ??
+                throw new InvalidOperationException($"Environment variable '{PodConstants.PodNamespaceEnv}' is not set.");
         }
 
         private string GetPodName()
         {
-            return Environment.GetEnvironmentVariable(_config.PodNameEnvironmentVariableName) ??
-                throw new InvalidOperationException($"Environment variable '{_config.PodNameEnvironmentVariableName}' is not set.");
+            return Environment.GetEnvironmentVariable(PodConstants.PodNameEnv) ??
+                throw new InvalidOperationException($"Environment variable '{PodConstants.PodNameEnv}' is not set.");
         }
 
         public async Task<V1Pod> GetPodAsync(CancellationToken cancellationToken)
