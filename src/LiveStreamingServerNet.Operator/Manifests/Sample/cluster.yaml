@@ -10,7 +10,7 @@ spec:
   podStreamsLimit: 2
   targetUtilization: 0.5
   
-  syncPeriodSecond: 5
+  syncPeriodSeconds: 5
   scaleUpStabilizationWindowSeconds: 0
   scaleDownStabilizationWindowSeconds: 30
   

@@ -51,16 +51,7 @@ namespace LiveStreamingServerNet.Operator.Services
             if (podsIncrement == 0)
                 return;
 
-            var template = entity.Spec.Template;
-
-            template.Metadata.Labels ??= new Dictionary<string, string>();
-            template.Metadata.Labels[Constants.AppLabel] = Constants.AppLabelValue;
-            template.Metadata.Labels[Constants.PendingStopLabel] = "false";
-
-            template.Metadata.Annotations ??= new Dictionary<string, string>();
-            template.Metadata.Annotations[Constants.StreamsCountAnnotation] = "0";
-
-            template.Spec.RestartPolicy = "Never";
+            var template = CreatePodTemplate(entity);
 
             await Task.WhenAll(Enumerable.Range(0, (int)podsIncrement).Select(async _ =>
             {
@@ -101,6 +92,22 @@ namespace LiveStreamingServerNet.Operator.Services
                     _logger.CreatingPodError(ex);
                 }
             }));
+        }
+
+        private static V1PodTemplateSpec CreatePodTemplate(V1LiveStreamingServerCluster entity)
+        {
+            var template = entity.Spec.Template;
+
+            template.Metadata.Labels ??= new Dictionary<string, string>();
+            template.Metadata.Labels[Constants.AppLabel] = Constants.AppLabelValue;
+            template.Metadata.Labels[Constants.PendingStopLabel] = "false";
+
+            template.Metadata.Annotations ??= new Dictionary<string, string>();
+            template.Metadata.Annotations[Constants.StreamsCountAnnotation] = "0";
+
+            template.Spec.RestartPolicy = "Never";
+
+            return template;
         }
 
         private async Task ApplyPodStateChangesAsync(IReadOnlyList<PodStateChange> podStateChanges, CancellationToken cancellationToken)
