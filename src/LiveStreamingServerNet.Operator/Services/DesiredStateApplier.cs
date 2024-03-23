@@ -101,11 +101,19 @@ namespace LiveStreamingServerNet.Operator.Services
             template.Metadata.Labels ??= new Dictionary<string, string>();
             template.Metadata.Labels[Constants.AppLabel] = Constants.AppLabelValue;
             template.Metadata.Labels[Constants.PendingStopLabel] = "false";
+            template.Metadata.Labels[Constants.LimitReachedLabel] = "false";
 
             template.Metadata.Annotations ??= new Dictionary<string, string>();
             template.Metadata.Annotations[Constants.StreamsCountAnnotation] = "0";
+            template.Metadata.Annotations[Constants.StreamsLimitAnnotation] = entity.Spec.PodStreamsLimit.ToString();
 
             template.Spec.RestartPolicy = "Never";
+
+            foreach (var container in template.Spec.Containers)
+            {
+                container.Env ??= new List<V1EnvVar>();
+                container.Env.Add(new V1EnvVar(Constants.StreamsLimitEnv, entity.Spec.PodStreamsLimit.ToString()));
+            }
 
             return template;
         }
