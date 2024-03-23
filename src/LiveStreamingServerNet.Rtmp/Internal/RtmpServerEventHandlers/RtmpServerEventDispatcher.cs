@@ -19,7 +19,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpServerEventHandlers
 
         public IRtmpServerConnectionEventHandler[] GetEventHandlers()
         {
-            _eventHandlers ??= _services.GetServices<IRtmpServerConnectionEventHandler>().ToArray();
+            _eventHandlers ??= _services.GetServices<IRtmpServerConnectionEventHandler>().OrderBy(x => x.GetOrder()).ToArray();
             return _eventHandlers;
         }
 
@@ -90,7 +90,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpServerEventHandlers
 
         public IRtmpServerStreamEventHandler[] GetEventHandlers()
         {
-            _eventHandlers ??= _services.GetServices<IRtmpServerStreamEventHandler>().ToArray();
+            _eventHandlers ??= _services.GetServices<IRtmpServerStreamEventHandler>().OrderBy(x => x.GetOrder()).ToArray();
             return _eventHandlers;
         }
 

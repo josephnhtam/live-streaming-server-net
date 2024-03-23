@@ -20,7 +20,7 @@ namespace LiveStreamingServerNet.Networking
 
         public IServerEventHandler[] GetEventHandlers()
         {
-            _eventHandlers ??= _services.GetServices<IServerEventHandler>().ToArray();
+            _eventHandlers ??= _services.GetServices<IServerEventHandler>().OrderBy(x => x.GetOrder()).ToArray();
             return _eventHandlers;
         }
 

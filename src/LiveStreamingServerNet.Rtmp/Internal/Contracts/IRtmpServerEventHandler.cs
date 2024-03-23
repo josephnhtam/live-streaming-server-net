@@ -2,6 +2,8 @@
 {
     internal interface IRtmpServerConnectionEventHandler
     {
+        int GetOrder() => 0;
+
         ValueTask OnRtmpClientCreatedAsync(IRtmpClientContext clientContext);
         ValueTask OnRtmpClientDisposedAsync(IRtmpClientContext clientContext);
 
@@ -11,6 +13,8 @@
 
     internal interface IRtmpServerStreamEventHandler
     {
+        int GetOrder() => 0;
+
         ValueTask OnRtmpStreamPublishedAsync(IRtmpClientContext clientContext, string streamPath, IReadOnlyDictionary<string, string> streamArguments);
         ValueTask OnRtmpStreamUnpublishedAsync(IRtmpClientContext clientContext, string streamPath);
         ValueTask OnRtmpStreamSubscribedAsync(IRtmpClientContext clientContext, string streamPath, IReadOnlyDictionary<string, string> streamArguments);

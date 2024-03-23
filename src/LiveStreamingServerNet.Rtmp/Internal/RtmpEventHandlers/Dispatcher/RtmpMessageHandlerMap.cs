@@ -2,7 +2,7 @@
 
 namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Dispatcher
 {
-    internal class RtmpMessageHandlerMap : IRtmpMessageHanlderMap
+    internal class RtmpMessageHandlerMap : IRtmpMessageHandlerMap
     {
         private readonly IDictionary<byte, Type> _handlerMap;
 

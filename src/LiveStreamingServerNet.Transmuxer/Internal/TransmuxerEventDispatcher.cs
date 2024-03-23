@@ -21,7 +21,7 @@ namespace LiveStreamingServerNet.Transmuxer.Internal
 
         public ITransmuxerEventHandler[] GetEventHandlers()
         {
-            _eventHandlers ??= _services.GetServices<ITransmuxerEventHandler>().ToArray();
+            _eventHandlers ??= _services.GetServices<ITransmuxerEventHandler>().OrderBy(x => x.GetOrder()).ToArray();
             return _eventHandlers;
         }
 

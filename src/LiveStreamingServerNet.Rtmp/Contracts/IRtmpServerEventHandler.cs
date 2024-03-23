@@ -4,6 +4,8 @@ namespace LiveStreamingServerNet.Rtmp.Contracts
 {
     public interface IRtmpServerConnectionEventHandler
     {
+        int GetOrder() => 0;
+
         ValueTask OnRtmpClientCreatedAsync(IClientControl client);
         ValueTask OnRtmpClientDisposedAsync(uint clientId);
 
@@ -13,6 +15,8 @@ namespace LiveStreamingServerNet.Rtmp.Contracts
 
     public interface IRtmpServerStreamEventHandler
     {
+        int GetOrder() => 0;
+
         ValueTask OnRtmpStreamPublishedAsync(uint clientId, string streamPath, IReadOnlyDictionary<string, string> streamArguments);
         ValueTask OnRtmpStreamUnpublishedAsync(uint clientId, string streamPath);
         ValueTask OnRtmpStreamSubscribedAsync(uint clientId, string streamPath, IReadOnlyDictionary<string, string> streamArguments);
