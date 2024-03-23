@@ -8,6 +8,11 @@ install-kubops-cli:
 .PHONY: manifest
 manifest:
 	dotnet kubeops generate operator live-streaming-server-net --out ./Manifests
+ifeq ($(OS),Windows_NT) 
+	del .\Manifests\Dockerfile
+else
+	rm -f ./Manifests/Dockerfile
+endif
 	
 .PHONY: build
 build:

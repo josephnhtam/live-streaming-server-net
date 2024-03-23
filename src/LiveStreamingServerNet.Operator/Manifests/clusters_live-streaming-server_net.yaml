@@ -30,11 +30,23 @@ spec:
                 format: int32
                 nullable: false
                 type: integer
+              podStreamsLimit:
+                format: int32
+                nullable: false
+                type: integer
               targetUtilization:
                 format: float
                 nullable: false
                 type: number
-              podStreamsLimit:
+              syncPeriodSecond:
+                format: int32
+                nullable: false
+                type: integer
+              scaleUpStabilizationWindowSeconds:
+                format: int32
+                nullable: false
+                type: integer
+              scaleDownStabilizationWindowSeconds:
                 format: int32
                 nullable: false
                 type: integer

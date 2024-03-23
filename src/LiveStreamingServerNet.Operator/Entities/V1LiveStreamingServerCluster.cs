@@ -11,8 +11,13 @@ namespace LiveStreamingServerNet.Operator.Entities
         {
             public int MinReplicas { get; set; } = 1;
             public int MaxReplicas { get; set; } = 10;
-            public float TargetUtilization { get; set; } = 0.75f;
+
             public int PodStreamsLimit { get; set; } = 4;
+            public float TargetUtilization { get; set; } = 0.75f;
+
+            public int SyncPeriodSecond { get; set; } = 5;
+            public int ScaleUpStabilizationWindowSeconds { get; set; } = 10;
+            public int ScaleDownStabilizationWindowSeconds { get; set; } = 300;
 
             [Required]
             [EmbeddedResource]
