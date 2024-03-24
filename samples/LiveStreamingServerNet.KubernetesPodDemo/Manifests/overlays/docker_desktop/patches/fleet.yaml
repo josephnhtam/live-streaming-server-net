@@ -1,0 +1,11 @@
+apiVersion: live-streaming-server.net/v1
+kind: Fleet
+metadata:
+  name: live-streaming-server-fleet
+spec:
+  template:
+    spec:
+      containers:
+      - name: live-streaming-server
+        image: image
+        imagePullPolicy: Never
