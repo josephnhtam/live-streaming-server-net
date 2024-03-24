@@ -24,13 +24,14 @@ namespace LiveStreamingServerNet.KubernetesOperator.Services
         {
             var pods = new List<PodState>();
 
-            bool hasNext = false;
+            string? continueToken;
             do
             {
                 var podList = await _client.CoreV1.ListNamespacedPodAsync(
                     namespaceParameter: _podsNamespace,
                     labelSelector: $"{PodConstants.TypeLabel}={PodConstants.TypeValue}",
                     limit: PodChunkSize,
+                    continueParameter: continueToken,
                     cancellationToken: cancellationToken);
 
                 pods.AddRange(
@@ -39,8 +40,8 @@ namespace LiveStreamingServerNet.KubernetesOperator.Services
                         .Select(ResolvePodState)
                 );
 
-                hasNext = !string.IsNullOrEmpty(podList.Continue());
-            } while (hasNext);
+                continueToken = podList.Continue();
+            } while (!string.IsNullOrEmpty(continueToken));
 
             return new FleetState(pods);
         }
