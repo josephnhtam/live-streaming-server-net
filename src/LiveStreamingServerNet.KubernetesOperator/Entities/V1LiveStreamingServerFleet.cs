@@ -4,8 +4,8 @@ using KubeOps.Abstractions.Entities.Attributes;
 
 namespace LiveStreamingServerNet.KubernetesOperator.Entities
 {
-    [KubernetesEntity(Group = "live-streaming-server.net", ApiVersion = "v1", Kind = "Cluster", PluralName = "Clusters")]
-    public partial class V1LiveStreamingServerCluster : CustomKubernetesEntity<V1LiveStreamingServerCluster.EntitySpec, V1LiveStreamingServerCluster.EntityStatus>
+    [KubernetesEntity(Group = "live-streaming-server.net", ApiVersion = "v1", Kind = "Fleet", PluralName = "Fleets")]
+    public partial class V1LiveStreamingServerFleet : CustomKubernetesEntity<V1LiveStreamingServerFleet.EntitySpec, V1LiveStreamingServerFleet.EntityStatus>
     {
         public class EntitySpec
         {
@@ -19,7 +19,7 @@ namespace LiveStreamingServerNet.KubernetesOperator.Entities
             [RangeMinimum(0), RangeMaximum(1, true), Description("The target utilization rate for the pod.")]
             public float TargetUtilization { get; set; } = 0.75f;
 
-            [RangeMinimum(1), Description("The time interval of resource audits to maintain the desired state across the cluster of pods.")]
+            [RangeMinimum(1), Description("The time interval of resource audits to maintain the desired state across the fleet of pods.")]
             public int SyncPeriodSeconds { get; set; } = 5;
             [RangeMinimum(0), Description("The stabilization window for scaling up.")]
             public int ScaleUpStabilizationWindowSeconds { get; set; } = 10;

@@ -1,7 +1,7 @@
 apiVersion: live-streaming-server.net/v1
-kind: Cluster
+kind: Fleet
 metadata:
-  name: live-streaming-server-net-cluster
+  name: live-streaming-server-net-fleet
   namespace: live-streaming-server-net
 spec:
   minReplicas: 1

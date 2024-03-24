@@ -2,8 +2,8 @@
 
 namespace LiveStreamingServerNet.KubernetesOperator.Services.Contracts
 {
-    public interface IClusterStateRetriver
+    public interface IFleetStateRetriver
     {
-        Task<ClusterState> GetClusterStateAsync(CancellationToken cancellationToken);
+        Task<FleetState> GetFleetStateAsync(CancellationToken cancellationToken);
     }
 }

@@ -6,9 +6,9 @@ namespace LiveStreamingServerNet.KubernetesOperator.Services.Contracts
     public interface IDesiredStateApplier
     {
         Task ApplyDesiredStateAsync(
-            V1LiveStreamingServerCluster entity,
-            ClusterState currentState,
-            DesiredClusterStateChange desiredStateChange,
+            V1LiveStreamingServerFleet entity,
+            FleetState currentState,
+            DesiredFleetStateChange desiredStateChange,
             CancellationToken cancellationToken);
     }
 }

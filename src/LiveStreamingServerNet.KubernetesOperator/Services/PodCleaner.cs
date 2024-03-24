@@ -27,7 +27,7 @@ namespace LiveStreamingServerNet.KubernetesOperator.Services
             _podNamespace = operatorClient.GetCurrentNamespace();
         }
 
-        public async Task PerformPodCleanupAsync(ClusterState currentState, CancellationToken cancellationToken)
+        public async Task PerformPodCleanupAsync(FleetState currentState, CancellationToken cancellationToken)
         {
             var completePods = currentState.Pods.Where(p => p.Phase >= PodPhase.Succeeded);
 

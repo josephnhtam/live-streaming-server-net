@@ -13,9 +13,9 @@ namespace LiveStreamingServerNet.KubernetesOperator.Services
             _targetReplicasStabilizer = targetReplicasStabilizer;
         }
 
-        public ValueTask<DesiredClusterStateChange> CalculateDesiredStateChange(
-            V1LiveStreamingServerCluster entity,
-            ClusterState currentState,
+        public ValueTask<DesiredFleetStateChange> CalculateDesiredStateChange(
+            V1LiveStreamingServerFleet entity,
+            FleetState currentState,
             CancellationToken cancellationToken)
         {
             var currentUtilization = CalculateUtilization(entity, currentState.ActivePods);
@@ -27,13 +27,13 @@ namespace LiveStreamingServerNet.KubernetesOperator.Services
                 var predictedUtilization = PredictUtilization(entity, currentState, desiredStateChanges);
 
                 if (!AreStateChangesValid(entity, currentUtilization, predictedUtilization))
-                    desiredStateChanges = new DesiredClusterStateChange(0, new List<PodStateChange>());
+                    desiredStateChanges = new DesiredFleetStateChange(0, new List<PodStateChange>());
             }
 
             return ValueTask.FromResult(desiredStateChanges);
         }
 
-        private static bool AreStateChangesValid(V1LiveStreamingServerCluster entity, float currentUtilization, float predictedUtilization)
+        private static bool AreStateChangesValid(V1LiveStreamingServerFleet entity, float currentUtilization, float predictedUtilization)
         {
             if (currentUtilization < entity.Spec.TargetUtilization)
                 return predictedUtilization >= currentUtilization && predictedUtilization <= entity.Spec.TargetUtilization;
@@ -41,9 +41,9 @@ namespace LiveStreamingServerNet.KubernetesOperator.Services
             return predictedUtilization < currentUtilization;
         }
 
-        private DesiredClusterStateChange CalculateStateChanges(
-            V1LiveStreamingServerCluster entity,
-            ClusterState currentState,
+        private DesiredFleetStateChange CalculateStateChanges(
+            V1LiveStreamingServerFleet entity,
+            FleetState currentState,
             int desiredPodsCount)
         {
             var podStateChanges = new List<PodStateChange>();
@@ -59,14 +59,14 @@ namespace LiveStreamingServerNet.KubernetesOperator.Services
                 AddPendingStops(desiredPodsCountDelta, podStateChanges, currentState);
             }
 
-            return new DesiredClusterStateChange((uint)Math.Max(0, desiredPodsCountDelta), podStateChanges);
+            return new DesiredFleetStateChange((uint)Math.Max(0, desiredPodsCountDelta), podStateChanges);
         }
 
         private void RemovePendingStops(
             ref int desiredPodsCountDelta,
-            V1LiveStreamingServerCluster entity,
+            V1LiveStreamingServerFleet entity,
             List<PodStateChange> podStateChanges,
-            ClusterState currentState)
+            FleetState currentState)
         {
             var requiredAvailability = desiredPodsCountDelta * entity.Spec.PodStreamsLimit;
             var availabilityRecovered = 0;
@@ -92,7 +92,7 @@ namespace LiveStreamingServerNet.KubernetesOperator.Services
         private void AddPendingStops(
             int desiredPodsCountDelta,
             List<PodStateChange> podStateChanges,
-            ClusterState currentState)
+            FleetState currentState)
         {
             desiredPodsCountDelta = Math.Abs(desiredPodsCountDelta);
 
@@ -109,7 +109,7 @@ namespace LiveStreamingServerNet.KubernetesOperator.Services
             }
         }
 
-        private int CalculateDesiredPodsCount(V1LiveStreamingServerCluster entity, ClusterState currentState, float currentUtilization)
+        private int CalculateDesiredPodsCount(V1LiveStreamingServerFleet entity, FleetState currentState, float currentUtilization)
         {
             var desiredPodsCount = (int)Math.Ceiling(currentState.ActivePods.Count * (currentUtilization / entity.Spec.TargetUtilization));
 
@@ -118,12 +118,12 @@ namespace LiveStreamingServerNet.KubernetesOperator.Services
             return Math.Clamp(desiredPodsCount, entity.Spec.MinReplicas, entity.Spec.MaxReplicas);
         }
 
-        private static float CalculateUtilization(V1LiveStreamingServerCluster entity, IReadOnlyList<PodState> activePods)
+        private static float CalculateUtilization(V1LiveStreamingServerFleet entity, IReadOnlyList<PodState> activePods)
         {
             return (float)activePods.Sum(p => p.StreamsCount) / (activePods.Count * entity.Spec.PodStreamsLimit);
         }
 
-        private static float PredictUtilization(V1LiveStreamingServerCluster entity, ClusterState currentState, DesiredClusterStateChange stateChanges)
+        private static float PredictUtilization(V1LiveStreamingServerFleet entity, FleetState currentState, DesiredFleetStateChange stateChanges)
         {
             var predictedPods = new List<PodState>(currentState.Pods);
             var podStateChanges = stateChanges.PodStateChanges.ToDictionary(x => x.PodName);

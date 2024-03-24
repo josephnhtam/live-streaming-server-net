@@ -1,11 +1,11 @@
 ﻿namespace LiveStreamingServerNet.KubernetesOperator.Models
 {
-    public class DesiredClusterStateChange
+    public class DesiredFleetStateChange
     {
         public uint PodsIncrement { get; }
         public IReadOnlyList<PodStateChange> PodStateChanges { get; }
 
-        public DesiredClusterStateChange(uint podsIncrement, IReadOnlyList<PodStateChange> podStateChanges)
+        public DesiredFleetStateChange(uint podsIncrement, IReadOnlyList<PodStateChange> podStateChanges)
         {
             PodsIncrement = podsIncrement;
             PodStateChanges = podStateChanges;

@@ -4,6 +4,6 @@ namespace LiveStreamingServerNet.KubernetesOperator.Services.Contracts
 {
     public interface IPodCleaner
     {
-        Task PerformPodCleanupAsync(ClusterState currentState, CancellationToken cancellationToken);
+        Task PerformPodCleanupAsync(FleetState currentState, CancellationToken cancellationToken);
     }
 }

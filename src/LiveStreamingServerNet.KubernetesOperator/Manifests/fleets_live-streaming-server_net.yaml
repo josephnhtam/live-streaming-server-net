@@ -1,14 +1,14 @@
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
-  name: clusters.live-streaming-server.net
+  name: fleets.live-streaming-server.net
 spec:
   group: live-streaming-server.net
   names:
-    kind: Cluster
-    listKind: ClusterList
-    plural: clusters
-    singular: cluster
+    kind: Fleet
+    listKind: FleetList
+    plural: fleets
+    singular: fleet
   scope: Namespaced
   versions:
   - name: v1
@@ -65,7 +65,7 @@ spec:
                 nullable: false
                 type: number
               syncPeriodSeconds:
-                description: The time interval of resource audits to maintain the desired state across the cluster of pods.
+                description: The time interval of resource audits to maintain the desired state across the fleet of pods.
                 exclusiveMinimum: false
                 format: int32
                 minimum: 1.0
