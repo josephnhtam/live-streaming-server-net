@@ -4,6 +4,6 @@ namespace LiveStreamingServerNet.KubernetesOperator.Services.Contracts
 {
     public interface ITargetReplicasStabilizer
     {
-        int StabilizeTargetReplicas(V1LiveStreamingServerCluster entity, int activePods, int targetReplicas);
+        int StabilizeTargetReplicas(V1LiveStreamingServerFleet entity, int activePods, int targetReplicas);
     }
 }

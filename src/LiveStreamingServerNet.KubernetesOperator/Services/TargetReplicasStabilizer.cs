@@ -9,7 +9,7 @@ namespace LiveStreamingServerNet.KubernetesOperator.Services
 
         private List<Recommendation> _recommendations = new();
 
-        public int StabilizeTargetReplicas(V1LiveStreamingServerCluster entity, int activePods, int targetReplicas)
+        public int StabilizeTargetReplicas(V1LiveStreamingServerFleet entity, int activePods, int targetReplicas)
         {
             targetReplicas = Math.Clamp(targetReplicas, entity.Spec.MinReplicas, entity.Spec.MaxReplicas);
 

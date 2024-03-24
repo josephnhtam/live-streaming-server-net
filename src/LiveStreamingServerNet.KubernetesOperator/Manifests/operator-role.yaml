@@ -6,7 +6,7 @@ rules:
 - apiGroups:
   - live-streaming-server.net
   resources:
-  - clusters
+  - fleets
   verbs:
   - '*'
 - apiGroups:
@@ -33,7 +33,7 @@ rules:
 - apiGroups:
   - live-streaming-server.net
   resources:
-  - clusters/status
+  - fleets/status
   verbs:
   - get
   - update

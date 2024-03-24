@@ -8,29 +8,29 @@ using LiveStreamingServerNet.KubernetesOperator.Services.Contracts;
 
 namespace LiveStreamingServerNet.KubernetesOperator.Controllers
 {
-    [EntityRbac(typeof(V1LiveStreamingServerCluster), Verbs = RbacVerb.All)]
+    [EntityRbac(typeof(V1LiveStreamingServerFleet), Verbs = RbacVerb.All)]
     [EntityRbac(typeof(V1Pod), Verbs = RbacVerb.All)]
-    public class V1LiveStreamingServerClusterController : IEntityController<V1LiveStreamingServerCluster>
+    public class V1LiveStreamingServerFleetController : IEntityController<V1LiveStreamingServerFleet>
     {
-        private readonly EntityRequeue<V1LiveStreamingServerCluster> _requeue;
-        private readonly IClusterScaler _clusterScaler;
+        private readonly EntityRequeue<V1LiveStreamingServerFleet> _requeue;
+        private readonly IFleetScaler _fleetScaler;
         private readonly ILogger _logger;
 
-        public V1LiveStreamingServerClusterController(
-            EntityRequeue<V1LiveStreamingServerCluster> requeue,
-            IClusterScaler clusterScaler,
-            ILogger<V1LiveStreamingServerClusterController> logger)
+        public V1LiveStreamingServerFleetController(
+            EntityRequeue<V1LiveStreamingServerFleet> requeue,
+            IFleetScaler fleetScaler,
+            ILogger<V1LiveStreamingServerFleetController> logger)
         {
             _requeue = requeue;
-            _clusterScaler = clusterScaler;
+            _fleetScaler = fleetScaler;
             _logger = logger;
         }
 
-        public async Task ReconcileAsync(V1LiveStreamingServerCluster entity, CancellationToken cancellationToken)
+        public async Task ReconcileAsync(V1LiveStreamingServerFleet entity, CancellationToken cancellationToken)
         {
             try
             {
-                await _clusterScaler.ScaleClusterAsync(entity, cancellationToken);
+                await _fleetScaler.ScaleFleetAsync(entity, cancellationToken);
             }
             catch (Exception ex)
             {
@@ -42,7 +42,7 @@ namespace LiveStreamingServerNet.KubernetesOperator.Controllers
             }
         }
 
-        public Task DeletedAsync(V1LiveStreamingServerCluster entity, CancellationToken cancellationToken)
+        public Task DeletedAsync(V1LiveStreamingServerFleet entity, CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }

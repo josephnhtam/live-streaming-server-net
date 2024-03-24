@@ -5,9 +5,9 @@ namespace LiveStreamingServerNet.KubernetesOperator.Services.Contracts
 {
     public interface IDesiredStateCalculator
     {
-        ValueTask<DesiredClusterStateChange> CalculateDesiredStateChange(
-            V1LiveStreamingServerCluster entity,
-            ClusterState currentState,
+        ValueTask<DesiredFleetStateChange> CalculateDesiredStateChange(
+            V1LiveStreamingServerFleet entity,
+            FleetState currentState,
             CancellationToken cancellationToken);
     }
 }

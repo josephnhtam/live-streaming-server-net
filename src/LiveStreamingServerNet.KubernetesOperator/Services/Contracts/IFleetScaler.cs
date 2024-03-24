@@ -2,8 +2,8 @@
 
 namespace LiveStreamingServerNet.KubernetesOperator.Services.Contracts
 {
-    public interface IClusterScaler
+    public interface IFleetScaler
     {
-        Task ScaleClusterAsync(V1LiveStreamingServerCluster entity, CancellationToken cancellationToken);
+        Task ScaleFleetAsync(V1LiveStreamingServerFleet entity, CancellationToken cancellationToken);
     }
 }

@@ -6,18 +6,18 @@ using LiveStreamingServerNet.KubernetesOperator.Services.Contracts;
 
 namespace LiveStreamingServerNet.KubernetesOperator.Services
 {
-    public class ClusterStateRetriver : IClusterStateRetriver
+    public class FleetStateRetriver : IFleetStateRetriver
     {
         private readonly IKubernetes _client;
         private readonly string _podsNamespace;
 
-        public ClusterStateRetriver(IKubernetes client, IKubernetesClient kubOpsClient)
+        public FleetStateRetriver(IKubernetes client, IKubernetesClient kubOpsClient)
         {
             _client = client;
             _podsNamespace = kubOpsClient.GetCurrentNamespace();
         }
 
-        public async Task<ClusterState> GetClusterStateAsync(CancellationToken cancellationToken)
+        public async Task<FleetState> GetFleetStateAsync(CancellationToken cancellationToken)
         {
             var pods = new List<PodState>();
 
@@ -34,7 +34,7 @@ namespace LiveStreamingServerNet.KubernetesOperator.Services
                 hasNext = !string.IsNullOrEmpty(podList.Continue());
             } while (hasNext);
 
-            return new ClusterState(pods);
+            return new FleetState(pods);
         }
 
         private static PodState ResolvePodState(V1Pod pod)

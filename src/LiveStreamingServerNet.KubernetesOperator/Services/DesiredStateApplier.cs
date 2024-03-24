@@ -37,16 +37,16 @@ namespace LiveStreamingServerNet.KubernetesOperator.Services
         }
 
         public async Task ApplyDesiredStateAsync(
-            V1LiveStreamingServerCluster entity,
-            ClusterState currentState,
-            DesiredClusterStateChange desiredStateChange,
+            V1LiveStreamingServerFleet entity,
+            FleetState currentState,
+            DesiredFleetStateChange desiredStateChange,
             CancellationToken cancellationToken)
         {
             await ApplyPodStateChangesAsync(desiredStateChange.PodStateChanges, cancellationToken);
             await CreateNewPodsAsync(entity, desiredStateChange.PodsIncrement, cancellationToken);
         }
 
-        private async Task CreateNewPodsAsync(V1LiveStreamingServerCluster entity, uint podsIncrement, CancellationToken cancellationToken)
+        private async Task CreateNewPodsAsync(V1LiveStreamingServerFleet entity, uint podsIncrement, CancellationToken cancellationToken)
         {
             if (podsIncrement == 0)
                 return;
@@ -94,7 +94,7 @@ namespace LiveStreamingServerNet.KubernetesOperator.Services
             }));
         }
 
-        private static V1PodTemplateSpec CreatePodTemplate(V1LiveStreamingServerCluster entity)
+        private static V1PodTemplateSpec CreatePodTemplate(V1LiveStreamingServerFleet entity)
         {
             var template = entity.Spec.Template;
 

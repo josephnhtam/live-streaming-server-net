@@ -6,7 +6,7 @@ resources:
 - operator-role.yaml
 - operator-role-binding.yaml
 - deployment.yaml
-- clusters_live-streaming-server_net.yaml
+- fleets_live-streaming-server_net.yaml
 - namespace.yaml
 images:
 - name: operator
