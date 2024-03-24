@@ -9,24 +9,24 @@ namespace LiveStreamingServerNet.KubernetesOperator.Services
     public class FleetScaler : IFleetScaler
     {
         private readonly IKubernetesClient _client;
-        private readonly IFleetStateRetriver _fleetStateRetriver;
-        private readonly IDesiredStateCalculator _desiredStateCalculator;
-        private readonly IDesiredStateApplier _desiredStateApplier;
+        private readonly IFleetStateFetcher _fleetStateFetcher;
+        private readonly IDesiredFleetStateCalculator _desiredFleetStateCalculator;
+        private readonly IDesiredFleetStateApplier _desiredFleetStateApplier;
         private readonly IPodCleaner _podCleaner;
         private readonly ILogger _logger;
 
         public FleetScaler(
             IKubernetesClient client,
-            IFleetStateRetriver fleetStateRetriver,
-            IDesiredStateCalculator desiredStateCalculator,
-            IDesiredStateApplier desiredStateApplier,
+            IFleetStateFetcher fleetStateFetcher,
+            IDesiredFleetStateCalculator desiredFleetStateCalculator,
+            IDesiredFleetStateApplier desiredFleetStateApplier,
             IPodCleaner podCleaner,
             ILogger<FleetScaler> logger)
         {
             _client = client;
-            _fleetStateRetriver = fleetStateRetriver;
-            _desiredStateCalculator = desiredStateCalculator;
-            _desiredStateApplier = desiredStateApplier;
+            _fleetStateFetcher = fleetStateFetcher;
+            _desiredFleetStateCalculator = desiredFleetStateCalculator;
+            _desiredFleetStateApplier = desiredFleetStateApplier;
             _podCleaner = podCleaner;
             _logger = logger;
         }
@@ -35,13 +35,13 @@ namespace LiveStreamingServerNet.KubernetesOperator.Services
         {
             try
             {
-                var currentState = await _fleetStateRetriver.GetFleetStateAsync(cancellationToken);
+                var currentState = await _fleetStateFetcher.GetFleetStateAsync(cancellationToken);
                 _logger.LogCurrentState(currentState);
 
-                var desiredStateChange = await _desiredStateCalculator.CalculateDesiredStateChange(entity, currentState, cancellationToken);
+                var desiredStateChange = await _desiredFleetStateCalculator.CalculateDesiredStateChange(entity, currentState, cancellationToken);
                 _logger.LogDesiredFleetStateChange(desiredStateChange);
 
-                await _desiredStateApplier.ApplyDesiredStateAsync(entity, currentState, desiredStateChange, cancellationToken);
+                await _desiredFleetStateApplier.ApplyDesiredStateAsync(entity, currentState, desiredStateChange, cancellationToken);
 
                 await _podCleaner.PerformPodCleanupAsync(currentState, cancellationToken);
 

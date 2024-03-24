@@ -3,7 +3,7 @@ using LiveStreamingServerNet.KubernetesOperator.Models;
 
 namespace LiveStreamingServerNet.KubernetesOperator.Services.Contracts
 {
-    public interface IDesiredStateApplier
+    public interface IDesiredFleetStateApplier
     {
         Task ApplyDesiredStateAsync(
             V1LiveStreamingServerFleet entity,
