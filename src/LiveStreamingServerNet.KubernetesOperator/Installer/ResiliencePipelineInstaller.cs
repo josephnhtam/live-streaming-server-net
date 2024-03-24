@@ -2,7 +2,7 @@
 using Polly;
 using Polly.Retry;
 
-namespace LiveStreamingServerNet.KubernetesOperator.Installers
+namespace LiveStreamingServerNet.KubernetesOperator.Installer
 {
     public static class ResiliencePipelineInstaller
     {
