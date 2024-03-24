@@ -22,8 +22,8 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
         public bool IsPendingStop => _isPendingStop;
         public bool IsStreamsLimitReached => _streamsCount >= _streamsLimit;
 
-        int IRtmpServerConnectionEventHandler.GetOrder() => -1;
-        int IRtmpServerStreamEventHandler.GetOrder() => -1;
+        int IRtmpServerConnectionEventHandler.GetOrder() => -100;
+        int IRtmpServerStreamEventHandler.GetOrder() => -100;
 
         public PodLifetimeManager(
             IKubernetesContext kubernetesContext,
