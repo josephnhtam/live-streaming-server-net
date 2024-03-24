@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
     <ImplicitUsings>enable</ImplicitUsings>
     <KubeOpsCli>disabled</KubeOpsCli>
     <UserSecretsId>85c69c63-6936-4022-87d0-0456ede77c5c</UserSecretsId>
