@@ -1,0 +1,10 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- ../../base
+patches:
+- path: ./patches/deployment.yaml
+images:
+- name: operator
+  newName: live-streaming-server-net-operator
+namespace: live-streaming-server-net

@@ -4,18 +4,6 @@ metadata:
   name: operator-role
 rules:
 - apiGroups:
-  - live-streaming-server.net
-  resources:
-  - fleets
-  verbs:
-  - '*'
-- apiGroups:
-  - ""
-  resources:
-  - pods
-  verbs:
-  - '*'
-- apiGroups:
   - ""
   resources:
   - events
@@ -28,6 +16,18 @@ rules:
   - coordination.k8s.io
   resources:
   - leases
+  verbs:
+  - '*'
+- apiGroups:
+  - live-streaming-server.net
+  resources:
+  - fleets
+  verbs:
+  - '*'
+- apiGroups:
+  - ""
+  resources:
+  - pods
   verbs:
   - '*'
 - apiGroups:
