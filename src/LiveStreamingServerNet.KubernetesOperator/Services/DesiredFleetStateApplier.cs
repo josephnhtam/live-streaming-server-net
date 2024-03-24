@@ -11,25 +11,28 @@ using Polly;
 
 namespace LiveStreamingServerNet.KubernetesOperator.Services
 {
-    public class DesiredStateApplier : IDesiredStateApplier
+    public class DesiredFleetStateApplier : IDesiredFleetStateApplier
     {
         private readonly IKubernetes _client;
         private readonly IKubernetesClient _operatorClient;
+        private readonly IPodTemplateCreator _podTemplateCreator;
         private readonly EventPublisher _eventPublisher;
         private readonly ResiliencePipeline _pipeline;
         private readonly ILogger _logger;
 
         private readonly string _podNamespace;
 
-        public DesiredStateApplier(
+        public DesiredFleetStateApplier(
             IKubernetes client,
             IKubernetesClient operatorClient,
+            IPodTemplateCreator podTemplateCreator,
             EventPublisher eventPublisher,
             [FromKeyedServices("k8s-pipeline")] ResiliencePipeline pipeline,
-            ILogger<DesiredStateApplier> logger)
+            ILogger<DesiredFleetStateApplier> logger)
         {
             _client = client;
             _operatorClient = operatorClient;
+            _podTemplateCreator = podTemplateCreator;
             _eventPublisher = eventPublisher;
             _pipeline = pipeline;
             _logger = logger;
@@ -51,7 +54,7 @@ namespace LiveStreamingServerNet.KubernetesOperator.Services
             if (podsIncrement == 0)
                 return;
 
-            var template = CreatePodTemplate(entity);
+            var template = _podTemplateCreator.CreatePodTemplate(entity);
 
             await Task.WhenAll(Enumerable.Range(0, (int)podsIncrement).Select(async _ =>
             {
@@ -92,30 +95,6 @@ namespace LiveStreamingServerNet.KubernetesOperator.Services
                     _logger.CreatingPodError(ex);
                 }
             }));
-        }
-
-        private static V1PodTemplateSpec CreatePodTemplate(V1LiveStreamingServerFleet entity)
-        {
-            var template = entity.Spec.Template;
-
-            template.Metadata.Labels ??= new Dictionary<string, string>();
-            template.Metadata.Labels[PodConstants.TypeLabel] = PodConstants.TypeValue;
-            template.Metadata.Labels[PodConstants.PendingStopLabel] = "false";
-            template.Metadata.Labels[PodConstants.StreamsLimitReachedLabel] = "false";
-
-            template.Metadata.Annotations ??= new Dictionary<string, string>();
-            template.Metadata.Annotations[PodConstants.StreamsCountAnnotation] = "0";
-            template.Metadata.Annotations[PodConstants.StreamsLimitAnnotation] = entity.Spec.PodStreamsLimit.ToString();
-
-            template.Spec.RestartPolicy = "Never";
-
-            foreach (var container in template.Spec.Containers)
-            {
-                container.Env ??= new List<V1EnvVar>();
-                container.Env.Add(new V1EnvVar(PodConstants.StreamsLimitEnv, entity.Spec.PodStreamsLimit.ToString()));
-            }
-
-            return template;
         }
 
         private async Task ApplyPodStateChangesAsync(IReadOnlyList<PodStateChange> podStateChanges, CancellationToken cancellationToken)

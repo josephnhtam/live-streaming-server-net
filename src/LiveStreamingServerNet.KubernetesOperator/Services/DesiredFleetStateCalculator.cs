@@ -4,11 +4,11 @@ using LiveStreamingServerNet.KubernetesOperator.Services.Contracts;
 
 namespace LiveStreamingServerNet.KubernetesOperator.Services
 {
-    public class DesiredStateCalculator : IDesiredStateCalculator
+    public class DesiredFleetStateCalculator : IDesiredFleetStateCalculator
     {
         private readonly ITargetReplicasStabilizer _targetReplicasStabilizer;
 
-        public DesiredStateCalculator(ITargetReplicasStabilizer targetReplicasStabilizer)
+        public DesiredFleetStateCalculator(ITargetReplicasStabilizer targetReplicasStabilizer)
         {
             _targetReplicasStabilizer = targetReplicasStabilizer;
         }

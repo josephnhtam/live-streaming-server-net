@@ -6,12 +6,12 @@ using LiveStreamingServerNet.KubernetesOperator.Services.Contracts;
 
 namespace LiveStreamingServerNet.KubernetesOperator.Services
 {
-    public class FleetStateRetriver : IFleetStateRetriver
+    public class FleetStateFetcher : IFleetStateFetcher
     {
         private readonly IKubernetes _client;
         private readonly string _podsNamespace;
 
-        public FleetStateRetriver(IKubernetes client, IKubernetesClient kubOpsClient)
+        public FleetStateFetcher(IKubernetes client, IKubernetesClient kubOpsClient)
         {
             _client = client;
             _podsNamespace = kubOpsClient.GetCurrentNamespace();

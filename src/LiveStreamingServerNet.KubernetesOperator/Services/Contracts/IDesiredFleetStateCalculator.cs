@@ -3,7 +3,7 @@ using LiveStreamingServerNet.KubernetesOperator.Models;
 
 namespace LiveStreamingServerNet.KubernetesOperator.Services.Contracts
 {
-    public interface IDesiredStateCalculator
+    public interface IDesiredFleetStateCalculator
     {
         ValueTask<DesiredFleetStateChange> CalculateDesiredStateChange(
             V1LiveStreamingServerFleet entity,
