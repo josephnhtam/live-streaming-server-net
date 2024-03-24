@@ -1,7 +1,7 @@
 ﻿using LiveStreamingServerNet.KubernetesOperator.Services;
 using LiveStreamingServerNet.KubernetesOperator.Services.Contracts;
 
-namespace LiveStreamingServerNet.KubernetesOperator.Installers
+namespace LiveStreamingServerNet.KubernetesOperator.Installer
 {
     public static class ControllerServicesInstaller
     {

@@ -1,6 +1,6 @@
 ﻿using k8s;
 
-namespace LiveStreamingServerNet.KubernetesOperator.Installers
+namespace LiveStreamingServerNet.KubernetesOperator.Installer
 {
     public static class KubernetesInstaller
     {
