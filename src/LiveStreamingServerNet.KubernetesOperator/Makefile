@@ -7,25 +7,25 @@ install-kubops-cli:
 
 .PHONY: manifest
 manifest:
-	dotnet kubeops generate operator live-streaming-server-net --out ./Manifests
+	dotnet kubeops generate operator live-streaming-server-net --out ./Manifests/base
 ifeq ($(OS),Windows_NT) 
-	del .\Manifests\Dockerfile
+	del .\Manifests\base\Dockerfile
 else
-	rm -f ./Manifests/Dockerfile
+	rm -f ./Manifests/base/Dockerfile
 endif
 	
 .PHONY: build
 build:
 	docker build -t $(IMG) -f ./Dockerfile ../../
 	
-.PHONY: deploy
-deploy:
-	CD ./Manifests && kustomize edit set image operator=$(IMG)
-	CD ./Manifests && kustomize edit set namespace $(NAMESPACE)
-	kustomize build ./Manifests | kubectl apply -f -
+.PHONY: deploy_docker_desktop
+deploy_docker_desktop:
+	CD ./Manifests/overlays/docker_desktop && kustomize edit set image operator=$(IMG)
+	CD ./Manifests/overlays/docker_desktop && kustomize edit set namespace $(NAMESPACE)
+	kustomize build ./Manifests/overlays/docker_desktop | kubectl apply -f -
 	
-.PHONY: undeploy
-undeploy:
-	CD ./Manifests && kustomize edit set image operator=$(IMG)
-	CD ./Manifests && kustomize edit set namespace $(NAMESPACE)
-	kustomize build ./Manifests | kubectl delete -f -
+.PHONY: undeploy_docker_desktop
+undeploy_docker_desktop:
+	CD ./Manifests/overlays/docker_desktop && kustomize edit set image operator=$(IMG)
+	CD ./Manifests/overlays/docker_desktop && kustomize edit set namespace $(NAMESPACE)
+	kustomize build ./Manifests/overlays/docker_desktop | kubectl delete -f -
