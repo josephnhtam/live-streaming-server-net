@@ -1,6 +1,7 @@
 ﻿using k8s;
 using k8s.Models;
 using KubeOps.KubernetesClient;
+using LiveStreamingServerNet.KubernetesOperator.Entities;
 using LiveStreamingServerNet.KubernetesOperator.Models;
 using LiveStreamingServerNet.KubernetesOperator.Services.Contracts;
 
@@ -11,13 +12,15 @@ namespace LiveStreamingServerNet.KubernetesOperator.Services
         private readonly IKubernetes _client;
         private readonly string _podsNamespace;
 
+        private const int PodChunkSize = 50;
+
         public FleetStateFetcher(IKubernetes client, IKubernetesClient kubOpsClient)
         {
             _client = client;
             _podsNamespace = kubOpsClient.GetCurrentNamespace();
         }
 
-        public async Task<FleetState> GetFleetStateAsync(CancellationToken cancellationToken)
+        public async Task<FleetState> GetFleetStateAsync(V1LiveStreamingServerFleet entity, CancellationToken cancellationToken)
         {
             var pods = new List<PodState>();
 
@@ -27,9 +30,14 @@ namespace LiveStreamingServerNet.KubernetesOperator.Services
                 var podList = await _client.CoreV1.ListNamespacedPodAsync(
                     namespaceParameter: _podsNamespace,
                     labelSelector: $"{PodConstants.TypeLabel}={PodConstants.TypeValue}",
+                    limit: PodChunkSize,
                     cancellationToken: cancellationToken);
 
-                pods.AddRange(podList.Items.Select(ResolvePodState));
+                pods.AddRange(
+                    podList.Items
+                        .Where(pod => pod.IsOwnedBy(entity))
+                        .Select(ResolvePodState)
+                );
 
                 hasNext = !string.IsNullOrEmpty(podList.Continue());
             } while (hasNext);

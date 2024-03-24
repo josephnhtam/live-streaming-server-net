@@ -35,7 +35,7 @@ namespace LiveStreamingServerNet.KubernetesOperator.Services
         {
             try
             {
-                var currentState = await _fleetStateFetcher.GetFleetStateAsync(cancellationToken);
+                var currentState = await _fleetStateFetcher.GetFleetStateAsync(entity, cancellationToken);
                 _logger.LogCurrentState(currentState);
 
                 var desiredStateChange = await _desiredFleetStateCalculator.CalculateDesiredStateChange(entity, currentState, cancellationToken);
