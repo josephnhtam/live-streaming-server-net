@@ -10,11 +10,10 @@
     <PackageTags>live-streaming;rtmp;flv</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <Version>0.6.0</Version>
+    <Version>0.7.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
-
     <PackageReference Include="MediatR" Version="12.2.0" />
     <PackageReference Include="mtanksl.ActionMessageFormat" Version="1.0.4" />
     <PackageReference Include="Open.Threading.ReadWrite" Version="2.0.3" />
