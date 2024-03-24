@@ -13,7 +13,7 @@ This open-source project provides an implementation of an RTMP live streaming se
 
 ## Roadmap
 
-- **Custom Kubernetes Operator**: The objective is to achieve horizontal autoscaling by scaling out the pods when more streams are published, and scaling in the pods when streams are deleted, all without affecting the existing connections.
+- **Custom Kubernetes Operator**: The objective is to achieve automatic horizontal autoscaling by scaling out the pods when more streams are published, and scaling in the pods when streams are deleted, all without affecting the existing connections.
 
 ## Quick Start
 
@@ -34,7 +34,7 @@ using LiveStreamingServerNet;
 using Microsoft.Extensions.Logging;
 using System.Net;
 
-await using var server = LiveStreamingServerBuilder.Create()
+using var server = LiveStreamingServerBuilder.Create()
     .ConfigureLogging(options => options.AddConsole())
     .Build();
 
@@ -103,12 +103,12 @@ using LiveStreamingServerNet;
 using LiveStreamingServerNet.Flv.Installer;
 using LiveStreamingServerNet.Networking.Helpers;
 
-var builder = WebApplication.CreateBuilder(args);
-
-await using var liveStreamingServer = LiveStreamingServerBuilder.Create()
+using var liveStreamingServer = LiveStreamingServerBuilder.Create()
     .ConfigureRtmpServer(options => options.AddFlv())
     .ConfigureLogging(options => options.AddConsole())
     .Build();
+
+var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddBackgroundServer(liveStreamingServer, new IPEndPoint(IPAddress.Any, 1935));
 
@@ -169,6 +169,10 @@ Please refer to the [LiveStreamServerNet.StandaloneDemo](https://github.com/jose
     <tr>
       <th>LiveStreamingServerNet</th>
       <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.svg?logo=nuget"></a></td>
+    </tr>
+    <tr>
+      <th>LiveStreamingServerNet.Standalone</th>
+      <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet.Standalone"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.Standalone.svg?logo=nuget"></a></td>
     </tr>
     <tr>
       <th>LiveStreamingServerNet.AdminPanelUI</th>
