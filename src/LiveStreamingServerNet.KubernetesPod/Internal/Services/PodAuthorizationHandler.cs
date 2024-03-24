@@ -25,7 +25,7 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
             _logger = logger;
         }
 
-        int IAuthorizationHandler.GetOrder() => -1;
+        int IAuthorizationHandler.GetOrder() => -100;
 
         public Task<AuthorizationResult> AuthorizePublishingAsync(
             IClientInfo client, string streamPath, IDictionary<string, string> streamArguments, string publishingType)
