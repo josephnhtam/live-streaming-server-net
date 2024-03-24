@@ -48,6 +48,8 @@ namespace LiveStreamingServerNet.Networking
         {
             ValidateAndSetStarted();
 
+            EndPoints = new List<ServerEndPoint>(serverEndPoints).AsReadOnly();
+
             Exception? serverException = null;
             var serverListeners = new List<ServerListener>();
 
@@ -66,15 +68,25 @@ namespace LiveStreamingServerNet.Networking
                 serverException = ex;
             }
 
-            await Task.WhenAll(_clientTasks.Select(x => x.Value.Task));
+            await WaitUntilAllClientTasksCompleteAsync();
 
-            foreach (var serverListener in serverListeners)
-                serverListener.TcpListener.Stop();
+            StopAllTcpListeners(serverListeners);
 
             await OnServerStoppedAsync();
 
             if (serverException != null)
                 throw serverException;
+        }
+
+        private async Task WaitUntilAllClientTasksCompleteAsync()
+        {
+            await Task.WhenAll(_clientTasks.Select(x => x.Value.Task));
+        }
+
+        private void StopAllTcpListeners(List<ServerListener> serverListeners)
+        {
+            foreach (var serverListener in serverListeners)
+                serverListener.TcpListener.Stop();
         }
 
         private async Task RunServerLoopsAsync(List<ServerListener> serverListeners, CancellationToken cancellationToken)
@@ -97,8 +109,6 @@ namespace LiveStreamingServerNet.Networking
 
                 _logger.ServerStarted(serverEndPoint.LocalEndPoint.ToString());
             }
-
-            EndPoints = new List<ServerEndPoint>(serverEndPoints).AsReadOnly();
 
             return serverListeners;
         }
