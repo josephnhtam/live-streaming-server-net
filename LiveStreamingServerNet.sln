@@ -33,6 +33,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.Kube
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveStreamingServerNet.KubernetesPod", "src\LiveStreamingServerNet.KubernetesPod\LiveStreamingServerNet.KubernetesPod.csproj", "{B872E3FA-16FC-4C97-9B37-75E930BF337F}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.KubernetesPodDemo", "samples\LiveStreamingServerNet.KubernetesPodDemo\LiveStreamingServerNet.KubernetesPodDemo.csproj", "{7EFF979E-F81E-4938-8504-A53FA9E02AFD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -95,6 +97,10 @@ Global
 		{B872E3FA-16FC-4C97-9B37-75E930BF337F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B872E3FA-16FC-4C97-9B37-75E930BF337F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B872E3FA-16FC-4C97-9B37-75E930BF337F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7EFF979E-F81E-4938-8504-A53FA9E02AFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7EFF979E-F81E-4938-8504-A53FA9E02AFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7EFF979E-F81E-4938-8504-A53FA9E02AFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7EFF979E-F81E-4938-8504-A53FA9E02AFD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -104,6 +110,7 @@ Global
 		{F67288DC-13C8-4765-900D-325DB79994DD} = {45761E33-F086-403D-BB6E-8059F8CC6BA8}
 		{3C0C2F0E-E274-4F36-8CB1-CF60441FA46A} = {45761E33-F086-403D-BB6E-8059F8CC6BA8}
 		{B4B870FA-2634-46E5-9586-05E5CACF6D6F} = {45761E33-F086-403D-BB6E-8059F8CC6BA8}
+		{7EFF979E-F81E-4938-8504-A53FA9E02AFD} = {45761E33-F086-403D-BB6E-8059F8CC6BA8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0A9A3928-2852-49B9-85EF-F00480E9FE7F}

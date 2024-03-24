@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: service
+  namespace: default
+spec:
+  selector:
+    app: live-streaming-server
+    live-streaming-server-net/pending-stop: "false"
+    live-streaming-server-net/streams-limit-reached: "false"
+  type: LoadBalancer
+  ports:
+  - name: http
+    protocol: TCP
+    port: 80
+    targetPort: http
+  - name: rtmp
+    protocol: TCP
+    port: 1935
+    targetPort: rtmp
