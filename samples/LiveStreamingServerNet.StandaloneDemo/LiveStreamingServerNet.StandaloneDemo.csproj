@@ -16,7 +16,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\LiveStreamingServerNet.AdminPanelUI\LiveStreamingServerNet.AdminPanelUI.csproj" />
     <ProjectReference Include="..\..\src\LiveStreamingServerNet.Flv\LiveStreamingServerNet.Flv.csproj" />
-    <ProjectReference Include="..\..\src\LiveStreamingServerNet\LiveStreamingServerNet.csproj" />
+    <ProjectReference Include="..\..\src\LiveStreamingServerNet.Standalone\LiveStreamingServerNet.Standalone.csproj" />
   </ItemGroup>
 
 </Project>
