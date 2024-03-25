@@ -3,7 +3,7 @@
     public class AuthorizationResult
     {
         public bool IsAuthorized { get; set; }
-        public string Reason { get; set; } = default!;
+        public string? Reason { get; set; }
         public string? StreamPathOverride { get; set; }
         public IDictionary<string, string>? StreamArgumentsOverride { get; set; }
 
