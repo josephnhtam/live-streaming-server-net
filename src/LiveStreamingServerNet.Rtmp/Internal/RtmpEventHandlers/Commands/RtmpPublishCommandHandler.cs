@@ -1,4 +1,5 @@
-﻿using LiveStreamingServerNet.Rtmp.Auth.Contracts;
+﻿using LiveStreamingServerNet.Rtmp.Auth;
+using LiveStreamingServerNet.Rtmp.Auth.Contracts;
 using LiveStreamingServerNet.Rtmp.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands.Dispatcher;

@@ -1,4 +1,4 @@
-﻿namespace LiveStreamingServerNet.Rtmp
+﻿namespace LiveStreamingServerNet.Rtmp.Auth
 {
     public class AuthorizationResult
     {
