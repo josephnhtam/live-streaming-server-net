@@ -34,7 +34,7 @@ namespace LiveStreamingServerNet.StandaloneDemo
         {
             return LiveStreamingServerBuilder.Create()
                 .ConfigureRtmpServer(options => options
-                    .AddBandwidthLimiter(10_000_000)
+                    .AddBandwidthLimiter(100_000_000)
                     .AddStandaloneServices()
                     .AddFlv())
                 .ConfigureLogging(options => options.AddConsole())
