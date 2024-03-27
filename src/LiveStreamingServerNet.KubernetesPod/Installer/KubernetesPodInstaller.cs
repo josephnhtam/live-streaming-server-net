@@ -16,12 +16,13 @@ namespace LiveStreamingServerNet.KubernetesPod.Installer
             var services = configurator.Services;
 
             services.AddHostedService<PodWatcherService>()
+                    .AddSingleton<PodEventListener>()
                     .AddSingleton<IKubernetesContext, KubernetesContext>()
                     .AddSingleton<IPodLifetimeManager, PodLifetimeManager>()
                     .AddSingleton<IPodStatus>(svc => svc.GetRequiredService<IPodLifetimeManager>());
 
-            configurator.AddConnectionEventHandler(svc => svc.GetRequiredService<IPodLifetimeManager>())
-                        .AddStreamEventHandler(svc => svc.GetRequiredService<IPodLifetimeManager>())
+            configurator.AddConnectionEventHandler(svc => svc.GetRequiredService<PodEventListener>())
+                        .AddStreamEventHandler(svc => svc.GetRequiredService<PodEventListener>())
                         .AddAuthorizationHandler<PodAuthorizationHandler>();
 
             configure?.Invoke(new KubernetesPodConfigurator(services));
