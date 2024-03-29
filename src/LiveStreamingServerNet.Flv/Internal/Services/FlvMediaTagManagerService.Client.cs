@@ -21,9 +21,10 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
 
         public void RegisterClient(IFlvClient client)
         {
-            _clientMediaContexts[client] = new ClientMediaContext(client, _config, _logger);
+            var context = new ClientMediaContext(client, _config, _logger); ;
+            _clientMediaContexts[client] = context;
 
-            var clientTask = Task.Run(() => ClientTask(client));
+            var clientTask = Task.Run(() => ClientTask(context));
             _clientTasks[client] = clientTask;
             _ = clientTask.ContinueWith(_ => _clientTasks.TryRemove(client, out var _));
         }
@@ -41,11 +42,9 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
             await Task.WhenAll(_clientTasks.Values);
         }
 
-        private async Task ClientTask(IFlvClient client)
+        private async Task ClientTask(ClientMediaContext context)
         {
-            if (!_clientMediaContexts.TryGetValue(client, out var context))
-                return;
-
+            var client = context.Client;
             var cancellation = context.CancellationToken;
 
             try
