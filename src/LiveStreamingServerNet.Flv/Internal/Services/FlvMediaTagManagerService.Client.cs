@@ -43,7 +43,9 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
 
         private async Task ClientTask(IFlvClient client)
         {
-            var context = _clientMediaContexts[client];
+            if (!_clientMediaContexts.TryGetValue(client, out var context))
+                return;
+
             var cancellation = context.CancellationToken;
 
             try

@@ -34,7 +34,12 @@ namespace LiveStreamingServerNet.Flv.Internal
             StoppingToken = _stoppingCts.Token;
 
             _taskCompletionSource = new TaskCompletionSource();
-            _stoppingCts.Token.Register(() => _taskCompletionSource.TrySetResult());
+
+            _stoppingCts.Token.Register(() =>
+            {
+                _initializationTcs.TrySetCanceled();
+                _taskCompletionSource.TrySetResult();
+            });
 
             _initializationTask = _initializationTcs.Task;
             _completeTask = _taskCompletionSource.Task;
