@@ -16,7 +16,7 @@
             };
         }
 
-        public static StreamRevalidationResult Failure(bool retryable, string? reason)
+        public static StreamRevalidationResult Failure(bool retryable, string reason)
         {
             return new StreamRevalidationResult
             {
