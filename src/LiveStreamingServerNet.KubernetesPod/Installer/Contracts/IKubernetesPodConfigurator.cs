@@ -7,5 +7,6 @@ namespace LiveStreamingServerNet.KubernetesPod.Installer.Contracts
     {
         IServiceCollection Services { get; }
         IKubernetesPodConfigurator Configure(Action<KubernetesPodConfiguration>? configure);
+        IKubernetesPodConfigurator AddStreamRegistry(Action<IStreamRegistryConfigurator> configure);
     }
 }

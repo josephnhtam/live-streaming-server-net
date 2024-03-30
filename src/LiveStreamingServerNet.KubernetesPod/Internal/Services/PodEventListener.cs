@@ -8,8 +8,9 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
     {
         private readonly IPodLifetimeManager _podLifetimeManager;
 
-        int IRtmpServerConnectionEventHandler.GetOrder() => -100;
-        int IRtmpServerStreamEventHandler.GetOrder() => -100;
+        public const int Order = -100;
+        int IRtmpServerConnectionEventHandler.GetOrder() => Order;
+        int IRtmpServerStreamEventHandler.GetOrder() => Order;
 
         public PodEventListener(IPodLifetimeManager podLifetimeManager)
         {

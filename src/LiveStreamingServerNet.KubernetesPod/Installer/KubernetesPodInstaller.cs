@@ -25,7 +25,7 @@ namespace LiveStreamingServerNet.KubernetesPod.Installer
                         .AddStreamEventHandler(svc => svc.GetRequiredService<PodEventListener>())
                         .AddAuthorizationHandler<PodAuthorizationHandler>();
 
-            configure?.Invoke(new KubernetesPodConfigurator(services));
+            configure?.Invoke(new KubernetesPodConfigurator(configurator, services));
 
             return configurator;
         }

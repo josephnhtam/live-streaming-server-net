@@ -22,4 +22,8 @@
     <PackageReference Include="Microsoft.AspNetCore.JsonPatch" Version="8.0.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Streams\" />
+  </ItemGroup>
+
 </Project>
