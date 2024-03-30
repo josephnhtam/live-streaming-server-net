@@ -1,5 +1,7 @@
 using LiveStreamingServerNet.KubernetesPod.Installer;
+using LiveStreamingServerNet.KubernetesPod.Redis.Installer;
 using LiveStreamingServerNet.Networking.Helpers;
+using StackExchange.Redis;
 using System.Net;
 
 namespace LiveStreamingServerNet.KubernetesPodDemo
@@ -25,9 +27,16 @@ namespace LiveStreamingServerNet.KubernetesPodDemo
 
         private static ILiveStreamingServer CreateLiveStreamingServer()
         {
+            var redisConn = ConnectionMultiplexer.Connect("redis-master:6379");
+
             return LiveStreamingServerBuilder.Create()
                 .ConfigureRtmpServer(options => options
-                    .AddKubernetesPodServices())
+                    .AddKubernetesPodServices(podOptions =>
+                        podOptions.AddStreamRegistry(registryOptions =>
+                            registryOptions.UseRedisStore(redisConn)
+                        )
+                    )
+                )
                 .ConfigureLogging(options => options.SetMinimumLevel(LogLevel.Debug).AddConsole())
                 .Build();
         }

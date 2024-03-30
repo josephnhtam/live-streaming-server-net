@@ -8,6 +8,8 @@ ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["samples/LiveStreamingServerNet.KubernetesPodDemo/LiveStreamingServerNet.KubernetesPodDemo.csproj", "samples/LiveStreamingServerNet.KubernetesPodDemo/"]
 COPY ["src/LiveStreamingServerNet/LiveStreamingServerNet.csproj", "src/LiveStreamingServerNet/"]
+COPY ["src/LiveStreamingServerNet.KubernetesPod/LiveStreamingServerNet.KubernetesPod.csproj", "src/LiveStreamingServerNet.KubernetesPod/"]
+COPY ["src/LiveStreamingServerNet.KubernetesPod.Redis/LiveStreamingServerNet.KubernetesPod.Redis.csproj", "src/LiveStreamingServerNet.KubernetesPod.Redis/"]
 COPY ["src/LiveStreamingServerNet.Rtmp/LiveStreamingServerNet.Rtmp.csproj", "src/LiveStreamingServerNet.Rtmp/"]
 COPY ["src/LiveStreamingServerNet.Networking/LiveStreamingServerNet.Networking.csproj", "src/LiveStreamingServerNet.Networking/"]
 COPY ["src/LiveStreamingServerNet.Utilities/LiveStreamingServerNet.Utilities.csproj", "src/LiveStreamingServerNet.Utilities/"]

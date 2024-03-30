@@ -1,0 +1,9 @@
+apiVersion: builtin
+kind: HelmChartInflationGenerator
+metadata:
+  name: redis-generator
+name: redis
+repo: https://charts.bitnami.com/bitnami
+version: 17.8.4
+releaseName: redis
+valuesFile: ./values/redis.yaml

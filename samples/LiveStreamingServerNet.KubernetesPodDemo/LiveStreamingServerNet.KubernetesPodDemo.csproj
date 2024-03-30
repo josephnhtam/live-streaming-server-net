@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\LiveStreamingServerNet.KubernetesPod.Redis\LiveStreamingServerNet.KubernetesPod.Redis.csproj" />
     <ProjectReference Include="..\..\src\LiveStreamingServerNet.KubernetesPod\LiveStreamingServerNet.KubernetesPod.csproj" />
   </ItemGroup>
 

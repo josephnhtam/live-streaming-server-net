@@ -6,3 +6,5 @@ resources:
 - ./role-binding.yaml
 - ./service-account.yaml
 - ./service.yaml
+generators:
+  - "./redis.yaml"

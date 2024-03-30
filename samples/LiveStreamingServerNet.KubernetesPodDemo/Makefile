@@ -9,10 +9,10 @@ build:
 deploy_docker_desktop:
 	CD ./Manifests/overlays/docker_desktop && kustomize edit set image image=$(IMG)
 	CD ./Manifests/overlays/docker_desktop && kustomize edit set namespace $(NAMESPACE)
-	kustomize build ./Manifests/overlays/docker_desktop | kubectl apply -f -
+	kustomize build --enable-helm ./Manifests/overlays/docker_desktop | kubectl apply -f -
 	
 .PHONY: undeploy_docker_desktop
 undeploy_docker_desktop:
 	CD ./Manifests/overlays/docker_desktop && kustomize edit set image image=$(IMG)
 	CD ./Manifests/overlays/docker_desktop && kustomize edit set namespace $(NAMESPACE)
-	kustomize build ./Manifests/overlays/docker_desktop | kubectl delete -f -
+	kustomize build --enable-helm ./Manifests/overlays/docker_desktop | kubectl delete -f -
