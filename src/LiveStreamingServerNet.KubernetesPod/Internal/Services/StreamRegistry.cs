@@ -14,16 +14,23 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
     {
         private readonly IStreamStore _streamStore;
         private readonly IServer _server;
+        private readonly IKubernetesContext _kubernetesContext;
         private readonly StreamRegistryConfiguration _config;
         private readonly ILogger _logger;
 
         private readonly ConcurrentDictionary<string, StreamContext> _streamContexts;
         private readonly ConcurrentDictionary<StreamContext, Task> _streamKeepaliveTasks;
 
-        public StreamRegistry(IServer server, IOptions<StreamRegistryConfiguration> config, ILogger<StreamRegistry> logger, IStreamStore? streamStore = null)
+        public StreamRegistry(
+            IServer server,
+            IKubernetesContext kubernetesContext,
+            IOptions<StreamRegistryConfiguration> config,
+            ILogger<StreamRegistry> logger,
+            IStreamStore? streamStore = null)
         {
             _streamStore = streamStore ?? throw new ArgumentNullException("No stream store is registered");
             _server = server;
+            _kubernetesContext = kubernetesContext;
             _config = config.Value;
             _logger = logger;
 
@@ -41,7 +48,12 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
 
             try
             {
-                var result = await _streamStore.RegisterStreamAsync(client, streamPath, streamArguments);
+                var result = await _streamStore.RegisterStreamAsync(
+                    client,
+                    _kubernetesContext.PodNamespace,
+                    _kubernetesContext.PodName,
+                    streamPath,
+                    streamArguments);
 
                 if (!result.Successful)
                 {
@@ -119,7 +131,7 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
 
                 if (DateTime.UtcNow + delay > lastRevalidationTime + _config.KeepaliveTimeout)
                 {
-                    _logger.RevalidatingStreamFailed(context.Client.ClientId, context.StreamPath);
+                    _logger.RevalidatingStreamTimedOut(context.Client.ClientId, context.StreamPath);
                     break;
                 }
 
@@ -128,11 +140,22 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
                     await Task.Delay(delay, cancellationToken);
 
                     var revlidationTime = DateTime.UtcNow;
-                    await _streamStore.RevalidateStreamAsync(context.StreamPath, cancellationToken);
-                    _logger.StreamRevalidated(context.Client.ClientId, context.StreamPath, revlidationTime);
+                    var result = await _streamStore.RevalidateStreamAsync(context.StreamPath, cancellationToken);
 
-                    isRetrying = false;
-                    lastRevalidationTime = revlidationTime;
+                    if (result.Successful)
+                    {
+                        _logger.StreamRevalidated(context.Client.ClientId, context.StreamPath, revlidationTime);
+                        isRetrying = false;
+                        lastRevalidationTime = revlidationTime;
+                    }
+                    else
+                    {
+                        _logger.RevalidatingStreamFailed(context.Client.ClientId, context.StreamPath, result.Retryable, result.Reason ?? "Unknown");
+                        isRetrying = result.Retryable;
+
+                        if (!isRetrying)
+                            break;
+                    }
                 }
                 catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
                 {

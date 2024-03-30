@@ -49,8 +49,11 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Logging
         [LoggerMessage(LogLevel.Debug, "ClientId: {ClientId} | StreamPath: {StreamPath} | Timestamp: {Timestamp} | The stream has been revalidated")]
         public static partial void StreamRevalidated(this ILogger logger, uint clientId, string streamPath, DateTime timestamp);
 
+        [LoggerMessage(LogLevel.Error, "ClientId: {ClientId} | StreamPath: {StreamPath} | Retryable: {Retryable} | Reason: {Reason} | Failed to revalidate the stream")]
+        public static partial void RevalidatingStreamFailed(this ILogger logger, uint clientId, string streamPath, bool retryable, string reason);
+
         [LoggerMessage(LogLevel.Error, "ClientId: {ClientId} | StreamPath: {StreamPath} | Failed to revalidate the stream within keepalive timeout period")]
-        public static partial void RevalidatingStreamFailed(this ILogger logger, uint clientId, string streamPath);
+        public static partial void RevalidatingStreamTimedOut(this ILogger logger, uint clientId, string streamPath);
 
         [LoggerMessage(LogLevel.Error, "ClientId: {ClientId} | StreamPath: {StreamPath} | An error occurred when revalidating the stream")]
         public static partial void RevalidatingStreamError(this ILogger logger, uint clientId, string streamPath, Exception exception);

@@ -15,7 +15,7 @@
             };
         }
 
-        public static StreamRegistrationResult Failure(string reason)
+        public static StreamRegistrationResult Failure(string? reason)
         {
             return new StreamRegistrationResult
             {
