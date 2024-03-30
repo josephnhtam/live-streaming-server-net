@@ -35,6 +35,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveStreamingServerNet.Kube
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.KubernetesPodDemo", "samples\LiveStreamingServerNet.KubernetesPodDemo\LiveStreamingServerNet.KubernetesPodDemo.csproj", "{7EFF979E-F81E-4938-8504-A53FA9E02AFD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveStreamingServerNet.KubernetesPod.Redis", "src\LiveStreamingServerNet.KubernetesPod.Redis\LiveStreamingServerNet.KubernetesPod.Redis.csproj", "{D69DDDBC-C7C3-4EFE-8124-4A643314DDED}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -101,6 +103,10 @@ Global
 		{7EFF979E-F81E-4938-8504-A53FA9E02AFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7EFF979E-F81E-4938-8504-A53FA9E02AFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7EFF979E-F81E-4938-8504-A53FA9E02AFD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D69DDDBC-C7C3-4EFE-8124-4A643314DDED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D69DDDBC-C7C3-4EFE-8124-4A643314DDED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D69DDDBC-C7C3-4EFE-8124-4A643314DDED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D69DDDBC-C7C3-4EFE-8124-4A643314DDED}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

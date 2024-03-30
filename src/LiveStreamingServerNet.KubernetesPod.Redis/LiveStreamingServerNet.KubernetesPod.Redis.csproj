@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net8.0;net7.0</TargetFrameworks>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+    <Authors>Joseph NH Tam</Authors>
+    <Description>This package provides Redis integration with live streaming server to manage streams across pods.</Description>
+    <PackageTags>live-streaming;rtmp;flv;http-flv;websocket-flv;hls;kubenetes;redis</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <Version>0.8.0</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Internal\HostedServices\**" />
+    <EmbeddedResource Remove="Internal\HostedServices\**" />
+    <None Remove="Internal\HostedServices\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="StackExchange.Redis" Version="2.7.33" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LiveStreamingServerNet.KubernetesPod\LiveStreamingServerNet.KubernetesPod.csproj" />
+  </ItemGroup>
+
+</Project>

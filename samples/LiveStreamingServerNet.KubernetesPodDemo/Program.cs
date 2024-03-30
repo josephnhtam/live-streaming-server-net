@@ -37,7 +37,7 @@ namespace LiveStreamingServerNet.KubernetesPodDemo
                         )
                     )
                 )
-                .ConfigureLogging(options => options.SetMinimumLevel(LogLevel.Debug).AddConsole())
+                .ConfigureLogging(options => options.SetMinimumLevel(LogLevel.Trace).AddConsole())
                 .Build();
         }
     }
