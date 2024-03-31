@@ -1,6 +1,7 @@
 ﻿using LiveStreamingServerNet.Transmuxer.Contracts;
 using LiveStreamingServerNet.Transmuxer.Internal.Contracts;
 using LiveStreamingServerNet.Transmuxer.Internal.Logging;
+using LiveStreamingServerNet.Utilities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -29,8 +30,10 @@ namespace LiveStreamingServerNet.Transmuxer.Internal
         {
             try
             {
+                using var context = EventContext.Obtain();
+
                 foreach (var handler in GetEventHandlers())
-                    await handler.OnTransmuxerStartedAsync(clientId, identifier, inputPath, outputPath, streamPath, streamArguments);
+                    await handler.OnTransmuxerStartedAsync(context, clientId, identifier, inputPath, outputPath, streamPath, streamArguments);
             }
             catch (Exception ex)
             {
@@ -42,8 +45,10 @@ namespace LiveStreamingServerNet.Transmuxer.Internal
         {
             try
             {
+                using var context = EventContext.Obtain();
+
                 foreach (var handler in GetEventHandlers())
-                    await handler.OnTransmuxerStoppedAsync(clientId, identifier, inputPath, outputPath, streamPath, streamArguments);
+                    await handler.OnTransmuxerStoppedAsync(context, clientId, identifier, inputPath, outputPath, streamPath, streamArguments);
             }
             catch (Exception ex)
             {

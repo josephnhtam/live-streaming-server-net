@@ -1,5 +1,6 @@
 ﻿using LiveStreamingServerNet.Flv.Internal.Services.Contracts;
 using LiveStreamingServerNet.Rtmp.Contracts;
+using LiveStreamingServerNet.Utilities.Contracts;
 
 namespace LiveStreamingServerNet.Flv.Internal.Services
 {
@@ -12,14 +13,14 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
             _streamManager = streamManager;
         }
 
-        public ValueTask OnRtmpStreamPublishedAsync(uint clientId, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
+        public ValueTask OnRtmpStreamPublishedAsync(IEventContext context, uint clientId, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
             var streamContext = new FlvStreamContext(streamPath, new Dictionary<string, string>(streamArguments));
             _streamManager.StartPublishingStream(streamContext);
             return ValueTask.CompletedTask;
         }
 
-        public ValueTask OnRtmpStreamUnpublishedAsync(uint clientId, string streamPath)
+        public ValueTask OnRtmpStreamUnpublishedAsync(IEventContext context, uint clientId, string streamPath)
         {
             if (_streamManager.StopPublishingStream(streamPath, out var existingSubscribers))
             {
@@ -30,7 +31,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
             return ValueTask.CompletedTask;
         }
 
-        public ValueTask OnRtmpStreamMetaDataReceivedAsync(uint clientId, string streamPath, IReadOnlyDictionary<string, object> metaData)
+        public ValueTask OnRtmpStreamMetaDataReceivedAsync(IEventContext context, uint clientId, string streamPath, IReadOnlyDictionary<string, object> metaData)
         {
             var streamContext = _streamManager.GetFlvStreamContext(streamPath);
 
@@ -40,12 +41,12 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
             return ValueTask.CompletedTask;
         }
 
-        public ValueTask OnRtmpStreamSubscribedAsync(uint clientId, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
+        public ValueTask OnRtmpStreamSubscribedAsync(IEventContext context, uint clientId, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
             return ValueTask.CompletedTask;
         }
 
-        public ValueTask OnRtmpStreamUnsubscribedAsync(uint clientId, string streamPath)
+        public ValueTask OnRtmpStreamUnsubscribedAsync(IEventContext context, uint clientId, string streamPath)
         {
             return ValueTask.CompletedTask;
         }

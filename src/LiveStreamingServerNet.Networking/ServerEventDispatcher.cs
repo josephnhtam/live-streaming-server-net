@@ -1,5 +1,6 @@
 ﻿using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.Networking.Logging;
+using LiveStreamingServerNet.Utilities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Net.Sockets;
@@ -28,8 +29,10 @@ namespace LiveStreamingServerNet.Networking
         {
             try
             {
+                using var context = EventContext.Obtain();
+
                 foreach (var serverEventHandler in GetEventHandlers())
-                    await serverEventHandler.OnListenerCreatedAsync(tcpListener);
+                    await serverEventHandler.OnListenerCreatedAsync(context, tcpListener);
             }
             catch (Exception ex)
             {
@@ -41,8 +44,10 @@ namespace LiveStreamingServerNet.Networking
         {
             try
             {
+                using var context = EventContext.Obtain();
+
                 foreach (var serverEventHandler in GetEventHandlers())
-                    await serverEventHandler.OnClientAcceptedAsync(tcpClient);
+                    await serverEventHandler.OnClientAcceptedAsync(context, tcpClient);
             }
             catch (Exception ex)
             {
@@ -54,8 +59,10 @@ namespace LiveStreamingServerNet.Networking
         {
             try
             {
+                using var context = EventContext.Obtain();
+
                 foreach (var serverEventHandler in GetEventHandlers())
-                    await serverEventHandler.OnClientConnectedAsync(client);
+                    await serverEventHandler.OnClientConnectedAsync(context, client);
             }
             catch (Exception ex)
             {
@@ -67,8 +74,10 @@ namespace LiveStreamingServerNet.Networking
         {
             try
             {
+                using var context = EventContext.Obtain();
+
                 foreach (var serverEventHandler in GetEventHandlers())
-                    await serverEventHandler.OnClientDisconnectedAsync(client);
+                    await serverEventHandler.OnClientDisconnectedAsync(context, client);
             }
             catch (Exception ex)
             {
@@ -80,8 +89,10 @@ namespace LiveStreamingServerNet.Networking
         {
             try
             {
+                using var context = EventContext.Obtain();
+
                 foreach (var serverEventHandler in GetEventHandlers())
-                    await serverEventHandler.OnServerStartedAsync();
+                    await serverEventHandler.OnServerStartedAsync(context);
             }
             catch (Exception ex)
             {
@@ -93,8 +104,10 @@ namespace LiveStreamingServerNet.Networking
         {
             try
             {
+                using var context = EventContext.Obtain();
+
                 foreach (var serverEventHandler in GetEventHandlers())
-                    await serverEventHandler.OnServerStoppedAsync();
+                    await serverEventHandler.OnServerStoppedAsync(context);
             }
             catch (Exception ex)
             {

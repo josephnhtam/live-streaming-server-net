@@ -1,5 +1,6 @@
 ﻿using LiveStreamingServerNet.KubernetesPod.Internal.Services.Contracts;
 using LiveStreamingServerNet.Rtmp.Contracts;
+using LiveStreamingServerNet.Utilities.Contracts;
 
 namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
 {
@@ -15,21 +16,21 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
             _streamRegistry = streamRegistry;
         }
 
-        public async ValueTask OnRtmpStreamUnpublishedAsync(uint clientId, string streamPath)
+        public async ValueTask OnRtmpStreamUnpublishedAsync(IEventContext context, uint clientId, string streamPath)
         {
             await _streamRegistry.UnregsiterStreamAsync(streamPath);
         }
 
-        public ValueTask OnRtmpStreamPublishedAsync(uint clientId, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
+        public ValueTask OnRtmpStreamPublishedAsync(IEventContext context, uint clientId, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
             => ValueTask.CompletedTask;
 
-        public ValueTask OnRtmpStreamSubscribedAsync(uint clientId, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
+        public ValueTask OnRtmpStreamSubscribedAsync(IEventContext context, uint clientId, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
             => ValueTask.CompletedTask;
 
-        public ValueTask OnRtmpStreamUnsubscribedAsync(uint clientId, string streamPath)
+        public ValueTask OnRtmpStreamUnsubscribedAsync(IEventContext context, uint clientId, string streamPath)
             => ValueTask.CompletedTask;
 
-        public ValueTask OnRtmpStreamMetaDataReceivedAsync(uint clientId, string streamPath, IReadOnlyDictionary<string, object> metaData)
+        public ValueTask OnRtmpStreamMetaDataReceivedAsync(IEventContext context, uint clientId, string streamPath, IReadOnlyDictionary<string, object> metaData)
             => ValueTask.CompletedTask;
     }
 }

@@ -1,5 +1,6 @@
 ﻿using LiveStreamingServerNet.Rtmp.Contracts;
 using LiveStreamingServerNet.Transmuxer.Internal.Services.Contracts;
+using LiveStreamingServerNet.Utilities.Contracts;
 
 namespace LiveStreamingServerNet.Transmuxer.Internal.Services
 {
@@ -12,27 +13,27 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Services
             _transmuxerManager = transmuxerManager;
         }
 
-        public async ValueTask OnRtmpStreamPublishedAsync(uint clientId, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
+        public async ValueTask OnRtmpStreamPublishedAsync(IEventContext context, uint clientId, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
             await _transmuxerManager.StartRemuxingStreamAsync(clientId, streamPath, new Dictionary<string, string>(streamArguments));
         }
 
-        public async ValueTask OnRtmpStreamUnpublishedAsync(uint clientId, string streamPath)
+        public async ValueTask OnRtmpStreamUnpublishedAsync(IEventContext context, uint clientId, string streamPath)
         {
             await _transmuxerManager.StopRemuxingStreamAsync(clientId, streamPath);
         }
 
-        public ValueTask OnRtmpStreamMetaDataReceivedAsync(uint clientId, string streamPath, IReadOnlyDictionary<string, object> metaData)
+        public ValueTask OnRtmpStreamMetaDataReceivedAsync(IEventContext context, uint clientId, string streamPath, IReadOnlyDictionary<string, object> metaData)
         {
             return ValueTask.CompletedTask;
         }
 
-        public ValueTask OnRtmpStreamSubscribedAsync(uint clientId, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
+        public ValueTask OnRtmpStreamSubscribedAsync(IEventContext context, uint clientId, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
             return ValueTask.CompletedTask;
         }
 
-        public ValueTask OnRtmpStreamUnsubscribedAsync(uint clientId, string streamPath)
+        public ValueTask OnRtmpStreamUnsubscribedAsync(IEventContext context, uint clientId, string streamPath)
         {
             return ValueTask.CompletedTask;
         }

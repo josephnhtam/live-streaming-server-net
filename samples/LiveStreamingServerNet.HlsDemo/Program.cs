@@ -2,6 +2,7 @@ using LiveStreamingServerNet.Networking.Helpers;
 using LiveStreamingServerNet.Transmuxer.Contracts;
 using LiveStreamingServerNet.Transmuxer.Installer;
 using LiveStreamingServerNet.Transmuxer.Internal.Utilities;
+using LiveStreamingServerNet.Utilities.Contracts;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.FileProviders;
 using System.Net;
@@ -85,14 +86,14 @@ namespace LiveStreamingServerNet.HlsDemo
                 _logger = logger;
             }
 
-            public Task OnTransmuxerStartedAsync(uint clientId, string identifier, string inputPath, string outputPath, string streamPath, IDictionary<string, string> streamArguments)
+            public Task OnTransmuxerStartedAsync(IEventContext context, uint clientId, string identifier, string inputPath, string outputPath, string streamPath, IDictionary<string, string> streamArguments)
             {
                 outputPath = Path.GetRelativePath(_trasmuxerOutputPath, outputPath);
                 _logger.LogInformation($"Transmuxer ({identifier}) started: {inputPath} -> {outputPath}");
                 return Task.CompletedTask;
             }
 
-            public Task OnTransmuxerStoppedAsync(uint clientId, string identifier, string inputPath, string outputPath, string streamPath, IDictionary<string, string> streamArguments)
+            public Task OnTransmuxerStoppedAsync(IEventContext context, uint clientId, string identifier, string inputPath, string outputPath, string streamPath, IDictionary<string, string> streamArguments)
             {
                 outputPath = Path.GetRelativePath(_trasmuxerOutputPath, outputPath);
                 _logger.LogInformation($"Transmuxer ({identifier}) stopped: {inputPath} -> {outputPath}");

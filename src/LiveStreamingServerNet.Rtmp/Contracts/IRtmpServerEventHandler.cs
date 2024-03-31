@@ -1,4 +1,5 @@
 ﻿using LiveStreamingServerNet.Networking.Contracts;
+using LiveStreamingServerNet.Utilities.Contracts;
 
 namespace LiveStreamingServerNet.Rtmp.Contracts
 {
@@ -6,22 +7,22 @@ namespace LiveStreamingServerNet.Rtmp.Contracts
     {
         int GetOrder() => 0;
 
-        ValueTask OnRtmpClientCreatedAsync(IClientControl client);
-        ValueTask OnRtmpClientDisposedAsync(uint clientId);
+        ValueTask OnRtmpClientCreatedAsync(IEventContext context, IClientControl client);
+        ValueTask OnRtmpClientDisposedAsync(IEventContext context, uint clientId);
 
-        ValueTask OnRtmpClientHandshakeCompleteAsync(uint clientId);
-        ValueTask OnRtmpClientConnectedAsync(uint clientId, IReadOnlyDictionary<string, object> commandObject, IReadOnlyDictionary<string, object>? arguments);
+        ValueTask OnRtmpClientHandshakeCompleteAsync(IEventContext context, uint clientId);
+        ValueTask OnRtmpClientConnectedAsync(IEventContext context, uint clientId, IReadOnlyDictionary<string, object> commandObject, IReadOnlyDictionary<string, object>? arguments);
     }
 
     public interface IRtmpServerStreamEventHandler
     {
         int GetOrder() => 0;
 
-        ValueTask OnRtmpStreamPublishedAsync(uint clientId, string streamPath, IReadOnlyDictionary<string, string> streamArguments);
-        ValueTask OnRtmpStreamUnpublishedAsync(uint clientId, string streamPath);
-        ValueTask OnRtmpStreamSubscribedAsync(uint clientId, string streamPath, IReadOnlyDictionary<string, string> streamArguments);
-        ValueTask OnRtmpStreamUnsubscribedAsync(uint clientId, string streamPath);
+        ValueTask OnRtmpStreamPublishedAsync(IEventContext context, uint clientId, string streamPath, IReadOnlyDictionary<string, string> streamArguments);
+        ValueTask OnRtmpStreamUnpublishedAsync(IEventContext context, uint clientId, string streamPath);
+        ValueTask OnRtmpStreamSubscribedAsync(IEventContext context, uint clientId, string streamPath, IReadOnlyDictionary<string, string> streamArguments);
+        ValueTask OnRtmpStreamUnsubscribedAsync(IEventContext context, uint clientId, string streamPath);
 
-        ValueTask OnRtmpStreamMetaDataReceivedAsync(uint clientId, string streamPath, IReadOnlyDictionary<string, object> metaData);
+        ValueTask OnRtmpStreamMetaDataReceivedAsync(IEventContext context, uint clientId, string streamPath, IReadOnlyDictionary<string, object> metaData);
     }
 }
