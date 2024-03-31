@@ -104,13 +104,13 @@ namespace LiveStreamingServerNet.Rtmp.Installer
 
         public IRtmpServerConfigurator AddBandwidthLimiter(long bytesPerSecond, long bytesLimit)
         {
-            Services.TryAddTransient<IBandwidthLimiter>(_ => new BandwidthLimiter(bytesPerSecond, bytesLimit));
+            Services.TryAddSingleton<IBandwidthLimiterFactory>(_ => new BandwidthLimiterFactory(bytesPerSecond, bytesLimit));
             return this;
         }
 
-        public IRtmpServerConfigurator AddBandwidthLimiter(Func<IServiceProvider, IBandwidthLimiter> factory)
+        public IRtmpServerConfigurator AddBandwidthLimiter(Func<IServiceProvider, IBandwidthLimiterFactory> factory)
         {
-            Services.TryAddTransient(factory);
+            Services.TryAddSingleton(factory);
             return this;
         }
     }

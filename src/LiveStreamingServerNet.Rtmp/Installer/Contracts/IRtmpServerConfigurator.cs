@@ -34,6 +34,6 @@ namespace LiveStreamingServerNet.Rtmp.Installer.Contracts
 
         IRtmpServerConfigurator AddBandwidthLimiter(long bytesPerSecond);
         IRtmpServerConfigurator AddBandwidthLimiter(long bytesPerSecond, long bytesLimit);
-        IRtmpServerConfigurator AddBandwidthLimiter(Func<IServiceProvider, IBandwidthLimiter> factory);
+        IRtmpServerConfigurator AddBandwidthLimiter(Func<IServiceProvider, IBandwidthLimiterFactory> factory);
     }
 }

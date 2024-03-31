@@ -5,7 +5,6 @@ using LiveStreamingServerNet.Rtmp.Internal.RtmpEvents;
 using LiveStreamingServerNet.Rtmp.Logging;
 using LiveStreamingServerNet.Rtmp.RateLimiting.Contracts;
 using MediatR;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace LiveStreamingServerNet.Rtmp.Internal
@@ -20,15 +19,15 @@ namespace LiveStreamingServerNet.Rtmp.Internal
         private IRtmpClientContext _clientContext = default!;
 
         public RtmpClientHandler(
-            IServiceProvider services,
             IMediator mediator,
             IRtmpServerConnectionEventDispatcher eventDispatcher,
-            ILogger<RtmpClientHandler> logger)
+            ILogger<RtmpClientHandler> logger,
+            IBandwidthLimiterFactory? bandwidthLimiterFactory = null)
         {
             _mediator = mediator;
             _eventDispatcher = eventDispatcher;
             _logger = logger;
-            _bandwidthLimiter = services.GetService<IBandwidthLimiter>();
+            _bandwidthLimiter = bandwidthLimiterFactory?.Create();
         }
 
         public async Task InitializeAsync(IClientHandle client)
