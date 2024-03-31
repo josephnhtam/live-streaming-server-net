@@ -46,5 +46,8 @@ namespace LiveStreamingServerNet.Rtmp.RateLimiting
 
             return true;
         }
+
+        public ValueTask DisposeAsync()
+            => ValueTask.CompletedTask;
     }
 }
