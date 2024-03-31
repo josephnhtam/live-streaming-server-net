@@ -76,6 +76,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
             }
 
             subscribers.Add(client);
+            _subscribedStreamPaths[client] = streamPath;
 
             return SubscribingStreamResult.Succeeded;
         }
