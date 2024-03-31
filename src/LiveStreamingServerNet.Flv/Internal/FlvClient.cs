@@ -18,14 +18,19 @@ namespace LiveStreamingServerNet.Flv.Internal
         private Task? _initializationTask;
         private Task? _completeTask;
 
-        public FlvClient(IFlvMediaTagManagerService mediaTagManager, IFlvWriter flvWriter)
+        private bool _isDiposed;
+
+        public FlvClient(
+            IFlvMediaTagManagerService mediaTagManager,
+            IFlvWriter flvWriter,
+            string clientId,
+            string streamPath,
+            IStreamWriter streamWriter,
+            CancellationToken stoppingToken)
         {
             _mediaTagManager = mediaTagManager;
             FlvWriter = flvWriter;
-        }
 
-        public void Initialize(string clientId, string streamPath, IStreamWriter streamWriter, CancellationToken stoppingToken)
-        {
             ClientId = clientId;
             StreamPath = streamPath;
             FlvWriter.Initialize(this, streamWriter);
@@ -69,12 +74,19 @@ namespace LiveStreamingServerNet.Flv.Internal
 
         public async ValueTask DisposeAsync()
         {
+            if (_isDiposed)
+                return;
+
+            _isDiposed = true;
+
             _mediaTagManager.UnregisterClient(this);
 
             if (_stoppingCts != null)
                 _stoppingCts.Dispose();
 
             await FlvWriter.DisposeAsync();
+
+            GC.SuppressFinalize(this);
         }
     }
 }

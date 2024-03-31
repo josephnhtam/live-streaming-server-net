@@ -15,6 +15,8 @@ namespace LiveStreamingServerNet.Flv.Internal
         private IFlvClient _client = default!;
         private IStreamWriter _streamWriter = default!;
 
+        private bool _isDisposed;
+
         public FlvWriter(ILogger<FlvWriter> logger)
         {
             _logger = logger;
@@ -83,6 +85,11 @@ namespace LiveStreamingServerNet.Flv.Internal
 
         public async ValueTask DisposeAsync()
         {
+            if (_isDisposed)
+                return;
+
+            _isDisposed = true;
+
             try
             {
                 await _syncLock.WaitAsync();
@@ -92,6 +99,8 @@ namespace LiveStreamingServerNet.Flv.Internal
             {
                 _syncLock.Release();
             }
+
+            GC.SuppressFinalize(this);
         }
     }
 }
