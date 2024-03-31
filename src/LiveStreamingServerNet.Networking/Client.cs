@@ -22,10 +22,12 @@ namespace LiveStreamingServerNet.Networking
         private CancellationTokenSource? _cts;
         private TaskCompletionSource _stoppedTcs = new();
 
-        public uint ClientId { get; private set; }
+        public uint ClientId { get; }
 
-        public Client(INetBufferPool netBufferPool, IOptions<SecurityConfiguration> config, ILogger<Client> logger)
+        public Client(uint clientId, TcpClient tcpClient, INetBufferPool netBufferPool, IOptions<SecurityConfiguration> config, ILogger<Client> logger)
         {
+            ClientId = clientId;
+            _tcpClient = tcpClient;
             _netBufferPool = netBufferPool;
             _config = config.Value;
             _logger = logger;
@@ -36,12 +38,6 @@ namespace LiveStreamingServerNet.Networking
 
         public EndPoint LocalEndPoint => _tcpClient.Client.LocalEndPoint!;
         public EndPoint RemoteEndPoint => _tcpClient.Client.RemoteEndPoint!;
-
-        public void Initialize(uint clientId, TcpClient tcpClient)
-        {
-            ClientId = clientId;
-            _tcpClient = tcpClient;
-        }
 
         public async Task RunAsync(IClientHandler handler, ServerEndPoint serverEndPoint, CancellationToken stoppingToken)
         {

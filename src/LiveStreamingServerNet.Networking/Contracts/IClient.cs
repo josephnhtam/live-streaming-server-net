@@ -1,11 +1,9 @@
 ﻿using System.Net;
-using System.Net.Sockets;
 
 namespace LiveStreamingServerNet.Networking.Contracts
 {
     internal interface IClient : IAsyncDisposable, IClientHandle
     {
-        void Initialize(uint clientId, TcpClient tcpClient);
         Task RunAsync(IClientHandler handler, ServerEndPoint serverEndPoint, CancellationToken stoppingToken);
     }
 

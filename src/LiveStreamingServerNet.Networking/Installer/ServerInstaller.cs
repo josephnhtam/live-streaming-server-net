@@ -15,7 +15,7 @@ namespace LiveStreamingServerNet.Networking.Installer
 
             services.AddSingleton<IServer, Server>()
                     .AddSingleton<IServerHandle>(x => x.GetRequiredService<IServer>())
-                    .AddTransient<IClient, Client>();
+                    .AddSingleton<IClientFactory, ClientFactory>();
 
             services.AddSingleton<IServerEventDispatcher, ServerEventDispatcher>()
                     .AddSingleton<IClientHandlerFactory, TClientHandlerFactory>();

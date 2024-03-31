@@ -1,6 +1,5 @@
 ﻿using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.Networking.Logging;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Collections.Concurrent;
 using System.Net;
@@ -11,6 +10,7 @@ namespace LiveStreamingServerNet.Networking
     internal sealed class Server : IServer
     {
         private readonly ConcurrentDictionary<uint, ClientTask> _clientTasks = new();
+        private readonly IClientFactory _clientFactory;
         private readonly IClientHandlerFactory _clientHandlerFactory;
         private readonly IServerEventDispatcher _eventDispatcher;
         private readonly ILogger _logger;
@@ -26,11 +26,13 @@ namespace LiveStreamingServerNet.Networking
 
         public Server(
             IServiceProvider services,
+            IClientFactory clientFactory,
             IClientHandlerFactory clientHandlerFactory,
             IServerEventDispatcher eventDispatcher,
             ILogger<Server> logger)
         {
             Services = services;
+            _clientFactory = clientFactory;
             _clientHandlerFactory = clientHandlerFactory;
             _eventDispatcher = eventDispatcher;
             _logger = logger;
@@ -191,10 +193,7 @@ namespace LiveStreamingServerNet.Networking
 
         private IClient CreateClient(uint clientId, TcpClient tcpClient)
         {
-            var client = Services.GetRequiredService<IClient>();
-            client.Initialize(clientId, tcpClient);
-
-            return client;
+            return _clientFactory.Create(clientId, tcpClient);
         }
 
         public IClientHandle? GetClient(uint clientId)
