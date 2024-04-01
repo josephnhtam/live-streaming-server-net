@@ -32,7 +32,7 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Services
             _transmuxerTasks = new ConcurrentDictionary<string, TransmuxerTask>();
         }
 
-        public async Task StartRemuxingStreamAsync(uint clientId, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
+        public async Task StartTransmuxingStreamAsync(uint clientId, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
             var cts = new CancellationTokenSource();
 
@@ -101,7 +101,7 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Services
             }
         }
 
-        public Task StopRemuxingStreamAsync(uint clientId, string streamPath)
+        public Task StopTransmuxingStreamAsync(uint clientId, string streamPath)
         {
             if (_transmuxerTasks.TryGetValue(streamPath, out var task))
                 task.Cts.Cancel();

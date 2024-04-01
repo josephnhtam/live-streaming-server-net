@@ -6,8 +6,8 @@
     <Nullable>enable</Nullable>
     <IsPackable>true</IsPackable>
     <Authors>Joseph NH Tam</Authors>
-    <Description>This package provides the capability to integrate a transmuxer, such as FFmpeg, for remuxing the media stream into other formats like HLS/DASH.</Description>
-    <PackageTags>live-streaming;rtmp;transmuxer;remux;hls;dash</PackageTags>
+    <Description>This package provides the capability to integrate a transmuxer, such as FFmpeg, for transmuxing the rtmp stream into other formats like HLS/DASH.</Description>
+    <PackageTags>live-streaming;rtmp;transmuxer;hls;dash</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <Version>0.8.0</Version>

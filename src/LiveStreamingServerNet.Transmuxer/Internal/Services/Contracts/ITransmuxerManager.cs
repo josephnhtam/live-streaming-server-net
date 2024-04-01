@@ -2,7 +2,7 @@
 {
     internal interface ITransmuxerManager : IAsyncDisposable
     {
-        Task StartRemuxingStreamAsync(uint clientId, string streamPath, IReadOnlyDictionary<string, string> streamArguments);
-        Task StopRemuxingStreamAsync(uint clientId, string streamPath);
+        Task StartTransmuxingStreamAsync(uint clientId, string streamPath, IReadOnlyDictionary<string, string> streamArguments);
+        Task StopTransmuxingStreamAsync(uint clientId, string streamPath);
     }
 }
