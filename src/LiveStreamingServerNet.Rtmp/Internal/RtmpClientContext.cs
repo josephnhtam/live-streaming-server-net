@@ -85,7 +85,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal
         {
             StreamId = streamId;
             StreamPath = streamPath;
-            StreamArguments = streamArguments;
+            StreamArguments = new Dictionary<string, string>(streamArguments);
             GroupOfPicturesCache = new GroupOfPicturesCache();
         }
     }
@@ -153,7 +153,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal
             StreamId = streamId;
             ChunkStreamId = chunkStreamId;
             StreamPath = streamPath;
-            StreamArguments = streamArguments;
+            StreamArguments = new Dictionary<string, string>(streamArguments);
 
             IsPaused = false;
             IsReceivingAudio = true;

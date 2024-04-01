@@ -23,7 +23,7 @@ namespace LiveStreamingServerNet.Standalone.Internal
             Client = client;
             StreamPath = streamPath;
             StartTime = DateTime.UtcNow;
-            StreamArguments = streamArguments;
+            StreamArguments = new Dictionary<string, string>(streamArguments);
         }
 
         public void UpdateMetaData(IReadOnlyDictionary<string, object> metaData)

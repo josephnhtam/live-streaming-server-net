@@ -36,7 +36,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
             var streamContext = _streamManager.GetFlvStreamContext(streamPath);
 
             if (streamContext != null)
-                streamContext.StreamMetaData = metaData;
+                streamContext.StreamMetaData = new Dictionary<string, object>(metaData);
 
             return ValueTask.CompletedTask;
         }

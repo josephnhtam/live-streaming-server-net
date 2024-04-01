@@ -77,7 +77,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Data
 
         private static void CacheStreamMetaData(IReadOnlyDictionary<string, object> metaData, IRtmpPublishStreamContext publishStreamContext)
         {
-            publishStreamContext.StreamMetaData = metaData;
+            publishStreamContext.StreamMetaData = new Dictionary<string, object>(metaData);
         }
 
         private void BroadcastMetaDataToSubscribers(

@@ -15,7 +15,7 @@ namespace LiveStreamingServerNet.Flv.Internal
         public FlvStreamContext(string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
             StreamPath = streamPath;
-            StreamArguments = streamArguments;
+            StreamArguments = new Dictionary<string, string>(streamArguments);
             GroupOfPicturesCache = new GroupOfPicturesCache();
         }
     }

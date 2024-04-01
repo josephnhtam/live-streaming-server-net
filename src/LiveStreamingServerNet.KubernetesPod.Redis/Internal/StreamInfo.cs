@@ -25,7 +25,7 @@
             PodNamespace = podNamespace;
             PodName = podName;
             StreamPath = streamPath;
-            StreamArguments = streamArguments;
+            StreamArguments = new Dictionary<string, string>(streamArguments);
         }
     }
 }

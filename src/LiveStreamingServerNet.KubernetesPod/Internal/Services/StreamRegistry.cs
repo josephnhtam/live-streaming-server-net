@@ -195,7 +195,7 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
             {
                 Client = client;
                 StreamPath = streamPath;
-                StreamArguments = streamArguments;
+                StreamArguments = new Dictionary<string, string>(streamArguments);
 
                 _keepaliveCts = new CancellationTokenSource();
                 KeepaliveCancellationToken = _keepaliveCts.Token;
