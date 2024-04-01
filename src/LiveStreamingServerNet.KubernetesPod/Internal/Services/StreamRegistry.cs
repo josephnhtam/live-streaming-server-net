@@ -39,7 +39,7 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
         }
 
         public async Task<StreamRegistrationResult> RegisterStreamAsync(
-            IClientInfo client, string streamPath, IDictionary<string, string> streamArguments)
+            IClientInfo client, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
             var context = new StreamContext(client, streamPath, streamArguments);
 
@@ -186,16 +186,16 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
         {
             public IClientInfo Client { get; }
             public string StreamPath { get; }
-            public IDictionary<string, string> StreamArguments { get; }
+            public IReadOnlyDictionary<string, string> StreamArguments { get; }
             public CancellationToken KeepaliveCancellationToken { get; }
 
             private readonly CancellationTokenSource _keepaliveCts;
 
-            public StreamContext(IClientInfo client, string streamPath, IDictionary<string, string> streamArguments)
+            public StreamContext(IClientInfo client, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
             {
                 Client = client;
                 StreamPath = streamPath;
-                StreamArguments = new Dictionary<string, string>(streamArguments);
+                StreamArguments = streamArguments;
 
                 _keepaliveCts = new CancellationTokenSource();
                 KeepaliveCancellationToken = _keepaliveCts.Token;

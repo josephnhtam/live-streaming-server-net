@@ -69,7 +69,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
         private async ValueTask<AuthorizationResult> AuthorizeAsync(
             IRtmpClientContext clientContext,
             string streamPath,
-            IDictionary<string, string> streamArguments,
+            IReadOnlyDictionary<string, string> streamArguments,
             string publishingType)
         {
             if (streamArguments.TryGetValue("code", out var authCode) && authCode == _serverContext.AuthCode)
@@ -78,7 +78,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
             foreach (var authorizationHandler in _services.GetServices<IAuthorizationHandler>().OrderBy(x => x.GetOrder()))
             {
                 var result = await authorizationHandler.AuthorizePublishingAsync(
-                    clientContext.Client, streamPath, new Dictionary<string, string>(streamArguments), publishingType);
+                    clientContext.Client, streamPath, streamArguments, publishingType);
 
                 if (!result.IsAuthorized)
                     return result;
@@ -90,7 +90,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
             return AuthorizationResult.Authorized(streamPath, streamArguments);
         }
 
-        private static (string StreamPath, IDictionary<string, string> StreamArguments)
+        private static (string StreamPath, IReadOnlyDictionary<string, string> StreamArguments)
             ParsePublishContext(RtmpPublishCommand command, IRtmpClientContext clientContext)
         {
             var (streamName, arguments) = StreamUtilities.ParseStreamPath(command.PublishingName);
@@ -98,7 +98,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
             var streamPath = $"/{string.Join('/',
                 new string[] { clientContext.AppName, streamName }.Where(s => !string.IsNullOrEmpty(s)).ToArray())}";
 
-            return (streamPath, arguments);
+            return (streamPath, arguments.AsReadOnly());
         }
 
         private async ValueTask<AuthorizationResult> AuthorizeAsync(
@@ -106,7 +106,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
             RtmpPublishCommand command,
             IRtmpChunkStreamContext chunkStreamContext,
             string streamPath,
-            IDictionary<string, string> streamArguments)
+            IReadOnlyDictionary<string, string> streamArguments)
         {
             if (streamArguments.TryGetValue("code", out var authCode) && authCode == _serverContext.AuthCode)
                 return AuthorizationResult.Authorized();
@@ -115,8 +115,8 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
 
             if (!result.IsAuthorized)
             {
-                _logger.AuthorizationFailed(clientContext.Client.ClientId, streamPath, command.PublishingType, result.Reason);
-                await SendAuthorizationFailedCommandMessageAsync(clientContext, chunkStreamContext, result.Reason);
+                _logger.AuthorizationFailed(clientContext.Client.ClientId, streamPath, command.PublishingType, result.Reason ?? "Unknown");
+                await SendAuthorizationFailedCommandMessageAsync(clientContext, chunkStreamContext, result.Reason ?? "Unknown");
             }
 
             return result;
@@ -127,7 +127,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
             RtmpPublishCommand command,
             IRtmpChunkStreamContext chunkStreamContext,
             string streamPath,
-            IDictionary<string, string> streamArguments)
+            IReadOnlyDictionary<string, string> streamArguments)
         {
             var startPublishingResult = _streamManager.StartPublishingStream(clientContext, streamPath, streamArguments, out _);
 
@@ -136,7 +136,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
                 case PublishingStreamResult.Succeeded:
                     _logger.PublishingStarted(clientContext.Client.ClientId, streamPath, command.PublishingType);
                     SendPublishingStartedMessage(clientContext, chunkStreamContext);
-                    _eventDispatcher.RtmpStreamPublishedAsync(clientContext, streamPath, streamArguments.AsReadOnly());
+                    _eventDispatcher.RtmpStreamPublishedAsync(clientContext, streamPath, streamArguments);
                     return true;
 
                 case PublishingStreamResult.AlreadySubscribing:

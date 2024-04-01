@@ -5,11 +5,11 @@
         public bool IsAuthorized { get; set; }
         public string? Reason { get; set; }
         public string? StreamPathOverride { get; set; }
-        public IDictionary<string, string>? StreamArgumentsOverride { get; set; }
+        public IReadOnlyDictionary<string, string>? StreamArgumentsOverride { get; set; }
 
         private AuthorizationResult() { }
 
-        public static AuthorizationResult Authorized(string? streamPathOverride = null, IDictionary<string, string>? streamArgumentsOverride = null)
+        public static AuthorizationResult Authorized(string? streamPathOverride = null, IReadOnlyDictionary<string, string>? streamArgumentsOverride = null)
         {
             return new AuthorizationResult
             {

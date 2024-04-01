@@ -46,7 +46,7 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.HostedServices
                 var labels = pod.Labels() ?? new Dictionary<string, string>();
                 var annotataions = pod.Annotations() ?? new Dictionary<string, string>();
 
-                await _lifetimeManager.ReconcileAsync(labels, annotataions);
+                await _lifetimeManager.ReconcileAsync(labels.AsReadOnly(), annotataions.AsReadOnly());
             }
         }
     }

@@ -46,7 +46,7 @@ namespace LiveStreamingServerNet.KubernetesPod.Redis.Internal.Services
             string podNamespace,
             string podName,
             string streamPath,
-            IDictionary<string, string> streamArguments,
+            IReadOnlyDictionary<string, string> streamArguments,
             CancellationToken cancellationToken = default)
         {
             try
@@ -60,7 +60,7 @@ namespace LiveStreamingServerNet.KubernetesPod.Redis.Internal.Services
                     podNamespace,
                     podName,
                     streamPath,
-                    streamArguments.AsReadOnly());
+                    streamArguments);
 
                 var set = await _database.StringSetAsync(
                     key,

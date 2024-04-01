@@ -6,8 +6,8 @@ namespace LiveStreamingServerNet.Flv.Internal.Contracts
     internal interface IFlvStreamContext
     {
         string StreamPath { get; }
-        IDictionary<string, string> StreamArguments { get; }
-        IDictionary<string, object>? StreamMetaData { get; set; }
+        IReadOnlyDictionary<string, string> StreamArguments { get; }
+        IReadOnlyDictionary<string, object>? StreamMetaData { get; set; }
         byte[]? VideoSequenceHeader { get; set; }
         byte[]? AudioSequenceHeader { get; set; }
         IGroupOfPicturesCache GroupOfPicturesCache { get; }

@@ -29,7 +29,7 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
         int IAuthorizationHandler.GetOrder() => Order;
 
         public Task<AuthorizationResult> AuthorizePublishingAsync(
-            IClientInfo client, string streamPath, IDictionary<string, string> streamArguments, string publishingType)
+            IClientInfo client, string streamPath, IReadOnlyDictionary<string, string> streamArguments, string publishingType)
         {
             if (_config.BlockPublishingWhenLimitReached && _podStatus.IsStreamsLimitReached)
             {
@@ -47,7 +47,7 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
         }
 
         public Task<AuthorizationResult> AuthorizeSubscriptionAsync(
-            IClientInfo client, string streamPath, IDictionary<string, string> streamArguments)
+            IClientInfo client, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
             return Task.FromResult(AuthorizationResult.Authorized());
         }

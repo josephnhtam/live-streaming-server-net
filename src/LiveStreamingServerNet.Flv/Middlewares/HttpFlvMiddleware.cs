@@ -44,10 +44,10 @@ namespace LiveStreamingServerNet.Flv.Middlewares
 
             WriteResponseHeader(context);
 
-            if (_onPrepareResponse != null && !await _onPrepareResponse(new FlvStreamContext(context, streamPath, streamArguments)))
+            if (_onPrepareResponse != null && !await _onPrepareResponse(new FlvStreamContext(context, streamPath, streamArguments.AsReadOnly())))
                 return;
 
-            await TryServeHttpFlv(context, streamPath, streamArguments);
+            await TryServeHttpFlv(context, streamPath, streamArguments.AsReadOnly());
         }
 
         private static void WriteResponseHeader(HttpContext context)
@@ -55,7 +55,7 @@ namespace LiveStreamingServerNet.Flv.Middlewares
             context.Response.ContentType = "video/x-flv";
         }
 
-        private async Task TryServeHttpFlv(HttpContext context, string streamPath, IDictionary<string, string> streamArguments)
+        private async Task TryServeHttpFlv(HttpContext context, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
             if (!_streamManager.IsStreamPathPublishing(streamPath))
             {
@@ -71,7 +71,7 @@ namespace LiveStreamingServerNet.Flv.Middlewares
             return _clientFactory.CreateClient(context, streamPath, cancellation);
         }
 
-        private async Task SubscribeToStreamAsync(HttpContext context, string streamPath, IDictionary<string, string> streamArguments)
+        private async Task SubscribeToStreamAsync(HttpContext context, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
             var cancellation = context.RequestAborted;
 

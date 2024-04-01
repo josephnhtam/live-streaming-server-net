@@ -20,12 +20,12 @@ namespace LiveStreamingServerNet.Transmuxer.Configurations
             OutputPathResolver = DefaultOutputPathResolver;
         }
 
-        public static Task<string> DefaultOutputPathResolver(string streamPath, IDictionary<string, string> streamArguments)
+        public static Task<string> DefaultOutputPathResolver(string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
             var entryDirectory = Path.GetDirectoryName(Assembly.GetEntryAssembly()!.Location)!;
             return Task.FromResult(Path.Combine(entryDirectory, "Output", streamPath.Trim('/'), "output.m3u8"));
         }
     }
 
-    public delegate Task<string> FFmpegOutputPathResolverDelegate(string streamPath, IDictionary<string, string> streamArguments);
+    public delegate Task<string> FFmpegOutputPathResolverDelegate(string streamPath, IReadOnlyDictionary<string, string> streamArguments);
 }

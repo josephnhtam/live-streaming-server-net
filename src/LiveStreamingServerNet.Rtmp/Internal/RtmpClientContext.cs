@@ -36,14 +36,14 @@ namespace LiveStreamingServerNet.Rtmp.Internal
             State = RtmpClientState.HandshakeC0;
         }
 
-        public IRtmpPublishStreamContext CreatePublishStreamContext(string streamPath, IDictionary<string, string> streamArguments)
+        public IRtmpPublishStreamContext CreatePublishStreamContext(string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
             var newContext = new RtmpPublishStreamContext(_streamId, streamPath, streamArguments);
             PublishStreamContext = newContext;
             return newContext;
         }
 
-        public IRtmpStreamSubscriptionContext CreateStreamSubscriptionContext(uint chunkStreamId, string streamPath, IDictionary<string, string> streamArguments)
+        public IRtmpStreamSubscriptionContext CreateStreamSubscriptionContext(uint chunkStreamId, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
             var newContext = new RtmpStreamSubscriptionContext(_streamId, chunkStreamId, streamPath, streamArguments);
             StreamSubscriptionContext = newContext;
@@ -74,14 +74,14 @@ namespace LiveStreamingServerNet.Rtmp.Internal
     {
         public uint StreamId { get; }
         public string StreamPath { get; }
-        public IDictionary<string, string> StreamArguments { get; }
-        public IDictionary<string, object>? StreamMetaData { get; set; }
+        public IReadOnlyDictionary<string, string> StreamArguments { get; }
+        public IReadOnlyDictionary<string, object>? StreamMetaData { get; set; }
         public byte[]? VideoSequenceHeader { get; set; }
         public byte[]? AudioSequenceHeader { get; set; }
         public bool GroupOfPicturesCacheActivated { get; set; }
         public IGroupOfPicturesCache GroupOfPicturesCache { get; }
 
-        public RtmpPublishStreamContext(uint streamId, string streamPath, IDictionary<string, string> streamArguments)
+        public RtmpPublishStreamContext(uint streamId, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
             StreamId = streamId;
             StreamPath = streamPath;
@@ -139,7 +139,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal
         public uint StreamId { get; }
         public uint ChunkStreamId { get; }
         public string StreamPath { get; }
-        public IDictionary<string, string> StreamArguments { get; }
+        public IReadOnlyDictionary<string, string> StreamArguments { get; }
 
         public bool IsPaused { get; set; }
         public bool IsReceivingAudio { get; set; }
@@ -148,7 +148,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal
         private readonly TaskCompletionSource _initializationTcs;
         private readonly Task _initializationTask;
 
-        public RtmpStreamSubscriptionContext(uint streamId, uint chunkStreamId, string streamPath, IDictionary<string, string> streamArguments)
+        public RtmpStreamSubscriptionContext(uint streamId, uint chunkStreamId, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
             StreamId = streamId;
             ChunkStreamId = chunkStreamId;

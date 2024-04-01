@@ -2,6 +2,6 @@
 {
     public interface ITransmuxerFactory
     {
-        Task<ITransmuxer> CreateAsync(string streamPath, IDictionary<string, string> streamArguments);
+        Task<ITransmuxer> CreateAsync(string streamPath, IReadOnlyDictionary<string, string> streamArguments);
     }
 }

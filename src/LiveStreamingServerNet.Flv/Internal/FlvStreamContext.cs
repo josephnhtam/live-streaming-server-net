@@ -5,14 +5,14 @@ namespace LiveStreamingServerNet.Flv.Internal
     internal class FlvStreamContext : IFlvStreamContext
     {
         public string StreamPath { get; }
-        public IDictionary<string, string> StreamArguments { get; }
-        public IDictionary<string, object>? StreamMetaData { get; set; }
+        public IReadOnlyDictionary<string, string> StreamArguments { get; }
+        public IReadOnlyDictionary<string, object>? StreamMetaData { get; set; }
         public byte[]? VideoSequenceHeader { get; set; }
         public byte[]? AudioSequenceHeader { get; set; }
         public IGroupOfPicturesCache GroupOfPicturesCache { get; }
         public bool IsReady => VideoSequenceHeader != null && AudioSequenceHeader != null;
 
-        public FlvStreamContext(string streamPath, IDictionary<string, string> streamArguments)
+        public FlvStreamContext(string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
             StreamPath = streamPath;
             StreamArguments = streamArguments;

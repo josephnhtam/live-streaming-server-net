@@ -51,8 +51,8 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Data
             switch (eventName)
             {
                 case RtmpDataMessageConstants.OnMetaData:
-                    var metaData = amfData[2] as IDictionary<string, object>;
-                    return metaData != null ? await HandleOnMetaDataAsync(clientContext, chunkStreamContext, metaData) : true;
+                    var metaData = amfData[2] as Dictionary<string, object>;
+                    return metaData != null ? await HandleOnMetaDataAsync(clientContext, chunkStreamContext, metaData.AsReadOnly()) : true;
                 default:
                     return true;
             }
@@ -61,7 +61,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Data
         private ValueTask<bool> HandleOnMetaDataAsync(
             IRtmpClientContext clientContext,
             IRtmpChunkStreamContext chunkStreamContext,
-            IDictionary<string, object> metaData)
+            IReadOnlyDictionary<string, object> metaData)
         {
             var publishStreamContext = clientContext.PublishStreamContext
                 ?? throw new InvalidOperationException("Stream is not yet created.");
@@ -70,12 +70,12 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Data
 
             BroadcastMetaDataToSubscribers(clientContext, chunkStreamContext, publishStreamContext);
 
-            _eventDispatcher.RtmpStreamMetaDataReceivedAsync(clientContext, clientContext.PublishStreamContext!.StreamPath, metaData.AsReadOnly());
+            _eventDispatcher.RtmpStreamMetaDataReceivedAsync(clientContext, clientContext.PublishStreamContext!.StreamPath, metaData);
 
             return ValueTask.FromResult(true);
         }
 
-        private static void CacheStreamMetaData(IDictionary<string, object> metaData, IRtmpPublishStreamContext publishStreamContext)
+        private static void CacheStreamMetaData(IReadOnlyDictionary<string, object> metaData, IRtmpPublishStreamContext publishStreamContext)
         {
             publishStreamContext.StreamMetaData = metaData;
         }

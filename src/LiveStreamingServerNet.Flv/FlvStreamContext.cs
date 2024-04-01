@@ -2,5 +2,5 @@
 
 namespace LiveStreamingServerNet.Flv
 {
-    public record FlvStreamContext(HttpContext HttpContext, string StreamPath, IDictionary<string, string> StreamArguments);
+    public record FlvStreamContext(HttpContext HttpContext, string StreamPath, IReadOnlyDictionary<string, string> StreamArguments);
 }

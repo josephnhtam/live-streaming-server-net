@@ -26,7 +26,7 @@ namespace LiveStreamingServerNet.Transmuxer.Internal
             return _eventHandlers;
         }
 
-        public async Task TransmuxerStartedAsync(uint clientId, string identifier, string inputPath, string outputPath, string streamPath, IDictionary<string, string> streamArguments)
+        public async Task TransmuxerStartedAsync(uint clientId, string identifier, string inputPath, string outputPath, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
             try
             {
@@ -41,7 +41,7 @@ namespace LiveStreamingServerNet.Transmuxer.Internal
             }
         }
 
-        public async Task TransmuxerStoppedAsync(uint clientId, string identifier, string inputPath, string outputPath, string streamPath, IDictionary<string, string> streamArguments)
+        public async Task TransmuxerStoppedAsync(uint clientId, string identifier, string inputPath, string outputPath, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
             try
             {

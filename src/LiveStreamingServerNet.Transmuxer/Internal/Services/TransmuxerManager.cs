@@ -32,10 +32,9 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Services
             _transmuxerTasks = new ConcurrentDictionary<string, TransmuxerTask>();
         }
 
-        public async Task StartRemuxingStreamAsync(uint clientId, string streamPath, IDictionary<string, string> _streamArguments)
+        public async Task StartRemuxingStreamAsync(uint clientId, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
             var cts = new CancellationTokenSource();
-            var streamArguments = new Dictionary<string, string>(_streamArguments).AsReadOnly();
 
             var transmuxers = await CreateTransmuxers(streamPath, streamArguments);
             var task = RunTransmuxers(transmuxers, clientId, streamPath, streamArguments, cts);
@@ -44,7 +43,7 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Services
             _ = task.ContinueWith(_ => _transmuxerTasks.TryRemove(streamPath, out var task));
         }
 
-        private async Task<IList<ITransmuxer>> CreateTransmuxers(string streamPath, IDictionary<string, string> streamArguments)
+        private async Task<IList<ITransmuxer>> CreateTransmuxers(string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
             var transmuxers = new List<ITransmuxer>();
 
@@ -58,7 +57,7 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Services
             IList<ITransmuxer> transmuxers,
             uint clientId,
             string streamPath,
-            IDictionary<string, string> streamArguments,
+            IReadOnlyDictionary<string, string> streamArguments,
             CancellationTokenSource cts)
         {
             var tasks = new List<Task>();
@@ -73,7 +72,7 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Services
             ITransmuxer transmuxer,
             uint clientId,
             string streamPath,
-            IDictionary<string, string> streamArguments,
+            IReadOnlyDictionary<string, string> streamArguments,
             CancellationTokenSource cts)
         {
             var inputPath = await _inputPathResolver.ResolveInputPathAsync(streamPath, streamArguments);

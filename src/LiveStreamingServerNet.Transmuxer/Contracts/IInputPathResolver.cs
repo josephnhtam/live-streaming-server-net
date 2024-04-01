@@ -2,6 +2,6 @@
 {
     public interface IInputPathResolver
     {
-        Task<string> ResolveInputPathAsync(string streamPath, IDictionary<string, string> streamArguments);
+        Task<string> ResolveInputPathAsync(string streamPath, IReadOnlyDictionary<string, string> streamArguments);
     }
 }

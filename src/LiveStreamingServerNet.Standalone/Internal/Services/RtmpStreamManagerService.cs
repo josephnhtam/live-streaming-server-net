@@ -27,7 +27,7 @@ namespace LiveStreamingServerNet.Standalone.Internal.Services
             if (client == null)
                 return ValueTask.CompletedTask;
 
-            var stream = new RtmpPublishStream(client, streamPath, new Dictionary<string, string>(streamArguments));
+            var stream = new RtmpPublishStream(client, streamPath, streamArguments);
 
             if (_publishStreams.TryAdd(streamPath, stream))
                 _streamPaths[stream.Id] = streamPath;

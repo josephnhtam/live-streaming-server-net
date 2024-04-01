@@ -15,7 +15,7 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Services
 
         public async ValueTask OnRtmpStreamPublishedAsync(IEventContext context, uint clientId, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
-            await _transmuxerManager.StartRemuxingStreamAsync(clientId, streamPath, new Dictionary<string, string>(streamArguments));
+            await _transmuxerManager.StartRemuxingStreamAsync(clientId, streamPath, streamArguments);
         }
 
         public async ValueTask OnRtmpStreamUnpublishedAsync(IEventContext context, uint clientId, string streamPath)

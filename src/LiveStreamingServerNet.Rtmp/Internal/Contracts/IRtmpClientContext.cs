@@ -26,10 +26,10 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Contracts
         void DeleteStream();
 
         IRtmpPublishStreamContext? PublishStreamContext { get; }
-        IRtmpPublishStreamContext CreatePublishStreamContext(string streamPath, IDictionary<string, string> streamArguments);
+        IRtmpPublishStreamContext CreatePublishStreamContext(string streamPath, IReadOnlyDictionary<string, string> streamArguments);
 
         IRtmpStreamSubscriptionContext? StreamSubscriptionContext { get; }
-        IRtmpStreamSubscriptionContext CreateStreamSubscriptionContext(uint chunkStreamId, string streamPath, IDictionary<string, string> streamArguments);
+        IRtmpStreamSubscriptionContext CreateStreamSubscriptionContext(uint chunkStreamId, string streamPath, IReadOnlyDictionary<string, string> streamArguments);
 
         IRtmpChunkStreamContext GetChunkStreamContext(uint chunkStreamId);
     }
@@ -38,8 +38,8 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Contracts
     {
         uint StreamId { get; }
         string StreamPath { get; }
-        IDictionary<string, string> StreamArguments { get; }
-        IDictionary<string, object>? StreamMetaData { get; set; }
+        IReadOnlyDictionary<string, string> StreamArguments { get; }
+        IReadOnlyDictionary<string, object>? StreamMetaData { get; set; }
         byte[]? VideoSequenceHeader { get; set; }
         byte[]? AudioSequenceHeader { get; set; }
         bool GroupOfPicturesCacheActivated { get; set; }
@@ -51,7 +51,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Contracts
         uint StreamId { get; }
         uint ChunkStreamId { get; }
         string StreamPath { get; }
-        IDictionary<string, string> StreamArguments { get; }
+        IReadOnlyDictionary<string, string> StreamArguments { get; }
 
         bool IsPaused { get; set; }
         bool IsReceivingAudio { get; set; }

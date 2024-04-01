@@ -33,7 +33,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             return publishingClientContext?.PublishStreamContext;
         }
 
-        public PublishingStreamResult StartPublishingStream(IRtmpClientContext publisherClientContext, string streamPath, IDictionary<string, string> streamArguments, out IList<IRtmpClientContext> existingSubscribers)
+        public PublishingStreamResult StartPublishingStream(IRtmpClientContext publisherClientContext, string streamPath, IReadOnlyDictionary<string, string> streamArguments, out IList<IRtmpClientContext> existingSubscribers)
         {
             using var publishingWriteLock = _publishingRwLock.WriteLock();
             using var subscribingReadLock = _subscribingRwLock.ReadLock();
@@ -83,7 +83,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             return _publishingClientContexts.ContainsKey(streamPath);
         }
 
-        public SubscribingStreamResult StartSubscribingStream(IRtmpClientContext subscriberClientContext, uint chunkStreamId, string streamPath, IDictionary<string, string> streamArguments)
+        public SubscribingStreamResult StartSubscribingStream(IRtmpClientContext subscriberClientContext, uint chunkStreamId, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
             using var publishingReadLock = _publishingRwLock.ReadLock();
             using var subscribingWriteLock = _subscribingRwLock.WriteLock();

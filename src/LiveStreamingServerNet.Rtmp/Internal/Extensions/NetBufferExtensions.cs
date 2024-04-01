@@ -11,7 +11,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Extensions
 
             foreach (var value in values)
             {
-                if (value is IDictionary<string, object?> map)
+                if (value is IReadOnlyDictionary<string, object?> map)
                 {
                     if (type == AmfEncodingType.Amf0)
                         writer.WriteAmf0ObjectWithType(map);

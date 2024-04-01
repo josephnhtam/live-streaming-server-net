@@ -17,7 +17,7 @@ namespace LiveStreamingServerNet.Transmuxer
             _serverContext = serverContext;
         }
 
-        public Task<string> ResolveInputPathAsync(string streamPath, IDictionary<string, string> streamArguments)
+        public Task<string> ResolveInputPathAsync(string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
             var inputUri = new Uri(GetLocalServerBaseUri(), streamPath);
             return Task.FromResult(AddAuthCode(inputUri));

@@ -15,7 +15,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
 
         public ValueTask OnRtmpStreamPublishedAsync(IEventContext context, uint clientId, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
-            var streamContext = new FlvStreamContext(streamPath, new Dictionary<string, string>(streamArguments));
+            var streamContext = new FlvStreamContext(streamPath, streamArguments);
             _streamManager.StartPublishingStream(streamContext);
             return ValueTask.CompletedTask;
         }
@@ -36,7 +36,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
             var streamContext = _streamManager.GetFlvStreamContext(streamPath);
 
             if (streamContext != null)
-                streamContext.StreamMetaData = new Dictionary<string, object>(metaData);
+                streamContext.StreamMetaData = metaData;
 
             return ValueTask.CompletedTask;
         }

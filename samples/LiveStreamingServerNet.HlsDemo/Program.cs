@@ -86,14 +86,14 @@ namespace LiveStreamingServerNet.HlsDemo
                 _logger = logger;
             }
 
-            public Task OnTransmuxerStartedAsync(IEventContext context, uint clientId, string identifier, string inputPath, string outputPath, string streamPath, IDictionary<string, string> streamArguments)
+            public Task OnTransmuxerStartedAsync(IEventContext context, uint clientId, string identifier, string inputPath, string outputPath, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
             {
                 outputPath = Path.GetRelativePath(_trasmuxerOutputPath, outputPath);
                 _logger.LogInformation($"Transmuxer ({identifier}) started: {inputPath} -> {outputPath}");
                 return Task.CompletedTask;
             }
 
-            public Task OnTransmuxerStoppedAsync(IEventContext context, uint clientId, string identifier, string inputPath, string outputPath, string streamPath, IDictionary<string, string> streamArguments)
+            public Task OnTransmuxerStoppedAsync(IEventContext context, uint clientId, string identifier, string inputPath, string outputPath, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
             {
                 outputPath = Path.GetRelativePath(_trasmuxerOutputPath, outputPath);
                 _logger.LogInformation($"Transmuxer ({identifier}) stopped: {inputPath} -> {outputPath}");

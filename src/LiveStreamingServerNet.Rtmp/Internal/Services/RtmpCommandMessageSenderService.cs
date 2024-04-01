@@ -20,7 +20,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             uint chunkStreamId,
             string commandName,
             double transactionId,
-            IDictionary<string, object>? commandObject,
+            IReadOnlyDictionary<string, object>? commandObject,
             IList<object?> initialParameters,
             AmfEncodingType amfEncodingType,
             Action? callback)
@@ -36,7 +36,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             }, callback);
         }
 
-        public Task SendCommandMessageAsync(IRtmpClientContext clientContext, uint chunkStreamId, string commandName, double transactionId, IDictionary<string, object>? commandObject, IList<object?> parameters, AmfEncodingType amfEncodingType = AmfEncodingType.Amf0)
+        public Task SendCommandMessageAsync(IRtmpClientContext clientContext, uint chunkStreamId, string commandName, double transactionId, IReadOnlyDictionary<string, object>? commandObject, IList<object?> parameters, AmfEncodingType amfEncodingType = AmfEncodingType.Amf0)
         {
             var tcs = new TaskCompletionSource();
             SendCommandMessage(clientContext, chunkStreamId, commandName, transactionId, commandObject, parameters, amfEncodingType, tcs.SetResult);
@@ -48,7 +48,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             uint chunkStreamId,
             string commandName,
             double transactionId,
-            IDictionary<string, object>? commandObject,
+            IReadOnlyDictionary<string, object>? commandObject,
             IList<object?> initialParameters,
             AmfEncodingType amfEncodingType)
         {
@@ -64,7 +64,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
         }
 
         static List<object?> GetParameters(string commandName, double transactionId,
-            IDictionary<string, object>? commandObject, IList<object?> initialParameters)
+            IReadOnlyDictionary<string, object>? commandObject, IList<object?> initialParameters)
         {
             var additionalParameters = new List<object?>
             {

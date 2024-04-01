@@ -20,7 +20,7 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
         public async Task<AuthorizationResult> AuthorizePublishingAsync(
             IClientInfo client,
             string streamPath,
-            IDictionary<string, string> streamArguments,
+            IReadOnlyDictionary<string, string> streamArguments,
             string publishingType)
         {
             var result = await _streamRegistry.RegisterStreamAsync(client, streamPath, streamArguments);
@@ -34,7 +34,7 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
         public async Task<AuthorizationResult> AuthorizeSubscriptionAsync(
             IClientInfo client,
             string streamPath,
-            IDictionary<string, string> streamArguments)
+            IReadOnlyDictionary<string, string> streamArguments)
         {
             if (await _streamRegistry.IsStreamRegisteredAsync(streamPath, true))
                 return AuthorizationResult.Authorized();

@@ -12,7 +12,7 @@ namespace LiveStreamingServerNet.Transmuxer
             _config = config;
         }
 
-        public async Task<ITransmuxer> CreateAsync(string streamPath, IDictionary<string, string> streamArguments)
+        public async Task<ITransmuxer> CreateAsync(string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
             return new FFmpegTransmuxer(
                 _config.TransmuxerIdentifier,
