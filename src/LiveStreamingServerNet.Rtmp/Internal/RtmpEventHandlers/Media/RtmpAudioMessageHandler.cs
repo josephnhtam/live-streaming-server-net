@@ -66,7 +66,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
             IRtmpPublishStreamContext publishStreamContext,
             bool isSkippable,
             INetBuffer payloadBuffer,
-            IList<IRtmpClientContext> subscribers)
+            IReadOnlyList<IRtmpClientContext> subscribers)
         {
             await _mediaMessageManager.EnqueueMediaMessageAsync(
                 publishStreamContext,

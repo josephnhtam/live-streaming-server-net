@@ -4,7 +4,7 @@
     {
         IServiceProvider Services { get; }
         Task RunAsync(ServerEndPoint serverEndPoint, CancellationToken cancellationToken = default);
-        Task RunAsync(IList<ServerEndPoint> serverEndPoints, CancellationToken cancellationToken = default);
+        Task RunAsync(IReadOnlyList<ServerEndPoint> serverEndPoints, CancellationToken cancellationToken = default);
     }
 
     public interface IServerHandle

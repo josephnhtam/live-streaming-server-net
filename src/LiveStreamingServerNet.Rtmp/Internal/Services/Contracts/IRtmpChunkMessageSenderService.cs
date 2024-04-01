@@ -14,7 +14,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services.Contracts
             Action? callback = null) where TRtmpChunkMessageHeader : struct, IRtmpChunkMessageHeader;
 
         void Send<TRtmpChunkMessageHeader>(
-            IList<IRtmpClientContext> clientContexts,
+            IReadOnlyList<IRtmpClientContext> clientContexts,
             RtmpChunkBasicHeader basicHeader,
             TRtmpChunkMessageHeader messageHeader,
             Action<INetBuffer> payloadWriter) where TRtmpChunkMessageHeader : struct, IRtmpChunkMessageHeader;

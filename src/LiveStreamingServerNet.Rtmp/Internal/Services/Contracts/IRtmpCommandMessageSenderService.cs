@@ -11,7 +11,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services.Contracts
             string commandName,
             double transactionId,
             IReadOnlyDictionary<string, object>? commandObject,
-            IList<object?> parameters,
+            IReadOnlyList<object?> parameters,
             AmfEncodingType amfEncodingType = AmfEncodingType.Amf0,
             Action? callback = null);
 
@@ -21,16 +21,16 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services.Contracts
             string commandName,
             double transactionId,
             IReadOnlyDictionary<string, object>? commandObject,
-            IList<object?> parameters,
+            IReadOnlyList<object?> parameters,
             AmfEncodingType amfEncodingType = AmfEncodingType.Amf0);
 
         void SendCommandMessage(
-           IList<IRtmpClientContext> clientContexts,
+           IReadOnlyList<IRtmpClientContext> clientContexts,
            uint chunkStreamId,
            string commandName,
            double transactionId,
            IReadOnlyDictionary<string, object>? commandObject,
-           IList<object?> parameters,
+           IReadOnlyList<object?> parameters,
            AmfEncodingType amfEncodingType = AmfEncodingType.Amf0);
     }
 }

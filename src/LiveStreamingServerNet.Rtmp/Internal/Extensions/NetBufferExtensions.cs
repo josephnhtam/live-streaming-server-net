@@ -5,7 +5,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Extensions
 {
     internal static class NetBufferExtensions
     {
-        public static void WriteAmf(this INetBuffer buffer, IList<object?> values, AmfEncodingType type)
+        public static void WriteAmf(this INetBuffer buffer, IReadOnlyList<object?> values, AmfEncodingType type)
         {
             var writer = new AmfWriter();
 

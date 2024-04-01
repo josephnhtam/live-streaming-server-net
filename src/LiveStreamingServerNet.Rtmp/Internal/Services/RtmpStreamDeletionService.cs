@@ -36,8 +36,8 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             if (!_rtmpStreamManager.StopPublishingStream(clientContext, out var existingSubscriber))
                 return;
 
-            _userControlMessageSender.SendStreamEofMessage(existingSubscriber);
-            SendStreamUnpublishNotify(existingSubscriber);
+            _userControlMessageSender.SendStreamEofMessage(existingSubscriber.AsReadOnly());
+            SendStreamUnpublishNotify(existingSubscriber.AsReadOnly());
             _eventDispatcher.RtmpStreamUnpublishedAsync(clientContext, clientContext.PublishStreamContext!.StreamPath);
         }
 
@@ -51,7 +51,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
         }
 
         private void SendStreamUnpublishNotify(
-            IList<IRtmpClientContext> subscribers,
+            IReadOnlyList<IRtmpClientContext> subscribers,
             AmfEncodingType amfEncodingType = AmfEncodingType.Amf0)
         {
             foreach (var subscriberGroup in

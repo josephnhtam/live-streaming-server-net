@@ -13,8 +13,8 @@ namespace LiveStreamingServerNet.Flv.Internal.Services.Contracts
 
         SubscribingStreamResult StartSubscribingStream(IFlvClient client, string streamPath);
         bool StopSubscribingStream(IFlvClient client);
-        IRentable<IList<IFlvClient>> GetSubscribersLocked(string streamPath);
-        IList<IFlvClient> GetSubscribers(string streamPath);
+        IRentable<IReadOnlyList<IFlvClient>> GetSubscribersLocked(string streamPath);
+        IReadOnlyList<IFlvClient> GetSubscribers(string streamPath);
     }
 
     internal enum PublishingStreamResult

@@ -78,7 +78,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
             return ValueTask.CompletedTask;
         }
 
-        public ValueTask EnqueueMediaTagAsync(IFlvStreamContext streamContext, IList<IFlvClient> subscribers, MediaType mediaType, uint timestamp, bool isSkippable, IRentedBuffer rentedBuffer)
+        public ValueTask EnqueueMediaTagAsync(IFlvStreamContext streamContext, IReadOnlyList<IFlvClient> subscribers, MediaType mediaType, uint timestamp, bool isSkippable, IRentedBuffer rentedBuffer)
         {
             if (!subscribers.Any())
                 return ValueTask.CompletedTask;

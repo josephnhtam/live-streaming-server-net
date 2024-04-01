@@ -28,7 +28,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services.Extensions
 
         public static void SendOnStatusCommandMessage(
             this IRtmpCommandMessageSenderService sender,
-            IList<IRtmpClientContext> clientContexts,
+            IReadOnlyList<IRtmpClientContext> clientContexts,
             uint publishStreamChunkId,
             string level,
             string code,

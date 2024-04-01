@@ -95,16 +95,16 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
             return true;
         }
 
-        public IRentable<IList<IFlvClient>> GetSubscribersLocked(string streamPath)
+        public IRentable<IReadOnlyList<IFlvClient>> GetSubscribersLocked(string streamPath)
         {
             var readLock = _subscribingRwLock.ReadLock();
 
-            return new Rentable<IList<IFlvClient>>(
+            return new Rentable<IReadOnlyList<IFlvClient>>(
                 _subscribingClients.GetValueOrDefault(streamPath)?.ToList() ?? new List<IFlvClient>(),
                 readLock.Dispose);
         }
 
-        public IList<IFlvClient> GetSubscribers(string streamPath)
+        public IReadOnlyList<IFlvClient> GetSubscribers(string streamPath)
         {
             using var readLock = _subscribingRwLock.ReadLock();
             return _subscribingClients.GetValueOrDefault(streamPath)?.ToList() ?? new List<IFlvClient>();

@@ -5,6 +5,6 @@ namespace LiveStreamingServerNet.Internal.HostedServices.Contracts
 {
     internal interface ILiveStreamingServerService : IHostedService
     {
-        void ConfigureEndPoints(IList<ServerEndPoint> serverEndPoints);
+        void ConfigureEndPoints(IReadOnlyList<ServerEndPoint> serverEndPoints);
     }
 }

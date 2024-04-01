@@ -46,7 +46,7 @@ namespace LiveStreamingServerNet.Networking
             }, cancellationToken);
         }
 
-        public async Task RunAsync(IList<ServerEndPoint> serverEndPoints, CancellationToken cancellationToken = default)
+        public async Task RunAsync(IReadOnlyList<ServerEndPoint> serverEndPoints, CancellationToken cancellationToken = default)
         {
             ValidateAndSetStarted();
 
@@ -57,7 +57,7 @@ namespace LiveStreamingServerNet.Networking
 
             try
             {
-                serverListeners = await StartServerListeners(serverEndPoints);
+                serverListeners = await StartServerListeners(new List<ServerEndPoint>(serverEndPoints));
                 await OnServerStartedAsync();
                 await RunServerLoopsAsync(serverListeners, cancellationToken);
             }
@@ -99,7 +99,7 @@ namespace LiveStreamingServerNet.Networking
                 .Select(x => RunServerLoopAsync(x.TcpListener, x.ServerEndPoint, cts)));
         }
 
-        private async Task<List<ServerListener>> StartServerListeners(IList<ServerEndPoint> serverEndPoints)
+        private async Task<List<ServerListener>> StartServerListeners(IReadOnlyList<ServerEndPoint> serverEndPoints)
         {
             var serverListeners = new List<ServerListener>();
 

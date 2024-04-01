@@ -122,16 +122,16 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             return true;
         }
 
-        public IRentable<IList<IRtmpClientContext>> GetSubscribersLocked(string streamPath)
+        public IRentable<IReadOnlyList<IRtmpClientContext>> GetSubscribersLocked(string streamPath)
         {
             var readLock = _subscribingRwLock.ReadLock();
 
-            return new Rentable<IList<IRtmpClientContext>>(
+            return new Rentable<IReadOnlyList<IRtmpClientContext>>(
                 _subscribingClientContexts.GetValueOrDefault(streamPath)?.ToList() ?? new List<IRtmpClientContext>(),
                 readLock.Dispose);
         }
 
-        public IList<IRtmpClientContext> GetSubscribers(string streamPath)
+        public IReadOnlyList<IRtmpClientContext> GetSubscribers(string streamPath)
         {
             using var readLock = _subscribingRwLock.ReadLock();
             return _subscribingClientContexts.GetValueOrDefault(streamPath)?.ToList() ?? new List<IRtmpClientContext>();

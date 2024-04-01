@@ -8,7 +8,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services.Contracts
     {
         ValueTask EnqueueMediaTagAsync(
             IFlvStreamContext streamContext,
-            IList<IFlvClient> subscribers,
+            IReadOnlyList<IFlvClient> subscribers,
             MediaType mediaType,
             uint timestamp,
             bool isSkippable,

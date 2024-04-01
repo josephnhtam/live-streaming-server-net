@@ -11,7 +11,7 @@ namespace LiveStreamingServerNet.RtmpsDemo
         {
             using var liveStreamingServer = CreateLiveStreamingServer();
 
-            IList<ServerEndPoint> endPoints =
+            List<ServerEndPoint> endPoints =
                 [new ServerEndPoint(new IPEndPoint(IPAddress.Any, 1935), false),
                     new ServerEndPoint(new IPEndPoint(IPAddress.Any, 443), true)];
 

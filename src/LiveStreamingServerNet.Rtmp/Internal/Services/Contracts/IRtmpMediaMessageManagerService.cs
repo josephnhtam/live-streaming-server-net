@@ -7,7 +7,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services.Contracts
     {
         ValueTask EnqueueMediaMessageAsync(
             IRtmpPublishStreamContext publishStreamContext,
-            IList<IRtmpClientContext> subscribers,
+            IReadOnlyList<IRtmpClientContext> subscribers,
             MediaType mediaType,
             uint timestamp,
             bool isSkippable,
@@ -39,7 +39,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services.Contracts
             uint streamId);
 
         void SendCachedStreamMetaDataMessage(
-            IList<IRtmpClientContext> clientContexts,
+            IReadOnlyList<IRtmpClientContext> clientContexts,
             IRtmpPublishStreamContext publishStreamContext,
             uint timestamp,
             uint streamId);

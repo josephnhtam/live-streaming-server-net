@@ -29,7 +29,7 @@ namespace LiveStreamingServerNet
         public Task RunAsync(ServerEndPoint serverEndPoint, CancellationToken cancellationToken = default)
             => RunAsync(new List<ServerEndPoint> { serverEndPoint }, cancellationToken);
 
-        public async Task RunAsync(IList<ServerEndPoint> serverEndPoints, CancellationToken cancellationToken = default)
+        public async Task RunAsync(IReadOnlyList<ServerEndPoint> serverEndPoints, CancellationToken cancellationToken = default)
         {
             _serverService.ConfigureEndPoints(serverEndPoints);
             await _host.RunAsync(cancellationToken);

@@ -29,7 +29,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             });
         }
 
-        public void SendStreamBeginMessage(IList<IRtmpClientContext> clientContexts)
+        public void SendStreamBeginMessage(IReadOnlyList<IRtmpClientContext> clientContexts)
         {
             foreach (var clientContextGroup in clientContexts.Where(x => x.StreamSubscriptionContext != null).GroupBy(x => x.StreamSubscriptionContext!.StreamId))
             {
@@ -59,7 +59,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             });
         }
 
-        public void SendStreamEofMessage(IList<IRtmpClientContext> clientContexts)
+        public void SendStreamEofMessage(IReadOnlyList<IRtmpClientContext> clientContexts)
         {
             foreach (var clientContextGroup in clientContexts.Where(x => x.StreamSubscriptionContext != null).GroupBy(x => x.StreamSubscriptionContext!.StreamId))
             {

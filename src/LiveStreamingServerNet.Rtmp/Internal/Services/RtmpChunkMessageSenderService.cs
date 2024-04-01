@@ -36,7 +36,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
         }
 
         public void Send<TRtmpChunkMessageHeader>(
-            IList<IRtmpClientContext> clientContexts,
+            IReadOnlyList<IRtmpClientContext> clientContexts,
             RtmpChunkBasicHeader basicHeader,
             TRtmpChunkMessageHeader messageHeader,
             Action<INetBuffer> payloadWriter) where TRtmpChunkMessageHeader : struct, IRtmpChunkMessageHeader
@@ -92,7 +92,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
         }
 
         private void SendFirstChunk<TRtmpChunkMessageHeader>(
-            IList<IClientHandle> clients,
+            IReadOnlyList<IClientHandle> clients,
             RtmpChunkBasicHeader basicHeader,
             TRtmpChunkMessageHeader messageHeader,
             RtmpChunkExtendedTimestampHeader? extendedTimestampHeader,
@@ -139,7 +139,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
         }
 
         private void SendRemainingChunks(
-            IList<IClientHandle> clients,
+            IReadOnlyList<IClientHandle> clients,
             RtmpChunkBasicHeader basicHeader,
             RtmpChunkExtendedTimestampHeader? extendedTimestampHeader,
             INetBuffer payloadBuffer,

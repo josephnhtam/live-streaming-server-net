@@ -21,7 +21,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             string commandName,
             double transactionId,
             IReadOnlyDictionary<string, object>? commandObject,
-            IList<object?> initialParameters,
+            IReadOnlyList<object?> initialParameters,
             AmfEncodingType amfEncodingType,
             Action? callback)
         {
@@ -36,7 +36,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             }, callback);
         }
 
-        public Task SendCommandMessageAsync(IRtmpClientContext clientContext, uint chunkStreamId, string commandName, double transactionId, IReadOnlyDictionary<string, object>? commandObject, IList<object?> parameters, AmfEncodingType amfEncodingType = AmfEncodingType.Amf0)
+        public Task SendCommandMessageAsync(IRtmpClientContext clientContext, uint chunkStreamId, string commandName, double transactionId, IReadOnlyDictionary<string, object>? commandObject, IReadOnlyList<object?> parameters, AmfEncodingType amfEncodingType = AmfEncodingType.Amf0)
         {
             var tcs = new TaskCompletionSource();
             SendCommandMessage(clientContext, chunkStreamId, commandName, transactionId, commandObject, parameters, amfEncodingType, tcs.SetResult);
@@ -44,12 +44,12 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
         }
 
         public void SendCommandMessage(
-            IList<IRtmpClientContext> clientContexts,
+            IReadOnlyList<IRtmpClientContext> clientContexts,
             uint chunkStreamId,
             string commandName,
             double transactionId,
             IReadOnlyDictionary<string, object>? commandObject,
-            IList<object?> initialParameters,
+            IReadOnlyList<object?> initialParameters,
             AmfEncodingType amfEncodingType)
         {
             var basicHeader = new RtmpChunkBasicHeader(0, chunkStreamId);
@@ -64,7 +64,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
         }
 
         static List<object?> GetParameters(string commandName, double transactionId,
-            IReadOnlyDictionary<string, object>? commandObject, IList<object?> initialParameters)
+            IReadOnlyDictionary<string, object>? commandObject, IReadOnlyList<object?> initialParameters)
         {
             var additionalParameters = new List<object?>
             {
