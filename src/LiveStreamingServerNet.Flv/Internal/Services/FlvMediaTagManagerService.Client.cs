@@ -77,6 +77,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
                 }
             }
             catch (OperationCanceledException) when (cancellation.IsCancellationRequested) { }
+            catch (ChannelClosedException) { }
 
             while (context.ReadPackage(out var package))
             {
