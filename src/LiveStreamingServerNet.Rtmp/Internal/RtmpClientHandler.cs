@@ -56,6 +56,10 @@ namespace LiveStreamingServerNet.Rtmp.Internal
 
                 return result.Succeeded;
             }
+            catch (IOException)
+            {
+                return false;
+            }
             catch (Exception ex)
             {
                 _logger.ClientLoopError(_clientContext.Client.ClientId, ex);
