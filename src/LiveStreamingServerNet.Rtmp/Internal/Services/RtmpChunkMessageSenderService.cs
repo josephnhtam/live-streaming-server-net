@@ -19,7 +19,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             RtmpChunkBasicHeader basicHeader,
             TRtmpChunkMessageHeader messageHeader,
             Action<INetBuffer> payloadWriter,
-            Action? callback) where TRtmpChunkMessageHeader : struct, IRtmpChunkMessageHeader
+            Action<bool>? callback) where TRtmpChunkMessageHeader : struct, IRtmpChunkMessageHeader
         {
             var extendedTimestampHeader = CreateExtendedTimestampHeader(messageHeader);
             using var payloadBuffer = CreatePayloadBuffer(ref messageHeader, payloadWriter);
@@ -31,7 +31,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
         public Task SendAsync<TRtmpChunkMessageHeader>(IRtmpClientContext clientContext, RtmpChunkBasicHeader basicHeader, TRtmpChunkMessageHeader messageHeader, Action<INetBuffer> payloadWriter) where TRtmpChunkMessageHeader : struct, IRtmpChunkMessageHeader
         {
             var tcs = new TaskCompletionSource();
-            Send(clientContext, basicHeader, messageHeader, payloadWriter, tcs.SetResult);
+            Send(clientContext, basicHeader, messageHeader, payloadWriter, _ => tcs.SetResult());
             return tcs.Task;
         }
 
@@ -72,7 +72,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             RtmpChunkBasicHeader basicHeader,
             TRtmpChunkMessageHeader messageHeader,
             RtmpChunkExtendedTimestampHeader? extendedTimestampHeader,
-            Action? callback,
+            Action<bool>? callback,
             INetBuffer payloadBuffer)
             where TRtmpChunkMessageHeader : struct, IRtmpChunkMessageHeader
         {
@@ -120,7 +120,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             IRtmpClientContext clientContext,
             RtmpChunkBasicHeader basicHeader,
             RtmpChunkExtendedTimestampHeader? extendedTimestampHeader,
-            Action? callback,
+            Action<bool>? callback,
             INetBuffer payloadBuffer)
         {
             var outChunkSize = clientContext.OutChunkSize;

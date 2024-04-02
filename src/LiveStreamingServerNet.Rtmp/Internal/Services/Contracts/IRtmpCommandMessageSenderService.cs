@@ -13,7 +13,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services.Contracts
             IReadOnlyDictionary<string, object>? commandObject,
             IReadOnlyList<object?> parameters,
             AmfEncodingType amfEncodingType = AmfEncodingType.Amf0,
-            Action? callback = null);
+            Action<bool>? callback = null);
 
         Task SendCommandMessageAsync(
             IRtmpClientContext clientContext,

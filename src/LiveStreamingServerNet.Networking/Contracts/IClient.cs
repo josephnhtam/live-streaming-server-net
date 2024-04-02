@@ -23,8 +23,8 @@ namespace LiveStreamingServerNet.Networking.Contracts
 
     public interface IClientHandle : IClientControl
     {
-        void Send(INetBuffer netBuffer, Action? callback = null);
-        void Send(Action<INetBuffer> writer, Action? callback = null);
+        void Send(INetBuffer netBuffer, Action<bool>? callback = null);
+        void Send(Action<INetBuffer> writer, Action<bool>? callback = null);
         Task SendAsync(INetBuffer netBuffer);
         Task SendAsync(Action<INetBuffer> writer);
     }

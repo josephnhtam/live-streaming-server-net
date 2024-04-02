@@ -14,7 +14,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services.Extensions
             string code,
             string description,
             AmfEncodingType amfEncodingType = AmfEncodingType.Amf0,
-            Action? callback = null)
+            Action<bool>? callback = null)
         {
             var properties = new Dictionary<string, object?>
             {
@@ -55,7 +55,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services.Extensions
             AmfEncodingType amfEncodingType = AmfEncodingType.Amf0)
         {
             var tcs = new TaskCompletionSource();
-            sender.SendOnStatusCommandMessage(clientContext, publishStreamChunkId, level, code, description, amfEncodingType, tcs.SetResult);
+            sender.SendOnStatusCommandMessage(clientContext, publishStreamChunkId, level, code, description, amfEncodingType, _ => tcs.SetResult());
             return tcs.Task;
         }
     }

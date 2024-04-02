@@ -23,7 +23,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             IReadOnlyDictionary<string, object>? commandObject,
             IReadOnlyList<object?> initialParameters,
             AmfEncodingType amfEncodingType,
-            Action? callback)
+            Action<bool>? callback)
         {
             var basicHeader = new RtmpChunkBasicHeader(0, chunkStreamId);
             var messageHeader = new RtmpChunkMessageHeaderType0(0,
@@ -39,7 +39,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
         public Task SendCommandMessageAsync(IRtmpClientContext clientContext, uint chunkStreamId, string commandName, double transactionId, IReadOnlyDictionary<string, object>? commandObject, IReadOnlyList<object?> parameters, AmfEncodingType amfEncodingType = AmfEncodingType.Amf0)
         {
             var tcs = new TaskCompletionSource();
-            SendCommandMessage(clientContext, chunkStreamId, commandName, transactionId, commandObject, parameters, amfEncodingType, tcs.SetResult);
+            SendCommandMessage(clientContext, chunkStreamId, commandName, transactionId, commandObject, parameters, amfEncodingType, _ => tcs.SetResult());
             return tcs.Task;
         }
 

@@ -1,5 +1,6 @@
 ﻿using LiveStreamingServerNet.Networking.Configurations;
 using LiveStreamingServerNet.Networking.Contracts;
+using LiveStreamingServerNet.Networking.Exceptions;
 using LiveStreamingServerNet.Networking.Logging;
 using LiveStreamingServerNet.Utilities.Extensions;
 using Microsoft.Extensions.Logging;
@@ -80,7 +81,7 @@ namespace LiveStreamingServerNet.Networking
             _logger.ClientDisconnected(ClientId);
         }
 
-        public void Send(INetBuffer netBuffer, Action? callback)
+        public void Send(INetBuffer netBuffer, Action<bool>? callback)
         {
             if (!IsConnected) return;
 
@@ -104,7 +105,7 @@ namespace LiveStreamingServerNet.Networking
             }
         }
 
-        public void Send(Action<INetBuffer> writer, Action? callback)
+        public void Send(Action<INetBuffer> writer, Action<bool>? callback)
         {
             if (!IsConnected) return;
 
@@ -132,15 +133,31 @@ namespace LiveStreamingServerNet.Networking
         public Task SendAsync(INetBuffer netBuffer)
         {
             var tcs = new TaskCompletionSource();
-            Send(netBuffer, tcs.SetResult);
+            Send(netBuffer, SetResult);
             return tcs.Task;
+
+            void SetResult(bool successful)
+            {
+                if (successful)
+                    tcs.SetResult();
+                else
+                    tcs.SetException(new BufferSendingException());
+            }
         }
 
         public Task SendAsync(Action<INetBuffer> writer)
         {
             var tcs = new TaskCompletionSource();
-            Send(writer, tcs.SetResult);
+            Send(writer, SetResult);
             return tcs.Task;
+
+            void SetResult(bool successful)
+            {
+                if (successful)
+                    tcs.SetResult();
+                else
+                    tcs.SetException(new BufferSendingException());
+            }
         }
 
         private INetBuffer ObtainNetBuffer()
@@ -184,7 +201,7 @@ namespace LiveStreamingServerNet.Networking
             return _tcpClient.GetStream();
         }
 
-        private record struct PendingMessage(byte[] RentedBuffer, int BufferSize, Action? Callback);
+        private record struct PendingMessage(byte[] RentedBuffer, int BufferSize, Action<bool>? Callback);
 
         private class OutstandingBufferSender : IAsyncDisposable
         {
@@ -217,16 +234,20 @@ namespace LiveStreamingServerNet.Networking
                         try
                         {
                             await networkStream.WriteAsync(rentedBuffer, 0, bufferSize, cancellationToken);
+                            InvokeCallback(callback, true);
                         }
-                        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { }
-                        catch (IOException) { }
+                        catch (Exception ex)
+                        when (ex is IOException || (ex is OperationCanceledException && cancellationToken.IsCancellationRequested))
+                        {
+                            InvokeCallback(callback, false);
+                        }
                         catch (Exception ex)
                         {
+                            InvokeCallback(callback, false);
                             _logger.SendDataError(_clientId, ex);
                         }
                         finally
                         {
-                            callback?.Invoke();
                             ArrayPool<byte>.Shared.Return(rentedBuffer);
                         }
                     }
@@ -235,8 +256,17 @@ namespace LiveStreamingServerNet.Networking
 
                 while (_pendingMessageReader.TryRead(out var pendingMessage))
                 {
-                    pendingMessage.Callback?.Invoke();
+                    InvokeCallback(pendingMessage.Callback, false);
                     ArrayPool<byte>.Shared.Return(pendingMessage.RentedBuffer);
+                }
+
+                void InvokeCallback(Action<bool>? callback, bool successful)
+                {
+                    try
+                    {
+                        callback?.Invoke(true);
+                    }
+                    catch { }
                 }
             }
 
