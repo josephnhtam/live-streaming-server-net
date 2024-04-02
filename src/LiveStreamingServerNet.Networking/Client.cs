@@ -232,6 +232,12 @@ namespace LiveStreamingServerNet.Networking
                     }
                 }
                 catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { }
+
+                while (_pendingMessageReader.TryRead(out var pendingMessage))
+                {
+                    pendingMessage.Callback?.Invoke();
+                    ArrayPool<byte>.Shared.Return(pendingMessage.RentedBuffer);
+                }
             }
 
             public async ValueTask DisposeAsync()
