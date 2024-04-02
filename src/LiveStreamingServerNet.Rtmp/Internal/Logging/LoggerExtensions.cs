@@ -4,6 +4,9 @@ namespace LiveStreamingServerNet.Rtmp.Logging
 {
     internal static partial class LoggerExtensions
     {
+        [LoggerMessage(LogLevel.Error, "ClientId: {ClientId} | An error occurred in the client client loop")]
+        public static partial void ClientLoopError(this ILogger logger, uint clientId, Exception exception);
+
         [LoggerMessage(LogLevel.Debug, "ClientId: {ClientId} | Command ({commandName}) received")]
         public static partial void CommandReceived(this ILogger logger, uint clientId, string commandName);
 

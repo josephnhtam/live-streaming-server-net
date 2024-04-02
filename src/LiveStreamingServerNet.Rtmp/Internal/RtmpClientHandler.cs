@@ -38,21 +38,29 @@ namespace LiveStreamingServerNet.Rtmp.Internal
 
         public async Task<bool> HandleClientLoopAsync(ReadOnlyStream networkStream, CancellationToken cancellationToken)
         {
-            var result = _clientContext.State switch
+            try
             {
-                RtmpClientState.HandshakeC0 => await HandleHandshakeC0(_clientContext, networkStream, cancellationToken),
-                RtmpClientState.HandshakeC1 => await HandleHandshakeC1(_clientContext, networkStream, cancellationToken),
-                RtmpClientState.HandshakeC2 => await HandleHandshakeC2(_clientContext, networkStream, cancellationToken),
-                _ => await HandleChunkAsync(_clientContext, networkStream, cancellationToken),
-            };
+                var result = _clientContext.State switch
+                {
+                    RtmpClientState.HandshakeC0 => await HandleHandshakeC0(_clientContext, networkStream, cancellationToken),
+                    RtmpClientState.HandshakeC1 => await HandleHandshakeC1(_clientContext, networkStream, cancellationToken),
+                    RtmpClientState.HandshakeC2 => await HandleHandshakeC2(_clientContext, networkStream, cancellationToken),
+                    _ => await HandleChunkAsync(_clientContext, networkStream, cancellationToken),
+                };
 
-            if (result.Succeeded && _bandwidthLimiter != null && !_bandwidthLimiter.ConsumeBandwidth(result.ConsumedBytes))
+                if (result.Succeeded && _bandwidthLimiter != null && !_bandwidthLimiter.ConsumeBandwidth(result.ConsumedBytes))
+                {
+                    _logger.ExceededBandwidthLimit(_clientContext.Client.ClientId);
+                    return false;
+                }
+
+                return result.Succeeded;
+            }
+            catch (Exception ex)
             {
-                _logger.ExceededBandwidthLimit(_clientContext.Client.ClientId);
+                _logger.ClientLoopError(_clientContext.Client.ClientId, ex);
                 return false;
             }
-
-            return result.Succeeded;
         }
 
         private async Task<RtmpEventConsumingResult> HandleHandshakeC0(IRtmpClientContext clientContext, ReadOnlyStream networkStream, CancellationToken cancellationToken)

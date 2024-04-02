@@ -64,9 +64,9 @@ namespace LiveStreamingServerNet.Networking
                 }
                 catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { }
                 catch (Exception ex) when (ex is IOException or EndOfStreamException) { }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    throw;
+                    _logger.ClientLoopError(ClientId, ex);
                 }
                 finally
                 {
