@@ -15,6 +15,7 @@ This open-source project provides an implementation of an RTMP live streaming se
 
 - **Custom Kubernetes Operator and Kubernetes Integration**: The objective is to achieve automatic horizontal autoscaling by scaling out the pods when more streams are published, and scaling in the pods when streams are deleted, all without affecting the existing connections.
 - **Redis Integration**: Integrate with Redis to share stream information among pods in the fleet.
+- **Cloud Storage Integration**: Enabling real-time uploading of HLS files to cloud storage services like Azure Blob Storage, Google Cloud Storage, and AWS S3, which ensures scalable and efficient content distribution through CDN.
 
 ## Quick Start
 
