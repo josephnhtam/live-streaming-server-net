@@ -6,7 +6,7 @@ This open-source project provides an implementation of an RTMP live streaming se
 
 - **RTMP/RTMPS protocol**: Supports the RTMP and RTMPS protocols for streaming audio, video, and data.
 - **HTTP-FLV/WebSocket-FLV with ASP.NET CORE**: Provides support for serving FLV live streams using HTTP-FLV and WebSocket-FLV protocols within an ASP.NET Core application.
-- **Remuxing RTMP streams into HLS/DASH streams**: Allows you to remux RTMP streams into HLS (HTTP Live Streaming) or DASH (Dynamic Adaptive Streaming over HTTP) streams.
+- **Transmuxing RTMP streams into HLS/DASH streams**: Allows you to transmux RTMP streams into HLS (HTTP Live Streaming) or DASH (Dynamic Adaptive Streaming over HTTP) streams.
 - **GOP caching**: Supports caching the Group of Pictures (GOP) to ensure immediate availability of live streaming content.
 - **Custom authorization**: Enables you to implement custom authorization mechanisms for accessing live streams.
 - **Admin panel**: Includes an admin panel that provides an user interface for managing and monitoring the live streaming server.
