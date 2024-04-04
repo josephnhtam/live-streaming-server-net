@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace LiveStreamingServerNet.Networking.Installer
 {
-    public class ServerConfigurator : IServerConfigurator
+    internal class ServerConfigurator : IServerConfigurator
     {
         public IServiceCollection Services { get; }
 

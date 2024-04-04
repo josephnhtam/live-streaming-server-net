@@ -9,7 +9,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace LiveStreamingServerNet.Rtmp.Installer
 {
-    public class RtmpServerConfigurator : IRtmpServerConfigurator
+    internal class RtmpServerConfigurator : IRtmpServerConfigurator
     {
         public IServiceCollection Services { get; }
 
