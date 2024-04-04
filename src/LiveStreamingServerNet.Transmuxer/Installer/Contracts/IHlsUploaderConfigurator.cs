@@ -9,6 +9,6 @@ namespace LiveStreamingServerNet.Transmuxer.Installer.Contracts
 
         IHlsUploaderConfigurator AddHlsStorageEventHandler<THlsStorageEventHandler>()
             where THlsStorageEventHandler : class, IHlsStorageEventHandler;
-        IHlsUploaderConfigurator AddTransmuxerEventHandler(Func<IServiceProvider, IHlsStorageEventHandler> implmentationFactory);
+        IHlsUploaderConfigurator AddHlsStorageEventHandler(Func<IServiceProvider, IHlsStorageEventHandler> implmentationFactory);
     }
 }

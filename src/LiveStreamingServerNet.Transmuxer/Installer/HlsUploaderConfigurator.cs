@@ -20,7 +20,7 @@ namespace LiveStreamingServerNet.Transmuxer.Installer
             return this;
         }
 
-        public IHlsUploaderConfigurator AddTransmuxerEventHandler(Func<IServiceProvider, IHlsStorageEventHandler> implmentationFactory)
+        public IHlsUploaderConfigurator AddHlsStorageEventHandler(Func<IServiceProvider, IHlsStorageEventHandler> implmentationFactory)
         {
             Services.AddSingleton(implmentationFactory);
             return this;
