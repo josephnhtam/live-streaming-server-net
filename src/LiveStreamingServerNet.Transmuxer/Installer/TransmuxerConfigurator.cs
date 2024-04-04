@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace LiveStreamingServerNet.Transmuxer.Installer
 {
-    public class TransmuxerConfigurator : ITransmuxerConfigurator
+    internal class TransmuxerConfigurator : ITransmuxerConfigurator
     {
         public IServiceCollection Services { get; }
 

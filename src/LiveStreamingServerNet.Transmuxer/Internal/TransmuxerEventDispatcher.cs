@@ -26,33 +26,33 @@ namespace LiveStreamingServerNet.Transmuxer.Internal
             return _eventHandlers;
         }
 
-        public async Task TransmuxerStartedAsync(uint clientId, string identifier, string inputPath, string outputPath, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
+        public async Task TransmuxerStartedAsync(string transmuxer, Guid identifier, uint clientId, string inputPath, string outputPath, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
+            using var context = EventContext.Obtain();
+
             try
             {
-                using var context = EventContext.Obtain();
-
                 foreach (var handler in GetEventHandlers())
-                    await handler.OnTransmuxerStartedAsync(context, clientId, identifier, inputPath, outputPath, streamPath, streamArguments);
+                    await handler.OnTransmuxerStartedAsync(context, transmuxer, identifier, clientId, inputPath, outputPath, streamPath, streamArguments);
             }
             catch (Exception ex)
             {
-                _logger.DispatchingTransmuxerStartedEventError(identifier, inputPath, outputPath, streamPath, ex);
+                _logger.DispatchingTransmuxerStartedEventError(transmuxer, identifier, inputPath, outputPath, streamPath, ex);
             }
         }
 
-        public async Task TransmuxerStoppedAsync(uint clientId, string identifier, string inputPath, string outputPath, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
+        public async Task TransmuxerStoppedAsync(string transmuxer, Guid identifier, uint clientId, string inputPath, string outputPath, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
+            using var context = EventContext.Obtain();
+
             try
             {
-                using var context = EventContext.Obtain();
-
                 foreach (var handler in GetEventHandlers())
-                    await handler.OnTransmuxerStoppedAsync(context, clientId, identifier, inputPath, outputPath, streamPath, streamArguments);
+                    await handler.OnTransmuxerStoppedAsync(context, transmuxer, identifier, clientId, inputPath, outputPath, streamPath, streamArguments);
             }
             catch (Exception ex)
             {
-                _logger.DispatchingTransmuxerStoppedEventError(identifier, inputPath, outputPath, streamPath, ex);
+                _logger.DispatchingTransmuxerStoppedEventError(transmuxer, identifier, inputPath, outputPath, streamPath, ex);
             }
         }
     }

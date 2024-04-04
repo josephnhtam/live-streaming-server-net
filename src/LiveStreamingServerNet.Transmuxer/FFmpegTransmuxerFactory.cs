@@ -12,14 +12,15 @@ namespace LiveStreamingServerNet.Transmuxer
             _config = config;
         }
 
-        public async Task<ITransmuxer> CreateAsync(string streamPath, IReadOnlyDictionary<string, string> streamArguments)
+        public async Task<ITransmuxer> CreateAsync(Guid contextIdentifier, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
             return new FFmpegTransmuxer(
-                _config.TransmuxerIdentifier,
+                contextIdentifier,
+                _config.Name,
                 _config.FFmpegPath,
                 _config.FFmpegTransmuxerArguments,
                 _config.GracefulShutdownTimeoutSeconds,
-                await _config.OutputPathResolver.Invoke(streamPath, streamArguments));
+                await _config.OutputPathResolver.Invoke(contextIdentifier, streamPath, streamArguments));
         }
     }
 }

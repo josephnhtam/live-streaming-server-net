@@ -58,18 +58,18 @@ namespace LiveStreamingServerNet.HlsDemo
         private static ILiveStreamingServer CreateLiveStreamingServer(string trasmuxerOutputPath)
         {
             return LiveStreamingServerBuilder.Create()
-                .ConfigureRtmpServer(options =>
-                    options
-                        .AddTransmuxer(options =>
-                            options.AddTransmuxerEventHandler(svc =>
-                                new TransmuxerEventListener(trasmuxerOutputPath, svc.GetRequiredService<ILogger<TransmuxerEventListener>>()))
-                        )
-                        .AddFFmpeg(options =>
-                        {
-                            options.FFmpegPath = ExecutableFinder.FindExecutableFromPATH("ffmpeg")!;
-                            options.OutputPathResolver = (streamPath, streamArguments)
-                                => Task.FromResult(Path.Combine(trasmuxerOutputPath, streamPath.Trim('/'), "output.m3u8"));
-                        })
+                .ConfigureRtmpServer(options => options
+                    .AddTransmuxer(options =>
+                    {
+                        options.AddTransmuxerEventHandler(svc =>
+                                new TransmuxerEventListener(trasmuxerOutputPath, svc.GetRequiredService<ILogger<TransmuxerEventListener>>()));
+                    })
+                    .AddFFmpeg(options =>
+                    {
+                        options.FFmpegPath = ExecutableFinder.FindExecutableFromPATH("ffmpeg")!;
+                        options.OutputPathResolver = (contextIdentifier, streamPath, streamArguments)
+                            => Task.FromResult(Path.Combine(trasmuxerOutputPath, streamPath.Trim('/'), "output.m3u8"));
+                    })
                 )
                 .ConfigureLogging(options => options.AddConsole())
                 .Build();
@@ -86,17 +86,17 @@ namespace LiveStreamingServerNet.HlsDemo
                 _logger = logger;
             }
 
-            public Task OnTransmuxerStartedAsync(IEventContext context, uint clientId, string identifier, string inputPath, string outputPath, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
+            public Task OnTransmuxerStartedAsync(IEventContext context, string transmuxer, Guid identifier, uint clientId, string inputPath, string outputPath, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
             {
                 outputPath = Path.GetRelativePath(_trasmuxerOutputPath, outputPath);
-                _logger.LogInformation($"Transmuxer ({identifier}) started: {inputPath} -> {outputPath}");
+                _logger.LogInformation($"[{identifier}] Transmuxer {transmuxer} started: {inputPath} -> {outputPath}");
                 return Task.CompletedTask;
             }
 
-            public Task OnTransmuxerStoppedAsync(IEventContext context, uint clientId, string identifier, string inputPath, string outputPath, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
+            public Task OnTransmuxerStoppedAsync(IEventContext context, string transmuxer, Guid identifier, uint clientId, string inputPath, string outputPath, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
             {
                 outputPath = Path.GetRelativePath(_trasmuxerOutputPath, outputPath);
-                _logger.LogInformation($"Transmuxer ({identifier}) stopped: {inputPath} -> {outputPath}");
+                _logger.LogInformation($"[{identifier}] Transmuxer {transmuxer} stopped: {inputPath} -> {outputPath}");
                 return Task.CompletedTask;
             }
         }

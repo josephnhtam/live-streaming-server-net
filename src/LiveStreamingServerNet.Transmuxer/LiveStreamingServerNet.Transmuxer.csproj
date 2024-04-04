@@ -10,12 +10,14 @@
     <PackageTags>live-streaming;rtmp;transmuxer;hls;dash</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <Version>0.8.1</Version>
+    <Version>0.9.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Physical" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.0.0" />
+    <PackageReference Include="Open.Threading.ReadWrite" Version="2.0.3" />
   </ItemGroup>
 
   <ItemGroup>
