@@ -115,5 +115,38 @@ namespace LiveStreamingServerNet.Transmuxer.Azure.Internal
                 }
             }
         }
+
+        public async Task DeleteAsync(TransmuxingContext context, IReadOnlyList<TsFile> tsFiles, CancellationToken cancellationToken)
+        {
+            var tasks = new List<Task>();
+
+            foreach (var tsFile in tsFiles)
+            {
+                tasks.Add(DeleteTsFileAsync(tsFile.FileName, cancellationToken));
+            }
+
+            await Task.WhenAll(tasks);
+
+            async Task DeleteTsFileAsync
+                (string tsFileName, CancellationToken cancellationToken)
+            {
+                try
+                {
+                    var blobPath = _blobPathResolver.ResolveBlobPath(context, tsFileName);
+                    var blobClient = _containerClient.GetBlobClient(blobPath);
+
+                    await blobClient.DeleteAsync(cancellationToken: cancellationToken);
+                }
+                catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+                {
+                    throw;
+                }
+                catch (Exception ex)
+                {
+                    _logger.DeletingTsFileError(
+                        context.Transmuxer, context.Identifier, context.InputPath, context.OutputPath, context.StreamPath,  ex);
+                }
+            }
+        }
     }
 }

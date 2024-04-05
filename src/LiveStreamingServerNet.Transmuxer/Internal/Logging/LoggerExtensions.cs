@@ -25,6 +25,9 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Logging
         [LoggerMessage(LogLevel.Error, "An error occurred while uploading HLS to store | Transmuxer: {Transmuxer} | Identifier: {Identifier} | InputPath: {InputPath} | OutputPath: {OutputPath} | StreamPath: {StreamPath}")]
         public static partial void UploadingHlsToStoreError(this ILogger logger, string transmuxer, Guid identifier, string inputPath, string outputPath, string streamPath, Exception ex);
 
+        [LoggerMessage(LogLevel.Error, "An error occurred while delete outdated TS files | Transmuxer: {Transmuxer} | Identifier: {Identifier} | InputPath: {InputPath} | OutputPath: {OutputPath} | StreamPath: {StreamPath}")]
+        public static partial void DeletingOutdatedTsFilesError(this ILogger logger, string transmuxer, Guid identifier, string inputPath, string outputPath, string streamPath, Exception ex);
+
         [LoggerMessage(LogLevel.Error, "An error occurred while dispatching HLS files stored event | Transmuxer: {Transmuxer} | Identifier: {Identifier} | InputPath: {InputPath} | OutputPath: {OutputPath} | StreamPath: {StreamPath}")]
         public static partial void DispatchingHlsFilesStoredEventError(this ILogger logger, string transmuxer, Guid identifier, string inputPath, string outputPath, string streamPath, Exception ex);
 

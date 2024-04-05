@@ -84,18 +84,28 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Hls
             var manifests = playlist.Manifests;
             var tsFiles = playlist.TsFiles;
 
-            var deltaTsFiles = tsFiles.Except(lastTsFiles).ToList();
-            var deltaManifests = deltaTsFiles.Select(x => x.ManifestName).Distinct().Select(x => manifests[x]).ToList();
+            var addedTsFiles = tsFiles.Except(lastTsFiles).ToList();
+            var updatedManifests = addedTsFiles.Select(x => x.ManifestName).Distinct().Select(x => manifests[x]).ToList();
 
-            await Task.WhenAll(_storageAdapters.Select(adapter => StoreAsync(adapter, deltaManifests, deltaTsFiles)));
+            var adapterTasks = _storageAdapters.Select(adapter => StoreAsync(adapter, updatedManifests, addedTsFiles));
+
+            if (_config.DeleteOutdatedTsFiles)
+            {
+                var removedTsFiles = lastTsFiles.Except(tsFiles).ToList();
+                adapterTasks = adapterTasks.Concat(_storageAdapters.Select(adapter => DeleteOutdatedAsync(adapter, removedTsFiles)));
+            }
+
+            await Task.WhenAll(adapterTasks);
+
             return new List<TsFile>(tsFiles);
 
-            async Task StoreAsync(IHlsStorageAdapter adapter, IReadOnlyList<Manifest> deltaManifests, IReadOnlyList<TsFile> deltaTsFiles)
+            async Task StoreAsync(IHlsStorageAdapter adapter, IReadOnlyList<Manifest> updatedManifests,
+                IReadOnlyList<TsFile> addedTsFiles)
             {
                 try
                 {
                     var (storedManifests, storedTsFiles) =
-                        await adapter.StoreAsync(_context, deltaManifests, deltaTsFiles, cancellationToken);
+                        await adapter.StoreAsync(_context, updatedManifests, addedTsFiles, cancellationToken);
 
                     bool isInitial = !_uploadedOnce.ContainsKey(adapter);
                     _uploadedOnce[adapter] = true;
@@ -106,6 +116,20 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Hls
                 catch (Exception ex)
                 {
                     _logger.UploadingHlsToStoreError(
+                        _context.Transmuxer, _context.Identifier, _context.InputPath, _context.OutputPath, _context.StreamPath, ex);
+                }
+            }
+
+            async Task DeleteOutdatedAsync(IHlsStorageAdapter adapter, IReadOnlyList<TsFile> removedTsFiles)
+            {
+                try
+                {
+                    await adapter.DeleteAsync(_context, removedTsFiles, cancellationToken);
+                }
+                catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { }
+                catch (Exception ex)
+                {
+                    _logger.DeletingOutdatedTsFilesError(
                         _context.Transmuxer, _context.Identifier, _context.InputPath, _context.OutputPath, _context.StreamPath, ex);
                 }
             }
