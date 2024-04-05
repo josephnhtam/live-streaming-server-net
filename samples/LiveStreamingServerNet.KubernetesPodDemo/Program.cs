@@ -8,11 +8,8 @@ using LiveStreamingServerNet.Transmuxer.Hls;
 using LiveStreamingServerNet.Transmuxer.Hls.Contracts;
 using LiveStreamingServerNet.Transmuxer.Installer;
 using LiveStreamingServerNet.Utilities.Contracts;
-using Microsoft.AspNetCore.StaticFiles;
-using Microsoft.Extensions.FileProviders;
 using StackExchange.Redis;
 using System.Net;
-using System.Reflection;
 
 namespace LiveStreamingServerNet.KubernetesPodDemo
 {
