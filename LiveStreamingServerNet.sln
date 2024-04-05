@@ -37,7 +37,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.Kube
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.KubernetesPod.Redis", "src\LiveStreamingServerNet.KubernetesPod.Redis\LiveStreamingServerNet.KubernetesPod.Redis.csproj", "{D69DDDBC-C7C3-4EFE-8124-4A643314DDED}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveStreamingServerNet.Transmuxer.Azure", "src\LiveStreamingServerNet.Transmuxer.Azure\LiveStreamingServerNet.Transmuxer.Azure.csproj", "{6A78B27B-2B64-4E12-80FD-36715EF9C0F5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.Transmuxer.AzureBlobStorage", "src\LiveStreamingServerNet.Transmuxer.AzureBlobStorage\LiveStreamingServerNet.Transmuxer.AzureBlobStorage.csproj", "{A10CF8BE-3E85-4C85-B837-F223C9C4AD59}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -109,10 +109,10 @@ Global
 		{D69DDDBC-C7C3-4EFE-8124-4A643314DDED}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D69DDDBC-C7C3-4EFE-8124-4A643314DDED}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D69DDDBC-C7C3-4EFE-8124-4A643314DDED}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6A78B27B-2B64-4E12-80FD-36715EF9C0F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6A78B27B-2B64-4E12-80FD-36715EF9C0F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6A78B27B-2B64-4E12-80FD-36715EF9C0F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6A78B27B-2B64-4E12-80FD-36715EF9C0F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A10CF8BE-3E85-4C85-B837-F223C9C4AD59}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A10CF8BE-3E85-4C85-B837-F223C9C4AD59}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A10CF8BE-3E85-4C85-B837-F223C9C4AD59}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A10CF8BE-3E85-4C85-B837-F223C9C4AD59}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

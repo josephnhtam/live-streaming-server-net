@@ -1,7 +1,7 @@
-﻿using LiveStreamingServerNet.Transmuxer.Azure.Contracts;
+﻿using LiveStreamingServerNet.Transmuxer.AzureBlobStorage.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace LiveStreamingServerNet.Transmuxer.Azure.Installer.Contracts
+namespace LiveStreamingServerNet.Transmuxer.AzureBlobStorage.Installer.Contracts
 {
     public interface IHlsAzureStorageConfigurator
     {

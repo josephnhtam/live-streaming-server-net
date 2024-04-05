@@ -3,7 +3,7 @@ using LiveStreamingServerNet.KubernetesPod.Installer;
 using LiveStreamingServerNet.KubernetesPod.Redis.Installer;
 using LiveStreamingServerNet.Networking.Helpers;
 using LiveStreamingServerNet.Transmuxer;
-using LiveStreamingServerNet.Transmuxer.Azure.Installer;
+using LiveStreamingServerNet.Transmuxer.AzureBlobStorage.Installer;
 using LiveStreamingServerNet.Transmuxer.Hls;
 using LiveStreamingServerNet.Transmuxer.Hls.Contracts;
 using LiveStreamingServerNet.Transmuxer.Installer;

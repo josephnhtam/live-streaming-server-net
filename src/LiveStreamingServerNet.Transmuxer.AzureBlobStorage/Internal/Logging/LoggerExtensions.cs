@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 
-namespace LiveStreamingServerNet.Transmuxer.Azure.Internal.Logging
+namespace LiveStreamingServerNet.Transmuxer.AzureBlobStorage.Internal.Logging
 {
     internal static partial class LoggerExtensions
     {

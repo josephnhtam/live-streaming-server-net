@@ -1,12 +1,12 @@
 ﻿using Azure.Storage.Blobs;
-using LiveStreamingServerNet.Transmuxer.Azure.Contracts;
-using LiveStreamingServerNet.Transmuxer.Azure.Internal.Logging;
+using LiveStreamingServerNet.Transmuxer.AzureBlobStorage.Contracts;
+using LiveStreamingServerNet.Transmuxer.AzureBlobStorage.Internal.Logging;
 using LiveStreamingServerNet.Transmuxer.Hls;
 using LiveStreamingServerNet.Transmuxer.Hls.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace LiveStreamingServerNet.Transmuxer.Azure.Internal
+namespace LiveStreamingServerNet.Transmuxer.AzureBlobStorage.Internal
 {
     public class HlsAzureBlobStorageAdapter : IHlsStorageAdapter
     {
@@ -144,7 +144,7 @@ namespace LiveStreamingServerNet.Transmuxer.Azure.Internal
                 catch (Exception ex)
                 {
                     _logger.DeletingTsFileError(
-                        context.Transmuxer, context.Identifier, context.InputPath, context.OutputPath, context.StreamPath,  ex);
+                        context.Transmuxer, context.Identifier, context.InputPath, context.OutputPath, context.StreamPath, ex);
                 }
             }
         }

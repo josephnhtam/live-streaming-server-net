@@ -1,5 +1,5 @@
 ﻿
-namespace LiveStreamingServerNet.Transmuxer.Azure.Contracts
+namespace LiveStreamingServerNet.Transmuxer.AzureBlobStorage.Contracts
 {
     public interface IHlsAzureBlobPathResolver
     {

@@ -1,8 +1,8 @@
-﻿using LiveStreamingServerNet.Transmuxer.Azure.Contracts;
-using LiveStreamingServerNet.Transmuxer.Azure.Installer.Contracts;
+﻿using LiveStreamingServerNet.Transmuxer.AzureBlobStorage.Contracts;
+using LiveStreamingServerNet.Transmuxer.AzureBlobStorage.Installer.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace LiveStreamingServerNet.Transmuxer.Azure.Installer
+namespace LiveStreamingServerNet.Transmuxer.AzureBlobStorage.Installer
 {
     internal class HlsAzureBlobStorageConfigurator : IHlsAzureStorageConfigurator
     {

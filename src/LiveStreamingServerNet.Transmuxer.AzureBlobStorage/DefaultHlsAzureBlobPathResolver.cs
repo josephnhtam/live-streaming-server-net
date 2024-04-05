@@ -1,6 +1,6 @@
-﻿using LiveStreamingServerNet.Transmuxer.Azure.Contracts;
+﻿using LiveStreamingServerNet.Transmuxer.AzureBlobStorage.Contracts;
 
-namespace LiveStreamingServerNet.Transmuxer.Azure
+namespace LiveStreamingServerNet.Transmuxer.AzureBlobStorage
 {
     public class DefaultHlsAzureBlobPathResolver : IHlsAzureBlobPathResolver
     {
