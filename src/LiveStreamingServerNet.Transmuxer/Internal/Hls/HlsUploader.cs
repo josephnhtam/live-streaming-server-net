@@ -67,7 +67,9 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Hls
                 await Task.WhenAll(_storageAdapters.Select(
                     async adapter =>
                     {
-                        var uploadedOnce = _uploadedOnce.ContainsKey(adapter);
+                        if (!_uploadedOnce.ContainsKey(adapter))
+                            return;
+
                         await _eventDispatcher.HlsFilesStoringCompleteAsync(_context);
                     }
                 ));
