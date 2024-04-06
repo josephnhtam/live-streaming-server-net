@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace LiveStreamingServerNet.Transmuxer.AzureBlobStorage.Installer
 {
-    internal class HlsAzureBlobStorageConfigurator : IHlsAzureStorageConfigurator
+    internal class HlsAzureBlobStorageConfigurator : IHlsAzureBlobStorageConfigurator
     {
         public IServiceCollection Services { get; }
 
@@ -13,14 +13,14 @@ namespace LiveStreamingServerNet.Transmuxer.AzureBlobStorage.Installer
             Services = services;
         }
 
-        public IHlsAzureStorageConfigurator UseBlobPathResolver<TBlobPathResolver>()
+        public IHlsAzureBlobStorageConfigurator UseBlobPathResolver<TBlobPathResolver>()
             where TBlobPathResolver : class, IHlsBlobPathResolver
         {
             Services.AddSingleton<IHlsBlobPathResolver, TBlobPathResolver>();
             return this;
         }
 
-        public IHlsAzureStorageConfigurator UseBlobPathResolver<TBlobPathResolver>(Func<IServiceProvider, TBlobPathResolver> implementationFactory)
+        public IHlsAzureBlobStorageConfigurator UseBlobPathResolver<TBlobPathResolver>(Func<IServiceProvider, TBlobPathResolver> implementationFactory)
             where TBlobPathResolver : class, IHlsBlobPathResolver
         {
             Services.AddSingleton(implementationFactory);

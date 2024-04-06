@@ -3,12 +3,12 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace LiveStreamingServerNet.Transmuxer.AzureBlobStorage.Installer.Contracts
 {
-    public interface IHlsAzureStorageConfigurator
+    public interface IHlsAzureBlobStorageConfigurator
     {
         IServiceCollection Services { get; }
-        IHlsAzureStorageConfigurator UseBlobPathResolver<TBlobPathResolver>()
+        IHlsAzureBlobStorageConfigurator UseBlobPathResolver<TBlobPathResolver>()
             where TBlobPathResolver : class, IHlsBlobPathResolver;
-        IHlsAzureStorageConfigurator UseBlobPathResolver<TBlobPathResolver>(Func<IServiceProvider, TBlobPathResolver> implementationFactory)
+        IHlsAzureBlobStorageConfigurator UseBlobPathResolver<TBlobPathResolver>(Func<IServiceProvider, TBlobPathResolver> implementationFactory)
             where TBlobPathResolver : class, IHlsBlobPathResolver;
     }
 }
