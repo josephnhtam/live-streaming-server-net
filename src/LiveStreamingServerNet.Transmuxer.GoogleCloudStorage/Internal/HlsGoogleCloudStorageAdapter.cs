@@ -69,12 +69,12 @@ namespace LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Internal
                         CacheControl = _config.TsFilesCacheControl
                     };
 
-                    var response = await _storageClient.UploadObjectAsync(
+                    var result = await _storageClient.UploadObjectAsync(
                         @object, fileStream,
                         options: _config.TsFilesUploadObjectOptions,
                         cancellationToken: cancellationToken);
 
-                    return new StoredTsFile(tsFileName, new Uri($"https://storage.googleapis.com/{response.Id}"));
+                    return new StoredTsFile(tsFileName, _config.ObjectUriResolver.ResolveObjectUri(result));
                 }
                 catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
                 {
@@ -118,12 +118,12 @@ namespace LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Internal
                         CacheControl = _config.ManifestsCacheControl
                     };
 
-                    var response = await _storageClient.UploadObjectAsync(
+                    var result = await _storageClient.UploadObjectAsync(
                         @object, contentStream,
                         options: _config.ManifestsUploadObjectOptions,
                         cancellationToken: cancellationToken);
 
-                    return new StoredManifest(name, new Uri($"https://storage.googleapis.com/{response.Id}"));
+                    return new StoredManifest(name, _config.ObjectUriResolver.ResolveObjectUri(result));
                 }
                 catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
                 {

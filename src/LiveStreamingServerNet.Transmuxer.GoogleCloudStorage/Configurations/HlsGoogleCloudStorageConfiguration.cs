@@ -10,5 +10,6 @@ namespace LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Configurations
         public string ManifestsCacheControl { get; set; } = "no-cache,no-store,max-age=0";
         public string TsFilesCacheControl { get; set; } = string.Empty;
         public IHlsObjectPathResolver ObjectPathResolver { get; set; } = new DefaultHlsObjectPathResolver();
+        public IHlsObjectUriResolver ObjectUriResolver { get; set; } = new DefaultHlsObjectUriResolver();
     }
 }
