@@ -7,12 +7,13 @@ namespace LiveStreamingServerNet.KubernetesOperator.Installer
     {
         public static IServiceCollection AddControllerServices(this IServiceCollection services)
         {
-            services.AddSingleton<IFleetStateFetcher, FleetStateFetcher>()
-                    .AddSingleton<IDesiredFleetStateCalculator, DesiredFleetStateCalculator>()
-                    .AddSingleton<IDesiredFleetStateApplier, DesiredFleetStateApplier>()
-                    .AddSingleton<IPodCleaner, PodCleaner>()
-                    .AddSingleton<IFleetScaler, FleetScaler>()
-                    .AddSingleton<IPodTemplateCreator, PodTemplateCreator>()
+            services.AddSingleton<IFleetScalerResolver, FleetScalerResolver>()
+                    .AddScoped<IFleetStateFetcher, FleetStateFetcher>()
+                    .AddScoped<IDesiredFleetStateCalculator, DesiredFleetStateCalculator>()
+                    .AddScoped<IDesiredFleetStateApplier, DesiredFleetStateApplier>()
+                    .AddScoped<IPodCleaner, PodCleaner>()
+                    .AddScoped<IFleetScaler, FleetScaler>()
+                    .AddScoped<IPodTemplateCreator, PodTemplateCreator>()
                     .AddTransient<ITargetReplicasStabilizer, TargetReplicasStabilizer>();
 
             return services;

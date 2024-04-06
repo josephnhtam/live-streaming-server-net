@@ -13,16 +13,16 @@ namespace LiveStreamingServerNet.KubernetesOperator.Controllers
     public class V1LiveStreamingServerFleetController : IEntityController<V1LiveStreamingServerFleet>
     {
         private readonly EntityRequeue<V1LiveStreamingServerFleet> _requeue;
-        private readonly IFleetScaler _fleetScaler;
+        private readonly IFleetScalerResolver _fleetScalerResolver;
         private readonly ILogger _logger;
 
         public V1LiveStreamingServerFleetController(
             EntityRequeue<V1LiveStreamingServerFleet> requeue,
-            IFleetScaler fleetScaler,
+            IFleetScalerResolver fleetScalerResolver,
             ILogger<V1LiveStreamingServerFleetController> logger)
         {
             _requeue = requeue;
-            _fleetScaler = fleetScaler;
+            _fleetScalerResolver = fleetScalerResolver;
             _logger = logger;
         }
 
@@ -30,7 +30,8 @@ namespace LiveStreamingServerNet.KubernetesOperator.Controllers
         {
             try
             {
-                await _fleetScaler.ScaleFleetAsync(entity, cancellationToken);
+                var feleetScaler = _fleetScalerResolver.Resolve(entity);
+                await feleetScaler.ScaleFleetAsync(entity, cancellationToken);
             }
             catch (Exception ex)
             {
@@ -44,6 +45,7 @@ namespace LiveStreamingServerNet.KubernetesOperator.Controllers
 
         public Task DeletedAsync(V1LiveStreamingServerFleet entity, CancellationToken cancellationToken)
         {
+            _fleetScalerResolver.Finalize(entity);
             return Task.CompletedTask;
         }
     }
