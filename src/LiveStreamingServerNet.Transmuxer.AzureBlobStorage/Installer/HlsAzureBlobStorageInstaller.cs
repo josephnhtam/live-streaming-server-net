@@ -13,7 +13,7 @@ namespace LiveStreamingServerNet.Transmuxer.AzureBlobStorage.Installer
         public static IHlsUploaderConfigurator AddAzureBlobStorage(
             this IHlsUploaderConfigurator configurator,
             BlobContainerClient blobContainerClient,
-            Action<HlsAzureBlobStorageConfiguration>? configure)
+            Action<HlsAzureBlobStorageConfiguration>? configure = null)
         {
             var services = configurator.Services;
 
