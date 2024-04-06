@@ -11,12 +11,12 @@ namespace LiveStreamingServerNet.Transmuxer.AzureBlobStorage.Internal
     public class HlsAzureBlobStorageAdapter : IHlsStorageAdapter
     {
         private readonly BlobContainerClient _containerClient;
-        private readonly IHlsAzureBlobPathResolver _blobPathResolver;
+        private readonly IHlsBlobPathResolver _blobPathResolver;
         private readonly ILogger _logger;
 
         public HlsAzureBlobStorageAdapter(
             [FromKeyedServices("hls-blob-container-client")] BlobContainerClient containerClient,
-            IHlsAzureBlobPathResolver blobPathResolver,
+            IHlsBlobPathResolver blobPathResolver,
             ILogger<HlsAzureBlobStorageAdapter> logger)
         {
             _containerClient = containerClient;

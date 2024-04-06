@@ -7,8 +7,8 @@ namespace LiveStreamingServerNet.Transmuxer.AzureBlobStorage.Installer.Contracts
     {
         IServiceCollection Services { get; }
         IHlsAzureStorageConfigurator UseBlobPathResolver<TBlobPathResolver>()
-            where TBlobPathResolver : class, IHlsAzureBlobPathResolver;
+            where TBlobPathResolver : class, IHlsBlobPathResolver;
         IHlsAzureStorageConfigurator UseBlobPathResolver<TBlobPathResolver>(Func<IServiceProvider, TBlobPathResolver> implementationFactory)
-            where TBlobPathResolver : class, IHlsAzureBlobPathResolver;
+            where TBlobPathResolver : class, IHlsBlobPathResolver;
     }
 }

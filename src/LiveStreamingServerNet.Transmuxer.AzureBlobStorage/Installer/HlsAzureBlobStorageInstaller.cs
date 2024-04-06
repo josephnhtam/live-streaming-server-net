@@ -24,7 +24,7 @@ namespace LiveStreamingServerNet.Transmuxer.AzureBlobStorage.Installer
             if (configure != null)
                 configure.Invoke(new HlsAzureBlobStorageConfigurator(services));
 
-            services.TryAddSingleton<IHlsAzureBlobPathResolver, DefaultHlsAzureBlobPathResolver>();
+            services.TryAddSingleton<IHlsBlobPathResolver, DefaultHlsBlobPathResolver>();
 
             return configurator;
         }

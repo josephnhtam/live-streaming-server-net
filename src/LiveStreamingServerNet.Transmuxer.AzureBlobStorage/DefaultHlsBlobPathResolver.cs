@@ -2,7 +2,7 @@
 
 namespace LiveStreamingServerNet.Transmuxer.AzureBlobStorage
 {
-    public class DefaultHlsAzureBlobPathResolver : IHlsAzureBlobPathResolver
+    public class DefaultHlsBlobPathResolver : IHlsBlobPathResolver
     {
         public string ResolveBlobPath(TransmuxingContext context, string fileName)
         {

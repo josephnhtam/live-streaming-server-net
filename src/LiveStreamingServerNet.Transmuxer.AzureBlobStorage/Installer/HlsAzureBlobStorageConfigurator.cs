@@ -14,14 +14,14 @@ namespace LiveStreamingServerNet.Transmuxer.AzureBlobStorage.Installer
         }
 
         public IHlsAzureStorageConfigurator UseBlobPathResolver<TBlobPathResolver>()
-            where TBlobPathResolver : class, IHlsAzureBlobPathResolver
+            where TBlobPathResolver : class, IHlsBlobPathResolver
         {
-            Services.AddSingleton<IHlsAzureBlobPathResolver, TBlobPathResolver>();
+            Services.AddSingleton<IHlsBlobPathResolver, TBlobPathResolver>();
             return this;
         }
 
         public IHlsAzureStorageConfigurator UseBlobPathResolver<TBlobPathResolver>(Func<IServiceProvider, TBlobPathResolver> implementationFactory)
-            where TBlobPathResolver : class, IHlsAzureBlobPathResolver
+            where TBlobPathResolver : class, IHlsBlobPathResolver
         {
             Services.AddSingleton(implementationFactory);
             return this;

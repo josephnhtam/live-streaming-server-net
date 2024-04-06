@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
     <Authors>Joseph NH Tam</Authors>
-    <Description>This package provides the capability to upload transmuxed HLS files to Azure Blob Storage in real time.</Description>
+    <Description>This package provides the capability to upload remuxed HLS files to Azure Blob Storage in real time.</Description>
     <PackageTags>live-streaming;rtmp;transmuxer;hls;azure</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
