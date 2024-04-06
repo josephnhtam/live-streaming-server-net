@@ -1,6 +1,5 @@
 ﻿using Azure.Storage.Blobs;
-using Azure.Storage.Blobs.Models;
-using LiveStreamingServerNet.Transmuxer.AzureBlobStorage.Contracts;
+using LiveStreamingServerNet.Transmuxer.AzureBlobStorage.Configurations;
 using LiveStreamingServerNet.Transmuxer.AzureBlobStorage.Internal.Logging;
 using LiveStreamingServerNet.Transmuxer.Hls;
 using LiveStreamingServerNet.Transmuxer.Hls.Contracts;
@@ -11,22 +10,16 @@ namespace LiveStreamingServerNet.Transmuxer.AzureBlobStorage.Internal
     public class HlsAzureBlobStorageAdapter : IHlsStorageAdapter
     {
         private readonly BlobContainerClient _containerClient;
-        private readonly IHlsBlobPathResolver _blobPathResolver;
-        private readonly BlobUploadOptions _manifestsUploadOptions;
-        private readonly BlobUploadOptions _tsFilesUploadOptions;
+        private readonly HlsAzureBlobStorageConfiguration _config;
         private readonly ILogger _logger;
 
         public HlsAzureBlobStorageAdapter(
             BlobContainerClient containerClient,
-            BlobUploadOptions manifestsUploadOptions,
-            BlobUploadOptions tsFilesUploadOptions,
-            IHlsBlobPathResolver blobPathResolver,
+            HlsAzureBlobStorageConfiguration config,
             ILogger<HlsAzureBlobStorageAdapter> logger)
         {
             _containerClient = containerClient;
-            _manifestsUploadOptions = manifestsUploadOptions;
-            _tsFilesUploadOptions = tsFilesUploadOptions;
-            _blobPathResolver = blobPathResolver;
+            _config = config;
             _logger = logger;
         }
 
@@ -63,10 +56,10 @@ namespace LiveStreamingServerNet.Transmuxer.AzureBlobStorage.Internal
             {
                 try
                 {
-                    var blobPath = _blobPathResolver.ResolveBlobPath(context, tsFileName);
+                    var blobPath = _config.BlobPathResolver.ResolveBlobPath(context, tsFileName);
                     var blobClient = _containerClient.GetBlobClient(blobPath);
 
-                    var response = await blobClient.UploadAsync(tsFilePath, _tsFilesUploadOptions, cancellationToken);
+                    var response = await blobClient.UploadAsync(tsFilePath, _config.TsFilesUploadOptions, cancellationToken);
                     return new StoredTsFile(tsFileName, blobClient.Uri);
                 }
                 catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
@@ -102,10 +95,10 @@ namespace LiveStreamingServerNet.Transmuxer.AzureBlobStorage.Internal
             {
                 try
                 {
-                    var blobPath = _blobPathResolver.ResolveBlobPath(context, name);
+                    var blobPath = _config.BlobPathResolver.ResolveBlobPath(context, name);
                     var blobClient = _containerClient.GetBlobClient(blobPath);
 
-                    await blobClient.UploadAsync(new BinaryData(content), _manifestsUploadOptions, cancellationToken);
+                    await blobClient.UploadAsync(new BinaryData(content), _config.ManifestsUploadOptions, cancellationToken);
                     return new StoredManifest(name, blobClient.Uri);
                 }
                 catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
@@ -138,7 +131,7 @@ namespace LiveStreamingServerNet.Transmuxer.AzureBlobStorage.Internal
             {
                 try
                 {
-                    var blobPath = _blobPathResolver.ResolveBlobPath(context, tsFileName);
+                    var blobPath = _config.BlobPathResolver.ResolveBlobPath(context, tsFileName);
                     var blobClient = _containerClient.GetBlobClient(blobPath);
 
                     await blobClient.DeleteAsync(cancellationToken: cancellationToken);

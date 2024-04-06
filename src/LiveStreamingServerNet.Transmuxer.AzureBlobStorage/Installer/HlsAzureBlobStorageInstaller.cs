@@ -1,6 +1,5 @@
 ﻿using Azure.Storage.Blobs;
-using Azure.Storage.Blobs.Models;
-using LiveStreamingServerNet.Transmuxer.AzureBlobStorage.Contracts;
+using LiveStreamingServerNet.Transmuxer.AzureBlobStorage.Configurations;
 using LiveStreamingServerNet.Transmuxer.AzureBlobStorage.Internal;
 using LiveStreamingServerNet.Transmuxer.Hls.Contracts;
 using LiveStreamingServerNet.Transmuxer.Installer.Contracts;
@@ -14,18 +13,17 @@ namespace LiveStreamingServerNet.Transmuxer.AzureBlobStorage.Installer
         public static IHlsUploaderConfigurator AddAzureBlobStorage(
             this IHlsUploaderConfigurator configurator,
             BlobContainerClient blobContainerClient,
-            BlobUploadOptions? manifestsUploadOptions = null,
-            BlobUploadOptions? tsFilesUploadOptions = null,
-            IHlsBlobPathResolver? blobPathResolver = null)
+            Action<HlsAzureBlobStorageConfiguration>? configure)
         {
             var services = configurator.Services;
+
+            var config = new HlsAzureBlobStorageConfiguration();
+            configure?.Invoke(config);
 
             services.AddSingleton<IHlsStorageAdapter>(svc =>
                 new HlsAzureBlobStorageAdapter(
                     blobContainerClient,
-                    manifestsUploadOptions ?? new BlobUploadOptions(),
-                    tsFilesUploadOptions ?? new BlobUploadOptions(),
-                    blobPathResolver ?? new DefaultHlsBlobPathResolver(),
+                    config,
                     svc.GetRequiredService<ILogger<HlsAzureBlobStorageAdapter>>()
                 )
             );
