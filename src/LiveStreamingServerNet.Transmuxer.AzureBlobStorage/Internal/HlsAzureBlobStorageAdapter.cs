@@ -12,17 +12,20 @@ namespace LiveStreamingServerNet.Transmuxer.AzureBlobStorage.Internal
     {
         private readonly BlobContainerClient _containerClient;
         private readonly IHlsBlobPathResolver _blobPathResolver;
-        private readonly BlobUploadOptions _blobUploadOptions;
+        private readonly BlobUploadOptions _manifestsUploadOptions;
+        private readonly BlobUploadOptions _tsFilesUploadOptions;
         private readonly ILogger _logger;
 
         public HlsAzureBlobStorageAdapter(
             BlobContainerClient containerClient,
-            BlobUploadOptions blobUploadOptions,
+            BlobUploadOptions manifestsUploadOptions,
+            BlobUploadOptions tsFilesUploadOptions,
             IHlsBlobPathResolver blobPathResolver,
             ILogger<HlsAzureBlobStorageAdapter> logger)
         {
             _containerClient = containerClient;
-            _blobUploadOptions = blobUploadOptions;
+            _manifestsUploadOptions = manifestsUploadOptions;
+            _tsFilesUploadOptions = tsFilesUploadOptions;
             _blobPathResolver = blobPathResolver;
             _logger = logger;
         }
