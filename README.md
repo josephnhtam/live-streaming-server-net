@@ -11,11 +11,15 @@ This open-source project provides an implementation of an RTMP live streaming se
 - **Custom authorization**: Enables you to implement custom authorization mechanisms for accessing live streams.
 - **Admin panel**: Includes an admin panel that provides an user interface for managing and monitoring the live streaming server.
 
-## Roadmap
+## In-Progress
 
 - **Custom Kubernetes Operator and Kubernetes Integration**: The objective is to achieve automatic horizontal autoscaling by scaling out the pods when more streams are published, and scaling in the pods when streams are deleted, all without affecting the existing connections.
 - **Redis Integration**: Integrate with Redis to share stream information among pods in the fleet.
 - **Cloud Storage Integration**: Enabling real-time uploading of HLS files to cloud storage services like Azure Blob Storage, Google Cloud Storage, and AWS S3, which ensures scalable and efficient content distribution through CDN.
+
+## Roadmap
+
+- **Edge Server**: Although edge servers are not necessary for serving HLS, they are required for serving RTMP and FLV streams in a cluster configuration.
 
 ## Quick Start
 
