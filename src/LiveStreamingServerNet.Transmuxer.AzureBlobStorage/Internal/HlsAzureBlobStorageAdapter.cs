@@ -66,7 +66,7 @@ namespace LiveStreamingServerNet.Transmuxer.AzureBlobStorage.Internal
                     var blobPath = _blobPathResolver.ResolveBlobPath(context, tsFileName);
                     var blobClient = _containerClient.GetBlobClient(blobPath);
 
-                    var response = await blobClient.UploadAsync(tsFilePath, _blobUploadOptions, cancellationToken);
+                    var response = await blobClient.UploadAsync(tsFilePath, _tsFilesUploadOptions, cancellationToken);
                     return new StoredTsFile(tsFileName, blobClient.Uri);
                 }
                 catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
@@ -105,7 +105,7 @@ namespace LiveStreamingServerNet.Transmuxer.AzureBlobStorage.Internal
                     var blobPath = _blobPathResolver.ResolveBlobPath(context, name);
                     var blobClient = _containerClient.GetBlobClient(blobPath);
 
-                    await blobClient.UploadAsync(new BinaryData(content), true, cancellationToken);
+                    await blobClient.UploadAsync(new BinaryData(content), _manifestsUploadOptions, cancellationToken);
                     return new StoredManifest(name, blobClient.Uri);
                 }
                 catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
