@@ -1,5 +1,5 @@
 ﻿using Google.Cloud.Storage.V1;
-using LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Contracts;
+using LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Configurations;
 using LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Internal.Logging;
 using LiveStreamingServerNet.Transmuxer.Hls;
 using LiveStreamingServerNet.Transmuxer.Hls.Contracts;
@@ -12,24 +12,18 @@ namespace LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Internal
     {
         private readonly StorageClient _storageClient;
         private readonly string _bucket;
-        private readonly HlsUploadObjectOptions _manifestsUploadObjectOptions;
-        private readonly HlsUploadObjectOptions _tsFilesUploadObjectOptions;
-        private readonly IHlsObjectPathResolver _objectPathResolver;
+        private readonly HlsGoogleCloudStorageConfiguration _config;
         private readonly ILogger _logger;
 
         public HlsGoogleCloudStorageAdapter(
             StorageClient storageClient,
             string bucket,
-            HlsUploadObjectOptions manifestsUploadObjectOptions,
-            HlsUploadObjectOptions tsFilesUploadObjectOptions,
-            IHlsObjectPathResolver objectPathResolver,
+            HlsGoogleCloudStorageConfiguration config,
             ILogger<HlsGoogleCloudStorageAdapter> logger)
         {
             _storageClient = storageClient;
             _bucket = bucket;
-            _manifestsUploadObjectOptions = manifestsUploadObjectOptions;
-            _tsFilesUploadObjectOptions = tsFilesUploadObjectOptions;
-            _objectPathResolver = objectPathResolver;
+            _config = config;
             _logger = logger;
         }
 
@@ -71,13 +65,13 @@ namespace LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Internal
                     var @object = new Google.Apis.Storage.v1.Data.Object
                     {
                         Bucket = _bucket,
-                        Name = _objectPathResolver.ResolveObjectPath(context, tsFileName),
-                        CacheControl = _tsFilesUploadObjectOptions.CacheControl
+                        Name = _config.ObjectPathResolver.ResolveObjectPath(context, tsFileName),
+                        CacheControl = _config.TsFilesCacheControl
                     };
 
                     var response = await _storageClient.UploadObjectAsync(
                         @object, fileStream,
-                        options: _tsFilesUploadObjectOptions.Options,
+                        options: _config.TsFilesUploadObjectOptions,
                         cancellationToken: cancellationToken);
 
                     return new StoredTsFile(tsFileName, new Uri($"https://storage.googleapis.com/{response.Id}"));
@@ -120,13 +114,13 @@ namespace LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Internal
                     var @object = new Google.Apis.Storage.v1.Data.Object
                     {
                         Bucket = _bucket,
-                        Name = _objectPathResolver.ResolveObjectPath(context, name),
-                        CacheControl = _manifestsUploadObjectOptions.CacheControl
+                        Name = _config.ObjectPathResolver.ResolveObjectPath(context, name),
+                        CacheControl = _config.ManifestsCacheControl
                     };
 
                     var response = await _storageClient.UploadObjectAsync(
                         @object, contentStream,
-                        options: _manifestsUploadObjectOptions.Options,
+                        options: _config.ManifestsUploadObjectOptions,
                         cancellationToken: cancellationToken);
 
                     return new StoredManifest(name, new Uri($"https://storage.googleapis.com/{response.Id}"));
@@ -161,7 +155,7 @@ namespace LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Internal
             {
                 try
                 {
-                    var objectPath = _objectPathResolver.ResolveObjectPath(context, tsFileName);
+                    var objectPath = _config.ObjectPathResolver.ResolveObjectPath(context, tsFileName);
 
                     await _storageClient.DeleteObjectAsync(_bucket, objectPath, cancellationToken: cancellationToken);
                 }
