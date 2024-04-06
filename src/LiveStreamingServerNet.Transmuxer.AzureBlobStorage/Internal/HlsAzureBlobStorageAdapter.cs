@@ -3,7 +3,6 @@ using LiveStreamingServerNet.Transmuxer.AzureBlobStorage.Contracts;
 using LiveStreamingServerNet.Transmuxer.AzureBlobStorage.Internal.Logging;
 using LiveStreamingServerNet.Transmuxer.Hls;
 using LiveStreamingServerNet.Transmuxer.Hls.Contracts;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace LiveStreamingServerNet.Transmuxer.AzureBlobStorage.Internal
@@ -15,7 +14,7 @@ namespace LiveStreamingServerNet.Transmuxer.AzureBlobStorage.Internal
         private readonly ILogger _logger;
 
         public HlsAzureBlobStorageAdapter(
-            [FromKeyedServices("hls-blob-container-client")] BlobContainerClient containerClient,
+            BlobContainerClient containerClient,
             IHlsBlobPathResolver blobPathResolver,
             ILogger<HlsAzureBlobStorageAdapter> logger)
         {

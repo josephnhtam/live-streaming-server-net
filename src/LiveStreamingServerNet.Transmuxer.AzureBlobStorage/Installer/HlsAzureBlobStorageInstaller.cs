@@ -1,11 +1,10 @@
 ﻿using Azure.Storage.Blobs;
 using LiveStreamingServerNet.Transmuxer.AzureBlobStorage.Contracts;
-using LiveStreamingServerNet.Transmuxer.AzureBlobStorage.Installer.Contracts;
 using LiveStreamingServerNet.Transmuxer.AzureBlobStorage.Internal;
 using LiveStreamingServerNet.Transmuxer.Hls.Contracts;
 using LiveStreamingServerNet.Transmuxer.Installer.Contracts;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Logging;
 
 namespace LiveStreamingServerNet.Transmuxer.AzureBlobStorage.Installer
 {
@@ -14,17 +13,17 @@ namespace LiveStreamingServerNet.Transmuxer.AzureBlobStorage.Installer
         public static IHlsUploaderConfigurator AddAzureBlobStorage(
             this IHlsUploaderConfigurator configurator,
             BlobContainerClient blobContainerClient,
-            Action<IHlsAzureBlobStorageConfigurator>? configure = null)
+            IHlsBlobPathResolver? blobPathResolver = null)
         {
             var services = configurator.Services;
 
-            services.AddKeyedSingleton("hls-blob-container-client", blobContainerClient)
-                    .AddSingleton<IHlsStorageAdapter, HlsAzureBlobStorageAdapter>();
-
-            if (configure != null)
-                configure.Invoke(new HlsAzureBlobStorageConfigurator(services));
-
-            services.TryAddSingleton<IHlsBlobPathResolver, DefaultHlsBlobPathResolver>();
+            services.AddSingleton<IHlsStorageAdapter>(svc =>
+                new HlsAzureBlobStorageAdapter(
+                    blobContainerClient,
+                    blobPathResolver ?? new DefaultHlsBlobPathResolver(),
+                    svc.GetRequiredService<ILogger<HlsAzureBlobStorageAdapter>>()
+                )
+            );
 
             return configurator;
         }
