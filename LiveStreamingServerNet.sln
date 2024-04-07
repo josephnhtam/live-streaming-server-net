@@ -41,7 +41,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.Tran
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.Transmuxer.GoogleCloudStorage", "src\LiveStreamingServerNet.Transmuxer.GoogleCloudStorage\LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.csproj", "{BB88974C-82E1-4470-8FEE-8FB2534F40FA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveStreamingServerNet.Transmuxer.AmazonS3", "src\LiveStreamingServerNet.Transmuxer.AmazonS3\LiveStreamingServerNet.Transmuxer.AmazonS3.csproj", "{F6F84F4D-91C1-4A65-A6A7-C52AEE84B91E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.Transmuxer.AmazonS3", "src\LiveStreamingServerNet.Transmuxer.AmazonS3\LiveStreamingServerNet.Transmuxer.AmazonS3.csproj", "{F6F84F4D-91C1-4A65-A6A7-C52AEE84B91E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{C85AC04A-5060-4C4B-830A-D7F51F602749}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveStreamingServerNet.Networking.Test", "test\LiveStreamingServerNet.Networking.Test\LiveStreamingServerNet.Networking.Test.csproj", "{67DCDCEA-6E4F-476D-B993-FF5BA02ACA7F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -125,6 +129,10 @@ Global
 		{F6F84F4D-91C1-4A65-A6A7-C52AEE84B91E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F6F84F4D-91C1-4A65-A6A7-C52AEE84B91E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F6F84F4D-91C1-4A65-A6A7-C52AEE84B91E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{67DCDCEA-6E4F-476D-B993-FF5BA02ACA7F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{67DCDCEA-6E4F-476D-B993-FF5BA02ACA7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{67DCDCEA-6E4F-476D-B993-FF5BA02ACA7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{67DCDCEA-6E4F-476D-B993-FF5BA02ACA7F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -135,6 +143,7 @@ Global
 		{3C0C2F0E-E274-4F36-8CB1-CF60441FA46A} = {45761E33-F086-403D-BB6E-8059F8CC6BA8}
 		{B4B870FA-2634-46E5-9586-05E5CACF6D6F} = {45761E33-F086-403D-BB6E-8059F8CC6BA8}
 		{7EFF979E-F81E-4938-8504-A53FA9E02AFD} = {45761E33-F086-403D-BB6E-8059F8CC6BA8}
+		{67DCDCEA-6E4F-476D-B993-FF5BA02ACA7F} = {C85AC04A-5060-4C4B-830A-D7F51F602749}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0A9A3928-2852-49B9-85EF-F00480E9FE7F}
