@@ -23,7 +23,8 @@ namespace LiveStreamingServerNet.Networking.Installer
                     .AddSingleton<IClientFactory, ClientFactory>()
                     .AddSingleton<INetBufferSenderFactory, NetBufferSenderFactory>()
                     .AddSingleton<INetworkStreamFactory, NetworkStreamFactory>()
-                    .AddSingleton<IClientHandlerFactory, TClientHandlerFactory>(); ;
+                    .AddSingleton<IClientHandlerFactory, TClientHandlerFactory>()
+                    .AddSingleton<ISslStreamFactory, SslStreamFactory>();
 
             services.AddSingleton<IServerEventDispatcher, ServerEventDispatcher>();
 

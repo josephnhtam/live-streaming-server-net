@@ -20,7 +20,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\LiveStreamingServerNet.Utilities\LiveStreamingServerNet.Utilities.csproj" />
+    <InternalsVisibleTo Include="DynamicProxyGenAssembly2"/>
+    <InternalsVisibleTo Include="LiveStreamingServerNet.Networking.Test" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\LiveStreamingServerNet.Utilities\LiveStreamingServerNet.Utilities.csproj" />
+  </ItemGroup>
+  
 </Project>

@@ -1,19 +1,15 @@
-﻿using LiveStreamingServerNet.Networking.Configurations;
-using LiveStreamingServerNet.Networking.Installer.Contracts;
+﻿using LiveStreamingServerNet.Networking.Installer.Contracts;
 using LiveStreamingServerNet.Networking.Internal.Contracts;
-using Microsoft.Extensions.Options;
-using System.Net.Security;
-using System.Security.Cryptography.X509Certificates;
 
 namespace LiveStreamingServerNet.Networking.Internal
 {
     internal class NetworkStreamFactory : INetworkStreamFactory
     {
-        private readonly SecurityConfiguration _config;
+        private readonly ISslStreamFactory _sslStreamFactory;
 
-        public NetworkStreamFactory(IOptions<SecurityConfiguration> config)
+        public NetworkStreamFactory(ISslStreamFactory sslStreamFactory)
         {
-            _config = config.Value;
+            _sslStreamFactory = sslStreamFactory;
         }
 
         public async Task<Stream> CreateNetworkStreamAsync(
@@ -21,23 +17,12 @@ namespace LiveStreamingServerNet.Networking.Internal
             ServerEndPoint serverEndPoint,
             CancellationToken cancellationToken)
         {
-            if (serverEndPoint.IsSecure && _config.ServerCertificate != null)
+            if (serverEndPoint.IsSecure)
             {
-                var sslStream = new SslStream(tcpClient.GetStream(), false);
+                var sslStream = await _sslStreamFactory.CreateAsync(tcpClient, cancellationToken);
 
-                var options = new SslServerAuthenticationOptions
-                {
-                    ServerCertificate = _config.ServerCertificate,
-                    ClientCertificateRequired = false,
-                    EnabledSslProtocols = _config.SslProtocols,
-                    CertificateRevocationCheckMode = _config.CheckCertificateRevocation ?
-                        X509RevocationMode.Online : X509RevocationMode.NoCheck,
-                    EncryptionPolicy = EncryptionPolicy.RequireEncryption,
-                };
-
-                await sslStream.AuthenticateAsServerAsync(options, cancellationToken);
-
-                return sslStream;
+                if (sslStream != null)
+                    return sslStream;
             }
 
             return tcpClient.GetStream();
