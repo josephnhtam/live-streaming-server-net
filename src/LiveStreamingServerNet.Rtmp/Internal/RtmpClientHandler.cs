@@ -13,6 +13,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal
     {
         private readonly IMediator _mediator;
         private readonly IRtmpServerConnectionEventDispatcher _eventDispatcher;
+        private readonly IRtmpClientContextFactory _clientContextFactory;
         private readonly ILogger _logger;
         private readonly IBandwidthLimiter? _bandwidthLimiter;
 
@@ -21,18 +22,20 @@ namespace LiveStreamingServerNet.Rtmp.Internal
         public RtmpClientHandler(
             IMediator mediator,
             IRtmpServerConnectionEventDispatcher eventDispatcher,
+            IRtmpClientContextFactory clientContextFactory,
             ILogger<RtmpClientHandler> logger,
             IBandwidthLimiterFactory? bandwidthLimiterFactory = null)
         {
             _mediator = mediator;
             _eventDispatcher = eventDispatcher;
+            _clientContextFactory = clientContextFactory;
             _logger = logger;
             _bandwidthLimiter = bandwidthLimiterFactory?.Create();
         }
 
         public async Task InitializeAsync(IClientHandle client)
         {
-            _clientContext = new RtmpClientContext(client);
+            _clientContext = _clientContextFactory.Create(client);
             await OnRtmpClientCreatedAsync();
         }
 
