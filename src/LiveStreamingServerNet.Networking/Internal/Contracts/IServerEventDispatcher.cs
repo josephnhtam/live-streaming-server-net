@@ -1,11 +1,11 @@
-﻿using System.Net.Sockets;
+﻿using LiveStreamingServerNet.Networking.Contracts;
 
-namespace LiveStreamingServerNet.Networking.Contracts
+namespace LiveStreamingServerNet.Networking.Internal.Contracts
 {
     internal interface IServerEventDispatcher
     {
-        Task ListenerCreatedAsync(TcpListener tcpListener);
-        Task ClientAcceptedAsync(TcpClient tcpClient);
+        Task ListenerCreatedAsync(ITcpListener tcpListener);
+        Task ClientAcceptedAsync(ITcpClient tcpClient);
         Task ClientConnectedAsync(IClientHandle client);
         Task ClientDisconnectedAsync(IClientHandle client);
         Task ServerStartedAsync();

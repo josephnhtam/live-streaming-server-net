@@ -23,7 +23,7 @@ namespace LiveStreamingServerNet.Networking.Logging
         [LoggerMessage(LogLevel.Error, "An error occurred in the server loop")]
         public static partial void ServerLoopError(this ILogger logger, Exception exception);
 
-        [LoggerMessage(LogLevel.Error, "ClientId: {ClientId} | An error occurred in the client client loop")]
+        [LoggerMessage(LogLevel.Error, "ClientId: {ClientId} | An error occurred in the client loop")]
         public static partial void ClientLoopError(this ILogger logger, uint clientId, Exception exception);
 
         [LoggerMessage(LogLevel.Information, "ClientId: {ClientId} | Connected")]

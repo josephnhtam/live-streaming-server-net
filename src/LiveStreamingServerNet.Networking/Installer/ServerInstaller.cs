@@ -1,5 +1,7 @@
 ﻿using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.Networking.Installer.Contracts;
+using LiveStreamingServerNet.Networking.Internal;
+using LiveStreamingServerNet.Networking.Internal.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
@@ -15,10 +17,15 @@ namespace LiveStreamingServerNet.Networking.Installer
 
             services.AddSingleton<IServer, Server>()
                     .AddSingleton<IServerHandle>(x => x.GetRequiredService<IServer>())
-                    .AddSingleton<IClientFactory, ClientFactory>();
+                    .AddSingleton<ITcpListenerFactory, TcpListenerFactory>();
 
-            services.AddSingleton<IServerEventDispatcher, ServerEventDispatcher>()
-                    .AddSingleton<IClientHandlerFactory, TClientHandlerFactory>();
+            services.AddSingleton<IClientManager, ClientManager>()
+                    .AddSingleton<IClientFactory, ClientFactory>()
+                    .AddSingleton<INetBufferSenderFactory, NetBufferSenderFactory>()
+                    .AddSingleton<INetworkStreamFactory, NetworkStreamFactory>()
+                    .AddSingleton<IClientHandlerFactory, TClientHandlerFactory>(); ;
+
+            services.AddSingleton<IServerEventDispatcher, ServerEventDispatcher>();
 
             services.TryAddSingleton<INetBufferPool, NetBufferPool>();
 

@@ -1,39 +1,36 @@
 ﻿using LiveStreamingServerNet.Networking.Contracts;
+using LiveStreamingServerNet.Networking.Internal.Contracts;
 using LiveStreamingServerNet.Networking.Logging;
 using Microsoft.Extensions.Logging;
-using System.Collections.Concurrent;
 using System.Net;
 using System.Net.Sockets;
 
-namespace LiveStreamingServerNet.Networking
+namespace LiveStreamingServerNet.Networking.Internal
 {
     internal sealed class Server : IServer
     {
-        private readonly ConcurrentDictionary<uint, ClientTask> _clientTasks = new();
-        private readonly IClientFactory _clientFactory;
-        private readonly IClientHandlerFactory _clientHandlerFactory;
+        private readonly ITcpListenerFactory _tcpListenerFactory;
+        private readonly IClientManager _clientManager;
         private readonly IServerEventDispatcher _eventDispatcher;
         private readonly ILogger _logger;
         private int _isStarted;
-        private uint _nextClientId;
 
         public IServiceProvider Services { get; }
         public bool IsStarted => _isStarted == 1;
-        public IList<IClientHandle> Clients => GetClientHandles();
+        public IReadOnlyList<IClientHandle> Clients => _clientManager.GetClientHandles();
 
         public IReadOnlyList<ServerEndPoint>? EndPoints { get; private set; }
-        IReadOnlyList<IClientHandle> IServerHandle.Clients => Clients.AsReadOnly();
 
         public Server(
             IServiceProvider services,
-            IClientFactory clientFactory,
-            IClientHandlerFactory clientHandlerFactory,
+            ITcpListenerFactory tcpListenerFactory,
+            IClientManager clientManager,
             IServerEventDispatcher eventDispatcher,
             ILogger<Server> logger)
         {
             Services = services;
-            _clientFactory = clientFactory;
-            _clientHandlerFactory = clientHandlerFactory;
+            _tcpListenerFactory = tcpListenerFactory;
+            _clientManager = clientManager;
             _eventDispatcher = eventDispatcher;
             _logger = logger;
         }
@@ -70,7 +67,7 @@ namespace LiveStreamingServerNet.Networking
                 serverException = ex;
             }
 
-            await WaitUntilAllClientTasksCompleteAsync();
+            await _clientManager.WaitUntilAllClientTasksCompleteAsync();
 
             StopAllTcpListeners(serverListeners);
 
@@ -78,11 +75,6 @@ namespace LiveStreamingServerNet.Networking
 
             if (serverException != null)
                 throw serverException;
-        }
-
-        private async Task WaitUntilAllClientTasksCompleteAsync()
-        {
-            await Task.WhenAll(_clientTasks.Select(x => x.Value.Task));
         }
 
         private void StopAllTcpListeners(List<ServerListener> serverListeners)
@@ -115,7 +107,7 @@ namespace LiveStreamingServerNet.Networking
             return serverListeners;
         }
 
-        private async Task RunServerLoopAsync(TcpListener tcpListener, ServerEndPoint serverEndPoint, CancellationTokenSource cts)
+        private async Task RunServerLoopAsync(ITcpListenerInternal tcpListener, ServerEndPoint serverEndPoint, CancellationTokenSource cts)
         {
             var cancellationToken = cts.Token;
 
@@ -123,7 +115,7 @@ namespace LiveStreamingServerNet.Networking
             {
                 try
                 {
-                    await AcceptClientAsync(tcpListener, serverEndPoint, cancellationToken);
+                    await _clientManager.AcceptClientAsync(tcpListener, serverEndPoint, cancellationToken);
                 }
                 catch (SocketException ex)
                 {
@@ -142,30 +134,6 @@ namespace LiveStreamingServerNet.Networking
             }
         }
 
-        private async Task AcceptClientAsync(TcpListener tcpListener, ServerEndPoint serverEndPoint, CancellationToken cancellationToken)
-        {
-            var tcpClient = await tcpListener.AcceptTcpClientAsync(cancellationToken);
-            tcpClient.NoDelay = true;
-
-            await OnClientAcceptedAsync(tcpClient);
-
-            var clientId = GetNextClientId();
-            var client = CreateClient(clientId, tcpClient);
-
-            var clientHandler = CreateClientHandler();
-            var clientTask = client.RunAsync(clientHandler, serverEndPoint, cancellationToken);
-
-            _clientTasks.TryAdd(clientId, new(client, clientTask));
-            await OnClientConnectedAsync(client);
-
-            _ = clientTask.ContinueWith(async _ =>
-            {
-                await OnClientDisconnected(client);
-                _clientTasks.TryRemove(clientId, out var removed);
-                await client.DisposeAsync();
-            });
-        }
-
         private void ValidateAndSetStarted()
         {
             if (Interlocked.CompareExchange(ref _isStarted, 1, 0) == 1)
@@ -174,56 +142,16 @@ namespace LiveStreamingServerNet.Networking
             }
         }
 
-        private List<IClientHandle> GetClientHandles()
+        private async Task<ITcpListenerInternal> CreateTcpListenerAsync(IPEndPoint localEndPoint)
         {
-            return _clientTasks.Select(x => x.Value.Client).OfType<IClientHandle>().ToList();
-        }
-
-        private uint GetNextClientId()
-        {
-            return Interlocked.Increment(ref _nextClientId);
-        }
-
-        private async Task<TcpListener> CreateTcpListenerAsync(IPEndPoint localEndPoint)
-        {
-            var listener = new TcpListener(localEndPoint);
+            var listener = _tcpListenerFactory.Create(localEndPoint);
             await OnListenerCreatedAsync(listener);
             return listener;
         }
 
-        private IClient CreateClient(uint clientId, TcpClient tcpClient)
-        {
-            return _clientFactory.Create(clientId, tcpClient);
-        }
-
-        public IClientHandle? GetClient(uint clientId)
-        {
-            return _clientTasks.GetValueOrDefault(clientId)?.Client;
-        }
-
-        private IClientHandler CreateClientHandler()
-        {
-            return _clientHandlerFactory.CreateClientHandler();
-        }
-
-        private async Task OnListenerCreatedAsync(TcpListener tcpListener)
+        private async Task OnListenerCreatedAsync(ITcpListener tcpListener)
         {
             await _eventDispatcher.ListenerCreatedAsync(tcpListener);
-        }
-
-        private async Task OnClientAcceptedAsync(TcpClient tcpClient)
-        {
-            await _eventDispatcher.ClientAcceptedAsync(tcpClient);
-        }
-
-        private async Task OnClientConnectedAsync(IClientHandle client)
-        {
-            await _eventDispatcher.ClientConnectedAsync(client);
-        }
-
-        private async Task OnClientDisconnected(IClientHandle client)
-        {
-            await _eventDispatcher.ClientDisconnectedAsync(client);
         }
 
         private async Task OnServerStartedAsync()
@@ -238,7 +166,11 @@ namespace LiveStreamingServerNet.Networking
             _logger.ServerStopped();
         }
 
-        private record ServerListener(TcpListener TcpListener, ServerEndPoint ServerEndPoint);
-        private record ClientTask(IClient Client, Task Task);
+        public IClientHandle? GetClient(uint clientId)
+        {
+            return _clientManager.GetClient(clientId);
+        }
+
+        private record ServerListener(ITcpListenerInternal TcpListener, ServerEndPoint ServerEndPoint);
     }
 }

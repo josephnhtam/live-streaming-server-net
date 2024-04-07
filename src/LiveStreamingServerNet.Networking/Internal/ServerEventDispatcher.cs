@@ -1,11 +1,11 @@
 ﻿using LiveStreamingServerNet.Networking.Contracts;
+using LiveStreamingServerNet.Networking.Internal.Contracts;
 using LiveStreamingServerNet.Networking.Logging;
 using LiveStreamingServerNet.Utilities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using System.Net.Sockets;
 
-namespace LiveStreamingServerNet.Networking
+namespace LiveStreamingServerNet.Networking.Internal
 {
     internal class ServerEventDispatcher : IServerEventDispatcher
     {
@@ -25,7 +25,7 @@ namespace LiveStreamingServerNet.Networking
             return _eventHandlers;
         }
 
-        public async Task ListenerCreatedAsync(TcpListener tcpListener)
+        public async Task ListenerCreatedAsync(ITcpListener tcpListener)
         {
             try
             {
@@ -40,7 +40,7 @@ namespace LiveStreamingServerNet.Networking
             }
         }
 
-        public async Task ClientAcceptedAsync(TcpClient tcpClient)
+        public async Task ClientAcceptedAsync(ITcpClient tcpClient)
         {
             try
             {
