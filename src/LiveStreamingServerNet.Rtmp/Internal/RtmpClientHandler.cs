@@ -56,7 +56,8 @@ namespace LiveStreamingServerNet.Rtmp.Internal
 
                 return result.Succeeded;
             }
-            catch (IOException)
+            catch (Exception ex)
+            when (ex is IOException || (ex is OperationCanceledException && cancellationToken.IsCancellationRequested))
             {
                 return false;
             }
