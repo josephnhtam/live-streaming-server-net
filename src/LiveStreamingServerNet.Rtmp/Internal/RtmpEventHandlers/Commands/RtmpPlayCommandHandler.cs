@@ -22,7 +22,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
         private readonly IRtmpServerContext _serverContext;
         private readonly IRtmpStreamManagerService _streamManager;
         private readonly IRtmpCommandMessageSenderService _commandMessageSender;
-        private readonly IRtmpMediaMessageManagerService _mediaMessageManager;
+        private readonly IRtmpMediaMessageCacherService _mediaMessageCacher;
         private readonly IRtmpServerStreamEventDispatcher _eventDispatch;
         private readonly ILogger<RtmpPlayCommandHandler> _logger;
 
@@ -31,7 +31,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
             IRtmpServerContext serverContext,
             IRtmpStreamManagerService streamManager,
             IRtmpCommandMessageSenderService commandMessageSender,
-            IRtmpMediaMessageManagerService mediaMessageManager,
+            IRtmpMediaMessageCacherService mediaMessageCacher,
             IRtmpServerStreamEventDispatcher eventDispatch,
             ILogger<RtmpPlayCommandHandler> logger)
         {
@@ -39,7 +39,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
             _serverContext = serverContext;
             _streamManager = streamManager;
             _commandMessageSender = commandMessageSender;
-            _mediaMessageManager = mediaMessageManager;
+            _mediaMessageCacher = mediaMessageCacher;
             _eventDispatch = eventDispatch;
             _logger = logger;
         }
@@ -161,19 +161,19 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
             if (publishStreamContext == null)
                 return;
 
-            _mediaMessageManager.SendCachedStreamMetaDataMessage(
+            _mediaMessageCacher.SendCachedStreamMetaDataMessage(
                 clientContext, publishStreamContext,
                 chunkStreamContext.MessageHeader.Timestamp,
                 chunkStreamContext.MessageHeader.MessageStreamId);
 
-            _mediaMessageManager.SendCachedHeaderMessages(
+            _mediaMessageCacher.SendCachedHeaderMessages(
                 clientContext, publishStreamContext,
                 chunkStreamContext.MessageHeader.Timestamp,
                 chunkStreamContext.MessageHeader.MessageStreamId);
 
             if (publishStreamContext.GroupOfPicturesCacheActivated)
             {
-                _mediaMessageManager.SendCachedGroupOfPictures(
+                _mediaMessageCacher.SendCachedGroupOfPictures(
                     clientContext, publishStreamContext,
                     chunkStreamContext.MessageHeader.MessageStreamId);
             }

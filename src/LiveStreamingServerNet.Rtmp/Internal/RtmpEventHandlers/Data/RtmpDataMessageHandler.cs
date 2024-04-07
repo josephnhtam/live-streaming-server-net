@@ -11,12 +11,12 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Data
     [RtmpMessageType(RtmpMessageType.DataMessageAmf3)]
     internal class RtmpDataMessageHandler : IRtmpMessageHandler
     {
-        private readonly IRtmpMediaMessageManagerService _mediaMessageManager;
+        private readonly IRtmpMediaMessageCacherService _mediaMessageCacher;
         private readonly IRtmpServerStreamEventDispatcher _eventDispatcher;
 
-        public RtmpDataMessageHandler(IRtmpMediaMessageManagerService mediaMessageManager, IRtmpServerStreamEventDispatcher eventDispatcher)
+        public RtmpDataMessageHandler(IRtmpMediaMessageCacherService mediaMessageCacher, IRtmpServerStreamEventDispatcher eventDispatcher)
         {
-            _mediaMessageManager = mediaMessageManager;
+            _mediaMessageCacher = mediaMessageCacher;
             _eventDispatcher = eventDispatcher;
         }
 
@@ -85,7 +85,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Data
             IRtmpChunkStreamContext chunkStreamContext,
             IRtmpPublishStreamContext publishStreamContext)
         {
-            _mediaMessageManager.SendCachedStreamMetaDataMessage(
+            _mediaMessageCacher.SendCachedStreamMetaDataMessage(
                 clientContext,
                 publishStreamContext,
                 chunkStreamContext.MessageHeader.Timestamp,

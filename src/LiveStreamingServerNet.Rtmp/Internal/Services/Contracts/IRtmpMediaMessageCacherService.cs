@@ -3,16 +3,8 @@ using LiveStreamingServerNet.Rtmp.Internal.Contracts;
 
 namespace LiveStreamingServerNet.Rtmp.Internal.Services.Contracts
 {
-    internal interface IRtmpMediaMessageManagerService : IAsyncDisposable
+    internal interface IRtmpMediaMessageCacherService : IAsyncDisposable
     {
-        ValueTask EnqueueMediaMessageAsync(
-            IRtmpPublishStreamContext publishStreamContext,
-            IReadOnlyList<IRtmpClientContext> subscribers,
-            MediaType mediaType,
-            uint timestamp,
-            bool isSkippable,
-            Action<INetBuffer> payloadWriter);
-
         ValueTask CacheSequenceHeaderAsync(
             IRtmpPublishStreamContext publishStreamContext,
             MediaType mediaType,
@@ -48,8 +40,5 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services.Contracts
             IRtmpClientContext clientContext,
             IRtmpPublishStreamContext publishStreamContext,
             uint streamId);
-
-        void RegisterClient(IRtmpClientContext clientContext);
-        void UnregisterClient(IRtmpClientContext clientContext);
     }
 }

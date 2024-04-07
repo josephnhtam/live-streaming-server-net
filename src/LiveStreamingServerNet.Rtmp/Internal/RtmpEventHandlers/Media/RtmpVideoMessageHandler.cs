@@ -12,16 +12,19 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
     internal class RtmpVideoMessageHandler : IRtmpMessageHandler
     {
         private readonly IRtmpStreamManagerService _streamManager;
-        private readonly IRtmpMediaMessageManagerService _mediaMessageManager;
+        private readonly IRtmpMediaMessageCacherService _mediaMessageCacher;
+        private readonly IRtmpMediaMessageBroadcasterService _mediaMessageBroadcaster;
         private readonly RtmpServerConfiguration _config;
 
         public RtmpVideoMessageHandler(
             IRtmpStreamManagerService streamManager,
-            IRtmpMediaMessageManagerService mediaMessageManager,
+            IRtmpMediaMessageCacherService mediaMessageCacher,
+            IRtmpMediaMessageBroadcasterService mediaMessageBroadcaster,
             IOptions<RtmpServerConfiguration> config)
         {
             _streamManager = streamManager;
-            _mediaMessageManager = mediaMessageManager;
+            _mediaMessageCacher = mediaMessageCacher;
+            _mediaMessageBroadcaster = mediaMessageBroadcaster;
             _config = config.Value;
         }
 
@@ -64,7 +67,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
             INetBuffer payloadBuffer,
             IReadOnlyList<IRtmpClientContext> subscribers)
         {
-            await _mediaMessageManager.EnqueueMediaMessageAsync(
+            await _mediaMessageBroadcaster.BroadcastMediaMessageAsync(
                 publishStreamContext,
                 subscribers,
                 MediaType.Video,
@@ -89,24 +92,24 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
 
                 if (publishStreamContext.GroupOfPicturesCacheActivated && frameType == VideoFrameType.KeyFrame)
                 {
-                    await _mediaMessageManager.ClearGroupOfPicturesCacheAsync(publishStreamContext);
+                    await _mediaMessageCacher.ClearGroupOfPicturesCacheAsync(publishStreamContext);
                 }
 
                 if (frameType == VideoFrameType.KeyFrame && avcPackageType == AVCPacketType.SequenceHeader)
                 {
-                    await _mediaMessageManager.CacheSequenceHeaderAsync(publishStreamContext, MediaType.Video, payloadBuffer);
+                    await _mediaMessageCacher.CacheSequenceHeaderAsync(publishStreamContext, MediaType.Video, payloadBuffer);
                     return true;
                 }
 
                 if (publishStreamContext.GroupOfPicturesCacheActivated && avcPackageType == AVCPacketType.NALU)
                 {
-                    await _mediaMessageManager.CachePictureAsync(publishStreamContext, MediaType.Video, payloadBuffer, chunkStreamContext.MessageHeader.Timestamp);
+                    await _mediaMessageCacher.CachePictureAsync(publishStreamContext, MediaType.Video, payloadBuffer, chunkStreamContext.MessageHeader.Timestamp);
                 }
             }
             else if (publishStreamContext.GroupOfPicturesCacheActivated)
             {
                 publishStreamContext.GroupOfPicturesCacheActivated = false;
-                await _mediaMessageManager.ClearGroupOfPicturesCacheAsync(publishStreamContext);
+                await _mediaMessageCacher.ClearGroupOfPicturesCacheAsync(publishStreamContext);
             }
 
             payloadBuffer.MoveTo(0);

@@ -12,16 +12,16 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
     {
         private readonly IRtmpUserControlMessageSenderService _userControlMessageSender;
         private readonly IRtmpStreamManagerService _streamManager;
-        private readonly IRtmpMediaMessageManagerService _mediaMessageManager;
+        private readonly IRtmpMediaMessageCacherService _mediaMessageCacher;
 
         public RtmpPauseCommandHandler(
             IRtmpUserControlMessageSenderService userControlMessageSender,
             IRtmpStreamManagerService streamManager,
-            IRtmpMediaMessageManagerService mediaMessageManager)
+            IRtmpMediaMessageCacherService mediaMessageCacher)
         {
             _userControlMessageSender = userControlMessageSender;
             _streamManager = streamManager;
-            _mediaMessageManager = mediaMessageManager;
+            _mediaMessageCacher = mediaMessageCacher;
         }
 
         public override ValueTask<bool> HandleAsync(
@@ -66,12 +66,12 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
             if (publishStreamContext == null)
                 return;
 
-            _mediaMessageManager.SendCachedStreamMetaDataMessage(
+            _mediaMessageCacher.SendCachedStreamMetaDataMessage(
                 clientContext, publishStreamContext,
                 chunkStreamContext.MessageHeader.Timestamp,
                 chunkStreamContext.MessageHeader.MessageStreamId);
 
-            _mediaMessageManager.SendCachedHeaderMessages(
+            _mediaMessageCacher.SendCachedHeaderMessages(
                 clientContext, publishStreamContext,
                 chunkStreamContext.MessageHeader.Timestamp,
                 chunkStreamContext.MessageHeader.MessageStreamId);

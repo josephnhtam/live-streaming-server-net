@@ -13,18 +13,21 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
     internal class RtmpAudioMessageHandler : IRtmpMessageHandler
     {
         private readonly IRtmpStreamManagerService _streamManager;
-        private readonly IRtmpMediaMessageManagerService _mediaMessageManager;
+        private readonly IRtmpMediaMessageCacherService _mediaMessageCacher;
+        private readonly IRtmpMediaMessageBroadcasterService _mediaMessagrBroadcaster;
         private readonly RtmpServerConfiguration _config;
         private readonly ILogger _logger;
 
         public RtmpAudioMessageHandler(
             IRtmpStreamManagerService streamManager,
-            IRtmpMediaMessageManagerService mediaMessageManager,
+            IRtmpMediaMessageCacherService mediaMessageCacher,
+            IRtmpMediaMessageBroadcasterService mediaMessageBroadcaster,
             IOptions<RtmpServerConfiguration> config,
             ILogger<RtmpAudioMessageHandler> logger)
         {
             _streamManager = streamManager;
-            _mediaMessageManager = mediaMessageManager;
+            _mediaMessageCacher = mediaMessageCacher;
+            _mediaMessagrBroadcaster = mediaMessageBroadcaster;
             _config = config.Value;
             _logger = logger;
         }
@@ -68,7 +71,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
             INetBuffer payloadBuffer,
             IReadOnlyList<IRtmpClientContext> subscribers)
         {
-            await _mediaMessageManager.EnqueueMediaMessageAsync(
+            await _mediaMessagrBroadcaster.BroadcastMediaMessageAsync(
                 publishStreamContext,
                 subscribers,
                 MediaType.Audio,
@@ -90,12 +93,12 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
                 var aacPackageType = (AACPacketType)payloadBuffer.ReadByte();
                 if (aacPackageType == AACPacketType.SequenceHeader)
                 {
-                    await _mediaMessageManager.CacheSequenceHeaderAsync(publishStreamContext, MediaType.Audio, payloadBuffer);
+                    await _mediaMessageCacher.CacheSequenceHeaderAsync(publishStreamContext, MediaType.Audio, payloadBuffer);
                     return true;
                 }
                 else if (publishStreamContext.GroupOfPicturesCacheActivated)
                 {
-                    await _mediaMessageManager.CachePictureAsync(publishStreamContext, MediaType.Audio, payloadBuffer, chunkStreamContext.MessageHeader.Timestamp);
+                    await _mediaMessageCacher.CachePictureAsync(publishStreamContext, MediaType.Audio, payloadBuffer, chunkStreamContext.MessageHeader.Timestamp);
                 }
             }
 

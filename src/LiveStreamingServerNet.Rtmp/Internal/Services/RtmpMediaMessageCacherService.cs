@@ -7,30 +7,26 @@ using LiveStreamingServerNet.Rtmp.Internal.RtmpHeaders;
 using LiveStreamingServerNet.Rtmp.Internal.Services.Contracts;
 using LiveStreamingServerNet.Rtmp.Logging;
 using LiveStreamingServerNet.Utilities;
-using LiveStreamingServerNet.Utilities.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace LiveStreamingServerNet.Rtmp.Internal.Services
 {
-    internal partial class RtmpMediaMessageManagerService : IRtmpMediaMessageManagerService
+    internal class RtmpMediaMessageCacherService : IRtmpMediaMessageCacherService
     {
         private readonly IRtmpChunkMessageSenderService _chunkMessageSender;
         private readonly IRtmpMediaMessageInterceptionService _interception;
-        private readonly INetBufferPool _netBufferPool;
         private readonly MediaMessageConfiguration _config;
         private readonly ILogger _logger;
 
-        public RtmpMediaMessageManagerService(
+        public RtmpMediaMessageCacherService(
             IRtmpChunkMessageSenderService chunkMessageSender,
             IRtmpMediaMessageInterceptionService interception,
-            INetBufferPool netBufferPool,
             IOptions<MediaMessageConfiguration> config,
-            ILogger<RtmpMediaMessageManagerService> logger)
+            ILogger<RtmpMediaMessageCacherService> logger)
         {
             _chunkMessageSender = chunkMessageSender;
             _interception = interception;
-            _netBufferPool = netBufferPool;
             _config = config.Value;
             _logger = logger;
         }
@@ -155,68 +151,6 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             }
         }
 
-        public async ValueTask EnqueueMediaMessageAsync(
-            IRtmpPublishStreamContext publishStreamContext,
-            IReadOnlyList<IRtmpClientContext> subscribers,
-            MediaType mediaType,
-            uint timestamp,
-            bool isSkippable,
-            Action<INetBuffer> payloadWriter)
-        {
-            subscribers = subscribers.Where(FilterSubscribers).ToList();
-
-            using var netBuffer = _netBufferPool.Obtain();
-            payloadWriter(netBuffer);
-
-            var rentedBuffer = new RentedBuffer(netBuffer.Size, Math.Max(1, subscribers.Count));
-            netBuffer.MoveTo(0).ReadBytes(rentedBuffer.Buffer, 0, rentedBuffer.Size);
-            netBuffer.MoveTo(0);
-
-            await _interception.ReceiveMediaMessageAsync(publishStreamContext.StreamPath, mediaType, rentedBuffer, timestamp, isSkippable);
-
-            if (!subscribers.Any())
-            {
-                rentedBuffer.Unclaim();
-                return;
-            }
-
-            var mediaPackage = new ClientMediaPackage(
-                mediaType,
-                timestamp,
-                publishStreamContext.StreamId,
-                rentedBuffer,
-                isSkippable);
-
-            foreach (var subscriber in subscribers)
-            {
-                var mediaContext = GetMediaContext(subscriber);
-                if (mediaContext == null || !mediaContext.AddPackage(ref mediaPackage))
-                    rentedBuffer.Unclaim();
-            }
-
-            bool FilterSubscribers(IRtmpClientContext subscriber)
-            {
-                var subscriptionContext = subscriber.StreamSubscriptionContext;
-
-                if (subscriptionContext == null)
-                    return false;
-
-                switch (mediaType)
-                {
-                    case MediaType.Audio:
-                        if (!subscriptionContext.IsReceivingAudio)
-                            return false;
-                        break;
-                    case MediaType.Video:
-                        if (!subscriptionContext.IsReceivingVideo)
-                            return false;
-                        break;
-                }
-
-                return true;
-            }
-        }
-
         private void SendMediaPackage(
             IRtmpClientContext clientContext,
             MediaType type,
@@ -241,32 +175,9 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             _chunkMessageSender.Send(clientContext, basicHeader, messageHeader, (netBuffer) => netBuffer.Write(payloadBuffer, 0, payloadSize));
         }
 
-        private async Task SendMediaPackageAsync(
-            IRtmpClientContext clientContext,
-            MediaType type,
-            byte[] payloadBuffer,
-            int payloadSize,
-            uint timestamp,
-            uint streamId,
-            CancellationToken cancellation)
+        public ValueTask DisposeAsync()
         {
-            var basicHeader = new RtmpChunkBasicHeader(
-                    0,
-                    type == MediaType.Video ?
-                    RtmpConstants.VideoMessageChunkStreamId :
-                    RtmpConstants.AudioMessageChunkStreamId);
-
-            var messageHeader = new RtmpChunkMessageHeaderType0(
-                timestamp,
-                type == MediaType.Video ?
-                RtmpMessageType.VideoMessage :
-                RtmpMessageType.AudioMessage,
-                streamId);
-
-            await _chunkMessageSender
-                .SendAsync(clientContext, basicHeader, messageHeader,
-                    (netBuffer) => netBuffer.Write(payloadBuffer, 0, payloadSize))
-                .WithCancellation(cancellation);
+            return ValueTask.CompletedTask;
         }
     }
 }
