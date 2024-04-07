@@ -52,6 +52,7 @@ namespace LiveStreamingServerNet.Networking.Internal
                 await client.DisposeAsync();
             });
         }
+
         private uint GetNextClientId()
         {
             return Interlocked.Increment(ref _nextClientId);
