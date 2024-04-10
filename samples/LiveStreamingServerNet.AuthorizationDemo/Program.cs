@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Net;
 
-namespace LiveStreamingServerNet.RtmpsDemo
+namespace LiveStreamingServerNet.AuthorizationDemo
 {
     public static class Program
     {
