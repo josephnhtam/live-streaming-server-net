@@ -2,17 +2,17 @@
 using LiveStreamingServerNet.Rtmp.Internal.Services.Contracts;
 using LiveStreamingServerNet.Utilities;
 using LiveStreamingServerNet.Utilities.Contracts;
-using Open.Threading;
+using Nito.AsyncEx;
 
 namespace LiveStreamingServerNet.Rtmp.Internal.Services
 {
     internal class RtmpStreamManagerService : IRtmpStreamManagerService
     {
-        private readonly ReaderWriterLockSlim _publishingRwLock = new();
+        private readonly AsyncReaderWriterLock _publishingRwLock = new();
         private readonly Dictionary<IRtmpClientContext, string> _publishStreamPaths = new();
         private readonly Dictionary<string, IRtmpClientContext> _publishingClientContexts = new();
 
-        private readonly ReaderWriterLockSlim _subscribingRwLock = new();
+        private readonly AsyncReaderWriterLock _subscribingRwLock = new();
         private readonly Dictionary<string, List<IRtmpClientContext>> _subscribingClientContexts = new();
         private readonly Dictionary<IRtmpClientContext, string> _subscribedStreamPaths = new();
 
@@ -23,7 +23,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
 
         public IRtmpClientContext? GetPublishingClientContext(string streamPath)
         {
-            using var readLock = _publishingRwLock.ReadLock();
+            using var readLock = _publishingRwLock.ReaderLock();
             return _publishingClientContexts.GetValueOrDefault(streamPath);
         }
 
@@ -35,8 +35,8 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
 
         public PublishingStreamResult StartPublishingStream(IRtmpClientContext publisherClientContext, string streamPath, IReadOnlyDictionary<string, string> streamArguments, out IList<IRtmpClientContext> existingSubscribers)
         {
-            using var publishingWriteLock = _publishingRwLock.WriteLock();
-            using var subscribingReadLock = _subscribingRwLock.ReadLock();
+            using var publishingWriteLock = _publishingRwLock.WriterLock();
+            using var subscribingReadLock = _subscribingRwLock.ReaderLock();
 
             existingSubscribers = null!;
 
@@ -61,8 +61,8 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
 
         public bool StopPublishingStream(IRtmpClientContext publisherClientContext, out IList<IRtmpClientContext> existingSubscribers)
         {
-            using var publishingWriteLock = _publishingRwLock.WriteLock();
-            using var subscribingWriteLock = _subscribingRwLock.WriteLock();
+            using var publishingWriteLock = _publishingRwLock.WriterLock();
+            using var subscribingWriteLock = _subscribingRwLock.WriterLock();
 
             existingSubscribers = null!;
 
@@ -79,14 +79,14 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
 
         public bool IsStreamPathPublishing(string streamPath)
         {
-            using var readLock = _publishingRwLock.ReadLock();
+            using var readLock = _publishingRwLock.ReaderLock();
             return _publishingClientContexts.ContainsKey(streamPath);
         }
 
         public SubscribingStreamResult StartSubscribingStream(IRtmpClientContext subscriberClientContext, uint chunkStreamId, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
-            using var publishingReadLock = _publishingRwLock.ReadLock();
-            using var subscribingWriteLock = _subscribingRwLock.WriteLock();
+            using var publishingReadLock = _publishingRwLock.ReaderLock();
+            using var subscribingWriteLock = _subscribingRwLock.WriterLock();
 
             if (_publishStreamPaths.ContainsKey(subscriberClientContext))
                 return SubscribingStreamResult.AlreadyPublishing;
@@ -110,7 +110,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
 
         public bool StopSubscribingStream(IRtmpClientContext subscriberClientContext)
         {
-            using var subscribingWriteLock = _subscribingRwLock.WriteLock();
+            using var subscribingWriteLock = _subscribingRwLock.WriterLock();
 
             if (!_subscribedStreamPaths.Remove(subscriberClientContext, out var streamPath))
                 return false;
@@ -124,7 +124,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
 
         public IRentable<IReadOnlyList<IRtmpClientContext>> GetSubscribersLocked(string streamPath)
         {
-            var readLock = _subscribingRwLock.ReadLock();
+            var readLock = _subscribingRwLock.ReaderLock();
 
             return new Rentable<IReadOnlyList<IRtmpClientContext>>(
                 _subscribingClientContexts.GetValueOrDefault(streamPath)?.ToList() ?? new List<IRtmpClientContext>(),
@@ -133,7 +133,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
 
         public IReadOnlyList<IRtmpClientContext> GetSubscribers(string streamPath)
         {
-            using var readLock = _subscribingRwLock.ReadLock();
+            using var readLock = _subscribingRwLock.ReaderLock();
             return _subscribingClientContexts.GetValueOrDefault(streamPath)?.ToList() ?? new List<IRtmpClientContext>();
         }
     }

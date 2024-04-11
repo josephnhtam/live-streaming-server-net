@@ -2,28 +2,28 @@
 using LiveStreamingServerNet.Flv.Internal.Services.Contracts;
 using LiveStreamingServerNet.Utilities;
 using LiveStreamingServerNet.Utilities.Contracts;
-using Open.Threading;
+using Nito.AsyncEx;
 
 namespace LiveStreamingServerNet.Flv.Internal.Services
 {
     internal class FlvStreamManagerService : IFlvStreamManagerService
     {
-        private readonly ReaderWriterLockSlim _publishingRwLock = new();
+        private readonly AsyncReaderWriterLock _publishingRwLock = new();
         private readonly Dictionary<string, IFlvStreamContext> _publishingStreamContexts = new();
 
-        private readonly ReaderWriterLockSlim _subscribingRwLock = new();
+        private readonly AsyncReaderWriterLock _subscribingRwLock = new();
         private readonly Dictionary<string, List<IFlvClient>> _subscribingClients = new();
         private readonly Dictionary<IFlvClient, string> _subscribedStreamPaths = new();
 
         public bool IsStreamPathPublishing(string streamPath, bool requireReady)
         {
-            using var readLock = _publishingRwLock.ReadLock();
+            using var readLock = _publishingRwLock.ReaderLock();
             return _publishingStreamContexts.TryGetValue(streamPath, out var streamContext) && (!requireReady || streamContext.IsReady);
         }
 
         public PublishingStreamResult StartPublishingStream(IFlvStreamContext streamContext)
         {
-            using var writeLock = _publishingRwLock.WriteLock();
+            using var writeLock = _publishingRwLock.WriterLock();
             var streamPath = streamContext.StreamPath;
 
             if (_publishingStreamContexts.ContainsKey(streamPath))
@@ -35,8 +35,8 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
 
         public bool StopPublishingStream(string streamPath, out IList<IFlvClient> existingSubscribers)
         {
-            using var publishingWriteLock = _publishingRwLock.WriteLock();
-            using var subscribingWriteLock = _subscribingRwLock.WriteLock();
+            using var publishingWriteLock = _publishingRwLock.WriterLock();
+            using var subscribingWriteLock = _subscribingRwLock.WriterLock();
 
             existingSubscribers = null!;
 
@@ -54,14 +54,14 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
 
         public IFlvStreamContext? GetFlvStreamContext(string streamPath)
         {
-            using var readLock = _publishingRwLock.WriteLock();
+            using var readLock = _publishingRwLock.WriterLock();
             return _publishingStreamContexts.GetValueOrDefault(streamPath);
         }
 
         public SubscribingStreamResult StartSubscribingStream(IFlvClient client, string streamPath)
         {
-            using var publishingReadLock = _publishingRwLock.ReadLock();
-            using var subscribingWriteLock = _subscribingRwLock.WriteLock();
+            using var publishingReadLock = _publishingRwLock.ReaderLock();
+            using var subscribingWriteLock = _subscribingRwLock.WriterLock();
 
             if (_subscribedStreamPaths.ContainsKey(client))
                 return SubscribingStreamResult.AlreadySubscribing;
@@ -83,7 +83,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
 
         public bool StopSubscribingStream(IFlvClient client)
         {
-            using var subscribingWriteLock = _subscribingRwLock.WriteLock();
+            using var subscribingWriteLock = _subscribingRwLock.WriterLock();
 
             if (!_subscribedStreamPaths.Remove(client, out var streamPath))
                 return false;
@@ -97,7 +97,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
 
         public IRentable<IReadOnlyList<IFlvClient>> GetSubscribersLocked(string streamPath)
         {
-            var readLock = _subscribingRwLock.ReadLock();
+            var readLock = _subscribingRwLock.ReaderLock();
 
             return new Rentable<IReadOnlyList<IFlvClient>>(
                 _subscribingClients.GetValueOrDefault(streamPath)?.ToList() ?? new List<IFlvClient>(),
@@ -106,7 +106,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
 
         public IReadOnlyList<IFlvClient> GetSubscribers(string streamPath)
         {
-            using var readLock = _subscribingRwLock.ReadLock();
+            using var readLock = _subscribingRwLock.ReaderLock();
             return _subscribingClients.GetValueOrDefault(streamPath)?.ToList() ?? new List<IFlvClient>();
         }
     }
