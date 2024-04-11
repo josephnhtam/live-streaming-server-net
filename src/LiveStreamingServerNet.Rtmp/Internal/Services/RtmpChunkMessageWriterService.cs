@@ -32,7 +32,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             return null;
         }
 
-        private void WriteFirstChunk<TRtmpChunkMessageHeader>(
+        private static void WriteFirstChunk<TRtmpChunkMessageHeader>(
            INetBuffer targetBuffer,
            RtmpChunkBasicHeader basicHeader,
            TRtmpChunkMessageHeader messageHeader,
@@ -49,7 +49,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             payloadBuffer.ReadAndWriteTo(targetBuffer, payloadSize);
         }
 
-        private void WriteRemainingChunks(
+        private static void WriteRemainingChunks(
             INetBuffer targetBuffer,
             RtmpChunkBasicHeader basicHeader,
             RtmpChunkExtendedTimestampHeader? extendedTimestampHeader,
