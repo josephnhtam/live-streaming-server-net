@@ -2,6 +2,7 @@
 using LiveStreamingServerNet.Networking.Installer.Contracts;
 using LiveStreamingServerNet.Networking.Internal.Contracts;
 using LiveStreamingServerNet.Networking.Logging;
+using LiveStreamingServerNet.Utilities.Contracts;
 using LiveStreamingServerNet.Utilities.Extensions;
 using Microsoft.Extensions.Logging;
 using System.Net;
@@ -87,6 +88,11 @@ namespace LiveStreamingServerNet.Networking.Internal
             _bufferSender.Send(netBuffer, callback);
         }
 
+        public void Send(IRentedBuffer rentedBuffer, Action<bool>? callback)
+        {
+            _bufferSender.Send(rentedBuffer, callback);
+        }
+
         public void Send(Action<INetBuffer> writer, Action<bool>? callback)
         {
             _bufferSender.Send(writer, callback);
@@ -95,6 +101,11 @@ namespace LiveStreamingServerNet.Networking.Internal
         public Task SendAsync(INetBuffer netBuffer)
         {
             return _bufferSender.SendAsync(netBuffer);
+        }
+
+        public Task SendAsync(IRentedBuffer rentedBuffer)
+        {
+            return _bufferSender.SendAsync(rentedBuffer);
         }
 
         public Task SendAsync(Action<INetBuffer> writer)

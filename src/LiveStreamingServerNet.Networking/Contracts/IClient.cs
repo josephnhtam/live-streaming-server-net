@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using LiveStreamingServerNet.Utilities.Contracts;
+using System.Net;
 
 namespace LiveStreamingServerNet.Networking.Contracts
 {
@@ -19,8 +20,10 @@ namespace LiveStreamingServerNet.Networking.Contracts
     public interface IClientHandle : IClientControl
     {
         void Send(INetBuffer netBuffer, Action<bool>? callback = null);
+        void Send(IRentedBuffer rentedBuffer, Action<bool>? callback = null);
         void Send(Action<INetBuffer> writer, Action<bool>? callback = null);
         Task SendAsync(INetBuffer netBuffer);
+        Task SendAsync(IRentedBuffer rentedBuffer);
         Task SendAsync(Action<INetBuffer> writer);
     }
 }

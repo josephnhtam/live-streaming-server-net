@@ -2,8 +2,9 @@
 using LiveStreamingServerNet.Networking.Exceptions;
 using LiveStreamingServerNet.Networking.Internal.Contracts;
 using LiveStreamingServerNet.Networking.Logging;
+using LiveStreamingServerNet.Utilities;
+using LiveStreamingServerNet.Utilities.Contracts;
 using Microsoft.Extensions.Logging;
-using System.Buffers;
 using System.Threading.Channels;
 
 namespace LiveStreamingServerNet.Networking.Internal
@@ -33,22 +34,40 @@ namespace LiveStreamingServerNet.Networking.Internal
 
         public void Send(INetBuffer netBuffer, Action<bool>? callback)
         {
-            var rentedBuffer = ArrayPool<byte>.Shared.Rent(netBuffer.Size);
+            var rentedBuffer = new RentedBuffer(netBuffer.Size);
 
             try
             {
                 var originalPosition = netBuffer.Position;
-                netBuffer.MoveTo(0).ReadBytes(rentedBuffer, 0, netBuffer.Size);
+                netBuffer.MoveTo(0).ReadBytes(rentedBuffer.Buffer, 0, rentedBuffer.Size);
                 netBuffer.MoveTo(originalPosition);
 
-                if (!_pendingMessageChannel.Writer.TryWrite(new PendingMessage(rentedBuffer, netBuffer.Size, callback)))
+                if (!_pendingMessageChannel.Writer.TryWrite(new PendingMessage(rentedBuffer, callback)))
                 {
                     throw new Exception("Failed to write to the send channel");
                 }
             }
             catch (Exception)
             {
-                ArrayPool<byte>.Shared.Return(rentedBuffer);
+                rentedBuffer.Unclaim();
+                throw;
+            }
+        }
+
+        public void Send(IRentedBuffer rentedBuffer, Action<bool>? callback)
+        {
+            rentedBuffer.Claim();
+
+            try
+            {
+                if (!_pendingMessageChannel.Writer.TryWrite(new PendingMessage(rentedBuffer, callback)))
+                {
+                    throw new Exception("Failed to write to the send channel");
+                }
+            }
+            catch (Exception)
+            {
+                rentedBuffer.Unclaim();
                 throw;
             }
         }
@@ -58,20 +77,20 @@ namespace LiveStreamingServerNet.Networking.Internal
             using var netBuffer = ObtainNetBuffer();
             writer.Invoke(netBuffer);
 
-            var rentedBuffer = ArrayPool<byte>.Shared.Rent(netBuffer.Size);
+            var rentedBuffer = new RentedBuffer(netBuffer.Size);
 
             try
             {
-                netBuffer.MoveTo(0).ReadBytes(rentedBuffer, 0, netBuffer.Size);
+                netBuffer.MoveTo(0).ReadBytes(rentedBuffer.Buffer, 0, rentedBuffer.Size);
 
-                if (!_pendingMessageChannel.Writer.TryWrite(new PendingMessage(rentedBuffer, netBuffer.Size, callback)))
+                if (!_pendingMessageChannel.Writer.TryWrite(new PendingMessage(rentedBuffer, callback)))
                 {
                     throw new Exception("Failed to write to the send channel");
                 }
             }
             catch (Exception)
             {
-                ArrayPool<byte>.Shared.Return(rentedBuffer);
+                rentedBuffer.Unclaim();
                 throw;
             }
         }
@@ -80,6 +99,21 @@ namespace LiveStreamingServerNet.Networking.Internal
         {
             var tcs = new TaskCompletionSource();
             Send(netBuffer, SetResult);
+            return tcs.Task;
+
+            void SetResult(bool successful)
+            {
+                if (successful)
+                    tcs.SetResult();
+                else
+                    tcs.SetException(new BufferSendingException());
+            }
+        }
+
+        public Task SendAsync(IRentedBuffer rentedBuffer)
+        {
+            var tcs = new TaskCompletionSource();
+            Send(rentedBuffer, SetResult);
             return tcs.Task;
 
             void SetResult(bool successful)
@@ -117,11 +151,11 @@ namespace LiveStreamingServerNet.Networking.Internal
             {
                 while (!cancellationToken.IsCancellationRequested)
                 {
-                    var (rentedBuffer, bufferSize, callback) = await _pendingMessageChannel.Reader.ReadAsync(cancellationToken);
+                    var (rentedBuffer, callback) = await _pendingMessageChannel.Reader.ReadAsync(cancellationToken);
 
                     try
                     {
-                        await networkStream.WriteAsync(rentedBuffer, 0, bufferSize, cancellationToken);
+                        await networkStream.WriteAsync(rentedBuffer.Buffer, 0, rentedBuffer.Size, cancellationToken);
                         InvokeCallback(callback, true);
                     }
                     catch (Exception ex)
@@ -136,7 +170,7 @@ namespace LiveStreamingServerNet.Networking.Internal
                     }
                     finally
                     {
-                        ArrayPool<byte>.Shared.Return(rentedBuffer);
+                        rentedBuffer.Unclaim();
                     }
                 }
             }
@@ -145,7 +179,7 @@ namespace LiveStreamingServerNet.Networking.Internal
             while (_pendingMessageChannel.Reader.TryRead(out var pendingMessage))
             {
                 InvokeCallback(pendingMessage.Callback, false);
-                ArrayPool<byte>.Shared.Return(pendingMessage.RentedBuffer);
+                pendingMessage.RentedBuffer.Unclaim();
             }
 
             void InvokeCallback(Action<bool>? callback, bool successful)

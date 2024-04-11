@@ -135,7 +135,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
                 using var tempBuffer = _netBufferPool.Obtain();
                 _chunkMessageWriter.Write(tempBuffer, basicHeader, messageHeader, payloadBuffer.MoveTo(0), outChunkSize);
 
-                var rentedBuffer = new RentedBuffer(tempBuffer.Size, Math.Max(1, subscribers.Count));
+                var rentedBuffer = new RentedBuffer(tempBuffer.Size, subscribers.Count);
                 tempBuffer.MoveTo(0).ReadBytes(rentedBuffer.Buffer, 0, rentedBuffer.Size);
 
                 var mediaPackage = new ClientMediaPackage(rentedBuffer, isSkippable);
@@ -172,9 +172,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
                             subscriptionInitialized = true;
                         }
 
-                        await clientContext.Client.SendAsync(netBuffer =>
-                            netBuffer.Write(package.RentedPayload.Buffer, 0, package.RentedPayload.Size)
-                        ).WithCancellation(cancellation);
+                        await clientContext.Client.SendAsync(package.RentedPayload).WithCancellation(cancellation);
                     }
                     catch (OperationCanceledException) when (cancellation.IsCancellationRequested) { }
                     catch (Exception ex)

@@ -1,4 +1,5 @@
 ﻿using LiveStreamingServerNet.Networking.Contracts;
+using LiveStreamingServerNet.Utilities.Contracts;
 
 namespace LiveStreamingServerNet.Networking.Internal.Contracts
 {
@@ -6,8 +7,10 @@ namespace LiveStreamingServerNet.Networking.Internal.Contracts
     {
         void Start(Stream networkStream, CancellationToken cancellationToken);
         void Send(INetBuffer netBuffer, Action<bool>? callback);
+        void Send(IRentedBuffer rentedBuffer, Action<bool>? callback);
         void Send(Action<INetBuffer> writer, Action<bool>? callback);
         Task SendAsync(INetBuffer netBuffer);
+        Task SendAsync(IRentedBuffer rentedBuffer);
         Task SendAsync(Action<INetBuffer> writer);
     }
 }
