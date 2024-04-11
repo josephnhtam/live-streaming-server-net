@@ -73,7 +73,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
                 MediaType.Video,
                 chunkStreamContext.MessageHeader.Timestamp,
                 isSkippable,
-                payloadBuffer.CopyAllTo);
+                payloadBuffer);
         }
 
         private async ValueTask<bool> CacheVideoSequenceAsync(

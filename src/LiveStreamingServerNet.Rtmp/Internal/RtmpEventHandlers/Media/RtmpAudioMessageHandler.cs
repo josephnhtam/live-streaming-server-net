@@ -77,7 +77,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
                 MediaType.Audio,
                 chunkStreamContext.MessageHeader.Timestamp,
                 isSkippable,
-                payloadBuffer.CopyAllTo);
+                payloadBuffer);
         }
 
         private async ValueTask<bool> CacheAudioSequenceAsync(

@@ -1,5 +1,7 @@
-﻿using LiveStreamingServerNet.Rtmp.Contracts;
+﻿using LiveStreamingServerNet.Networking.Contracts;
+using LiveStreamingServerNet.Rtmp.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.Services.Contracts;
+using LiveStreamingServerNet.Utilities;
 using LiveStreamingServerNet.Utilities.Contracts;
 
 namespace LiveStreamingServerNet.Rtmp.Internal.Services
@@ -31,10 +33,25 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
                 await interceptor.OnClearGroupOfPicturesCache(streamPath);
         }
 
-        public async ValueTask ReceiveMediaMessageAsync(string streamPath, MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp, bool isSkippable)
+        public async ValueTask ReceiveMediaMessageAsync(string streamPath, MediaType mediaType, INetBuffer payloadBuffer, uint timestamp, bool isSkippable)
         {
-            foreach (var interceptor in _interceptors)
-                await interceptor.OnReceiveMediaMessage(streamPath, mediaType, rentedBuffer, timestamp, isSkippable);
+            if (!_interceptors.Any())
+                return;
+
+            var rentedBuffer = new RentedBuffer(payloadBuffer.Size);
+
+            try
+            {
+                payloadBuffer.MoveTo(0).ReadBytes(rentedBuffer.Buffer, 0, rentedBuffer.Size);
+                payloadBuffer.MoveTo(0);
+
+                foreach (var interceptor in _interceptors)
+                    await interceptor.OnReceiveMediaMessage(streamPath, mediaType, rentedBuffer, timestamp, isSkippable);
+            }
+            finally
+            {
+                rentedBuffer.Unclaim();
+            }
         }
     }
 }

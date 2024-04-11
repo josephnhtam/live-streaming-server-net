@@ -11,7 +11,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services.Contracts
             MediaType mediaType,
             uint timestamp,
             bool isSkippable,
-            Action<INetBuffer> payloadWriter);
+            INetBuffer payloadBuffer);
 
         void RegisterClient(IRtmpClientContext clientContext);
         void UnregisterClient(IRtmpClientContext clientContext);
