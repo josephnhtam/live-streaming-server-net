@@ -3,6 +3,7 @@ using LiveStreamingServerNet.Networking.Configurations;
 using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.Networking.Internal;
 using LiveStreamingServerNet.Networking.Internal.Contracts;
+using LiveStreamingServerNet.Utilities;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using NSubstitute;
@@ -42,6 +43,33 @@ namespace LiveStreamingServerNet.Networking.Test
 
             // Act
             await _sut.SendAsync(netBuffer);
+
+            // Assert
+            networkStream.Should().HaveLength(expectedBuffer.Length);
+
+            networkStream.Position = 0;
+            var actualBuffer = new byte[expectedBuffer.Length];
+            await networkStream.ReadAsync(actualBuffer, 0, expectedBuffer.Length);
+
+            actualBuffer.Should().Equal(expectedBuffer);
+        }
+
+        [Fact]
+        public async Task SendAsyncWithRentedBuffer_Should_WriteBufferIntoNetworkStream()
+        {
+            // Arrange
+            using var networkStream = new MemoryStream();
+            var expectedBuffer = new byte[] { 1, 2, 3, 4, 5 };
+
+            _sut.Start(networkStream, _cancellationToken);
+
+            var rentedBuffer = new RentedBuffer(expectedBuffer.Length);
+            expectedBuffer.AsSpan().CopyTo(rentedBuffer.Buffer);
+
+            // Act
+            await _sut.SendAsync(rentedBuffer);
+
+            rentedBuffer.Unclaim();
 
             // Assert
             networkStream.Should().HaveLength(expectedBuffer.Length);
@@ -103,6 +131,35 @@ namespace LiveStreamingServerNet.Networking.Test
         }
 
         [Fact]
+        public async Task SendWithRentedBuffer_Should_WriteBufferIntoNetworkStream()
+        {
+            // Arrange
+            using var networkStream = new MemoryStream();
+            var expectedBuffer = new byte[] { 1, 2, 3, 4, 5 };
+
+            _sut.Start(networkStream, _cancellationToken);
+
+            var rentedBuffer = new RentedBuffer(expectedBuffer.Length);
+            expectedBuffer.AsSpan().CopyTo(rentedBuffer.Buffer);
+
+            // Act
+            var tcs = new TaskCompletionSource();
+            _sut.Send(rentedBuffer, _ => tcs.SetResult());
+            await tcs.Task;
+
+            rentedBuffer.Unclaim();
+
+            // Assert
+            networkStream.Should().HaveLength(expectedBuffer.Length);
+
+            networkStream.Position = 0;
+            var actualBuffer = new byte[expectedBuffer.Length];
+            await networkStream.ReadAsync(actualBuffer, 0, expectedBuffer.Length);
+
+            actualBuffer.Should().Equal(expectedBuffer);
+        }
+
+        [Fact]
         public async Task SendWithWriter_Should_WriteBufferIntoNetworkStream()
         {
             // Arrange
@@ -141,6 +198,40 @@ namespace LiveStreamingServerNet.Networking.Test
 
             // Assert
             result.Should().Be(waitUntilComplete);
+        }
+
+        [Fact]
+        public async Task Send_Should_WriteBufferIntoNetworkStreamInOrder()
+        {
+            // Arrange
+            using var networkStream = new MemoryStream();
+            var expectedBuffer = new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+
+            _sut.Start(networkStream, _cancellationToken);
+
+            // Act
+            var tcs = new TaskCompletionSource();
+
+            for (int i = 0; i < expectedBuffer.Length; i++)
+            {
+                var idx = i;
+
+                _sut.Send(netBuffer => netBuffer.Write(expectedBuffer[idx]), _ =>
+                {
+                    if (idx == expectedBuffer.Length - 1) tcs.SetResult();
+                });
+            }
+
+            await tcs.Task;
+
+            // Assert
+            networkStream.Should().HaveLength(expectedBuffer.Length);
+
+            networkStream.Position = 0;
+            var actualBuffer = new byte[expectedBuffer.Length];
+            await networkStream.ReadAsync(actualBuffer, 0, expectedBuffer.Length);
+
+            actualBuffer.Should().Equal(expectedBuffer);
         }
 
         public void Dispose()
