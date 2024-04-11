@@ -32,7 +32,6 @@ namespace LiveStreamingServerNet.Networking.Internal
         public async Task AcceptClientAsync(ITcpListenerInternal tcpListener, ServerEndPoint serverEndPoint, CancellationToken cancellationToken)
         {
             var tcpClient = await tcpListener.AcceptTcpClientAsync(cancellationToken);
-            tcpClient.NoDelay = true;
 
             await OnClientAcceptedAsync(tcpClient);
 
