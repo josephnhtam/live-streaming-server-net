@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using AutoFixture;
+using FluentAssertions;
 using LiveStreamingServerNet.Networking.Configurations;
 using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.Networking.Internal;
@@ -12,6 +13,7 @@ namespace LiveStreamingServerNet.Networking.Test
 {
     public class NetBufferSenderTest : IDisposable
     {
+        private readonly IFixture _fixture;
         private readonly INetBufferPool _netBufferPool;
         private readonly ILogger<NetBufferSender> _logger;
         private readonly INetBufferSender _sut;
@@ -20,6 +22,7 @@ namespace LiveStreamingServerNet.Networking.Test
 
         public NetBufferSenderTest()
         {
+            _fixture = new Fixture();
             _netBufferPool = new NetBufferPool(Options.Create(new NetBufferPoolConfiguration()));
             _logger = Substitute.For<ILogger<NetBufferSender>>();
 
@@ -34,7 +37,7 @@ namespace LiveStreamingServerNet.Networking.Test
         {
             // Arrange
             using var networkStream = new MemoryStream();
-            var expectedBuffer = new byte[] { 1, 2, 3, 4, 5 };
+            var expectedBuffer = _fixture.Create<byte[]>();
 
             _sut.Start(networkStream, _cancellationToken);
 
@@ -59,7 +62,7 @@ namespace LiveStreamingServerNet.Networking.Test
         {
             // Arrange
             using var networkStream = new MemoryStream();
-            var expectedBuffer = new byte[] { 1, 2, 3, 4, 5 };
+            var expectedBuffer = _fixture.Create<byte[]>();
 
             _sut.Start(networkStream, _cancellationToken);
 
@@ -86,7 +89,7 @@ namespace LiveStreamingServerNet.Networking.Test
         {
             // Arrange
             using var networkStream = new MemoryStream();
-            var expectedBuffer = new byte[] { 1, 2, 3, 4, 5 };
+            var expectedBuffer = _fixture.Create<byte[]>();
 
             _sut.Start(networkStream, _cancellationToken);
 
@@ -108,7 +111,7 @@ namespace LiveStreamingServerNet.Networking.Test
         {
             // Arrange
             using var networkStream = new MemoryStream();
-            var expectedBuffer = new byte[] { 1, 2, 3, 4, 5 };
+            var expectedBuffer = _fixture.Create<byte[]>();
 
             _sut.Start(networkStream, _cancellationToken);
 
@@ -135,7 +138,7 @@ namespace LiveStreamingServerNet.Networking.Test
         {
             // Arrange
             using var networkStream = new MemoryStream();
-            var expectedBuffer = new byte[] { 1, 2, 3, 4, 5 };
+            var expectedBuffer = _fixture.Create<byte[]>();
 
             _sut.Start(networkStream, _cancellationToken);
 
@@ -164,7 +167,7 @@ namespace LiveStreamingServerNet.Networking.Test
         {
             // Arrange
             using var networkStream = new MemoryStream();
-            var expectedBuffer = new byte[] { 1, 2, 3, 4, 5 };
+            var expectedBuffer = _fixture.Create<byte[]>();
 
             _sut.Start(networkStream, _cancellationToken);
 
@@ -205,7 +208,7 @@ namespace LiveStreamingServerNet.Networking.Test
         {
             // Arrange
             using var networkStream = new MemoryStream();
-            var expectedBuffer = new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+            var expectedBuffer = _fixture.CreateMany<byte>(100).ToArray();
 
             _sut.Start(networkStream, _cancellationToken);
 

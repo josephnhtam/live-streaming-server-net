@@ -5,7 +5,7 @@ namespace LiveStreamingServerNet.Networking.Test
 {
     public class NetBufferTest
     {
-        private readonly Fixture _fixture;
+        private readonly IFixture _fixture;
 
         public NetBufferTest()
         {
