@@ -24,9 +24,8 @@ namespace LiveStreamingServerNet.Rtmp.Test
         private readonly IOptions<MediaMessageConfiguration> _config;
         private readonly ILogger<RtmpMediaMessageBroadcasterService> _logger;
         private readonly RtmpMediaMessageBroadcasterService _sut;
-        private readonly ITestOutputHelper _output;
 
-        public RtmpMediaMessageBroadcasterServiceTest(ITestOutputHelper output)
+        public RtmpMediaMessageBroadcasterServiceTest()
         {
             _fixture = new Fixture();
             _chunkMessageWriter = Substitute.For<IRtmpChunkMessageWriterService>();
@@ -36,7 +35,6 @@ namespace LiveStreamingServerNet.Rtmp.Test
             _logger = Substitute.For<ILogger<RtmpMediaMessageBroadcasterService>>();
 
             _sut = new RtmpMediaMessageBroadcasterService(_chunkMessageWriter, _interception, _netBufferPool, _config, _logger);
-            _output = output;
         }
 
         [Fact]
