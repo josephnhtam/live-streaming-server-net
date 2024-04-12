@@ -9,6 +9,7 @@
 
         INetBuffer MoveTo(int position);
         void Reset();
+        Task FlushAsync(Stream output);
         void Flush(Stream output);
         void Flush(INetBuffer output);
         void CopyAllTo(INetBuffer targetBuffer);
@@ -26,7 +27,6 @@
         int ReadInt32();
         long ReadInt64();
         float ReadSingle();
-        string ReadString();
         ushort ReadUInt16();
         uint ReadUInt32();
         ulong ReadUInt64();
@@ -49,7 +49,6 @@
         void Write(Memory<byte> memory);
         void Write(ReadOnlySpan<byte> buffer);
         void Write(short value);
-        void Write(string value);
         void Write(uint value);
         void Write(ulong value);
         void Write(ushort value);

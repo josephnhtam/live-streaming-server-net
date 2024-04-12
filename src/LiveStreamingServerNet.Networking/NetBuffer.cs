@@ -1,77 +1,128 @@
-﻿using System.Runtime.CompilerServices;
+﻿using LiveStreamingServerNet.Networking.Contracts;
+using System.Buffers;
 
 namespace LiveStreamingServerNet.Networking
 {
-    public class NetBuffer : NetBufferBase
+    public partial class NetBuffer : INetBuffer
     {
-        private readonly MemoryStream _stream;
-        private readonly BinaryWriter _writer;
-        private readonly BinaryReader _reader;
-
         private bool _isDisposed;
 
-        public NetBuffer()
-        {
-            _stream = new MemoryStream();
-            _writer = new BinaryWriter(_stream);
-            _reader = new BinaryReader(_stream);
-        }
+        private byte[] _buffer;
+        public byte[] UnderlyingBuffer => _buffer;
 
-        public NetBuffer(int initialCapacity)
+        private int _position;
+        public int Position
         {
-            _stream = new MemoryStream(initialCapacity);
-            _writer = new BinaryWriter(_stream);
-            _reader = new BinaryReader(_stream);
-        }
-
-        public override byte[] UnderlyingBuffer => _stream.GetBuffer();
-
-        public override int Position
-        {
-            get => (int)_stream.Position;
+            get => _position;
             set
             {
-                if (_stream.Length < value)
-                {
-                    _stream.SetLength(value);
-                }
-
-                _stream.Position = value;
+                EnsureCapacity(value);
+                _position = value;
             }
         }
 
         private int _size;
-        public override int Size
+        public int Size
         {
             get => _size;
             set
             {
-                if (_stream.Length < value)
-                {
-                    _stream.SetLength(value);
-                }
-
+                EnsureCapacity(value);
                 _size = value;
             }
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        protected override BinaryWriter GetWriter() => _writer;
+        public int Capacity => _buffer.Length;
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        protected override BinaryReader GetReader() => _reader;
-
-        protected override void Dispose(bool disposing)
+        public NetBuffer()
         {
-            base.Dispose(disposing);
+            _buffer = ArrayPool<byte>.Shared.Rent(128);
+        }
 
-            if (disposing && !_isDisposed)
-            {
-                _stream.Dispose();
-                _writer.Dispose();
-                _reader.Dispose();
-                _isDisposed = true;
-            }
+        public NetBuffer(int initialCapacity)
+        {
+            _buffer = ArrayPool<byte>.Shared.Rent(initialCapacity);
+        }
+
+        private void EnsureCapacity(int capacity)
+        {
+            if (capacity < Capacity)
+                return;
+
+            var newCapacity = Math.Max(capacity, Capacity * 2);
+
+            var buffer = ArrayPool<byte>.Shared.Rent(newCapacity);
+            _buffer.AsSpan().CopyTo(buffer);
+            ArrayPool<byte>.Shared.Return(_buffer);
+            _buffer = buffer;
+        }
+
+        public INetBuffer MoveTo(int position)
+        {
+            Position = position;
+            return this;
+        }
+
+        private void Advance(int count)
+        {
+            Position += count;
+            _size = Math.Max(_size, Position);
+        }
+
+        public void Reset()
+        {
+            _position = 0;
+            _size = 0;
+        }
+
+        public async Task FlushAsync(Stream output)
+        {
+            await output.WriteAsync(_buffer, 0, Size);
+            Reset();
+        }
+
+        public void Flush(INetBuffer output)
+        {
+            output.Write(_buffer, 0, Size);
+            Reset();
+        }
+
+        public void Flush(Stream output)
+        {
+            output.Write(_buffer, 0, Size);
+            Reset();
+        }
+
+        public void CopyAllTo(INetBuffer targetBuffer)
+        {
+            targetBuffer.Write(_buffer, 0, Size);
+        }
+
+        public void ReadAndWriteTo(INetBuffer targetBuffer, int bytesCount)
+        {
+            if (_position + bytesCount > _size)
+                throw new ArgumentOutOfRangeException(nameof(bytesCount));
+
+            targetBuffer.Write(_buffer, _position, bytesCount);
+            _position += bytesCount;
+        }
+
+        public async Task CopyStreamData(Stream stream, int bytesCount, CancellationToken cancellationToken = default)
+        {
+            Size = bytesCount;
+            await stream.ReadExactlyAsync(_buffer, 0, bytesCount, cancellationToken);
+            _position = 0;
+        }
+
+        public virtual void Dispose()
+        {
+            if (_isDisposed)
+                return;
+
+            _isDisposed = true;
+
+            ArrayPool<byte>.Shared.Return(_buffer);
+            _buffer = null!;
         }
     }
 }
