@@ -3,7 +3,7 @@ using LiveStreamingServerNet.Networking.Contracts;
 
 namespace LiveStreamingServerNet.Rtmp.Internal.RtmpHeaders
 {
-    internal record struct RtmpChunkExtendedTimestampHeader(uint extendedTimestamp)
+    internal record struct RtmpChunkExtendedTimestampHeader(uint ExtendedTimestamp)
     {
         public const int kSize = 4;
         public int Size => kSize;
@@ -19,7 +19,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpHeaders
 
         public void Write(INetBuffer netBuffer)
         {
-            netBuffer.WriteUInt32BigEndian(extendedTimestamp);
+            netBuffer.WriteUInt32BigEndian(ExtendedTimestamp);
         }
     }
 }
