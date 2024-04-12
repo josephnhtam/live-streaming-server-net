@@ -1,6 +1,6 @@
 ﻿using LiveStreamingServerNet.Networking.Contracts;
-using LiveStreamingServerNet.Rtmp.Configurations;
 using LiveStreamingServerNet.Rtmp.Internal.Contracts;
+using LiveStreamingServerNet.Rtmp.Internal.MediaPackageDiscarding.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpHeaders;
 using LiveStreamingServerNet.Rtmp.Internal.Services.Contracts;
@@ -9,7 +9,6 @@ using LiveStreamingServerNet.Utilities;
 using LiveStreamingServerNet.Utilities.Contracts;
 using LiveStreamingServerNet.Utilities.Extensions;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using System.Collections.Concurrent;
 using System.Threading.Channels;
 
@@ -20,7 +19,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
         private readonly IRtmpChunkMessageWriterService _chunkMessageWriter;
         private readonly IRtmpMediaMessageInterceptionService _interception;
         private readonly INetBufferPool _netBufferPool;
-        private readonly MediaMessageConfiguration _config;
+        private readonly IMediaPackageDiscarderFactory _mediaPackageDiscarderFactory;
         private readonly ILogger _logger;
 
         private readonly ConcurrentDictionary<IRtmpClientContext, ClientMediaContext> _clientMediaContexts = new();
@@ -30,13 +29,13 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             IRtmpChunkMessageWriterService chunkMessageWriter,
             IRtmpMediaMessageInterceptionService interception,
             INetBufferPool netBufferPool,
-            IOptions<MediaMessageConfiguration> config,
+            IMediaPackageDiscarderFactory mediaPackageDiscarderFactory,
             ILogger<RtmpMediaMessageBroadcasterService> logger)
         {
             _chunkMessageWriter = chunkMessageWriter;
             _interception = interception;
             _netBufferPool = netBufferPool;
-            _config = config.Value;
+            _mediaPackageDiscarderFactory = mediaPackageDiscarderFactory;
             _logger = logger;
         }
 
@@ -47,7 +46,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
 
         public void RegisterClient(IRtmpClientContext clientContext)
         {
-            _clientMediaContexts[clientContext] = new ClientMediaContext(clientContext, _config, _logger);
+            _clientMediaContexts[clientContext] = new ClientMediaContext(clientContext, _mediaPackageDiscarderFactory);
 
             var clientTask = Task.Run(() => ClientTask(clientContext));
             _clientTasks[clientContext] = clientTask;
@@ -201,20 +200,16 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             public long OutstandingPackagesSize => _outstandingPackagesSize;
             public long OutstandingPackagesCount => _packageChannel.Reader.Count;
 
-            private readonly MediaMessageConfiguration _config;
-            private readonly ILogger _logger;
-
+            private readonly IMediaPackageDiscarder _mediaPackageDiscarder;
             private readonly Channel<ClientMediaPackage> _packageChannel;
             private readonly CancellationTokenSource _cts;
 
             private long _outstandingPackagesSize;
-            private bool _skippingPackage;
 
-            public ClientMediaContext(IRtmpClientContext clientContext, MediaMessageConfiguration config, ILogger logger)
+            public ClientMediaContext(IRtmpClientContext clientContext, IMediaPackageDiscarderFactory mediaPackageDiscarderFactory)
             {
                 ClientContext = clientContext;
-                _config = config;
-                _logger = logger;
+                _mediaPackageDiscarder = mediaPackageDiscarderFactory.Create(clientContext.Client.ClientId);
 
                 _packageChannel = Channel.CreateUnbounded<ClientMediaPackage>();
                 _cts = new CancellationTokenSource();
@@ -229,7 +224,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
 
             public bool AddPackage(ref ClientMediaPackage package)
             {
-                if (ShouldSkipPackage(this, ref package))
+                if (ShouldSkipPackage(this, package.IsSkippable))
                 {
                     return false;
                 }
@@ -255,36 +250,10 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
                 return _packageChannel.Reader.TryRead(out package);
             }
 
-            private bool ShouldSkipPackage(ClientMediaContext context, ref ClientMediaPackage package)
+            private bool ShouldSkipPackage(ClientMediaContext context, bool isSkippable)
             {
-                if (!package.IsSkippable)
-                {
-                    _skippingPackage = false;
-                    return false;
-                }
-
-                if (_skippingPackage)
-                {
-                    if (context.OutstandingPackagesSize <= _config.TargetOutstandingMediaMessageSize &&
-                        context.OutstandingPackagesCount <= _config.TargetOutstandingMediaMessageCount)
-                    {
-                        _logger.ResumeMediaPackage(ClientContext.Client.ClientId, context.OutstandingPackagesSize, context.OutstandingPackagesCount);
-                        _skippingPackage = false;
-                        return false;
-                    }
-
-                    return true;
-                }
-
-                if (context.OutstandingPackagesSize > _config.MaxOutstandingMediaMessageSize ||
-                    context.OutstandingPackagesCount > _config.MaxOutstandingMediaMessageCount)
-                {
-                    _logger.PauseMediaPackage(ClientContext.Client.ClientId, context.OutstandingPackagesSize, context.OutstandingPackagesCount);
-                    _skippingPackage = true;
-                    return true;
-                }
-
-                return false;
+                return _mediaPackageDiscarder.ShouldDiscardMediaPackage(
+                    isSkippable, context.OutstandingPackagesSize, context.OutstandingPackagesCount);
             }
         }
 

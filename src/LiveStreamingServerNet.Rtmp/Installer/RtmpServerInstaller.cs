@@ -5,6 +5,8 @@ using LiveStreamingServerNet.Rtmp.Auth.Contracts;
 using LiveStreamingServerNet.Rtmp.Installer.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal;
 using LiveStreamingServerNet.Rtmp.Internal.Contracts;
+using LiveStreamingServerNet.Rtmp.Internal.MediaPackageDiscarding;
+using LiveStreamingServerNet.Rtmp.Internal.MediaPackageDiscarding.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands.Dispatcher;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands.Dispatcher.Attributes;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands.Dispatcher.Contracts;
@@ -56,7 +58,8 @@ namespace LiveStreamingServerNet.Rtmp.Installer
                 options.RegisterServicesFromAssemblyContaining<RtmpClientHandler>());
 
             services.AddSingleton<Rtmp.Contracts.IRtmpServerContext, RtmpServerContext>()
-                    .AddSingleton<IRtmpClientContextFactory, RtmpClientContextFactory>();
+                    .AddSingleton<IRtmpClientContextFactory, RtmpClientContextFactory>()
+                    .AddSingleton<IMediaPackageDiscarderFactory, MediaPackageDiscarderFactory>();
 
             return services;
         }
