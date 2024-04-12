@@ -19,13 +19,13 @@ namespace LiveStreamingServerNet.Rtmp.Logging
         public static void Play(this ILogger logger, uint clientId, string streamName)
             => PlayCore(logger, clientId, !string.IsNullOrEmpty(streamName) ? streamName : "(Empty)");
 
-        [LoggerMessage(LogLevel.Debug, "ClientId: {ClientId} | StreamPath: {StreamPath} | Reason: {Reason} | Authorization failed")]
+        [LoggerMessage(LogLevel.Warning, "ClientId: {ClientId} | StreamPath: {StreamPath} | Reason: {Reason} | Authorization failed")]
         public static partial void AuthorizationFailed(this ILogger logger, uint clientId, string streamPath, string reason);
 
-        [LoggerMessage(LogLevel.Debug, "ClientId: {ClientId} | StreamPath: {StreamPath} | Type:{Type} | Reason: {Reason} | Authorization failed")]
+        [LoggerMessage(LogLevel.Warning, "ClientId: {ClientId} | StreamPath: {StreamPath} | Type:{Type} | Reason: {Reason} | Authorization failed")]
         public static partial void AuthorizationFailed(this ILogger logger, uint clientId, string streamPath, string type, string reason);
 
-        [LoggerMessage(LogLevel.Debug, "ClientId: {ClientId} | StreamPath: {StreamPath} | Start subscription successfully")]
+        [LoggerMessage(LogLevel.Information, "ClientId: {ClientId} | StreamPath: {StreamPath} | Start subscription successfully")]
         public static partial void SubscriptionStarted(this ILogger logger, uint clientId, string streamPath);
 
         [LoggerMessage(LogLevel.Debug, "ClientId: {ClientId} | StreamPath: {StreamPath} | Already subscribing")]
@@ -40,7 +40,7 @@ namespace LiveStreamingServerNet.Rtmp.Logging
         public static void Publish(this ILogger logger, uint clientId, string streamName, string publishingType)
             => PublishCore(logger, clientId, !string.IsNullOrEmpty(streamName) ? streamName : "(Empty)", publishingType);
 
-        [LoggerMessage(LogLevel.Debug, "ClientId: {ClientId} | StreamPath: {StreamPath} | Type: {Type} | Start publishing successfully")]
+        [LoggerMessage(LogLevel.Information, "ClientId: {ClientId} | StreamPath: {StreamPath} | Type: {Type} | Start publishing successfully")]
         public static partial void PublishingStarted(this ILogger logger, uint clientId, string streamPath, string type);
 
         [LoggerMessage(LogLevel.Debug, "ClientId: {ClientId} | StreamPath: {StreamPath} | Type: {Type} | Stream already exists")]
@@ -64,13 +64,13 @@ namespace LiveStreamingServerNet.Rtmp.Logging
         [LoggerMessage(LogLevel.Debug, "ClientId: {ClientId} | Handshake C1 Handled")]
         public static partial void HandshakeC1Handled(this ILogger logger, uint clientId);
 
-        [LoggerMessage(LogLevel.Debug, "ClientId: {ClientId} | Handshake C1 Handling Failed")]
+        [LoggerMessage(LogLevel.Error, "ClientId: {ClientId} | Handshake C1 Handling Failed")]
         public static partial void HandshakeC1HandlingFailed(this ILogger logger, uint clientId);
 
         [LoggerMessage(LogLevel.Debug, "ClientId: {ClientId} | Handshake C2 Handled")]
         public static partial void HandshakeC2Handled(this ILogger logger, uint clientId);
 
-        [LoggerMessage(LogLevel.Debug, "ClientId: {ClientId} | Handshake C2 Handling Failed")]
+        [LoggerMessage(LogLevel.Error, "ClientId: {ClientId} | Handshake C2 Handling Failed")]
         public static partial void HandshakeC2HandlingFailed(this ILogger logger, uint clientId);
 
         [LoggerMessage(LogLevel.Debug, "ClientId: {ClientId} | Handshake type: {HandshakeType}")]
@@ -79,13 +79,13 @@ namespace LiveStreamingServerNet.Rtmp.Logging
         [LoggerMessage(LogLevel.Error, "ClientId: {ClientId} | An error occurred while sending media message")]
         public static partial void FailedToSendMediaMessage(this ILogger logger, uint clientId, Exception exception);
 
-        [LoggerMessage(LogLevel.Debug, "ClientId: {ClientId} | Resume media package | Outstanding media message size: {OutstandingPackagesSize} | count: {OutstandingPackagesCount}")]
+        [LoggerMessage(LogLevel.Warning, "ClientId: {ClientId} | Resume media package | Outstanding media message size: {OutstandingPackagesSize} | count: {OutstandingPackagesCount}")]
         public static partial void ResumeMediaPackage(this ILogger logger, uint clientId, long outstandingPackagesSize, long outstandingPackagesCount);
 
-        [LoggerMessage(LogLevel.Debug, "ClientId: {ClientId} | Pause media package | Outstanding media message size: {OutstandingPackagesSize} | count: {OutstandingPackagesCount}")]
+        [LoggerMessage(LogLevel.Warning, "ClientId: {ClientId} | Pause media package | Outstanding media message size: {OutstandingPackagesSize} | count: {OutstandingPackagesCount}")]
         public static partial void PauseMediaPackage(this ILogger logger, uint clientId, long outstandingPackagesSize, long outstandingPackagesCount);
 
-        [LoggerMessage(LogLevel.Debug, "StreamPath: {StreamPath} | Reached max GOP cache size")]
+        [LoggerMessage(LogLevel.Warning, "StreamPath: {StreamPath} | Reached max GOP cache size")]
         public static partial void ReachedMaxGopCacheSize(this ILogger logger, string streamPath);
 
         [LoggerMessage(LogLevel.Warning, "ClientId: {ClientId} | Exceeded bandwidth limit")]
