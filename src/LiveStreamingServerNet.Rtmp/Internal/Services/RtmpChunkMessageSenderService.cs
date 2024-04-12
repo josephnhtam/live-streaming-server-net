@@ -60,12 +60,8 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
                 var outChunkSize = clientsGroup.Key;
                 var clients = clientsGroup.Select(x => x.Client).ToList();
 
-                using var groupPayloadBuffer = _netBufferPool.Obtain();
-                payloadBuffer.CopyAllTo(groupPayloadBuffer);
-                groupPayloadBuffer.MoveTo(0);
-
                 using var targetBuffer = _netBufferPool.Obtain();
-                _writer.Write(targetBuffer, basicHeader, messageHeader, payloadBuffer, outChunkSize);
+                _writer.Write(targetBuffer, basicHeader, messageHeader, payloadBuffer.MoveTo(0), outChunkSize);
 
                 foreach (var client in clients)
                 {
