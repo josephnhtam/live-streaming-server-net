@@ -23,7 +23,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
         public async Task<RtmpEventConsumingResult> Handle(RtmpHandshakeC1Event @event, CancellationToken cancellationToken)
         {
             using var incomingBuffer = _netBufferPool.Obtain();
-            await incomingBuffer.CopyStreamData(@event.NetworkStream, HandshakeC1Size, cancellationToken);
+            await incomingBuffer.FromStreamData(@event.NetworkStream, HandshakeC1Size, cancellationToken);
 
             using var outgoingBuffer = _netBufferPool.Obtain();
             if (HandleHandshake(@event, incomingBuffer, outgoingBuffer))

@@ -60,7 +60,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
                 _ => throw new ArgumentOutOfRangeException(nameof(basicHeader.ChunkType))
             };
 
-            success &= await HandleChunkEventPayloadAsync(chunkStreamContext, @event, netBuffer, cancellationToken);
+            success &= await HandleChunkEventPayloadAsync(chunkStreamContext, @event, cancellationToken);
 
             return new RtmpEventConsumingResult(success, chunkStreamContext.MessageHeader.MessageLength);
         }
@@ -115,7 +115,8 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
             return true;
         }
 
-        private async ValueTask<bool> HandleChunkMessageHeaderType1Async(IRtmpChunkStreamContext chunkStreamContext,
+        private async ValueTask<bool> HandleChunkMessageHeaderType1Async(
+            IRtmpChunkStreamContext chunkStreamContext,
             RtmpChunkEvent @event,
             INetBuffer netBuffer,
             CancellationToken cancellationToken)
@@ -187,7 +188,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
             return true;
         }
 
-        private async ValueTask<bool> HandleChunkEventPayloadAsync(IRtmpChunkStreamContext chunkStreamContext, RtmpChunkEvent @event, INetBuffer netBuffer, CancellationToken cancellationToken)
+        private async ValueTask<bool> HandleChunkEventPayloadAsync(IRtmpChunkStreamContext chunkStreamContext, RtmpChunkEvent @event, CancellationToken cancellationToken)
         {
             if (chunkStreamContext.IsFirstChunkOfMessage)
             {
@@ -205,8 +206,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
                     clientContext.InChunkSize - payloadBuffer.Size % clientContext.InChunkSize
                 );
 
-                await netBuffer.CopyStreamData(@event.NetworkStream, chunkedPayloadLength, cancellationToken);
-                netBuffer.CopyAllTo(payloadBuffer);
+                await payloadBuffer.AppendStreamData(@event.NetworkStream, chunkedPayloadLength, cancellationToken);
             }
 
             if (payloadBuffer.Size == messageLength)

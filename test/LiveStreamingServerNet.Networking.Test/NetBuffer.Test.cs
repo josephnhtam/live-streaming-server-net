@@ -185,7 +185,7 @@ namespace LiveStreamingServerNet.Networking.Test
         }
 
         [Fact]
-        public async Task CopyStreamData()
+        public async Task FromStreamData()
         {
             // Arange
             var startPos = _fixture.Create<int>();
@@ -195,13 +195,34 @@ namespace LiveStreamingServerNet.Networking.Test
             using var netBuffer = new NetBuffer();
             using var stream = new MemoryStream(expected);
             netBuffer.MoveTo(startPos);
-            await netBuffer.CopyStreamData(stream, expected.Length);
+            await netBuffer.FromStreamData(stream, expected.Length);
 
             // Assert
             var size = netBuffer.Size;
             size.Should().Be(expected.Length);
 
             var result = netBuffer.UnderlyingBuffer.Take(expected.Length);
+            result.Should().BeEquivalentTo(expected);
+        }
+
+        [Fact]
+        public async Task AppendStreamData()
+        {
+            // Arange
+            var startPos = _fixture.Create<int>();
+            var expected = _fixture.Create<byte[]>();
+
+            // Act
+            using var netBuffer = new NetBuffer();
+            using var stream = new MemoryStream(expected);
+            netBuffer.MoveTo(startPos);
+            await netBuffer.AppendStreamData(stream, expected.Length);
+
+            // Assert
+            var size = netBuffer.Size;
+            size.Should().Be(startPos + expected.Length);
+
+            var result = netBuffer.UnderlyingBuffer.Skip(startPos).Take(expected.Length);
             result.Should().BeEquivalentTo(expected);
         }
     }

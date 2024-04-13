@@ -78,7 +78,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
                 }
 
                 using var tempBuffer = new NetBuffer();
-                await tempBuffer.CopyStreamData(stream, Math.Min(expectedChunkSize, remainingPayloadSize));
+                await tempBuffer.FromStreamData(stream, Math.Min(expectedChunkSize, remainingPayloadSize));
                 targetBuffer.Write(tempBuffer.UnderlyingBuffer, 0, tempBuffer.Size);
 
                 remainingPayloadSize -= expectedChunkSize;
@@ -99,7 +99,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
                 }
 
                 using var tempBuffer = new NetBuffer();
-                await tempBuffer.CopyStreamData(stream, Math.Min(expectedChunkSize, remainingPayloadSize));
+                await tempBuffer.FromStreamData(stream, Math.Min(expectedChunkSize, remainingPayloadSize));
                 targetBuffer.Write(tempBuffer.UnderlyingBuffer, 0, tempBuffer.Size);
 
                 remainingPayloadSize -= expectedChunkSize;

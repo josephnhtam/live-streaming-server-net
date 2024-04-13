@@ -14,7 +14,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpHeaders
 
         public static async Task<RtmpChunkBasicHeader> ReadAsync(INetBuffer netBuffer, ReadOnlyStream networkStream, CancellationToken cancellationToken)
         {
-            await netBuffer.CopyStreamData(networkStream, 1, cancellationToken);
+            await netBuffer.FromStreamData(networkStream, 1, cancellationToken);
 
             var firstByte = netBuffer.ReadByte();
             var chunkStreamIdAttempt = (uint)(firstByte & 0x3f);
@@ -24,10 +24,10 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpHeaders
             switch (chunkStreamIdAttempt)
             {
                 case 0:
-                    await netBuffer.CopyStreamData(networkStream, 1, cancellationToken);
+                    await netBuffer.FromStreamData(networkStream, 1, cancellationToken);
                     return new RtmpChunkBasicHeader(chunkType, 64u + netBuffer.ReadByte());
                 case 1:
-                    await netBuffer.CopyStreamData(networkStream, 2, cancellationToken);
+                    await netBuffer.FromStreamData(networkStream, 2, cancellationToken);
                     return new RtmpChunkBasicHeader(chunkType, 64u + netBuffer.ReadByte() + 256u * netBuffer.ReadByte());
                 default:
                     return new RtmpChunkBasicHeader(chunkType, chunkStreamIdAttempt);
