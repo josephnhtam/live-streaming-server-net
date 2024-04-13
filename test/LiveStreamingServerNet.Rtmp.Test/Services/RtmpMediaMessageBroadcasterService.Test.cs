@@ -12,7 +12,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using NSubstitute;
 
-namespace LiveStreamingServerNet.Rtmp.Test
+namespace LiveStreamingServerNet.Rtmp.Test.Services
 {
     public class RtmpMediaMessageBroadcasterServiceTest
     {

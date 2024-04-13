@@ -7,7 +7,7 @@ using LiveStreamingServerNet.Rtmp.Internal.Services;
 using LiveStreamingServerNet.Rtmp.Internal.Services.Contracts;
 using NSubstitute;
 
-namespace LiveStreamingServerNet.Rtmp.Test
+namespace LiveStreamingServerNet.Rtmp.Test.Services
 {
     public class RtmpChunkMessageSenderServiceTest
     {

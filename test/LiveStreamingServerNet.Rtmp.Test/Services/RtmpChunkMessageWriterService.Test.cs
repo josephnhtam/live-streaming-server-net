@@ -4,7 +4,7 @@ using LiveStreamingServerNet.Rtmp.Internal.RtmpHeaders;
 using LiveStreamingServerNet.Rtmp.Internal.Services;
 using System.Security.Cryptography;
 
-namespace LiveStreamingServerNet.Rtmp.Test
+namespace LiveStreamingServerNet.Rtmp.Test.Services
 {
     public class RtmpChunkMessageWriterServiceTest
     {

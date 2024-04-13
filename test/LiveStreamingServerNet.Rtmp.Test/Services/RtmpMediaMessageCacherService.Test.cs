@@ -11,13 +11,11 @@ using LiveStreamingServerNet.Rtmp.Internal.RtmpHeaders;
 using LiveStreamingServerNet.Rtmp.Internal.Services;
 using LiveStreamingServerNet.Rtmp.Internal.Services.Contracts;
 using LiveStreamingServerNet.Utilities;
-using LiveStreamingServerNet.Utilities.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using NSubstitute;
-using System.IO;
 
-namespace LiveStreamingServerNet.Rtmp.Test
+namespace LiveStreamingServerNet.Rtmp.Test.Services
 {
     public class RtmpMediaMessageCacherServiceTest
     {
