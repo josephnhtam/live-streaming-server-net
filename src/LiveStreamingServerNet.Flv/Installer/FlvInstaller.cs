@@ -2,6 +2,8 @@
 using LiveStreamingServerNet.Flv.Installer.Contracts;
 using LiveStreamingServerNet.Flv.Internal.HttpClients;
 using LiveStreamingServerNet.Flv.Internal.HttpClients.Contracts;
+using LiveStreamingServerNet.Flv.Internal.MediaPackageDiscarding;
+using LiveStreamingServerNet.Flv.Internal.MediaPackageDiscarding.Contracts;
 using LiveStreamingServerNet.Flv.Internal.Services;
 using LiveStreamingServerNet.Flv.Internal.Services.Contracts;
 using LiveStreamingServerNet.Flv.Internal.WebSocketClients;
@@ -25,7 +27,8 @@ namespace LiveStreamingServerNet.Flv.Installer
 
             services.AddSingleton<IFlvWriterFactory, FlvWriterFactory>()
                     .AddSingleton<IFlvClientFactory, FlvClientFactory>()
-                    .AddSingleton<IFlvClientHandler, FlvClientHandler>();
+                    .AddSingleton<IFlvClientHandler, FlvClientHandler>()
+                    .AddSingleton<IMediaPackageDiscarderFactory, MediaPackageDiscarderFactory>();
 
             services.AddSingleton<IHttpFlvClientFactory, HttpFlvClientFactory>();
 

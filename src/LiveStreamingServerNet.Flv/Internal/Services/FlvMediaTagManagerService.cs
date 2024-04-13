@@ -1,23 +1,22 @@
-﻿using LiveStreamingServerNet.Flv.Configurations;
-using LiveStreamingServerNet.Flv.Internal.Contracts;
+﻿using LiveStreamingServerNet.Flv.Internal.Contracts;
+using LiveStreamingServerNet.Flv.Internal.MediaPackageDiscarding.Contracts;
 using LiveStreamingServerNet.Flv.Internal.Services.Contracts;
 using LiveStreamingServerNet.Rtmp;
 using LiveStreamingServerNet.Utilities.Contracts;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace LiveStreamingServerNet.Flv.Internal.Services
 {
     internal partial class FlvMediaTagManagerService : IFlvMediaTagManagerService, IAsyncDisposable
     {
-        private readonly MediaMessageConfiguration _config;
+        private readonly IMediaPackageDiscarderFactory _mediaPackageDiscarderFactory;
         private readonly ILogger _logger;
 
         public FlvMediaTagManagerService(
-            IOptions<MediaMessageConfiguration> config,
+            IMediaPackageDiscarderFactory mediaPackageDiscarderFactory,
             ILogger<FlvMediaTagManagerService> logger)
         {
-            _config = config.Value;
+            _mediaPackageDiscarderFactory = mediaPackageDiscarderFactory;
             _logger = logger;
         }
 

@@ -1,6 +1,6 @@
-﻿using LiveStreamingServerNet.Flv.Configurations;
-using LiveStreamingServerNet.Flv.Internal.Contracts;
+﻿using LiveStreamingServerNet.Flv.Internal.Contracts;
 using LiveStreamingServerNet.Flv.Internal.Logging;
+using LiveStreamingServerNet.Flv.Internal.MediaPackageDiscarding.Contracts;
 using LiveStreamingServerNet.Rtmp;
 using LiveStreamingServerNet.Utilities.Contracts;
 using Microsoft.Extensions.Logging;
@@ -21,7 +21,8 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
 
         public void RegisterClient(IFlvClient client)
         {
-            var context = new ClientMediaContext(client, _config, _logger); ;
+            var mediaPackageDiscarder = _mediaPackageDiscarderFactory.Create(client.ClientId);
+            var context = new ClientMediaContext(client, mediaPackageDiscarder, _logger); ;
             _clientMediaContexts[client] = context;
 
             var clientTask = Task.Run(() => ClientTask(context));
@@ -92,7 +93,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
             public long OutstandingPackagesSize => _outstandingPackagesSize;
             public long OutstandingPackagesCount => _packageChannel.Reader.Count;
 
-            private readonly MediaMessageConfiguration _config;
+            private readonly IMediaPackageDiscarder _mediaPackageDiscarder;
             private readonly ILogger _logger;
 
             private readonly Channel<ClientMediaPackage> _packageChannel;
@@ -101,10 +102,10 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
             private long _outstandingPackagesSize;
             private bool _skippingPackage;
 
-            public ClientMediaContext(IFlvClient client, MediaMessageConfiguration config, ILogger logger)
+            public ClientMediaContext(IFlvClient client, IMediaPackageDiscarder mediaPackageDiscarder, ILogger logger)
             {
                 Client = client;
-                _config = config;
+                _mediaPackageDiscarder = mediaPackageDiscarder;
                 _logger = logger;
 
                 _packageChannel = Channel.CreateUnbounded<ClientMediaPackage>();
@@ -148,34 +149,8 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
 
             private bool ShouldSkipPackage(ClientMediaContext context, ref ClientMediaPackage package)
             {
-                if (!package.IsSkippable)
-                {
-                    _skippingPackage = false;
-                    return false;
-                }
-
-                if (_skippingPackage)
-                {
-                    if (context.OutstandingPackagesSize <= _config.MaxOutstandingMediaMessageSize ||
-                        context.OutstandingPackagesCount <= _config.MaxOutstandingMediaMessageCount)
-                    {
-                        _logger.ResumeMediaPackage(Client.ClientId, context.OutstandingPackagesSize, context.OutstandingPackagesCount);
-                        _skippingPackage = false;
-                        return false;
-                    }
-
-                    return true;
-                }
-
-                if (context.OutstandingPackagesSize > _config.MaxOutstandingMediaMessageSize &&
-                    context.OutstandingPackagesCount > _config.MaxOutstandingMediaMessageCount)
-                {
-                    _logger.PauseMediaPackage(Client.ClientId, context.OutstandingPackagesSize, context.OutstandingPackagesCount);
-                    _skippingPackage = true;
-                    return true;
-                }
-
-                return false;
+                return _mediaPackageDiscarder.ShouldDiscardMediaPackage(
+                    package.IsSkippable, context.OutstandingPackagesSize, context.OutstandingPackagesCount);
             }
         }
 
