@@ -10,7 +10,7 @@ namespace LiveStreamingServerNet.Flv.Internal
         public byte[]? VideoSequenceHeader { get; set; }
         public byte[]? AudioSequenceHeader { get; set; }
         public IGroupOfPicturesCache GroupOfPicturesCache { get; }
-        public bool IsReady => VideoSequenceHeader != null && AudioSequenceHeader != null;
+        public bool IsReady => VideoSequenceHeader != null || AudioSequenceHeader != null;
 
         public FlvStreamContext(string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {

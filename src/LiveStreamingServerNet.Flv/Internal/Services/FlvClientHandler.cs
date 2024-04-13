@@ -30,9 +30,13 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
             }
         }
 
-        private static async ValueTask SendFlvHeaderAsync(IFlvClient client, CancellationToken cancellationToken)
+        private async ValueTask SendFlvHeaderAsync(IFlvClient client, CancellationToken cancellationToken)
         {
-            await client.FlvWriter.WriteHeaderAsync(true, true, cancellationToken);
+            var streamContext = _streamManager.GetFlvStreamContext(client.StreamPath)!;
+            var hasAudio = streamContext.AudioSequenceHeader != null;
+            var hasVideo = streamContext.VideoSequenceHeader != null;
+
+            await client.FlvWriter.WriteHeaderAsync(hasAudio, hasVideo, cancellationToken);
         }
 
         private async ValueTask SendCachedFlvTagsAsync(IFlvClient client, CancellationToken cancellationToken)
