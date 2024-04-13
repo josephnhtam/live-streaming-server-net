@@ -1,8 +1,8 @@
 ﻿using LiveStreamingServerNet.Networking;
 using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.Contracts;
+using LiveStreamingServerNet.Rtmp.Internal.Logging;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEvents;
-using LiveStreamingServerNet.Rtmp.Logging;
 using LiveStreamingServerNet.Rtmp.RateLimiting.Contracts;
 using MediatR;
 using Microsoft.Extensions.Logging;

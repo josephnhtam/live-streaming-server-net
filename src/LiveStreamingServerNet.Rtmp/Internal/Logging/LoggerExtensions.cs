@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 
-namespace LiveStreamingServerNet.Rtmp.Logging
+namespace LiveStreamingServerNet.Rtmp.Internal.Logging
 {
     internal static partial class LoggerExtensions
     {

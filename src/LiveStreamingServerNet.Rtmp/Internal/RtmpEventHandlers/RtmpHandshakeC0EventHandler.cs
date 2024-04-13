@@ -1,5 +1,5 @@
-﻿using LiveStreamingServerNet.Rtmp.Internal.RtmpEvents;
-using LiveStreamingServerNet.Rtmp.Logging;
+﻿using LiveStreamingServerNet.Rtmp.Internal.Logging;
+using LiveStreamingServerNet.Rtmp.Internal.RtmpEvents;
 using MediatR;
 using Microsoft.Extensions.Logging;
 

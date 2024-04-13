@@ -1,5 +1,5 @@
 ﻿using LiveStreamingServerNet.Rtmp.Internal.Contracts;
-using LiveStreamingServerNet.Rtmp.Logging;
+using LiveStreamingServerNet.Rtmp.Internal.Logging;
 using LiveStreamingServerNet.Utilities.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;

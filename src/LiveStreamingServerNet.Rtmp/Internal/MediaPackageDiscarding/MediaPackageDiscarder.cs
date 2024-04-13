@@ -1,6 +1,6 @@
 ﻿using LiveStreamingServerNet.Rtmp.Configurations;
+using LiveStreamingServerNet.Rtmp.Internal.Logging;
 using LiveStreamingServerNet.Rtmp.Internal.MediaPackageDiscarding.Contracts;
-using LiveStreamingServerNet.Rtmp.Logging;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
