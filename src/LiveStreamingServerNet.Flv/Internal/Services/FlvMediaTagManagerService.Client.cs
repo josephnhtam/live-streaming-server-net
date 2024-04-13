@@ -22,7 +22,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
         public void RegisterClient(IFlvClient client)
         {
             var mediaPackageDiscarder = _mediaPackageDiscarderFactory.Create(client.ClientId);
-            var context = new ClientMediaContext(client, mediaPackageDiscarder, _logger); ;
+            var context = new ClientMediaContext(client, mediaPackageDiscarder);
             _clientMediaContexts[client] = context;
 
             var clientTask = Task.Run(() => ClientTask(context));
@@ -94,19 +94,16 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
             public long OutstandingPackagesCount => _packageChannel.Reader.Count;
 
             private readonly IMediaPackageDiscarder _mediaPackageDiscarder;
-            private readonly ILogger _logger;
 
             private readonly Channel<ClientMediaPackage> _packageChannel;
             private readonly CancellationTokenSource _cts;
 
             private long _outstandingPackagesSize;
-            private bool _skippingPackage;
 
-            public ClientMediaContext(IFlvClient client, IMediaPackageDiscarder mediaPackageDiscarder, ILogger logger)
+            public ClientMediaContext(IFlvClient client, IMediaPackageDiscarder mediaPackageDiscarder)
             {
                 Client = client;
                 _mediaPackageDiscarder = mediaPackageDiscarder;
-                _logger = logger;
 
                 _packageChannel = Channel.CreateUnbounded<ClientMediaPackage>();
                 _cts = new CancellationTokenSource();
