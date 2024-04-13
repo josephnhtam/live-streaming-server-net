@@ -24,7 +24,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
         private readonly IRtmpMediaMessageInterceptionService _interception;
         private readonly MediaMessageConfiguration _config;
         private readonly ILogger<RtmpMediaMessageCacherService> _logger;
-        private readonly RtmpMediaMessageCacherService _sut;
+        private readonly IRtmpMediaMessageCacherService _sut;
 
         public RtmpMediaMessageCacherServiceTest()
         {

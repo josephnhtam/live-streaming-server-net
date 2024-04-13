@@ -19,11 +19,11 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
         private readonly Fixture _fixture;
         private readonly IRtmpChunkMessageWriterService _chunkMessageWriter;
         private readonly IRtmpMediaMessageInterceptionService _interception;
-        private readonly NetBufferPool _netBufferPool;
+        private readonly INetBufferPool _netBufferPool;
         private readonly IMediaPackageDiscarder _mediaPackageDiscarder;
         private readonly IMediaPackageDiscarderFactory _mediaPackageDiscarderFactory;
         private readonly ILogger<RtmpMediaMessageBroadcasterService> _logger;
-        private readonly RtmpMediaMessageBroadcasterService _sut;
+        private readonly IRtmpMediaMessageBroadcasterService _sut;
 
         public RtmpMediaMessageBroadcasterServiceTest()
         {
