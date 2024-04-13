@@ -10,12 +10,12 @@ This open-source project provides an implementation of an RTMP live streaming se
 - **GOP caching**: Supports caching the Group of Pictures (GOP) to ensure immediate availability of live streaming content.
 - **Custom authorization**: Enables you to implement custom authorization mechanisms for accessing live streams.
 - **Admin panel**: Includes an admin panel that provides an user interface for managing and monitoring the live streaming server.
+- **Cloud Storage Integration**: Enabling real-time uploading of HLS files to cloud storage services like Azure Blob Storage, Google Cloud Storage, and AWS S3, which ensures scalable and efficient HLS stream distribution through CDN.
 
 ## In-Progress
 
 - **Custom Kubernetes Operator and Kubernetes Integration**: The objective is to achieve automatic horizontal autoscaling by scaling out the pods when more streams are published, and scaling in the pods when streams are deleted, all without affecting the existing connections.
 - **Redis Integration**: Integrate with Redis to share stream information among pods in the fleet.
-- **Cloud Storage Integration**: Enabling real-time uploading of HLS files to cloud storage services like Azure Blob Storage, Google Cloud Storage, and AWS S3, which ensures scalable and efficient content distribution through CDN.
 
 ## Roadmap
 
@@ -199,6 +199,18 @@ Please refer to the [LiveStreamServerNet.StandaloneDemo](https://github.com/jose
     <tr>
       <th>LiveStreamingServerNet.Transmuxer</th>
       <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet.Transmuxer"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.Transmuxer.svg?logo=nuget"></a></td>
+    </tr>
+    <tr>
+      <th>LiveStreamingServerNet.Transmuxer.AmazonS3</th>
+      <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet.Transmuxer.AmazonS3"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.Transmuxer.AmazonS3.svg?logo=nuget"></a></td>
+    </tr>
+    <tr>
+      <th>LiveStreamingServerNet.Transmuxer.AzureBlobStorage</th>
+      <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet.Transmuxer.AzureBlobStorage"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.Transmuxer.AzureBlobStorage.svg?logo=nuget"></a></td>
+    </tr>
+    <tr>
+      <th>LiveStreamingServerNet.Transmuxer.GoogleCloudStorage</th>
+      <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet.Transmuxer.GoogleCloudStorage"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.svg?logo=nuget"></a></td>
     </tr>
     <tr>
       <th>LiveStreamingServerNet.Utilities</th>
