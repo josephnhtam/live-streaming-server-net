@@ -4,7 +4,7 @@
     <TargetFrameworks>net8.0;net7.0</TargetFrameworks>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <IsPackable>false</IsPackable>
+    <IsPackable>true</IsPackable>
     <Authors>Joseph NH Tam</Authors>
     <Description>This package provides the capability to upload remuxed HLS files to Amazon S3 in real time.</Description>
     <PackageTags>live-streaming;rtmp;transmuxer;hls;aws</PackageTags>
