@@ -118,7 +118,7 @@ namespace LiveStreamingServerNet.Networking
         {
             var pos = _position;
             Advance(bytesCount);
-            await stream.ReadAsync(_buffer, pos, bytesCount, cancellationToken);
+            await stream.ReadExactlyAsync(_buffer, pos, bytesCount, cancellationToken);
         }
 
         public virtual void Dispose()
