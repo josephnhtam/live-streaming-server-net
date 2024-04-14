@@ -13,6 +13,12 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Logging
         [LoggerMessage(LogLevel.Debug, "ClientId: {ClientId} | Connect: {CommandObject}")]
         public static partial void Connect(this ILogger logger, uint clientId, IDictionary<string, object> commandObject);
 
+        [LoggerMessage(LogLevel.Warning, "ClientId: {ClientId} | Client already connected")]
+        public static partial void ClientAlreadyConnected(this ILogger logger, uint clientId);
+
+        [LoggerMessage(LogLevel.Warning, "ClientId: {ClientId} | Invalid app name")]
+        public static partial void InvalidAppName(this ILogger logger, uint clientId);
+
         [LoggerMessage(LogLevel.Debug, "ClientId: {ClientId} | Play: {StreamName}")]
         private static partial void PlayCore(this ILogger logger, uint clientId, string streamName);
 

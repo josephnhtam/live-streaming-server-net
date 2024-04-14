@@ -42,7 +42,21 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
         {
             _logger.Connect(clientContext.Client.ClientId, command.CommandObject);
 
-            clientContext.AppName = (string)command.CommandObject["app"];
+            if (!string.IsNullOrEmpty(clientContext.AppName))
+            {
+                _logger.ClientAlreadyConnected(clientContext.Client.ClientId);
+                return ValueTask.FromResult(false);
+            }
+
+            var appName = (string)command.CommandObject["app"];
+
+            if (string.IsNullOrWhiteSpace(appName))
+            {
+                _logger.InvalidAppName(clientContext.Client.ClientId);
+                return ValueTask.FromResult(false);
+            }
+
+            clientContext.AppName = appName;
 
             _protocolControlMessageSender.SetChunkSize(clientContext, _config.OutChunkSize);
             _protocolControlMessageSender.WindowAcknowledgementSize(clientContext, _config.OutAcknowledgementWindowSize);
