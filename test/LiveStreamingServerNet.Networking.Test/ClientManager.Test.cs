@@ -62,6 +62,9 @@ namespace LiveStreamingServerNet.Networking.Test
             var clientTcs = new TaskCompletionSource();
             _client.RunAsync(_clientHandler, _serverEndPoint, Arg.Any<CancellationToken>()).Returns(clientTcs.Task);
 
+            var tcs = new TaskCompletionSource();
+            _eventDispatcher.When(x => x.ClientDisconnectedAsync(_client)).Do(x => tcs.SetResult());
+
             // Act
             await _sut.AcceptClientAsync(_tcpListener, _serverEndPoint, default);
 
@@ -74,7 +77,9 @@ namespace LiveStreamingServerNet.Networking.Test
 
             // Act
             clientTcs.SetCanceled();
+
             await _sut.WaitUntilAllClientTasksCompleteAsync(default);
+            await tcs.Task;
 
             // Assert
             _ = _eventDispatcher.Received(1).ClientDisconnectedAsync(_client);
