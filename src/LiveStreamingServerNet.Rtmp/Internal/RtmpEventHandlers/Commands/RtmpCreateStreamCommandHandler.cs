@@ -23,11 +23,12 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
             RtmpCreateStreamCommand command,
             CancellationToken cancellationToken)
         {
-            RespondToClient(clientContext, command);
+            var streamId = clientContext.CreateNewStream();
+            RespondToClient(clientContext, command, streamId);
             return ValueTask.FromResult(true);
         }
 
-        public void RespondToClient(IRtmpClientContext clientContext, RtmpCreateStreamCommand command)
+        public void RespondToClient(IRtmpClientContext clientContext, RtmpCreateStreamCommand command, uint streamId)
         {
             _commandMessageSender.SendCommandMessage(
                 clientContext: clientContext,
@@ -35,7 +36,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
                 commandName: "_result",
                 transactionId: command.TransactionId,
                 commandObject: null,
-                parameters: new List<object?> { clientContext.CreateNewStream() }
+                parameters: new List<object?> { streamId }
             );
         }
     }
