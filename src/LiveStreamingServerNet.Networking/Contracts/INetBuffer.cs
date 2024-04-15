@@ -14,8 +14,8 @@
         void Flush(INetBuffer output);
         void CopyAllTo(INetBuffer targetBuffer);
         void ReadAndWriteTo(INetBuffer targetBuffer, int bytesCount);
-        Task FromStreamData(Stream stream, int bytesCount, CancellationToken cancellationToken = default);
-        Task AppendStreamData(Stream stream, int bytesCount, CancellationToken cancellationToken = default);
+        ValueTask FromStreamData(Stream stream, int bytesCount, CancellationToken cancellationToken = default);
+        ValueTask AppendStreamData(Stream stream, int bytesCount, CancellationToken cancellationToken = default);
 
         void WriteRandomBytes(int count);
         bool ReadBoolean();

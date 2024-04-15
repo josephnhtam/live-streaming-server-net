@@ -8,7 +8,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpHeaders
         public const int kSize = 4;
         public int Size => kSize;
 
-        public static async Task<RtmpChunkExtendedTimestampHeader> ReadAsync(INetBuffer netBuffer, ReadOnlyStream networkStream, CancellationToken cancellationToken)
+        public static async ValueTask<RtmpChunkExtendedTimestampHeader> ReadAsync(INetBuffer netBuffer, ReadOnlyStream networkStream, CancellationToken cancellationToken)
         {
             await netBuffer.FromStreamData(networkStream, kSize, cancellationToken);
 

@@ -107,18 +107,18 @@ namespace LiveStreamingServerNet.Networking
             _position += bytesCount;
         }
 
-        public async Task FromStreamData(Stream stream, int bytesCount, CancellationToken cancellationToken = default)
+        public ValueTask FromStreamData(Stream stream, int bytesCount, CancellationToken cancellationToken = default)
         {
-            Size = bytesCount;
-            await stream.ReadExactlyAsync(_buffer, 0, bytesCount, cancellationToken);
             _position = 0;
+            Size = bytesCount;
+            return stream.ReadExactlyAsync(_buffer, 0, bytesCount, cancellationToken);
         }
 
-        public async Task AppendStreamData(Stream stream, int bytesCount, CancellationToken cancellationToken = default)
+        public ValueTask AppendStreamData(Stream stream, int bytesCount, CancellationToken cancellationToken = default)
         {
             var pos = _position;
             Advance(bytesCount);
-            await stream.ReadExactlyAsync(_buffer, pos, bytesCount, cancellationToken);
+            return stream.ReadExactlyAsync(_buffer, pos, bytesCount, cancellationToken);
         }
 
         public virtual void Dispose()
