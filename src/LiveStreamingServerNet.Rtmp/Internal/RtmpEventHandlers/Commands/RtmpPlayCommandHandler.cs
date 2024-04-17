@@ -53,7 +53,10 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
             _logger.Play(clientContext.Client.ClientId, command.StreamName);
 
             if (clientContext.StreamId == null)
-                throw new InvalidOperationException("Stream is not yet created.");
+            {
+                _logger.StreamNotYetCreated(clientContext.Client.ClientId);
+                return false;
+            }
 
             var (streamPath, streamArguments) = ParseSubscriptionContext(command, clientContext);
 

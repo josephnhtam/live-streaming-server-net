@@ -50,7 +50,10 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
             _logger.Publish(clientContext.Client.ClientId, command.PublishingName, command.PublishingType);
 
             if (clientContext.StreamId == null)
-                throw new InvalidOperationException("Stream is not yet created.");
+            {
+                _logger.StreamNotYetCreated(clientContext.Client.ClientId);
+                return false;
+            }
 
             var (streamPath, streamArguments) = ParsePublishContext(command, clientContext);
 
