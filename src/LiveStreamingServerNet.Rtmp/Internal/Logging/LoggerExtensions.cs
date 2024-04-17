@@ -52,6 +52,9 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Logging
         [LoggerMessage(LogLevel.Debug, "ClientId: {ClientId} | StreamPath: {StreamPath} | Type: {Type} | Stream already exists")]
         public static partial void StreamAlreadyExists(this ILogger logger, uint clientId, string streamPath, string type);
 
+        [LoggerMessage(LogLevel.Warning, "ClientId: {ClientId} | Stream is not yet created")]
+        public static partial void StreamNotYetCreated(this ILogger logger, uint clientId);
+
         [LoggerMessage(LogLevel.Trace, "ClientId: {ClientId} | Acknowledgement received")]
         public static partial void AcknowledgementReceived(this ILogger logger, uint clientId);
 
