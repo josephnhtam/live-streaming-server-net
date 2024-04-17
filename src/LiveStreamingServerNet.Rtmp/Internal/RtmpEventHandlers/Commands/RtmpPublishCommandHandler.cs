@@ -1,6 +1,7 @@
 ﻿using LiveStreamingServerNet.Rtmp.Auth;
 using LiveStreamingServerNet.Rtmp.Auth.Contracts;
 using LiveStreamingServerNet.Rtmp.Contracts;
+using LiveStreamingServerNet.Rtmp.Internal.Authorization.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.Logging;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands.Dispatcher;
@@ -23,6 +24,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
         private readonly IRtmpStreamManagerService _streamManager;
         private readonly IRtmpCommandMessageSenderService _commandMessageSender;
         private readonly IRtmpServerStreamEventDispatcher _eventDispatcher;
+        private readonly IStreamAuthorization _streamAuthorization;
         private readonly ILogger _logger;
 
         public RtmpPublishCommandHandler(
@@ -31,6 +33,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
             IRtmpStreamManagerService streamManager,
             IRtmpCommandMessageSenderService commandMessageSender,
             IRtmpServerStreamEventDispatcher eventDispatcher,
+            IStreamAuthorization streamAuthorization,
             ILogger<RtmpPublishCommandHandler> logger)
         {
             _services = services;
@@ -38,6 +41,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
             _streamManager = streamManager;
             _commandMessageSender = commandMessageSender;
             _eventDispatcher = eventDispatcher;
+            _streamAuthorization = streamAuthorization;
             _logger = logger;
         }
 
@@ -69,30 +73,6 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
             return true;
         }
 
-        private async ValueTask<AuthorizationResult> AuthorizeAsync(
-            IRtmpClientContext clientContext,
-            string streamPath,
-            IReadOnlyDictionary<string, string> streamArguments,
-            string publishingType)
-        {
-            if (streamArguments.TryGetValue("code", out var authCode) && authCode == _serverContext.AuthCode)
-                return AuthorizationResult.Authorized();
-
-            foreach (var authorizationHandler in _services.GetServices<IAuthorizationHandler>().OrderBy(x => x.GetOrder()))
-            {
-                var result = await authorizationHandler.AuthorizePublishingAsync(
-                    clientContext.Client, streamPath, streamArguments, publishingType);
-
-                if (!result.IsAuthorized)
-                    return result;
-
-                streamPath = result.StreamPathOverride ?? streamPath;
-                streamArguments = result.StreamArgumentsOverride ?? streamArguments;
-            }
-
-            return AuthorizationResult.Authorized(streamPath, streamArguments);
-        }
-
         private static (string StreamPath, IReadOnlyDictionary<string, string> StreamArguments)
             ParsePublishContext(RtmpPublishCommand command, IRtmpClientContext clientContext)
         {
@@ -108,10 +88,8 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
             string streamPath,
             IReadOnlyDictionary<string, string> streamArguments)
         {
-            if (streamArguments.TryGetValue("code", out var authCode) && authCode == _serverContext.AuthCode)
-                return AuthorizationResult.Authorized();
-
-            var result = await AuthorizeAsync(clientContext, streamPath, streamArguments, command.PublishingType);
+            var result = await _streamAuthorization.AuthorizePublishingAsync(
+                clientContext, streamPath, command.PublishingType, streamArguments);
 
             if (!result.IsAuthorized)
             {

@@ -4,6 +4,8 @@ using LiveStreamingServerNet.Rtmp.Auth;
 using LiveStreamingServerNet.Rtmp.Auth.Contracts;
 using LiveStreamingServerNet.Rtmp.Installer.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal;
+using LiveStreamingServerNet.Rtmp.Internal.Authorization;
+using LiveStreamingServerNet.Rtmp.Internal.Authorization.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.MediaPackageDiscarding;
 using LiveStreamingServerNet.Rtmp.Internal.MediaPackageDiscarding.Contracts;
@@ -59,7 +61,8 @@ namespace LiveStreamingServerNet.Rtmp.Installer
 
             services.AddSingleton<Rtmp.Contracts.IRtmpServerContext, RtmpServerContext>()
                     .AddSingleton<IRtmpClientContextFactory, RtmpClientContextFactory>()
-                    .AddSingleton<IMediaPackageDiscarderFactory, MediaPackageDiscarderFactory>();
+                    .AddSingleton<IMediaPackageDiscarderFactory, MediaPackageDiscarderFactory>()
+                    .AddSingleton<IStreamAuthorization, StreamAuthorization>();
 
             return services;
         }

@@ -1,6 +1,7 @@
 ﻿using LiveStreamingServerNet.Rtmp.Auth;
 using LiveStreamingServerNet.Rtmp.Auth.Contracts;
 using LiveStreamingServerNet.Rtmp.Contracts;
+using LiveStreamingServerNet.Rtmp.Internal.Authorization.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.Logging;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands.Dispatcher;
@@ -24,6 +25,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
         private readonly IRtmpCommandMessageSenderService _commandMessageSender;
         private readonly IRtmpMediaMessageCacherService _mediaMessageCacher;
         private readonly IRtmpServerStreamEventDispatcher _eventDispatch;
+        private readonly IStreamAuthorization _streamAuthorization;
         private readonly ILogger<RtmpPlayCommandHandler> _logger;
 
         public RtmpPlayCommandHandler(
@@ -33,6 +35,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
             IRtmpCommandMessageSenderService commandMessageSender,
             IRtmpMediaMessageCacherService mediaMessageCacher,
             IRtmpServerStreamEventDispatcher eventDispatch,
+            IStreamAuthorization streamAuthorization,
             ILogger<RtmpPlayCommandHandler> logger)
         {
             _services = services;
@@ -41,6 +44,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
             _commandMessageSender = commandMessageSender;
             _mediaMessageCacher = mediaMessageCacher;
             _eventDispatch = eventDispatch;
+            _streamAuthorization = streamAuthorization;
             _logger = logger;
         }
 
@@ -72,27 +76,12 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
             return true;
         }
 
-        private async ValueTask<AuthorizationResult> AuthorizeAsync(
+        private ValueTask<AuthorizationResult> AuthorizeAsync(
             IRtmpClientContext clientContext,
             string streamPath,
             IReadOnlyDictionary<string, string> streamArguments)
         {
-            if (streamArguments.TryGetValue("code", out var authCode) && authCode == _serverContext.AuthCode)
-                return AuthorizationResult.Authorized();
-
-            foreach (var authorizationHandler in _services.GetServices<IAuthorizationHandler>().OrderBy(x => x.GetOrder()))
-            {
-                var result = await authorizationHandler.AuthorizeSubscriptionAsync(
-                    clientContext.Client, streamPath, streamArguments);
-
-                if (!result.IsAuthorized)
-                    return result;
-
-                streamPath = result.StreamPathOverride ?? streamPath;
-                streamArguments = result.StreamArgumentsOverride ?? streamArguments;
-            }
-
-            return AuthorizationResult.Authorized(streamPath, streamArguments);
+            return _streamAuthorization.AuthorizeSubscribingAsync(clientContext, streamPath, streamArguments);
         }
 
         private static (string StreamPath, IReadOnlyDictionary<string, string> StreamArguments)
