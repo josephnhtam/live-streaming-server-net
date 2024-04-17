@@ -95,11 +95,8 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
         private static (string StreamPath, IReadOnlyDictionary<string, string> StreamArguments)
             ParseSubscriptionContext(RtmpPlayCommand command, IRtmpClientContext clientContext)
         {
-            var (streamName, arguments) = StreamUtilities.ParseStreamPath(command.StreamName);
-
-            var streamPath = $"/{string.Join('/',
-                new string[] { clientContext.AppName, streamName }.Where(s => !string.IsNullOrEmpty(s)).ToArray())}";
-
+            var (streamName, arguments) = StreamUtilities.ParseStreamName(command.StreamName);
+            var streamPath = StreamUtilities.ComposeStreamPath(clientContext.AppName, streamName);
             return (streamPath, arguments.AsReadOnly());
         }
 

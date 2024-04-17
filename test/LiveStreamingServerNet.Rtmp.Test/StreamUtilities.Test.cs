@@ -6,13 +6,13 @@ namespace LiveStreamingServerNet.Rtmp.Test
     public class StreamUtilitiesTest
     {
         [Fact]
-        public void ParseStreamPath_Should_Return_StreamName()
+        public void ParseStreamName_Should_Return_StreamName()
         {
             // Arrange
-            var streamPath = "streamName/streamKey";
+            var rawStreamName = "streamName/streamKey";
 
             // Act
-            var (streamName, queryStringMap) = StreamUtilities.ParseStreamPath(streamPath);
+            var (streamName, queryStringMap) = StreamUtilities.ParseStreamName(rawStreamName);
 
             // Assert
             streamName.Should().Be("streamName/streamKey");
@@ -22,13 +22,13 @@ namespace LiveStreamingServerNet.Rtmp.Test
         }
 
         [Fact]
-        public void ParseStreamPath_Should_Return_StreamName_And_QueryStringMap()
+        public void ParseStreamName_Should_Return_StreamName_And_QueryStringMap()
         {
             // Arrange
-            var streamPath = "streamName/streamKey?param1=value1&param2=value2";
+            var rawStreamName = "streamName/streamKey?param1=value1&param2=value2";
 
             // Act
-            var (streamName, queryStringMap) = StreamUtilities.ParseStreamPath(streamPath);
+            var (streamName, queryStringMap) = StreamUtilities.ParseStreamName(rawStreamName);
 
             // Assert
             streamName.Should().Be("streamName/streamKey");
@@ -37,6 +37,19 @@ namespace LiveStreamingServerNet.Rtmp.Test
             queryStringMap.Should().HaveCount(2);
             queryStringMap.Should().ContainKey("param1").And.ContainValue("value1");
             queryStringMap.Should().ContainKey("param2").And.ContainValue("value2");
+        }
+
+        [Theory]
+        [InlineData("stream", "app/demo", "/stream/app/demo")]
+        [InlineData("stream", "", "/stream")]
+        [InlineData("", "app/demo", "/app/demo")]
+        public void ComposeStreamPath_Should_Return_CorrectStreamPath(string appName, string streamName, string expectedStreamPath)
+        {
+            // Act
+            var streamPath = StreamUtilities.ComposeStreamPath(appName, streamName);
+
+            // Assert
+            streamPath.Should().Be(expectedStreamPath);
         }
     }
 }

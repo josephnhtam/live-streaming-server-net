@@ -4,7 +4,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Utilities
 {
     internal static class StreamUtilities
     {
-        public static (string, IDictionary<string, string>) ParseStreamPath(string streamNameWithQueryString)
+        public static (string, IDictionary<string, string>) ParseStreamName(string streamNameWithQueryString)
         {
             var publishingNameSplit = streamNameWithQueryString.Split('?');
 
@@ -18,6 +18,11 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Utilities
                 .ToDictionary(key => key!, key => queryStringCollection[key]!);
 
             return (streamName, queryStringMap);
+        }
+
+        public static string ComposeStreamPath(string appName, string streamName)
+        {
+            return $"/{string.Join('/', new string[] { appName, streamName }.Where(s => !string.IsNullOrEmpty(s)).ToArray())}";
         }
     }
 }
