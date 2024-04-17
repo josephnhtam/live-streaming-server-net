@@ -76,14 +76,6 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
             return true;
         }
 
-        private ValueTask<AuthorizationResult> AuthorizeAsync(
-            IRtmpClientContext clientContext,
-            string streamPath,
-            IReadOnlyDictionary<string, string> streamArguments)
-        {
-            return _streamAuthorization.AuthorizeSubscribingAsync(clientContext, streamPath, streamArguments);
-        }
-
         private static (string StreamPath, IReadOnlyDictionary<string, string> StreamArguments)
             ParseSubscriptionContext(RtmpPlayCommand command, IRtmpClientContext clientContext)
         {
@@ -99,7 +91,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
             string streamPath,
             IReadOnlyDictionary<string, string> streamArguments)
         {
-            var result = await AuthorizeAsync(clientContext, streamPath, streamArguments);
+            var result = await _streamAuthorization.AuthorizeSubscribingAsync(clientContext, streamPath, streamArguments);
 
             if (!result.IsAuthorized)
             {
