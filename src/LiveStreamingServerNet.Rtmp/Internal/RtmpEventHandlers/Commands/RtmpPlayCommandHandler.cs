@@ -1,5 +1,4 @@
 ﻿using LiveStreamingServerNet.Rtmp.Auth;
-using LiveStreamingServerNet.Rtmp.Auth.Contracts;
 using LiveStreamingServerNet.Rtmp.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.Authorization.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.Contracts;
@@ -9,7 +8,6 @@ using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands.Dispatcher
 using LiveStreamingServerNet.Rtmp.Internal.Services.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.Services.Extensions;
 using LiveStreamingServerNet.Rtmp.Internal.Utilities;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands

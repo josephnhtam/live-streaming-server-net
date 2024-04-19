@@ -82,18 +82,18 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             IRtmpClientContext clientContext,
             IRtmpPublishStreamContext publishStreamContext,
             uint timestamp,
-            uint streamId)
+            uint messageStreamId)
         {
             var audioSequenceHeader = publishStreamContext.AudioSequenceHeader;
             if (audioSequenceHeader != null)
             {
-                SendMediaPackage(clientContext, MediaType.Audio, audioSequenceHeader, audioSequenceHeader.Length, timestamp, streamId);
+                SendMediaPackage(clientContext, MediaType.Audio, audioSequenceHeader, audioSequenceHeader.Length, timestamp, messageStreamId);
             }
 
             var videoSequenceHeader = publishStreamContext.VideoSequenceHeader;
             if (videoSequenceHeader != null)
             {
-                SendMediaPackage(clientContext, MediaType.Video, videoSequenceHeader, videoSequenceHeader.Length, timestamp, streamId);
+                SendMediaPackage(clientContext, MediaType.Video, videoSequenceHeader, videoSequenceHeader.Length, timestamp, messageStreamId);
             }
         }
 
@@ -101,13 +101,13 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             IRtmpClientContext clientContext,
             IRtmpPublishStreamContext publishStreamContext,
             uint timestamp,
-            uint streamId)
+            uint messageStreamId)
         {
             if (publishStreamContext.StreamMetaData == null)
                 return;
 
             var basicHeader = new RtmpChunkBasicHeader(0, RtmpConstants.DataMessageChunkStreamId);
-            var messageHeader = new RtmpChunkMessageHeaderType0(timestamp, RtmpMessageType.DataMessageAmf0, streamId);
+            var messageHeader = new RtmpChunkMessageHeaderType0(timestamp, RtmpMessageType.DataMessageAmf0, messageStreamId);
 
             _chunkMessageSender.Send(clientContext, basicHeader, messageHeader, (netBuffer) =>
                 netBuffer.WriteAmf(new List<object?>
@@ -122,13 +122,13 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             IReadOnlyList<IRtmpClientContext> clientContexts,
             IRtmpPublishStreamContext publishStreamContext,
             uint timestamp,
-            uint streamId)
+            uint messageStreamId)
         {
             if (publishStreamContext.StreamMetaData == null)
                 return;
 
             var basicHeader = new RtmpChunkBasicHeader(0, RtmpConstants.DataMessageChunkStreamId);
-            var messageHeader = new RtmpChunkMessageHeaderType0(timestamp, RtmpMessageType.DataMessageAmf0, streamId);
+            var messageHeader = new RtmpChunkMessageHeaderType0(timestamp, RtmpMessageType.DataMessageAmf0, messageStreamId);
 
             _chunkMessageSender.Send(clientContexts, basicHeader, messageHeader, (netBuffer) =>
                 netBuffer.WriteAmf(new List<object?>
@@ -142,11 +142,11 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
         public void SendCachedGroupOfPictures(
             IRtmpClientContext clientContext,
             IRtmpPublishStreamContext publishStreamContext,
-            uint streamId)
+            uint messageStreamId)
         {
             foreach (var picture in publishStreamContext.GroupOfPicturesCache.Get())
             {
-                SendMediaPackage(clientContext, picture.Type, picture.Payload.Buffer, picture.Payload.Size, picture.Timestamp, streamId);
+                SendMediaPackage(clientContext, picture.Type, picture.Payload.Buffer, picture.Payload.Size, picture.Timestamp, messageStreamId);
                 picture.Payload.Unclaim();
             }
         }
@@ -157,7 +157,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             byte[] payloadBuffer,
             int payloadSize,
             uint timestamp,
-            uint streamId)
+            uint messageStreamId)
         {
             var basicHeader = new RtmpChunkBasicHeader(
                     0,
@@ -170,7 +170,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
                 type == MediaType.Video ?
                 RtmpMessageType.VideoMessage :
                 RtmpMessageType.AudioMessage,
-                streamId);
+                messageStreamId);
 
             _chunkMessageSender.Send(clientContext, basicHeader, messageHeader, (netBuffer) => netBuffer.Write(payloadBuffer, 0, payloadSize));
         }

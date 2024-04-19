@@ -22,23 +22,23 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services.Contracts
             IRtmpClientContext clientContext,
             IRtmpPublishStreamContext publishStreamContext,
             uint timestamp,
-            uint streamId);
+            uint messageStreamId);
 
         void SendCachedStreamMetaDataMessage(
             IRtmpClientContext clientContext,
             IRtmpPublishStreamContext publishStreamContext,
             uint timestamp,
-            uint streamId);
+            uint messageStreamId);
 
         void SendCachedStreamMetaDataMessage(
             IReadOnlyList<IRtmpClientContext> clientContexts,
             IRtmpPublishStreamContext publishStreamContext,
             uint timestamp,
-            uint streamId);
+            uint messageStreamId);
 
         void SendCachedGroupOfPictures(
             IRtmpClientContext clientContext,
             IRtmpPublishStreamContext publishStreamContext,
-            uint streamId);
+            uint messageStreamId);
     }
 }
