@@ -1,10 +1,10 @@
 # Live-Streaming-Server-Net
 
-This open-source project provides an implementation of an RTMP live streaming server which allows you to build your own live streaming server using .NET.
-
 ![build and test](https://github.com/josephnhtam/live-streaming-server-net/actions/workflows/build_and_test.yaml/badge.svg)
 [![Nuget](https://img.shields.io/nuget/v/LiveStreamingServerNet)](https://www.nuget.org/packages/LiveStreamingServerNet/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+
+This repository contains an implementation of an RTMP server which allows you to build your own live streaming server using .NET.
 
 ## Features
 
