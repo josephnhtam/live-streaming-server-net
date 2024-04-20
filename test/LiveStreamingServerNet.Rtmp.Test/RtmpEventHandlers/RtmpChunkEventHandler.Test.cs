@@ -11,6 +11,7 @@ using LiveStreamingServerNet.Rtmp.Internal.RtmpEvents;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpHeaders;
 using LiveStreamingServerNet.Rtmp.Internal.Services;
 using LiveStreamingServerNet.Rtmp.Internal.Services.Contracts;
+using LiveStreamingServerNet.Rtmp.Test.Utilities;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using NSubstitute;
@@ -96,7 +97,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers
 
             {
                 var chunkSize = 128u;
-                var chunkStreamId = fixture.Create<uint>();
+                var chunkStreamId = Helpers.CreateRandomChunkStreamId();
 
                 var streamContext = new RtmpChunkStreamContext(chunkStreamId);
                 var clientContext = Substitute.For<IRtmpClientContext>();
@@ -121,7 +122,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers
 
             {
                 var chunkSize = 2000u;
-                var chunkStreamId = fixture.Create<uint>();
+                var chunkStreamId = Helpers.CreateRandomChunkStreamId();
 
                 var streamContext = new RtmpChunkStreamContext(chunkStreamId);
                 var clientContext = Substitute.For<IRtmpClientContext>();
@@ -146,7 +147,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers
 
             {
                 var chunkSize = 500u;
-                var chunkStreamId = fixture.Create<uint>();
+                var chunkStreamId = Helpers.CreateRandomChunkStreamId();
 
                 var streamContext = new RtmpChunkStreamContext(chunkStreamId);
                 var clientContext = Substitute.For<IRtmpClientContext>();
@@ -171,7 +172,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers
 
             {
                 var chunkSize = 500u;
-                var chunkStreamId = fixture.Create<uint>();
+                var chunkStreamId = Helpers.CreateRandomChunkStreamId();
 
                 var streamContext = new RtmpChunkStreamContext(chunkStreamId);
                 var clientContext = Substitute.For<IRtmpClientContext>();

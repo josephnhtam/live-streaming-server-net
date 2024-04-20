@@ -2,6 +2,7 @@
 using LiveStreamingServerNet.Networking;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpHeaders;
 using LiveStreamingServerNet.Rtmp.Internal.Services;
+using LiveStreamingServerNet.Rtmp.Test.Utilities;
 using System.Security.Cryptography;
 
 namespace LiveStreamingServerNet.Rtmp.Test.Services
@@ -18,7 +19,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
         public async Task Write_Should_SeparateChunkType0MessageIntoChunks(uint timestamp, int payloadSize, int chunkSize)
         {
             // Arrange
-            var expectedChunkStreamId = (ushort)Random.Shared.Next();
+            var expectedChunkStreamId = Helpers.CreateRandomChunkStreamId();
             var expectedTimestamp = timestamp;
             var expectedMessageTypeId = (byte)Random.Shared.Next();
             var expectedMessageStreamId = (uint)Random.Shared.Next();

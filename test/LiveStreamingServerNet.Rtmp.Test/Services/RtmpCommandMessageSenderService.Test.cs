@@ -8,6 +8,7 @@ using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpHeaders;
 using LiveStreamingServerNet.Rtmp.Internal.Services;
 using LiveStreamingServerNet.Rtmp.Internal.Services.Contracts;
+using LiveStreamingServerNet.Rtmp.Test.Utilities;
 using NSubstitute;
 
 namespace LiveStreamingServerNet.Rtmp.Test.Services
@@ -30,7 +31,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
         {
             // Arrange
             var clientContext = Substitute.For<IRtmpClientContext>();
-            var chunkStreamId = _fixture.Create<uint>();
+            var chunkStreamId = Helpers.CreateRandomChunkStreamId();
             var commandName = _fixture.Create<string>();
             var transactionId = _fixture.Create<double>();
             var commandObject = _fixture.Create<Dictionary<string, object>>();
@@ -101,7 +102,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
         {
             // Arrange
             var clientContext = Substitute.For<IRtmpClientContext>();
-            var chunkStreamId = _fixture.Create<uint>();
+            var chunkStreamId = Helpers.CreateRandomChunkStreamId();
             var commandName = _fixture.Create<string>();
             var transactionId = _fixture.Create<double>();
             var commandObject = _fixture.Create<Dictionary<string, object>>();
@@ -171,7 +172,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
         {
             // Arrange
             var clientContexts = new List<IRtmpClientContext> { Substitute.For<IRtmpClientContext>(), Substitute.For<IRtmpClientContext>() };
-            var chunkStreamId = _fixture.Create<uint>();
+            var chunkStreamId = Helpers.CreateRandomChunkStreamId();
             var commandName = _fixture.Create<string>();
             var transactionId = _fixture.Create<double>();
             var commandObject = _fixture.Create<Dictionary<string, object>>();

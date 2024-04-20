@@ -121,7 +121,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Commands
 
             var streamPath = "/appName/streamName";
 
-            var chunkStreamId = _fixture.Create<uint>();
+            var chunkStreamId = Helpers.CreateRandomChunkStreamId();
             var timstamp = _fixture.Create<uint>();
             var messageStreamId = _fixture.Create<uint>();
 
@@ -197,7 +197,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Commands
 
             var streamPath = "/appName/streamName";
 
-            var chunkStreamId = _fixture.Create<uint>();
+            var chunkStreamId = Helpers.CreateRandomChunkStreamId();
             var timstamp = _fixture.Create<uint>();
             var messageStreamId = _fixture.Create<uint>();
 
