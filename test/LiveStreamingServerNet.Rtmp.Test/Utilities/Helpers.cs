@@ -21,5 +21,11 @@ namespace LiveStreamingServerNet.Rtmp.Test.Utilities
         {
             return Arg.Is<IReadOnlyDictionary<string, string>>(x => x[key] == value);
         }
+
+        public static IReadOnlyDictionary<string, object> CreateExpectedMetaData<TValue>(string key, TValue value)
+            where TValue : struct, IEquatable<TValue>
+        {
+            return Arg.Is<IReadOnlyDictionary<string, object>>(x => ((TValue)x[key]).Equals(value));
+        }
     }
 }
