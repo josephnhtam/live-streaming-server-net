@@ -49,7 +49,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Commands
                 x.SendCommandMessage(Arg.Any<IRtmpClientContext>(), Arg.Any<uint>(), Arg.Any<string>(), Arg.Any<double>(),
                     Arg.Any<IReadOnlyDictionary<string, object>>(), Arg.Any<IReadOnlyList<object?>>(),
                     Arg.Any<AmfEncodingType>(), Arg.Any<Action<bool>>()))
-                .Do(x => x.Arg<Action<bool>>().Invoke(true));
+                .Do(x => x.Arg<Action<bool>>()?.Invoke(true));
 
             _sut = new RtmpPlayCommandHandler(
                 _services,
