@@ -1,7 +1,6 @@
 ﻿using AutoFixture;
 using FluentAssertions;
 using LiveStreamingServerNet.Rtmp.Auth;
-using LiveStreamingServerNet.Rtmp.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal;
 using LiveStreamingServerNet.Rtmp.Internal.Authorization.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.Contracts;
