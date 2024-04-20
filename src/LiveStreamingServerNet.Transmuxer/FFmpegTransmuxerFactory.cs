@@ -18,7 +18,7 @@ namespace LiveStreamingServerNet.Transmuxer
                 contextIdentifier,
                 _config.Name,
                 _config.FFmpegPath,
-                _config.FFmpegTransmuxerArguments,
+                _config.FFmpegArguments,
                 _config.GracefulShutdownTimeoutSeconds,
                 await _config.OutputPathResolver.Invoke(contextIdentifier, streamPath, streamArguments));
         }

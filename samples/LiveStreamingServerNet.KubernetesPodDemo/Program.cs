@@ -63,7 +63,7 @@ namespace LiveStreamingServerNet.KubernetesPodDemo
                             })
                             .AddFFmpeg(options =>
                             {
-                                options.FFmpegTransmuxerArguments =
+                                options.FFmpegArguments =
                                     "-i {inputPath} -c:v copy -c:a copy " +
                                     "-preset ultrafast -tune zerolatency -hls_time 1 " +
                                     "-hls_flags delete_segments -hls_list_size 20 -f hls {outputPath}";
