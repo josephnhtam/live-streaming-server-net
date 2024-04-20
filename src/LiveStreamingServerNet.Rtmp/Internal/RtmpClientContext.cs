@@ -155,7 +155,6 @@ namespace LiveStreamingServerNet.Rtmp.Internal
             StreamPath = streamPath;
             StreamArguments = new Dictionary<string, string>(streamArguments);
 
-            IsPaused = false;
             IsReceivingAudio = true;
             IsReceivingVideo = true;
 

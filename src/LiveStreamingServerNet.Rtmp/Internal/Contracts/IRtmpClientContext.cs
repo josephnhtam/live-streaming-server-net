@@ -53,7 +53,6 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Contracts
         string StreamPath { get; }
         IReadOnlyDictionary<string, string> StreamArguments { get; }
 
-        bool IsPaused { get; set; }
         bool IsReceivingAudio { get; set; }
         bool IsReceivingVideo { get; set; }
 
