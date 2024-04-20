@@ -65,7 +65,6 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Commands
             _clientContext.DidNotReceive().CreateNewStream();
 
             _streamDeletionService.DidNotReceive().DeleteStream(_clientContext);
-
         }
     }
 }
