@@ -35,12 +35,12 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
             var commandName = _fixture.Create<string>();
             var transactionId = _fixture.Create<double>();
             var commandObject = _fixture.Create<Dictionary<string, object>>();
-            var initialParameters = _fixture.Create<List<object?>>();
+            var parameters = _fixture.Create<List<object?>>();
             var amfEncodingType = _fixture.Create<AmfEncodingType>();
             var callback = _fixture.Create<Action<bool>>();
 
             using var expectedBuffer = new NetBuffer();
-            var expectedParameter = GetParameters(commandName, transactionId, commandObject, initialParameters);
+            var expectedParameter = GetParameters(commandName, transactionId, commandObject, parameters);
             expectedBuffer.WriteAmf(expectedParameter, amfEncodingType);
 
             using var netBuffer = new NetBuffer();
@@ -73,7 +73,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
                 commandName,
                 transactionId,
                 commandObject,
-                initialParameters,
+                parameters,
                 amfEncodingType,
                 callback);
 
@@ -106,11 +106,11 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
             var commandName = _fixture.Create<string>();
             var transactionId = _fixture.Create<double>();
             var commandObject = _fixture.Create<Dictionary<string, object>>();
-            var initialParameters = _fixture.Create<List<object?>>();
+            var parameters = _fixture.Create<List<object?>>();
             var amfEncodingType = _fixture.Create<AmfEncodingType>();
 
             using var expectedBuffer = new NetBuffer();
-            var expectedParameter = GetParameters(commandName, transactionId, commandObject, initialParameters);
+            var expectedParameter = GetParameters(commandName, transactionId, commandObject, parameters);
             expectedBuffer.WriteAmf(expectedParameter, amfEncodingType);
 
             using var netBuffer = new NetBuffer();
@@ -143,7 +143,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
                 commandName,
                 transactionId,
                 commandObject,
-                initialParameters,
+                parameters,
                 amfEncodingType
             );
 
@@ -176,11 +176,11 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
             var commandName = _fixture.Create<string>();
             var transactionId = _fixture.Create<double>();
             var commandObject = _fixture.Create<Dictionary<string, object>>();
-            var initialParameters = _fixture.Create<List<object?>>();
+            var parameters = _fixture.Create<List<object?>>();
             var amfEncodingType = _fixture.Create<AmfEncodingType>();
 
             using var expectedBuffer = new NetBuffer();
-            var expectedParameter = GetParameters(commandName, transactionId, commandObject, initialParameters);
+            var expectedParameter = GetParameters(commandName, transactionId, commandObject, parameters);
             expectedBuffer.WriteAmf(expectedParameter, amfEncodingType);
 
             using var netBuffer = new NetBuffer();
@@ -211,7 +211,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
                 commandName,
                 transactionId,
                 commandObject,
-                initialParameters,
+                parameters,
                 amfEncodingType
             );
 
@@ -235,16 +235,16 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
         }
 
         private static List<object?> GetParameters(string commandName, double transactionId,
-            IReadOnlyDictionary<string, object>? commandObject, IReadOnlyList<object?> initialParameters)
+            IReadOnlyDictionary<string, object>? commandObject, IReadOnlyList<object?> additionalParameters)
         {
-            var additionalParameters = new List<object?>
+            var parameters = new List<object?>
             {
                 commandName,
                 transactionId,
                 commandObject
             };
 
-            return additionalParameters.Concat(initialParameters).ToList();
+            return parameters.Concat(additionalParameters).ToList();
         }
     }
 }

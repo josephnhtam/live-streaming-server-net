@@ -21,7 +21,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             string commandName,
             double transactionId,
             IReadOnlyDictionary<string, object>? commandObject,
-            IReadOnlyList<object?> initialParameters,
+            IReadOnlyList<object?> parameters,
             AmfEncodingType amfEncodingType,
             Action<bool>? callback)
         {
@@ -31,8 +31,8 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
 
             _chunkMessageSender.Send(clientContext, basicHeader, messageHeader, netBuffer =>
             {
-                var parameters = GetParameters(commandName, transactionId, commandObject, initialParameters);
-                netBuffer.WriteAmf(parameters, amfEncodingType);
+                var values = GetParameters(commandName, transactionId, commandObject, parameters);
+                netBuffer.WriteAmf(values, amfEncodingType);
             }, callback);
         }
 
@@ -49,7 +49,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             string commandName,
             double transactionId,
             IReadOnlyDictionary<string, object>? commandObject,
-            IReadOnlyList<object?> initialParameters,
+            IReadOnlyList<object?> parameters,
             AmfEncodingType amfEncodingType)
         {
             var basicHeader = new RtmpChunkBasicHeader(0, chunkStreamId);
@@ -58,22 +58,22 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
 
             _chunkMessageSender.Send(clientContexts, basicHeader, messageHeader, netBuffer =>
             {
-                var parameters = GetParameters(commandName, transactionId, commandObject, initialParameters);
-                netBuffer.WriteAmf(parameters, amfEncodingType);
+                var values = GetParameters(commandName, transactionId, commandObject, parameters);
+                netBuffer.WriteAmf(values, amfEncodingType);
             });
         }
 
         static List<object?> GetParameters(string commandName, double transactionId,
-            IReadOnlyDictionary<string, object>? commandObject, IReadOnlyList<object?> initialParameters)
+            IReadOnlyDictionary<string, object>? commandObject, IReadOnlyList<object?> additionalParameters)
         {
-            var additionalParameters = new List<object?>
+            var parameters = new List<object?>
             {
                 commandName,
                 transactionId,
                 commandObject
             };
 
-            return additionalParameters.Concat(initialParameters).ToList();
+            return parameters.Concat(additionalParameters).ToList();
         }
     }
 }
