@@ -22,7 +22,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Authorization
 
         public async ValueTask<AuthorizationResult> AuthorizePublishingAsync(IRtmpClientContext clientContext, string streamPath, string publishingType, IReadOnlyDictionary<string, string> streamArguments)
         {
-            if (streamArguments.TryGetValue("code", out var authCode) && authCode == _serverContext.AuthCode)
+            if (IsAuthorizedByCode(streamArguments))
                 return AuthorizationResult.Authorized();
 
             foreach (var authorizationHandler in _services.GetServices<IAuthorizationHandler>().OrderBy(x => x.GetOrder()))
@@ -42,7 +42,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Authorization
 
         public async ValueTask<AuthorizationResult> AuthorizeSubscribingAsync(IRtmpClientContext clientContext, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
-            if (streamArguments.TryGetValue("code", out var authCode) && authCode == _serverContext.AuthCode)
+            if (IsAuthorizedByCode(streamArguments))
                 return AuthorizationResult.Authorized();
 
             foreach (var authorizationHandler in _services.GetServices<IAuthorizationHandler>().OrderBy(x => x.GetOrder()))
@@ -58,6 +58,11 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Authorization
             }
 
             return AuthorizationResult.Authorized(streamPath, streamArguments);
+        }
+
+        private bool IsAuthorizedByCode(IReadOnlyDictionary<string, string> streamArguments)
+        {
+            return streamArguments.TryGetValue("code", out var authCode) && authCode == _serverContext.AuthCode;
         }
     }
 }
