@@ -76,17 +76,20 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
         {
             await _interception.ReceiveMediaMessageAsync(publishStreamContext.StreamPath, mediaType, payloadBuffer, timestamp, isSkippable);
 
-            subscribers = subscribers.Where(FilterSubscribers).ToList();
+            subscribers = subscribers.Where((subscriber) => FilterSubscribers(subscriber, isSkippable)).ToList();
 
             if (subscribers.Any())
                 EnqueueMediaPackages(subscribers, mediaType, payloadBuffer, timestamp, publishStreamContext.StreamId, isSkippable);
 
-            bool FilterSubscribers(IRtmpClientContext subscriber)
+            bool FilterSubscribers(IRtmpClientContext subscriber, bool isSkippable)
             {
                 var subscriptionContext = subscriber.StreamSubscriptionContext;
 
                 if (subscriptionContext == null)
                     return false;
+
+                if (!isSkippable)
+                    return true;
 
                 switch (mediaType)
                 {
