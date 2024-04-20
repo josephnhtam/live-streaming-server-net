@@ -1,9 +1,11 @@
 ﻿using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.Extensions;
+using LiveStreamingServerNet.Rtmp.Internal.Logging;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Dispatcher.Attributes;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Dispatcher.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.Services.Contracts;
+using Microsoft.Extensions.Logging;
 
 namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Data
 {
@@ -13,11 +15,16 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Data
     {
         private readonly IRtmpMediaMessageCacherService _mediaMessageCacher;
         private readonly IRtmpServerStreamEventDispatcher _eventDispatcher;
+        private readonly ILogger<RtmpDataMessageHandler> _logger;
 
-        public RtmpDataMessageHandler(IRtmpMediaMessageCacherService mediaMessageCacher, IRtmpServerStreamEventDispatcher eventDispatcher)
+        public RtmpDataMessageHandler(
+            IRtmpMediaMessageCacherService mediaMessageCacher,
+            IRtmpServerStreamEventDispatcher eventDispatcher,
+            ILogger<RtmpDataMessageHandler> logger)
         {
             _mediaMessageCacher = mediaMessageCacher;
             _eventDispatcher = eventDispatcher;
+            _logger = logger;
         }
 
         public async ValueTask<bool> HandleAsync(
@@ -63,8 +70,13 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Data
             IRtmpChunkStreamContext chunkStreamContext,
             IReadOnlyDictionary<string, object> metaData)
         {
-            var publishStreamContext = clientContext.PublishStreamContext
-                ?? throw new InvalidOperationException("Stream is not yet created.");
+            var publishStreamContext = clientContext.PublishStreamContext;
+
+            if (publishStreamContext == null)
+            {
+                _logger.StreamNotYetCreated(clientContext.Client.ClientId);
+                return ValueTask.FromResult(false);
+            }
 
             CacheStreamMetaData(metaData, publishStreamContext);
 

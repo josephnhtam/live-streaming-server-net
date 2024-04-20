@@ -1,9 +1,11 @@
 ﻿using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.Rtmp.Configurations;
 using LiveStreamingServerNet.Rtmp.Internal.Contracts;
+using LiveStreamingServerNet.Rtmp.Internal.Logging;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Dispatcher.Attributes;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Dispatcher.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.Services.Contracts;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
@@ -15,17 +17,20 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
         private readonly IRtmpMediaMessageCacherService _mediaMessageCacher;
         private readonly IRtmpMediaMessageBroadcasterService _mediaMessageBroadcaster;
         private readonly RtmpServerConfiguration _config;
+        private readonly ILogger _logger;
 
         public RtmpVideoMessageHandler(
             IRtmpStreamManagerService streamManager,
             IRtmpMediaMessageCacherService mediaMessageCacher,
             IRtmpMediaMessageBroadcasterService mediaMessageBroadcaster,
-            IOptions<RtmpServerConfiguration> config)
+            IOptions<RtmpServerConfiguration> config,
+            ILogger<RtmpVideoMessageHandler> logger)
         {
             _streamManager = streamManager;
             _mediaMessageCacher = mediaMessageCacher;
             _mediaMessageBroadcaster = mediaMessageBroadcaster;
             _config = config.Value;
+            _logger = logger;
         }
 
         public async ValueTask<bool> HandleAsync(
@@ -34,8 +39,13 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
             INetBuffer payloadBuffer,
             CancellationToken cancellationToken)
         {
-            var publishStreamContext = clientContext.PublishStreamContext ??
-                throw new InvalidOperationException("Stream is not yet published.");
+            var publishStreamContext = clientContext.PublishStreamContext;
+
+            if (publishStreamContext == null)
+            {
+                _logger.StreamNotYetCreated(clientContext.Client.ClientId);
+                return false;
+            }
 
             var hasHeader = await CacheVideoSequenceAsync(chunkStreamContext, publishStreamContext, payloadBuffer);
             await BroacastVideoMessageToSubscribersAsync(chunkStreamContext, publishStreamContext, payloadBuffer, hasHeader);
