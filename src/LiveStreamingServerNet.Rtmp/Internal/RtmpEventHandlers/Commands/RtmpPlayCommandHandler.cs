@@ -22,7 +22,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
         private readonly IRtmpStreamManagerService _streamManager;
         private readonly IRtmpCommandMessageSenderService _commandMessageSender;
         private readonly IRtmpMediaMessageCacherService _mediaMessageCacher;
-        private readonly IRtmpServerStreamEventDispatcher _eventDispatch;
+        private readonly IRtmpServerStreamEventDispatcher _eventDispatcher;
         private readonly IStreamAuthorization _streamAuthorization;
         private readonly ILogger<RtmpPlayCommandHandler> _logger;
 
@@ -32,7 +32,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
             IRtmpStreamManagerService streamManager,
             IRtmpCommandMessageSenderService commandMessageSender,
             IRtmpMediaMessageCacherService mediaMessageCacher,
-            IRtmpServerStreamEventDispatcher eventDispatch,
+            IRtmpServerStreamEventDispatcher eventDispatcher,
             IStreamAuthorization streamAuthorization,
             ILogger<RtmpPlayCommandHandler> logger)
         {
@@ -41,7 +41,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
             _streamManager = streamManager;
             _commandMessageSender = commandMessageSender;
             _mediaMessageCacher = mediaMessageCacher;
-            _eventDispatch = eventDispatch;
+            _eventDispatcher = eventDispatcher;
             _streamAuthorization = streamAuthorization;
             _logger = logger;
         }
@@ -162,7 +162,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
         {
             clientContext.StreamSubscriptionContext!.CompleteInitialization();
 
-            _eventDispatch.RtmpStreamSubscribedAsync(
+            _eventDispatcher.RtmpStreamSubscribedAsync(
                 clientContext,
                 clientContext.StreamSubscriptionContext.StreamPath,
                 clientContext.StreamSubscriptionContext.StreamArguments);
