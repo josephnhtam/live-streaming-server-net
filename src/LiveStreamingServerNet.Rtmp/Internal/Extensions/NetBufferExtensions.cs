@@ -1,4 +1,5 @@
 ﻿using LiveStreamingServerNet.Networking.Contracts;
+using LiveStreamingServerNet.Rtmp.Internal.Utilities;
 using mtanksl.ActionMessageFormat;
 
 namespace LiveStreamingServerNet.Rtmp.Internal.Extensions
@@ -11,7 +12,17 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Extensions
 
             foreach (var value in values)
             {
-                if (value is IReadOnlyDictionary<string, object?> map)
+                if (value is AmfArray array)
+                {
+                    if (type == AmfEncodingType.Amf0)
+                        writer.WriteAmf0(array.Map);
+                    else
+                        writer.WriteAmf3(array.Map);
+
+                    continue;
+                }
+
+                if (value is IEnumerable<KeyValuePair<string, object?>> map)
                 {
                     if (type == AmfEncodingType.Amf0)
                         writer.WriteAmf0ObjectWithType(map);

@@ -4,7 +4,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Extensions
 {
     internal static class AmfWriterExtensions
     {
-        public static void WriteAmf0ObjectWithType(this AmfWriter amfWriter, IReadOnlyDictionary<string, object?> keyValuePairs)
+        public static void WriteAmf0ObjectWithType(this AmfWriter amfWriter, IEnumerable<KeyValuePair<string, object?>> keyValuePairs)
         {
             var amf0Object = new Amf0Object();
             amf0Object.ClassName = string.Empty;
@@ -12,12 +12,12 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Extensions
             amfWriter.WriteAmf0(amf0Object);
         }
 
-        public static void WriteAmf3ObjectWithType(this AmfWriter amfWriter, IReadOnlyDictionary<string, object?> keyValuePairs)
+        public static void WriteAmf3ObjectWithType(this AmfWriter amfWriter, IEnumerable<KeyValuePair<string, object?>> keyValuePairs)
         {
             var amf0Object = new Amf3Object();
             amf0Object.Trait.IsDynamic = true;
             amf0Object.DynamicMembersAndValues = keyValuePairs as Dictionary<string, object?> ?? new Dictionary<string, object?>(keyValuePairs);
-            amfWriter.WriteAmf0(amf0Object);
+            amfWriter.WriteAmf3(amf0Object);
         }
     }
 }
