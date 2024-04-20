@@ -107,19 +107,18 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Commands
             // Arrange
             var transactionId = 0.0;
             var commandObject = new Dictionary<string, object>();
+            var appName = "appName";
             var streamName = "streamName?password=123456";
+            var streamPath = "/appName/streamName";
             var streamId = _fixture.Create<uint>();
             var publishingType = "live";
-            var command = new RtmpPublishCommand(transactionId, commandObject, streamName, publishingType);
-
-            var streamPath = "/appName/streamName";
-
             var chunkStreamId = Helpers.CreateRandomChunkStreamId();
             var timstamp = _fixture.Create<uint>();
             var messageStreamId = _fixture.Create<uint>();
+            var command = new RtmpPublishCommand(transactionId, commandObject, streamName, publishingType);
 
             _clientContext.StreamId.Returns(streamId);
-            _clientContext.AppName.Returns("appName");
+            _clientContext.AppName.Returns(appName);
             _chunkStreamContext.ChunkStreamId.Returns(chunkStreamId);
             _chunkStreamContext.MessageHeader.Timestamp.Returns(timstamp);
             _chunkStreamContext.MessageHeader.MessageStreamId.Returns(messageStreamId);
@@ -130,11 +129,10 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Commands
                 _streamManager.GetPublishStreamContext(streamPath).Returns(_publishStreamContext);
             }
 
-            _streamAuthorization.AuthorizePublishingAsync(_clientContext, streamPath, publishingType, Helpers.CreateExpectedStreamArguments("password", "123456"))
-                .Returns(AuthorizationResult.Authorized());
-
-            _streamAuthorization.When(x => x.AuthorizePublishingAsync(_clientContext, streamPath, publishingType, Helpers.CreateExpectedStreamArguments("password", "123456")))
-                .Do(x =>
+            _streamAuthorization.AuthorizePublishingAsync(
+                _clientContext, streamPath, publishingType, Helpers.CreateExpectedStreamArguments("password", "123456"))
+                .Returns(AuthorizationResult.Authorized())
+                .AndDoes(x =>
                 {
                     _clientContext.PublishStreamContext!.StreamPath.Returns(x.ArgAt<string>(1));
                     _clientContext.PublishStreamContext!.StreamArguments.Returns(x.Arg<IReadOnlyDictionary<string, string>>());
@@ -170,26 +168,24 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Commands
             // Arrange
             var transactionId = 0.0;
             var commandObject = new Dictionary<string, object>();
+            var appName = "appName";
             var streamName = "streamName?password=123456";
+            var streamPath = "/appName/streamName";
             var streamId = _fixture.Create<uint>();
             var publishingType = "live";
-            var command = new RtmpPublishCommand(transactionId, commandObject, streamName, publishingType);
-
-            var streamPath = "/appName/streamName";
-
             var chunkStreamId = Helpers.CreateRandomChunkStreamId();
             var timstamp = _fixture.Create<uint>();
             var messageStreamId = _fixture.Create<uint>();
+            var command = new RtmpPublishCommand(transactionId, commandObject, streamName, publishingType);
 
             _clientContext.StreamId.Returns(streamId);
-            _clientContext.AppName.Returns("appName");
+            _clientContext.AppName.Returns(appName);
             _chunkStreamContext.ChunkStreamId.Returns(chunkStreamId);
 
-            _streamAuthorization.AuthorizePublishingAsync(_clientContext, streamPath, publishingType, Helpers.CreateExpectedStreamArguments("password", "123456"))
-                .Returns(AuthorizationResult.Authorized());
-
-            _streamAuthorization.When(x => x.AuthorizePublishingAsync(_clientContext, streamPath, publishingType, Helpers.CreateExpectedStreamArguments("password", "123456")))
-                .Do(x =>
+            _streamAuthorization.AuthorizePublishingAsync(
+                _clientContext, streamPath, publishingType, Helpers.CreateExpectedStreamArguments("password", "123456"))
+                .Returns(AuthorizationResult.Authorized())
+                .AndDoes(x =>
                 {
                     _clientContext.PublishStreamContext!.StreamPath.Returns(x.ArgAt<string>(1));
                     _clientContext.PublishStreamContext!.StreamArguments.Returns(x.Arg<IReadOnlyDictionary<string, string>>());

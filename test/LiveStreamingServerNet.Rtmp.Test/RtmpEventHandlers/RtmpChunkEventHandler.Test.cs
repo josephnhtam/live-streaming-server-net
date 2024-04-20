@@ -38,9 +38,9 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers
             var logger = Substitute.For<ILogger<RtmpChunkEventHandler>>();
 
             using INetBuffer resultPayloadBuffer = new NetBuffer();
-            dispatcher.DispatchAsync(streamContext, clientContext, Arg.Any<CancellationToken>()).Returns(true);
-            dispatcher.When(x => x.DispatchAsync(streamContext, clientContext, Arg.Any<CancellationToken>()))
-                .Do(x =>
+            dispatcher.DispatchAsync(streamContext, clientContext, Arg.Any<CancellationToken>())
+                .Returns(true)
+                .AndDoes(x =>
                 {
                     streamContext.PayloadBuffer!.ReadAndWriteTo(resultPayloadBuffer, streamContext.PayloadBuffer.Size);
                     resultPayloadBuffer.MoveTo(0);

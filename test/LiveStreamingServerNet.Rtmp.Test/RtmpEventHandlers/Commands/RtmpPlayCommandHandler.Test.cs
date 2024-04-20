@@ -80,14 +80,14 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Commands
             // Arrange
             var transactionId = 0.0;
             var commandObject = new Dictionary<string, object>();
+            var appName = "appName";
             var streamName = "streamName?password=123456";
+            var streamPath = "/appName/streamName";
             var streamId = _fixture.Create<uint>();
             var command = new RtmpPlayCommand(transactionId, commandObject, streamName, 0, 0, false);
 
-            var streamPath = "/appName/streamName";
-
             _clientContext.StreamId.Returns(streamId);
-            _clientContext.AppName.Returns("appName");
+            _clientContext.AppName.Returns(appName);
 
             _streamAuthorization.AuthorizeSubscribingAsync(_clientContext, streamPath, Helpers.CreateExpectedStreamArguments("password", "123456"))
                 .Returns(AuthorizationResult.Unauthorized("testing"));
@@ -108,18 +108,17 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Commands
             // Arrange
             var transactionId = 0.0;
             var commandObject = new Dictionary<string, object>();
+            var appName = "appName";
             var streamName = "streamName?password=123456";
-            var streamId = _fixture.Create<uint>();
-            var command = new RtmpPlayCommand(transactionId, commandObject, streamName, 0, 0, false);
-
             var streamPath = "/appName/streamName";
-
+            var streamId = _fixture.Create<uint>();
             var chunkStreamId = Helpers.CreateRandomChunkStreamId();
             var timstamp = _fixture.Create<uint>();
             var messageStreamId = _fixture.Create<uint>();
+            var command = new RtmpPlayCommand(transactionId, commandObject, streamName, 0, 0, false);
 
             _clientContext.StreamId.Returns(streamId);
-            _clientContext.AppName.Returns("appName");
+            _clientContext.AppName.Returns(appName);
             _chunkStreamContext.ChunkStreamId.Returns(chunkStreamId);
             _chunkStreamContext.MessageHeader.Timestamp.Returns(timstamp);
             _chunkStreamContext.MessageHeader.MessageStreamId.Returns(messageStreamId);
@@ -131,16 +130,15 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Commands
             }
 
             _streamAuthorization.AuthorizeSubscribingAsync(_clientContext, streamPath, Helpers.CreateExpectedStreamArguments("password", "123456"))
-                .Returns(AuthorizationResult.Authorized());
-
-            _streamAuthorization.When(x => x.AuthorizeSubscribingAsync(_clientContext, streamPath, Helpers.CreateExpectedStreamArguments("password", "123456")))
-                .Do(x =>
+                .Returns(AuthorizationResult.Authorized())
+                .AndDoes(x =>
                 {
                     _clientContext.StreamSubscriptionContext!.StreamPath.Returns(x.Arg<string>());
                     _clientContext.StreamSubscriptionContext!.StreamArguments.Returns(x.Arg<IReadOnlyDictionary<string, string>>());
                 });
 
-            _streamManager.StartSubscribingStream(_clientContext, chunkStreamId, streamPath, Helpers.CreateExpectedStreamArguments("password", "123456"))
+            _streamManager.StartSubscribingStream(
+                _clientContext, chunkStreamId, streamPath, Helpers.CreateExpectedStreamArguments("password", "123456"))
                 .Returns(SubscribingStreamResult.Succeeded);
 
             // Act
@@ -184,25 +182,23 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Commands
             // Arrange
             var transactionId = 0.0;
             var commandObject = new Dictionary<string, object>();
+            var appName = "appName";
             var streamName = "streamName?password=123456";
-            var streamId = _fixture.Create<uint>();
-            var command = new RtmpPlayCommand(transactionId, commandObject, streamName, 0, 0, false);
-
             var streamPath = "/appName/streamName";
-
+            var streamId = _fixture.Create<uint>();
             var chunkStreamId = Helpers.CreateRandomChunkStreamId();
             var timstamp = _fixture.Create<uint>();
             var messageStreamId = _fixture.Create<uint>();
+            var command = new RtmpPlayCommand(transactionId, commandObject, streamName, 0, 0, false);
 
             _clientContext.StreamId.Returns(streamId);
-            _clientContext.AppName.Returns("appName");
+            _clientContext.AppName.Returns(appName);
             _chunkStreamContext.ChunkStreamId.Returns(chunkStreamId);
 
-            _streamAuthorization.AuthorizeSubscribingAsync(_clientContext, streamPath, Helpers.CreateExpectedStreamArguments("password", "123456"))
-                .Returns(AuthorizationResult.Authorized());
-
-            _streamAuthorization.When(x => x.AuthorizeSubscribingAsync(_clientContext, streamPath, Helpers.CreateExpectedStreamArguments("password", "123456")))
-                .Do(x =>
+            _streamAuthorization.AuthorizeSubscribingAsync(
+                _clientContext, streamPath, Helpers.CreateExpectedStreamArguments("password", "123456"))
+                .Returns(AuthorizationResult.Authorized())
+                .AndDoes(x =>
                 {
                     _clientContext.StreamSubscriptionContext!.StreamPath.Returns(x.Arg<string>());
                     _clientContext.StreamSubscriptionContext!.StreamArguments.Returns(x.Arg<IReadOnlyDictionary<string, string>>());
