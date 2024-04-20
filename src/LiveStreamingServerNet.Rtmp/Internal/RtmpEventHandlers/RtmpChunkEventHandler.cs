@@ -62,7 +62,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
 
             success &= await HandleChunkEventPayloadAsync(chunkStreamContext, @event, cancellationToken);
 
-            return new RtmpEventConsumingResult(success, chunkStreamContext.MessageHeader.MessageLength);
+            return new RtmpEventConsumingResult(success, (int)@event.ClientContext.InChunkSize);
         }
 
         private void HandleAcknowlegement(RtmpChunkEvent @event, int bufferSize)
