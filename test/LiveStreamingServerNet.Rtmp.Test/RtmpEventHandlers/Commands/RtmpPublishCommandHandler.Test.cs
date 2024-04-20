@@ -19,8 +19,6 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Commands
         private readonly IFixture _fixture;
         private readonly IRtmpChunkStreamContext _chunkStreamContext;
         private readonly IRtmpClientContext _clientContext;
-        private readonly IRtmpServerContext _serverContext;
-        private readonly IServiceProvider _services;
         private readonly IRtmpStreamManagerService _streamManager;
         private readonly IRtmpCommandMessageSenderService _commandMessageSender;
         private readonly IRtmpServerStreamEventDispatcher _eventDispatcher;
@@ -34,8 +32,6 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Commands
             _fixture = new Fixture();
             _chunkStreamContext = Substitute.For<IRtmpChunkStreamContext>();
             _clientContext = Substitute.For<IRtmpClientContext>();
-            _serverContext = Substitute.For<IRtmpServerContext>();
-            _services = Substitute.For<IServiceProvider>();
             _streamManager = Substitute.For<IRtmpStreamManagerService>();
             _commandMessageSender = Substitute.For<IRtmpCommandMessageSenderService>();
             _eventDispatcher = Substitute.For<IRtmpServerStreamEventDispatcher>();
@@ -50,8 +46,6 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Commands
                 .Do(x => x.Arg<Action<bool>>()?.Invoke(true));
 
             _sut = new RtmpPublishCommandHandler(
-                _services,
-                _serverContext,
                 _streamManager,
                 _commandMessageSender,
                 _eventDispatcher,

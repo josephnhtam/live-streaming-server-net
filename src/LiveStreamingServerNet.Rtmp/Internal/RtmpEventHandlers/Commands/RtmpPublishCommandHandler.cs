@@ -17,8 +17,6 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
     [RtmpCommand("publish")]
     internal class RtmpPublishCommandHandler : RtmpCommandHandler<RtmpPublishCommand>
     {
-        private readonly IServiceProvider _services;
-        private readonly IRtmpServerContext _serverContext;
         private readonly IRtmpStreamManagerService _streamManager;
         private readonly IRtmpCommandMessageSenderService _commandMessageSender;
         private readonly IRtmpServerStreamEventDispatcher _eventDispatcher;
@@ -26,16 +24,12 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
         private readonly ILogger _logger;
 
         public RtmpPublishCommandHandler(
-            IServiceProvider services,
-            IRtmpServerContext serverContext,
             IRtmpStreamManagerService streamManager,
             IRtmpCommandMessageSenderService commandMessageSender,
             IRtmpServerStreamEventDispatcher eventDispatcher,
             IStreamAuthorization streamAuthorization,
             ILogger<RtmpPublishCommandHandler> logger)
         {
-            _services = services;
-            _serverContext = serverContext;
             _streamManager = streamManager;
             _commandMessageSender = commandMessageSender;
             _eventDispatcher = eventDispatcher;

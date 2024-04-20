@@ -17,8 +17,6 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
     [RtmpCommand("play")]
     internal class RtmpPlayCommandHandler : RtmpCommandHandler<RtmpPlayCommand>
     {
-        private readonly IServiceProvider _services;
-        private readonly IRtmpServerContext _serverContext;
         private readonly IRtmpStreamManagerService _streamManager;
         private readonly IRtmpCommandMessageSenderService _commandMessageSender;
         private readonly IRtmpMediaMessageCacherService _mediaMessageCacher;
@@ -27,8 +25,6 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
         private readonly ILogger<RtmpPlayCommandHandler> _logger;
 
         public RtmpPlayCommandHandler(
-            IServiceProvider services,
-            IRtmpServerContext serverContext,
             IRtmpStreamManagerService streamManager,
             IRtmpCommandMessageSenderService commandMessageSender,
             IRtmpMediaMessageCacherService mediaMessageCacher,
@@ -36,8 +32,6 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
             IStreamAuthorization streamAuthorization,
             ILogger<RtmpPlayCommandHandler> logger)
         {
-            _services = services;
-            _serverContext = serverContext;
             _streamManager = streamManager;
             _commandMessageSender = commandMessageSender;
             _mediaMessageCacher = mediaMessageCacher;
