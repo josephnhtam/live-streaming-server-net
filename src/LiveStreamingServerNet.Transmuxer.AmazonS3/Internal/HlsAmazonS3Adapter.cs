@@ -9,7 +9,7 @@ using System.Text;
 
 namespace LiveStreamingServerNet.Transmuxer.AmazonS3.Internal
 {
-    public class HlsAmazonS3Adapter : IHlsStorageAdapter
+    internal class HlsAmazonS3Adapter : IHlsStorageAdapter
     {
         private readonly IAmazonS3 _s3Client;
         private readonly string _bucket;

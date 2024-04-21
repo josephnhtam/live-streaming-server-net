@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace LiveStreamingServerNet.Transmuxer.AzureBlobStorage.Internal
 {
-    public class HlsAzureBlobStorageAdapter : IHlsStorageAdapter
+    internal class HlsAzureBlobStorageAdapter : IHlsStorageAdapter
     {
         private readonly BlobContainerClient _containerClient;
         private readonly HlsAzureBlobStorageConfiguration _config;

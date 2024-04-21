@@ -8,7 +8,7 @@ using System.Text;
 
 namespace LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Internal
 {
-    public class HlsGoogleCloudStorageAdapter : IHlsStorageAdapter
+    internal class HlsGoogleCloudStorageAdapter : IHlsStorageAdapter
     {
         private readonly StorageClient _storageClient;
         private readonly string _bucket;
