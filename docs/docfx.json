@@ -45,7 +45,8 @@
       "_appTitle": "LiveStreamingServerNET",
       "_enableSearch": true,
       "_disableContribution": true,
-      "_appFaviconPath": "favicon.ico"
+      "_appFaviconPath": "favicon.ico",
+      "_appFooter": "This documentation is currently under construction."
     }
   }
 }
