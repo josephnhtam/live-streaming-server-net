@@ -1,17 +1,17 @@
-- href: getting-started.md
+- href: ./getting-started.md
   
 - name: Essentials
-- href: admin-panel.md
-- href: serving-flv.md
-- href: serving-hls.md
-- href: rtmps.md
-- href: custom-authorization.md
-- href: custom-transmuxer.md
+- href: ./essentials/admin-panel.md
+- href: ./essentials/serving-flv.md
+- href: ./essentials/serving-hls.md
+- href: ./essentials/rtmps.md
+- href: ./essentials/custom-authorization.md
+- href: ./essentials/custom-transmuxer.md
 
 - name: Advanced
 - name: Kubernetes Integration
   items:
-  - href: kubernetes-intro.md
-  - href: kubernetes-operator.md
-  - href: kubernetes-pod.md
-  - href: fleet.md
+  - href: ./kubernetes-integration/kubernetes-intro.md
+  - href: ./kubernetes-integration/kubernetes-operator.md
+  - href: ./kubernetes-integration/kubernetes-pod.md
+  - href: ./kubernetes-integration/fleet.md
