@@ -1,0 +1,62 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.KubernetesPod.StreamRegistration
+  commentId: N:LiveStreamingServerNet.KubernetesPod.StreamRegistration
+  id: LiveStreamingServerNet.KubernetesPod.StreamRegistration
+  children:
+  - LiveStreamingServerNet.KubernetesPod.StreamRegistration.StreamRegistrationResult
+  - LiveStreamingServerNet.KubernetesPod.StreamRegistration.StreamRevalidationResult
+  langs:
+  - csharp
+  - vb
+  name: LiveStreamingServerNet.KubernetesPod.StreamRegistration
+  nameWithType: LiveStreamingServerNet.KubernetesPod.StreamRegistration
+  fullName: LiveStreamingServerNet.KubernetesPod.StreamRegistration
+  type: Namespace
+  assemblies:
+  - LiveStreamingServerNet.KubernetesPod
+references:
+- uid: LiveStreamingServerNet.KubernetesPod.StreamRegistration.StreamRegistrationResult
+  commentId: T:LiveStreamingServerNet.KubernetesPod.StreamRegistration.StreamRegistrationResult
+  parent: LiveStreamingServerNet.KubernetesPod.StreamRegistration
+  href: LiveStreamingServerNet.KubernetesPod.StreamRegistration.StreamRegistrationResult.html
+  name: StreamRegistrationResult
+  nameWithType: StreamRegistrationResult
+  fullName: LiveStreamingServerNet.KubernetesPod.StreamRegistration.StreamRegistrationResult
+- uid: LiveStreamingServerNet.KubernetesPod.StreamRegistration.StreamRevalidationResult
+  commentId: T:LiveStreamingServerNet.KubernetesPod.StreamRegistration.StreamRevalidationResult
+  parent: LiveStreamingServerNet.KubernetesPod.StreamRegistration
+  href: LiveStreamingServerNet.KubernetesPod.StreamRegistration.StreamRevalidationResult.html
+  name: StreamRevalidationResult
+  nameWithType: StreamRevalidationResult
+  fullName: LiveStreamingServerNet.KubernetesPod.StreamRegistration.StreamRevalidationResult
+- uid: LiveStreamingServerNet.KubernetesPod.StreamRegistration
+  commentId: N:LiveStreamingServerNet.KubernetesPod.StreamRegistration
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.KubernetesPod.StreamRegistration
+  nameWithType: LiveStreamingServerNet.KubernetesPod.StreamRegistration
+  fullName: LiveStreamingServerNet.KubernetesPod.StreamRegistration
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.KubernetesPod
+    name: KubernetesPod
+    href: LiveStreamingServerNet.KubernetesPod.html
+  - name: .
+  - uid: LiveStreamingServerNet.KubernetesPod.StreamRegistration
+    name: StreamRegistration
+    href: LiveStreamingServerNet.KubernetesPod.StreamRegistration.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.KubernetesPod
+    name: KubernetesPod
+    href: LiveStreamingServerNet.KubernetesPod.html
+  - name: .
+  - uid: LiveStreamingServerNet.KubernetesPod.StreamRegistration
+    name: StreamRegistration
+    href: LiveStreamingServerNet.KubernetesPod.StreamRegistration.html

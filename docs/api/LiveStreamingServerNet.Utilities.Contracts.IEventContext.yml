@@ -1,0 +1,428 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.Utilities.Contracts.IEventContext
+  commentId: T:LiveStreamingServerNet.Utilities.Contracts.IEventContext
+  id: IEventContext
+  parent: LiveStreamingServerNet.Utilities.Contracts
+  children:
+  - LiveStreamingServerNet.Utilities.Contracts.IEventContext.Get``1
+  - LiveStreamingServerNet.Utilities.Contracts.IEventContext.Items
+  - LiveStreamingServerNet.Utilities.Contracts.IEventContext.Set``1(``0)
+  langs:
+  - csharp
+  - vb
+  name: IEventContext
+  nameWithType: IEventContext
+  fullName: LiveStreamingServerNet.Utilities.Contracts.IEventContext
+  type: Interface
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Utilities/Contracts/IEventContext.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: IEventContext
+    path: ../src/LiveStreamingServerNet.Utilities/Contracts/IEventContext.cs
+    startLine: 2
+  assemblies:
+  - LiveStreamingServerNet.Utilities
+  namespace: LiveStreamingServerNet.Utilities.Contracts
+  syntax:
+    content: public interface IEventContext
+    content.vb: Public Interface IEventContext
+  extensionMethods:
+  - System.Object.LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Action)
+- uid: LiveStreamingServerNet.Utilities.Contracts.IEventContext.Items
+  commentId: P:LiveStreamingServerNet.Utilities.Contracts.IEventContext.Items
+  id: Items
+  parent: LiveStreamingServerNet.Utilities.Contracts.IEventContext
+  langs:
+  - csharp
+  - vb
+  name: Items
+  nameWithType: IEventContext.Items
+  fullName: LiveStreamingServerNet.Utilities.Contracts.IEventContext.Items
+  type: Property
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Utilities/Contracts/IEventContext.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: Items
+    path: ../src/LiveStreamingServerNet.Utilities/Contracts/IEventContext.cs
+    startLine: 4
+  assemblies:
+  - LiveStreamingServerNet.Utilities
+  namespace: LiveStreamingServerNet.Utilities.Contracts
+  syntax:
+    content: IDictionary<string, object?> Items { get; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.IDictionary{System.String,System.Object}
+    content.vb: ReadOnly Property Items As IDictionary(Of String, Object)
+  overload: LiveStreamingServerNet.Utilities.Contracts.IEventContext.Items*
+- uid: LiveStreamingServerNet.Utilities.Contracts.IEventContext.Get``1
+  commentId: M:LiveStreamingServerNet.Utilities.Contracts.IEventContext.Get``1
+  id: Get``1
+  parent: LiveStreamingServerNet.Utilities.Contracts.IEventContext
+  langs:
+  - csharp
+  - vb
+  name: Get<TFeature>()
+  nameWithType: IEventContext.Get<TFeature>()
+  fullName: LiveStreamingServerNet.Utilities.Contracts.IEventContext.Get<TFeature>()
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Utilities/Contracts/IEventContext.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: Get
+    path: ../src/LiveStreamingServerNet.Utilities/Contracts/IEventContext.cs
+    startLine: 5
+  assemblies:
+  - LiveStreamingServerNet.Utilities
+  namespace: LiveStreamingServerNet.Utilities.Contracts
+  syntax:
+    content: 'TFeature? Get<TFeature>() where TFeature : class'
+    typeParameters:
+    - id: TFeature
+    return:
+      type: '{TFeature}'
+    content.vb: Function [Get](Of TFeature As Class)() As TFeature
+  overload: LiveStreamingServerNet.Utilities.Contracts.IEventContext.Get*
+  nameWithType.vb: IEventContext.Get(Of TFeature)()
+  fullName.vb: LiveStreamingServerNet.Utilities.Contracts.IEventContext.Get(Of TFeature)()
+  name.vb: Get(Of TFeature)()
+- uid: LiveStreamingServerNet.Utilities.Contracts.IEventContext.Set``1(``0)
+  commentId: M:LiveStreamingServerNet.Utilities.Contracts.IEventContext.Set``1(``0)
+  id: Set``1(``0)
+  parent: LiveStreamingServerNet.Utilities.Contracts.IEventContext
+  langs:
+  - csharp
+  - vb
+  name: Set<TFeature>(TFeature)
+  nameWithType: IEventContext.Set<TFeature>(TFeature)
+  fullName: LiveStreamingServerNet.Utilities.Contracts.IEventContext.Set<TFeature>(TFeature)
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Utilities/Contracts/IEventContext.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: Set
+    path: ../src/LiveStreamingServerNet.Utilities/Contracts/IEventContext.cs
+    startLine: 6
+  assemblies:
+  - LiveStreamingServerNet.Utilities
+  namespace: LiveStreamingServerNet.Utilities.Contracts
+  syntax:
+    content: 'void Set<TFeature>(TFeature instance) where TFeature : class'
+    parameters:
+    - id: instance
+      type: '{TFeature}'
+    typeParameters:
+    - id: TFeature
+    content.vb: Sub [Set](Of TFeature As Class)(instance As TFeature)
+  overload: LiveStreamingServerNet.Utilities.Contracts.IEventContext.Set*
+  nameWithType.vb: IEventContext.Set(Of TFeature)(TFeature)
+  fullName.vb: LiveStreamingServerNet.Utilities.Contracts.IEventContext.Set(Of TFeature)(TFeature)
+  name.vb: Set(Of TFeature)(TFeature)
+references:
+- uid: LiveStreamingServerNet.Utilities.Contracts
+  commentId: N:LiveStreamingServerNet.Utilities.Contracts
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.Utilities.Contracts
+  nameWithType: LiveStreamingServerNet.Utilities.Contracts
+  fullName: LiveStreamingServerNet.Utilities.Contracts
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities
+    name: Utilities
+    href: LiveStreamingServerNet.Utilities.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities.Contracts
+    name: Contracts
+    href: LiveStreamingServerNet.Utilities.Contracts.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities
+    name: Utilities
+    href: LiveStreamingServerNet.Utilities.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities.Contracts
+    name: Contracts
+    href: LiveStreamingServerNet.Utilities.Contracts.html
+- uid: System.Object.LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Action)
+  commentId: M:LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  parent: LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+  definition: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  name: Lock(object, Action)
+  nameWithType: LockExtensions.Lock(object, Action)
+  fullName: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(object, System.Action)
+  nameWithType.vb: LockExtensions.Lock(Object, Action)
+  fullName.vb: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(Object, System.Action)
+  name.vb: Lock(Object, Action)
+  spec.csharp:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+  spec.vb:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+- uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  commentId: M:LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  isExternal: true
+  href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  name: Lock(object, Action)
+  nameWithType: LockExtensions.Lock(object, Action)
+  fullName: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(object, System.Action)
+  nameWithType.vb: LockExtensions.Lock(Object, Action)
+  fullName.vb: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(Object, System.Action)
+  name.vb: Lock(Object, Action)
+  spec.csharp:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+  spec.vb:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+- uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+  commentId: T:LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+  parent: LiveStreamingServerNet.Utilities.Extensions
+  href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html
+  name: LockExtensions
+  nameWithType: LockExtensions
+  fullName: LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+- uid: LiveStreamingServerNet.Utilities.Extensions
+  commentId: N:LiveStreamingServerNet.Utilities.Extensions
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.Utilities.Extensions
+  nameWithType: LiveStreamingServerNet.Utilities.Extensions
+  fullName: LiveStreamingServerNet.Utilities.Extensions
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities
+    name: Utilities
+    href: LiveStreamingServerNet.Utilities.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities.Extensions
+    name: Extensions
+    href: LiveStreamingServerNet.Utilities.Extensions.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities
+    name: Utilities
+    href: LiveStreamingServerNet.Utilities.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities.Extensions
+    name: Extensions
+    href: LiveStreamingServerNet.Utilities.Extensions.html
+- uid: LiveStreamingServerNet.Utilities.Contracts.IEventContext.Items*
+  commentId: Overload:LiveStreamingServerNet.Utilities.Contracts.IEventContext.Items
+  href: LiveStreamingServerNet.Utilities.Contracts.IEventContext.html#LiveStreamingServerNet_Utilities_Contracts_IEventContext_Items
+  name: Items
+  nameWithType: IEventContext.Items
+  fullName: LiveStreamingServerNet.Utilities.Contracts.IEventContext.Items
+- uid: System.Collections.Generic.IDictionary{System.String,System.Object}
+  commentId: T:System.Collections.Generic.IDictionary{System.String,System.Object}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IDictionary`2
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.idictionary-2
+  name: IDictionary<string, object>
+  nameWithType: IDictionary<string, object>
+  fullName: System.Collections.Generic.IDictionary<string, object>
+  nameWithType.vb: IDictionary(Of String, Object)
+  fullName.vb: System.Collections.Generic.IDictionary(Of String, Object)
+  name.vb: IDictionary(Of String, Object)
+  spec.csharp:
+  - uid: System.Collections.Generic.IDictionary`2
+    name: IDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.idictionary-2
+  - name: <
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IDictionary`2
+    name: IDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.idictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Collections.Generic.IDictionary`2
+  commentId: T:System.Collections.Generic.IDictionary`2
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.idictionary-2
+  name: IDictionary<TKey, TValue>
+  nameWithType: IDictionary<TKey, TValue>
+  fullName: System.Collections.Generic.IDictionary<TKey, TValue>
+  nameWithType.vb: IDictionary(Of TKey, TValue)
+  fullName.vb: System.Collections.Generic.IDictionary(Of TKey, TValue)
+  name.vb: IDictionary(Of TKey, TValue)
+  spec.csharp:
+  - uid: System.Collections.Generic.IDictionary`2
+    name: IDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.idictionary-2
+  - name: <
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IDictionary`2
+    name: IDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.idictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+- uid: LiveStreamingServerNet.Utilities.Contracts.IEventContext.Get*
+  commentId: Overload:LiveStreamingServerNet.Utilities.Contracts.IEventContext.Get
+  href: LiveStreamingServerNet.Utilities.Contracts.IEventContext.html#LiveStreamingServerNet_Utilities_Contracts_IEventContext_Get__1
+  name: Get
+  nameWithType: IEventContext.Get
+  fullName: LiveStreamingServerNet.Utilities.Contracts.IEventContext.Get
+- uid: '{TFeature}'
+  commentId: '!:TFeature'
+  definition: TFeature
+  name: TFeature
+  nameWithType: TFeature
+  fullName: TFeature
+- uid: TFeature
+  name: TFeature
+  nameWithType: TFeature
+  fullName: TFeature
+- uid: LiveStreamingServerNet.Utilities.Contracts.IEventContext.Set*
+  commentId: Overload:LiveStreamingServerNet.Utilities.Contracts.IEventContext.Set
+  href: LiveStreamingServerNet.Utilities.Contracts.IEventContext.html#LiveStreamingServerNet_Utilities_Contracts_IEventContext_Set__1___0_
+  name: Set
+  nameWithType: IEventContext.Set
+  fullName: LiveStreamingServerNet.Utilities.Contracts.IEventContext.Set

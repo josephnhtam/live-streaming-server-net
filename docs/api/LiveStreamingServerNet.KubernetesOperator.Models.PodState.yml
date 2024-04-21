@@ -1,0 +1,814 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.KubernetesOperator.Models.PodState
+  commentId: T:LiveStreamingServerNet.KubernetesOperator.Models.PodState
+  id: PodState
+  parent: LiveStreamingServerNet.KubernetesOperator.Models
+  children:
+  - LiveStreamingServerNet.KubernetesOperator.Models.PodState.#ctor(System.String,System.Boolean,System.Int32,LiveStreamingServerNet.KubernetesOperator.Models.PodPhase,System.Nullable{System.DateTime})
+  - LiveStreamingServerNet.KubernetesOperator.Models.PodState.PendingStop
+  - LiveStreamingServerNet.KubernetesOperator.Models.PodState.Phase
+  - LiveStreamingServerNet.KubernetesOperator.Models.PodState.PodName
+  - LiveStreamingServerNet.KubernetesOperator.Models.PodState.StartTime
+  - LiveStreamingServerNet.KubernetesOperator.Models.PodState.StreamsCount
+  langs:
+  - csharp
+  - vb
+  name: PodState
+  nameWithType: PodState
+  fullName: LiveStreamingServerNet.KubernetesOperator.Models.PodState
+  type: Class
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.KubernetesOperator/Models/FleetState.cs
+      branch: develop
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: PodState
+    path: ../src/LiveStreamingServerNet.KubernetesOperator/Models/FleetState.cs
+    startLine: 18
+  assemblies:
+  - LiveStreamingServerNet.KubernetesOperator
+  namespace: LiveStreamingServerNet.KubernetesOperator.Models
+  syntax:
+    content: 'public record PodState : IEquatable<PodState>'
+    content.vb: Public Class PodState Implements IEquatable(Of PodState)
+  inheritance:
+  - System.Object
+  implements:
+  - System.IEquatable{LiveStreamingServerNet.KubernetesOperator.Models.PodState}
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  extensionMethods:
+  - System.Object.LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Action)
+- uid: LiveStreamingServerNet.KubernetesOperator.Models.PodState.#ctor(System.String,System.Boolean,System.Int32,LiveStreamingServerNet.KubernetesOperator.Models.PodPhase,System.Nullable{System.DateTime})
+  commentId: M:LiveStreamingServerNet.KubernetesOperator.Models.PodState.#ctor(System.String,System.Boolean,System.Int32,LiveStreamingServerNet.KubernetesOperator.Models.PodPhase,System.Nullable{System.DateTime})
+  id: '#ctor(System.String,System.Boolean,System.Int32,LiveStreamingServerNet.KubernetesOperator.Models.PodPhase,System.Nullable{System.DateTime})'
+  parent: LiveStreamingServerNet.KubernetesOperator.Models.PodState
+  langs:
+  - csharp
+  - vb
+  name: PodState(string, bool, int, PodPhase, DateTime?)
+  nameWithType: PodState.PodState(string, bool, int, PodPhase, DateTime?)
+  fullName: LiveStreamingServerNet.KubernetesOperator.Models.PodState.PodState(string, bool, int, LiveStreamingServerNet.KubernetesOperator.Models.PodPhase, System.DateTime?)
+  type: Constructor
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.KubernetesOperator/Models/FleetState.cs
+      branch: develop
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: .ctor
+    path: ../src/LiveStreamingServerNet.KubernetesOperator/Models/FleetState.cs
+    startLine: 18
+  assemblies:
+  - LiveStreamingServerNet.KubernetesOperator
+  namespace: LiveStreamingServerNet.KubernetesOperator.Models
+  syntax:
+    content: public PodState(string PodName, bool PendingStop, int StreamsCount, PodPhase Phase, DateTime? StartTime)
+    parameters:
+    - id: PodName
+      type: System.String
+    - id: PendingStop
+      type: System.Boolean
+    - id: StreamsCount
+      type: System.Int32
+    - id: Phase
+      type: LiveStreamingServerNet.KubernetesOperator.Models.PodPhase
+    - id: StartTime
+      type: System.Nullable{System.DateTime}
+    content.vb: Public Sub New(PodName As String, PendingStop As Boolean, StreamsCount As Integer, Phase As PodPhase, StartTime As Date?)
+  overload: LiveStreamingServerNet.KubernetesOperator.Models.PodState.#ctor*
+  nameWithType.vb: PodState.New(String, Boolean, Integer, PodPhase, Date?)
+  fullName.vb: LiveStreamingServerNet.KubernetesOperator.Models.PodState.New(String, Boolean, Integer, LiveStreamingServerNet.KubernetesOperator.Models.PodPhase, Date?)
+  name.vb: New(String, Boolean, Integer, PodPhase, Date?)
+- uid: LiveStreamingServerNet.KubernetesOperator.Models.PodState.PodName
+  commentId: P:LiveStreamingServerNet.KubernetesOperator.Models.PodState.PodName
+  id: PodName
+  parent: LiveStreamingServerNet.KubernetesOperator.Models.PodState
+  langs:
+  - csharp
+  - vb
+  name: PodName
+  nameWithType: PodState.PodName
+  fullName: LiveStreamingServerNet.KubernetesOperator.Models.PodState.PodName
+  type: Property
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.KubernetesOperator/Models/FleetState.cs
+      branch: develop
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: PodName
+    path: ../src/LiveStreamingServerNet.KubernetesOperator/Models/FleetState.cs
+    startLine: 18
+  assemblies:
+  - LiveStreamingServerNet.KubernetesOperator
+  namespace: LiveStreamingServerNet.KubernetesOperator.Models
+  syntax:
+    content: public string PodName { get; init; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property PodName As String
+  overload: LiveStreamingServerNet.KubernetesOperator.Models.PodState.PodName*
+- uid: LiveStreamingServerNet.KubernetesOperator.Models.PodState.PendingStop
+  commentId: P:LiveStreamingServerNet.KubernetesOperator.Models.PodState.PendingStop
+  id: PendingStop
+  parent: LiveStreamingServerNet.KubernetesOperator.Models.PodState
+  langs:
+  - csharp
+  - vb
+  name: PendingStop
+  nameWithType: PodState.PendingStop
+  fullName: LiveStreamingServerNet.KubernetesOperator.Models.PodState.PendingStop
+  type: Property
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.KubernetesOperator/Models/FleetState.cs
+      branch: develop
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: PendingStop
+    path: ../src/LiveStreamingServerNet.KubernetesOperator/Models/FleetState.cs
+    startLine: 18
+  assemblies:
+  - LiveStreamingServerNet.KubernetesOperator
+  namespace: LiveStreamingServerNet.KubernetesOperator.Models
+  syntax:
+    content: public bool PendingStop { get; init; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public Property PendingStop As Boolean
+  overload: LiveStreamingServerNet.KubernetesOperator.Models.PodState.PendingStop*
+- uid: LiveStreamingServerNet.KubernetesOperator.Models.PodState.StreamsCount
+  commentId: P:LiveStreamingServerNet.KubernetesOperator.Models.PodState.StreamsCount
+  id: StreamsCount
+  parent: LiveStreamingServerNet.KubernetesOperator.Models.PodState
+  langs:
+  - csharp
+  - vb
+  name: StreamsCount
+  nameWithType: PodState.StreamsCount
+  fullName: LiveStreamingServerNet.KubernetesOperator.Models.PodState.StreamsCount
+  type: Property
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.KubernetesOperator/Models/FleetState.cs
+      branch: develop
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: StreamsCount
+    path: ../src/LiveStreamingServerNet.KubernetesOperator/Models/FleetState.cs
+    startLine: 18
+  assemblies:
+  - LiveStreamingServerNet.KubernetesOperator
+  namespace: LiveStreamingServerNet.KubernetesOperator.Models
+  syntax:
+    content: public int StreamsCount { get; init; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Public Property StreamsCount As Integer
+  overload: LiveStreamingServerNet.KubernetesOperator.Models.PodState.StreamsCount*
+- uid: LiveStreamingServerNet.KubernetesOperator.Models.PodState.Phase
+  commentId: P:LiveStreamingServerNet.KubernetesOperator.Models.PodState.Phase
+  id: Phase
+  parent: LiveStreamingServerNet.KubernetesOperator.Models.PodState
+  langs:
+  - csharp
+  - vb
+  name: Phase
+  nameWithType: PodState.Phase
+  fullName: LiveStreamingServerNet.KubernetesOperator.Models.PodState.Phase
+  type: Property
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.KubernetesOperator/Models/FleetState.cs
+      branch: develop
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: Phase
+    path: ../src/LiveStreamingServerNet.KubernetesOperator/Models/FleetState.cs
+    startLine: 18
+  assemblies:
+  - LiveStreamingServerNet.KubernetesOperator
+  namespace: LiveStreamingServerNet.KubernetesOperator.Models
+  syntax:
+    content: public PodPhase Phase { get; init; }
+    parameters: []
+    return:
+      type: LiveStreamingServerNet.KubernetesOperator.Models.PodPhase
+    content.vb: Public Property Phase As PodPhase
+  overload: LiveStreamingServerNet.KubernetesOperator.Models.PodState.Phase*
+- uid: LiveStreamingServerNet.KubernetesOperator.Models.PodState.StartTime
+  commentId: P:LiveStreamingServerNet.KubernetesOperator.Models.PodState.StartTime
+  id: StartTime
+  parent: LiveStreamingServerNet.KubernetesOperator.Models.PodState
+  langs:
+  - csharp
+  - vb
+  name: StartTime
+  nameWithType: PodState.StartTime
+  fullName: LiveStreamingServerNet.KubernetesOperator.Models.PodState.StartTime
+  type: Property
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.KubernetesOperator/Models/FleetState.cs
+      branch: develop
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: StartTime
+    path: ../src/LiveStreamingServerNet.KubernetesOperator/Models/FleetState.cs
+    startLine: 18
+  assemblies:
+  - LiveStreamingServerNet.KubernetesOperator
+  namespace: LiveStreamingServerNet.KubernetesOperator.Models
+  syntax:
+    content: public DateTime? StartTime { get; init; }
+    parameters: []
+    return:
+      type: System.Nullable{System.DateTime}
+    content.vb: Public Property StartTime As Date?
+  overload: LiveStreamingServerNet.KubernetesOperator.Models.PodState.StartTime*
+references:
+- uid: LiveStreamingServerNet.KubernetesOperator.Models
+  commentId: N:LiveStreamingServerNet.KubernetesOperator.Models
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.KubernetesOperator.Models
+  nameWithType: LiveStreamingServerNet.KubernetesOperator.Models
+  fullName: LiveStreamingServerNet.KubernetesOperator.Models
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.KubernetesOperator
+    name: KubernetesOperator
+    href: LiveStreamingServerNet.KubernetesOperator.html
+  - name: .
+  - uid: LiveStreamingServerNet.KubernetesOperator.Models
+    name: Models
+    href: LiveStreamingServerNet.KubernetesOperator.Models.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.KubernetesOperator
+    name: KubernetesOperator
+    href: LiveStreamingServerNet.KubernetesOperator.html
+  - name: .
+  - uid: LiveStreamingServerNet.KubernetesOperator.Models
+    name: Models
+    href: LiveStreamingServerNet.KubernetesOperator.Models.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.IEquatable{LiveStreamingServerNet.KubernetesOperator.Models.PodState}
+  commentId: T:System.IEquatable{LiveStreamingServerNet.KubernetesOperator.Models.PodState}
+  parent: System
+  definition: System.IEquatable`1
+  href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  name: IEquatable<PodState>
+  nameWithType: IEquatable<PodState>
+  fullName: System.IEquatable<LiveStreamingServerNet.KubernetesOperator.Models.PodState>
+  nameWithType.vb: IEquatable(Of PodState)
+  fullName.vb: System.IEquatable(Of LiveStreamingServerNet.KubernetesOperator.Models.PodState)
+  name.vb: IEquatable(Of PodState)
+  spec.csharp:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  - name: <
+  - uid: LiveStreamingServerNet.KubernetesOperator.Models.PodState
+    name: PodState
+    href: LiveStreamingServerNet.KubernetesOperator.Models.PodState.html
+  - name: '>'
+  spec.vb:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: LiveStreamingServerNet.KubernetesOperator.Models.PodState
+    name: PodState
+    href: LiveStreamingServerNet.KubernetesOperator.Models.PodState.html
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Action)
+  commentId: M:LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  parent: LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+  definition: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  name: Lock(object, Action)
+  nameWithType: LockExtensions.Lock(object, Action)
+  fullName: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(object, System.Action)
+  nameWithType.vb: LockExtensions.Lock(Object, Action)
+  fullName.vb: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(Object, System.Action)
+  name.vb: Lock(Object, Action)
+  spec.csharp:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+  spec.vb:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: System.IEquatable`1
+  commentId: T:System.IEquatable`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  name: IEquatable<T>
+  nameWithType: IEquatable<T>
+  fullName: System.IEquatable<T>
+  nameWithType.vb: IEquatable(Of T)
+  fullName.vb: System.IEquatable(Of T)
+  name.vb: IEquatable(Of T)
+  spec.csharp:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  commentId: M:LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  isExternal: true
+  href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  name: Lock(object, Action)
+  nameWithType: LockExtensions.Lock(object, Action)
+  fullName: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(object, System.Action)
+  nameWithType.vb: LockExtensions.Lock(Object, Action)
+  fullName.vb: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(Object, System.Action)
+  name.vb: Lock(Object, Action)
+  spec.csharp:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+  spec.vb:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+- uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+  commentId: T:LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+  parent: LiveStreamingServerNet.Utilities.Extensions
+  href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html
+  name: LockExtensions
+  nameWithType: LockExtensions
+  fullName: LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+- uid: LiveStreamingServerNet.Utilities.Extensions
+  commentId: N:LiveStreamingServerNet.Utilities.Extensions
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.Utilities.Extensions
+  nameWithType: LiveStreamingServerNet.Utilities.Extensions
+  fullName: LiveStreamingServerNet.Utilities.Extensions
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities
+    name: Utilities
+    href: LiveStreamingServerNet.Utilities.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities.Extensions
+    name: Extensions
+    href: LiveStreamingServerNet.Utilities.Extensions.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities
+    name: Utilities
+    href: LiveStreamingServerNet.Utilities.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities.Extensions
+    name: Extensions
+    href: LiveStreamingServerNet.Utilities.Extensions.html
+- uid: LiveStreamingServerNet.KubernetesOperator.Models.PodState.#ctor*
+  commentId: Overload:LiveStreamingServerNet.KubernetesOperator.Models.PodState.#ctor
+  href: LiveStreamingServerNet.KubernetesOperator.Models.PodState.html#LiveStreamingServerNet_KubernetesOperator_Models_PodState__ctor_System_String_System_Boolean_System_Int32_LiveStreamingServerNet_KubernetesOperator_Models_PodPhase_System_Nullable_System_DateTime__
+  name: PodState
+  nameWithType: PodState.PodState
+  fullName: LiveStreamingServerNet.KubernetesOperator.Models.PodState.PodState
+  nameWithType.vb: PodState.New
+  fullName.vb: LiveStreamingServerNet.KubernetesOperator.Models.PodState.New
+  name.vb: New
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: LiveStreamingServerNet.KubernetesOperator.Models.PodPhase
+  commentId: T:LiveStreamingServerNet.KubernetesOperator.Models.PodPhase
+  parent: LiveStreamingServerNet.KubernetesOperator.Models
+  href: LiveStreamingServerNet.KubernetesOperator.Models.PodPhase.html
+  name: PodPhase
+  nameWithType: PodPhase
+  fullName: LiveStreamingServerNet.KubernetesOperator.Models.PodPhase
+- uid: System.Nullable{System.DateTime}
+  commentId: T:System.Nullable{System.DateTime}
+  parent: System
+  definition: System.Nullable`1
+  href: https://learn.microsoft.com/dotnet/api/system.datetime
+  name: DateTime?
+  nameWithType: DateTime?
+  fullName: System.DateTime?
+  nameWithType.vb: Date?
+  fullName.vb: Date?
+  name.vb: Date?
+  spec.csharp:
+  - uid: System.DateTime
+    name: DateTime
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.datetime
+  - name: '?'
+  spec.vb:
+  - uid: System.DateTime
+    name: Date
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.datetime
+  - name: '?'
+- uid: System.Nullable`1
+  commentId: T:System.Nullable`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.nullable-1
+  name: Nullable<T>
+  nameWithType: Nullable<T>
+  fullName: System.Nullable<T>
+  nameWithType.vb: Nullable(Of T)
+  fullName.vb: System.Nullable(Of T)
+  name.vb: Nullable(Of T)
+  spec.csharp:
+  - uid: System.Nullable`1
+    name: Nullable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.nullable-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Nullable`1
+    name: Nullable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.nullable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: LiveStreamingServerNet.KubernetesOperator.Models.PodState.PodName*
+  commentId: Overload:LiveStreamingServerNet.KubernetesOperator.Models.PodState.PodName
+  href: LiveStreamingServerNet.KubernetesOperator.Models.PodState.html#LiveStreamingServerNet_KubernetesOperator_Models_PodState_PodName
+  name: PodName
+  nameWithType: PodState.PodName
+  fullName: LiveStreamingServerNet.KubernetesOperator.Models.PodState.PodName
+- uid: LiveStreamingServerNet.KubernetesOperator.Models.PodState.PendingStop*
+  commentId: Overload:LiveStreamingServerNet.KubernetesOperator.Models.PodState.PendingStop
+  href: LiveStreamingServerNet.KubernetesOperator.Models.PodState.html#LiveStreamingServerNet_KubernetesOperator_Models_PodState_PendingStop
+  name: PendingStop
+  nameWithType: PodState.PendingStop
+  fullName: LiveStreamingServerNet.KubernetesOperator.Models.PodState.PendingStop
+- uid: LiveStreamingServerNet.KubernetesOperator.Models.PodState.StreamsCount*
+  commentId: Overload:LiveStreamingServerNet.KubernetesOperator.Models.PodState.StreamsCount
+  href: LiveStreamingServerNet.KubernetesOperator.Models.PodState.html#LiveStreamingServerNet_KubernetesOperator_Models_PodState_StreamsCount
+  name: StreamsCount
+  nameWithType: PodState.StreamsCount
+  fullName: LiveStreamingServerNet.KubernetesOperator.Models.PodState.StreamsCount
+- uid: LiveStreamingServerNet.KubernetesOperator.Models.PodState.Phase*
+  commentId: Overload:LiveStreamingServerNet.KubernetesOperator.Models.PodState.Phase
+  href: LiveStreamingServerNet.KubernetesOperator.Models.PodState.html#LiveStreamingServerNet_KubernetesOperator_Models_PodState_Phase
+  name: Phase
+  nameWithType: PodState.Phase
+  fullName: LiveStreamingServerNet.KubernetesOperator.Models.PodState.Phase
+- uid: LiveStreamingServerNet.KubernetesOperator.Models.PodState.StartTime*
+  commentId: Overload:LiveStreamingServerNet.KubernetesOperator.Models.PodState.StartTime
+  href: LiveStreamingServerNet.KubernetesOperator.Models.PodState.html#LiveStreamingServerNet_KubernetesOperator_Models_PodState_StartTime
+  name: StartTime
+  nameWithType: PodState.StartTime
+  fullName: LiveStreamingServerNet.KubernetesOperator.Models.PodState.StartTime

@@ -1,0 +1,23 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.KubernetesPod.Installer
+  commentId: N:LiveStreamingServerNet.KubernetesPod.Installer
+  id: LiveStreamingServerNet.KubernetesPod.Installer
+  children:
+  - LiveStreamingServerNet.KubernetesPod.Installer.KubernetesPodInstaller
+  langs:
+  - csharp
+  - vb
+  name: LiveStreamingServerNet.KubernetesPod.Installer
+  nameWithType: LiveStreamingServerNet.KubernetesPod.Installer
+  fullName: LiveStreamingServerNet.KubernetesPod.Installer
+  type: Namespace
+  assemblies:
+  - LiveStreamingServerNet.KubernetesPod
+references:
+- uid: LiveStreamingServerNet.KubernetesPod.Installer.KubernetesPodInstaller
+  commentId: T:LiveStreamingServerNet.KubernetesPod.Installer.KubernetesPodInstaller
+  href: LiveStreamingServerNet.KubernetesPod.Installer.KubernetesPodInstaller.html
+  name: KubernetesPodInstaller
+  nameWithType: KubernetesPodInstaller
+  fullName: LiveStreamingServerNet.KubernetesPod.Installer.KubernetesPodInstaller

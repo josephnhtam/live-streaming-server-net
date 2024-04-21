@@ -1,0 +1,23 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.Standalone.Endpoints
+  commentId: N:LiveStreamingServerNet.Standalone.Endpoints
+  id: LiveStreamingServerNet.Standalone.Endpoints
+  children:
+  - LiveStreamingServerNet.Standalone.Endpoints.RtmpStreamManagerApiEndpoints
+  langs:
+  - csharp
+  - vb
+  name: LiveStreamingServerNet.Standalone.Endpoints
+  nameWithType: LiveStreamingServerNet.Standalone.Endpoints
+  fullName: LiveStreamingServerNet.Standalone.Endpoints
+  type: Namespace
+  assemblies:
+  - LiveStreamingServerNet.Standalone
+references:
+- uid: LiveStreamingServerNet.Standalone.Endpoints.RtmpStreamManagerApiEndpoints
+  commentId: T:LiveStreamingServerNet.Standalone.Endpoints.RtmpStreamManagerApiEndpoints
+  href: LiveStreamingServerNet.Standalone.Endpoints.RtmpStreamManagerApiEndpoints.html
+  name: RtmpStreamManagerApiEndpoints
+  nameWithType: RtmpStreamManagerApiEndpoints
+  fullName: LiveStreamingServerNet.Standalone.Endpoints.RtmpStreamManagerApiEndpoints

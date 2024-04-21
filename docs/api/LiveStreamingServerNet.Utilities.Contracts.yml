@@ -1,0 +1,114 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.Utilities.Contracts
+  commentId: N:LiveStreamingServerNet.Utilities.Contracts
+  id: LiveStreamingServerNet.Utilities.Contracts
+  children:
+  - LiveStreamingServerNet.Utilities.Contracts.IEventContext
+  - LiveStreamingServerNet.Utilities.Contracts.IPool`1
+  - LiveStreamingServerNet.Utilities.Contracts.IRentable`1
+  - LiveStreamingServerNet.Utilities.Contracts.IRentedBuffer
+  langs:
+  - csharp
+  - vb
+  name: LiveStreamingServerNet.Utilities.Contracts
+  nameWithType: LiveStreamingServerNet.Utilities.Contracts
+  fullName: LiveStreamingServerNet.Utilities.Contracts
+  type: Namespace
+  assemblies:
+  - LiveStreamingServerNet.Utilities
+references:
+- uid: LiveStreamingServerNet.Utilities.Contracts.IEventContext
+  commentId: T:LiveStreamingServerNet.Utilities.Contracts.IEventContext
+  parent: LiveStreamingServerNet.Utilities.Contracts
+  href: LiveStreamingServerNet.Utilities.Contracts.IEventContext.html
+  name: IEventContext
+  nameWithType: IEventContext
+  fullName: LiveStreamingServerNet.Utilities.Contracts.IEventContext
+- uid: LiveStreamingServerNet.Utilities.Contracts.IPool`1
+  commentId: T:LiveStreamingServerNet.Utilities.Contracts.IPool`1
+  href: LiveStreamingServerNet.Utilities.Contracts.IPool-1.html
+  name: IPool<TObject>
+  nameWithType: IPool<TObject>
+  fullName: LiveStreamingServerNet.Utilities.Contracts.IPool<TObject>
+  nameWithType.vb: IPool(Of TObject)
+  fullName.vb: LiveStreamingServerNet.Utilities.Contracts.IPool(Of TObject)
+  name.vb: IPool(Of TObject)
+  spec.csharp:
+  - uid: LiveStreamingServerNet.Utilities.Contracts.IPool`1
+    name: IPool
+    href: LiveStreamingServerNet.Utilities.Contracts.IPool-1.html
+  - name: <
+  - name: TObject
+  - name: '>'
+  spec.vb:
+  - uid: LiveStreamingServerNet.Utilities.Contracts.IPool`1
+    name: IPool
+    href: LiveStreamingServerNet.Utilities.Contracts.IPool-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TObject
+  - name: )
+- uid: LiveStreamingServerNet.Utilities.Contracts.IRentable`1
+  commentId: T:LiveStreamingServerNet.Utilities.Contracts.IRentable`1
+  href: LiveStreamingServerNet.Utilities.Contracts.IRentable-1.html
+  name: IRentable<T>
+  nameWithType: IRentable<T>
+  fullName: LiveStreamingServerNet.Utilities.Contracts.IRentable<T>
+  nameWithType.vb: IRentable(Of T)
+  fullName.vb: LiveStreamingServerNet.Utilities.Contracts.IRentable(Of T)
+  name.vb: IRentable(Of T)
+  spec.csharp:
+  - uid: LiveStreamingServerNet.Utilities.Contracts.IRentable`1
+    name: IRentable
+    href: LiveStreamingServerNet.Utilities.Contracts.IRentable-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: LiveStreamingServerNet.Utilities.Contracts.IRentable`1
+    name: IRentable
+    href: LiveStreamingServerNet.Utilities.Contracts.IRentable-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: LiveStreamingServerNet.Utilities.Contracts.IRentedBuffer
+  commentId: T:LiveStreamingServerNet.Utilities.Contracts.IRentedBuffer
+  parent: LiveStreamingServerNet.Utilities.Contracts
+  href: LiveStreamingServerNet.Utilities.Contracts.IRentedBuffer.html
+  name: IRentedBuffer
+  nameWithType: IRentedBuffer
+  fullName: LiveStreamingServerNet.Utilities.Contracts.IRentedBuffer
+- uid: LiveStreamingServerNet.Utilities.Contracts
+  commentId: N:LiveStreamingServerNet.Utilities.Contracts
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.Utilities.Contracts
+  nameWithType: LiveStreamingServerNet.Utilities.Contracts
+  fullName: LiveStreamingServerNet.Utilities.Contracts
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities
+    name: Utilities
+    href: LiveStreamingServerNet.Utilities.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities.Contracts
+    name: Contracts
+    href: LiveStreamingServerNet.Utilities.Contracts.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities
+    name: Utilities
+    href: LiveStreamingServerNet.Utilities.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities.Contracts
+    name: Contracts
+    href: LiveStreamingServerNet.Utilities.Contracts.html

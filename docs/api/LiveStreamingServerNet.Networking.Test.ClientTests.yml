@@ -1,0 +1,853 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.Networking.Test.ClientTests
+  commentId: T:LiveStreamingServerNet.Networking.Test.ClientTests
+  id: ClientTests
+  parent: LiveStreamingServerNet.Networking.Test
+  children:
+  - LiveStreamingServerNet.Networking.Test.ClientTests.#ctor
+  - LiveStreamingServerNet.Networking.Test.ClientTests.Disconnect_Should_CancelRunAsync
+  - LiveStreamingServerNet.Networking.Test.ClientTests.Dispose
+  - LiveStreamingServerNet.Networking.Test.ClientTests.RunAsync_Should_BeCancellable
+  - LiveStreamingServerNet.Networking.Test.ClientTests.RunAsync_Should_CreateNetworkStream
+  - LiveStreamingServerNet.Networking.Test.ClientTests.RunAsync_Should_InitializeClientHandler
+  - LiveStreamingServerNet.Networking.Test.ClientTests.RunAsync_Should_RunClientLoop_Until_HandleClientLoopAsyncReturnsFalse
+  - LiveStreamingServerNet.Networking.Test.ClientTests.RunAsync_Should_StartBufferSender
+  langs:
+  - csharp
+  - vb
+  name: ClientTests
+  nameWithType: ClientTests
+  fullName: LiveStreamingServerNet.Networking.Test.ClientTests
+  type: Class
+  source:
+    remote:
+      path: test/LiveStreamingServerNet.Networking.Test/Client.Test.cs
+      branch: develop
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: ClientTests
+    path: ../test/LiveStreamingServerNet.Networking.Test/Client.Test.cs
+    startLine: 10
+  assemblies:
+  - LiveStreamingServerNet.Networking.Test
+  namespace: LiveStreamingServerNet.Networking.Test
+  syntax:
+    content: 'public class ClientTests : IDisposable'
+    content.vb: Public Class ClientTests Implements IDisposable
+  inheritance:
+  - System.Object
+  implements:
+  - System.IDisposable
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  extensionMethods:
+  - System.Object.LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Action)
+- uid: LiveStreamingServerNet.Networking.Test.ClientTests.#ctor
+  commentId: M:LiveStreamingServerNet.Networking.Test.ClientTests.#ctor
+  id: '#ctor'
+  parent: LiveStreamingServerNet.Networking.Test.ClientTests
+  langs:
+  - csharp
+  - vb
+  name: ClientTests()
+  nameWithType: ClientTests.ClientTests()
+  fullName: LiveStreamingServerNet.Networking.Test.ClientTests.ClientTests()
+  type: Constructor
+  source:
+    remote:
+      path: test/LiveStreamingServerNet.Networking.Test/Client.Test.cs
+      branch: develop
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: .ctor
+    path: ../test/LiveStreamingServerNet.Networking.Test/Client.Test.cs
+    startLine: 23
+  assemblies:
+  - LiveStreamingServerNet.Networking.Test
+  namespace: LiveStreamingServerNet.Networking.Test
+  syntax:
+    content: public ClientTests()
+    content.vb: Public Sub New()
+  overload: LiveStreamingServerNet.Networking.Test.ClientTests.#ctor*
+  nameWithType.vb: ClientTests.New()
+  fullName.vb: LiveStreamingServerNet.Networking.Test.ClientTests.New()
+  name.vb: New()
+- uid: LiveStreamingServerNet.Networking.Test.ClientTests.RunAsync_Should_InitializeClientHandler
+  commentId: M:LiveStreamingServerNet.Networking.Test.ClientTests.RunAsync_Should_InitializeClientHandler
+  id: RunAsync_Should_InitializeClientHandler
+  parent: LiveStreamingServerNet.Networking.Test.ClientTests
+  langs:
+  - csharp
+  - vb
+  name: RunAsync_Should_InitializeClientHandler()
+  nameWithType: ClientTests.RunAsync_Should_InitializeClientHandler()
+  fullName: LiveStreamingServerNet.Networking.Test.ClientTests.RunAsync_Should_InitializeClientHandler()
+  type: Method
+  source:
+    remote:
+      path: test/LiveStreamingServerNet.Networking.Test/Client.Test.cs
+      branch: develop
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: RunAsync_Should_InitializeClientHandler
+    path: ../test/LiveStreamingServerNet.Networking.Test/Client.Test.cs
+    startLine: 47
+  assemblies:
+  - LiveStreamingServerNet.Networking.Test
+  namespace: LiveStreamingServerNet.Networking.Test
+  syntax:
+    content: >-
+      [Fact]
+
+      public Task RunAsync_Should_InitializeClientHandler()
+    return:
+      type: System.Threading.Tasks.Task
+    content.vb: >-
+      <Fact>
+
+      Public Function RunAsync_Should_InitializeClientHandler() As Task
+  overload: LiveStreamingServerNet.Networking.Test.ClientTests.RunAsync_Should_InitializeClientHandler*
+  attributes:
+  - type: Xunit.FactAttribute
+    ctor: Xunit.FactAttribute.#ctor
+    arguments: []
+- uid: LiveStreamingServerNet.Networking.Test.ClientTests.RunAsync_Should_CreateNetworkStream
+  commentId: M:LiveStreamingServerNet.Networking.Test.ClientTests.RunAsync_Should_CreateNetworkStream
+  id: RunAsync_Should_CreateNetworkStream
+  parent: LiveStreamingServerNet.Networking.Test.ClientTests
+  langs:
+  - csharp
+  - vb
+  name: RunAsync_Should_CreateNetworkStream()
+  nameWithType: ClientTests.RunAsync_Should_CreateNetworkStream()
+  fullName: LiveStreamingServerNet.Networking.Test.ClientTests.RunAsync_Should_CreateNetworkStream()
+  type: Method
+  source:
+    remote:
+      path: test/LiveStreamingServerNet.Networking.Test/Client.Test.cs
+      branch: develop
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: RunAsync_Should_CreateNetworkStream
+    path: ../test/LiveStreamingServerNet.Networking.Test/Client.Test.cs
+    startLine: 57
+  assemblies:
+  - LiveStreamingServerNet.Networking.Test
+  namespace: LiveStreamingServerNet.Networking.Test
+  syntax:
+    content: >-
+      [Fact]
+
+      public Task RunAsync_Should_CreateNetworkStream()
+    return:
+      type: System.Threading.Tasks.Task
+    content.vb: >-
+      <Fact>
+
+      Public Function RunAsync_Should_CreateNetworkStream() As Task
+  overload: LiveStreamingServerNet.Networking.Test.ClientTests.RunAsync_Should_CreateNetworkStream*
+  attributes:
+  - type: Xunit.FactAttribute
+    ctor: Xunit.FactAttribute.#ctor
+    arguments: []
+- uid: LiveStreamingServerNet.Networking.Test.ClientTests.RunAsync_Should_StartBufferSender
+  commentId: M:LiveStreamingServerNet.Networking.Test.ClientTests.RunAsync_Should_StartBufferSender
+  id: RunAsync_Should_StartBufferSender
+  parent: LiveStreamingServerNet.Networking.Test.ClientTests
+  langs:
+  - csharp
+  - vb
+  name: RunAsync_Should_StartBufferSender()
+  nameWithType: ClientTests.RunAsync_Should_StartBufferSender()
+  fullName: LiveStreamingServerNet.Networking.Test.ClientTests.RunAsync_Should_StartBufferSender()
+  type: Method
+  source:
+    remote:
+      path: test/LiveStreamingServerNet.Networking.Test/Client.Test.cs
+      branch: develop
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: RunAsync_Should_StartBufferSender
+    path: ../test/LiveStreamingServerNet.Networking.Test/Client.Test.cs
+    startLine: 67
+  assemblies:
+  - LiveStreamingServerNet.Networking.Test
+  namespace: LiveStreamingServerNet.Networking.Test
+  syntax:
+    content: >-
+      [Fact]
+
+      public Task RunAsync_Should_StartBufferSender()
+    return:
+      type: System.Threading.Tasks.Task
+    content.vb: >-
+      <Fact>
+
+      Public Function RunAsync_Should_StartBufferSender() As Task
+  overload: LiveStreamingServerNet.Networking.Test.ClientTests.RunAsync_Should_StartBufferSender*
+  attributes:
+  - type: Xunit.FactAttribute
+    ctor: Xunit.FactAttribute.#ctor
+    arguments: []
+- uid: LiveStreamingServerNet.Networking.Test.ClientTests.RunAsync_Should_RunClientLoop_Until_HandleClientLoopAsyncReturnsFalse
+  commentId: M:LiveStreamingServerNet.Networking.Test.ClientTests.RunAsync_Should_RunClientLoop_Until_HandleClientLoopAsyncReturnsFalse
+  id: RunAsync_Should_RunClientLoop_Until_HandleClientLoopAsyncReturnsFalse
+  parent: LiveStreamingServerNet.Networking.Test.ClientTests
+  langs:
+  - csharp
+  - vb
+  name: RunAsync_Should_RunClientLoop_Until_HandleClientLoopAsyncReturnsFalse()
+  nameWithType: ClientTests.RunAsync_Should_RunClientLoop_Until_HandleClientLoopAsyncReturnsFalse()
+  fullName: LiveStreamingServerNet.Networking.Test.ClientTests.RunAsync_Should_RunClientLoop_Until_HandleClientLoopAsyncReturnsFalse()
+  type: Method
+  source:
+    remote:
+      path: test/LiveStreamingServerNet.Networking.Test/Client.Test.cs
+      branch: develop
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: RunAsync_Should_RunClientLoop_Until_HandleClientLoopAsyncReturnsFalse
+    path: ../test/LiveStreamingServerNet.Networking.Test/Client.Test.cs
+    startLine: 83
+  assemblies:
+  - LiveStreamingServerNet.Networking.Test
+  namespace: LiveStreamingServerNet.Networking.Test
+  syntax:
+    content: >-
+      [Fact]
+
+      public Task RunAsync_Should_RunClientLoop_Until_HandleClientLoopAsyncReturnsFalse()
+    return:
+      type: System.Threading.Tasks.Task
+    content.vb: >-
+      <Fact>
+
+      Public Function RunAsync_Should_RunClientLoop_Until_HandleClientLoopAsyncReturnsFalse() As Task
+  overload: LiveStreamingServerNet.Networking.Test.ClientTests.RunAsync_Should_RunClientLoop_Until_HandleClientLoopAsyncReturnsFalse*
+  attributes:
+  - type: Xunit.FactAttribute
+    ctor: Xunit.FactAttribute.#ctor
+    arguments: []
+- uid: LiveStreamingServerNet.Networking.Test.ClientTests.RunAsync_Should_BeCancellable
+  commentId: M:LiveStreamingServerNet.Networking.Test.ClientTests.RunAsync_Should_BeCancellable
+  id: RunAsync_Should_BeCancellable
+  parent: LiveStreamingServerNet.Networking.Test.ClientTests
+  langs:
+  - csharp
+  - vb
+  name: RunAsync_Should_BeCancellable()
+  nameWithType: ClientTests.RunAsync_Should_BeCancellable()
+  fullName: LiveStreamingServerNet.Networking.Test.ClientTests.RunAsync_Should_BeCancellable()
+  type: Method
+  source:
+    remote:
+      path: test/LiveStreamingServerNet.Networking.Test/Client.Test.cs
+      branch: develop
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: RunAsync_Should_BeCancellable
+    path: ../test/LiveStreamingServerNet.Networking.Test/Client.Test.cs
+    startLine: 99
+  assemblies:
+  - LiveStreamingServerNet.Networking.Test
+  namespace: LiveStreamingServerNet.Networking.Test
+  syntax:
+    content: >-
+      [Fact]
+
+      public Task RunAsync_Should_BeCancellable()
+    return:
+      type: System.Threading.Tasks.Task
+    content.vb: >-
+      <Fact>
+
+      Public Function RunAsync_Should_BeCancellable() As Task
+  overload: LiveStreamingServerNet.Networking.Test.ClientTests.RunAsync_Should_BeCancellable*
+  attributes:
+  - type: Xunit.FactAttribute
+    ctor: Xunit.FactAttribute.#ctor
+    arguments: []
+- uid: LiveStreamingServerNet.Networking.Test.ClientTests.Disconnect_Should_CancelRunAsync
+  commentId: M:LiveStreamingServerNet.Networking.Test.ClientTests.Disconnect_Should_CancelRunAsync
+  id: Disconnect_Should_CancelRunAsync
+  parent: LiveStreamingServerNet.Networking.Test.ClientTests
+  langs:
+  - csharp
+  - vb
+  name: Disconnect_Should_CancelRunAsync()
+  nameWithType: ClientTests.Disconnect_Should_CancelRunAsync()
+  fullName: LiveStreamingServerNet.Networking.Test.ClientTests.Disconnect_Should_CancelRunAsync()
+  type: Method
+  source:
+    remote:
+      path: test/LiveStreamingServerNet.Networking.Test/Client.Test.cs
+      branch: develop
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: Disconnect_Should_CancelRunAsync
+    path: ../test/LiveStreamingServerNet.Networking.Test/Client.Test.cs
+    startLine: 121
+  assemblies:
+  - LiveStreamingServerNet.Networking.Test
+  namespace: LiveStreamingServerNet.Networking.Test
+  syntax:
+    content: >-
+      [Fact]
+
+      public Task Disconnect_Should_CancelRunAsync()
+    return:
+      type: System.Threading.Tasks.Task
+    content.vb: >-
+      <Fact>
+
+      Public Function Disconnect_Should_CancelRunAsync() As Task
+  overload: LiveStreamingServerNet.Networking.Test.ClientTests.Disconnect_Should_CancelRunAsync*
+  attributes:
+  - type: Xunit.FactAttribute
+    ctor: Xunit.FactAttribute.#ctor
+    arguments: []
+- uid: LiveStreamingServerNet.Networking.Test.ClientTests.Dispose
+  commentId: M:LiveStreamingServerNet.Networking.Test.ClientTests.Dispose
+  id: Dispose
+  parent: LiveStreamingServerNet.Networking.Test.ClientTests
+  langs:
+  - csharp
+  - vb
+  name: Dispose()
+  nameWithType: ClientTests.Dispose()
+  fullName: LiveStreamingServerNet.Networking.Test.ClientTests.Dispose()
+  type: Method
+  source:
+    remote:
+      path: test/LiveStreamingServerNet.Networking.Test/Client.Test.cs
+      branch: develop
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: Dispose
+    path: ../test/LiveStreamingServerNet.Networking.Test/Client.Test.cs
+    startLine: 141
+  assemblies:
+  - LiveStreamingServerNet.Networking.Test
+  namespace: LiveStreamingServerNet.Networking.Test
+  summary: Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+  example: []
+  syntax:
+    content: public void Dispose()
+    content.vb: Public Sub Dispose()
+  overload: LiveStreamingServerNet.Networking.Test.ClientTests.Dispose*
+  implements:
+  - System.IDisposable.Dispose
+references:
+- uid: LiveStreamingServerNet.Networking.Test
+  commentId: N:LiveStreamingServerNet.Networking.Test
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.Networking.Test
+  nameWithType: LiveStreamingServerNet.Networking.Test
+  fullName: LiveStreamingServerNet.Networking.Test
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Networking
+    name: Networking
+    href: LiveStreamingServerNet.Networking.html
+  - name: .
+  - uid: LiveStreamingServerNet.Networking.Test
+    name: Test
+    href: LiveStreamingServerNet.Networking.Test.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Networking
+    name: Networking
+    href: LiveStreamingServerNet.Networking.html
+  - name: .
+  - uid: LiveStreamingServerNet.Networking.Test
+    name: Test
+    href: LiveStreamingServerNet.Networking.Test.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.IDisposable
+  commentId: T:System.IDisposable
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.idisposable
+  name: IDisposable
+  nameWithType: IDisposable
+  fullName: System.IDisposable
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Action)
+  commentId: M:LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  parent: LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+  definition: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  name: Lock(object, Action)
+  nameWithType: LockExtensions.Lock(object, Action)
+  fullName: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(object, System.Action)
+  nameWithType.vb: LockExtensions.Lock(Object, Action)
+  fullName.vb: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(Object, System.Action)
+  name.vb: Lock(Object, Action)
+  spec.csharp:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+  spec.vb:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  commentId: M:LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  isExternal: true
+  href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  name: Lock(object, Action)
+  nameWithType: LockExtensions.Lock(object, Action)
+  fullName: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(object, System.Action)
+  nameWithType.vb: LockExtensions.Lock(Object, Action)
+  fullName.vb: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(Object, System.Action)
+  name.vb: Lock(Object, Action)
+  spec.csharp:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+  spec.vb:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+- uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+  commentId: T:LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+  parent: LiveStreamingServerNet.Utilities.Extensions
+  href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html
+  name: LockExtensions
+  nameWithType: LockExtensions
+  fullName: LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+- uid: LiveStreamingServerNet.Utilities.Extensions
+  commentId: N:LiveStreamingServerNet.Utilities.Extensions
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.Utilities.Extensions
+  nameWithType: LiveStreamingServerNet.Utilities.Extensions
+  fullName: LiveStreamingServerNet.Utilities.Extensions
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities
+    name: Utilities
+    href: LiveStreamingServerNet.Utilities.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities.Extensions
+    name: Extensions
+    href: LiveStreamingServerNet.Utilities.Extensions.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities
+    name: Utilities
+    href: LiveStreamingServerNet.Utilities.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities.Extensions
+    name: Extensions
+    href: LiveStreamingServerNet.Utilities.Extensions.html
+- uid: LiveStreamingServerNet.Networking.Test.ClientTests.#ctor*
+  commentId: Overload:LiveStreamingServerNet.Networking.Test.ClientTests.#ctor
+  href: LiveStreamingServerNet.Networking.Test.ClientTests.html#LiveStreamingServerNet_Networking_Test_ClientTests__ctor
+  name: ClientTests
+  nameWithType: ClientTests.ClientTests
+  fullName: LiveStreamingServerNet.Networking.Test.ClientTests.ClientTests
+  nameWithType.vb: ClientTests.New
+  fullName.vb: LiveStreamingServerNet.Networking.Test.ClientTests.New
+  name.vb: New
+- uid: LiveStreamingServerNet.Networking.Test.ClientTests.RunAsync_Should_InitializeClientHandler*
+  commentId: Overload:LiveStreamingServerNet.Networking.Test.ClientTests.RunAsync_Should_InitializeClientHandler
+  href: LiveStreamingServerNet.Networking.Test.ClientTests.html#LiveStreamingServerNet_Networking_Test_ClientTests_RunAsync_Should_InitializeClientHandler
+  name: RunAsync_Should_InitializeClientHandler
+  nameWithType: ClientTests.RunAsync_Should_InitializeClientHandler
+  fullName: LiveStreamingServerNet.Networking.Test.ClientTests.RunAsync_Should_InitializeClientHandler
+- uid: System.Threading.Tasks.Task
+  commentId: T:System.Threading.Tasks.Task
+  parent: System.Threading.Tasks
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task
+  name: Task
+  nameWithType: Task
+  fullName: System.Threading.Tasks.Task
+- uid: System.Threading.Tasks
+  commentId: N:System.Threading.Tasks
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Threading.Tasks
+  nameWithType: System.Threading.Tasks
+  fullName: System.Threading.Tasks
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  - name: .
+  - uid: System.Threading.Tasks
+    name: Tasks
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  - name: .
+  - uid: System.Threading.Tasks
+    name: Tasks
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks
+- uid: LiveStreamingServerNet.Networking.Test.ClientTests.RunAsync_Should_CreateNetworkStream*
+  commentId: Overload:LiveStreamingServerNet.Networking.Test.ClientTests.RunAsync_Should_CreateNetworkStream
+  href: LiveStreamingServerNet.Networking.Test.ClientTests.html#LiveStreamingServerNet_Networking_Test_ClientTests_RunAsync_Should_CreateNetworkStream
+  name: RunAsync_Should_CreateNetworkStream
+  nameWithType: ClientTests.RunAsync_Should_CreateNetworkStream
+  fullName: LiveStreamingServerNet.Networking.Test.ClientTests.RunAsync_Should_CreateNetworkStream
+- uid: LiveStreamingServerNet.Networking.Test.ClientTests.RunAsync_Should_StartBufferSender*
+  commentId: Overload:LiveStreamingServerNet.Networking.Test.ClientTests.RunAsync_Should_StartBufferSender
+  href: LiveStreamingServerNet.Networking.Test.ClientTests.html#LiveStreamingServerNet_Networking_Test_ClientTests_RunAsync_Should_StartBufferSender
+  name: RunAsync_Should_StartBufferSender
+  nameWithType: ClientTests.RunAsync_Should_StartBufferSender
+  fullName: LiveStreamingServerNet.Networking.Test.ClientTests.RunAsync_Should_StartBufferSender
+- uid: LiveStreamingServerNet.Networking.Test.ClientTests.RunAsync_Should_RunClientLoop_Until_HandleClientLoopAsyncReturnsFalse*
+  commentId: Overload:LiveStreamingServerNet.Networking.Test.ClientTests.RunAsync_Should_RunClientLoop_Until_HandleClientLoopAsyncReturnsFalse
+  href: LiveStreamingServerNet.Networking.Test.ClientTests.html#LiveStreamingServerNet_Networking_Test_ClientTests_RunAsync_Should_RunClientLoop_Until_HandleClientLoopAsyncReturnsFalse
+  name: RunAsync_Should_RunClientLoop_Until_HandleClientLoopAsyncReturnsFalse
+  nameWithType: ClientTests.RunAsync_Should_RunClientLoop_Until_HandleClientLoopAsyncReturnsFalse
+  fullName: LiveStreamingServerNet.Networking.Test.ClientTests.RunAsync_Should_RunClientLoop_Until_HandleClientLoopAsyncReturnsFalse
+- uid: LiveStreamingServerNet.Networking.Test.ClientTests.RunAsync_Should_BeCancellable*
+  commentId: Overload:LiveStreamingServerNet.Networking.Test.ClientTests.RunAsync_Should_BeCancellable
+  href: LiveStreamingServerNet.Networking.Test.ClientTests.html#LiveStreamingServerNet_Networking_Test_ClientTests_RunAsync_Should_BeCancellable
+  name: RunAsync_Should_BeCancellable
+  nameWithType: ClientTests.RunAsync_Should_BeCancellable
+  fullName: LiveStreamingServerNet.Networking.Test.ClientTests.RunAsync_Should_BeCancellable
+- uid: LiveStreamingServerNet.Networking.Test.ClientTests.Disconnect_Should_CancelRunAsync*
+  commentId: Overload:LiveStreamingServerNet.Networking.Test.ClientTests.Disconnect_Should_CancelRunAsync
+  href: LiveStreamingServerNet.Networking.Test.ClientTests.html#LiveStreamingServerNet_Networking_Test_ClientTests_Disconnect_Should_CancelRunAsync
+  name: Disconnect_Should_CancelRunAsync
+  nameWithType: ClientTests.Disconnect_Should_CancelRunAsync
+  fullName: LiveStreamingServerNet.Networking.Test.ClientTests.Disconnect_Should_CancelRunAsync
+- uid: LiveStreamingServerNet.Networking.Test.ClientTests.Dispose*
+  commentId: Overload:LiveStreamingServerNet.Networking.Test.ClientTests.Dispose
+  href: LiveStreamingServerNet.Networking.Test.ClientTests.html#LiveStreamingServerNet_Networking_Test_ClientTests_Dispose
+  name: Dispose
+  nameWithType: ClientTests.Dispose
+  fullName: LiveStreamingServerNet.Networking.Test.ClientTests.Dispose
+- uid: System.IDisposable.Dispose
+  commentId: M:System.IDisposable.Dispose
+  parent: System.IDisposable
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.idisposable.dispose
+  name: Dispose()
+  nameWithType: IDisposable.Dispose()
+  fullName: System.IDisposable.Dispose()
+  spec.csharp:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.idisposable.dispose
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.idisposable.dispose
+  - name: (
+  - name: )

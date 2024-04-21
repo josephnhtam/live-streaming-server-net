@@ -1,0 +1,84 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.KubernetesOperator.Models
+  commentId: N:LiveStreamingServerNet.KubernetesOperator.Models
+  id: LiveStreamingServerNet.KubernetesOperator.Models
+  children:
+  - LiveStreamingServerNet.KubernetesOperator.Models.DesiredFleetStateChange
+  - LiveStreamingServerNet.KubernetesOperator.Models.FleetState
+  - LiveStreamingServerNet.KubernetesOperator.Models.PodPhase
+  - LiveStreamingServerNet.KubernetesOperator.Models.PodState
+  - LiveStreamingServerNet.KubernetesOperator.Models.PodStateChange
+  langs:
+  - csharp
+  - vb
+  name: LiveStreamingServerNet.KubernetesOperator.Models
+  nameWithType: LiveStreamingServerNet.KubernetesOperator.Models
+  fullName: LiveStreamingServerNet.KubernetesOperator.Models
+  type: Namespace
+  assemblies:
+  - LiveStreamingServerNet.KubernetesOperator
+references:
+- uid: LiveStreamingServerNet.KubernetesOperator.Models.DesiredFleetStateChange
+  commentId: T:LiveStreamingServerNet.KubernetesOperator.Models.DesiredFleetStateChange
+  parent: LiveStreamingServerNet.KubernetesOperator.Models
+  href: LiveStreamingServerNet.KubernetesOperator.Models.DesiredFleetStateChange.html
+  name: DesiredFleetStateChange
+  nameWithType: DesiredFleetStateChange
+  fullName: LiveStreamingServerNet.KubernetesOperator.Models.DesiredFleetStateChange
+- uid: LiveStreamingServerNet.KubernetesOperator.Models.PodStateChange
+  commentId: T:LiveStreamingServerNet.KubernetesOperator.Models.PodStateChange
+  href: LiveStreamingServerNet.KubernetesOperator.Models.PodStateChange.html
+  name: PodStateChange
+  nameWithType: PodStateChange
+  fullName: LiveStreamingServerNet.KubernetesOperator.Models.PodStateChange
+- uid: LiveStreamingServerNet.KubernetesOperator.Models.FleetState
+  commentId: T:LiveStreamingServerNet.KubernetesOperator.Models.FleetState
+  parent: LiveStreamingServerNet.KubernetesOperator.Models
+  href: LiveStreamingServerNet.KubernetesOperator.Models.FleetState.html
+  name: FleetState
+  nameWithType: FleetState
+  fullName: LiveStreamingServerNet.KubernetesOperator.Models.FleetState
+- uid: LiveStreamingServerNet.KubernetesOperator.Models.PodState
+  commentId: T:LiveStreamingServerNet.KubernetesOperator.Models.PodState
+  href: LiveStreamingServerNet.KubernetesOperator.Models.PodState.html
+  name: PodState
+  nameWithType: PodState
+  fullName: LiveStreamingServerNet.KubernetesOperator.Models.PodState
+- uid: LiveStreamingServerNet.KubernetesOperator.Models.PodPhase
+  commentId: T:LiveStreamingServerNet.KubernetesOperator.Models.PodPhase
+  parent: LiveStreamingServerNet.KubernetesOperator.Models
+  href: LiveStreamingServerNet.KubernetesOperator.Models.PodPhase.html
+  name: PodPhase
+  nameWithType: PodPhase
+  fullName: LiveStreamingServerNet.KubernetesOperator.Models.PodPhase
+- uid: LiveStreamingServerNet.KubernetesOperator.Models
+  commentId: N:LiveStreamingServerNet.KubernetesOperator.Models
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.KubernetesOperator.Models
+  nameWithType: LiveStreamingServerNet.KubernetesOperator.Models
+  fullName: LiveStreamingServerNet.KubernetesOperator.Models
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.KubernetesOperator
+    name: KubernetesOperator
+    href: LiveStreamingServerNet.KubernetesOperator.html
+  - name: .
+  - uid: LiveStreamingServerNet.KubernetesOperator.Models
+    name: Models
+    href: LiveStreamingServerNet.KubernetesOperator.Models.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.KubernetesOperator
+    name: KubernetesOperator
+    href: LiveStreamingServerNet.KubernetesOperator.html
+  - name: .
+  - uid: LiveStreamingServerNet.KubernetesOperator.Models
+    name: Models
+    href: LiveStreamingServerNet.KubernetesOperator.Models.html

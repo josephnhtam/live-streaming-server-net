@@ -1,0 +1,51 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.Transmuxer.Hls
+  commentId: N:LiveStreamingServerNet.Transmuxer.Hls
+  id: LiveStreamingServerNet.Transmuxer.Hls
+  children:
+  - LiveStreamingServerNet.Transmuxer.Hls.Manifest
+  - LiveStreamingServerNet.Transmuxer.Hls.StoredManifest
+  - LiveStreamingServerNet.Transmuxer.Hls.StoredTsFile
+  - LiveStreamingServerNet.Transmuxer.Hls.StoringResult
+  - LiveStreamingServerNet.Transmuxer.Hls.TsFile
+  langs:
+  - csharp
+  - vb
+  name: LiveStreamingServerNet.Transmuxer.Hls
+  nameWithType: LiveStreamingServerNet.Transmuxer.Hls
+  fullName: LiveStreamingServerNet.Transmuxer.Hls
+  type: Namespace
+  assemblies:
+  - LiveStreamingServerNet.Transmuxer
+references:
+- uid: LiveStreamingServerNet.Transmuxer.Hls.Manifest
+  commentId: T:LiveStreamingServerNet.Transmuxer.Hls.Manifest
+  href: LiveStreamingServerNet.Transmuxer.Hls.Manifest.html
+  name: Manifest
+  nameWithType: Manifest
+  fullName: LiveStreamingServerNet.Transmuxer.Hls.Manifest
+- uid: LiveStreamingServerNet.Transmuxer.Hls.StoredManifest
+  commentId: T:LiveStreamingServerNet.Transmuxer.Hls.StoredManifest
+  href: LiveStreamingServerNet.Transmuxer.Hls.StoredManifest.html
+  name: StoredManifest
+  nameWithType: StoredManifest
+  fullName: LiveStreamingServerNet.Transmuxer.Hls.StoredManifest
+- uid: LiveStreamingServerNet.Transmuxer.Hls.StoredTsFile
+  commentId: T:LiveStreamingServerNet.Transmuxer.Hls.StoredTsFile
+  href: LiveStreamingServerNet.Transmuxer.Hls.StoredTsFile.html
+  name: StoredTsFile
+  nameWithType: StoredTsFile
+  fullName: LiveStreamingServerNet.Transmuxer.Hls.StoredTsFile
+- uid: LiveStreamingServerNet.Transmuxer.Hls.StoringResult
+  commentId: T:LiveStreamingServerNet.Transmuxer.Hls.StoringResult
+  href: LiveStreamingServerNet.Transmuxer.Hls.StoringResult.html
+  name: StoringResult
+  nameWithType: StoringResult
+  fullName: LiveStreamingServerNet.Transmuxer.Hls.StoringResult
+- uid: LiveStreamingServerNet.Transmuxer.Hls.TsFile
+  commentId: T:LiveStreamingServerNet.Transmuxer.Hls.TsFile
+  href: LiveStreamingServerNet.Transmuxer.Hls.TsFile.html
+  name: TsFile
+  nameWithType: TsFile
+  fullName: LiveStreamingServerNet.Transmuxer.Hls.TsFile

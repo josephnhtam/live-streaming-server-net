@@ -1,0 +1,62 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.Flv.Installer.Contracts
+  commentId: N:LiveStreamingServerNet.Flv.Installer.Contracts
+  id: LiveStreamingServerNet.Flv.Installer.Contracts
+  children:
+  - LiveStreamingServerNet.Flv.Installer.Contracts.IFlvConfigurator
+  langs:
+  - csharp
+  - vb
+  name: LiveStreamingServerNet.Flv.Installer.Contracts
+  nameWithType: LiveStreamingServerNet.Flv.Installer.Contracts
+  fullName: LiveStreamingServerNet.Flv.Installer.Contracts
+  type: Namespace
+  assemblies:
+  - LiveStreamingServerNet.Flv
+references:
+- uid: LiveStreamingServerNet.Flv.Installer.Contracts.IFlvConfigurator
+  commentId: T:LiveStreamingServerNet.Flv.Installer.Contracts.IFlvConfigurator
+  parent: LiveStreamingServerNet.Flv.Installer.Contracts
+  href: LiveStreamingServerNet.Flv.Installer.Contracts.IFlvConfigurator.html
+  name: IFlvConfigurator
+  nameWithType: IFlvConfigurator
+  fullName: LiveStreamingServerNet.Flv.Installer.Contracts.IFlvConfigurator
+- uid: LiveStreamingServerNet.Flv.Installer.Contracts
+  commentId: N:LiveStreamingServerNet.Flv.Installer.Contracts
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.Flv.Installer.Contracts
+  nameWithType: LiveStreamingServerNet.Flv.Installer.Contracts
+  fullName: LiveStreamingServerNet.Flv.Installer.Contracts
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Flv
+    name: Flv
+    href: LiveStreamingServerNet.Flv.html
+  - name: .
+  - uid: LiveStreamingServerNet.Flv.Installer
+    name: Installer
+    href: LiveStreamingServerNet.Flv.Installer.html
+  - name: .
+  - uid: LiveStreamingServerNet.Flv.Installer.Contracts
+    name: Contracts
+    href: LiveStreamingServerNet.Flv.Installer.Contracts.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Flv
+    name: Flv
+    href: LiveStreamingServerNet.Flv.html
+  - name: .
+  - uid: LiveStreamingServerNet.Flv.Installer
+    name: Installer
+    href: LiveStreamingServerNet.Flv.Installer.html
+  - name: .
+  - uid: LiveStreamingServerNet.Flv.Installer.Contracts
+    name: Contracts
+    href: LiveStreamingServerNet.Flv.Installer.Contracts.html

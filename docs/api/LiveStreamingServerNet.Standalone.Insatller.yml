@@ -1,0 +1,23 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.Standalone.Insatller
+  commentId: N:LiveStreamingServerNet.Standalone.Insatller
+  id: LiveStreamingServerNet.Standalone.Insatller
+  children:
+  - LiveStreamingServerNet.Standalone.Insatller.StandaloneServicesInstaller
+  langs:
+  - csharp
+  - vb
+  name: LiveStreamingServerNet.Standalone.Insatller
+  nameWithType: LiveStreamingServerNet.Standalone.Insatller
+  fullName: LiveStreamingServerNet.Standalone.Insatller
+  type: Namespace
+  assemblies:
+  - LiveStreamingServerNet.Standalone
+references:
+- uid: LiveStreamingServerNet.Standalone.Insatller.StandaloneServicesInstaller
+  commentId: T:LiveStreamingServerNet.Standalone.Insatller.StandaloneServicesInstaller
+  href: LiveStreamingServerNet.Standalone.Insatller.StandaloneServicesInstaller.html
+  name: StandaloneServicesInstaller
+  nameWithType: StandaloneServicesInstaller
+  fullName: LiveStreamingServerNet.Standalone.Insatller.StandaloneServicesInstaller

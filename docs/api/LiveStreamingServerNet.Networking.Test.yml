@@ -1,0 +1,72 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.Networking.Test
+  commentId: N:LiveStreamingServerNet.Networking.Test
+  id: LiveStreamingServerNet.Networking.Test
+  children:
+  - LiveStreamingServerNet.Networking.Test.ClientManagerTest
+  - LiveStreamingServerNet.Networking.Test.ClientTests
+  - LiveStreamingServerNet.Networking.Test.NetBufferReadTest
+  - LiveStreamingServerNet.Networking.Test.NetBufferSenderTest
+  - LiveStreamingServerNet.Networking.Test.NetBufferTest
+  - LiveStreamingServerNet.Networking.Test.NetBufferWriteTest
+  - LiveStreamingServerNet.Networking.Test.NetworkStreamFactoryTest
+  - LiveStreamingServerNet.Networking.Test.ServerTest
+  langs:
+  - csharp
+  - vb
+  name: LiveStreamingServerNet.Networking.Test
+  nameWithType: LiveStreamingServerNet.Networking.Test
+  fullName: LiveStreamingServerNet.Networking.Test
+  type: Namespace
+  assemblies:
+  - LiveStreamingServerNet.Networking.Test
+references:
+- uid: LiveStreamingServerNet.Networking.Test.ClientTests
+  commentId: T:LiveStreamingServerNet.Networking.Test.ClientTests
+  href: LiveStreamingServerNet.Networking.Test.ClientTests.html
+  name: ClientTests
+  nameWithType: ClientTests
+  fullName: LiveStreamingServerNet.Networking.Test.ClientTests
+- uid: LiveStreamingServerNet.Networking.Test.ClientManagerTest
+  commentId: T:LiveStreamingServerNet.Networking.Test.ClientManagerTest
+  href: LiveStreamingServerNet.Networking.Test.ClientManagerTest.html
+  name: ClientManagerTest
+  nameWithType: ClientManagerTest
+  fullName: LiveStreamingServerNet.Networking.Test.ClientManagerTest
+- uid: LiveStreamingServerNet.Networking.Test.NetBufferReadTest
+  commentId: T:LiveStreamingServerNet.Networking.Test.NetBufferReadTest
+  href: LiveStreamingServerNet.Networking.Test.NetBufferReadTest.html
+  name: NetBufferReadTest
+  nameWithType: NetBufferReadTest
+  fullName: LiveStreamingServerNet.Networking.Test.NetBufferReadTest
+- uid: LiveStreamingServerNet.Networking.Test.NetBufferTest
+  commentId: T:LiveStreamingServerNet.Networking.Test.NetBufferTest
+  href: LiveStreamingServerNet.Networking.Test.NetBufferTest.html
+  name: NetBufferTest
+  nameWithType: NetBufferTest
+  fullName: LiveStreamingServerNet.Networking.Test.NetBufferTest
+- uid: LiveStreamingServerNet.Networking.Test.NetBufferWriteTest
+  commentId: T:LiveStreamingServerNet.Networking.Test.NetBufferWriteTest
+  href: LiveStreamingServerNet.Networking.Test.NetBufferWriteTest.html
+  name: NetBufferWriteTest
+  nameWithType: NetBufferWriteTest
+  fullName: LiveStreamingServerNet.Networking.Test.NetBufferWriteTest
+- uid: LiveStreamingServerNet.Networking.Test.NetBufferSenderTest
+  commentId: T:LiveStreamingServerNet.Networking.Test.NetBufferSenderTest
+  href: LiveStreamingServerNet.Networking.Test.NetBufferSenderTest.html
+  name: NetBufferSenderTest
+  nameWithType: NetBufferSenderTest
+  fullName: LiveStreamingServerNet.Networking.Test.NetBufferSenderTest
+- uid: LiveStreamingServerNet.Networking.Test.NetworkStreamFactoryTest
+  commentId: T:LiveStreamingServerNet.Networking.Test.NetworkStreamFactoryTest
+  href: LiveStreamingServerNet.Networking.Test.NetworkStreamFactoryTest.html
+  name: NetworkStreamFactoryTest
+  nameWithType: NetworkStreamFactoryTest
+  fullName: LiveStreamingServerNet.Networking.Test.NetworkStreamFactoryTest
+- uid: LiveStreamingServerNet.Networking.Test.ServerTest
+  commentId: T:LiveStreamingServerNet.Networking.Test.ServerTest
+  href: LiveStreamingServerNet.Networking.Test.ServerTest.html
+  name: ServerTest
+  nameWithType: ServerTest
+  fullName: LiveStreamingServerNet.Networking.Test.ServerTest

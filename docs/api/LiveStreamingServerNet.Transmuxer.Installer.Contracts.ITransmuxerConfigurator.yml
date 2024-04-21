@@ -1,0 +1,703 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator
+  commentId: T:LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator
+  id: ITransmuxerConfigurator
+  parent: LiveStreamingServerNet.Transmuxer.Installer.Contracts
+  children:
+  - LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator.AddTransmuxerEventHandler(System.Func{System.IServiceProvider,LiveStreamingServerNet.Transmuxer.Contracts.ITransmuxerEventHandler})
+  - LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator.AddTransmuxerEventHandler``1
+  - LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator.Services
+  - LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator.UseInputPathResolver(System.Func{System.IServiceProvider,LiveStreamingServerNet.Transmuxer.Contracts.IInputPathResolver})
+  - LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator.UseInputPathResolver``1
+  langs:
+  - csharp
+  - vb
+  name: ITransmuxerConfigurator
+  nameWithType: ITransmuxerConfigurator
+  fullName: LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator
+  type: Interface
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Transmuxer/Installer/Contracts/ITransmuxerConfigurator.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: ITransmuxerConfigurator
+    path: ../src/LiveStreamingServerNet.Transmuxer/Installer/Contracts/ITransmuxerConfigurator.cs
+    startLine: 5
+  assemblies:
+  - LiveStreamingServerNet.Transmuxer
+  namespace: LiveStreamingServerNet.Transmuxer.Installer.Contracts
+  syntax:
+    content: public interface ITransmuxerConfigurator
+    content.vb: Public Interface ITransmuxerConfigurator
+  extensionMethods:
+  - LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator.LiveStreamingServerNet.Transmuxer.Installer.HlsUploaderInstaller.AddHlsUploader(System.Action{LiveStreamingServerNet.Transmuxer.Installer.Contracts.IHlsUploaderConfigurator})
+  - System.Object.LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Action)
+- uid: LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator.Services
+  commentId: P:LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator.Services
+  id: Services
+  parent: LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator
+  langs:
+  - csharp
+  - vb
+  name: Services
+  nameWithType: ITransmuxerConfigurator.Services
+  fullName: LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator.Services
+  type: Property
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Transmuxer/Installer/Contracts/ITransmuxerConfigurator.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: Services
+    path: ../src/LiveStreamingServerNet.Transmuxer/Installer/Contracts/ITransmuxerConfigurator.cs
+    startLine: 7
+  assemblies:
+  - LiveStreamingServerNet.Transmuxer
+  namespace: LiveStreamingServerNet.Transmuxer.Installer.Contracts
+  syntax:
+    content: IServiceCollection Services { get; }
+    parameters: []
+    return:
+      type: Microsoft.Extensions.DependencyInjection.IServiceCollection
+    content.vb: ReadOnly Property Services As IServiceCollection
+  overload: LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator.Services*
+- uid: LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator.UseInputPathResolver``1
+  commentId: M:LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator.UseInputPathResolver``1
+  id: UseInputPathResolver``1
+  parent: LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator
+  langs:
+  - csharp
+  - vb
+  name: UseInputPathResolver<TInputPathResolver>()
+  nameWithType: ITransmuxerConfigurator.UseInputPathResolver<TInputPathResolver>()
+  fullName: LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator.UseInputPathResolver<TInputPathResolver>()
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Transmuxer/Installer/Contracts/ITransmuxerConfigurator.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: UseInputPathResolver
+    path: ../src/LiveStreamingServerNet.Transmuxer/Installer/Contracts/ITransmuxerConfigurator.cs
+    startLine: 9
+  assemblies:
+  - LiveStreamingServerNet.Transmuxer
+  namespace: LiveStreamingServerNet.Transmuxer.Installer.Contracts
+  syntax:
+    content: 'ITransmuxerConfigurator UseInputPathResolver<TInputPathResolver>() where TInputPathResolver : class, IInputPathResolver'
+    typeParameters:
+    - id: TInputPathResolver
+    return:
+      type: LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator
+    content.vb: Function UseInputPathResolver(Of TInputPathResolver As {Class, IInputPathResolver})() As ITransmuxerConfigurator
+  overload: LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator.UseInputPathResolver*
+  nameWithType.vb: ITransmuxerConfigurator.UseInputPathResolver(Of TInputPathResolver)()
+  fullName.vb: LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator.UseInputPathResolver(Of TInputPathResolver)()
+  name.vb: UseInputPathResolver(Of TInputPathResolver)()
+- uid: LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator.UseInputPathResolver(System.Func{System.IServiceProvider,LiveStreamingServerNet.Transmuxer.Contracts.IInputPathResolver})
+  commentId: M:LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator.UseInputPathResolver(System.Func{System.IServiceProvider,LiveStreamingServerNet.Transmuxer.Contracts.IInputPathResolver})
+  id: UseInputPathResolver(System.Func{System.IServiceProvider,LiveStreamingServerNet.Transmuxer.Contracts.IInputPathResolver})
+  parent: LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator
+  langs:
+  - csharp
+  - vb
+  name: UseInputPathResolver(Func<IServiceProvider, IInputPathResolver>)
+  nameWithType: ITransmuxerConfigurator.UseInputPathResolver(Func<IServiceProvider, IInputPathResolver>)
+  fullName: LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator.UseInputPathResolver(System.Func<System.IServiceProvider, LiveStreamingServerNet.Transmuxer.Contracts.IInputPathResolver>)
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Transmuxer/Installer/Contracts/ITransmuxerConfigurator.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: UseInputPathResolver
+    path: ../src/LiveStreamingServerNet.Transmuxer/Installer/Contracts/ITransmuxerConfigurator.cs
+    startLine: 11
+  assemblies:
+  - LiveStreamingServerNet.Transmuxer
+  namespace: LiveStreamingServerNet.Transmuxer.Installer.Contracts
+  syntax:
+    content: ITransmuxerConfigurator UseInputPathResolver(Func<IServiceProvider, IInputPathResolver> implmentationFactory)
+    parameters:
+    - id: implmentationFactory
+      type: System.Func{System.IServiceProvider,LiveStreamingServerNet.Transmuxer.Contracts.IInputPathResolver}
+    return:
+      type: LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator
+    content.vb: Function UseInputPathResolver(implmentationFactory As Func(Of IServiceProvider, IInputPathResolver)) As ITransmuxerConfigurator
+  overload: LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator.UseInputPathResolver*
+  nameWithType.vb: ITransmuxerConfigurator.UseInputPathResolver(Func(Of IServiceProvider, IInputPathResolver))
+  fullName.vb: LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator.UseInputPathResolver(System.Func(Of System.IServiceProvider, LiveStreamingServerNet.Transmuxer.Contracts.IInputPathResolver))
+  name.vb: UseInputPathResolver(Func(Of IServiceProvider, IInputPathResolver))
+- uid: LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator.AddTransmuxerEventHandler``1
+  commentId: M:LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator.AddTransmuxerEventHandler``1
+  id: AddTransmuxerEventHandler``1
+  parent: LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator
+  langs:
+  - csharp
+  - vb
+  name: AddTransmuxerEventHandler<TTransmuxerEventHandler>()
+  nameWithType: ITransmuxerConfigurator.AddTransmuxerEventHandler<TTransmuxerEventHandler>()
+  fullName: LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator.AddTransmuxerEventHandler<TTransmuxerEventHandler>()
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Transmuxer/Installer/Contracts/ITransmuxerConfigurator.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: AddTransmuxerEventHandler
+    path: ../src/LiveStreamingServerNet.Transmuxer/Installer/Contracts/ITransmuxerConfigurator.cs
+    startLine: 13
+  assemblies:
+  - LiveStreamingServerNet.Transmuxer
+  namespace: LiveStreamingServerNet.Transmuxer.Installer.Contracts
+  syntax:
+    content: 'ITransmuxerConfigurator AddTransmuxerEventHandler<TTransmuxerEventHandler>() where TTransmuxerEventHandler : class, ITransmuxerEventHandler'
+    typeParameters:
+    - id: TTransmuxerEventHandler
+    return:
+      type: LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator
+    content.vb: Function AddTransmuxerEventHandler(Of TTransmuxerEventHandler As {Class, ITransmuxerEventHandler})() As ITransmuxerConfigurator
+  overload: LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator.AddTransmuxerEventHandler*
+  nameWithType.vb: ITransmuxerConfigurator.AddTransmuxerEventHandler(Of TTransmuxerEventHandler)()
+  fullName.vb: LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator.AddTransmuxerEventHandler(Of TTransmuxerEventHandler)()
+  name.vb: AddTransmuxerEventHandler(Of TTransmuxerEventHandler)()
+- uid: LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator.AddTransmuxerEventHandler(System.Func{System.IServiceProvider,LiveStreamingServerNet.Transmuxer.Contracts.ITransmuxerEventHandler})
+  commentId: M:LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator.AddTransmuxerEventHandler(System.Func{System.IServiceProvider,LiveStreamingServerNet.Transmuxer.Contracts.ITransmuxerEventHandler})
+  id: AddTransmuxerEventHandler(System.Func{System.IServiceProvider,LiveStreamingServerNet.Transmuxer.Contracts.ITransmuxerEventHandler})
+  parent: LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator
+  langs:
+  - csharp
+  - vb
+  name: AddTransmuxerEventHandler(Func<IServiceProvider, ITransmuxerEventHandler>)
+  nameWithType: ITransmuxerConfigurator.AddTransmuxerEventHandler(Func<IServiceProvider, ITransmuxerEventHandler>)
+  fullName: LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator.AddTransmuxerEventHandler(System.Func<System.IServiceProvider, LiveStreamingServerNet.Transmuxer.Contracts.ITransmuxerEventHandler>)
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Transmuxer/Installer/Contracts/ITransmuxerConfigurator.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: AddTransmuxerEventHandler
+    path: ../src/LiveStreamingServerNet.Transmuxer/Installer/Contracts/ITransmuxerConfigurator.cs
+    startLine: 15
+  assemblies:
+  - LiveStreamingServerNet.Transmuxer
+  namespace: LiveStreamingServerNet.Transmuxer.Installer.Contracts
+  syntax:
+    content: ITransmuxerConfigurator AddTransmuxerEventHandler(Func<IServiceProvider, ITransmuxerEventHandler> implmentationFactory)
+    parameters:
+    - id: implmentationFactory
+      type: System.Func{System.IServiceProvider,LiveStreamingServerNet.Transmuxer.Contracts.ITransmuxerEventHandler}
+    return:
+      type: LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator
+    content.vb: Function AddTransmuxerEventHandler(implmentationFactory As Func(Of IServiceProvider, ITransmuxerEventHandler)) As ITransmuxerConfigurator
+  overload: LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator.AddTransmuxerEventHandler*
+  nameWithType.vb: ITransmuxerConfigurator.AddTransmuxerEventHandler(Func(Of IServiceProvider, ITransmuxerEventHandler))
+  fullName.vb: LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator.AddTransmuxerEventHandler(System.Func(Of System.IServiceProvider, LiveStreamingServerNet.Transmuxer.Contracts.ITransmuxerEventHandler))
+  name.vb: AddTransmuxerEventHandler(Func(Of IServiceProvider, ITransmuxerEventHandler))
+references:
+- uid: LiveStreamingServerNet.Transmuxer.Installer.Contracts
+  commentId: N:LiveStreamingServerNet.Transmuxer.Installer.Contracts
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.Transmuxer.Installer.Contracts
+  nameWithType: LiveStreamingServerNet.Transmuxer.Installer.Contracts
+  fullName: LiveStreamingServerNet.Transmuxer.Installer.Contracts
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Transmuxer
+    name: Transmuxer
+    href: LiveStreamingServerNet.Transmuxer.html
+  - name: .
+  - uid: LiveStreamingServerNet.Transmuxer.Installer
+    name: Installer
+    href: LiveStreamingServerNet.Transmuxer.Installer.html
+  - name: .
+  - uid: LiveStreamingServerNet.Transmuxer.Installer.Contracts
+    name: Contracts
+    href: LiveStreamingServerNet.Transmuxer.Installer.Contracts.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Transmuxer
+    name: Transmuxer
+    href: LiveStreamingServerNet.Transmuxer.html
+  - name: .
+  - uid: LiveStreamingServerNet.Transmuxer.Installer
+    name: Installer
+    href: LiveStreamingServerNet.Transmuxer.Installer.html
+  - name: .
+  - uid: LiveStreamingServerNet.Transmuxer.Installer.Contracts
+    name: Contracts
+    href: LiveStreamingServerNet.Transmuxer.Installer.Contracts.html
+- uid: LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator.LiveStreamingServerNet.Transmuxer.Installer.HlsUploaderInstaller.AddHlsUploader(System.Action{LiveStreamingServerNet.Transmuxer.Installer.Contracts.IHlsUploaderConfigurator})
+  commentId: M:LiveStreamingServerNet.Transmuxer.Installer.HlsUploaderInstaller.AddHlsUploader(LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator,System.Action{LiveStreamingServerNet.Transmuxer.Installer.Contracts.IHlsUploaderConfigurator})
+  parent: LiveStreamingServerNet.Transmuxer.Installer.HlsUploaderInstaller
+  definition: LiveStreamingServerNet.Transmuxer.Installer.HlsUploaderInstaller.AddHlsUploader(LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator,System.Action{LiveStreamingServerNet.Transmuxer.Installer.Contracts.IHlsUploaderConfigurator})
+  href: LiveStreamingServerNet.Transmuxer.Installer.HlsUploaderInstaller.html#LiveStreamingServerNet_Transmuxer_Installer_HlsUploaderInstaller_AddHlsUploader_LiveStreamingServerNet_Transmuxer_Installer_Contracts_ITransmuxerConfigurator_System_Action_LiveStreamingServerNet_Transmuxer_Installer_Contracts_IHlsUploaderConfigurator__
+  name: AddHlsUploader(ITransmuxerConfigurator, Action<IHlsUploaderConfigurator>)
+  nameWithType: HlsUploaderInstaller.AddHlsUploader(ITransmuxerConfigurator, Action<IHlsUploaderConfigurator>)
+  fullName: LiveStreamingServerNet.Transmuxer.Installer.HlsUploaderInstaller.AddHlsUploader(LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator, System.Action<LiveStreamingServerNet.Transmuxer.Installer.Contracts.IHlsUploaderConfigurator>)
+  nameWithType.vb: HlsUploaderInstaller.AddHlsUploader(ITransmuxerConfigurator, Action(Of IHlsUploaderConfigurator))
+  fullName.vb: LiveStreamingServerNet.Transmuxer.Installer.HlsUploaderInstaller.AddHlsUploader(LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator, System.Action(Of LiveStreamingServerNet.Transmuxer.Installer.Contracts.IHlsUploaderConfigurator))
+  name.vb: AddHlsUploader(ITransmuxerConfigurator, Action(Of IHlsUploaderConfigurator))
+  spec.csharp:
+  - uid: LiveStreamingServerNet.Transmuxer.Installer.HlsUploaderInstaller.AddHlsUploader(LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator,System.Action{LiveStreamingServerNet.Transmuxer.Installer.Contracts.IHlsUploaderConfigurator})
+    name: AddHlsUploader
+    href: LiveStreamingServerNet.Transmuxer.Installer.HlsUploaderInstaller.html#LiveStreamingServerNet_Transmuxer_Installer_HlsUploaderInstaller_AddHlsUploader_LiveStreamingServerNet_Transmuxer_Installer_Contracts_ITransmuxerConfigurator_System_Action_LiveStreamingServerNet_Transmuxer_Installer_Contracts_IHlsUploaderConfigurator__
+  - name: (
+  - uid: LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator
+    name: ITransmuxerConfigurator
+    href: LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator.html
+  - name: ','
+  - name: " "
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: <
+  - uid: LiveStreamingServerNet.Transmuxer.Installer.Contracts.IHlsUploaderConfigurator
+    name: IHlsUploaderConfigurator
+    href: LiveStreamingServerNet.Transmuxer.Installer.Contracts.IHlsUploaderConfigurator.html
+  - name: '>'
+  - name: )
+  spec.vb:
+  - uid: LiveStreamingServerNet.Transmuxer.Installer.HlsUploaderInstaller.AddHlsUploader(LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator,System.Action{LiveStreamingServerNet.Transmuxer.Installer.Contracts.IHlsUploaderConfigurator})
+    name: AddHlsUploader
+    href: LiveStreamingServerNet.Transmuxer.Installer.HlsUploaderInstaller.html#LiveStreamingServerNet_Transmuxer_Installer_HlsUploaderInstaller_AddHlsUploader_LiveStreamingServerNet_Transmuxer_Installer_Contracts_ITransmuxerConfigurator_System_Action_LiveStreamingServerNet_Transmuxer_Installer_Contracts_IHlsUploaderConfigurator__
+  - name: (
+  - uid: LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator
+    name: ITransmuxerConfigurator
+    href: LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator.html
+  - name: ','
+  - name: " "
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: LiveStreamingServerNet.Transmuxer.Installer.Contracts.IHlsUploaderConfigurator
+    name: IHlsUploaderConfigurator
+    href: LiveStreamingServerNet.Transmuxer.Installer.Contracts.IHlsUploaderConfigurator.html
+  - name: )
+  - name: )
+- uid: System.Object.LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Action)
+  commentId: M:LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  parent: LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+  definition: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  name: Lock(object, Action)
+  nameWithType: LockExtensions.Lock(object, Action)
+  fullName: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(object, System.Action)
+  nameWithType.vb: LockExtensions.Lock(Object, Action)
+  fullName.vb: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(Object, System.Action)
+  name.vb: Lock(Object, Action)
+  spec.csharp:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+  spec.vb:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+- uid: LiveStreamingServerNet.Transmuxer.Installer.HlsUploaderInstaller.AddHlsUploader(LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator,System.Action{LiveStreamingServerNet.Transmuxer.Installer.Contracts.IHlsUploaderConfigurator})
+  commentId: M:LiveStreamingServerNet.Transmuxer.Installer.HlsUploaderInstaller.AddHlsUploader(LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator,System.Action{LiveStreamingServerNet.Transmuxer.Installer.Contracts.IHlsUploaderConfigurator})
+  isExternal: true
+  href: LiveStreamingServerNet.Transmuxer.Installer.HlsUploaderInstaller.html#LiveStreamingServerNet_Transmuxer_Installer_HlsUploaderInstaller_AddHlsUploader_LiveStreamingServerNet_Transmuxer_Installer_Contracts_ITransmuxerConfigurator_System_Action_LiveStreamingServerNet_Transmuxer_Installer_Contracts_IHlsUploaderConfigurator__
+  name: AddHlsUploader(ITransmuxerConfigurator, Action<IHlsUploaderConfigurator>)
+  nameWithType: HlsUploaderInstaller.AddHlsUploader(ITransmuxerConfigurator, Action<IHlsUploaderConfigurator>)
+  fullName: LiveStreamingServerNet.Transmuxer.Installer.HlsUploaderInstaller.AddHlsUploader(LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator, System.Action<LiveStreamingServerNet.Transmuxer.Installer.Contracts.IHlsUploaderConfigurator>)
+  nameWithType.vb: HlsUploaderInstaller.AddHlsUploader(ITransmuxerConfigurator, Action(Of IHlsUploaderConfigurator))
+  fullName.vb: LiveStreamingServerNet.Transmuxer.Installer.HlsUploaderInstaller.AddHlsUploader(LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator, System.Action(Of LiveStreamingServerNet.Transmuxer.Installer.Contracts.IHlsUploaderConfigurator))
+  name.vb: AddHlsUploader(ITransmuxerConfigurator, Action(Of IHlsUploaderConfigurator))
+  spec.csharp:
+  - uid: LiveStreamingServerNet.Transmuxer.Installer.HlsUploaderInstaller.AddHlsUploader(LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator,System.Action{LiveStreamingServerNet.Transmuxer.Installer.Contracts.IHlsUploaderConfigurator})
+    name: AddHlsUploader
+    href: LiveStreamingServerNet.Transmuxer.Installer.HlsUploaderInstaller.html#LiveStreamingServerNet_Transmuxer_Installer_HlsUploaderInstaller_AddHlsUploader_LiveStreamingServerNet_Transmuxer_Installer_Contracts_ITransmuxerConfigurator_System_Action_LiveStreamingServerNet_Transmuxer_Installer_Contracts_IHlsUploaderConfigurator__
+  - name: (
+  - uid: LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator
+    name: ITransmuxerConfigurator
+    href: LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator.html
+  - name: ','
+  - name: " "
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: <
+  - uid: LiveStreamingServerNet.Transmuxer.Installer.Contracts.IHlsUploaderConfigurator
+    name: IHlsUploaderConfigurator
+    href: LiveStreamingServerNet.Transmuxer.Installer.Contracts.IHlsUploaderConfigurator.html
+  - name: '>'
+  - name: )
+  spec.vb:
+  - uid: LiveStreamingServerNet.Transmuxer.Installer.HlsUploaderInstaller.AddHlsUploader(LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator,System.Action{LiveStreamingServerNet.Transmuxer.Installer.Contracts.IHlsUploaderConfigurator})
+    name: AddHlsUploader
+    href: LiveStreamingServerNet.Transmuxer.Installer.HlsUploaderInstaller.html#LiveStreamingServerNet_Transmuxer_Installer_HlsUploaderInstaller_AddHlsUploader_LiveStreamingServerNet_Transmuxer_Installer_Contracts_ITransmuxerConfigurator_System_Action_LiveStreamingServerNet_Transmuxer_Installer_Contracts_IHlsUploaderConfigurator__
+  - name: (
+  - uid: LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator
+    name: ITransmuxerConfigurator
+    href: LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator.html
+  - name: ','
+  - name: " "
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: LiveStreamingServerNet.Transmuxer.Installer.Contracts.IHlsUploaderConfigurator
+    name: IHlsUploaderConfigurator
+    href: LiveStreamingServerNet.Transmuxer.Installer.Contracts.IHlsUploaderConfigurator.html
+  - name: )
+  - name: )
+- uid: LiveStreamingServerNet.Transmuxer.Installer.HlsUploaderInstaller
+  commentId: T:LiveStreamingServerNet.Transmuxer.Installer.HlsUploaderInstaller
+  parent: LiveStreamingServerNet.Transmuxer.Installer
+  href: LiveStreamingServerNet.Transmuxer.Installer.HlsUploaderInstaller.html
+  name: HlsUploaderInstaller
+  nameWithType: HlsUploaderInstaller
+  fullName: LiveStreamingServerNet.Transmuxer.Installer.HlsUploaderInstaller
+- uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  commentId: M:LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  isExternal: true
+  href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  name: Lock(object, Action)
+  nameWithType: LockExtensions.Lock(object, Action)
+  fullName: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(object, System.Action)
+  nameWithType.vb: LockExtensions.Lock(Object, Action)
+  fullName.vb: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(Object, System.Action)
+  name.vb: Lock(Object, Action)
+  spec.csharp:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+  spec.vb:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+- uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+  commentId: T:LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+  parent: LiveStreamingServerNet.Utilities.Extensions
+  href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html
+  name: LockExtensions
+  nameWithType: LockExtensions
+  fullName: LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+- uid: LiveStreamingServerNet.Transmuxer.Installer
+  commentId: N:LiveStreamingServerNet.Transmuxer.Installer
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.Transmuxer.Installer
+  nameWithType: LiveStreamingServerNet.Transmuxer.Installer
+  fullName: LiveStreamingServerNet.Transmuxer.Installer
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Transmuxer
+    name: Transmuxer
+    href: LiveStreamingServerNet.Transmuxer.html
+  - name: .
+  - uid: LiveStreamingServerNet.Transmuxer.Installer
+    name: Installer
+    href: LiveStreamingServerNet.Transmuxer.Installer.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Transmuxer
+    name: Transmuxer
+    href: LiveStreamingServerNet.Transmuxer.html
+  - name: .
+  - uid: LiveStreamingServerNet.Transmuxer.Installer
+    name: Installer
+    href: LiveStreamingServerNet.Transmuxer.Installer.html
+- uid: LiveStreamingServerNet.Utilities.Extensions
+  commentId: N:LiveStreamingServerNet.Utilities.Extensions
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.Utilities.Extensions
+  nameWithType: LiveStreamingServerNet.Utilities.Extensions
+  fullName: LiveStreamingServerNet.Utilities.Extensions
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities
+    name: Utilities
+    href: LiveStreamingServerNet.Utilities.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities.Extensions
+    name: Extensions
+    href: LiveStreamingServerNet.Utilities.Extensions.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities
+    name: Utilities
+    href: LiveStreamingServerNet.Utilities.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities.Extensions
+    name: Extensions
+    href: LiveStreamingServerNet.Utilities.Extensions.html
+- uid: LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator.Services*
+  commentId: Overload:LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator.Services
+  href: LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator.html#LiveStreamingServerNet_Transmuxer_Installer_Contracts_ITransmuxerConfigurator_Services
+  name: Services
+  nameWithType: ITransmuxerConfigurator.Services
+  fullName: LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator.Services
+- uid: Microsoft.Extensions.DependencyInjection.IServiceCollection
+  commentId: T:Microsoft.Extensions.DependencyInjection.IServiceCollection
+  parent: Microsoft.Extensions.DependencyInjection
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.extensions.dependencyinjection.iservicecollection
+  name: IServiceCollection
+  nameWithType: IServiceCollection
+  fullName: Microsoft.Extensions.DependencyInjection.IServiceCollection
+- uid: Microsoft.Extensions.DependencyInjection
+  commentId: N:Microsoft.Extensions.DependencyInjection
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft
+  name: Microsoft.Extensions.DependencyInjection
+  nameWithType: Microsoft.Extensions.DependencyInjection
+  fullName: Microsoft.Extensions.DependencyInjection
+  spec.csharp:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.Extensions
+    name: Extensions
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.extensions
+  - name: .
+  - uid: Microsoft.Extensions.DependencyInjection
+    name: DependencyInjection
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.extensions.dependencyinjection
+  spec.vb:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.Extensions
+    name: Extensions
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.extensions
+  - name: .
+  - uid: Microsoft.Extensions.DependencyInjection
+    name: DependencyInjection
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.extensions.dependencyinjection
+- uid: LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator.UseInputPathResolver*
+  commentId: Overload:LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator.UseInputPathResolver
+  href: LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator.html#LiveStreamingServerNet_Transmuxer_Installer_Contracts_ITransmuxerConfigurator_UseInputPathResolver__1
+  name: UseInputPathResolver
+  nameWithType: ITransmuxerConfigurator.UseInputPathResolver
+  fullName: LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator.UseInputPathResolver
+- uid: LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator
+  commentId: T:LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator
+  parent: LiveStreamingServerNet.Transmuxer.Installer.Contracts
+  href: LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator.html
+  name: ITransmuxerConfigurator
+  nameWithType: ITransmuxerConfigurator
+  fullName: LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator
+- uid: System.Func{System.IServiceProvider,LiveStreamingServerNet.Transmuxer.Contracts.IInputPathResolver}
+  commentId: T:System.Func{System.IServiceProvider,LiveStreamingServerNet.Transmuxer.Contracts.IInputPathResolver}
+  parent: System
+  definition: System.Func`2
+  href: https://learn.microsoft.com/dotnet/api/system.func-2
+  name: Func<IServiceProvider, IInputPathResolver>
+  nameWithType: Func<IServiceProvider, IInputPathResolver>
+  fullName: System.Func<System.IServiceProvider, LiveStreamingServerNet.Transmuxer.Contracts.IInputPathResolver>
+  nameWithType.vb: Func(Of IServiceProvider, IInputPathResolver)
+  fullName.vb: System.Func(Of System.IServiceProvider, LiveStreamingServerNet.Transmuxer.Contracts.IInputPathResolver)
+  name.vb: Func(Of IServiceProvider, IInputPathResolver)
+  spec.csharp:
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-2
+  - name: <
+  - uid: System.IServiceProvider
+    name: IServiceProvider
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iserviceprovider
+  - name: ','
+  - name: " "
+  - uid: LiveStreamingServerNet.Transmuxer.Contracts.IInputPathResolver
+    name: IInputPathResolver
+    href: LiveStreamingServerNet.Transmuxer.Contracts.IInputPathResolver.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.IServiceProvider
+    name: IServiceProvider
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iserviceprovider
+  - name: ','
+  - name: " "
+  - uid: LiveStreamingServerNet.Transmuxer.Contracts.IInputPathResolver
+    name: IInputPathResolver
+    href: LiveStreamingServerNet.Transmuxer.Contracts.IInputPathResolver.html
+  - name: )
+- uid: System.Func`2
+  commentId: T:System.Func`2
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.func-2
+  name: Func<T, TResult>
+  nameWithType: Func<T, TResult>
+  fullName: System.Func<T, TResult>
+  nameWithType.vb: Func(Of T, TResult)
+  fullName.vb: System.Func(Of T, TResult)
+  name.vb: Func(Of T, TResult)
+  spec.csharp:
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-2
+  - name: <
+  - name: T
+  - name: ','
+  - name: " "
+  - name: TResult
+  - name: '>'
+  spec.vb:
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-2
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: ','
+  - name: " "
+  - name: TResult
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator.AddTransmuxerEventHandler*
+  commentId: Overload:LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator.AddTransmuxerEventHandler
+  href: LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator.html#LiveStreamingServerNet_Transmuxer_Installer_Contracts_ITransmuxerConfigurator_AddTransmuxerEventHandler__1
+  name: AddTransmuxerEventHandler
+  nameWithType: ITransmuxerConfigurator.AddTransmuxerEventHandler
+  fullName: LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerConfigurator.AddTransmuxerEventHandler
+- uid: System.Func{System.IServiceProvider,LiveStreamingServerNet.Transmuxer.Contracts.ITransmuxerEventHandler}
+  commentId: T:System.Func{System.IServiceProvider,LiveStreamingServerNet.Transmuxer.Contracts.ITransmuxerEventHandler}
+  parent: System
+  definition: System.Func`2
+  href: https://learn.microsoft.com/dotnet/api/system.func-2
+  name: Func<IServiceProvider, ITransmuxerEventHandler>
+  nameWithType: Func<IServiceProvider, ITransmuxerEventHandler>
+  fullName: System.Func<System.IServiceProvider, LiveStreamingServerNet.Transmuxer.Contracts.ITransmuxerEventHandler>
+  nameWithType.vb: Func(Of IServiceProvider, ITransmuxerEventHandler)
+  fullName.vb: System.Func(Of System.IServiceProvider, LiveStreamingServerNet.Transmuxer.Contracts.ITransmuxerEventHandler)
+  name.vb: Func(Of IServiceProvider, ITransmuxerEventHandler)
+  spec.csharp:
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-2
+  - name: <
+  - uid: System.IServiceProvider
+    name: IServiceProvider
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iserviceprovider
+  - name: ','
+  - name: " "
+  - uid: LiveStreamingServerNet.Transmuxer.Contracts.ITransmuxerEventHandler
+    name: ITransmuxerEventHandler
+    href: LiveStreamingServerNet.Transmuxer.Contracts.ITransmuxerEventHandler.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.IServiceProvider
+    name: IServiceProvider
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iserviceprovider
+  - name: ','
+  - name: " "
+  - uid: LiveStreamingServerNet.Transmuxer.Contracts.ITransmuxerEventHandler
+    name: ITransmuxerEventHandler
+    href: LiveStreamingServerNet.Transmuxer.Contracts.ITransmuxerEventHandler.html
+  - name: )

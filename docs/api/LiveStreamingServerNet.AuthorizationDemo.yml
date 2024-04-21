@@ -1,0 +1,67 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.AuthorizationDemo
+  commentId: N:LiveStreamingServerNet.AuthorizationDemo
+  id: LiveStreamingServerNet.AuthorizationDemo
+  children:
+  - LiveStreamingServerNet.AuthorizationDemo.DemoAuthorizationHandler
+  - LiveStreamingServerNet.AuthorizationDemo.DemoPasswordValidator
+  - LiveStreamingServerNet.AuthorizationDemo.IPasswordValidator
+  - LiveStreamingServerNet.AuthorizationDemo.Program
+  langs:
+  - csharp
+  - vb
+  name: LiveStreamingServerNet.AuthorizationDemo
+  nameWithType: LiveStreamingServerNet.AuthorizationDemo
+  fullName: LiveStreamingServerNet.AuthorizationDemo
+  type: Namespace
+  assemblies:
+  - LiveStreamingServerNet.AuthorizationDemo
+references:
+- uid: LiveStreamingServerNet.AuthorizationDemo.Program
+  commentId: T:LiveStreamingServerNet.AuthorizationDemo.Program
+  href: LiveStreamingServerNet.AuthorizationDemo.Program.html
+  name: Program
+  nameWithType: Program
+  fullName: LiveStreamingServerNet.AuthorizationDemo.Program
+- uid: LiveStreamingServerNet.AuthorizationDemo.IPasswordValidator
+  commentId: T:LiveStreamingServerNet.AuthorizationDemo.IPasswordValidator
+  parent: LiveStreamingServerNet.AuthorizationDemo
+  href: LiveStreamingServerNet.AuthorizationDemo.IPasswordValidator.html
+  name: IPasswordValidator
+  nameWithType: IPasswordValidator
+  fullName: LiveStreamingServerNet.AuthorizationDemo.IPasswordValidator
+- uid: LiveStreamingServerNet.AuthorizationDemo.DemoPasswordValidator
+  commentId: T:LiveStreamingServerNet.AuthorizationDemo.DemoPasswordValidator
+  href: LiveStreamingServerNet.AuthorizationDemo.DemoPasswordValidator.html
+  name: DemoPasswordValidator
+  nameWithType: DemoPasswordValidator
+  fullName: LiveStreamingServerNet.AuthorizationDemo.DemoPasswordValidator
+- uid: LiveStreamingServerNet.AuthorizationDemo.DemoAuthorizationHandler
+  commentId: T:LiveStreamingServerNet.AuthorizationDemo.DemoAuthorizationHandler
+  href: LiveStreamingServerNet.AuthorizationDemo.DemoAuthorizationHandler.html
+  name: DemoAuthorizationHandler
+  nameWithType: DemoAuthorizationHandler
+  fullName: LiveStreamingServerNet.AuthorizationDemo.DemoAuthorizationHandler
+- uid: LiveStreamingServerNet.AuthorizationDemo
+  commentId: N:LiveStreamingServerNet.AuthorizationDemo
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.AuthorizationDemo
+  nameWithType: LiveStreamingServerNet.AuthorizationDemo
+  fullName: LiveStreamingServerNet.AuthorizationDemo
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.AuthorizationDemo
+    name: AuthorizationDemo
+    href: LiveStreamingServerNet.AuthorizationDemo.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.AuthorizationDemo
+    name: AuthorizationDemo
+    href: LiveStreamingServerNet.AuthorizationDemo.html

@@ -1,0 +1,52 @@
+{
+  "metadata": [
+    {
+      "src": [
+        {
+          "src": "../src/",
+          "files": [
+            "**/*.csproj"
+          ],
+          "exclude": [
+            "LiveStreamingServerNet.KubernetesOperator/*"
+          ]
+        }
+      ],
+      "dest": "api"
+    }
+  ],
+  "build": {
+    "content": [
+      {
+        "files": [
+          "**/*.{md,yml}"
+        ],
+        "exclude": [
+          "_site/**"
+        ]
+      }
+    ],
+    "resource": [
+      {
+        "files": [
+          "images/**",
+          "public/**"
+        ]
+      }
+    ],
+    "output": "_site",
+    "template": [
+      "default",
+      "modern",
+      "template"
+    ],
+    "globalMetadata": {
+      "_appName": "LiveStreamingServerNET",
+      "_appTitle": "LiveStreamingServerNET",
+      "_enableSearch": true,
+      "_disableContribution": true,
+      "_appFaviconPath": "favicon.ico",
+      "pdf": true
+    }
+  }
+}

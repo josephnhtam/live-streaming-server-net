@@ -1,0 +1,62 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.KubernetesPod.Redis.Installer
+  commentId: N:LiveStreamingServerNet.KubernetesPod.Redis.Installer
+  id: LiveStreamingServerNet.KubernetesPod.Redis.Installer
+  children:
+  - LiveStreamingServerNet.KubernetesPod.Redis.Installer.RedisStoreInstaller
+  langs:
+  - csharp
+  - vb
+  name: LiveStreamingServerNet.KubernetesPod.Redis.Installer
+  nameWithType: LiveStreamingServerNet.KubernetesPod.Redis.Installer
+  fullName: LiveStreamingServerNet.KubernetesPod.Redis.Installer
+  type: Namespace
+  assemblies:
+  - LiveStreamingServerNet.KubernetesPod.Redis
+references:
+- uid: LiveStreamingServerNet.KubernetesPod.Redis.Installer.RedisStoreInstaller
+  commentId: T:LiveStreamingServerNet.KubernetesPod.Redis.Installer.RedisStoreInstaller
+  parent: LiveStreamingServerNet.KubernetesPod.Redis.Installer
+  href: LiveStreamingServerNet.KubernetesPod.Redis.Installer.RedisStoreInstaller.html
+  name: RedisStoreInstaller
+  nameWithType: RedisStoreInstaller
+  fullName: LiveStreamingServerNet.KubernetesPod.Redis.Installer.RedisStoreInstaller
+- uid: LiveStreamingServerNet.KubernetesPod.Redis.Installer
+  commentId: N:LiveStreamingServerNet.KubernetesPod.Redis.Installer
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.KubernetesPod.Redis.Installer
+  nameWithType: LiveStreamingServerNet.KubernetesPod.Redis.Installer
+  fullName: LiveStreamingServerNet.KubernetesPod.Redis.Installer
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.KubernetesPod
+    name: KubernetesPod
+    href: LiveStreamingServerNet.KubernetesPod.html
+  - name: .
+  - uid: LiveStreamingServerNet.KubernetesPod.Redis
+    name: Redis
+    href: LiveStreamingServerNet.KubernetesPod.Redis.html
+  - name: .
+  - uid: LiveStreamingServerNet.KubernetesPod.Redis.Installer
+    name: Installer
+    href: LiveStreamingServerNet.KubernetesPod.Redis.Installer.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.KubernetesPod
+    name: KubernetesPod
+    href: LiveStreamingServerNet.KubernetesPod.html
+  - name: .
+  - uid: LiveStreamingServerNet.KubernetesPod.Redis
+    name: Redis
+    href: LiveStreamingServerNet.KubernetesPod.Redis.html
+  - name: .
+  - uid: LiveStreamingServerNet.KubernetesPod.Redis.Installer
+    name: Installer
+    href: LiveStreamingServerNet.KubernetesPod.Redis.Installer.html

@@ -1,0 +1,290 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.Rtmp.RtmpClientState
+  commentId: T:LiveStreamingServerNet.Rtmp.RtmpClientState
+  id: RtmpClientState
+  parent: LiveStreamingServerNet.Rtmp
+  children:
+  - LiveStreamingServerNet.Rtmp.RtmpClientState.HandshakeC0
+  - LiveStreamingServerNet.Rtmp.RtmpClientState.HandshakeC1
+  - LiveStreamingServerNet.Rtmp.RtmpClientState.HandshakeC2
+  - LiveStreamingServerNet.Rtmp.RtmpClientState.HandshakeDone
+  langs:
+  - csharp
+  - vb
+  name: RtmpClientState
+  nameWithType: RtmpClientState
+  fullName: LiveStreamingServerNet.Rtmp.RtmpClientState
+  type: Enum
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Rtmp/RtmpClientState.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: RtmpClientState
+    path: ../src/LiveStreamingServerNet.Rtmp/RtmpClientState.cs
+    startLine: 2
+  assemblies:
+  - LiveStreamingServerNet.Rtmp
+  namespace: LiveStreamingServerNet.Rtmp
+  syntax:
+    content: public enum RtmpClientState
+    content.vb: Public Enum RtmpClientState
+  extensionMethods:
+  - System.Object.LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Action)
+- uid: LiveStreamingServerNet.Rtmp.RtmpClientState.HandshakeC0
+  commentId: F:LiveStreamingServerNet.Rtmp.RtmpClientState.HandshakeC0
+  id: HandshakeC0
+  parent: LiveStreamingServerNet.Rtmp.RtmpClientState
+  langs:
+  - csharp
+  - vb
+  name: HandshakeC0
+  nameWithType: RtmpClientState.HandshakeC0
+  fullName: LiveStreamingServerNet.Rtmp.RtmpClientState.HandshakeC0
+  type: Field
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Rtmp/RtmpClientState.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: HandshakeC0
+    path: ../src/LiveStreamingServerNet.Rtmp/RtmpClientState.cs
+    startLine: 4
+  assemblies:
+  - LiveStreamingServerNet.Rtmp
+  namespace: LiveStreamingServerNet.Rtmp
+  syntax:
+    content: HandshakeC0 = 0
+    return:
+      type: LiveStreamingServerNet.Rtmp.RtmpClientState
+- uid: LiveStreamingServerNet.Rtmp.RtmpClientState.HandshakeC1
+  commentId: F:LiveStreamingServerNet.Rtmp.RtmpClientState.HandshakeC1
+  id: HandshakeC1
+  parent: LiveStreamingServerNet.Rtmp.RtmpClientState
+  langs:
+  - csharp
+  - vb
+  name: HandshakeC1
+  nameWithType: RtmpClientState.HandshakeC1
+  fullName: LiveStreamingServerNet.Rtmp.RtmpClientState.HandshakeC1
+  type: Field
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Rtmp/RtmpClientState.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: HandshakeC1
+    path: ../src/LiveStreamingServerNet.Rtmp/RtmpClientState.cs
+    startLine: 5
+  assemblies:
+  - LiveStreamingServerNet.Rtmp
+  namespace: LiveStreamingServerNet.Rtmp
+  syntax:
+    content: HandshakeC1 = 1
+    return:
+      type: LiveStreamingServerNet.Rtmp.RtmpClientState
+- uid: LiveStreamingServerNet.Rtmp.RtmpClientState.HandshakeC2
+  commentId: F:LiveStreamingServerNet.Rtmp.RtmpClientState.HandshakeC2
+  id: HandshakeC2
+  parent: LiveStreamingServerNet.Rtmp.RtmpClientState
+  langs:
+  - csharp
+  - vb
+  name: HandshakeC2
+  nameWithType: RtmpClientState.HandshakeC2
+  fullName: LiveStreamingServerNet.Rtmp.RtmpClientState.HandshakeC2
+  type: Field
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Rtmp/RtmpClientState.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: HandshakeC2
+    path: ../src/LiveStreamingServerNet.Rtmp/RtmpClientState.cs
+    startLine: 6
+  assemblies:
+  - LiveStreamingServerNet.Rtmp
+  namespace: LiveStreamingServerNet.Rtmp
+  syntax:
+    content: HandshakeC2 = 2
+    return:
+      type: LiveStreamingServerNet.Rtmp.RtmpClientState
+- uid: LiveStreamingServerNet.Rtmp.RtmpClientState.HandshakeDone
+  commentId: F:LiveStreamingServerNet.Rtmp.RtmpClientState.HandshakeDone
+  id: HandshakeDone
+  parent: LiveStreamingServerNet.Rtmp.RtmpClientState
+  langs:
+  - csharp
+  - vb
+  name: HandshakeDone
+  nameWithType: RtmpClientState.HandshakeDone
+  fullName: LiveStreamingServerNet.Rtmp.RtmpClientState.HandshakeDone
+  type: Field
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Rtmp/RtmpClientState.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: HandshakeDone
+    path: ../src/LiveStreamingServerNet.Rtmp/RtmpClientState.cs
+    startLine: 7
+  assemblies:
+  - LiveStreamingServerNet.Rtmp
+  namespace: LiveStreamingServerNet.Rtmp
+  syntax:
+    content: HandshakeDone = 3
+    return:
+      type: LiveStreamingServerNet.Rtmp.RtmpClientState
+references:
+- uid: LiveStreamingServerNet.Rtmp
+  commentId: N:LiveStreamingServerNet.Rtmp
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.Rtmp
+  nameWithType: LiveStreamingServerNet.Rtmp
+  fullName: LiveStreamingServerNet.Rtmp
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Rtmp
+    name: Rtmp
+    href: LiveStreamingServerNet.Rtmp.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Rtmp
+    name: Rtmp
+    href: LiveStreamingServerNet.Rtmp.html
+- uid: System.Object.LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Action)
+  commentId: M:LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  parent: LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+  definition: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  name: Lock(object, Action)
+  nameWithType: LockExtensions.Lock(object, Action)
+  fullName: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(object, System.Action)
+  nameWithType.vb: LockExtensions.Lock(Object, Action)
+  fullName.vb: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(Object, System.Action)
+  name.vb: Lock(Object, Action)
+  spec.csharp:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+  spec.vb:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+- uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  commentId: M:LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  isExternal: true
+  href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  name: Lock(object, Action)
+  nameWithType: LockExtensions.Lock(object, Action)
+  fullName: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(object, System.Action)
+  nameWithType.vb: LockExtensions.Lock(Object, Action)
+  fullName.vb: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(Object, System.Action)
+  name.vb: Lock(Object, Action)
+  spec.csharp:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+  spec.vb:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+- uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+  commentId: T:LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+  parent: LiveStreamingServerNet.Utilities.Extensions
+  href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html
+  name: LockExtensions
+  nameWithType: LockExtensions
+  fullName: LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+- uid: LiveStreamingServerNet.Utilities.Extensions
+  commentId: N:LiveStreamingServerNet.Utilities.Extensions
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.Utilities.Extensions
+  nameWithType: LiveStreamingServerNet.Utilities.Extensions
+  fullName: LiveStreamingServerNet.Utilities.Extensions
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities
+    name: Utilities
+    href: LiveStreamingServerNet.Utilities.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities.Extensions
+    name: Extensions
+    href: LiveStreamingServerNet.Utilities.Extensions.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities
+    name: Utilities
+    href: LiveStreamingServerNet.Utilities.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities.Extensions
+    name: Extensions
+    href: LiveStreamingServerNet.Utilities.Extensions.html
+- uid: LiveStreamingServerNet.Rtmp.RtmpClientState
+  commentId: T:LiveStreamingServerNet.Rtmp.RtmpClientState
+  parent: LiveStreamingServerNet.Rtmp
+  href: LiveStreamingServerNet.Rtmp.RtmpClientState.html
+  name: RtmpClientState
+  nameWithType: RtmpClientState
+  fullName: LiveStreamingServerNet.Rtmp.RtmpClientState

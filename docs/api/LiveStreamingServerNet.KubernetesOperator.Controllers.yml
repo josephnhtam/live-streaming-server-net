@@ -1,0 +1,23 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.KubernetesOperator.Controllers
+  commentId: N:LiveStreamingServerNet.KubernetesOperator.Controllers
+  id: LiveStreamingServerNet.KubernetesOperator.Controllers
+  children:
+  - LiveStreamingServerNet.KubernetesOperator.Controllers.V1LiveStreamingServerFleetController
+  langs:
+  - csharp
+  - vb
+  name: LiveStreamingServerNet.KubernetesOperator.Controllers
+  nameWithType: LiveStreamingServerNet.KubernetesOperator.Controllers
+  fullName: LiveStreamingServerNet.KubernetesOperator.Controllers
+  type: Namespace
+  assemblies:
+  - LiveStreamingServerNet.KubernetesOperator
+references:
+- uid: LiveStreamingServerNet.KubernetesOperator.Controllers.V1LiveStreamingServerFleetController
+  commentId: T:LiveStreamingServerNet.KubernetesOperator.Controllers.V1LiveStreamingServerFleetController
+  href: LiveStreamingServerNet.KubernetesOperator.Controllers.V1LiveStreamingServerFleetController.html
+  name: V1LiveStreamingServerFleetController
+  nameWithType: V1LiveStreamingServerFleetController
+  fullName: LiveStreamingServerNet.KubernetesOperator.Controllers.V1LiveStreamingServerFleetController

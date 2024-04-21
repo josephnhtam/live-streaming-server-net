@@ -1,0 +1,23 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.Transmuxer.AzureBlobStorage
+  commentId: N:LiveStreamingServerNet.Transmuxer.AzureBlobStorage
+  id: LiveStreamingServerNet.Transmuxer.AzureBlobStorage
+  children:
+  - LiveStreamingServerNet.Transmuxer.AzureBlobStorage.DefaultHlsBlobPathResolver
+  langs:
+  - csharp
+  - vb
+  name: LiveStreamingServerNet.Transmuxer.AzureBlobStorage
+  nameWithType: LiveStreamingServerNet.Transmuxer.AzureBlobStorage
+  fullName: LiveStreamingServerNet.Transmuxer.AzureBlobStorage
+  type: Namespace
+  assemblies:
+  - LiveStreamingServerNet.Transmuxer.AzureBlobStorage
+references:
+- uid: LiveStreamingServerNet.Transmuxer.AzureBlobStorage.DefaultHlsBlobPathResolver
+  commentId: T:LiveStreamingServerNet.Transmuxer.AzureBlobStorage.DefaultHlsBlobPathResolver
+  href: LiveStreamingServerNet.Transmuxer.AzureBlobStorage.DefaultHlsBlobPathResolver.html
+  name: DefaultHlsBlobPathResolver
+  nameWithType: DefaultHlsBlobPathResolver
+  fullName: LiveStreamingServerNet.Transmuxer.AzureBlobStorage.DefaultHlsBlobPathResolver

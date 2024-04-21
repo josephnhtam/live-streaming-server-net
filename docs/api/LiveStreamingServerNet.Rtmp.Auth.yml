@@ -1,0 +1,61 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.Rtmp.Auth
+  commentId: N:LiveStreamingServerNet.Rtmp.Auth
+  id: LiveStreamingServerNet.Rtmp.Auth
+  children:
+  - LiveStreamingServerNet.Rtmp.Auth.AuthorizationResult
+  - LiveStreamingServerNet.Rtmp.Auth.RandomHexAuthCodeProvider
+  langs:
+  - csharp
+  - vb
+  name: LiveStreamingServerNet.Rtmp.Auth
+  nameWithType: LiveStreamingServerNet.Rtmp.Auth
+  fullName: LiveStreamingServerNet.Rtmp.Auth
+  type: Namespace
+  assemblies:
+  - LiveStreamingServerNet.Rtmp
+references:
+- uid: LiveStreamingServerNet.Rtmp.Auth.AuthorizationResult
+  commentId: T:LiveStreamingServerNet.Rtmp.Auth.AuthorizationResult
+  parent: LiveStreamingServerNet.Rtmp.Auth
+  href: LiveStreamingServerNet.Rtmp.Auth.AuthorizationResult.html
+  name: AuthorizationResult
+  nameWithType: AuthorizationResult
+  fullName: LiveStreamingServerNet.Rtmp.Auth.AuthorizationResult
+- uid: LiveStreamingServerNet.Rtmp.Auth.RandomHexAuthCodeProvider
+  commentId: T:LiveStreamingServerNet.Rtmp.Auth.RandomHexAuthCodeProvider
+  href: LiveStreamingServerNet.Rtmp.Auth.RandomHexAuthCodeProvider.html
+  name: RandomHexAuthCodeProvider
+  nameWithType: RandomHexAuthCodeProvider
+  fullName: LiveStreamingServerNet.Rtmp.Auth.RandomHexAuthCodeProvider
+- uid: LiveStreamingServerNet.Rtmp.Auth
+  commentId: N:LiveStreamingServerNet.Rtmp.Auth
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.Rtmp.Auth
+  nameWithType: LiveStreamingServerNet.Rtmp.Auth
+  fullName: LiveStreamingServerNet.Rtmp.Auth
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Rtmp
+    name: Rtmp
+    href: LiveStreamingServerNet.Rtmp.html
+  - name: .
+  - uid: LiveStreamingServerNet.Rtmp.Auth
+    name: Auth
+    href: LiveStreamingServerNet.Rtmp.Auth.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Rtmp
+    name: Rtmp
+    href: LiveStreamingServerNet.Rtmp.html
+  - name: .
+  - uid: LiveStreamingServerNet.Rtmp.Auth
+    name: Auth
+    href: LiveStreamingServerNet.Rtmp.Auth.html

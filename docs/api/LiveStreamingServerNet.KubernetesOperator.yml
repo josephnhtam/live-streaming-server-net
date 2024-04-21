@@ -1,0 +1,23 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.KubernetesOperator
+  commentId: N:LiveStreamingServerNet.KubernetesOperator
+  id: LiveStreamingServerNet.KubernetesOperator
+  children:
+  - LiveStreamingServerNet.KubernetesOperator.Program
+  langs:
+  - csharp
+  - vb
+  name: LiveStreamingServerNet.KubernetesOperator
+  nameWithType: LiveStreamingServerNet.KubernetesOperator
+  fullName: LiveStreamingServerNet.KubernetesOperator
+  type: Namespace
+  assemblies:
+  - LiveStreamingServerNet.KubernetesOperator
+references:
+- uid: LiveStreamingServerNet.KubernetesOperator.Program
+  commentId: T:LiveStreamingServerNet.KubernetesOperator.Program
+  href: LiveStreamingServerNet.KubernetesOperator.Program.html
+  name: Program
+  nameWithType: Program
+  fullName: LiveStreamingServerNet.KubernetesOperator.Program

@@ -1,0 +1,68 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.Networking
+  commentId: N:LiveStreamingServerNet.Networking
+  id: LiveStreamingServerNet.Networking
+  children:
+  - LiveStreamingServerNet.Networking.NetBuffer
+  - LiveStreamingServerNet.Networking.NetBufferPool
+  - LiveStreamingServerNet.Networking.ReadOnlyStream
+  - LiveStreamingServerNet.Networking.ServerEndPoint
+  langs:
+  - csharp
+  - vb
+  name: LiveStreamingServerNet.Networking
+  nameWithType: LiveStreamingServerNet.Networking
+  fullName: LiveStreamingServerNet.Networking
+  type: Namespace
+  assemblies:
+  - LiveStreamingServerNet.Networking
+references:
+- uid: LiveStreamingServerNet.Networking.NetBuffer
+  commentId: T:LiveStreamingServerNet.Networking.NetBuffer
+  href: LiveStreamingServerNet.Networking.NetBuffer.html
+  name: NetBuffer
+  nameWithType: NetBuffer
+  fullName: LiveStreamingServerNet.Networking.NetBuffer
+- uid: LiveStreamingServerNet.Networking.NetBufferPool
+  commentId: T:LiveStreamingServerNet.Networking.NetBufferPool
+  href: LiveStreamingServerNet.Networking.NetBufferPool.html
+  name: NetBufferPool
+  nameWithType: NetBufferPool
+  fullName: LiveStreamingServerNet.Networking.NetBufferPool
+- uid: LiveStreamingServerNet.Networking.ReadOnlyStream
+  commentId: T:LiveStreamingServerNet.Networking.ReadOnlyStream
+  parent: LiveStreamingServerNet.Networking
+  href: LiveStreamingServerNet.Networking.ReadOnlyStream.html
+  name: ReadOnlyStream
+  nameWithType: ReadOnlyStream
+  fullName: LiveStreamingServerNet.Networking.ReadOnlyStream
+- uid: LiveStreamingServerNet.Networking.ServerEndPoint
+  commentId: T:LiveStreamingServerNet.Networking.ServerEndPoint
+  parent: LiveStreamingServerNet.Networking
+  href: LiveStreamingServerNet.Networking.ServerEndPoint.html
+  name: ServerEndPoint
+  nameWithType: ServerEndPoint
+  fullName: LiveStreamingServerNet.Networking.ServerEndPoint
+- uid: LiveStreamingServerNet.Networking
+  commentId: N:LiveStreamingServerNet.Networking
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.Networking
+  nameWithType: LiveStreamingServerNet.Networking
+  fullName: LiveStreamingServerNet.Networking
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Networking
+    name: Networking
+    href: LiveStreamingServerNet.Networking.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Networking
+    name: Networking
+    href: LiveStreamingServerNet.Networking.html

@@ -1,0 +1,23 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Internal
+  commentId: N:LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Internal
+  id: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Internal
+  children:
+  - LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Internal.HlsGoogleCloudStorageAdapter
+  langs:
+  - csharp
+  - vb
+  name: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Internal
+  nameWithType: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Internal
+  fullName: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Internal
+  type: Namespace
+  assemblies:
+  - LiveStreamingServerNet.Transmuxer.GoogleCloudStorage
+references:
+- uid: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Internal.HlsGoogleCloudStorageAdapter
+  commentId: T:LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Internal.HlsGoogleCloudStorageAdapter
+  href: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Internal.HlsGoogleCloudStorageAdapter.html
+  name: HlsGoogleCloudStorageAdapter
+  nameWithType: HlsGoogleCloudStorageAdapter
+  fullName: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Internal.HlsGoogleCloudStorageAdapter

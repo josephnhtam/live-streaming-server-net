@@ -1,0 +1,62 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.KubernetesOperator.Utilities.Contracts
+  commentId: N:LiveStreamingServerNet.KubernetesOperator.Utilities.Contracts
+  id: LiveStreamingServerNet.KubernetesOperator.Utilities.Contracts
+  children:
+  - LiveStreamingServerNet.KubernetesOperator.Utilities.Contracts.IPodPatcherBuilder
+  langs:
+  - csharp
+  - vb
+  name: LiveStreamingServerNet.KubernetesOperator.Utilities.Contracts
+  nameWithType: LiveStreamingServerNet.KubernetesOperator.Utilities.Contracts
+  fullName: LiveStreamingServerNet.KubernetesOperator.Utilities.Contracts
+  type: Namespace
+  assemblies:
+  - LiveStreamingServerNet.KubernetesOperator
+references:
+- uid: LiveStreamingServerNet.KubernetesOperator.Utilities.Contracts.IPodPatcherBuilder
+  commentId: T:LiveStreamingServerNet.KubernetesOperator.Utilities.Contracts.IPodPatcherBuilder
+  parent: LiveStreamingServerNet.KubernetesOperator.Utilities.Contracts
+  href: LiveStreamingServerNet.KubernetesOperator.Utilities.Contracts.IPodPatcherBuilder.html
+  name: IPodPatcherBuilder
+  nameWithType: IPodPatcherBuilder
+  fullName: LiveStreamingServerNet.KubernetesOperator.Utilities.Contracts.IPodPatcherBuilder
+- uid: LiveStreamingServerNet.KubernetesOperator.Utilities.Contracts
+  commentId: N:LiveStreamingServerNet.KubernetesOperator.Utilities.Contracts
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.KubernetesOperator.Utilities.Contracts
+  nameWithType: LiveStreamingServerNet.KubernetesOperator.Utilities.Contracts
+  fullName: LiveStreamingServerNet.KubernetesOperator.Utilities.Contracts
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.KubernetesOperator
+    name: KubernetesOperator
+    href: LiveStreamingServerNet.KubernetesOperator.html
+  - name: .
+  - uid: LiveStreamingServerNet.KubernetesOperator.Utilities
+    name: Utilities
+    href: LiveStreamingServerNet.KubernetesOperator.Utilities.html
+  - name: .
+  - uid: LiveStreamingServerNet.KubernetesOperator.Utilities.Contracts
+    name: Contracts
+    href: LiveStreamingServerNet.KubernetesOperator.Utilities.Contracts.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.KubernetesOperator
+    name: KubernetesOperator
+    href: LiveStreamingServerNet.KubernetesOperator.html
+  - name: .
+  - uid: LiveStreamingServerNet.KubernetesOperator.Utilities
+    name: Utilities
+    href: LiveStreamingServerNet.KubernetesOperator.Utilities.html
+  - name: .
+  - uid: LiveStreamingServerNet.KubernetesOperator.Utilities.Contracts
+    name: Contracts
+    href: LiveStreamingServerNet.KubernetesOperator.Utilities.Contracts.html

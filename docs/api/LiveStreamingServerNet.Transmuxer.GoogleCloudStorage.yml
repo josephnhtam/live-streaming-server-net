@@ -1,0 +1,30 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage
+  commentId: N:LiveStreamingServerNet.Transmuxer.GoogleCloudStorage
+  id: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage
+  children:
+  - LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.DefaultHlsObjectPathResolver
+  - LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.DefaultHlsObjectUriResolver
+  langs:
+  - csharp
+  - vb
+  name: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage
+  nameWithType: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage
+  fullName: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage
+  type: Namespace
+  assemblies:
+  - LiveStreamingServerNet.Transmuxer.GoogleCloudStorage
+references:
+- uid: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.DefaultHlsObjectPathResolver
+  commentId: T:LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.DefaultHlsObjectPathResolver
+  href: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.DefaultHlsObjectPathResolver.html
+  name: DefaultHlsObjectPathResolver
+  nameWithType: DefaultHlsObjectPathResolver
+  fullName: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.DefaultHlsObjectPathResolver
+- uid: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.DefaultHlsObjectUriResolver
+  commentId: T:LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.DefaultHlsObjectUriResolver
+  href: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.DefaultHlsObjectUriResolver.html
+  name: DefaultHlsObjectUriResolver
+  nameWithType: DefaultHlsObjectUriResolver
+  fullName: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.DefaultHlsObjectUriResolver

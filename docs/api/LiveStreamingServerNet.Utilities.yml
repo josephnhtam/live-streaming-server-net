@@ -1,0 +1,105 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.Utilities
+  commentId: N:LiveStreamingServerNet.Utilities
+  id: LiveStreamingServerNet.Utilities
+  children:
+  - LiveStreamingServerNet.Utilities.EventContext
+  - LiveStreamingServerNet.Utilities.Pool`1
+  - LiveStreamingServerNet.Utilities.Rentable`1
+  - LiveStreamingServerNet.Utilities.RentedBuffer
+  langs:
+  - csharp
+  - vb
+  name: LiveStreamingServerNet.Utilities
+  nameWithType: LiveStreamingServerNet.Utilities
+  fullName: LiveStreamingServerNet.Utilities
+  type: Namespace
+  assemblies:
+  - LiveStreamingServerNet.Utilities
+references:
+- uid: LiveStreamingServerNet.Utilities.EventContext
+  commentId: T:LiveStreamingServerNet.Utilities.EventContext
+  parent: LiveStreamingServerNet.Utilities
+  href: LiveStreamingServerNet.Utilities.EventContext.html
+  name: EventContext
+  nameWithType: EventContext
+  fullName: LiveStreamingServerNet.Utilities.EventContext
+- uid: LiveStreamingServerNet.Utilities.Pool`1
+  commentId: T:LiveStreamingServerNet.Utilities.Pool`1
+  href: LiveStreamingServerNet.Utilities.Pool-1.html
+  name: Pool<TObject>
+  nameWithType: Pool<TObject>
+  fullName: LiveStreamingServerNet.Utilities.Pool<TObject>
+  nameWithType.vb: Pool(Of TObject)
+  fullName.vb: LiveStreamingServerNet.Utilities.Pool(Of TObject)
+  name.vb: Pool(Of TObject)
+  spec.csharp:
+  - uid: LiveStreamingServerNet.Utilities.Pool`1
+    name: Pool
+    href: LiveStreamingServerNet.Utilities.Pool-1.html
+  - name: <
+  - name: TObject
+  - name: '>'
+  spec.vb:
+  - uid: LiveStreamingServerNet.Utilities.Pool`1
+    name: Pool
+    href: LiveStreamingServerNet.Utilities.Pool-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TObject
+  - name: )
+- uid: LiveStreamingServerNet.Utilities.Rentable`1
+  commentId: T:LiveStreamingServerNet.Utilities.Rentable`1
+  href: LiveStreamingServerNet.Utilities.Rentable-1.html
+  name: Rentable<T>
+  nameWithType: Rentable<T>
+  fullName: LiveStreamingServerNet.Utilities.Rentable<T>
+  nameWithType.vb: Rentable(Of T)
+  fullName.vb: LiveStreamingServerNet.Utilities.Rentable(Of T)
+  name.vb: Rentable(Of T)
+  spec.csharp:
+  - uid: LiveStreamingServerNet.Utilities.Rentable`1
+    name: Rentable
+    href: LiveStreamingServerNet.Utilities.Rentable-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: LiveStreamingServerNet.Utilities.Rentable`1
+    name: Rentable
+    href: LiveStreamingServerNet.Utilities.Rentable-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: LiveStreamingServerNet.Utilities.RentedBuffer
+  commentId: T:LiveStreamingServerNet.Utilities.RentedBuffer
+  href: LiveStreamingServerNet.Utilities.RentedBuffer.html
+  name: RentedBuffer
+  nameWithType: RentedBuffer
+  fullName: LiveStreamingServerNet.Utilities.RentedBuffer
+- uid: LiveStreamingServerNet.Utilities
+  commentId: N:LiveStreamingServerNet.Utilities
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.Utilities
+  nameWithType: LiveStreamingServerNet.Utilities
+  fullName: LiveStreamingServerNet.Utilities
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities
+    name: Utilities
+    href: LiveStreamingServerNet.Utilities.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities
+    name: Utilities
+    href: LiveStreamingServerNet.Utilities.html

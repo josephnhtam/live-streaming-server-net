@@ -1,0 +1,23 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.Transmuxer.AmazonS3.Configurations
+  commentId: N:LiveStreamingServerNet.Transmuxer.AmazonS3.Configurations
+  id: LiveStreamingServerNet.Transmuxer.AmazonS3.Configurations
+  children:
+  - LiveStreamingServerNet.Transmuxer.AmazonS3.Configurations.HlsAmazonS3Configuration
+  langs:
+  - csharp
+  - vb
+  name: LiveStreamingServerNet.Transmuxer.AmazonS3.Configurations
+  nameWithType: LiveStreamingServerNet.Transmuxer.AmazonS3.Configurations
+  fullName: LiveStreamingServerNet.Transmuxer.AmazonS3.Configurations
+  type: Namespace
+  assemblies:
+  - LiveStreamingServerNet.Transmuxer.AmazonS3
+references:
+- uid: LiveStreamingServerNet.Transmuxer.AmazonS3.Configurations.HlsAmazonS3Configuration
+  commentId: T:LiveStreamingServerNet.Transmuxer.AmazonS3.Configurations.HlsAmazonS3Configuration
+  href: LiveStreamingServerNet.Transmuxer.AmazonS3.Configurations.HlsAmazonS3Configuration.html
+  name: HlsAmazonS3Configuration
+  nameWithType: HlsAmazonS3Configuration
+  fullName: LiveStreamingServerNet.Transmuxer.AmazonS3.Configurations.HlsAmazonS3Configuration

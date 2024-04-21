@@ -1,0 +1,23 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.Flv.Installer
+  commentId: N:LiveStreamingServerNet.Flv.Installer
+  id: LiveStreamingServerNet.Flv.Installer
+  children:
+  - LiveStreamingServerNet.Flv.Installer.FlvInstaller
+  langs:
+  - csharp
+  - vb
+  name: LiveStreamingServerNet.Flv.Installer
+  nameWithType: LiveStreamingServerNet.Flv.Installer
+  fullName: LiveStreamingServerNet.Flv.Installer
+  type: Namespace
+  assemblies:
+  - LiveStreamingServerNet.Flv
+references:
+- uid: LiveStreamingServerNet.Flv.Installer.FlvInstaller
+  commentId: T:LiveStreamingServerNet.Flv.Installer.FlvInstaller
+  href: LiveStreamingServerNet.Flv.Installer.FlvInstaller.html
+  name: FlvInstaller
+  nameWithType: FlvInstaller
+  fullName: LiveStreamingServerNet.Flv.Installer.FlvInstaller

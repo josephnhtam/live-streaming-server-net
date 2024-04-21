@@ -1,0 +1,23 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.KubernetesPod.StreamRegistration.Contracts
+  commentId: N:LiveStreamingServerNet.KubernetesPod.StreamRegistration.Contracts
+  id: LiveStreamingServerNet.KubernetesPod.StreamRegistration.Contracts
+  children:
+  - LiveStreamingServerNet.KubernetesPod.StreamRegistration.Contracts.IStreamStore
+  langs:
+  - csharp
+  - vb
+  name: LiveStreamingServerNet.KubernetesPod.StreamRegistration.Contracts
+  nameWithType: LiveStreamingServerNet.KubernetesPod.StreamRegistration.Contracts
+  fullName: LiveStreamingServerNet.KubernetesPod.StreamRegistration.Contracts
+  type: Namespace
+  assemblies:
+  - LiveStreamingServerNet.KubernetesPod
+references:
+- uid: LiveStreamingServerNet.KubernetesPod.StreamRegistration.Contracts.IStreamStore
+  commentId: T:LiveStreamingServerNet.KubernetesPod.StreamRegistration.Contracts.IStreamStore
+  href: LiveStreamingServerNet.KubernetesPod.StreamRegistration.Contracts.IStreamStore.html
+  name: IStreamStore
+  nameWithType: IStreamStore
+  fullName: LiveStreamingServerNet.KubernetesPod.StreamRegistration.Contracts.IStreamStore

@@ -1,0 +1,736 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler
+  commentId: T:LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler
+  id: IRtmpServerStreamEventHandler
+  parent: LiveStreamingServerNet.Rtmp.Contracts
+  children:
+  - LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler.GetOrder
+  - LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler.OnRtmpStreamMetaDataReceivedAsync(LiveStreamingServerNet.Utilities.Contracts.IEventContext,System.UInt32,System.String,System.Collections.Generic.IReadOnlyDictionary{System.String,System.Object})
+  - LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler.OnRtmpStreamPublishedAsync(LiveStreamingServerNet.Utilities.Contracts.IEventContext,System.UInt32,System.String,System.Collections.Generic.IReadOnlyDictionary{System.String,System.String})
+  - LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler.OnRtmpStreamSubscribedAsync(LiveStreamingServerNet.Utilities.Contracts.IEventContext,System.UInt32,System.String,System.Collections.Generic.IReadOnlyDictionary{System.String,System.String})
+  - LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler.OnRtmpStreamUnpublishedAsync(LiveStreamingServerNet.Utilities.Contracts.IEventContext,System.UInt32,System.String)
+  - LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler.OnRtmpStreamUnsubscribedAsync(LiveStreamingServerNet.Utilities.Contracts.IEventContext,System.UInt32,System.String)
+  langs:
+  - csharp
+  - vb
+  name: IRtmpServerStreamEventHandler
+  nameWithType: IRtmpServerStreamEventHandler
+  fullName: LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler
+  type: Interface
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Rtmp/Contracts/IRtmpServerEventHandler.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: IRtmpServerStreamEventHandler
+    path: ../src/LiveStreamingServerNet.Rtmp/Contracts/IRtmpServerEventHandler.cs
+    startLine: 16
+  assemblies:
+  - LiveStreamingServerNet.Rtmp
+  namespace: LiveStreamingServerNet.Rtmp.Contracts
+  syntax:
+    content: public interface IRtmpServerStreamEventHandler
+    content.vb: Public Interface IRtmpServerStreamEventHandler
+  extensionMethods:
+  - System.Object.LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Action)
+- uid: LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler.GetOrder
+  commentId: M:LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler.GetOrder
+  id: GetOrder
+  parent: LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler
+  langs:
+  - csharp
+  - vb
+  name: GetOrder()
+  nameWithType: IRtmpServerStreamEventHandler.GetOrder()
+  fullName: LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler.GetOrder()
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Rtmp/Contracts/IRtmpServerEventHandler.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: GetOrder
+    path: ../src/LiveStreamingServerNet.Rtmp/Contracts/IRtmpServerEventHandler.cs
+    startLine: 18
+  assemblies:
+  - LiveStreamingServerNet.Rtmp
+  namespace: LiveStreamingServerNet.Rtmp.Contracts
+  syntax:
+    content: int GetOrder()
+    return:
+      type: System.Int32
+    content.vb: Function GetOrder() As Integer
+  overload: LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler.GetOrder*
+- uid: LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler.OnRtmpStreamPublishedAsync(LiveStreamingServerNet.Utilities.Contracts.IEventContext,System.UInt32,System.String,System.Collections.Generic.IReadOnlyDictionary{System.String,System.String})
+  commentId: M:LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler.OnRtmpStreamPublishedAsync(LiveStreamingServerNet.Utilities.Contracts.IEventContext,System.UInt32,System.String,System.Collections.Generic.IReadOnlyDictionary{System.String,System.String})
+  id: OnRtmpStreamPublishedAsync(LiveStreamingServerNet.Utilities.Contracts.IEventContext,System.UInt32,System.String,System.Collections.Generic.IReadOnlyDictionary{System.String,System.String})
+  parent: LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler
+  langs:
+  - csharp
+  - vb
+  name: OnRtmpStreamPublishedAsync(IEventContext, uint, string, IReadOnlyDictionary<string, string>)
+  nameWithType: IRtmpServerStreamEventHandler.OnRtmpStreamPublishedAsync(IEventContext, uint, string, IReadOnlyDictionary<string, string>)
+  fullName: LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler.OnRtmpStreamPublishedAsync(LiveStreamingServerNet.Utilities.Contracts.IEventContext, uint, string, System.Collections.Generic.IReadOnlyDictionary<string, string>)
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Rtmp/Contracts/IRtmpServerEventHandler.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: OnRtmpStreamPublishedAsync
+    path: ../src/LiveStreamingServerNet.Rtmp/Contracts/IRtmpServerEventHandler.cs
+    startLine: 20
+  assemblies:
+  - LiveStreamingServerNet.Rtmp
+  namespace: LiveStreamingServerNet.Rtmp.Contracts
+  syntax:
+    content: ValueTask OnRtmpStreamPublishedAsync(IEventContext context, uint clientId, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
+    parameters:
+    - id: context
+      type: LiveStreamingServerNet.Utilities.Contracts.IEventContext
+    - id: clientId
+      type: System.UInt32
+    - id: streamPath
+      type: System.String
+    - id: streamArguments
+      type: System.Collections.Generic.IReadOnlyDictionary{System.String,System.String}
+    return:
+      type: System.Threading.Tasks.ValueTask
+    content.vb: Function OnRtmpStreamPublishedAsync(context As IEventContext, clientId As UInteger, streamPath As String, streamArguments As IReadOnlyDictionary(Of String, String)) As ValueTask
+  overload: LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler.OnRtmpStreamPublishedAsync*
+  nameWithType.vb: IRtmpServerStreamEventHandler.OnRtmpStreamPublishedAsync(IEventContext, UInteger, String, IReadOnlyDictionary(Of String, String))
+  fullName.vb: LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler.OnRtmpStreamPublishedAsync(LiveStreamingServerNet.Utilities.Contracts.IEventContext, UInteger, String, System.Collections.Generic.IReadOnlyDictionary(Of String, String))
+  name.vb: OnRtmpStreamPublishedAsync(IEventContext, UInteger, String, IReadOnlyDictionary(Of String, String))
+- uid: LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler.OnRtmpStreamUnpublishedAsync(LiveStreamingServerNet.Utilities.Contracts.IEventContext,System.UInt32,System.String)
+  commentId: M:LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler.OnRtmpStreamUnpublishedAsync(LiveStreamingServerNet.Utilities.Contracts.IEventContext,System.UInt32,System.String)
+  id: OnRtmpStreamUnpublishedAsync(LiveStreamingServerNet.Utilities.Contracts.IEventContext,System.UInt32,System.String)
+  parent: LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler
+  langs:
+  - csharp
+  - vb
+  name: OnRtmpStreamUnpublishedAsync(IEventContext, uint, string)
+  nameWithType: IRtmpServerStreamEventHandler.OnRtmpStreamUnpublishedAsync(IEventContext, uint, string)
+  fullName: LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler.OnRtmpStreamUnpublishedAsync(LiveStreamingServerNet.Utilities.Contracts.IEventContext, uint, string)
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Rtmp/Contracts/IRtmpServerEventHandler.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: OnRtmpStreamUnpublishedAsync
+    path: ../src/LiveStreamingServerNet.Rtmp/Contracts/IRtmpServerEventHandler.cs
+    startLine: 21
+  assemblies:
+  - LiveStreamingServerNet.Rtmp
+  namespace: LiveStreamingServerNet.Rtmp.Contracts
+  syntax:
+    content: ValueTask OnRtmpStreamUnpublishedAsync(IEventContext context, uint clientId, string streamPath)
+    parameters:
+    - id: context
+      type: LiveStreamingServerNet.Utilities.Contracts.IEventContext
+    - id: clientId
+      type: System.UInt32
+    - id: streamPath
+      type: System.String
+    return:
+      type: System.Threading.Tasks.ValueTask
+    content.vb: Function OnRtmpStreamUnpublishedAsync(context As IEventContext, clientId As UInteger, streamPath As String) As ValueTask
+  overload: LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler.OnRtmpStreamUnpublishedAsync*
+  nameWithType.vb: IRtmpServerStreamEventHandler.OnRtmpStreamUnpublishedAsync(IEventContext, UInteger, String)
+  fullName.vb: LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler.OnRtmpStreamUnpublishedAsync(LiveStreamingServerNet.Utilities.Contracts.IEventContext, UInteger, String)
+  name.vb: OnRtmpStreamUnpublishedAsync(IEventContext, UInteger, String)
+- uid: LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler.OnRtmpStreamSubscribedAsync(LiveStreamingServerNet.Utilities.Contracts.IEventContext,System.UInt32,System.String,System.Collections.Generic.IReadOnlyDictionary{System.String,System.String})
+  commentId: M:LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler.OnRtmpStreamSubscribedAsync(LiveStreamingServerNet.Utilities.Contracts.IEventContext,System.UInt32,System.String,System.Collections.Generic.IReadOnlyDictionary{System.String,System.String})
+  id: OnRtmpStreamSubscribedAsync(LiveStreamingServerNet.Utilities.Contracts.IEventContext,System.UInt32,System.String,System.Collections.Generic.IReadOnlyDictionary{System.String,System.String})
+  parent: LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler
+  langs:
+  - csharp
+  - vb
+  name: OnRtmpStreamSubscribedAsync(IEventContext, uint, string, IReadOnlyDictionary<string, string>)
+  nameWithType: IRtmpServerStreamEventHandler.OnRtmpStreamSubscribedAsync(IEventContext, uint, string, IReadOnlyDictionary<string, string>)
+  fullName: LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler.OnRtmpStreamSubscribedAsync(LiveStreamingServerNet.Utilities.Contracts.IEventContext, uint, string, System.Collections.Generic.IReadOnlyDictionary<string, string>)
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Rtmp/Contracts/IRtmpServerEventHandler.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: OnRtmpStreamSubscribedAsync
+    path: ../src/LiveStreamingServerNet.Rtmp/Contracts/IRtmpServerEventHandler.cs
+    startLine: 22
+  assemblies:
+  - LiveStreamingServerNet.Rtmp
+  namespace: LiveStreamingServerNet.Rtmp.Contracts
+  syntax:
+    content: ValueTask OnRtmpStreamSubscribedAsync(IEventContext context, uint clientId, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
+    parameters:
+    - id: context
+      type: LiveStreamingServerNet.Utilities.Contracts.IEventContext
+    - id: clientId
+      type: System.UInt32
+    - id: streamPath
+      type: System.String
+    - id: streamArguments
+      type: System.Collections.Generic.IReadOnlyDictionary{System.String,System.String}
+    return:
+      type: System.Threading.Tasks.ValueTask
+    content.vb: Function OnRtmpStreamSubscribedAsync(context As IEventContext, clientId As UInteger, streamPath As String, streamArguments As IReadOnlyDictionary(Of String, String)) As ValueTask
+  overload: LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler.OnRtmpStreamSubscribedAsync*
+  nameWithType.vb: IRtmpServerStreamEventHandler.OnRtmpStreamSubscribedAsync(IEventContext, UInteger, String, IReadOnlyDictionary(Of String, String))
+  fullName.vb: LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler.OnRtmpStreamSubscribedAsync(LiveStreamingServerNet.Utilities.Contracts.IEventContext, UInteger, String, System.Collections.Generic.IReadOnlyDictionary(Of String, String))
+  name.vb: OnRtmpStreamSubscribedAsync(IEventContext, UInteger, String, IReadOnlyDictionary(Of String, String))
+- uid: LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler.OnRtmpStreamUnsubscribedAsync(LiveStreamingServerNet.Utilities.Contracts.IEventContext,System.UInt32,System.String)
+  commentId: M:LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler.OnRtmpStreamUnsubscribedAsync(LiveStreamingServerNet.Utilities.Contracts.IEventContext,System.UInt32,System.String)
+  id: OnRtmpStreamUnsubscribedAsync(LiveStreamingServerNet.Utilities.Contracts.IEventContext,System.UInt32,System.String)
+  parent: LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler
+  langs:
+  - csharp
+  - vb
+  name: OnRtmpStreamUnsubscribedAsync(IEventContext, uint, string)
+  nameWithType: IRtmpServerStreamEventHandler.OnRtmpStreamUnsubscribedAsync(IEventContext, uint, string)
+  fullName: LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler.OnRtmpStreamUnsubscribedAsync(LiveStreamingServerNet.Utilities.Contracts.IEventContext, uint, string)
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Rtmp/Contracts/IRtmpServerEventHandler.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: OnRtmpStreamUnsubscribedAsync
+    path: ../src/LiveStreamingServerNet.Rtmp/Contracts/IRtmpServerEventHandler.cs
+    startLine: 23
+  assemblies:
+  - LiveStreamingServerNet.Rtmp
+  namespace: LiveStreamingServerNet.Rtmp.Contracts
+  syntax:
+    content: ValueTask OnRtmpStreamUnsubscribedAsync(IEventContext context, uint clientId, string streamPath)
+    parameters:
+    - id: context
+      type: LiveStreamingServerNet.Utilities.Contracts.IEventContext
+    - id: clientId
+      type: System.UInt32
+    - id: streamPath
+      type: System.String
+    return:
+      type: System.Threading.Tasks.ValueTask
+    content.vb: Function OnRtmpStreamUnsubscribedAsync(context As IEventContext, clientId As UInteger, streamPath As String) As ValueTask
+  overload: LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler.OnRtmpStreamUnsubscribedAsync*
+  nameWithType.vb: IRtmpServerStreamEventHandler.OnRtmpStreamUnsubscribedAsync(IEventContext, UInteger, String)
+  fullName.vb: LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler.OnRtmpStreamUnsubscribedAsync(LiveStreamingServerNet.Utilities.Contracts.IEventContext, UInteger, String)
+  name.vb: OnRtmpStreamUnsubscribedAsync(IEventContext, UInteger, String)
+- uid: LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler.OnRtmpStreamMetaDataReceivedAsync(LiveStreamingServerNet.Utilities.Contracts.IEventContext,System.UInt32,System.String,System.Collections.Generic.IReadOnlyDictionary{System.String,System.Object})
+  commentId: M:LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler.OnRtmpStreamMetaDataReceivedAsync(LiveStreamingServerNet.Utilities.Contracts.IEventContext,System.UInt32,System.String,System.Collections.Generic.IReadOnlyDictionary{System.String,System.Object})
+  id: OnRtmpStreamMetaDataReceivedAsync(LiveStreamingServerNet.Utilities.Contracts.IEventContext,System.UInt32,System.String,System.Collections.Generic.IReadOnlyDictionary{System.String,System.Object})
+  parent: LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler
+  langs:
+  - csharp
+  - vb
+  name: OnRtmpStreamMetaDataReceivedAsync(IEventContext, uint, string, IReadOnlyDictionary<string, object>)
+  nameWithType: IRtmpServerStreamEventHandler.OnRtmpStreamMetaDataReceivedAsync(IEventContext, uint, string, IReadOnlyDictionary<string, object>)
+  fullName: LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler.OnRtmpStreamMetaDataReceivedAsync(LiveStreamingServerNet.Utilities.Contracts.IEventContext, uint, string, System.Collections.Generic.IReadOnlyDictionary<string, object>)
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Rtmp/Contracts/IRtmpServerEventHandler.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: OnRtmpStreamMetaDataReceivedAsync
+    path: ../src/LiveStreamingServerNet.Rtmp/Contracts/IRtmpServerEventHandler.cs
+    startLine: 25
+  assemblies:
+  - LiveStreamingServerNet.Rtmp
+  namespace: LiveStreamingServerNet.Rtmp.Contracts
+  syntax:
+    content: ValueTask OnRtmpStreamMetaDataReceivedAsync(IEventContext context, uint clientId, string streamPath, IReadOnlyDictionary<string, object> metaData)
+    parameters:
+    - id: context
+      type: LiveStreamingServerNet.Utilities.Contracts.IEventContext
+    - id: clientId
+      type: System.UInt32
+    - id: streamPath
+      type: System.String
+    - id: metaData
+      type: System.Collections.Generic.IReadOnlyDictionary{System.String,System.Object}
+    return:
+      type: System.Threading.Tasks.ValueTask
+    content.vb: Function OnRtmpStreamMetaDataReceivedAsync(context As IEventContext, clientId As UInteger, streamPath As String, metaData As IReadOnlyDictionary(Of String, Object)) As ValueTask
+  overload: LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler.OnRtmpStreamMetaDataReceivedAsync*
+  nameWithType.vb: IRtmpServerStreamEventHandler.OnRtmpStreamMetaDataReceivedAsync(IEventContext, UInteger, String, IReadOnlyDictionary(Of String, Object))
+  fullName.vb: LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler.OnRtmpStreamMetaDataReceivedAsync(LiveStreamingServerNet.Utilities.Contracts.IEventContext, UInteger, String, System.Collections.Generic.IReadOnlyDictionary(Of String, Object))
+  name.vb: OnRtmpStreamMetaDataReceivedAsync(IEventContext, UInteger, String, IReadOnlyDictionary(Of String, Object))
+references:
+- uid: LiveStreamingServerNet.Rtmp.Contracts
+  commentId: N:LiveStreamingServerNet.Rtmp.Contracts
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.Rtmp.Contracts
+  nameWithType: LiveStreamingServerNet.Rtmp.Contracts
+  fullName: LiveStreamingServerNet.Rtmp.Contracts
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Rtmp
+    name: Rtmp
+    href: LiveStreamingServerNet.Rtmp.html
+  - name: .
+  - uid: LiveStreamingServerNet.Rtmp.Contracts
+    name: Contracts
+    href: LiveStreamingServerNet.Rtmp.Contracts.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Rtmp
+    name: Rtmp
+    href: LiveStreamingServerNet.Rtmp.html
+  - name: .
+  - uid: LiveStreamingServerNet.Rtmp.Contracts
+    name: Contracts
+    href: LiveStreamingServerNet.Rtmp.Contracts.html
+- uid: System.Object.LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Action)
+  commentId: M:LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  parent: LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+  definition: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  name: Lock(object, Action)
+  nameWithType: LockExtensions.Lock(object, Action)
+  fullName: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(object, System.Action)
+  nameWithType.vb: LockExtensions.Lock(Object, Action)
+  fullName.vb: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(Object, System.Action)
+  name.vb: Lock(Object, Action)
+  spec.csharp:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+  spec.vb:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+- uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  commentId: M:LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  isExternal: true
+  href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  name: Lock(object, Action)
+  nameWithType: LockExtensions.Lock(object, Action)
+  fullName: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(object, System.Action)
+  nameWithType.vb: LockExtensions.Lock(Object, Action)
+  fullName.vb: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(Object, System.Action)
+  name.vb: Lock(Object, Action)
+  spec.csharp:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+  spec.vb:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+- uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+  commentId: T:LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+  parent: LiveStreamingServerNet.Utilities.Extensions
+  href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html
+  name: LockExtensions
+  nameWithType: LockExtensions
+  fullName: LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+- uid: LiveStreamingServerNet.Utilities.Extensions
+  commentId: N:LiveStreamingServerNet.Utilities.Extensions
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.Utilities.Extensions
+  nameWithType: LiveStreamingServerNet.Utilities.Extensions
+  fullName: LiveStreamingServerNet.Utilities.Extensions
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities
+    name: Utilities
+    href: LiveStreamingServerNet.Utilities.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities.Extensions
+    name: Extensions
+    href: LiveStreamingServerNet.Utilities.Extensions.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities
+    name: Utilities
+    href: LiveStreamingServerNet.Utilities.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities.Extensions
+    name: Extensions
+    href: LiveStreamingServerNet.Utilities.Extensions.html
+- uid: LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler.GetOrder*
+  commentId: Overload:LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler.GetOrder
+  href: LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler.html#LiveStreamingServerNet_Rtmp_Contracts_IRtmpServerStreamEventHandler_GetOrder
+  name: GetOrder
+  nameWithType: IRtmpServerStreamEventHandler.GetOrder
+  fullName: LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler.GetOrder
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler.OnRtmpStreamPublishedAsync*
+  commentId: Overload:LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler.OnRtmpStreamPublishedAsync
+  href: LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler.html#LiveStreamingServerNet_Rtmp_Contracts_IRtmpServerStreamEventHandler_OnRtmpStreamPublishedAsync_LiveStreamingServerNet_Utilities_Contracts_IEventContext_System_UInt32_System_String_System_Collections_Generic_IReadOnlyDictionary_System_String_System_String__
+  name: OnRtmpStreamPublishedAsync
+  nameWithType: IRtmpServerStreamEventHandler.OnRtmpStreamPublishedAsync
+  fullName: LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler.OnRtmpStreamPublishedAsync
+- uid: LiveStreamingServerNet.Utilities.Contracts.IEventContext
+  commentId: T:LiveStreamingServerNet.Utilities.Contracts.IEventContext
+  parent: LiveStreamingServerNet.Utilities.Contracts
+  href: LiveStreamingServerNet.Utilities.Contracts.IEventContext.html
+  name: IEventContext
+  nameWithType: IEventContext
+  fullName: LiveStreamingServerNet.Utilities.Contracts.IEventContext
+- uid: System.UInt32
+  commentId: T:System.UInt32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.uint32
+  name: uint
+  nameWithType: uint
+  fullName: uint
+  nameWithType.vb: UInteger
+  fullName.vb: UInteger
+  name.vb: UInteger
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: System.Collections.Generic.IReadOnlyDictionary{System.String,System.String}
+  commentId: T:System.Collections.Generic.IReadOnlyDictionary{System.String,System.String}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IReadOnlyDictionary`2
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlydictionary-2
+  name: IReadOnlyDictionary<string, string>
+  nameWithType: IReadOnlyDictionary<string, string>
+  fullName: System.Collections.Generic.IReadOnlyDictionary<string, string>
+  nameWithType.vb: IReadOnlyDictionary(Of String, String)
+  fullName.vb: System.Collections.Generic.IReadOnlyDictionary(Of String, String)
+  name.vb: IReadOnlyDictionary(Of String, String)
+  spec.csharp:
+  - uid: System.Collections.Generic.IReadOnlyDictionary`2
+    name: IReadOnlyDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlydictionary-2
+  - name: <
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IReadOnlyDictionary`2
+    name: IReadOnlyDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlydictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+- uid: System.Threading.Tasks.ValueTask
+  commentId: T:System.Threading.Tasks.ValueTask
+  parent: System.Threading.Tasks
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.valuetask
+  name: ValueTask
+  nameWithType: ValueTask
+  fullName: System.Threading.Tasks.ValueTask
+- uid: LiveStreamingServerNet.Utilities.Contracts
+  commentId: N:LiveStreamingServerNet.Utilities.Contracts
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.Utilities.Contracts
+  nameWithType: LiveStreamingServerNet.Utilities.Contracts
+  fullName: LiveStreamingServerNet.Utilities.Contracts
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities
+    name: Utilities
+    href: LiveStreamingServerNet.Utilities.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities.Contracts
+    name: Contracts
+    href: LiveStreamingServerNet.Utilities.Contracts.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities
+    name: Utilities
+    href: LiveStreamingServerNet.Utilities.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities.Contracts
+    name: Contracts
+    href: LiveStreamingServerNet.Utilities.Contracts.html
+- uid: System.Collections.Generic.IReadOnlyDictionary`2
+  commentId: T:System.Collections.Generic.IReadOnlyDictionary`2
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlydictionary-2
+  name: IReadOnlyDictionary<TKey, TValue>
+  nameWithType: IReadOnlyDictionary<TKey, TValue>
+  fullName: System.Collections.Generic.IReadOnlyDictionary<TKey, TValue>
+  nameWithType.vb: IReadOnlyDictionary(Of TKey, TValue)
+  fullName.vb: System.Collections.Generic.IReadOnlyDictionary(Of TKey, TValue)
+  name.vb: IReadOnlyDictionary(Of TKey, TValue)
+  spec.csharp:
+  - uid: System.Collections.Generic.IReadOnlyDictionary`2
+    name: IReadOnlyDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlydictionary-2
+  - name: <
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IReadOnlyDictionary`2
+    name: IReadOnlyDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlydictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+- uid: System.Threading.Tasks
+  commentId: N:System.Threading.Tasks
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Threading.Tasks
+  nameWithType: System.Threading.Tasks
+  fullName: System.Threading.Tasks
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  - name: .
+  - uid: System.Threading.Tasks
+    name: Tasks
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  - name: .
+  - uid: System.Threading.Tasks
+    name: Tasks
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks
+- uid: LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler.OnRtmpStreamUnpublishedAsync*
+  commentId: Overload:LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler.OnRtmpStreamUnpublishedAsync
+  href: LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler.html#LiveStreamingServerNet_Rtmp_Contracts_IRtmpServerStreamEventHandler_OnRtmpStreamUnpublishedAsync_LiveStreamingServerNet_Utilities_Contracts_IEventContext_System_UInt32_System_String_
+  name: OnRtmpStreamUnpublishedAsync
+  nameWithType: IRtmpServerStreamEventHandler.OnRtmpStreamUnpublishedAsync
+  fullName: LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler.OnRtmpStreamUnpublishedAsync
+- uid: LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler.OnRtmpStreamSubscribedAsync*
+  commentId: Overload:LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler.OnRtmpStreamSubscribedAsync
+  href: LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler.html#LiveStreamingServerNet_Rtmp_Contracts_IRtmpServerStreamEventHandler_OnRtmpStreamSubscribedAsync_LiveStreamingServerNet_Utilities_Contracts_IEventContext_System_UInt32_System_String_System_Collections_Generic_IReadOnlyDictionary_System_String_System_String__
+  name: OnRtmpStreamSubscribedAsync
+  nameWithType: IRtmpServerStreamEventHandler.OnRtmpStreamSubscribedAsync
+  fullName: LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler.OnRtmpStreamSubscribedAsync
+- uid: LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler.OnRtmpStreamUnsubscribedAsync*
+  commentId: Overload:LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler.OnRtmpStreamUnsubscribedAsync
+  href: LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler.html#LiveStreamingServerNet_Rtmp_Contracts_IRtmpServerStreamEventHandler_OnRtmpStreamUnsubscribedAsync_LiveStreamingServerNet_Utilities_Contracts_IEventContext_System_UInt32_System_String_
+  name: OnRtmpStreamUnsubscribedAsync
+  nameWithType: IRtmpServerStreamEventHandler.OnRtmpStreamUnsubscribedAsync
+  fullName: LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler.OnRtmpStreamUnsubscribedAsync
+- uid: LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler.OnRtmpStreamMetaDataReceivedAsync*
+  commentId: Overload:LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler.OnRtmpStreamMetaDataReceivedAsync
+  href: LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler.html#LiveStreamingServerNet_Rtmp_Contracts_IRtmpServerStreamEventHandler_OnRtmpStreamMetaDataReceivedAsync_LiveStreamingServerNet_Utilities_Contracts_IEventContext_System_UInt32_System_String_System_Collections_Generic_IReadOnlyDictionary_System_String_System_Object__
+  name: OnRtmpStreamMetaDataReceivedAsync
+  nameWithType: IRtmpServerStreamEventHandler.OnRtmpStreamMetaDataReceivedAsync
+  fullName: LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler.OnRtmpStreamMetaDataReceivedAsync
+- uid: System.Collections.Generic.IReadOnlyDictionary{System.String,System.Object}
+  commentId: T:System.Collections.Generic.IReadOnlyDictionary{System.String,System.Object}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IReadOnlyDictionary`2
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlydictionary-2
+  name: IReadOnlyDictionary<string, object>
+  nameWithType: IReadOnlyDictionary<string, object>
+  fullName: System.Collections.Generic.IReadOnlyDictionary<string, object>
+  nameWithType.vb: IReadOnlyDictionary(Of String, Object)
+  fullName.vb: System.Collections.Generic.IReadOnlyDictionary(Of String, Object)
+  name.vb: IReadOnlyDictionary(Of String, Object)
+  spec.csharp:
+  - uid: System.Collections.Generic.IReadOnlyDictionary`2
+    name: IReadOnlyDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlydictionary-2
+  - name: <
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IReadOnlyDictionary`2
+    name: IReadOnlyDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlydictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )

@@ -1,0 +1,118 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.KubernetesOperator.Services.Contracts
+  commentId: N:LiveStreamingServerNet.KubernetesOperator.Services.Contracts
+  id: LiveStreamingServerNet.KubernetesOperator.Services.Contracts
+  children:
+  - LiveStreamingServerNet.KubernetesOperator.Services.Contracts.IDesiredFleetStateApplier
+  - LiveStreamingServerNet.KubernetesOperator.Services.Contracts.IDesiredFleetStateCalculator
+  - LiveStreamingServerNet.KubernetesOperator.Services.Contracts.IFleetScaler
+  - LiveStreamingServerNet.KubernetesOperator.Services.Contracts.IFleetScalerResolver
+  - LiveStreamingServerNet.KubernetesOperator.Services.Contracts.IFleetStateFetcher
+  - LiveStreamingServerNet.KubernetesOperator.Services.Contracts.IPodCleaner
+  - LiveStreamingServerNet.KubernetesOperator.Services.Contracts.IPodTemplateCreator
+  - LiveStreamingServerNet.KubernetesOperator.Services.Contracts.ITargetReplicasStabilizer
+  langs:
+  - csharp
+  - vb
+  name: LiveStreamingServerNet.KubernetesOperator.Services.Contracts
+  nameWithType: LiveStreamingServerNet.KubernetesOperator.Services.Contracts
+  fullName: LiveStreamingServerNet.KubernetesOperator.Services.Contracts
+  type: Namespace
+  assemblies:
+  - LiveStreamingServerNet.KubernetesOperator
+references:
+- uid: LiveStreamingServerNet.KubernetesOperator.Services.Contracts.IDesiredFleetStateApplier
+  commentId: T:LiveStreamingServerNet.KubernetesOperator.Services.Contracts.IDesiredFleetStateApplier
+  parent: LiveStreamingServerNet.KubernetesOperator.Services.Contracts
+  href: LiveStreamingServerNet.KubernetesOperator.Services.Contracts.IDesiredFleetStateApplier.html
+  name: IDesiredFleetStateApplier
+  nameWithType: IDesiredFleetStateApplier
+  fullName: LiveStreamingServerNet.KubernetesOperator.Services.Contracts.IDesiredFleetStateApplier
+- uid: LiveStreamingServerNet.KubernetesOperator.Services.Contracts.IDesiredFleetStateCalculator
+  commentId: T:LiveStreamingServerNet.KubernetesOperator.Services.Contracts.IDesiredFleetStateCalculator
+  parent: LiveStreamingServerNet.KubernetesOperator.Services.Contracts
+  href: LiveStreamingServerNet.KubernetesOperator.Services.Contracts.IDesiredFleetStateCalculator.html
+  name: IDesiredFleetStateCalculator
+  nameWithType: IDesiredFleetStateCalculator
+  fullName: LiveStreamingServerNet.KubernetesOperator.Services.Contracts.IDesiredFleetStateCalculator
+- uid: LiveStreamingServerNet.KubernetesOperator.Services.Contracts.IFleetScaler
+  commentId: T:LiveStreamingServerNet.KubernetesOperator.Services.Contracts.IFleetScaler
+  parent: LiveStreamingServerNet.KubernetesOperator.Services.Contracts
+  href: LiveStreamingServerNet.KubernetesOperator.Services.Contracts.IFleetScaler.html
+  name: IFleetScaler
+  nameWithType: IFleetScaler
+  fullName: LiveStreamingServerNet.KubernetesOperator.Services.Contracts.IFleetScaler
+- uid: LiveStreamingServerNet.KubernetesOperator.Services.Contracts.IFleetScalerResolver
+  commentId: T:LiveStreamingServerNet.KubernetesOperator.Services.Contracts.IFleetScalerResolver
+  parent: LiveStreamingServerNet.KubernetesOperator.Services.Contracts
+  href: LiveStreamingServerNet.KubernetesOperator.Services.Contracts.IFleetScalerResolver.html
+  name: IFleetScalerResolver
+  nameWithType: IFleetScalerResolver
+  fullName: LiveStreamingServerNet.KubernetesOperator.Services.Contracts.IFleetScalerResolver
+- uid: LiveStreamingServerNet.KubernetesOperator.Services.Contracts.IFleetStateFetcher
+  commentId: T:LiveStreamingServerNet.KubernetesOperator.Services.Contracts.IFleetStateFetcher
+  parent: LiveStreamingServerNet.KubernetesOperator.Services.Contracts
+  href: LiveStreamingServerNet.KubernetesOperator.Services.Contracts.IFleetStateFetcher.html
+  name: IFleetStateFetcher
+  nameWithType: IFleetStateFetcher
+  fullName: LiveStreamingServerNet.KubernetesOperator.Services.Contracts.IFleetStateFetcher
+- uid: LiveStreamingServerNet.KubernetesOperator.Services.Contracts.IPodCleaner
+  commentId: T:LiveStreamingServerNet.KubernetesOperator.Services.Contracts.IPodCleaner
+  parent: LiveStreamingServerNet.KubernetesOperator.Services.Contracts
+  href: LiveStreamingServerNet.KubernetesOperator.Services.Contracts.IPodCleaner.html
+  name: IPodCleaner
+  nameWithType: IPodCleaner
+  fullName: LiveStreamingServerNet.KubernetesOperator.Services.Contracts.IPodCleaner
+- uid: LiveStreamingServerNet.KubernetesOperator.Services.Contracts.IPodTemplateCreator
+  commentId: T:LiveStreamingServerNet.KubernetesOperator.Services.Contracts.IPodTemplateCreator
+  parent: LiveStreamingServerNet.KubernetesOperator.Services.Contracts
+  href: LiveStreamingServerNet.KubernetesOperator.Services.Contracts.IPodTemplateCreator.html
+  name: IPodTemplateCreator
+  nameWithType: IPodTemplateCreator
+  fullName: LiveStreamingServerNet.KubernetesOperator.Services.Contracts.IPodTemplateCreator
+- uid: LiveStreamingServerNet.KubernetesOperator.Services.Contracts.ITargetReplicasStabilizer
+  commentId: T:LiveStreamingServerNet.KubernetesOperator.Services.Contracts.ITargetReplicasStabilizer
+  parent: LiveStreamingServerNet.KubernetesOperator.Services.Contracts
+  href: LiveStreamingServerNet.KubernetesOperator.Services.Contracts.ITargetReplicasStabilizer.html
+  name: ITargetReplicasStabilizer
+  nameWithType: ITargetReplicasStabilizer
+  fullName: LiveStreamingServerNet.KubernetesOperator.Services.Contracts.ITargetReplicasStabilizer
+- uid: LiveStreamingServerNet.KubernetesOperator.Services.Contracts
+  commentId: N:LiveStreamingServerNet.KubernetesOperator.Services.Contracts
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.KubernetesOperator.Services.Contracts
+  nameWithType: LiveStreamingServerNet.KubernetesOperator.Services.Contracts
+  fullName: LiveStreamingServerNet.KubernetesOperator.Services.Contracts
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.KubernetesOperator
+    name: KubernetesOperator
+    href: LiveStreamingServerNet.KubernetesOperator.html
+  - name: .
+  - uid: LiveStreamingServerNet.KubernetesOperator.Services
+    name: Services
+    href: LiveStreamingServerNet.KubernetesOperator.Services.html
+  - name: .
+  - uid: LiveStreamingServerNet.KubernetesOperator.Services.Contracts
+    name: Contracts
+    href: LiveStreamingServerNet.KubernetesOperator.Services.Contracts.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.KubernetesOperator
+    name: KubernetesOperator
+    href: LiveStreamingServerNet.KubernetesOperator.html
+  - name: .
+  - uid: LiveStreamingServerNet.KubernetesOperator.Services
+    name: Services
+    href: LiveStreamingServerNet.KubernetesOperator.Services.html
+  - name: .
+  - uid: LiveStreamingServerNet.KubernetesOperator.Services.Contracts
+    name: Contracts
+    href: LiveStreamingServerNet.KubernetesOperator.Services.Contracts.html

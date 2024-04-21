@@ -1,0 +1,70 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.Rtmp.RateLimiting.Contracts
+  commentId: N:LiveStreamingServerNet.Rtmp.RateLimiting.Contracts
+  id: LiveStreamingServerNet.Rtmp.RateLimiting.Contracts
+  children:
+  - LiveStreamingServerNet.Rtmp.RateLimiting.Contracts.IBandwidthLimiter
+  - LiveStreamingServerNet.Rtmp.RateLimiting.Contracts.IBandwidthLimiterFactory
+  langs:
+  - csharp
+  - vb
+  name: LiveStreamingServerNet.Rtmp.RateLimiting.Contracts
+  nameWithType: LiveStreamingServerNet.Rtmp.RateLimiting.Contracts
+  fullName: LiveStreamingServerNet.Rtmp.RateLimiting.Contracts
+  type: Namespace
+  assemblies:
+  - LiveStreamingServerNet.Rtmp
+references:
+- uid: LiveStreamingServerNet.Rtmp.RateLimiting.Contracts.IBandwidthLimiter
+  commentId: T:LiveStreamingServerNet.Rtmp.RateLimiting.Contracts.IBandwidthLimiter
+  parent: LiveStreamingServerNet.Rtmp.RateLimiting.Contracts
+  href: LiveStreamingServerNet.Rtmp.RateLimiting.Contracts.IBandwidthLimiter.html
+  name: IBandwidthLimiter
+  nameWithType: IBandwidthLimiter
+  fullName: LiveStreamingServerNet.Rtmp.RateLimiting.Contracts.IBandwidthLimiter
+- uid: LiveStreamingServerNet.Rtmp.RateLimiting.Contracts.IBandwidthLimiterFactory
+  commentId: T:LiveStreamingServerNet.Rtmp.RateLimiting.Contracts.IBandwidthLimiterFactory
+  parent: LiveStreamingServerNet.Rtmp.RateLimiting.Contracts
+  href: LiveStreamingServerNet.Rtmp.RateLimiting.Contracts.IBandwidthLimiterFactory.html
+  name: IBandwidthLimiterFactory
+  nameWithType: IBandwidthLimiterFactory
+  fullName: LiveStreamingServerNet.Rtmp.RateLimiting.Contracts.IBandwidthLimiterFactory
+- uid: LiveStreamingServerNet.Rtmp.RateLimiting.Contracts
+  commentId: N:LiveStreamingServerNet.Rtmp.RateLimiting.Contracts
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.Rtmp.RateLimiting.Contracts
+  nameWithType: LiveStreamingServerNet.Rtmp.RateLimiting.Contracts
+  fullName: LiveStreamingServerNet.Rtmp.RateLimiting.Contracts
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Rtmp
+    name: Rtmp
+    href: LiveStreamingServerNet.Rtmp.html
+  - name: .
+  - uid: LiveStreamingServerNet.Rtmp.RateLimiting
+    name: RateLimiting
+    href: LiveStreamingServerNet.Rtmp.RateLimiting.html
+  - name: .
+  - uid: LiveStreamingServerNet.Rtmp.RateLimiting.Contracts
+    name: Contracts
+    href: LiveStreamingServerNet.Rtmp.RateLimiting.Contracts.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Rtmp
+    name: Rtmp
+    href: LiveStreamingServerNet.Rtmp.html
+  - name: .
+  - uid: LiveStreamingServerNet.Rtmp.RateLimiting
+    name: RateLimiting
+    href: LiveStreamingServerNet.Rtmp.RateLimiting.html
+  - name: .
+  - uid: LiveStreamingServerNet.Rtmp.RateLimiting.Contracts
+    name: Contracts
+    href: LiveStreamingServerNet.Rtmp.RateLimiting.Contracts.html

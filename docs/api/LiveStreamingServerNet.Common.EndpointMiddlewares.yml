@@ -1,0 +1,23 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.Common.EndpointMiddlewares
+  commentId: N:LiveStreamingServerNet.Common.EndpointMiddlewares
+  id: LiveStreamingServerNet.Common.EndpointMiddlewares
+  children:
+  - LiveStreamingServerNet.Common.EndpointMiddlewares.ApiExceptionEndpointFilter
+  langs:
+  - csharp
+  - vb
+  name: LiveStreamingServerNet.Common.EndpointMiddlewares
+  nameWithType: LiveStreamingServerNet.Common.EndpointMiddlewares
+  fullName: LiveStreamingServerNet.Common.EndpointMiddlewares
+  type: Namespace
+  assemblies:
+  - LiveStreamingServerNet
+references:
+- uid: LiveStreamingServerNet.Common.EndpointMiddlewares.ApiExceptionEndpointFilter
+  commentId: T:LiveStreamingServerNet.Common.EndpointMiddlewares.ApiExceptionEndpointFilter
+  href: LiveStreamingServerNet.Common.EndpointMiddlewares.ApiExceptionEndpointFilter.html
+  name: ApiExceptionEndpointFilter
+  nameWithType: ApiExceptionEndpointFilter
+  fullName: LiveStreamingServerNet.Common.EndpointMiddlewares.ApiExceptionEndpointFilter

@@ -1,0 +1,75 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.Utilities.Extensions
+  commentId: N:LiveStreamingServerNet.Utilities.Extensions
+  id: LiveStreamingServerNet.Utilities.Extensions
+  children:
+  - LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+  - LiveStreamingServerNet.Utilities.Extensions.SecurityExtensions
+  - LiveStreamingServerNet.Utilities.Extensions.TaskExtensions
+  - LiveStreamingServerNet.Utilities.Extensions.TypeExtensions
+  langs:
+  - csharp
+  - vb
+  name: LiveStreamingServerNet.Utilities.Extensions
+  nameWithType: LiveStreamingServerNet.Utilities.Extensions
+  fullName: LiveStreamingServerNet.Utilities.Extensions
+  type: Namespace
+  assemblies:
+  - LiveStreamingServerNet.Utilities
+references:
+- uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+  commentId: T:LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+  parent: LiveStreamingServerNet.Utilities.Extensions
+  href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html
+  name: LockExtensions
+  nameWithType: LockExtensions
+  fullName: LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+- uid: LiveStreamingServerNet.Utilities.Extensions.SecurityExtensions
+  commentId: T:LiveStreamingServerNet.Utilities.Extensions.SecurityExtensions
+  href: LiveStreamingServerNet.Utilities.Extensions.SecurityExtensions.html
+  name: SecurityExtensions
+  nameWithType: SecurityExtensions
+  fullName: LiveStreamingServerNet.Utilities.Extensions.SecurityExtensions
+- uid: LiveStreamingServerNet.Utilities.Extensions.TaskExtensions
+  commentId: T:LiveStreamingServerNet.Utilities.Extensions.TaskExtensions
+  href: LiveStreamingServerNet.Utilities.Extensions.TaskExtensions.html
+  name: TaskExtensions
+  nameWithType: TaskExtensions
+  fullName: LiveStreamingServerNet.Utilities.Extensions.TaskExtensions
+- uid: LiveStreamingServerNet.Utilities.Extensions.TypeExtensions
+  commentId: T:LiveStreamingServerNet.Utilities.Extensions.TypeExtensions
+  href: LiveStreamingServerNet.Utilities.Extensions.TypeExtensions.html
+  name: TypeExtensions
+  nameWithType: TypeExtensions
+  fullName: LiveStreamingServerNet.Utilities.Extensions.TypeExtensions
+- uid: LiveStreamingServerNet.Utilities.Extensions
+  commentId: N:LiveStreamingServerNet.Utilities.Extensions
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.Utilities.Extensions
+  nameWithType: LiveStreamingServerNet.Utilities.Extensions
+  fullName: LiveStreamingServerNet.Utilities.Extensions
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities
+    name: Utilities
+    href: LiveStreamingServerNet.Utilities.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities.Extensions
+    name: Extensions
+    href: LiveStreamingServerNet.Utilities.Extensions.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities
+    name: Utilities
+    href: LiveStreamingServerNet.Utilities.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities.Extensions
+    name: Extensions
+    href: LiveStreamingServerNet.Utilities.Extensions.html

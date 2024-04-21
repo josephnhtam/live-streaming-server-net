@@ -1,0 +1,62 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.Rtmp.Installer.Contracts
+  commentId: N:LiveStreamingServerNet.Rtmp.Installer.Contracts
+  id: LiveStreamingServerNet.Rtmp.Installer.Contracts
+  children:
+  - LiveStreamingServerNet.Rtmp.Installer.Contracts.IRtmpServerConfigurator
+  langs:
+  - csharp
+  - vb
+  name: LiveStreamingServerNet.Rtmp.Installer.Contracts
+  nameWithType: LiveStreamingServerNet.Rtmp.Installer.Contracts
+  fullName: LiveStreamingServerNet.Rtmp.Installer.Contracts
+  type: Namespace
+  assemblies:
+  - LiveStreamingServerNet.Rtmp
+references:
+- uid: LiveStreamingServerNet.Rtmp.Installer.Contracts.IRtmpServerConfigurator
+  commentId: T:LiveStreamingServerNet.Rtmp.Installer.Contracts.IRtmpServerConfigurator
+  parent: LiveStreamingServerNet.Rtmp.Installer.Contracts
+  href: LiveStreamingServerNet.Rtmp.Installer.Contracts.IRtmpServerConfigurator.html
+  name: IRtmpServerConfigurator
+  nameWithType: IRtmpServerConfigurator
+  fullName: LiveStreamingServerNet.Rtmp.Installer.Contracts.IRtmpServerConfigurator
+- uid: LiveStreamingServerNet.Rtmp.Installer.Contracts
+  commentId: N:LiveStreamingServerNet.Rtmp.Installer.Contracts
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.Rtmp.Installer.Contracts
+  nameWithType: LiveStreamingServerNet.Rtmp.Installer.Contracts
+  fullName: LiveStreamingServerNet.Rtmp.Installer.Contracts
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Rtmp
+    name: Rtmp
+    href: LiveStreamingServerNet.Rtmp.html
+  - name: .
+  - uid: LiveStreamingServerNet.Rtmp.Installer
+    name: Installer
+    href: LiveStreamingServerNet.Rtmp.Installer.html
+  - name: .
+  - uid: LiveStreamingServerNet.Rtmp.Installer.Contracts
+    name: Contracts
+    href: LiveStreamingServerNet.Rtmp.Installer.Contracts.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Rtmp
+    name: Rtmp
+    href: LiveStreamingServerNet.Rtmp.html
+  - name: .
+  - uid: LiveStreamingServerNet.Rtmp.Installer
+    name: Installer
+    href: LiveStreamingServerNet.Rtmp.Installer.html
+  - name: .
+  - uid: LiveStreamingServerNet.Rtmp.Installer.Contracts
+    name: Contracts
+    href: LiveStreamingServerNet.Rtmp.Installer.Contracts.html

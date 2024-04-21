@@ -1,0 +1,54 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.KubernetesOperator.Utilities
+  commentId: N:LiveStreamingServerNet.KubernetesOperator.Utilities
+  id: LiveStreamingServerNet.KubernetesOperator.Utilities
+  children:
+  - LiveStreamingServerNet.KubernetesOperator.Utilities.PodPatcherBuilder
+  langs:
+  - csharp
+  - vb
+  name: LiveStreamingServerNet.KubernetesOperator.Utilities
+  nameWithType: LiveStreamingServerNet.KubernetesOperator.Utilities
+  fullName: LiveStreamingServerNet.KubernetesOperator.Utilities
+  type: Namespace
+  assemblies:
+  - LiveStreamingServerNet.KubernetesOperator
+references:
+- uid: LiveStreamingServerNet.KubernetesOperator.Utilities.PodPatcherBuilder
+  commentId: T:LiveStreamingServerNet.KubernetesOperator.Utilities.PodPatcherBuilder
+  parent: LiveStreamingServerNet.KubernetesOperator.Utilities
+  href: LiveStreamingServerNet.KubernetesOperator.Utilities.PodPatcherBuilder.html
+  name: PodPatcherBuilder
+  nameWithType: PodPatcherBuilder
+  fullName: LiveStreamingServerNet.KubernetesOperator.Utilities.PodPatcherBuilder
+- uid: LiveStreamingServerNet.KubernetesOperator.Utilities
+  commentId: N:LiveStreamingServerNet.KubernetesOperator.Utilities
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.KubernetesOperator.Utilities
+  nameWithType: LiveStreamingServerNet.KubernetesOperator.Utilities
+  fullName: LiveStreamingServerNet.KubernetesOperator.Utilities
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.KubernetesOperator
+    name: KubernetesOperator
+    href: LiveStreamingServerNet.KubernetesOperator.html
+  - name: .
+  - uid: LiveStreamingServerNet.KubernetesOperator.Utilities
+    name: Utilities
+    href: LiveStreamingServerNet.KubernetesOperator.Utilities.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.KubernetesOperator
+    name: KubernetesOperator
+    href: LiveStreamingServerNet.KubernetesOperator.html
+  - name: .
+  - uid: LiveStreamingServerNet.KubernetesOperator.Utilities
+    name: Utilities
+    href: LiveStreamingServerNet.KubernetesOperator.Utilities.html

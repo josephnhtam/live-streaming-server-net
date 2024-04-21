@@ -1,0 +1,30 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.Rtmp.RateLimiting
+  commentId: N:LiveStreamingServerNet.Rtmp.RateLimiting
+  id: LiveStreamingServerNet.Rtmp.RateLimiting
+  children:
+  - LiveStreamingServerNet.Rtmp.RateLimiting.BandwidthLimiter
+  - LiveStreamingServerNet.Rtmp.RateLimiting.BandwidthLimiterFactory
+  langs:
+  - csharp
+  - vb
+  name: LiveStreamingServerNet.Rtmp.RateLimiting
+  nameWithType: LiveStreamingServerNet.Rtmp.RateLimiting
+  fullName: LiveStreamingServerNet.Rtmp.RateLimiting
+  type: Namespace
+  assemblies:
+  - LiveStreamingServerNet.Rtmp
+references:
+- uid: LiveStreamingServerNet.Rtmp.RateLimiting.BandwidthLimiter
+  commentId: T:LiveStreamingServerNet.Rtmp.RateLimiting.BandwidthLimiter
+  href: LiveStreamingServerNet.Rtmp.RateLimiting.BandwidthLimiter.html
+  name: BandwidthLimiter
+  nameWithType: BandwidthLimiter
+  fullName: LiveStreamingServerNet.Rtmp.RateLimiting.BandwidthLimiter
+- uid: LiveStreamingServerNet.Rtmp.RateLimiting.BandwidthLimiterFactory
+  commentId: T:LiveStreamingServerNet.Rtmp.RateLimiting.BandwidthLimiterFactory
+  href: LiveStreamingServerNet.Rtmp.RateLimiting.BandwidthLimiterFactory.html
+  name: BandwidthLimiterFactory
+  nameWithType: BandwidthLimiterFactory
+  fullName: LiveStreamingServerNet.Rtmp.RateLimiting.BandwidthLimiterFactory

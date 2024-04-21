@@ -1,0 +1,62 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.KubernetesPod.Utilities.Contracts
+  commentId: N:LiveStreamingServerNet.KubernetesPod.Utilities.Contracts
+  id: LiveStreamingServerNet.KubernetesPod.Utilities.Contracts
+  children:
+  - LiveStreamingServerNet.KubernetesPod.Utilities.Contracts.IPodPatcherBuilder
+  langs:
+  - csharp
+  - vb
+  name: LiveStreamingServerNet.KubernetesPod.Utilities.Contracts
+  nameWithType: LiveStreamingServerNet.KubernetesPod.Utilities.Contracts
+  fullName: LiveStreamingServerNet.KubernetesPod.Utilities.Contracts
+  type: Namespace
+  assemblies:
+  - LiveStreamingServerNet.KubernetesPod
+references:
+- uid: LiveStreamingServerNet.KubernetesPod.Utilities.Contracts.IPodPatcherBuilder
+  commentId: T:LiveStreamingServerNet.KubernetesPod.Utilities.Contracts.IPodPatcherBuilder
+  parent: LiveStreamingServerNet.KubernetesPod.Utilities.Contracts
+  href: LiveStreamingServerNet.KubernetesPod.Utilities.Contracts.IPodPatcherBuilder.html
+  name: IPodPatcherBuilder
+  nameWithType: IPodPatcherBuilder
+  fullName: LiveStreamingServerNet.KubernetesPod.Utilities.Contracts.IPodPatcherBuilder
+- uid: LiveStreamingServerNet.KubernetesPod.Utilities.Contracts
+  commentId: N:LiveStreamingServerNet.KubernetesPod.Utilities.Contracts
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.KubernetesPod.Utilities.Contracts
+  nameWithType: LiveStreamingServerNet.KubernetesPod.Utilities.Contracts
+  fullName: LiveStreamingServerNet.KubernetesPod.Utilities.Contracts
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.KubernetesPod
+    name: KubernetesPod
+    href: LiveStreamingServerNet.KubernetesPod.html
+  - name: .
+  - uid: LiveStreamingServerNet.KubernetesPod.Utilities
+    name: Utilities
+    href: LiveStreamingServerNet.KubernetesPod.Utilities.html
+  - name: .
+  - uid: LiveStreamingServerNet.KubernetesPod.Utilities.Contracts
+    name: Contracts
+    href: LiveStreamingServerNet.KubernetesPod.Utilities.Contracts.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.KubernetesPod
+    name: KubernetesPod
+    href: LiveStreamingServerNet.KubernetesPod.html
+  - name: .
+  - uid: LiveStreamingServerNet.KubernetesPod.Utilities
+    name: Utilities
+    href: LiveStreamingServerNet.KubernetesPod.Utilities.html
+  - name: .
+  - uid: LiveStreamingServerNet.KubernetesPod.Utilities.Contracts
+    name: Contracts
+    href: LiveStreamingServerNet.KubernetesPod.Utilities.Contracts.html

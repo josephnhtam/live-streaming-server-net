@@ -1,0 +1,545 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.Networking.Contracts.ITcpClient
+  commentId: T:LiveStreamingServerNet.Networking.Contracts.ITcpClient
+  id: ITcpClient
+  parent: LiveStreamingServerNet.Networking.Contracts
+  children:
+  - LiveStreamingServerNet.Networking.Contracts.ITcpClient.Available
+  - LiveStreamingServerNet.Networking.Contracts.ITcpClient.Connected
+  - LiveStreamingServerNet.Networking.Contracts.ITcpClient.LingerState
+  - LiveStreamingServerNet.Networking.Contracts.ITcpClient.NoDelay
+  - LiveStreamingServerNet.Networking.Contracts.ITcpClient.ReceiveBufferSize
+  - LiveStreamingServerNet.Networking.Contracts.ITcpClient.ReceiveTimeout
+  - LiveStreamingServerNet.Networking.Contracts.ITcpClient.SendBufferSize
+  - LiveStreamingServerNet.Networking.Contracts.ITcpClient.SendTimeout
+  langs:
+  - csharp
+  - vb
+  name: ITcpClient
+  nameWithType: ITcpClient
+  fullName: LiveStreamingServerNet.Networking.Contracts.ITcpClient
+  type: Interface
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/Contracts/ITcpClient.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: ITcpClient
+    path: ../src/LiveStreamingServerNet.Networking/Contracts/ITcpClient.cs
+    startLine: 5
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking.Contracts
+  syntax:
+    content: public interface ITcpClient
+    content.vb: Public Interface ITcpClient
+  extensionMethods:
+  - System.Object.LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Action)
+- uid: LiveStreamingServerNet.Networking.Contracts.ITcpClient.Available
+  commentId: P:LiveStreamingServerNet.Networking.Contracts.ITcpClient.Available
+  id: Available
+  parent: LiveStreamingServerNet.Networking.Contracts.ITcpClient
+  langs:
+  - csharp
+  - vb
+  name: Available
+  nameWithType: ITcpClient.Available
+  fullName: LiveStreamingServerNet.Networking.Contracts.ITcpClient.Available
+  type: Property
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/Contracts/ITcpClient.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: Available
+    path: ../src/LiveStreamingServerNet.Networking/Contracts/ITcpClient.cs
+    startLine: 7
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking.Contracts
+  syntax:
+    content: int Available { get; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: ReadOnly Property Available As Integer
+  overload: LiveStreamingServerNet.Networking.Contracts.ITcpClient.Available*
+- uid: LiveStreamingServerNet.Networking.Contracts.ITcpClient.Connected
+  commentId: P:LiveStreamingServerNet.Networking.Contracts.ITcpClient.Connected
+  id: Connected
+  parent: LiveStreamingServerNet.Networking.Contracts.ITcpClient
+  langs:
+  - csharp
+  - vb
+  name: Connected
+  nameWithType: ITcpClient.Connected
+  fullName: LiveStreamingServerNet.Networking.Contracts.ITcpClient.Connected
+  type: Property
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/Contracts/ITcpClient.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: Connected
+    path: ../src/LiveStreamingServerNet.Networking/Contracts/ITcpClient.cs
+    startLine: 8
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking.Contracts
+  syntax:
+    content: bool Connected { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: ReadOnly Property Connected As Boolean
+  overload: LiveStreamingServerNet.Networking.Contracts.ITcpClient.Connected*
+- uid: LiveStreamingServerNet.Networking.Contracts.ITcpClient.ReceiveBufferSize
+  commentId: P:LiveStreamingServerNet.Networking.Contracts.ITcpClient.ReceiveBufferSize
+  id: ReceiveBufferSize
+  parent: LiveStreamingServerNet.Networking.Contracts.ITcpClient
+  langs:
+  - csharp
+  - vb
+  name: ReceiveBufferSize
+  nameWithType: ITcpClient.ReceiveBufferSize
+  fullName: LiveStreamingServerNet.Networking.Contracts.ITcpClient.ReceiveBufferSize
+  type: Property
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/Contracts/ITcpClient.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: ReceiveBufferSize
+    path: ../src/LiveStreamingServerNet.Networking/Contracts/ITcpClient.cs
+    startLine: 9
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking.Contracts
+  syntax:
+    content: int ReceiveBufferSize { get; set; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Property ReceiveBufferSize As Integer
+  overload: LiveStreamingServerNet.Networking.Contracts.ITcpClient.ReceiveBufferSize*
+- uid: LiveStreamingServerNet.Networking.Contracts.ITcpClient.SendBufferSize
+  commentId: P:LiveStreamingServerNet.Networking.Contracts.ITcpClient.SendBufferSize
+  id: SendBufferSize
+  parent: LiveStreamingServerNet.Networking.Contracts.ITcpClient
+  langs:
+  - csharp
+  - vb
+  name: SendBufferSize
+  nameWithType: ITcpClient.SendBufferSize
+  fullName: LiveStreamingServerNet.Networking.Contracts.ITcpClient.SendBufferSize
+  type: Property
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/Contracts/ITcpClient.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: SendBufferSize
+    path: ../src/LiveStreamingServerNet.Networking/Contracts/ITcpClient.cs
+    startLine: 10
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking.Contracts
+  syntax:
+    content: int SendBufferSize { get; set; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Property SendBufferSize As Integer
+  overload: LiveStreamingServerNet.Networking.Contracts.ITcpClient.SendBufferSize*
+- uid: LiveStreamingServerNet.Networking.Contracts.ITcpClient.ReceiveTimeout
+  commentId: P:LiveStreamingServerNet.Networking.Contracts.ITcpClient.ReceiveTimeout
+  id: ReceiveTimeout
+  parent: LiveStreamingServerNet.Networking.Contracts.ITcpClient
+  langs:
+  - csharp
+  - vb
+  name: ReceiveTimeout
+  nameWithType: ITcpClient.ReceiveTimeout
+  fullName: LiveStreamingServerNet.Networking.Contracts.ITcpClient.ReceiveTimeout
+  type: Property
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/Contracts/ITcpClient.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: ReceiveTimeout
+    path: ../src/LiveStreamingServerNet.Networking/Contracts/ITcpClient.cs
+    startLine: 11
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking.Contracts
+  syntax:
+    content: int ReceiveTimeout { get; set; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Property ReceiveTimeout As Integer
+  overload: LiveStreamingServerNet.Networking.Contracts.ITcpClient.ReceiveTimeout*
+- uid: LiveStreamingServerNet.Networking.Contracts.ITcpClient.SendTimeout
+  commentId: P:LiveStreamingServerNet.Networking.Contracts.ITcpClient.SendTimeout
+  id: SendTimeout
+  parent: LiveStreamingServerNet.Networking.Contracts.ITcpClient
+  langs:
+  - csharp
+  - vb
+  name: SendTimeout
+  nameWithType: ITcpClient.SendTimeout
+  fullName: LiveStreamingServerNet.Networking.Contracts.ITcpClient.SendTimeout
+  type: Property
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/Contracts/ITcpClient.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: SendTimeout
+    path: ../src/LiveStreamingServerNet.Networking/Contracts/ITcpClient.cs
+    startLine: 12
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking.Contracts
+  syntax:
+    content: int SendTimeout { get; set; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Property SendTimeout As Integer
+  overload: LiveStreamingServerNet.Networking.Contracts.ITcpClient.SendTimeout*
+- uid: LiveStreamingServerNet.Networking.Contracts.ITcpClient.NoDelay
+  commentId: P:LiveStreamingServerNet.Networking.Contracts.ITcpClient.NoDelay
+  id: NoDelay
+  parent: LiveStreamingServerNet.Networking.Contracts.ITcpClient
+  langs:
+  - csharp
+  - vb
+  name: NoDelay
+  nameWithType: ITcpClient.NoDelay
+  fullName: LiveStreamingServerNet.Networking.Contracts.ITcpClient.NoDelay
+  type: Property
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/Contracts/ITcpClient.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: NoDelay
+    path: ../src/LiveStreamingServerNet.Networking/Contracts/ITcpClient.cs
+    startLine: 13
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking.Contracts
+  syntax:
+    content: bool NoDelay { get; set; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Property NoDelay As Boolean
+  overload: LiveStreamingServerNet.Networking.Contracts.ITcpClient.NoDelay*
+- uid: LiveStreamingServerNet.Networking.Contracts.ITcpClient.LingerState
+  commentId: P:LiveStreamingServerNet.Networking.Contracts.ITcpClient.LingerState
+  id: LingerState
+  parent: LiveStreamingServerNet.Networking.Contracts.ITcpClient
+  langs:
+  - csharp
+  - vb
+  name: LingerState
+  nameWithType: ITcpClient.LingerState
+  fullName: LiveStreamingServerNet.Networking.Contracts.ITcpClient.LingerState
+  type: Property
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/Contracts/ITcpClient.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: LingerState
+    path: ../src/LiveStreamingServerNet.Networking/Contracts/ITcpClient.cs
+    startLine: 14
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking.Contracts
+  syntax:
+    content: LingerOption? LingerState { get; set; }
+    parameters: []
+    return:
+      type: System.Net.Sockets.LingerOption
+    content.vb: Property LingerState As LingerOption
+  overload: LiveStreamingServerNet.Networking.Contracts.ITcpClient.LingerState*
+references:
+- uid: LiveStreamingServerNet.Networking.Contracts
+  commentId: N:LiveStreamingServerNet.Networking.Contracts
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.Networking.Contracts
+  nameWithType: LiveStreamingServerNet.Networking.Contracts
+  fullName: LiveStreamingServerNet.Networking.Contracts
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Networking
+    name: Networking
+    href: LiveStreamingServerNet.Networking.html
+  - name: .
+  - uid: LiveStreamingServerNet.Networking.Contracts
+    name: Contracts
+    href: LiveStreamingServerNet.Networking.Contracts.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Networking
+    name: Networking
+    href: LiveStreamingServerNet.Networking.html
+  - name: .
+  - uid: LiveStreamingServerNet.Networking.Contracts
+    name: Contracts
+    href: LiveStreamingServerNet.Networking.Contracts.html
+- uid: System.Object.LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Action)
+  commentId: M:LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  parent: LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+  definition: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  name: Lock(object, Action)
+  nameWithType: LockExtensions.Lock(object, Action)
+  fullName: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(object, System.Action)
+  nameWithType.vb: LockExtensions.Lock(Object, Action)
+  fullName.vb: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(Object, System.Action)
+  name.vb: Lock(Object, Action)
+  spec.csharp:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+  spec.vb:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+- uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  commentId: M:LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  isExternal: true
+  href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  name: Lock(object, Action)
+  nameWithType: LockExtensions.Lock(object, Action)
+  fullName: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(object, System.Action)
+  nameWithType.vb: LockExtensions.Lock(Object, Action)
+  fullName.vb: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(Object, System.Action)
+  name.vb: Lock(Object, Action)
+  spec.csharp:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+  spec.vb:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+- uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+  commentId: T:LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+  parent: LiveStreamingServerNet.Utilities.Extensions
+  href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html
+  name: LockExtensions
+  nameWithType: LockExtensions
+  fullName: LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+- uid: LiveStreamingServerNet.Utilities.Extensions
+  commentId: N:LiveStreamingServerNet.Utilities.Extensions
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.Utilities.Extensions
+  nameWithType: LiveStreamingServerNet.Utilities.Extensions
+  fullName: LiveStreamingServerNet.Utilities.Extensions
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities
+    name: Utilities
+    href: LiveStreamingServerNet.Utilities.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities.Extensions
+    name: Extensions
+    href: LiveStreamingServerNet.Utilities.Extensions.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities
+    name: Utilities
+    href: LiveStreamingServerNet.Utilities.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities.Extensions
+    name: Extensions
+    href: LiveStreamingServerNet.Utilities.Extensions.html
+- uid: LiveStreamingServerNet.Networking.Contracts.ITcpClient.Available*
+  commentId: Overload:LiveStreamingServerNet.Networking.Contracts.ITcpClient.Available
+  href: LiveStreamingServerNet.Networking.Contracts.ITcpClient.html#LiveStreamingServerNet_Networking_Contracts_ITcpClient_Available
+  name: Available
+  nameWithType: ITcpClient.Available
+  fullName: LiveStreamingServerNet.Networking.Contracts.ITcpClient.Available
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: LiveStreamingServerNet.Networking.Contracts.ITcpClient.Connected*
+  commentId: Overload:LiveStreamingServerNet.Networking.Contracts.ITcpClient.Connected
+  href: LiveStreamingServerNet.Networking.Contracts.ITcpClient.html#LiveStreamingServerNet_Networking_Contracts_ITcpClient_Connected
+  name: Connected
+  nameWithType: ITcpClient.Connected
+  fullName: LiveStreamingServerNet.Networking.Contracts.ITcpClient.Connected
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: LiveStreamingServerNet.Networking.Contracts.ITcpClient.ReceiveBufferSize*
+  commentId: Overload:LiveStreamingServerNet.Networking.Contracts.ITcpClient.ReceiveBufferSize
+  href: LiveStreamingServerNet.Networking.Contracts.ITcpClient.html#LiveStreamingServerNet_Networking_Contracts_ITcpClient_ReceiveBufferSize
+  name: ReceiveBufferSize
+  nameWithType: ITcpClient.ReceiveBufferSize
+  fullName: LiveStreamingServerNet.Networking.Contracts.ITcpClient.ReceiveBufferSize
+- uid: LiveStreamingServerNet.Networking.Contracts.ITcpClient.SendBufferSize*
+  commentId: Overload:LiveStreamingServerNet.Networking.Contracts.ITcpClient.SendBufferSize
+  href: LiveStreamingServerNet.Networking.Contracts.ITcpClient.html#LiveStreamingServerNet_Networking_Contracts_ITcpClient_SendBufferSize
+  name: SendBufferSize
+  nameWithType: ITcpClient.SendBufferSize
+  fullName: LiveStreamingServerNet.Networking.Contracts.ITcpClient.SendBufferSize
+- uid: LiveStreamingServerNet.Networking.Contracts.ITcpClient.ReceiveTimeout*
+  commentId: Overload:LiveStreamingServerNet.Networking.Contracts.ITcpClient.ReceiveTimeout
+  href: LiveStreamingServerNet.Networking.Contracts.ITcpClient.html#LiveStreamingServerNet_Networking_Contracts_ITcpClient_ReceiveTimeout
+  name: ReceiveTimeout
+  nameWithType: ITcpClient.ReceiveTimeout
+  fullName: LiveStreamingServerNet.Networking.Contracts.ITcpClient.ReceiveTimeout
+- uid: LiveStreamingServerNet.Networking.Contracts.ITcpClient.SendTimeout*
+  commentId: Overload:LiveStreamingServerNet.Networking.Contracts.ITcpClient.SendTimeout
+  href: LiveStreamingServerNet.Networking.Contracts.ITcpClient.html#LiveStreamingServerNet_Networking_Contracts_ITcpClient_SendTimeout
+  name: SendTimeout
+  nameWithType: ITcpClient.SendTimeout
+  fullName: LiveStreamingServerNet.Networking.Contracts.ITcpClient.SendTimeout
+- uid: LiveStreamingServerNet.Networking.Contracts.ITcpClient.NoDelay*
+  commentId: Overload:LiveStreamingServerNet.Networking.Contracts.ITcpClient.NoDelay
+  href: LiveStreamingServerNet.Networking.Contracts.ITcpClient.html#LiveStreamingServerNet_Networking_Contracts_ITcpClient_NoDelay
+  name: NoDelay
+  nameWithType: ITcpClient.NoDelay
+  fullName: LiveStreamingServerNet.Networking.Contracts.ITcpClient.NoDelay
+- uid: LiveStreamingServerNet.Networking.Contracts.ITcpClient.LingerState*
+  commentId: Overload:LiveStreamingServerNet.Networking.Contracts.ITcpClient.LingerState
+  href: LiveStreamingServerNet.Networking.Contracts.ITcpClient.html#LiveStreamingServerNet_Networking_Contracts_ITcpClient_LingerState
+  name: LingerState
+  nameWithType: ITcpClient.LingerState
+  fullName: LiveStreamingServerNet.Networking.Contracts.ITcpClient.LingerState
+- uid: System.Net.Sockets.LingerOption
+  commentId: T:System.Net.Sockets.LingerOption
+  parent: System.Net.Sockets
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.net.sockets.lingeroption
+  name: LingerOption
+  nameWithType: LingerOption
+  fullName: System.Net.Sockets.LingerOption
+- uid: System.Net.Sockets
+  commentId: N:System.Net.Sockets
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Net.Sockets
+  nameWithType: System.Net.Sockets
+  fullName: System.Net.Sockets
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Net
+    name: Net
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.net
+  - name: .
+  - uid: System.Net.Sockets
+    name: Sockets
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.net.sockets
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Net
+    name: Net
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.net
+  - name: .
+  - uid: System.Net.Sockets
+    name: Sockets
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.net.sockets

@@ -1,0 +1,23 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.Common.Exceptions
+  commentId: N:LiveStreamingServerNet.Common.Exceptions
+  id: LiveStreamingServerNet.Common.Exceptions
+  children:
+  - LiveStreamingServerNet.Common.Exceptions.ApiException
+  langs:
+  - csharp
+  - vb
+  name: LiveStreamingServerNet.Common.Exceptions
+  nameWithType: LiveStreamingServerNet.Common.Exceptions
+  fullName: LiveStreamingServerNet.Common.Exceptions
+  type: Namespace
+  assemblies:
+  - LiveStreamingServerNet
+references:
+- uid: LiveStreamingServerNet.Common.Exceptions.ApiException
+  commentId: T:LiveStreamingServerNet.Common.Exceptions.ApiException
+  href: LiveStreamingServerNet.Common.Exceptions.ApiException.html
+  name: ApiException
+  nameWithType: ApiException
+  fullName: LiveStreamingServerNet.Common.Exceptions.ApiException

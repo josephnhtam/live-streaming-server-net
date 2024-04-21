@@ -1,0 +1,225 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.Networking.Contracts.IClientHandlerFactory
+  commentId: T:LiveStreamingServerNet.Networking.Contracts.IClientHandlerFactory
+  id: IClientHandlerFactory
+  parent: LiveStreamingServerNet.Networking.Contracts
+  children:
+  - LiveStreamingServerNet.Networking.Contracts.IClientHandlerFactory.CreateClientHandler
+  langs:
+  - csharp
+  - vb
+  name: IClientHandlerFactory
+  nameWithType: IClientHandlerFactory
+  fullName: LiveStreamingServerNet.Networking.Contracts.IClientHandlerFactory
+  type: Interface
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/Contracts/IClientHandlerFactory.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: IClientHandlerFactory
+    path: ../src/LiveStreamingServerNet.Networking/Contracts/IClientHandlerFactory.cs
+    startLine: 2
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking.Contracts
+  syntax:
+    content: public interface IClientHandlerFactory
+    content.vb: Public Interface IClientHandlerFactory
+  extensionMethods:
+  - System.Object.LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Action)
+- uid: LiveStreamingServerNet.Networking.Contracts.IClientHandlerFactory.CreateClientHandler
+  commentId: M:LiveStreamingServerNet.Networking.Contracts.IClientHandlerFactory.CreateClientHandler
+  id: CreateClientHandler
+  parent: LiveStreamingServerNet.Networking.Contracts.IClientHandlerFactory
+  langs:
+  - csharp
+  - vb
+  name: CreateClientHandler()
+  nameWithType: IClientHandlerFactory.CreateClientHandler()
+  fullName: LiveStreamingServerNet.Networking.Contracts.IClientHandlerFactory.CreateClientHandler()
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/Contracts/IClientHandlerFactory.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: CreateClientHandler
+    path: ../src/LiveStreamingServerNet.Networking/Contracts/IClientHandlerFactory.cs
+    startLine: 4
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking.Contracts
+  syntax:
+    content: IClientHandler CreateClientHandler()
+    return:
+      type: LiveStreamingServerNet.Networking.Contracts.IClientHandler
+    content.vb: Function CreateClientHandler() As IClientHandler
+  overload: LiveStreamingServerNet.Networking.Contracts.IClientHandlerFactory.CreateClientHandler*
+references:
+- uid: LiveStreamingServerNet.Networking.Contracts
+  commentId: N:LiveStreamingServerNet.Networking.Contracts
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.Networking.Contracts
+  nameWithType: LiveStreamingServerNet.Networking.Contracts
+  fullName: LiveStreamingServerNet.Networking.Contracts
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Networking
+    name: Networking
+    href: LiveStreamingServerNet.Networking.html
+  - name: .
+  - uid: LiveStreamingServerNet.Networking.Contracts
+    name: Contracts
+    href: LiveStreamingServerNet.Networking.Contracts.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Networking
+    name: Networking
+    href: LiveStreamingServerNet.Networking.html
+  - name: .
+  - uid: LiveStreamingServerNet.Networking.Contracts
+    name: Contracts
+    href: LiveStreamingServerNet.Networking.Contracts.html
+- uid: System.Object.LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Action)
+  commentId: M:LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  parent: LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+  definition: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  name: Lock(object, Action)
+  nameWithType: LockExtensions.Lock(object, Action)
+  fullName: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(object, System.Action)
+  nameWithType.vb: LockExtensions.Lock(Object, Action)
+  fullName.vb: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(Object, System.Action)
+  name.vb: Lock(Object, Action)
+  spec.csharp:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+  spec.vb:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+- uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  commentId: M:LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  isExternal: true
+  href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  name: Lock(object, Action)
+  nameWithType: LockExtensions.Lock(object, Action)
+  fullName: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(object, System.Action)
+  nameWithType.vb: LockExtensions.Lock(Object, Action)
+  fullName.vb: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(Object, System.Action)
+  name.vb: Lock(Object, Action)
+  spec.csharp:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+  spec.vb:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+- uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+  commentId: T:LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+  parent: LiveStreamingServerNet.Utilities.Extensions
+  href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html
+  name: LockExtensions
+  nameWithType: LockExtensions
+  fullName: LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+- uid: LiveStreamingServerNet.Utilities.Extensions
+  commentId: N:LiveStreamingServerNet.Utilities.Extensions
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.Utilities.Extensions
+  nameWithType: LiveStreamingServerNet.Utilities.Extensions
+  fullName: LiveStreamingServerNet.Utilities.Extensions
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities
+    name: Utilities
+    href: LiveStreamingServerNet.Utilities.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities.Extensions
+    name: Extensions
+    href: LiveStreamingServerNet.Utilities.Extensions.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities
+    name: Utilities
+    href: LiveStreamingServerNet.Utilities.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities.Extensions
+    name: Extensions
+    href: LiveStreamingServerNet.Utilities.Extensions.html
+- uid: LiveStreamingServerNet.Networking.Contracts.IClientHandlerFactory.CreateClientHandler*
+  commentId: Overload:LiveStreamingServerNet.Networking.Contracts.IClientHandlerFactory.CreateClientHandler
+  href: LiveStreamingServerNet.Networking.Contracts.IClientHandlerFactory.html#LiveStreamingServerNet_Networking_Contracts_IClientHandlerFactory_CreateClientHandler
+  name: CreateClientHandler
+  nameWithType: IClientHandlerFactory.CreateClientHandler
+  fullName: LiveStreamingServerNet.Networking.Contracts.IClientHandlerFactory.CreateClientHandler
+- uid: LiveStreamingServerNet.Networking.Contracts.IClientHandler
+  commentId: T:LiveStreamingServerNet.Networking.Contracts.IClientHandler
+  parent: LiveStreamingServerNet.Networking.Contracts
+  href: LiveStreamingServerNet.Networking.Contracts.IClientHandler.html
+  name: IClientHandler
+  nameWithType: IClientHandler
+  fullName: LiveStreamingServerNet.Networking.Contracts.IClientHandler

@@ -1,0 +1,723 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.Transmuxer.Installer.TransmuxerBuilder
+  commentId: T:LiveStreamingServerNet.Transmuxer.Installer.TransmuxerBuilder
+  id: TransmuxerBuilder
+  parent: LiveStreamingServerNet.Transmuxer.Installer
+  children:
+  - LiveStreamingServerNet.Transmuxer.Installer.TransmuxerBuilder.#ctor(Microsoft.Extensions.DependencyInjection.IServiceCollection)
+  - LiveStreamingServerNet.Transmuxer.Installer.TransmuxerBuilder.Services
+  langs:
+  - csharp
+  - vb
+  name: TransmuxerBuilder
+  nameWithType: TransmuxerBuilder
+  fullName: LiveStreamingServerNet.Transmuxer.Installer.TransmuxerBuilder
+  type: Class
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Transmuxer/Installer/TransmuxerInstaller.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: TransmuxerBuilder
+    path: ../src/LiveStreamingServerNet.Transmuxer/Installer/TransmuxerInstaller.cs
+    startLine: 33
+  assemblies:
+  - LiveStreamingServerNet.Transmuxer
+  namespace: LiveStreamingServerNet.Transmuxer.Installer
+  syntax:
+    content: 'public class TransmuxerBuilder : ITransmuxerBuilder'
+    content.vb: Public Class TransmuxerBuilder Implements ITransmuxerBuilder
+  inheritance:
+  - System.Object
+  implements:
+  - LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerBuilder
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  extensionMethods:
+  - LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerBuilder.LiveStreamingServerNet.Transmuxer.Installer.FFmpegTranmuxerInstaller.AddFFmpeg(System.Action{LiveStreamingServerNet.Transmuxer.Configurations.FFmpegTransmuxerFactoryConfiguration})
+  - System.Object.LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Action)
+- uid: LiveStreamingServerNet.Transmuxer.Installer.TransmuxerBuilder.Services
+  commentId: P:LiveStreamingServerNet.Transmuxer.Installer.TransmuxerBuilder.Services
+  id: Services
+  parent: LiveStreamingServerNet.Transmuxer.Installer.TransmuxerBuilder
+  langs:
+  - csharp
+  - vb
+  name: Services
+  nameWithType: TransmuxerBuilder.Services
+  fullName: LiveStreamingServerNet.Transmuxer.Installer.TransmuxerBuilder.Services
+  type: Property
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Transmuxer/Installer/TransmuxerInstaller.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: Services
+    path: ../src/LiveStreamingServerNet.Transmuxer/Installer/TransmuxerInstaller.cs
+    startLine: 35
+  assemblies:
+  - LiveStreamingServerNet.Transmuxer
+  namespace: LiveStreamingServerNet.Transmuxer.Installer
+  example: []
+  syntax:
+    content: public IServiceCollection Services { get; }
+    parameters: []
+    return:
+      type: Microsoft.Extensions.DependencyInjection.IServiceCollection
+    content.vb: Public ReadOnly Property Services As IServiceCollection
+  overload: LiveStreamingServerNet.Transmuxer.Installer.TransmuxerBuilder.Services*
+  implements:
+  - LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerBuilder.Services
+- uid: LiveStreamingServerNet.Transmuxer.Installer.TransmuxerBuilder.#ctor(Microsoft.Extensions.DependencyInjection.IServiceCollection)
+  commentId: M:LiveStreamingServerNet.Transmuxer.Installer.TransmuxerBuilder.#ctor(Microsoft.Extensions.DependencyInjection.IServiceCollection)
+  id: '#ctor(Microsoft.Extensions.DependencyInjection.IServiceCollection)'
+  parent: LiveStreamingServerNet.Transmuxer.Installer.TransmuxerBuilder
+  langs:
+  - csharp
+  - vb
+  name: TransmuxerBuilder(IServiceCollection)
+  nameWithType: TransmuxerBuilder.TransmuxerBuilder(IServiceCollection)
+  fullName: LiveStreamingServerNet.Transmuxer.Installer.TransmuxerBuilder.TransmuxerBuilder(Microsoft.Extensions.DependencyInjection.IServiceCollection)
+  type: Constructor
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Transmuxer/Installer/TransmuxerInstaller.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: .ctor
+    path: ../src/LiveStreamingServerNet.Transmuxer/Installer/TransmuxerInstaller.cs
+    startLine: 37
+  assemblies:
+  - LiveStreamingServerNet.Transmuxer
+  namespace: LiveStreamingServerNet.Transmuxer.Installer
+  syntax:
+    content: public TransmuxerBuilder(IServiceCollection services)
+    parameters:
+    - id: services
+      type: Microsoft.Extensions.DependencyInjection.IServiceCollection
+    content.vb: Public Sub New(services As IServiceCollection)
+  overload: LiveStreamingServerNet.Transmuxer.Installer.TransmuxerBuilder.#ctor*
+  nameWithType.vb: TransmuxerBuilder.New(IServiceCollection)
+  fullName.vb: LiveStreamingServerNet.Transmuxer.Installer.TransmuxerBuilder.New(Microsoft.Extensions.DependencyInjection.IServiceCollection)
+  name.vb: New(IServiceCollection)
+references:
+- uid: LiveStreamingServerNet.Transmuxer.Installer
+  commentId: N:LiveStreamingServerNet.Transmuxer.Installer
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.Transmuxer.Installer
+  nameWithType: LiveStreamingServerNet.Transmuxer.Installer
+  fullName: LiveStreamingServerNet.Transmuxer.Installer
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Transmuxer
+    name: Transmuxer
+    href: LiveStreamingServerNet.Transmuxer.html
+  - name: .
+  - uid: LiveStreamingServerNet.Transmuxer.Installer
+    name: Installer
+    href: LiveStreamingServerNet.Transmuxer.Installer.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Transmuxer
+    name: Transmuxer
+    href: LiveStreamingServerNet.Transmuxer.html
+  - name: .
+  - uid: LiveStreamingServerNet.Transmuxer.Installer
+    name: Installer
+    href: LiveStreamingServerNet.Transmuxer.Installer.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerBuilder
+  commentId: T:LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerBuilder
+  parent: LiveStreamingServerNet.Transmuxer.Installer.Contracts
+  href: LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerBuilder.html
+  name: ITransmuxerBuilder
+  nameWithType: ITransmuxerBuilder
+  fullName: LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerBuilder
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerBuilder.LiveStreamingServerNet.Transmuxer.Installer.FFmpegTranmuxerInstaller.AddFFmpeg(System.Action{LiveStreamingServerNet.Transmuxer.Configurations.FFmpegTransmuxerFactoryConfiguration})
+  commentId: M:LiveStreamingServerNet.Transmuxer.Installer.FFmpegTranmuxerInstaller.AddFFmpeg(LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerBuilder,System.Action{LiveStreamingServerNet.Transmuxer.Configurations.FFmpegTransmuxerFactoryConfiguration})
+  parent: LiveStreamingServerNet.Transmuxer.Installer.FFmpegTranmuxerInstaller
+  definition: LiveStreamingServerNet.Transmuxer.Installer.FFmpegTranmuxerInstaller.AddFFmpeg(LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerBuilder,System.Action{LiveStreamingServerNet.Transmuxer.Configurations.FFmpegTransmuxerFactoryConfiguration})
+  href: LiveStreamingServerNet.Transmuxer.Installer.FFmpegTranmuxerInstaller.html#LiveStreamingServerNet_Transmuxer_Installer_FFmpegTranmuxerInstaller_AddFFmpeg_LiveStreamingServerNet_Transmuxer_Installer_Contracts_ITransmuxerBuilder_System_Action_LiveStreamingServerNet_Transmuxer_Configurations_FFmpegTransmuxerFactoryConfiguration__
+  name: AddFFmpeg(ITransmuxerBuilder, Action<FFmpegTransmuxerFactoryConfiguration>)
+  nameWithType: FFmpegTranmuxerInstaller.AddFFmpeg(ITransmuxerBuilder, Action<FFmpegTransmuxerFactoryConfiguration>)
+  fullName: LiveStreamingServerNet.Transmuxer.Installer.FFmpegTranmuxerInstaller.AddFFmpeg(LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerBuilder, System.Action<LiveStreamingServerNet.Transmuxer.Configurations.FFmpegTransmuxerFactoryConfiguration>)
+  nameWithType.vb: FFmpegTranmuxerInstaller.AddFFmpeg(ITransmuxerBuilder, Action(Of FFmpegTransmuxerFactoryConfiguration))
+  fullName.vb: LiveStreamingServerNet.Transmuxer.Installer.FFmpegTranmuxerInstaller.AddFFmpeg(LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerBuilder, System.Action(Of LiveStreamingServerNet.Transmuxer.Configurations.FFmpegTransmuxerFactoryConfiguration))
+  name.vb: AddFFmpeg(ITransmuxerBuilder, Action(Of FFmpegTransmuxerFactoryConfiguration))
+  spec.csharp:
+  - uid: LiveStreamingServerNet.Transmuxer.Installer.FFmpegTranmuxerInstaller.AddFFmpeg(LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerBuilder,System.Action{LiveStreamingServerNet.Transmuxer.Configurations.FFmpegTransmuxerFactoryConfiguration})
+    name: AddFFmpeg
+    href: LiveStreamingServerNet.Transmuxer.Installer.FFmpegTranmuxerInstaller.html#LiveStreamingServerNet_Transmuxer_Installer_FFmpegTranmuxerInstaller_AddFFmpeg_LiveStreamingServerNet_Transmuxer_Installer_Contracts_ITransmuxerBuilder_System_Action_LiveStreamingServerNet_Transmuxer_Configurations_FFmpegTransmuxerFactoryConfiguration__
+  - name: (
+  - uid: LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerBuilder
+    name: ITransmuxerBuilder
+    href: LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerBuilder.html
+  - name: ','
+  - name: " "
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: <
+  - uid: LiveStreamingServerNet.Transmuxer.Configurations.FFmpegTransmuxerFactoryConfiguration
+    name: FFmpegTransmuxerFactoryConfiguration
+    href: LiveStreamingServerNet.Transmuxer.Configurations.FFmpegTransmuxerFactoryConfiguration.html
+  - name: '>'
+  - name: )
+  spec.vb:
+  - uid: LiveStreamingServerNet.Transmuxer.Installer.FFmpegTranmuxerInstaller.AddFFmpeg(LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerBuilder,System.Action{LiveStreamingServerNet.Transmuxer.Configurations.FFmpegTransmuxerFactoryConfiguration})
+    name: AddFFmpeg
+    href: LiveStreamingServerNet.Transmuxer.Installer.FFmpegTranmuxerInstaller.html#LiveStreamingServerNet_Transmuxer_Installer_FFmpegTranmuxerInstaller_AddFFmpeg_LiveStreamingServerNet_Transmuxer_Installer_Contracts_ITransmuxerBuilder_System_Action_LiveStreamingServerNet_Transmuxer_Configurations_FFmpegTransmuxerFactoryConfiguration__
+  - name: (
+  - uid: LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerBuilder
+    name: ITransmuxerBuilder
+    href: LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerBuilder.html
+  - name: ','
+  - name: " "
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: LiveStreamingServerNet.Transmuxer.Configurations.FFmpegTransmuxerFactoryConfiguration
+    name: FFmpegTransmuxerFactoryConfiguration
+    href: LiveStreamingServerNet.Transmuxer.Configurations.FFmpegTransmuxerFactoryConfiguration.html
+  - name: )
+  - name: )
+- uid: System.Object.LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Action)
+  commentId: M:LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  parent: LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+  definition: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  name: Lock(object, Action)
+  nameWithType: LockExtensions.Lock(object, Action)
+  fullName: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(object, System.Action)
+  nameWithType.vb: LockExtensions.Lock(Object, Action)
+  fullName.vb: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(Object, System.Action)
+  name.vb: Lock(Object, Action)
+  spec.csharp:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+  spec.vb:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: LiveStreamingServerNet.Transmuxer.Installer.Contracts
+  commentId: N:LiveStreamingServerNet.Transmuxer.Installer.Contracts
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.Transmuxer.Installer.Contracts
+  nameWithType: LiveStreamingServerNet.Transmuxer.Installer.Contracts
+  fullName: LiveStreamingServerNet.Transmuxer.Installer.Contracts
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Transmuxer
+    name: Transmuxer
+    href: LiveStreamingServerNet.Transmuxer.html
+  - name: .
+  - uid: LiveStreamingServerNet.Transmuxer.Installer
+    name: Installer
+    href: LiveStreamingServerNet.Transmuxer.Installer.html
+  - name: .
+  - uid: LiveStreamingServerNet.Transmuxer.Installer.Contracts
+    name: Contracts
+    href: LiveStreamingServerNet.Transmuxer.Installer.Contracts.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Transmuxer
+    name: Transmuxer
+    href: LiveStreamingServerNet.Transmuxer.html
+  - name: .
+  - uid: LiveStreamingServerNet.Transmuxer.Installer
+    name: Installer
+    href: LiveStreamingServerNet.Transmuxer.Installer.html
+  - name: .
+  - uid: LiveStreamingServerNet.Transmuxer.Installer.Contracts
+    name: Contracts
+    href: LiveStreamingServerNet.Transmuxer.Installer.Contracts.html
+- uid: LiveStreamingServerNet.Transmuxer.Installer.FFmpegTranmuxerInstaller.AddFFmpeg(LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerBuilder,System.Action{LiveStreamingServerNet.Transmuxer.Configurations.FFmpegTransmuxerFactoryConfiguration})
+  commentId: M:LiveStreamingServerNet.Transmuxer.Installer.FFmpegTranmuxerInstaller.AddFFmpeg(LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerBuilder,System.Action{LiveStreamingServerNet.Transmuxer.Configurations.FFmpegTransmuxerFactoryConfiguration})
+  isExternal: true
+  href: LiveStreamingServerNet.Transmuxer.Installer.FFmpegTranmuxerInstaller.html#LiveStreamingServerNet_Transmuxer_Installer_FFmpegTranmuxerInstaller_AddFFmpeg_LiveStreamingServerNet_Transmuxer_Installer_Contracts_ITransmuxerBuilder_System_Action_LiveStreamingServerNet_Transmuxer_Configurations_FFmpegTransmuxerFactoryConfiguration__
+  name: AddFFmpeg(ITransmuxerBuilder, Action<FFmpegTransmuxerFactoryConfiguration>)
+  nameWithType: FFmpegTranmuxerInstaller.AddFFmpeg(ITransmuxerBuilder, Action<FFmpegTransmuxerFactoryConfiguration>)
+  fullName: LiveStreamingServerNet.Transmuxer.Installer.FFmpegTranmuxerInstaller.AddFFmpeg(LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerBuilder, System.Action<LiveStreamingServerNet.Transmuxer.Configurations.FFmpegTransmuxerFactoryConfiguration>)
+  nameWithType.vb: FFmpegTranmuxerInstaller.AddFFmpeg(ITransmuxerBuilder, Action(Of FFmpegTransmuxerFactoryConfiguration))
+  fullName.vb: LiveStreamingServerNet.Transmuxer.Installer.FFmpegTranmuxerInstaller.AddFFmpeg(LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerBuilder, System.Action(Of LiveStreamingServerNet.Transmuxer.Configurations.FFmpegTransmuxerFactoryConfiguration))
+  name.vb: AddFFmpeg(ITransmuxerBuilder, Action(Of FFmpegTransmuxerFactoryConfiguration))
+  spec.csharp:
+  - uid: LiveStreamingServerNet.Transmuxer.Installer.FFmpegTranmuxerInstaller.AddFFmpeg(LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerBuilder,System.Action{LiveStreamingServerNet.Transmuxer.Configurations.FFmpegTransmuxerFactoryConfiguration})
+    name: AddFFmpeg
+    href: LiveStreamingServerNet.Transmuxer.Installer.FFmpegTranmuxerInstaller.html#LiveStreamingServerNet_Transmuxer_Installer_FFmpegTranmuxerInstaller_AddFFmpeg_LiveStreamingServerNet_Transmuxer_Installer_Contracts_ITransmuxerBuilder_System_Action_LiveStreamingServerNet_Transmuxer_Configurations_FFmpegTransmuxerFactoryConfiguration__
+  - name: (
+  - uid: LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerBuilder
+    name: ITransmuxerBuilder
+    href: LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerBuilder.html
+  - name: ','
+  - name: " "
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: <
+  - uid: LiveStreamingServerNet.Transmuxer.Configurations.FFmpegTransmuxerFactoryConfiguration
+    name: FFmpegTransmuxerFactoryConfiguration
+    href: LiveStreamingServerNet.Transmuxer.Configurations.FFmpegTransmuxerFactoryConfiguration.html
+  - name: '>'
+  - name: )
+  spec.vb:
+  - uid: LiveStreamingServerNet.Transmuxer.Installer.FFmpegTranmuxerInstaller.AddFFmpeg(LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerBuilder,System.Action{LiveStreamingServerNet.Transmuxer.Configurations.FFmpegTransmuxerFactoryConfiguration})
+    name: AddFFmpeg
+    href: LiveStreamingServerNet.Transmuxer.Installer.FFmpegTranmuxerInstaller.html#LiveStreamingServerNet_Transmuxer_Installer_FFmpegTranmuxerInstaller_AddFFmpeg_LiveStreamingServerNet_Transmuxer_Installer_Contracts_ITransmuxerBuilder_System_Action_LiveStreamingServerNet_Transmuxer_Configurations_FFmpegTransmuxerFactoryConfiguration__
+  - name: (
+  - uid: LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerBuilder
+    name: ITransmuxerBuilder
+    href: LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerBuilder.html
+  - name: ','
+  - name: " "
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: LiveStreamingServerNet.Transmuxer.Configurations.FFmpegTransmuxerFactoryConfiguration
+    name: FFmpegTransmuxerFactoryConfiguration
+    href: LiveStreamingServerNet.Transmuxer.Configurations.FFmpegTransmuxerFactoryConfiguration.html
+  - name: )
+  - name: )
+- uid: LiveStreamingServerNet.Transmuxer.Installer.FFmpegTranmuxerInstaller
+  commentId: T:LiveStreamingServerNet.Transmuxer.Installer.FFmpegTranmuxerInstaller
+  parent: LiveStreamingServerNet.Transmuxer.Installer
+  href: LiveStreamingServerNet.Transmuxer.Installer.FFmpegTranmuxerInstaller.html
+  name: FFmpegTranmuxerInstaller
+  nameWithType: FFmpegTranmuxerInstaller
+  fullName: LiveStreamingServerNet.Transmuxer.Installer.FFmpegTranmuxerInstaller
+- uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  commentId: M:LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  isExternal: true
+  href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  name: Lock(object, Action)
+  nameWithType: LockExtensions.Lock(object, Action)
+  fullName: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(object, System.Action)
+  nameWithType.vb: LockExtensions.Lock(Object, Action)
+  fullName.vb: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(Object, System.Action)
+  name.vb: Lock(Object, Action)
+  spec.csharp:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+  spec.vb:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+- uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+  commentId: T:LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+  parent: LiveStreamingServerNet.Utilities.Extensions
+  href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html
+  name: LockExtensions
+  nameWithType: LockExtensions
+  fullName: LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+- uid: LiveStreamingServerNet.Utilities.Extensions
+  commentId: N:LiveStreamingServerNet.Utilities.Extensions
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.Utilities.Extensions
+  nameWithType: LiveStreamingServerNet.Utilities.Extensions
+  fullName: LiveStreamingServerNet.Utilities.Extensions
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities
+    name: Utilities
+    href: LiveStreamingServerNet.Utilities.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities.Extensions
+    name: Extensions
+    href: LiveStreamingServerNet.Utilities.Extensions.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities
+    name: Utilities
+    href: LiveStreamingServerNet.Utilities.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities.Extensions
+    name: Extensions
+    href: LiveStreamingServerNet.Utilities.Extensions.html
+- uid: LiveStreamingServerNet.Transmuxer.Installer.TransmuxerBuilder.Services*
+  commentId: Overload:LiveStreamingServerNet.Transmuxer.Installer.TransmuxerBuilder.Services
+  href: LiveStreamingServerNet.Transmuxer.Installer.TransmuxerBuilder.html#LiveStreamingServerNet_Transmuxer_Installer_TransmuxerBuilder_Services
+  name: Services
+  nameWithType: TransmuxerBuilder.Services
+  fullName: LiveStreamingServerNet.Transmuxer.Installer.TransmuxerBuilder.Services
+- uid: LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerBuilder.Services
+  commentId: P:LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerBuilder.Services
+  parent: LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerBuilder
+  href: LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerBuilder.html#LiveStreamingServerNet_Transmuxer_Installer_Contracts_ITransmuxerBuilder_Services
+  name: Services
+  nameWithType: ITransmuxerBuilder.Services
+  fullName: LiveStreamingServerNet.Transmuxer.Installer.Contracts.ITransmuxerBuilder.Services
+- uid: Microsoft.Extensions.DependencyInjection.IServiceCollection
+  commentId: T:Microsoft.Extensions.DependencyInjection.IServiceCollection
+  parent: Microsoft.Extensions.DependencyInjection
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.extensions.dependencyinjection.iservicecollection
+  name: IServiceCollection
+  nameWithType: IServiceCollection
+  fullName: Microsoft.Extensions.DependencyInjection.IServiceCollection
+- uid: Microsoft.Extensions.DependencyInjection
+  commentId: N:Microsoft.Extensions.DependencyInjection
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft
+  name: Microsoft.Extensions.DependencyInjection
+  nameWithType: Microsoft.Extensions.DependencyInjection
+  fullName: Microsoft.Extensions.DependencyInjection
+  spec.csharp:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.Extensions
+    name: Extensions
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.extensions
+  - name: .
+  - uid: Microsoft.Extensions.DependencyInjection
+    name: DependencyInjection
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.extensions.dependencyinjection
+  spec.vb:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.Extensions
+    name: Extensions
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.extensions
+  - name: .
+  - uid: Microsoft.Extensions.DependencyInjection
+    name: DependencyInjection
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.extensions.dependencyinjection
+- uid: LiveStreamingServerNet.Transmuxer.Installer.TransmuxerBuilder.#ctor*
+  commentId: Overload:LiveStreamingServerNet.Transmuxer.Installer.TransmuxerBuilder.#ctor
+  href: LiveStreamingServerNet.Transmuxer.Installer.TransmuxerBuilder.html#LiveStreamingServerNet_Transmuxer_Installer_TransmuxerBuilder__ctor_Microsoft_Extensions_DependencyInjection_IServiceCollection_
+  name: TransmuxerBuilder
+  nameWithType: TransmuxerBuilder.TransmuxerBuilder
+  fullName: LiveStreamingServerNet.Transmuxer.Installer.TransmuxerBuilder.TransmuxerBuilder
+  nameWithType.vb: TransmuxerBuilder.New
+  fullName.vb: LiveStreamingServerNet.Transmuxer.Installer.TransmuxerBuilder.New
+  name.vb: New

@@ -1,0 +1,23 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.KubernetesPodDemo
+  commentId: N:LiveStreamingServerNet.KubernetesPodDemo
+  id: LiveStreamingServerNet.KubernetesPodDemo
+  children:
+  - LiveStreamingServerNet.KubernetesPodDemo.Program
+  langs:
+  - csharp
+  - vb
+  name: LiveStreamingServerNet.KubernetesPodDemo
+  nameWithType: LiveStreamingServerNet.KubernetesPodDemo
+  fullName: LiveStreamingServerNet.KubernetesPodDemo
+  type: Namespace
+  assemblies:
+  - LiveStreamingServerNet.KubernetesPodDemo
+references:
+- uid: LiveStreamingServerNet.KubernetesPodDemo.Program
+  commentId: T:LiveStreamingServerNet.KubernetesPodDemo.Program
+  href: LiveStreamingServerNet.KubernetesPodDemo.Program.html
+  name: Program
+  nameWithType: Program
+  fullName: LiveStreamingServerNet.KubernetesPodDemo.Program

@@ -1,0 +1,281 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Contracts.IHlsObjectPathResolver
+  commentId: T:LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Contracts.IHlsObjectPathResolver
+  id: IHlsObjectPathResolver
+  parent: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Contracts
+  children:
+  - LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Contracts.IHlsObjectPathResolver.ResolveObjectPath(LiveStreamingServerNet.Transmuxer.TransmuxingContext,System.String)
+  langs:
+  - csharp
+  - vb
+  name: IHlsObjectPathResolver
+  nameWithType: IHlsObjectPathResolver
+  fullName: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Contracts.IHlsObjectPathResolver
+  type: Interface
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Transmuxer.GoogleCloudStorage/Contracts/IHlsObjectPathResolver.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: IHlsObjectPathResolver
+    path: ../src/LiveStreamingServerNet.Transmuxer.GoogleCloudStorage/Contracts/IHlsObjectPathResolver.cs
+    startLine: 3
+  assemblies:
+  - LiveStreamingServerNet.Transmuxer.GoogleCloudStorage
+  namespace: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Contracts
+  syntax:
+    content: public interface IHlsObjectPathResolver
+    content.vb: Public Interface IHlsObjectPathResolver
+  extensionMethods:
+  - System.Object.LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Action)
+- uid: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Contracts.IHlsObjectPathResolver.ResolveObjectPath(LiveStreamingServerNet.Transmuxer.TransmuxingContext,System.String)
+  commentId: M:LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Contracts.IHlsObjectPathResolver.ResolveObjectPath(LiveStreamingServerNet.Transmuxer.TransmuxingContext,System.String)
+  id: ResolveObjectPath(LiveStreamingServerNet.Transmuxer.TransmuxingContext,System.String)
+  parent: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Contracts.IHlsObjectPathResolver
+  langs:
+  - csharp
+  - vb
+  name: ResolveObjectPath(TransmuxingContext, string)
+  nameWithType: IHlsObjectPathResolver.ResolveObjectPath(TransmuxingContext, string)
+  fullName: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Contracts.IHlsObjectPathResolver.ResolveObjectPath(LiveStreamingServerNet.Transmuxer.TransmuxingContext, string)
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Transmuxer.GoogleCloudStorage/Contracts/IHlsObjectPathResolver.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: ResolveObjectPath
+    path: ../src/LiveStreamingServerNet.Transmuxer.GoogleCloudStorage/Contracts/IHlsObjectPathResolver.cs
+    startLine: 5
+  assemblies:
+  - LiveStreamingServerNet.Transmuxer.GoogleCloudStorage
+  namespace: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Contracts
+  syntax:
+    content: string ResolveObjectPath(TransmuxingContext context, string fileName)
+    parameters:
+    - id: context
+      type: LiveStreamingServerNet.Transmuxer.TransmuxingContext
+    - id: fileName
+      type: System.String
+    return:
+      type: System.String
+    content.vb: Function ResolveObjectPath(context As TransmuxingContext, fileName As String) As String
+  overload: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Contracts.IHlsObjectPathResolver.ResolveObjectPath*
+  nameWithType.vb: IHlsObjectPathResolver.ResolveObjectPath(TransmuxingContext, String)
+  fullName.vb: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Contracts.IHlsObjectPathResolver.ResolveObjectPath(LiveStreamingServerNet.Transmuxer.TransmuxingContext, String)
+  name.vb: ResolveObjectPath(TransmuxingContext, String)
+references:
+- uid: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Contracts
+  commentId: N:LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Contracts
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Contracts
+  nameWithType: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Contracts
+  fullName: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Contracts
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Transmuxer
+    name: Transmuxer
+    href: LiveStreamingServerNet.Transmuxer.html
+  - name: .
+  - uid: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage
+    name: GoogleCloudStorage
+    href: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.html
+  - name: .
+  - uid: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Contracts
+    name: Contracts
+    href: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Contracts.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Transmuxer
+    name: Transmuxer
+    href: LiveStreamingServerNet.Transmuxer.html
+  - name: .
+  - uid: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage
+    name: GoogleCloudStorage
+    href: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.html
+  - name: .
+  - uid: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Contracts
+    name: Contracts
+    href: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Contracts.html
+- uid: System.Object.LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Action)
+  commentId: M:LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  parent: LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+  definition: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  name: Lock(object, Action)
+  nameWithType: LockExtensions.Lock(object, Action)
+  fullName: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(object, System.Action)
+  nameWithType.vb: LockExtensions.Lock(Object, Action)
+  fullName.vb: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(Object, System.Action)
+  name.vb: Lock(Object, Action)
+  spec.csharp:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+  spec.vb:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+- uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  commentId: M:LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  isExternal: true
+  href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  name: Lock(object, Action)
+  nameWithType: LockExtensions.Lock(object, Action)
+  fullName: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(object, System.Action)
+  nameWithType.vb: LockExtensions.Lock(Object, Action)
+  fullName.vb: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(Object, System.Action)
+  name.vb: Lock(Object, Action)
+  spec.csharp:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+  spec.vb:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+- uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+  commentId: T:LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+  parent: LiveStreamingServerNet.Utilities.Extensions
+  href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html
+  name: LockExtensions
+  nameWithType: LockExtensions
+  fullName: LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+- uid: LiveStreamingServerNet.Utilities.Extensions
+  commentId: N:LiveStreamingServerNet.Utilities.Extensions
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.Utilities.Extensions
+  nameWithType: LiveStreamingServerNet.Utilities.Extensions
+  fullName: LiveStreamingServerNet.Utilities.Extensions
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities
+    name: Utilities
+    href: LiveStreamingServerNet.Utilities.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities.Extensions
+    name: Extensions
+    href: LiveStreamingServerNet.Utilities.Extensions.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities
+    name: Utilities
+    href: LiveStreamingServerNet.Utilities.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities.Extensions
+    name: Extensions
+    href: LiveStreamingServerNet.Utilities.Extensions.html
+- uid: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Contracts.IHlsObjectPathResolver.ResolveObjectPath*
+  commentId: Overload:LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Contracts.IHlsObjectPathResolver.ResolveObjectPath
+  href: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Contracts.IHlsObjectPathResolver.html#LiveStreamingServerNet_Transmuxer_GoogleCloudStorage_Contracts_IHlsObjectPathResolver_ResolveObjectPath_LiveStreamingServerNet_Transmuxer_TransmuxingContext_System_String_
+  name: ResolveObjectPath
+  nameWithType: IHlsObjectPathResolver.ResolveObjectPath
+  fullName: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Contracts.IHlsObjectPathResolver.ResolveObjectPath
+- uid: LiveStreamingServerNet.Transmuxer.TransmuxingContext
+  commentId: T:LiveStreamingServerNet.Transmuxer.TransmuxingContext
+  parent: LiveStreamingServerNet.Transmuxer
+  href: LiveStreamingServerNet.Transmuxer.TransmuxingContext.html
+  name: TransmuxingContext
+  nameWithType: TransmuxingContext
+  fullName: LiveStreamingServerNet.Transmuxer.TransmuxingContext
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: LiveStreamingServerNet.Transmuxer
+  commentId: N:LiveStreamingServerNet.Transmuxer
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.Transmuxer
+  nameWithType: LiveStreamingServerNet.Transmuxer
+  fullName: LiveStreamingServerNet.Transmuxer
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Transmuxer
+    name: Transmuxer
+    href: LiveStreamingServerNet.Transmuxer.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Transmuxer
+    name: Transmuxer
+    href: LiveStreamingServerNet.Transmuxer.html
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System

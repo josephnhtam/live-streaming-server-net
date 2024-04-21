@@ -1,0 +1,67 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.Transmuxer
+  commentId: N:LiveStreamingServerNet.Transmuxer
+  id: LiveStreamingServerNet.Transmuxer
+  children:
+  - LiveStreamingServerNet.Transmuxer.DefaultInputPathResolver
+  - LiveStreamingServerNet.Transmuxer.FFmpegTransmuxer
+  - LiveStreamingServerNet.Transmuxer.FFmpegTransmuxerFactory
+  - LiveStreamingServerNet.Transmuxer.TransmuxingContext
+  langs:
+  - csharp
+  - vb
+  name: LiveStreamingServerNet.Transmuxer
+  nameWithType: LiveStreamingServerNet.Transmuxer
+  fullName: LiveStreamingServerNet.Transmuxer
+  type: Namespace
+  assemblies:
+  - LiveStreamingServerNet.Transmuxer
+references:
+- uid: LiveStreamingServerNet.Transmuxer.DefaultInputPathResolver
+  commentId: T:LiveStreamingServerNet.Transmuxer.DefaultInputPathResolver
+  href: LiveStreamingServerNet.Transmuxer.DefaultInputPathResolver.html
+  name: DefaultInputPathResolver
+  nameWithType: DefaultInputPathResolver
+  fullName: LiveStreamingServerNet.Transmuxer.DefaultInputPathResolver
+- uid: LiveStreamingServerNet.Transmuxer.FFmpegTransmuxer
+  commentId: T:LiveStreamingServerNet.Transmuxer.FFmpegTransmuxer
+  href: LiveStreamingServerNet.Transmuxer.FFmpegTransmuxer.html
+  name: FFmpegTransmuxer
+  nameWithType: FFmpegTransmuxer
+  fullName: LiveStreamingServerNet.Transmuxer.FFmpegTransmuxer
+- uid: LiveStreamingServerNet.Transmuxer.FFmpegTransmuxerFactory
+  commentId: T:LiveStreamingServerNet.Transmuxer.FFmpegTransmuxerFactory
+  href: LiveStreamingServerNet.Transmuxer.FFmpegTransmuxerFactory.html
+  name: FFmpegTransmuxerFactory
+  nameWithType: FFmpegTransmuxerFactory
+  fullName: LiveStreamingServerNet.Transmuxer.FFmpegTransmuxerFactory
+- uid: LiveStreamingServerNet.Transmuxer.TransmuxingContext
+  commentId: T:LiveStreamingServerNet.Transmuxer.TransmuxingContext
+  parent: LiveStreamingServerNet.Transmuxer
+  href: LiveStreamingServerNet.Transmuxer.TransmuxingContext.html
+  name: TransmuxingContext
+  nameWithType: TransmuxingContext
+  fullName: LiveStreamingServerNet.Transmuxer.TransmuxingContext
+- uid: LiveStreamingServerNet.Transmuxer
+  commentId: N:LiveStreamingServerNet.Transmuxer
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.Transmuxer
+  nameWithType: LiveStreamingServerNet.Transmuxer
+  fullName: LiveStreamingServerNet.Transmuxer
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Transmuxer
+    name: Transmuxer
+    href: LiveStreamingServerNet.Transmuxer.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Transmuxer
+    name: Transmuxer
+    href: LiveStreamingServerNet.Transmuxer.html

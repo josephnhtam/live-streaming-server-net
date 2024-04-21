@@ -1,0 +1,584 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.Transmuxer.Hls.Contracts.IHlsStorageAdapter
+  commentId: T:LiveStreamingServerNet.Transmuxer.Hls.Contracts.IHlsStorageAdapter
+  id: IHlsStorageAdapter
+  parent: LiveStreamingServerNet.Transmuxer.Hls.Contracts
+  children:
+  - LiveStreamingServerNet.Transmuxer.Hls.Contracts.IHlsStorageAdapter.DeleteAsync(LiveStreamingServerNet.Transmuxer.TransmuxingContext,System.Collections.Generic.IReadOnlyList{LiveStreamingServerNet.Transmuxer.Hls.TsFile},System.Threading.CancellationToken)
+  - LiveStreamingServerNet.Transmuxer.Hls.Contracts.IHlsStorageAdapter.StoreAsync(LiveStreamingServerNet.Transmuxer.TransmuxingContext,System.Collections.Generic.IReadOnlyList{LiveStreamingServerNet.Transmuxer.Hls.Manifest},System.Collections.Generic.IReadOnlyList{LiveStreamingServerNet.Transmuxer.Hls.TsFile},System.Threading.CancellationToken)
+  langs:
+  - csharp
+  - vb
+  name: IHlsStorageAdapter
+  nameWithType: IHlsStorageAdapter
+  fullName: LiveStreamingServerNet.Transmuxer.Hls.Contracts.IHlsStorageAdapter
+  type: Interface
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Transmuxer/Hls/Contracts/IHlsStorageAdapter.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: IHlsStorageAdapter
+    path: ../src/LiveStreamingServerNet.Transmuxer/Hls/Contracts/IHlsStorageAdapter.cs
+    startLine: 2
+  assemblies:
+  - LiveStreamingServerNet.Transmuxer
+  namespace: LiveStreamingServerNet.Transmuxer.Hls.Contracts
+  syntax:
+    content: public interface IHlsStorageAdapter
+    content.vb: Public Interface IHlsStorageAdapter
+  extensionMethods:
+  - System.Object.LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Action)
+- uid: LiveStreamingServerNet.Transmuxer.Hls.Contracts.IHlsStorageAdapter.StoreAsync(LiveStreamingServerNet.Transmuxer.TransmuxingContext,System.Collections.Generic.IReadOnlyList{LiveStreamingServerNet.Transmuxer.Hls.Manifest},System.Collections.Generic.IReadOnlyList{LiveStreamingServerNet.Transmuxer.Hls.TsFile},System.Threading.CancellationToken)
+  commentId: M:LiveStreamingServerNet.Transmuxer.Hls.Contracts.IHlsStorageAdapter.StoreAsync(LiveStreamingServerNet.Transmuxer.TransmuxingContext,System.Collections.Generic.IReadOnlyList{LiveStreamingServerNet.Transmuxer.Hls.Manifest},System.Collections.Generic.IReadOnlyList{LiveStreamingServerNet.Transmuxer.Hls.TsFile},System.Threading.CancellationToken)
+  id: StoreAsync(LiveStreamingServerNet.Transmuxer.TransmuxingContext,System.Collections.Generic.IReadOnlyList{LiveStreamingServerNet.Transmuxer.Hls.Manifest},System.Collections.Generic.IReadOnlyList{LiveStreamingServerNet.Transmuxer.Hls.TsFile},System.Threading.CancellationToken)
+  parent: LiveStreamingServerNet.Transmuxer.Hls.Contracts.IHlsStorageAdapter
+  langs:
+  - csharp
+  - vb
+  name: StoreAsync(TransmuxingContext, IReadOnlyList<Manifest>, IReadOnlyList<TsFile>, CancellationToken)
+  nameWithType: IHlsStorageAdapter.StoreAsync(TransmuxingContext, IReadOnlyList<Manifest>, IReadOnlyList<TsFile>, CancellationToken)
+  fullName: LiveStreamingServerNet.Transmuxer.Hls.Contracts.IHlsStorageAdapter.StoreAsync(LiveStreamingServerNet.Transmuxer.TransmuxingContext, System.Collections.Generic.IReadOnlyList<LiveStreamingServerNet.Transmuxer.Hls.Manifest>, System.Collections.Generic.IReadOnlyList<LiveStreamingServerNet.Transmuxer.Hls.TsFile>, System.Threading.CancellationToken)
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Transmuxer/Hls/Contracts/IHlsStorageAdapter.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: StoreAsync
+    path: ../src/LiveStreamingServerNet.Transmuxer/Hls/Contracts/IHlsStorageAdapter.cs
+    startLine: 4
+  assemblies:
+  - LiveStreamingServerNet.Transmuxer
+  namespace: LiveStreamingServerNet.Transmuxer.Hls.Contracts
+  syntax:
+    content: Task<StoringResult> StoreAsync(TransmuxingContext context, IReadOnlyList<Manifest> manifests, IReadOnlyList<TsFile> tsFiles, CancellationToken cancellationToken)
+    parameters:
+    - id: context
+      type: LiveStreamingServerNet.Transmuxer.TransmuxingContext
+    - id: manifests
+      type: System.Collections.Generic.IReadOnlyList{LiveStreamingServerNet.Transmuxer.Hls.Manifest}
+    - id: tsFiles
+      type: System.Collections.Generic.IReadOnlyList{LiveStreamingServerNet.Transmuxer.Hls.TsFile}
+    - id: cancellationToken
+      type: System.Threading.CancellationToken
+    return:
+      type: System.Threading.Tasks.Task{LiveStreamingServerNet.Transmuxer.Hls.StoringResult}
+    content.vb: Function StoreAsync(context As TransmuxingContext, manifests As IReadOnlyList(Of Manifest), tsFiles As IReadOnlyList(Of TsFile), cancellationToken As CancellationToken) As Task(Of StoringResult)
+  overload: LiveStreamingServerNet.Transmuxer.Hls.Contracts.IHlsStorageAdapter.StoreAsync*
+  nameWithType.vb: IHlsStorageAdapter.StoreAsync(TransmuxingContext, IReadOnlyList(Of Manifest), IReadOnlyList(Of TsFile), CancellationToken)
+  fullName.vb: LiveStreamingServerNet.Transmuxer.Hls.Contracts.IHlsStorageAdapter.StoreAsync(LiveStreamingServerNet.Transmuxer.TransmuxingContext, System.Collections.Generic.IReadOnlyList(Of LiveStreamingServerNet.Transmuxer.Hls.Manifest), System.Collections.Generic.IReadOnlyList(Of LiveStreamingServerNet.Transmuxer.Hls.TsFile), System.Threading.CancellationToken)
+  name.vb: StoreAsync(TransmuxingContext, IReadOnlyList(Of Manifest), IReadOnlyList(Of TsFile), CancellationToken)
+- uid: LiveStreamingServerNet.Transmuxer.Hls.Contracts.IHlsStorageAdapter.DeleteAsync(LiveStreamingServerNet.Transmuxer.TransmuxingContext,System.Collections.Generic.IReadOnlyList{LiveStreamingServerNet.Transmuxer.Hls.TsFile},System.Threading.CancellationToken)
+  commentId: M:LiveStreamingServerNet.Transmuxer.Hls.Contracts.IHlsStorageAdapter.DeleteAsync(LiveStreamingServerNet.Transmuxer.TransmuxingContext,System.Collections.Generic.IReadOnlyList{LiveStreamingServerNet.Transmuxer.Hls.TsFile},System.Threading.CancellationToken)
+  id: DeleteAsync(LiveStreamingServerNet.Transmuxer.TransmuxingContext,System.Collections.Generic.IReadOnlyList{LiveStreamingServerNet.Transmuxer.Hls.TsFile},System.Threading.CancellationToken)
+  parent: LiveStreamingServerNet.Transmuxer.Hls.Contracts.IHlsStorageAdapter
+  langs:
+  - csharp
+  - vb
+  name: DeleteAsync(TransmuxingContext, IReadOnlyList<TsFile>, CancellationToken)
+  nameWithType: IHlsStorageAdapter.DeleteAsync(TransmuxingContext, IReadOnlyList<TsFile>, CancellationToken)
+  fullName: LiveStreamingServerNet.Transmuxer.Hls.Contracts.IHlsStorageAdapter.DeleteAsync(LiveStreamingServerNet.Transmuxer.TransmuxingContext, System.Collections.Generic.IReadOnlyList<LiveStreamingServerNet.Transmuxer.Hls.TsFile>, System.Threading.CancellationToken)
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Transmuxer/Hls/Contracts/IHlsStorageAdapter.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: DeleteAsync
+    path: ../src/LiveStreamingServerNet.Transmuxer/Hls/Contracts/IHlsStorageAdapter.cs
+    startLine: 5
+  assemblies:
+  - LiveStreamingServerNet.Transmuxer
+  namespace: LiveStreamingServerNet.Transmuxer.Hls.Contracts
+  syntax:
+    content: Task DeleteAsync(TransmuxingContext context, IReadOnlyList<TsFile> tsFiles, CancellationToken cancellationToken)
+    parameters:
+    - id: context
+      type: LiveStreamingServerNet.Transmuxer.TransmuxingContext
+    - id: tsFiles
+      type: System.Collections.Generic.IReadOnlyList{LiveStreamingServerNet.Transmuxer.Hls.TsFile}
+    - id: cancellationToken
+      type: System.Threading.CancellationToken
+    return:
+      type: System.Threading.Tasks.Task
+    content.vb: Function DeleteAsync(context As TransmuxingContext, tsFiles As IReadOnlyList(Of TsFile), cancellationToken As CancellationToken) As Task
+  overload: LiveStreamingServerNet.Transmuxer.Hls.Contracts.IHlsStorageAdapter.DeleteAsync*
+  nameWithType.vb: IHlsStorageAdapter.DeleteAsync(TransmuxingContext, IReadOnlyList(Of TsFile), CancellationToken)
+  fullName.vb: LiveStreamingServerNet.Transmuxer.Hls.Contracts.IHlsStorageAdapter.DeleteAsync(LiveStreamingServerNet.Transmuxer.TransmuxingContext, System.Collections.Generic.IReadOnlyList(Of LiveStreamingServerNet.Transmuxer.Hls.TsFile), System.Threading.CancellationToken)
+  name.vb: DeleteAsync(TransmuxingContext, IReadOnlyList(Of TsFile), CancellationToken)
+references:
+- uid: LiveStreamingServerNet.Transmuxer.Hls.Contracts
+  commentId: N:LiveStreamingServerNet.Transmuxer.Hls.Contracts
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.Transmuxer.Hls.Contracts
+  nameWithType: LiveStreamingServerNet.Transmuxer.Hls.Contracts
+  fullName: LiveStreamingServerNet.Transmuxer.Hls.Contracts
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Transmuxer
+    name: Transmuxer
+    href: LiveStreamingServerNet.Transmuxer.html
+  - name: .
+  - uid: LiveStreamingServerNet.Transmuxer.Hls
+    name: Hls
+    href: LiveStreamingServerNet.Transmuxer.Hls.html
+  - name: .
+  - uid: LiveStreamingServerNet.Transmuxer.Hls.Contracts
+    name: Contracts
+    href: LiveStreamingServerNet.Transmuxer.Hls.Contracts.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Transmuxer
+    name: Transmuxer
+    href: LiveStreamingServerNet.Transmuxer.html
+  - name: .
+  - uid: LiveStreamingServerNet.Transmuxer.Hls
+    name: Hls
+    href: LiveStreamingServerNet.Transmuxer.Hls.html
+  - name: .
+  - uid: LiveStreamingServerNet.Transmuxer.Hls.Contracts
+    name: Contracts
+    href: LiveStreamingServerNet.Transmuxer.Hls.Contracts.html
+- uid: System.Object.LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Action)
+  commentId: M:LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  parent: LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+  definition: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  name: Lock(object, Action)
+  nameWithType: LockExtensions.Lock(object, Action)
+  fullName: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(object, System.Action)
+  nameWithType.vb: LockExtensions.Lock(Object, Action)
+  fullName.vb: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(Object, System.Action)
+  name.vb: Lock(Object, Action)
+  spec.csharp:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+  spec.vb:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+- uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  commentId: M:LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  isExternal: true
+  href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  name: Lock(object, Action)
+  nameWithType: LockExtensions.Lock(object, Action)
+  fullName: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(object, System.Action)
+  nameWithType.vb: LockExtensions.Lock(Object, Action)
+  fullName.vb: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(Object, System.Action)
+  name.vb: Lock(Object, Action)
+  spec.csharp:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+  spec.vb:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+- uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+  commentId: T:LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+  parent: LiveStreamingServerNet.Utilities.Extensions
+  href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html
+  name: LockExtensions
+  nameWithType: LockExtensions
+  fullName: LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+- uid: LiveStreamingServerNet.Utilities.Extensions
+  commentId: N:LiveStreamingServerNet.Utilities.Extensions
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.Utilities.Extensions
+  nameWithType: LiveStreamingServerNet.Utilities.Extensions
+  fullName: LiveStreamingServerNet.Utilities.Extensions
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities
+    name: Utilities
+    href: LiveStreamingServerNet.Utilities.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities.Extensions
+    name: Extensions
+    href: LiveStreamingServerNet.Utilities.Extensions.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities
+    name: Utilities
+    href: LiveStreamingServerNet.Utilities.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities.Extensions
+    name: Extensions
+    href: LiveStreamingServerNet.Utilities.Extensions.html
+- uid: LiveStreamingServerNet.Transmuxer.Hls.Contracts.IHlsStorageAdapter.StoreAsync*
+  commentId: Overload:LiveStreamingServerNet.Transmuxer.Hls.Contracts.IHlsStorageAdapter.StoreAsync
+  href: LiveStreamingServerNet.Transmuxer.Hls.Contracts.IHlsStorageAdapter.html#LiveStreamingServerNet_Transmuxer_Hls_Contracts_IHlsStorageAdapter_StoreAsync_LiveStreamingServerNet_Transmuxer_TransmuxingContext_System_Collections_Generic_IReadOnlyList_LiveStreamingServerNet_Transmuxer_Hls_Manifest__System_Collections_Generic_IReadOnlyList_LiveStreamingServerNet_Transmuxer_Hls_TsFile__System_Threading_CancellationToken_
+  name: StoreAsync
+  nameWithType: IHlsStorageAdapter.StoreAsync
+  fullName: LiveStreamingServerNet.Transmuxer.Hls.Contracts.IHlsStorageAdapter.StoreAsync
+- uid: LiveStreamingServerNet.Transmuxer.TransmuxingContext
+  commentId: T:LiveStreamingServerNet.Transmuxer.TransmuxingContext
+  parent: LiveStreamingServerNet.Transmuxer
+  href: LiveStreamingServerNet.Transmuxer.TransmuxingContext.html
+  name: TransmuxingContext
+  nameWithType: TransmuxingContext
+  fullName: LiveStreamingServerNet.Transmuxer.TransmuxingContext
+- uid: System.Collections.Generic.IReadOnlyList{LiveStreamingServerNet.Transmuxer.Hls.Manifest}
+  commentId: T:System.Collections.Generic.IReadOnlyList{LiveStreamingServerNet.Transmuxer.Hls.Manifest}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IReadOnlyList`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1
+  name: IReadOnlyList<Manifest>
+  nameWithType: IReadOnlyList<Manifest>
+  fullName: System.Collections.Generic.IReadOnlyList<LiveStreamingServerNet.Transmuxer.Hls.Manifest>
+  nameWithType.vb: IReadOnlyList(Of Manifest)
+  fullName.vb: System.Collections.Generic.IReadOnlyList(Of LiveStreamingServerNet.Transmuxer.Hls.Manifest)
+  name.vb: IReadOnlyList(Of Manifest)
+  spec.csharp:
+  - uid: System.Collections.Generic.IReadOnlyList`1
+    name: IReadOnlyList
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1
+  - name: <
+  - uid: LiveStreamingServerNet.Transmuxer.Hls.Manifest
+    name: Manifest
+    href: LiveStreamingServerNet.Transmuxer.Hls.Manifest.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IReadOnlyList`1
+    name: IReadOnlyList
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: LiveStreamingServerNet.Transmuxer.Hls.Manifest
+    name: Manifest
+    href: LiveStreamingServerNet.Transmuxer.Hls.Manifest.html
+  - name: )
+- uid: System.Collections.Generic.IReadOnlyList{LiveStreamingServerNet.Transmuxer.Hls.TsFile}
+  commentId: T:System.Collections.Generic.IReadOnlyList{LiveStreamingServerNet.Transmuxer.Hls.TsFile}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IReadOnlyList`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1
+  name: IReadOnlyList<TsFile>
+  nameWithType: IReadOnlyList<TsFile>
+  fullName: System.Collections.Generic.IReadOnlyList<LiveStreamingServerNet.Transmuxer.Hls.TsFile>
+  nameWithType.vb: IReadOnlyList(Of TsFile)
+  fullName.vb: System.Collections.Generic.IReadOnlyList(Of LiveStreamingServerNet.Transmuxer.Hls.TsFile)
+  name.vb: IReadOnlyList(Of TsFile)
+  spec.csharp:
+  - uid: System.Collections.Generic.IReadOnlyList`1
+    name: IReadOnlyList
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1
+  - name: <
+  - uid: LiveStreamingServerNet.Transmuxer.Hls.TsFile
+    name: TsFile
+    href: LiveStreamingServerNet.Transmuxer.Hls.TsFile.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IReadOnlyList`1
+    name: IReadOnlyList
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: LiveStreamingServerNet.Transmuxer.Hls.TsFile
+    name: TsFile
+    href: LiveStreamingServerNet.Transmuxer.Hls.TsFile.html
+  - name: )
+- uid: System.Threading.CancellationToken
+  commentId: T:System.Threading.CancellationToken
+  parent: System.Threading
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken
+  name: CancellationToken
+  nameWithType: CancellationToken
+  fullName: System.Threading.CancellationToken
+- uid: System.Threading.Tasks.Task{LiveStreamingServerNet.Transmuxer.Hls.StoringResult}
+  commentId: T:System.Threading.Tasks.Task{LiveStreamingServerNet.Transmuxer.Hls.StoringResult}
+  parent: System.Threading.Tasks
+  definition: System.Threading.Tasks.Task`1
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  name: Task<StoringResult>
+  nameWithType: Task<StoringResult>
+  fullName: System.Threading.Tasks.Task<LiveStreamingServerNet.Transmuxer.Hls.StoringResult>
+  nameWithType.vb: Task(Of StoringResult)
+  fullName.vb: System.Threading.Tasks.Task(Of LiveStreamingServerNet.Transmuxer.Hls.StoringResult)
+  name.vb: Task(Of StoringResult)
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: <
+  - uid: LiveStreamingServerNet.Transmuxer.Hls.StoringResult
+    name: StoringResult
+    href: LiveStreamingServerNet.Transmuxer.Hls.StoringResult.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: LiveStreamingServerNet.Transmuxer.Hls.StoringResult
+    name: StoringResult
+    href: LiveStreamingServerNet.Transmuxer.Hls.StoringResult.html
+  - name: )
+- uid: LiveStreamingServerNet.Transmuxer
+  commentId: N:LiveStreamingServerNet.Transmuxer
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.Transmuxer
+  nameWithType: LiveStreamingServerNet.Transmuxer
+  fullName: LiveStreamingServerNet.Transmuxer
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Transmuxer
+    name: Transmuxer
+    href: LiveStreamingServerNet.Transmuxer.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Transmuxer
+    name: Transmuxer
+    href: LiveStreamingServerNet.Transmuxer.html
+- uid: System.Collections.Generic.IReadOnlyList`1
+  commentId: T:System.Collections.Generic.IReadOnlyList`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1
+  name: IReadOnlyList<T>
+  nameWithType: IReadOnlyList<T>
+  fullName: System.Collections.Generic.IReadOnlyList<T>
+  nameWithType.vb: IReadOnlyList(Of T)
+  fullName.vb: System.Collections.Generic.IReadOnlyList(Of T)
+  name.vb: IReadOnlyList(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IReadOnlyList`1
+    name: IReadOnlyList
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IReadOnlyList`1
+    name: IReadOnlyList
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+- uid: System.Threading
+  commentId: N:System.Threading
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Threading
+  nameWithType: System.Threading
+  fullName: System.Threading
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+- uid: System.Threading.Tasks.Task`1
+  commentId: T:System.Threading.Tasks.Task`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  name: Task<TResult>
+  nameWithType: Task<TResult>
+  fullName: System.Threading.Tasks.Task<TResult>
+  nameWithType.vb: Task(Of TResult)
+  fullName.vb: System.Threading.Tasks.Task(Of TResult)
+  name.vb: Task(Of TResult)
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: <
+  - name: TResult
+  - name: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TResult
+  - name: )
+- uid: System.Threading.Tasks
+  commentId: N:System.Threading.Tasks
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Threading.Tasks
+  nameWithType: System.Threading.Tasks
+  fullName: System.Threading.Tasks
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  - name: .
+  - uid: System.Threading.Tasks
+    name: Tasks
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  - name: .
+  - uid: System.Threading.Tasks
+    name: Tasks
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks
+- uid: LiveStreamingServerNet.Transmuxer.Hls.Contracts.IHlsStorageAdapter.DeleteAsync*
+  commentId: Overload:LiveStreamingServerNet.Transmuxer.Hls.Contracts.IHlsStorageAdapter.DeleteAsync
+  href: LiveStreamingServerNet.Transmuxer.Hls.Contracts.IHlsStorageAdapter.html#LiveStreamingServerNet_Transmuxer_Hls_Contracts_IHlsStorageAdapter_DeleteAsync_LiveStreamingServerNet_Transmuxer_TransmuxingContext_System_Collections_Generic_IReadOnlyList_LiveStreamingServerNet_Transmuxer_Hls_TsFile__System_Threading_CancellationToken_
+  name: DeleteAsync
+  nameWithType: IHlsStorageAdapter.DeleteAsync
+  fullName: LiveStreamingServerNet.Transmuxer.Hls.Contracts.IHlsStorageAdapter.DeleteAsync
+- uid: System.Threading.Tasks.Task
+  commentId: T:System.Threading.Tasks.Task
+  parent: System.Threading.Tasks
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task
+  name: Task
+  nameWithType: Task
+  fullName: System.Threading.Tasks.Task

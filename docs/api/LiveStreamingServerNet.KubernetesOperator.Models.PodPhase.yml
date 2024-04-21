@@ -1,0 +1,352 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.KubernetesOperator.Models.PodPhase
+  commentId: T:LiveStreamingServerNet.KubernetesOperator.Models.PodPhase
+  id: PodPhase
+  parent: LiveStreamingServerNet.KubernetesOperator.Models
+  children:
+  - LiveStreamingServerNet.KubernetesOperator.Models.PodPhase.Failed
+  - LiveStreamingServerNet.KubernetesOperator.Models.PodPhase.Pending
+  - LiveStreamingServerNet.KubernetesOperator.Models.PodPhase.Running
+  - LiveStreamingServerNet.KubernetesOperator.Models.PodPhase.Succeeded
+  - LiveStreamingServerNet.KubernetesOperator.Models.PodPhase.Terminating
+  - LiveStreamingServerNet.KubernetesOperator.Models.PodPhase.Unknown
+  langs:
+  - csharp
+  - vb
+  name: PodPhase
+  nameWithType: PodPhase
+  fullName: LiveStreamingServerNet.KubernetesOperator.Models.PodPhase
+  type: Enum
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.KubernetesOperator/Models/FleetState.cs
+      branch: develop
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: PodPhase
+    path: ../src/LiveStreamingServerNet.KubernetesOperator/Models/FleetState.cs
+    startLine: 20
+  assemblies:
+  - LiveStreamingServerNet.KubernetesOperator
+  namespace: LiveStreamingServerNet.KubernetesOperator.Models
+  syntax:
+    content: public enum PodPhase
+    content.vb: Public Enum PodPhase
+  extensionMethods:
+  - System.Object.LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Action)
+- uid: LiveStreamingServerNet.KubernetesOperator.Models.PodPhase.Unknown
+  commentId: F:LiveStreamingServerNet.KubernetesOperator.Models.PodPhase.Unknown
+  id: Unknown
+  parent: LiveStreamingServerNet.KubernetesOperator.Models.PodPhase
+  langs:
+  - csharp
+  - vb
+  name: Unknown
+  nameWithType: PodPhase.Unknown
+  fullName: LiveStreamingServerNet.KubernetesOperator.Models.PodPhase.Unknown
+  type: Field
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.KubernetesOperator/Models/FleetState.cs
+      branch: develop
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: Unknown
+    path: ../src/LiveStreamingServerNet.KubernetesOperator/Models/FleetState.cs
+    startLine: 22
+  assemblies:
+  - LiveStreamingServerNet.KubernetesOperator
+  namespace: LiveStreamingServerNet.KubernetesOperator.Models
+  syntax:
+    content: Unknown = -1
+    return:
+      type: LiveStreamingServerNet.KubernetesOperator.Models.PodPhase
+- uid: LiveStreamingServerNet.KubernetesOperator.Models.PodPhase.Pending
+  commentId: F:LiveStreamingServerNet.KubernetesOperator.Models.PodPhase.Pending
+  id: Pending
+  parent: LiveStreamingServerNet.KubernetesOperator.Models.PodPhase
+  langs:
+  - csharp
+  - vb
+  name: Pending
+  nameWithType: PodPhase.Pending
+  fullName: LiveStreamingServerNet.KubernetesOperator.Models.PodPhase.Pending
+  type: Field
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.KubernetesOperator/Models/FleetState.cs
+      branch: develop
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: Pending
+    path: ../src/LiveStreamingServerNet.KubernetesOperator/Models/FleetState.cs
+    startLine: 23
+  assemblies:
+  - LiveStreamingServerNet.KubernetesOperator
+  namespace: LiveStreamingServerNet.KubernetesOperator.Models
+  syntax:
+    content: Pending = 0
+    return:
+      type: LiveStreamingServerNet.KubernetesOperator.Models.PodPhase
+- uid: LiveStreamingServerNet.KubernetesOperator.Models.PodPhase.Running
+  commentId: F:LiveStreamingServerNet.KubernetesOperator.Models.PodPhase.Running
+  id: Running
+  parent: LiveStreamingServerNet.KubernetesOperator.Models.PodPhase
+  langs:
+  - csharp
+  - vb
+  name: Running
+  nameWithType: PodPhase.Running
+  fullName: LiveStreamingServerNet.KubernetesOperator.Models.PodPhase.Running
+  type: Field
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.KubernetesOperator/Models/FleetState.cs
+      branch: develop
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: Running
+    path: ../src/LiveStreamingServerNet.KubernetesOperator/Models/FleetState.cs
+    startLine: 24
+  assemblies:
+  - LiveStreamingServerNet.KubernetesOperator
+  namespace: LiveStreamingServerNet.KubernetesOperator.Models
+  syntax:
+    content: Running = 1
+    return:
+      type: LiveStreamingServerNet.KubernetesOperator.Models.PodPhase
+- uid: LiveStreamingServerNet.KubernetesOperator.Models.PodPhase.Terminating
+  commentId: F:LiveStreamingServerNet.KubernetesOperator.Models.PodPhase.Terminating
+  id: Terminating
+  parent: LiveStreamingServerNet.KubernetesOperator.Models.PodPhase
+  langs:
+  - csharp
+  - vb
+  name: Terminating
+  nameWithType: PodPhase.Terminating
+  fullName: LiveStreamingServerNet.KubernetesOperator.Models.PodPhase.Terminating
+  type: Field
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.KubernetesOperator/Models/FleetState.cs
+      branch: develop
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: Terminating
+    path: ../src/LiveStreamingServerNet.KubernetesOperator/Models/FleetState.cs
+    startLine: 25
+  assemblies:
+  - LiveStreamingServerNet.KubernetesOperator
+  namespace: LiveStreamingServerNet.KubernetesOperator.Models
+  syntax:
+    content: Terminating = 3
+    return:
+      type: LiveStreamingServerNet.KubernetesOperator.Models.PodPhase
+- uid: LiveStreamingServerNet.KubernetesOperator.Models.PodPhase.Succeeded
+  commentId: F:LiveStreamingServerNet.KubernetesOperator.Models.PodPhase.Succeeded
+  id: Succeeded
+  parent: LiveStreamingServerNet.KubernetesOperator.Models.PodPhase
+  langs:
+  - csharp
+  - vb
+  name: Succeeded
+  nameWithType: PodPhase.Succeeded
+  fullName: LiveStreamingServerNet.KubernetesOperator.Models.PodPhase.Succeeded
+  type: Field
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.KubernetesOperator/Models/FleetState.cs
+      branch: develop
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: Succeeded
+    path: ../src/LiveStreamingServerNet.KubernetesOperator/Models/FleetState.cs
+    startLine: 26
+  assemblies:
+  - LiveStreamingServerNet.KubernetesOperator
+  namespace: LiveStreamingServerNet.KubernetesOperator.Models
+  syntax:
+    content: Succeeded = 4
+    return:
+      type: LiveStreamingServerNet.KubernetesOperator.Models.PodPhase
+- uid: LiveStreamingServerNet.KubernetesOperator.Models.PodPhase.Failed
+  commentId: F:LiveStreamingServerNet.KubernetesOperator.Models.PodPhase.Failed
+  id: Failed
+  parent: LiveStreamingServerNet.KubernetesOperator.Models.PodPhase
+  langs:
+  - csharp
+  - vb
+  name: Failed
+  nameWithType: PodPhase.Failed
+  fullName: LiveStreamingServerNet.KubernetesOperator.Models.PodPhase.Failed
+  type: Field
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.KubernetesOperator/Models/FleetState.cs
+      branch: develop
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: Failed
+    path: ../src/LiveStreamingServerNet.KubernetesOperator/Models/FleetState.cs
+    startLine: 27
+  assemblies:
+  - LiveStreamingServerNet.KubernetesOperator
+  namespace: LiveStreamingServerNet.KubernetesOperator.Models
+  syntax:
+    content: Failed = 5
+    return:
+      type: LiveStreamingServerNet.KubernetesOperator.Models.PodPhase
+references:
+- uid: LiveStreamingServerNet.KubernetesOperator.Models
+  commentId: N:LiveStreamingServerNet.KubernetesOperator.Models
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.KubernetesOperator.Models
+  nameWithType: LiveStreamingServerNet.KubernetesOperator.Models
+  fullName: LiveStreamingServerNet.KubernetesOperator.Models
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.KubernetesOperator
+    name: KubernetesOperator
+    href: LiveStreamingServerNet.KubernetesOperator.html
+  - name: .
+  - uid: LiveStreamingServerNet.KubernetesOperator.Models
+    name: Models
+    href: LiveStreamingServerNet.KubernetesOperator.Models.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.KubernetesOperator
+    name: KubernetesOperator
+    href: LiveStreamingServerNet.KubernetesOperator.html
+  - name: .
+  - uid: LiveStreamingServerNet.KubernetesOperator.Models
+    name: Models
+    href: LiveStreamingServerNet.KubernetesOperator.Models.html
+- uid: System.Object.LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Action)
+  commentId: M:LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  parent: LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+  definition: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  name: Lock(object, Action)
+  nameWithType: LockExtensions.Lock(object, Action)
+  fullName: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(object, System.Action)
+  nameWithType.vb: LockExtensions.Lock(Object, Action)
+  fullName.vb: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(Object, System.Action)
+  name.vb: Lock(Object, Action)
+  spec.csharp:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+  spec.vb:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+- uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  commentId: M:LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  isExternal: true
+  href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  name: Lock(object, Action)
+  nameWithType: LockExtensions.Lock(object, Action)
+  fullName: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(object, System.Action)
+  nameWithType.vb: LockExtensions.Lock(Object, Action)
+  fullName.vb: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(Object, System.Action)
+  name.vb: Lock(Object, Action)
+  spec.csharp:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+  spec.vb:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+- uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+  commentId: T:LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+  parent: LiveStreamingServerNet.Utilities.Extensions
+  href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html
+  name: LockExtensions
+  nameWithType: LockExtensions
+  fullName: LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+- uid: LiveStreamingServerNet.Utilities.Extensions
+  commentId: N:LiveStreamingServerNet.Utilities.Extensions
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.Utilities.Extensions
+  nameWithType: LiveStreamingServerNet.Utilities.Extensions
+  fullName: LiveStreamingServerNet.Utilities.Extensions
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities
+    name: Utilities
+    href: LiveStreamingServerNet.Utilities.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities.Extensions
+    name: Extensions
+    href: LiveStreamingServerNet.Utilities.Extensions.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities
+    name: Utilities
+    href: LiveStreamingServerNet.Utilities.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities.Extensions
+    name: Extensions
+    href: LiveStreamingServerNet.Utilities.Extensions.html
+- uid: LiveStreamingServerNet.KubernetesOperator.Models.PodPhase
+  commentId: T:LiveStreamingServerNet.KubernetesOperator.Models.PodPhase
+  parent: LiveStreamingServerNet.KubernetesOperator.Models
+  href: LiveStreamingServerNet.KubernetesOperator.Models.PodPhase.html
+  name: PodPhase
+  nameWithType: PodPhase
+  fullName: LiveStreamingServerNet.KubernetesOperator.Models.PodPhase

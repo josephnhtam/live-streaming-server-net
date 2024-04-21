@@ -1,0 +1,30 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.Rtmp.Configurations
+  commentId: N:LiveStreamingServerNet.Rtmp.Configurations
+  id: LiveStreamingServerNet.Rtmp.Configurations
+  children:
+  - LiveStreamingServerNet.Rtmp.Configurations.MediaMessageConfiguration
+  - LiveStreamingServerNet.Rtmp.Configurations.RtmpServerConfiguration
+  langs:
+  - csharp
+  - vb
+  name: LiveStreamingServerNet.Rtmp.Configurations
+  nameWithType: LiveStreamingServerNet.Rtmp.Configurations
+  fullName: LiveStreamingServerNet.Rtmp.Configurations
+  type: Namespace
+  assemblies:
+  - LiveStreamingServerNet.Rtmp
+references:
+- uid: LiveStreamingServerNet.Rtmp.Configurations.MediaMessageConfiguration
+  commentId: T:LiveStreamingServerNet.Rtmp.Configurations.MediaMessageConfiguration
+  href: LiveStreamingServerNet.Rtmp.Configurations.MediaMessageConfiguration.html
+  name: MediaMessageConfiguration
+  nameWithType: MediaMessageConfiguration
+  fullName: LiveStreamingServerNet.Rtmp.Configurations.MediaMessageConfiguration
+- uid: LiveStreamingServerNet.Rtmp.Configurations.RtmpServerConfiguration
+  commentId: T:LiveStreamingServerNet.Rtmp.Configurations.RtmpServerConfiguration
+  href: LiveStreamingServerNet.Rtmp.Configurations.RtmpServerConfiguration.html
+  name: RtmpServerConfiguration
+  nameWithType: RtmpServerConfiguration
+  fullName: LiveStreamingServerNet.Rtmp.Configurations.RtmpServerConfiguration

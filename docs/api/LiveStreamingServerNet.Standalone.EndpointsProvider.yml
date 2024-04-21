@@ -1,0 +1,421 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.Standalone.EndpointsProvider
+  commentId: T:LiveStreamingServerNet.Standalone.EndpointsProvider
+  id: EndpointsProvider
+  parent: LiveStreamingServerNet.Standalone
+  children:
+  - LiveStreamingServerNet.Standalone.EndpointsProvider.MapStandaloneServerApiEndPoints(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder,LiveStreamingServerNet.Networking.Contracts.IServer)
+  langs:
+  - csharp
+  - vb
+  name: EndpointsProvider
+  nameWithType: EndpointsProvider
+  fullName: LiveStreamingServerNet.Standalone.EndpointsProvider
+  type: Class
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Standalone/EndpointsProvider.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: EndpointsProvider
+    path: ../src/LiveStreamingServerNet.Standalone/EndpointsProvider.cs
+    startLine: 6
+  assemblies:
+  - LiveStreamingServerNet.Standalone
+  namespace: LiveStreamingServerNet.Standalone
+  syntax:
+    content: public static class EndpointsProvider
+    content.vb: Public Module EndpointsProvider
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+- uid: LiveStreamingServerNet.Standalone.EndpointsProvider.MapStandaloneServerApiEndPoints(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder,LiveStreamingServerNet.Networking.Contracts.IServer)
+  commentId: M:LiveStreamingServerNet.Standalone.EndpointsProvider.MapStandaloneServerApiEndPoints(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder,LiveStreamingServerNet.Networking.Contracts.IServer)
+  id: MapStandaloneServerApiEndPoints(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder,LiveStreamingServerNet.Networking.Contracts.IServer)
+  isExtensionMethod: true
+  parent: LiveStreamingServerNet.Standalone.EndpointsProvider
+  langs:
+  - csharp
+  - vb
+  name: MapStandaloneServerApiEndPoints(IEndpointRouteBuilder, IServer)
+  nameWithType: EndpointsProvider.MapStandaloneServerApiEndPoints(IEndpointRouteBuilder, IServer)
+  fullName: LiveStreamingServerNet.Standalone.EndpointsProvider.MapStandaloneServerApiEndPoints(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder, LiveStreamingServerNet.Networking.Contracts.IServer)
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Standalone/EndpointsProvider.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: MapStandaloneServerApiEndPoints
+    path: ../src/LiveStreamingServerNet.Standalone/EndpointsProvider.cs
+    startLine: 8
+  assemblies:
+  - LiveStreamingServerNet.Standalone
+  namespace: LiveStreamingServerNet.Standalone
+  syntax:
+    content: public static IEndpointRouteBuilder MapStandaloneServerApiEndPoints(this IEndpointRouteBuilder builder, IServer server)
+    parameters:
+    - id: builder
+      type: Microsoft.AspNetCore.Routing.IEndpointRouteBuilder
+    - id: server
+      type: LiveStreamingServerNet.Networking.Contracts.IServer
+    return:
+      type: Microsoft.AspNetCore.Routing.IEndpointRouteBuilder
+    content.vb: Public Shared Function MapStandaloneServerApiEndPoints(builder As IEndpointRouteBuilder, server As IServer) As IEndpointRouteBuilder
+  overload: LiveStreamingServerNet.Standalone.EndpointsProvider.MapStandaloneServerApiEndPoints*
+references:
+- uid: LiveStreamingServerNet.Standalone
+  commentId: N:LiveStreamingServerNet.Standalone
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.Standalone
+  nameWithType: LiveStreamingServerNet.Standalone
+  fullName: LiveStreamingServerNet.Standalone
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Standalone
+    name: Standalone
+    href: LiveStreamingServerNet.Standalone.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Standalone
+    name: Standalone
+    href: LiveStreamingServerNet.Standalone.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: LiveStreamingServerNet.Standalone.EndpointsProvider.MapStandaloneServerApiEndPoints*
+  commentId: Overload:LiveStreamingServerNet.Standalone.EndpointsProvider.MapStandaloneServerApiEndPoints
+  href: LiveStreamingServerNet.Standalone.EndpointsProvider.html#LiveStreamingServerNet_Standalone_EndpointsProvider_MapStandaloneServerApiEndPoints_Microsoft_AspNetCore_Routing_IEndpointRouteBuilder_LiveStreamingServerNet_Networking_Contracts_IServer_
+  name: MapStandaloneServerApiEndPoints
+  nameWithType: EndpointsProvider.MapStandaloneServerApiEndPoints
+  fullName: LiveStreamingServerNet.Standalone.EndpointsProvider.MapStandaloneServerApiEndPoints
+- uid: Microsoft.AspNetCore.Routing.IEndpointRouteBuilder
+  commentId: T:Microsoft.AspNetCore.Routing.IEndpointRouteBuilder
+  parent: Microsoft.AspNetCore.Routing
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.routing.iendpointroutebuilder
+  name: IEndpointRouteBuilder
+  nameWithType: IEndpointRouteBuilder
+  fullName: Microsoft.AspNetCore.Routing.IEndpointRouteBuilder
+- uid: LiveStreamingServerNet.Networking.Contracts.IServer
+  commentId: T:LiveStreamingServerNet.Networking.Contracts.IServer
+  parent: LiveStreamingServerNet.Networking.Contracts
+  href: LiveStreamingServerNet.Networking.Contracts.IServer.html
+  name: IServer
+  nameWithType: IServer
+  fullName: LiveStreamingServerNet.Networking.Contracts.IServer
+- uid: Microsoft.AspNetCore.Routing
+  commentId: N:Microsoft.AspNetCore.Routing
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft
+  name: Microsoft.AspNetCore.Routing
+  nameWithType: Microsoft.AspNetCore.Routing
+  fullName: Microsoft.AspNetCore.Routing
+  spec.csharp:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.AspNetCore
+    name: AspNetCore
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore
+  - name: .
+  - uid: Microsoft.AspNetCore.Routing
+    name: Routing
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.routing
+  spec.vb:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.AspNetCore
+    name: AspNetCore
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore
+  - name: .
+  - uid: Microsoft.AspNetCore.Routing
+    name: Routing
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.routing
+- uid: LiveStreamingServerNet.Networking.Contracts
+  commentId: N:LiveStreamingServerNet.Networking.Contracts
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.Networking.Contracts
+  nameWithType: LiveStreamingServerNet.Networking.Contracts
+  fullName: LiveStreamingServerNet.Networking.Contracts
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Networking
+    name: Networking
+    href: LiveStreamingServerNet.Networking.html
+  - name: .
+  - uid: LiveStreamingServerNet.Networking.Contracts
+    name: Contracts
+    href: LiveStreamingServerNet.Networking.Contracts.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Networking
+    name: Networking
+    href: LiveStreamingServerNet.Networking.html
+  - name: .
+  - uid: LiveStreamingServerNet.Networking.Contracts
+    name: Contracts
+    href: LiveStreamingServerNet.Networking.Contracts.html

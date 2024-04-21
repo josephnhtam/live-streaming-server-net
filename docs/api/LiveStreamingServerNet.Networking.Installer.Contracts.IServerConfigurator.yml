@@ -1,0 +1,502 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.Networking.Installer.Contracts.IServerConfigurator
+  commentId: T:LiveStreamingServerNet.Networking.Installer.Contracts.IServerConfigurator
+  id: IServerConfigurator
+  parent: LiveStreamingServerNet.Networking.Installer.Contracts
+  children:
+  - LiveStreamingServerNet.Networking.Installer.Contracts.IServerConfigurator.AddServerEventHandler``1
+  - LiveStreamingServerNet.Networking.Installer.Contracts.IServerConfigurator.ConfigureNetBufferPool(System.Action{LiveStreamingServerNet.Networking.Configurations.NetBufferPoolConfiguration})
+  - LiveStreamingServerNet.Networking.Installer.Contracts.IServerConfigurator.ConfigureSecurity(System.Action{LiveStreamingServerNet.Networking.Configurations.SecurityConfiguration})
+  - LiveStreamingServerNet.Networking.Installer.Contracts.IServerConfigurator.Services
+  langs:
+  - csharp
+  - vb
+  name: IServerConfigurator
+  nameWithType: IServerConfigurator
+  fullName: LiveStreamingServerNet.Networking.Installer.Contracts.IServerConfigurator
+  type: Interface
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/Installer/Contracts/IServerConfigurator.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: IServerConfigurator
+    path: ../src/LiveStreamingServerNet.Networking/Installer/Contracts/IServerConfigurator.cs
+    startLine: 6
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking.Installer.Contracts
+  syntax:
+    content: public interface IServerConfigurator
+    content.vb: Public Interface IServerConfigurator
+  extensionMethods:
+  - System.Object.LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Action)
+- uid: LiveStreamingServerNet.Networking.Installer.Contracts.IServerConfigurator.Services
+  commentId: P:LiveStreamingServerNet.Networking.Installer.Contracts.IServerConfigurator.Services
+  id: Services
+  parent: LiveStreamingServerNet.Networking.Installer.Contracts.IServerConfigurator
+  langs:
+  - csharp
+  - vb
+  name: Services
+  nameWithType: IServerConfigurator.Services
+  fullName: LiveStreamingServerNet.Networking.Installer.Contracts.IServerConfigurator.Services
+  type: Property
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/Installer/Contracts/IServerConfigurator.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: Services
+    path: ../src/LiveStreamingServerNet.Networking/Installer/Contracts/IServerConfigurator.cs
+    startLine: 8
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking.Installer.Contracts
+  syntax:
+    content: IServiceCollection Services { get; }
+    parameters: []
+    return:
+      type: Microsoft.Extensions.DependencyInjection.IServiceCollection
+    content.vb: ReadOnly Property Services As IServiceCollection
+  overload: LiveStreamingServerNet.Networking.Installer.Contracts.IServerConfigurator.Services*
+- uid: LiveStreamingServerNet.Networking.Installer.Contracts.IServerConfigurator.AddServerEventHandler``1
+  commentId: M:LiveStreamingServerNet.Networking.Installer.Contracts.IServerConfigurator.AddServerEventHandler``1
+  id: AddServerEventHandler``1
+  parent: LiveStreamingServerNet.Networking.Installer.Contracts.IServerConfigurator
+  langs:
+  - csharp
+  - vb
+  name: AddServerEventHandler<TServerEventHandler>()
+  nameWithType: IServerConfigurator.AddServerEventHandler<TServerEventHandler>()
+  fullName: LiveStreamingServerNet.Networking.Installer.Contracts.IServerConfigurator.AddServerEventHandler<TServerEventHandler>()
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/Installer/Contracts/IServerConfigurator.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: AddServerEventHandler
+    path: ../src/LiveStreamingServerNet.Networking/Installer/Contracts/IServerConfigurator.cs
+    startLine: 10
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking.Installer.Contracts
+  syntax:
+    content: 'IServerConfigurator AddServerEventHandler<TServerEventHandler>() where TServerEventHandler : class, IServerEventHandler'
+    typeParameters:
+    - id: TServerEventHandler
+    return:
+      type: LiveStreamingServerNet.Networking.Installer.Contracts.IServerConfigurator
+    content.vb: Function AddServerEventHandler(Of TServerEventHandler As {Class, IServerEventHandler})() As IServerConfigurator
+  overload: LiveStreamingServerNet.Networking.Installer.Contracts.IServerConfigurator.AddServerEventHandler*
+  nameWithType.vb: IServerConfigurator.AddServerEventHandler(Of TServerEventHandler)()
+  fullName.vb: LiveStreamingServerNet.Networking.Installer.Contracts.IServerConfigurator.AddServerEventHandler(Of TServerEventHandler)()
+  name.vb: AddServerEventHandler(Of TServerEventHandler)()
+- uid: LiveStreamingServerNet.Networking.Installer.Contracts.IServerConfigurator.ConfigureSecurity(System.Action{LiveStreamingServerNet.Networking.Configurations.SecurityConfiguration})
+  commentId: M:LiveStreamingServerNet.Networking.Installer.Contracts.IServerConfigurator.ConfigureSecurity(System.Action{LiveStreamingServerNet.Networking.Configurations.SecurityConfiguration})
+  id: ConfigureSecurity(System.Action{LiveStreamingServerNet.Networking.Configurations.SecurityConfiguration})
+  parent: LiveStreamingServerNet.Networking.Installer.Contracts.IServerConfigurator
+  langs:
+  - csharp
+  - vb
+  name: ConfigureSecurity(Action<SecurityConfiguration>?)
+  nameWithType: IServerConfigurator.ConfigureSecurity(Action<SecurityConfiguration>?)
+  fullName: LiveStreamingServerNet.Networking.Installer.Contracts.IServerConfigurator.ConfigureSecurity(System.Action<LiveStreamingServerNet.Networking.Configurations.SecurityConfiguration>?)
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/Installer/Contracts/IServerConfigurator.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: ConfigureSecurity
+    path: ../src/LiveStreamingServerNet.Networking/Installer/Contracts/IServerConfigurator.cs
+    startLine: 13
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking.Installer.Contracts
+  syntax:
+    content: IServerConfigurator ConfigureSecurity(Action<SecurityConfiguration>? configure)
+    parameters:
+    - id: configure
+      type: System.Action{LiveStreamingServerNet.Networking.Configurations.SecurityConfiguration}
+    return:
+      type: LiveStreamingServerNet.Networking.Installer.Contracts.IServerConfigurator
+    content.vb: Function ConfigureSecurity(configure As Action(Of SecurityConfiguration)) As IServerConfigurator
+  overload: LiveStreamingServerNet.Networking.Installer.Contracts.IServerConfigurator.ConfigureSecurity*
+  nameWithType.vb: IServerConfigurator.ConfigureSecurity(Action(Of SecurityConfiguration))
+  fullName.vb: LiveStreamingServerNet.Networking.Installer.Contracts.IServerConfigurator.ConfigureSecurity(System.Action(Of LiveStreamingServerNet.Networking.Configurations.SecurityConfiguration))
+  name.vb: ConfigureSecurity(Action(Of SecurityConfiguration))
+- uid: LiveStreamingServerNet.Networking.Installer.Contracts.IServerConfigurator.ConfigureNetBufferPool(System.Action{LiveStreamingServerNet.Networking.Configurations.NetBufferPoolConfiguration})
+  commentId: M:LiveStreamingServerNet.Networking.Installer.Contracts.IServerConfigurator.ConfigureNetBufferPool(System.Action{LiveStreamingServerNet.Networking.Configurations.NetBufferPoolConfiguration})
+  id: ConfigureNetBufferPool(System.Action{LiveStreamingServerNet.Networking.Configurations.NetBufferPoolConfiguration})
+  parent: LiveStreamingServerNet.Networking.Installer.Contracts.IServerConfigurator
+  langs:
+  - csharp
+  - vb
+  name: ConfigureNetBufferPool(Action<NetBufferPoolConfiguration>?)
+  nameWithType: IServerConfigurator.ConfigureNetBufferPool(Action<NetBufferPoolConfiguration>?)
+  fullName: LiveStreamingServerNet.Networking.Installer.Contracts.IServerConfigurator.ConfigureNetBufferPool(System.Action<LiveStreamingServerNet.Networking.Configurations.NetBufferPoolConfiguration>?)
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/Installer/Contracts/IServerConfigurator.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: ConfigureNetBufferPool
+    path: ../src/LiveStreamingServerNet.Networking/Installer/Contracts/IServerConfigurator.cs
+    startLine: 15
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking.Installer.Contracts
+  syntax:
+    content: IServerConfigurator ConfigureNetBufferPool(Action<NetBufferPoolConfiguration>? configure)
+    parameters:
+    - id: configure
+      type: System.Action{LiveStreamingServerNet.Networking.Configurations.NetBufferPoolConfiguration}
+    return:
+      type: LiveStreamingServerNet.Networking.Installer.Contracts.IServerConfigurator
+    content.vb: Function ConfigureNetBufferPool(configure As Action(Of NetBufferPoolConfiguration)) As IServerConfigurator
+  overload: LiveStreamingServerNet.Networking.Installer.Contracts.IServerConfigurator.ConfigureNetBufferPool*
+  nameWithType.vb: IServerConfigurator.ConfigureNetBufferPool(Action(Of NetBufferPoolConfiguration))
+  fullName.vb: LiveStreamingServerNet.Networking.Installer.Contracts.IServerConfigurator.ConfigureNetBufferPool(System.Action(Of LiveStreamingServerNet.Networking.Configurations.NetBufferPoolConfiguration))
+  name.vb: ConfigureNetBufferPool(Action(Of NetBufferPoolConfiguration))
+references:
+- uid: LiveStreamingServerNet.Networking.Installer.Contracts
+  commentId: N:LiveStreamingServerNet.Networking.Installer.Contracts
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.Networking.Installer.Contracts
+  nameWithType: LiveStreamingServerNet.Networking.Installer.Contracts
+  fullName: LiveStreamingServerNet.Networking.Installer.Contracts
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Networking
+    name: Networking
+    href: LiveStreamingServerNet.Networking.html
+  - name: .
+  - uid: LiveStreamingServerNet.Networking.Installer
+    name: Installer
+    href: LiveStreamingServerNet.Networking.Installer.html
+  - name: .
+  - uid: LiveStreamingServerNet.Networking.Installer.Contracts
+    name: Contracts
+    href: LiveStreamingServerNet.Networking.Installer.Contracts.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Networking
+    name: Networking
+    href: LiveStreamingServerNet.Networking.html
+  - name: .
+  - uid: LiveStreamingServerNet.Networking.Installer
+    name: Installer
+    href: LiveStreamingServerNet.Networking.Installer.html
+  - name: .
+  - uid: LiveStreamingServerNet.Networking.Installer.Contracts
+    name: Contracts
+    href: LiveStreamingServerNet.Networking.Installer.Contracts.html
+- uid: System.Object.LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Action)
+  commentId: M:LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  parent: LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+  definition: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  name: Lock(object, Action)
+  nameWithType: LockExtensions.Lock(object, Action)
+  fullName: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(object, System.Action)
+  nameWithType.vb: LockExtensions.Lock(Object, Action)
+  fullName.vb: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(Object, System.Action)
+  name.vb: Lock(Object, Action)
+  spec.csharp:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+  spec.vb:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+- uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  commentId: M:LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  isExternal: true
+  href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  name: Lock(object, Action)
+  nameWithType: LockExtensions.Lock(object, Action)
+  fullName: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(object, System.Action)
+  nameWithType.vb: LockExtensions.Lock(Object, Action)
+  fullName.vb: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(Object, System.Action)
+  name.vb: Lock(Object, Action)
+  spec.csharp:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+  spec.vb:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+- uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+  commentId: T:LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+  parent: LiveStreamingServerNet.Utilities.Extensions
+  href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html
+  name: LockExtensions
+  nameWithType: LockExtensions
+  fullName: LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+- uid: LiveStreamingServerNet.Utilities.Extensions
+  commentId: N:LiveStreamingServerNet.Utilities.Extensions
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.Utilities.Extensions
+  nameWithType: LiveStreamingServerNet.Utilities.Extensions
+  fullName: LiveStreamingServerNet.Utilities.Extensions
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities
+    name: Utilities
+    href: LiveStreamingServerNet.Utilities.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities.Extensions
+    name: Extensions
+    href: LiveStreamingServerNet.Utilities.Extensions.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities
+    name: Utilities
+    href: LiveStreamingServerNet.Utilities.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities.Extensions
+    name: Extensions
+    href: LiveStreamingServerNet.Utilities.Extensions.html
+- uid: LiveStreamingServerNet.Networking.Installer.Contracts.IServerConfigurator.Services*
+  commentId: Overload:LiveStreamingServerNet.Networking.Installer.Contracts.IServerConfigurator.Services
+  href: LiveStreamingServerNet.Networking.Installer.Contracts.IServerConfigurator.html#LiveStreamingServerNet_Networking_Installer_Contracts_IServerConfigurator_Services
+  name: Services
+  nameWithType: IServerConfigurator.Services
+  fullName: LiveStreamingServerNet.Networking.Installer.Contracts.IServerConfigurator.Services
+- uid: Microsoft.Extensions.DependencyInjection.IServiceCollection
+  commentId: T:Microsoft.Extensions.DependencyInjection.IServiceCollection
+  parent: Microsoft.Extensions.DependencyInjection
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.extensions.dependencyinjection.iservicecollection
+  name: IServiceCollection
+  nameWithType: IServiceCollection
+  fullName: Microsoft.Extensions.DependencyInjection.IServiceCollection
+- uid: Microsoft.Extensions.DependencyInjection
+  commentId: N:Microsoft.Extensions.DependencyInjection
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft
+  name: Microsoft.Extensions.DependencyInjection
+  nameWithType: Microsoft.Extensions.DependencyInjection
+  fullName: Microsoft.Extensions.DependencyInjection
+  spec.csharp:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.Extensions
+    name: Extensions
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.extensions
+  - name: .
+  - uid: Microsoft.Extensions.DependencyInjection
+    name: DependencyInjection
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.extensions.dependencyinjection
+  spec.vb:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.Extensions
+    name: Extensions
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.extensions
+  - name: .
+  - uid: Microsoft.Extensions.DependencyInjection
+    name: DependencyInjection
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.extensions.dependencyinjection
+- uid: LiveStreamingServerNet.Networking.Installer.Contracts.IServerConfigurator.AddServerEventHandler*
+  commentId: Overload:LiveStreamingServerNet.Networking.Installer.Contracts.IServerConfigurator.AddServerEventHandler
+  href: LiveStreamingServerNet.Networking.Installer.Contracts.IServerConfigurator.html#LiveStreamingServerNet_Networking_Installer_Contracts_IServerConfigurator_AddServerEventHandler__1
+  name: AddServerEventHandler
+  nameWithType: IServerConfigurator.AddServerEventHandler
+  fullName: LiveStreamingServerNet.Networking.Installer.Contracts.IServerConfigurator.AddServerEventHandler
+- uid: LiveStreamingServerNet.Networking.Installer.Contracts.IServerConfigurator
+  commentId: T:LiveStreamingServerNet.Networking.Installer.Contracts.IServerConfigurator
+  parent: LiveStreamingServerNet.Networking.Installer.Contracts
+  href: LiveStreamingServerNet.Networking.Installer.Contracts.IServerConfigurator.html
+  name: IServerConfigurator
+  nameWithType: IServerConfigurator
+  fullName: LiveStreamingServerNet.Networking.Installer.Contracts.IServerConfigurator
+- uid: LiveStreamingServerNet.Networking.Installer.Contracts.IServerConfigurator.ConfigureSecurity*
+  commentId: Overload:LiveStreamingServerNet.Networking.Installer.Contracts.IServerConfigurator.ConfigureSecurity
+  href: LiveStreamingServerNet.Networking.Installer.Contracts.IServerConfigurator.html#LiveStreamingServerNet_Networking_Installer_Contracts_IServerConfigurator_ConfigureSecurity_System_Action_LiveStreamingServerNet_Networking_Configurations_SecurityConfiguration__
+  name: ConfigureSecurity
+  nameWithType: IServerConfigurator.ConfigureSecurity
+  fullName: LiveStreamingServerNet.Networking.Installer.Contracts.IServerConfigurator.ConfigureSecurity
+- uid: System.Action{LiveStreamingServerNet.Networking.Configurations.SecurityConfiguration}
+  commentId: T:System.Action{LiveStreamingServerNet.Networking.Configurations.SecurityConfiguration}
+  parent: System
+  definition: System.Action`1
+  href: https://learn.microsoft.com/dotnet/api/system.action-1
+  name: Action<SecurityConfiguration>
+  nameWithType: Action<SecurityConfiguration>
+  fullName: System.Action<LiveStreamingServerNet.Networking.Configurations.SecurityConfiguration>
+  nameWithType.vb: Action(Of SecurityConfiguration)
+  fullName.vb: System.Action(Of LiveStreamingServerNet.Networking.Configurations.SecurityConfiguration)
+  name.vb: Action(Of SecurityConfiguration)
+  spec.csharp:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: <
+  - uid: LiveStreamingServerNet.Networking.Configurations.SecurityConfiguration
+    name: SecurityConfiguration
+    href: LiveStreamingServerNet.Networking.Configurations.SecurityConfiguration.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: LiveStreamingServerNet.Networking.Configurations.SecurityConfiguration
+    name: SecurityConfiguration
+    href: LiveStreamingServerNet.Networking.Configurations.SecurityConfiguration.html
+  - name: )
+- uid: System.Action`1
+  commentId: T:System.Action`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.action-1
+  name: Action<T>
+  nameWithType: Action<T>
+  fullName: System.Action<T>
+  nameWithType.vb: Action(Of T)
+  fullName.vb: System.Action(Of T)
+  name.vb: Action(Of T)
+  spec.csharp:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: LiveStreamingServerNet.Networking.Installer.Contracts.IServerConfigurator.ConfigureNetBufferPool*
+  commentId: Overload:LiveStreamingServerNet.Networking.Installer.Contracts.IServerConfigurator.ConfigureNetBufferPool
+  href: LiveStreamingServerNet.Networking.Installer.Contracts.IServerConfigurator.html#LiveStreamingServerNet_Networking_Installer_Contracts_IServerConfigurator_ConfigureNetBufferPool_System_Action_LiveStreamingServerNet_Networking_Configurations_NetBufferPoolConfiguration__
+  name: ConfigureNetBufferPool
+  nameWithType: IServerConfigurator.ConfigureNetBufferPool
+  fullName: LiveStreamingServerNet.Networking.Installer.Contracts.IServerConfigurator.ConfigureNetBufferPool
+- uid: System.Action{LiveStreamingServerNet.Networking.Configurations.NetBufferPoolConfiguration}
+  commentId: T:System.Action{LiveStreamingServerNet.Networking.Configurations.NetBufferPoolConfiguration}
+  parent: System
+  definition: System.Action`1
+  href: https://learn.microsoft.com/dotnet/api/system.action-1
+  name: Action<NetBufferPoolConfiguration>
+  nameWithType: Action<NetBufferPoolConfiguration>
+  fullName: System.Action<LiveStreamingServerNet.Networking.Configurations.NetBufferPoolConfiguration>
+  nameWithType.vb: Action(Of NetBufferPoolConfiguration)
+  fullName.vb: System.Action(Of LiveStreamingServerNet.Networking.Configurations.NetBufferPoolConfiguration)
+  name.vb: Action(Of NetBufferPoolConfiguration)
+  spec.csharp:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: <
+  - uid: LiveStreamingServerNet.Networking.Configurations.NetBufferPoolConfiguration
+    name: NetBufferPoolConfiguration
+    href: LiveStreamingServerNet.Networking.Configurations.NetBufferPoolConfiguration.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: LiveStreamingServerNet.Networking.Configurations.NetBufferPoolConfiguration
+    name: NetBufferPoolConfiguration
+    href: LiveStreamingServerNet.Networking.Configurations.NetBufferPoolConfiguration.html
+  - name: )

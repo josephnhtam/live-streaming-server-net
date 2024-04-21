@@ -1,0 +1,1294 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest
+  commentId: T:LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest
+  id: RtmpStreamManagerServiceTest
+  parent: LiveStreamingServerNet.Rtmp.Test.Services
+  children:
+  - LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.#ctor
+  - LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.GetPublishStreamContext_Should_ReturnCorrectStreamContext
+  - LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.GetPublishStreamPath_Should_ReturnCorrectStreamPath
+  - LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.GetPublishingClientContext_Should_ReturnCorrectClientContext
+  - LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.GetSubscribersLocked_Should_ReturnCorrectSubscribers
+  - LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.GetSubscribers_Should_ReturnCorrectSubscribers
+  - LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.IsStreamPathPublishing_Should_ReturnFalse_When_StreamPathIsNotPublishing
+  - LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.IsStreamPathPublishing_Should_ReturnTrue_When_StreamPathIsPublishing
+  - LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StartPublishingStream_Should_AddPublisherAndReturnSucceeded
+  - LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StartPublishingStream_Should_ReturnAlreadyExists_When_StreamPathAlreadyExists
+  - LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StartPublishingStream_Should_ReturnAlreadyPublishing_When_PublisherIsAlreadyPublishing
+  - LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StartPublishingStream_Should_ReturnAlreadySubscribing_When_PublisherIsAlreadySubscribing
+  - LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StartPublishingStream_Should_ReturnCorrectSubscribers
+  - LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StartSubscribingStream_Should_AddSubscriberAndReturnSucceeded
+  - LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StartSubscribingStream_Should_ReturnAlreadyPublishing_When_SubscriberIsAlreadyPublishing
+  - LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StartSubscribingStream_Should_ReturnAlreadySubscribing_When_SubscriberIsAlreadySubscribing
+  - LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StopPublishingStream_Should_RemovePublisherAndReturnTrue
+  - LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StopPublishingStream_Should_ReturnFalse_When_PublisherDoesNotExist
+  - LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StopSubscribingStream_Should_RemoveSubscriberAndReturnTrue
+  - LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StopSubscribingStream_Should_ReturnFalse_When_SubscriberDoesNotExist
+  langs:
+  - csharp
+  - vb
+  name: RtmpStreamManagerServiceTest
+  nameWithType: RtmpStreamManagerServiceTest
+  fullName: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest
+  type: Class
+  source:
+    remote:
+      path: test/LiveStreamingServerNet.Rtmp.Test/Services/RtmpStreamManagerService.Test.cs
+      branch: develop
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: RtmpStreamManagerServiceTest
+    path: ../test/LiveStreamingServerNet.Rtmp.Test/Services/RtmpStreamManagerService.Test.cs
+    startLine: 9
+  assemblies:
+  - LiveStreamingServerNet.Rtmp.Test
+  namespace: LiveStreamingServerNet.Rtmp.Test.Services
+  syntax:
+    content: public class RtmpStreamManagerServiceTest
+    content.vb: Public Class RtmpStreamManagerServiceTest
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  extensionMethods:
+  - System.Object.LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Action)
+- uid: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.#ctor
+  commentId: M:LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.#ctor
+  id: '#ctor'
+  parent: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest
+  langs:
+  - csharp
+  - vb
+  name: RtmpStreamManagerServiceTest()
+  nameWithType: RtmpStreamManagerServiceTest.RtmpStreamManagerServiceTest()
+  fullName: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.RtmpStreamManagerServiceTest()
+  type: Constructor
+  source:
+    remote:
+      path: test/LiveStreamingServerNet.Rtmp.Test/Services/RtmpStreamManagerService.Test.cs
+      branch: develop
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: .ctor
+    path: ../test/LiveStreamingServerNet.Rtmp.Test/Services/RtmpStreamManagerService.Test.cs
+    startLine: 13
+  assemblies:
+  - LiveStreamingServerNet.Rtmp.Test
+  namespace: LiveStreamingServerNet.Rtmp.Test.Services
+  syntax:
+    content: public RtmpStreamManagerServiceTest()
+    content.vb: Public Sub New()
+  overload: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.#ctor*
+  nameWithType.vb: RtmpStreamManagerServiceTest.New()
+  fullName.vb: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.New()
+  name.vb: New()
+- uid: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.GetPublishStreamPath_Should_ReturnCorrectStreamPath
+  commentId: M:LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.GetPublishStreamPath_Should_ReturnCorrectStreamPath
+  id: GetPublishStreamPath_Should_ReturnCorrectStreamPath
+  parent: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest
+  langs:
+  - csharp
+  - vb
+  name: GetPublishStreamPath_Should_ReturnCorrectStreamPath()
+  nameWithType: RtmpStreamManagerServiceTest.GetPublishStreamPath_Should_ReturnCorrectStreamPath()
+  fullName: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.GetPublishStreamPath_Should_ReturnCorrectStreamPath()
+  type: Method
+  source:
+    remote:
+      path: test/LiveStreamingServerNet.Rtmp.Test/Services/RtmpStreamManagerService.Test.cs
+      branch: develop
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: GetPublishStreamPath_Should_ReturnCorrectStreamPath
+    path: ../test/LiveStreamingServerNet.Rtmp.Test/Services/RtmpStreamManagerService.Test.cs
+    startLine: 18
+  assemblies:
+  - LiveStreamingServerNet.Rtmp.Test
+  namespace: LiveStreamingServerNet.Rtmp.Test.Services
+  syntax:
+    content: >-
+      [Fact]
+
+      public void GetPublishStreamPath_Should_ReturnCorrectStreamPath()
+    content.vb: >-
+      <Fact>
+
+      Public Sub GetPublishStreamPath_Should_ReturnCorrectStreamPath()
+  overload: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.GetPublishStreamPath_Should_ReturnCorrectStreamPath*
+  attributes:
+  - type: Xunit.FactAttribute
+    ctor: Xunit.FactAttribute.#ctor
+    arguments: []
+- uid: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.GetPublishingClientContext_Should_ReturnCorrectClientContext
+  commentId: M:LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.GetPublishingClientContext_Should_ReturnCorrectClientContext
+  id: GetPublishingClientContext_Should_ReturnCorrectClientContext
+  parent: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest
+  langs:
+  - csharp
+  - vb
+  name: GetPublishingClientContext_Should_ReturnCorrectClientContext()
+  nameWithType: RtmpStreamManagerServiceTest.GetPublishingClientContext_Should_ReturnCorrectClientContext()
+  fullName: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.GetPublishingClientContext_Should_ReturnCorrectClientContext()
+  type: Method
+  source:
+    remote:
+      path: test/LiveStreamingServerNet.Rtmp.Test/Services/RtmpStreamManagerService.Test.cs
+      branch: develop
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: GetPublishingClientContext_Should_ReturnCorrectClientContext
+    path: ../test/LiveStreamingServerNet.Rtmp.Test/Services/RtmpStreamManagerService.Test.cs
+    startLine: 35
+  assemblies:
+  - LiveStreamingServerNet.Rtmp.Test
+  namespace: LiveStreamingServerNet.Rtmp.Test.Services
+  syntax:
+    content: >-
+      [Fact]
+
+      public void GetPublishingClientContext_Should_ReturnCorrectClientContext()
+    content.vb: >-
+      <Fact>
+
+      Public Sub GetPublishingClientContext_Should_ReturnCorrectClientContext()
+  overload: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.GetPublishingClientContext_Should_ReturnCorrectClientContext*
+  attributes:
+  - type: Xunit.FactAttribute
+    ctor: Xunit.FactAttribute.#ctor
+    arguments: []
+- uid: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.GetPublishStreamContext_Should_ReturnCorrectStreamContext
+  commentId: M:LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.GetPublishStreamContext_Should_ReturnCorrectStreamContext
+  id: GetPublishStreamContext_Should_ReturnCorrectStreamContext
+  parent: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest
+  langs:
+  - csharp
+  - vb
+  name: GetPublishStreamContext_Should_ReturnCorrectStreamContext()
+  nameWithType: RtmpStreamManagerServiceTest.GetPublishStreamContext_Should_ReturnCorrectStreamContext()
+  fullName: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.GetPublishStreamContext_Should_ReturnCorrectStreamContext()
+  type: Method
+  source:
+    remote:
+      path: test/LiveStreamingServerNet.Rtmp.Test/Services/RtmpStreamManagerService.Test.cs
+      branch: develop
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: GetPublishStreamContext_Should_ReturnCorrectStreamContext
+    path: ../test/LiveStreamingServerNet.Rtmp.Test/Services/RtmpStreamManagerService.Test.cs
+    startLine: 52
+  assemblies:
+  - LiveStreamingServerNet.Rtmp.Test
+  namespace: LiveStreamingServerNet.Rtmp.Test.Services
+  syntax:
+    content: >-
+      [Fact]
+
+      public void GetPublishStreamContext_Should_ReturnCorrectStreamContext()
+    content.vb: >-
+      <Fact>
+
+      Public Sub GetPublishStreamContext_Should_ReturnCorrectStreamContext()
+  overload: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.GetPublishStreamContext_Should_ReturnCorrectStreamContext*
+  attributes:
+  - type: Xunit.FactAttribute
+    ctor: Xunit.FactAttribute.#ctor
+    arguments: []
+- uid: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StartPublishingStream_Should_AddPublisherAndReturnSucceeded
+  commentId: M:LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StartPublishingStream_Should_AddPublisherAndReturnSucceeded
+  id: StartPublishingStream_Should_AddPublisherAndReturnSucceeded
+  parent: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest
+  langs:
+  - csharp
+  - vb
+  name: StartPublishingStream_Should_AddPublisherAndReturnSucceeded()
+  nameWithType: RtmpStreamManagerServiceTest.StartPublishingStream_Should_AddPublisherAndReturnSucceeded()
+  fullName: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StartPublishingStream_Should_AddPublisherAndReturnSucceeded()
+  type: Method
+  source:
+    remote:
+      path: test/LiveStreamingServerNet.Rtmp.Test/Services/RtmpStreamManagerService.Test.cs
+      branch: develop
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: StartPublishingStream_Should_AddPublisherAndReturnSucceeded
+    path: ../test/LiveStreamingServerNet.Rtmp.Test/Services/RtmpStreamManagerService.Test.cs
+    startLine: 69
+  assemblies:
+  - LiveStreamingServerNet.Rtmp.Test
+  namespace: LiveStreamingServerNet.Rtmp.Test.Services
+  syntax:
+    content: >-
+      [Fact]
+
+      public void StartPublishingStream_Should_AddPublisherAndReturnSucceeded()
+    content.vb: >-
+      <Fact>
+
+      Public Sub StartPublishingStream_Should_AddPublisherAndReturnSucceeded()
+  overload: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StartPublishingStream_Should_AddPublisherAndReturnSucceeded*
+  attributes:
+  - type: Xunit.FactAttribute
+    ctor: Xunit.FactAttribute.#ctor
+    arguments: []
+- uid: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StartPublishingStream_Should_ReturnAlreadySubscribing_When_PublisherIsAlreadySubscribing
+  commentId: M:LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StartPublishingStream_Should_ReturnAlreadySubscribing_When_PublisherIsAlreadySubscribing
+  id: StartPublishingStream_Should_ReturnAlreadySubscribing_When_PublisherIsAlreadySubscribing
+  parent: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest
+  langs:
+  - csharp
+  - vb
+  name: StartPublishingStream_Should_ReturnAlreadySubscribing_When_PublisherIsAlreadySubscribing()
+  nameWithType: RtmpStreamManagerServiceTest.StartPublishingStream_Should_ReturnAlreadySubscribing_When_PublisherIsAlreadySubscribing()
+  fullName: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StartPublishingStream_Should_ReturnAlreadySubscribing_When_PublisherIsAlreadySubscribing()
+  type: Method
+  source:
+    remote:
+      path: test/LiveStreamingServerNet.Rtmp.Test/Services/RtmpStreamManagerService.Test.cs
+      branch: develop
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: StartPublishingStream_Should_ReturnAlreadySubscribing_When_PublisherIsAlreadySubscribing
+    path: ../test/LiveStreamingServerNet.Rtmp.Test/Services/RtmpStreamManagerService.Test.cs
+    startLine: 86
+  assemblies:
+  - LiveStreamingServerNet.Rtmp.Test
+  namespace: LiveStreamingServerNet.Rtmp.Test.Services
+  syntax:
+    content: >-
+      [Fact]
+
+      public void StartPublishingStream_Should_ReturnAlreadySubscribing_When_PublisherIsAlreadySubscribing()
+    content.vb: >-
+      <Fact>
+
+      Public Sub StartPublishingStream_Should_ReturnAlreadySubscribing_When_PublisherIsAlreadySubscribing()
+  overload: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StartPublishingStream_Should_ReturnAlreadySubscribing_When_PublisherIsAlreadySubscribing*
+  attributes:
+  - type: Xunit.FactAttribute
+    ctor: Xunit.FactAttribute.#ctor
+    arguments: []
+- uid: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StartPublishingStream_Should_ReturnAlreadyPublishing_When_PublisherIsAlreadyPublishing
+  commentId: M:LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StartPublishingStream_Should_ReturnAlreadyPublishing_When_PublisherIsAlreadyPublishing
+  id: StartPublishingStream_Should_ReturnAlreadyPublishing_When_PublisherIsAlreadyPublishing
+  parent: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest
+  langs:
+  - csharp
+  - vb
+  name: StartPublishingStream_Should_ReturnAlreadyPublishing_When_PublisherIsAlreadyPublishing()
+  nameWithType: RtmpStreamManagerServiceTest.StartPublishingStream_Should_ReturnAlreadyPublishing_When_PublisherIsAlreadyPublishing()
+  fullName: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StartPublishingStream_Should_ReturnAlreadyPublishing_When_PublisherIsAlreadyPublishing()
+  type: Method
+  source:
+    remote:
+      path: test/LiveStreamingServerNet.Rtmp.Test/Services/RtmpStreamManagerService.Test.cs
+      branch: develop
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: StartPublishingStream_Should_ReturnAlreadyPublishing_When_PublisherIsAlreadyPublishing
+    path: ../test/LiveStreamingServerNet.Rtmp.Test/Services/RtmpStreamManagerService.Test.cs
+    startLine: 103
+  assemblies:
+  - LiveStreamingServerNet.Rtmp.Test
+  namespace: LiveStreamingServerNet.Rtmp.Test.Services
+  syntax:
+    content: >-
+      [Fact]
+
+      public void StartPublishingStream_Should_ReturnAlreadyPublishing_When_PublisherIsAlreadyPublishing()
+    content.vb: >-
+      <Fact>
+
+      Public Sub StartPublishingStream_Should_ReturnAlreadyPublishing_When_PublisherIsAlreadyPublishing()
+  overload: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StartPublishingStream_Should_ReturnAlreadyPublishing_When_PublisherIsAlreadyPublishing*
+  attributes:
+  - type: Xunit.FactAttribute
+    ctor: Xunit.FactAttribute.#ctor
+    arguments: []
+- uid: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StartPublishingStream_Should_ReturnAlreadyExists_When_StreamPathAlreadyExists
+  commentId: M:LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StartPublishingStream_Should_ReturnAlreadyExists_When_StreamPathAlreadyExists
+  id: StartPublishingStream_Should_ReturnAlreadyExists_When_StreamPathAlreadyExists
+  parent: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest
+  langs:
+  - csharp
+  - vb
+  name: StartPublishingStream_Should_ReturnAlreadyExists_When_StreamPathAlreadyExists()
+  nameWithType: RtmpStreamManagerServiceTest.StartPublishingStream_Should_ReturnAlreadyExists_When_StreamPathAlreadyExists()
+  fullName: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StartPublishingStream_Should_ReturnAlreadyExists_When_StreamPathAlreadyExists()
+  type: Method
+  source:
+    remote:
+      path: test/LiveStreamingServerNet.Rtmp.Test/Services/RtmpStreamManagerService.Test.cs
+      branch: develop
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: StartPublishingStream_Should_ReturnAlreadyExists_When_StreamPathAlreadyExists
+    path: ../test/LiveStreamingServerNet.Rtmp.Test/Services/RtmpStreamManagerService.Test.cs
+    startLine: 120
+  assemblies:
+  - LiveStreamingServerNet.Rtmp.Test
+  namespace: LiveStreamingServerNet.Rtmp.Test.Services
+  syntax:
+    content: >-
+      [Fact]
+
+      public void StartPublishingStream_Should_ReturnAlreadyExists_When_StreamPathAlreadyExists()
+    content.vb: >-
+      <Fact>
+
+      Public Sub StartPublishingStream_Should_ReturnAlreadyExists_When_StreamPathAlreadyExists()
+  overload: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StartPublishingStream_Should_ReturnAlreadyExists_When_StreamPathAlreadyExists*
+  attributes:
+  - type: Xunit.FactAttribute
+    ctor: Xunit.FactAttribute.#ctor
+    arguments: []
+- uid: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StopPublishingStream_Should_RemovePublisherAndReturnTrue
+  commentId: M:LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StopPublishingStream_Should_RemovePublisherAndReturnTrue
+  id: StopPublishingStream_Should_RemovePublisherAndReturnTrue
+  parent: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest
+  langs:
+  - csharp
+  - vb
+  name: StopPublishingStream_Should_RemovePublisherAndReturnTrue()
+  nameWithType: RtmpStreamManagerServiceTest.StopPublishingStream_Should_RemovePublisherAndReturnTrue()
+  fullName: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StopPublishingStream_Should_RemovePublisherAndReturnTrue()
+  type: Method
+  source:
+    remote:
+      path: test/LiveStreamingServerNet.Rtmp.Test/Services/RtmpStreamManagerService.Test.cs
+      branch: develop
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: StopPublishingStream_Should_RemovePublisherAndReturnTrue
+    path: ../test/LiveStreamingServerNet.Rtmp.Test/Services/RtmpStreamManagerService.Test.cs
+    startLine: 138
+  assemblies:
+  - LiveStreamingServerNet.Rtmp.Test
+  namespace: LiveStreamingServerNet.Rtmp.Test.Services
+  syntax:
+    content: >-
+      [Fact]
+
+      public void StopPublishingStream_Should_RemovePublisherAndReturnTrue()
+    content.vb: >-
+      <Fact>
+
+      Public Sub StopPublishingStream_Should_RemovePublisherAndReturnTrue()
+  overload: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StopPublishingStream_Should_RemovePublisherAndReturnTrue*
+  attributes:
+  - type: Xunit.FactAttribute
+    ctor: Xunit.FactAttribute.#ctor
+    arguments: []
+- uid: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StopPublishingStream_Should_ReturnFalse_When_PublisherDoesNotExist
+  commentId: M:LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StopPublishingStream_Should_ReturnFalse_When_PublisherDoesNotExist
+  id: StopPublishingStream_Should_ReturnFalse_When_PublisherDoesNotExist
+  parent: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest
+  langs:
+  - csharp
+  - vb
+  name: StopPublishingStream_Should_ReturnFalse_When_PublisherDoesNotExist()
+  nameWithType: RtmpStreamManagerServiceTest.StopPublishingStream_Should_ReturnFalse_When_PublisherDoesNotExist()
+  fullName: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StopPublishingStream_Should_ReturnFalse_When_PublisherDoesNotExist()
+  type: Method
+  source:
+    remote:
+      path: test/LiveStreamingServerNet.Rtmp.Test/Services/RtmpStreamManagerService.Test.cs
+      branch: develop
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: StopPublishingStream_Should_ReturnFalse_When_PublisherDoesNotExist
+    path: ../test/LiveStreamingServerNet.Rtmp.Test/Services/RtmpStreamManagerService.Test.cs
+    startLine: 156
+  assemblies:
+  - LiveStreamingServerNet.Rtmp.Test
+  namespace: LiveStreamingServerNet.Rtmp.Test.Services
+  syntax:
+    content: >-
+      [Fact]
+
+      public void StopPublishingStream_Should_ReturnFalse_When_PublisherDoesNotExist()
+    content.vb: >-
+      <Fact>
+
+      Public Sub StopPublishingStream_Should_ReturnFalse_When_PublisherDoesNotExist()
+  overload: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StopPublishingStream_Should_ReturnFalse_When_PublisherDoesNotExist*
+  attributes:
+  - type: Xunit.FactAttribute
+    ctor: Xunit.FactAttribute.#ctor
+    arguments: []
+- uid: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.IsStreamPathPublishing_Should_ReturnTrue_When_StreamPathIsPublishing
+  commentId: M:LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.IsStreamPathPublishing_Should_ReturnTrue_When_StreamPathIsPublishing
+  id: IsStreamPathPublishing_Should_ReturnTrue_When_StreamPathIsPublishing
+  parent: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest
+  langs:
+  - csharp
+  - vb
+  name: IsStreamPathPublishing_Should_ReturnTrue_When_StreamPathIsPublishing()
+  nameWithType: RtmpStreamManagerServiceTest.IsStreamPathPublishing_Should_ReturnTrue_When_StreamPathIsPublishing()
+  fullName: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.IsStreamPathPublishing_Should_ReturnTrue_When_StreamPathIsPublishing()
+  type: Method
+  source:
+    remote:
+      path: test/LiveStreamingServerNet.Rtmp.Test/Services/RtmpStreamManagerService.Test.cs
+      branch: develop
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: IsStreamPathPublishing_Should_ReturnTrue_When_StreamPathIsPublishing
+    path: ../test/LiveStreamingServerNet.Rtmp.Test/Services/RtmpStreamManagerService.Test.cs
+    startLine: 170
+  assemblies:
+  - LiveStreamingServerNet.Rtmp.Test
+  namespace: LiveStreamingServerNet.Rtmp.Test.Services
+  syntax:
+    content: >-
+      [Fact]
+
+      public void IsStreamPathPublishing_Should_ReturnTrue_When_StreamPathIsPublishing()
+    content.vb: >-
+      <Fact>
+
+      Public Sub IsStreamPathPublishing_Should_ReturnTrue_When_StreamPathIsPublishing()
+  overload: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.IsStreamPathPublishing_Should_ReturnTrue_When_StreamPathIsPublishing*
+  attributes:
+  - type: Xunit.FactAttribute
+    ctor: Xunit.FactAttribute.#ctor
+    arguments: []
+- uid: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.IsStreamPathPublishing_Should_ReturnFalse_When_StreamPathIsNotPublishing
+  commentId: M:LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.IsStreamPathPublishing_Should_ReturnFalse_When_StreamPathIsNotPublishing
+  id: IsStreamPathPublishing_Should_ReturnFalse_When_StreamPathIsNotPublishing
+  parent: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest
+  langs:
+  - csharp
+  - vb
+  name: IsStreamPathPublishing_Should_ReturnFalse_When_StreamPathIsNotPublishing()
+  nameWithType: RtmpStreamManagerServiceTest.IsStreamPathPublishing_Should_ReturnFalse_When_StreamPathIsNotPublishing()
+  fullName: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.IsStreamPathPublishing_Should_ReturnFalse_When_StreamPathIsNotPublishing()
+  type: Method
+  source:
+    remote:
+      path: test/LiveStreamingServerNet.Rtmp.Test/Services/RtmpStreamManagerService.Test.cs
+      branch: develop
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: IsStreamPathPublishing_Should_ReturnFalse_When_StreamPathIsNotPublishing
+    path: ../test/LiveStreamingServerNet.Rtmp.Test/Services/RtmpStreamManagerService.Test.cs
+    startLine: 187
+  assemblies:
+  - LiveStreamingServerNet.Rtmp.Test
+  namespace: LiveStreamingServerNet.Rtmp.Test.Services
+  syntax:
+    content: >-
+      [Fact]
+
+      public void IsStreamPathPublishing_Should_ReturnFalse_When_StreamPathIsNotPublishing()
+    content.vb: >-
+      <Fact>
+
+      Public Sub IsStreamPathPublishing_Should_ReturnFalse_When_StreamPathIsNotPublishing()
+  overload: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.IsStreamPathPublishing_Should_ReturnFalse_When_StreamPathIsNotPublishing*
+  attributes:
+  - type: Xunit.FactAttribute
+    ctor: Xunit.FactAttribute.#ctor
+    arguments: []
+- uid: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StartSubscribingStream_Should_AddSubscriberAndReturnSucceeded
+  commentId: M:LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StartSubscribingStream_Should_AddSubscriberAndReturnSucceeded
+  id: StartSubscribingStream_Should_AddSubscriberAndReturnSucceeded
+  parent: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest
+  langs:
+  - csharp
+  - vb
+  name: StartSubscribingStream_Should_AddSubscriberAndReturnSucceeded()
+  nameWithType: RtmpStreamManagerServiceTest.StartSubscribingStream_Should_AddSubscriberAndReturnSucceeded()
+  fullName: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StartSubscribingStream_Should_AddSubscriberAndReturnSucceeded()
+  type: Method
+  source:
+    remote:
+      path: test/LiveStreamingServerNet.Rtmp.Test/Services/RtmpStreamManagerService.Test.cs
+      branch: develop
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: StartSubscribingStream_Should_AddSubscriberAndReturnSucceeded
+    path: ../test/LiveStreamingServerNet.Rtmp.Test/Services/RtmpStreamManagerService.Test.cs
+    startLine: 201
+  assemblies:
+  - LiveStreamingServerNet.Rtmp.Test
+  namespace: LiveStreamingServerNet.Rtmp.Test.Services
+  syntax:
+    content: >-
+      [Fact]
+
+      public void StartSubscribingStream_Should_AddSubscriberAndReturnSucceeded()
+    content.vb: >-
+      <Fact>
+
+      Public Sub StartSubscribingStream_Should_AddSubscriberAndReturnSucceeded()
+  overload: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StartSubscribingStream_Should_AddSubscriberAndReturnSucceeded*
+  attributes:
+  - type: Xunit.FactAttribute
+    ctor: Xunit.FactAttribute.#ctor
+    arguments: []
+- uid: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StartSubscribingStream_Should_ReturnAlreadyPublishing_When_SubscriberIsAlreadyPublishing
+  commentId: M:LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StartSubscribingStream_Should_ReturnAlreadyPublishing_When_SubscriberIsAlreadyPublishing
+  id: StartSubscribingStream_Should_ReturnAlreadyPublishing_When_SubscriberIsAlreadyPublishing
+  parent: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest
+  langs:
+  - csharp
+  - vb
+  name: StartSubscribingStream_Should_ReturnAlreadyPublishing_When_SubscriberIsAlreadyPublishing()
+  nameWithType: RtmpStreamManagerServiceTest.StartSubscribingStream_Should_ReturnAlreadyPublishing_When_SubscriberIsAlreadyPublishing()
+  fullName: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StartSubscribingStream_Should_ReturnAlreadyPublishing_When_SubscriberIsAlreadyPublishing()
+  type: Method
+  source:
+    remote:
+      path: test/LiveStreamingServerNet.Rtmp.Test/Services/RtmpStreamManagerService.Test.cs
+      branch: develop
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: StartSubscribingStream_Should_ReturnAlreadyPublishing_When_SubscriberIsAlreadyPublishing
+    path: ../test/LiveStreamingServerNet.Rtmp.Test/Services/RtmpStreamManagerService.Test.cs
+    startLine: 218
+  assemblies:
+  - LiveStreamingServerNet.Rtmp.Test
+  namespace: LiveStreamingServerNet.Rtmp.Test.Services
+  syntax:
+    content: >-
+      [Fact]
+
+      public void StartSubscribingStream_Should_ReturnAlreadyPublishing_When_SubscriberIsAlreadyPublishing()
+    content.vb: >-
+      <Fact>
+
+      Public Sub StartSubscribingStream_Should_ReturnAlreadyPublishing_When_SubscriberIsAlreadyPublishing()
+  overload: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StartSubscribingStream_Should_ReturnAlreadyPublishing_When_SubscriberIsAlreadyPublishing*
+  attributes:
+  - type: Xunit.FactAttribute
+    ctor: Xunit.FactAttribute.#ctor
+    arguments: []
+- uid: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StartSubscribingStream_Should_ReturnAlreadySubscribing_When_SubscriberIsAlreadySubscribing
+  commentId: M:LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StartSubscribingStream_Should_ReturnAlreadySubscribing_When_SubscriberIsAlreadySubscribing
+  id: StartSubscribingStream_Should_ReturnAlreadySubscribing_When_SubscriberIsAlreadySubscribing
+  parent: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest
+  langs:
+  - csharp
+  - vb
+  name: StartSubscribingStream_Should_ReturnAlreadySubscribing_When_SubscriberIsAlreadySubscribing()
+  nameWithType: RtmpStreamManagerServiceTest.StartSubscribingStream_Should_ReturnAlreadySubscribing_When_SubscriberIsAlreadySubscribing()
+  fullName: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StartSubscribingStream_Should_ReturnAlreadySubscribing_When_SubscriberIsAlreadySubscribing()
+  type: Method
+  source:
+    remote:
+      path: test/LiveStreamingServerNet.Rtmp.Test/Services/RtmpStreamManagerService.Test.cs
+      branch: develop
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: StartSubscribingStream_Should_ReturnAlreadySubscribing_When_SubscriberIsAlreadySubscribing
+    path: ../test/LiveStreamingServerNet.Rtmp.Test/Services/RtmpStreamManagerService.Test.cs
+    startLine: 235
+  assemblies:
+  - LiveStreamingServerNet.Rtmp.Test
+  namespace: LiveStreamingServerNet.Rtmp.Test.Services
+  syntax:
+    content: >-
+      [Fact]
+
+      public void StartSubscribingStream_Should_ReturnAlreadySubscribing_When_SubscriberIsAlreadySubscribing()
+    content.vb: >-
+      <Fact>
+
+      Public Sub StartSubscribingStream_Should_ReturnAlreadySubscribing_When_SubscriberIsAlreadySubscribing()
+  overload: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StartSubscribingStream_Should_ReturnAlreadySubscribing_When_SubscriberIsAlreadySubscribing*
+  attributes:
+  - type: Xunit.FactAttribute
+    ctor: Xunit.FactAttribute.#ctor
+    arguments: []
+- uid: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StopSubscribingStream_Should_RemoveSubscriberAndReturnTrue
+  commentId: M:LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StopSubscribingStream_Should_RemoveSubscriberAndReturnTrue
+  id: StopSubscribingStream_Should_RemoveSubscriberAndReturnTrue
+  parent: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest
+  langs:
+  - csharp
+  - vb
+  name: StopSubscribingStream_Should_RemoveSubscriberAndReturnTrue()
+  nameWithType: RtmpStreamManagerServiceTest.StopSubscribingStream_Should_RemoveSubscriberAndReturnTrue()
+  fullName: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StopSubscribingStream_Should_RemoveSubscriberAndReturnTrue()
+  type: Method
+  source:
+    remote:
+      path: test/LiveStreamingServerNet.Rtmp.Test/Services/RtmpStreamManagerService.Test.cs
+      branch: develop
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: StopSubscribingStream_Should_RemoveSubscriberAndReturnTrue
+    path: ../test/LiveStreamingServerNet.Rtmp.Test/Services/RtmpStreamManagerService.Test.cs
+    startLine: 252
+  assemblies:
+  - LiveStreamingServerNet.Rtmp.Test
+  namespace: LiveStreamingServerNet.Rtmp.Test.Services
+  syntax:
+    content: >-
+      [Fact]
+
+      public void StopSubscribingStream_Should_RemoveSubscriberAndReturnTrue()
+    content.vb: >-
+      <Fact>
+
+      Public Sub StopSubscribingStream_Should_RemoveSubscriberAndReturnTrue()
+  overload: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StopSubscribingStream_Should_RemoveSubscriberAndReturnTrue*
+  attributes:
+  - type: Xunit.FactAttribute
+    ctor: Xunit.FactAttribute.#ctor
+    arguments: []
+- uid: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StopSubscribingStream_Should_ReturnFalse_When_SubscriberDoesNotExist
+  commentId: M:LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StopSubscribingStream_Should_ReturnFalse_When_SubscriberDoesNotExist
+  id: StopSubscribingStream_Should_ReturnFalse_When_SubscriberDoesNotExist
+  parent: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest
+  langs:
+  - csharp
+  - vb
+  name: StopSubscribingStream_Should_ReturnFalse_When_SubscriberDoesNotExist()
+  nameWithType: RtmpStreamManagerServiceTest.StopSubscribingStream_Should_ReturnFalse_When_SubscriberDoesNotExist()
+  fullName: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StopSubscribingStream_Should_ReturnFalse_When_SubscriberDoesNotExist()
+  type: Method
+  source:
+    remote:
+      path: test/LiveStreamingServerNet.Rtmp.Test/Services/RtmpStreamManagerService.Test.cs
+      branch: develop
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: StopSubscribingStream_Should_ReturnFalse_When_SubscriberDoesNotExist
+    path: ../test/LiveStreamingServerNet.Rtmp.Test/Services/RtmpStreamManagerService.Test.cs
+    startLine: 270
+  assemblies:
+  - LiveStreamingServerNet.Rtmp.Test
+  namespace: LiveStreamingServerNet.Rtmp.Test.Services
+  syntax:
+    content: >-
+      [Fact]
+
+      public void StopSubscribingStream_Should_ReturnFalse_When_SubscriberDoesNotExist()
+    content.vb: >-
+      <Fact>
+
+      Public Sub StopSubscribingStream_Should_ReturnFalse_When_SubscriberDoesNotExist()
+  overload: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StopSubscribingStream_Should_ReturnFalse_When_SubscriberDoesNotExist*
+  attributes:
+  - type: Xunit.FactAttribute
+    ctor: Xunit.FactAttribute.#ctor
+    arguments: []
+- uid: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.GetSubscribersLocked_Should_ReturnCorrectSubscribers
+  commentId: M:LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.GetSubscribersLocked_Should_ReturnCorrectSubscribers
+  id: GetSubscribersLocked_Should_ReturnCorrectSubscribers
+  parent: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest
+  langs:
+  - csharp
+  - vb
+  name: GetSubscribersLocked_Should_ReturnCorrectSubscribers()
+  nameWithType: RtmpStreamManagerServiceTest.GetSubscribersLocked_Should_ReturnCorrectSubscribers()
+  fullName: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.GetSubscribersLocked_Should_ReturnCorrectSubscribers()
+  type: Method
+  source:
+    remote:
+      path: test/LiveStreamingServerNet.Rtmp.Test/Services/RtmpStreamManagerService.Test.cs
+      branch: develop
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: GetSubscribersLocked_Should_ReturnCorrectSubscribers
+    path: ../test/LiveStreamingServerNet.Rtmp.Test/Services/RtmpStreamManagerService.Test.cs
+    startLine: 284
+  assemblies:
+  - LiveStreamingServerNet.Rtmp.Test
+  namespace: LiveStreamingServerNet.Rtmp.Test.Services
+  syntax:
+    content: >-
+      [Fact]
+
+      public void GetSubscribersLocked_Should_ReturnCorrectSubscribers()
+    content.vb: >-
+      <Fact>
+
+      Public Sub GetSubscribersLocked_Should_ReturnCorrectSubscribers()
+  overload: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.GetSubscribersLocked_Should_ReturnCorrectSubscribers*
+  attributes:
+  - type: Xunit.FactAttribute
+    ctor: Xunit.FactAttribute.#ctor
+    arguments: []
+- uid: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.GetSubscribers_Should_ReturnCorrectSubscribers
+  commentId: M:LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.GetSubscribers_Should_ReturnCorrectSubscribers
+  id: GetSubscribers_Should_ReturnCorrectSubscribers
+  parent: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest
+  langs:
+  - csharp
+  - vb
+  name: GetSubscribers_Should_ReturnCorrectSubscribers()
+  nameWithType: RtmpStreamManagerServiceTest.GetSubscribers_Should_ReturnCorrectSubscribers()
+  fullName: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.GetSubscribers_Should_ReturnCorrectSubscribers()
+  type: Method
+  source:
+    remote:
+      path: test/LiveStreamingServerNet.Rtmp.Test/Services/RtmpStreamManagerService.Test.cs
+      branch: develop
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: GetSubscribers_Should_ReturnCorrectSubscribers
+    path: ../test/LiveStreamingServerNet.Rtmp.Test/Services/RtmpStreamManagerService.Test.cs
+    startLine: 306
+  assemblies:
+  - LiveStreamingServerNet.Rtmp.Test
+  namespace: LiveStreamingServerNet.Rtmp.Test.Services
+  syntax:
+    content: >-
+      [Fact]
+
+      public void GetSubscribers_Should_ReturnCorrectSubscribers()
+    content.vb: >-
+      <Fact>
+
+      Public Sub GetSubscribers_Should_ReturnCorrectSubscribers()
+  overload: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.GetSubscribers_Should_ReturnCorrectSubscribers*
+  attributes:
+  - type: Xunit.FactAttribute
+    ctor: Xunit.FactAttribute.#ctor
+    arguments: []
+- uid: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StartPublishingStream_Should_ReturnCorrectSubscribers
+  commentId: M:LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StartPublishingStream_Should_ReturnCorrectSubscribers
+  id: StartPublishingStream_Should_ReturnCorrectSubscribers
+  parent: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest
+  langs:
+  - csharp
+  - vb
+  name: StartPublishingStream_Should_ReturnCorrectSubscribers()
+  nameWithType: RtmpStreamManagerServiceTest.StartPublishingStream_Should_ReturnCorrectSubscribers()
+  fullName: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StartPublishingStream_Should_ReturnCorrectSubscribers()
+  type: Method
+  source:
+    remote:
+      path: test/LiveStreamingServerNet.Rtmp.Test/Services/RtmpStreamManagerService.Test.cs
+      branch: develop
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: StartPublishingStream_Should_ReturnCorrectSubscribers
+    path: ../test/LiveStreamingServerNet.Rtmp.Test/Services/RtmpStreamManagerService.Test.cs
+    startLine: 327
+  assemblies:
+  - LiveStreamingServerNet.Rtmp.Test
+  namespace: LiveStreamingServerNet.Rtmp.Test.Services
+  syntax:
+    content: >-
+      [Fact]
+
+      public void StartPublishingStream_Should_ReturnCorrectSubscribers()
+    content.vb: >-
+      <Fact>
+
+      Public Sub StartPublishingStream_Should_ReturnCorrectSubscribers()
+  overload: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StartPublishingStream_Should_ReturnCorrectSubscribers*
+  attributes:
+  - type: Xunit.FactAttribute
+    ctor: Xunit.FactAttribute.#ctor
+    arguments: []
+references:
+- uid: LiveStreamingServerNet.Rtmp.Test.Services
+  commentId: N:LiveStreamingServerNet.Rtmp.Test.Services
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.Rtmp.Test.Services
+  nameWithType: LiveStreamingServerNet.Rtmp.Test.Services
+  fullName: LiveStreamingServerNet.Rtmp.Test.Services
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Rtmp
+    name: Rtmp
+    href: LiveStreamingServerNet.Rtmp.html
+  - name: .
+  - uid: LiveStreamingServerNet.Rtmp.Test
+    name: Test
+    href: LiveStreamingServerNet.Rtmp.Test.html
+  - name: .
+  - uid: LiveStreamingServerNet.Rtmp.Test.Services
+    name: Services
+    href: LiveStreamingServerNet.Rtmp.Test.Services.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Rtmp
+    name: Rtmp
+    href: LiveStreamingServerNet.Rtmp.html
+  - name: .
+  - uid: LiveStreamingServerNet.Rtmp.Test
+    name: Test
+    href: LiveStreamingServerNet.Rtmp.Test.html
+  - name: .
+  - uid: LiveStreamingServerNet.Rtmp.Test.Services
+    name: Services
+    href: LiveStreamingServerNet.Rtmp.Test.Services.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Action)
+  commentId: M:LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  parent: LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+  definition: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  name: Lock(object, Action)
+  nameWithType: LockExtensions.Lock(object, Action)
+  fullName: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(object, System.Action)
+  nameWithType.vb: LockExtensions.Lock(Object, Action)
+  fullName.vb: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(Object, System.Action)
+  name.vb: Lock(Object, Action)
+  spec.csharp:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+  spec.vb:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  commentId: M:LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  isExternal: true
+  href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  name: Lock(object, Action)
+  nameWithType: LockExtensions.Lock(object, Action)
+  fullName: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(object, System.Action)
+  nameWithType.vb: LockExtensions.Lock(Object, Action)
+  fullName.vb: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(Object, System.Action)
+  name.vb: Lock(Object, Action)
+  spec.csharp:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+  spec.vb:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+- uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+  commentId: T:LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+  parent: LiveStreamingServerNet.Utilities.Extensions
+  href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html
+  name: LockExtensions
+  nameWithType: LockExtensions
+  fullName: LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+- uid: LiveStreamingServerNet.Utilities.Extensions
+  commentId: N:LiveStreamingServerNet.Utilities.Extensions
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.Utilities.Extensions
+  nameWithType: LiveStreamingServerNet.Utilities.Extensions
+  fullName: LiveStreamingServerNet.Utilities.Extensions
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities
+    name: Utilities
+    href: LiveStreamingServerNet.Utilities.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities.Extensions
+    name: Extensions
+    href: LiveStreamingServerNet.Utilities.Extensions.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities
+    name: Utilities
+    href: LiveStreamingServerNet.Utilities.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities.Extensions
+    name: Extensions
+    href: LiveStreamingServerNet.Utilities.Extensions.html
+- uid: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.#ctor*
+  commentId: Overload:LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.#ctor
+  href: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.html#LiveStreamingServerNet_Rtmp_Test_Services_RtmpStreamManagerServiceTest__ctor
+  name: RtmpStreamManagerServiceTest
+  nameWithType: RtmpStreamManagerServiceTest.RtmpStreamManagerServiceTest
+  fullName: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.RtmpStreamManagerServiceTest
+  nameWithType.vb: RtmpStreamManagerServiceTest.New
+  fullName.vb: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.New
+  name.vb: New
+- uid: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.GetPublishStreamPath_Should_ReturnCorrectStreamPath*
+  commentId: Overload:LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.GetPublishStreamPath_Should_ReturnCorrectStreamPath
+  href: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.html#LiveStreamingServerNet_Rtmp_Test_Services_RtmpStreamManagerServiceTest_GetPublishStreamPath_Should_ReturnCorrectStreamPath
+  name: GetPublishStreamPath_Should_ReturnCorrectStreamPath
+  nameWithType: RtmpStreamManagerServiceTest.GetPublishStreamPath_Should_ReturnCorrectStreamPath
+  fullName: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.GetPublishStreamPath_Should_ReturnCorrectStreamPath
+- uid: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.GetPublishingClientContext_Should_ReturnCorrectClientContext*
+  commentId: Overload:LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.GetPublishingClientContext_Should_ReturnCorrectClientContext
+  href: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.html#LiveStreamingServerNet_Rtmp_Test_Services_RtmpStreamManagerServiceTest_GetPublishingClientContext_Should_ReturnCorrectClientContext
+  name: GetPublishingClientContext_Should_ReturnCorrectClientContext
+  nameWithType: RtmpStreamManagerServiceTest.GetPublishingClientContext_Should_ReturnCorrectClientContext
+  fullName: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.GetPublishingClientContext_Should_ReturnCorrectClientContext
+- uid: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.GetPublishStreamContext_Should_ReturnCorrectStreamContext*
+  commentId: Overload:LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.GetPublishStreamContext_Should_ReturnCorrectStreamContext
+  href: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.html#LiveStreamingServerNet_Rtmp_Test_Services_RtmpStreamManagerServiceTest_GetPublishStreamContext_Should_ReturnCorrectStreamContext
+  name: GetPublishStreamContext_Should_ReturnCorrectStreamContext
+  nameWithType: RtmpStreamManagerServiceTest.GetPublishStreamContext_Should_ReturnCorrectStreamContext
+  fullName: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.GetPublishStreamContext_Should_ReturnCorrectStreamContext
+- uid: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StartPublishingStream_Should_AddPublisherAndReturnSucceeded*
+  commentId: Overload:LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StartPublishingStream_Should_AddPublisherAndReturnSucceeded
+  href: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.html#LiveStreamingServerNet_Rtmp_Test_Services_RtmpStreamManagerServiceTest_StartPublishingStream_Should_AddPublisherAndReturnSucceeded
+  name: StartPublishingStream_Should_AddPublisherAndReturnSucceeded
+  nameWithType: RtmpStreamManagerServiceTest.StartPublishingStream_Should_AddPublisherAndReturnSucceeded
+  fullName: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StartPublishingStream_Should_AddPublisherAndReturnSucceeded
+- uid: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StartPublishingStream_Should_ReturnAlreadySubscribing_When_PublisherIsAlreadySubscribing*
+  commentId: Overload:LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StartPublishingStream_Should_ReturnAlreadySubscribing_When_PublisherIsAlreadySubscribing
+  href: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.html#LiveStreamingServerNet_Rtmp_Test_Services_RtmpStreamManagerServiceTest_StartPublishingStream_Should_ReturnAlreadySubscribing_When_PublisherIsAlreadySubscribing
+  name: StartPublishingStream_Should_ReturnAlreadySubscribing_When_PublisherIsAlreadySubscribing
+  nameWithType: RtmpStreamManagerServiceTest.StartPublishingStream_Should_ReturnAlreadySubscribing_When_PublisherIsAlreadySubscribing
+  fullName: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StartPublishingStream_Should_ReturnAlreadySubscribing_When_PublisherIsAlreadySubscribing
+- uid: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StartPublishingStream_Should_ReturnAlreadyPublishing_When_PublisherIsAlreadyPublishing*
+  commentId: Overload:LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StartPublishingStream_Should_ReturnAlreadyPublishing_When_PublisherIsAlreadyPublishing
+  href: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.html#LiveStreamingServerNet_Rtmp_Test_Services_RtmpStreamManagerServiceTest_StartPublishingStream_Should_ReturnAlreadyPublishing_When_PublisherIsAlreadyPublishing
+  name: StartPublishingStream_Should_ReturnAlreadyPublishing_When_PublisherIsAlreadyPublishing
+  nameWithType: RtmpStreamManagerServiceTest.StartPublishingStream_Should_ReturnAlreadyPublishing_When_PublisherIsAlreadyPublishing
+  fullName: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StartPublishingStream_Should_ReturnAlreadyPublishing_When_PublisherIsAlreadyPublishing
+- uid: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StartPublishingStream_Should_ReturnAlreadyExists_When_StreamPathAlreadyExists*
+  commentId: Overload:LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StartPublishingStream_Should_ReturnAlreadyExists_When_StreamPathAlreadyExists
+  href: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.html#LiveStreamingServerNet_Rtmp_Test_Services_RtmpStreamManagerServiceTest_StartPublishingStream_Should_ReturnAlreadyExists_When_StreamPathAlreadyExists
+  name: StartPublishingStream_Should_ReturnAlreadyExists_When_StreamPathAlreadyExists
+  nameWithType: RtmpStreamManagerServiceTest.StartPublishingStream_Should_ReturnAlreadyExists_When_StreamPathAlreadyExists
+  fullName: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StartPublishingStream_Should_ReturnAlreadyExists_When_StreamPathAlreadyExists
+- uid: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StopPublishingStream_Should_RemovePublisherAndReturnTrue*
+  commentId: Overload:LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StopPublishingStream_Should_RemovePublisherAndReturnTrue
+  href: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.html#LiveStreamingServerNet_Rtmp_Test_Services_RtmpStreamManagerServiceTest_StopPublishingStream_Should_RemovePublisherAndReturnTrue
+  name: StopPublishingStream_Should_RemovePublisherAndReturnTrue
+  nameWithType: RtmpStreamManagerServiceTest.StopPublishingStream_Should_RemovePublisherAndReturnTrue
+  fullName: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StopPublishingStream_Should_RemovePublisherAndReturnTrue
+- uid: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StopPublishingStream_Should_ReturnFalse_When_PublisherDoesNotExist*
+  commentId: Overload:LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StopPublishingStream_Should_ReturnFalse_When_PublisherDoesNotExist
+  href: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.html#LiveStreamingServerNet_Rtmp_Test_Services_RtmpStreamManagerServiceTest_StopPublishingStream_Should_ReturnFalse_When_PublisherDoesNotExist
+  name: StopPublishingStream_Should_ReturnFalse_When_PublisherDoesNotExist
+  nameWithType: RtmpStreamManagerServiceTest.StopPublishingStream_Should_ReturnFalse_When_PublisherDoesNotExist
+  fullName: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StopPublishingStream_Should_ReturnFalse_When_PublisherDoesNotExist
+- uid: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.IsStreamPathPublishing_Should_ReturnTrue_When_StreamPathIsPublishing*
+  commentId: Overload:LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.IsStreamPathPublishing_Should_ReturnTrue_When_StreamPathIsPublishing
+  href: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.html#LiveStreamingServerNet_Rtmp_Test_Services_RtmpStreamManagerServiceTest_IsStreamPathPublishing_Should_ReturnTrue_When_StreamPathIsPublishing
+  name: IsStreamPathPublishing_Should_ReturnTrue_When_StreamPathIsPublishing
+  nameWithType: RtmpStreamManagerServiceTest.IsStreamPathPublishing_Should_ReturnTrue_When_StreamPathIsPublishing
+  fullName: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.IsStreamPathPublishing_Should_ReturnTrue_When_StreamPathIsPublishing
+- uid: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.IsStreamPathPublishing_Should_ReturnFalse_When_StreamPathIsNotPublishing*
+  commentId: Overload:LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.IsStreamPathPublishing_Should_ReturnFalse_When_StreamPathIsNotPublishing
+  href: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.html#LiveStreamingServerNet_Rtmp_Test_Services_RtmpStreamManagerServiceTest_IsStreamPathPublishing_Should_ReturnFalse_When_StreamPathIsNotPublishing
+  name: IsStreamPathPublishing_Should_ReturnFalse_When_StreamPathIsNotPublishing
+  nameWithType: RtmpStreamManagerServiceTest.IsStreamPathPublishing_Should_ReturnFalse_When_StreamPathIsNotPublishing
+  fullName: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.IsStreamPathPublishing_Should_ReturnFalse_When_StreamPathIsNotPublishing
+- uid: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StartSubscribingStream_Should_AddSubscriberAndReturnSucceeded*
+  commentId: Overload:LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StartSubscribingStream_Should_AddSubscriberAndReturnSucceeded
+  href: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.html#LiveStreamingServerNet_Rtmp_Test_Services_RtmpStreamManagerServiceTest_StartSubscribingStream_Should_AddSubscriberAndReturnSucceeded
+  name: StartSubscribingStream_Should_AddSubscriberAndReturnSucceeded
+  nameWithType: RtmpStreamManagerServiceTest.StartSubscribingStream_Should_AddSubscriberAndReturnSucceeded
+  fullName: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StartSubscribingStream_Should_AddSubscriberAndReturnSucceeded
+- uid: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StartSubscribingStream_Should_ReturnAlreadyPublishing_When_SubscriberIsAlreadyPublishing*
+  commentId: Overload:LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StartSubscribingStream_Should_ReturnAlreadyPublishing_When_SubscriberIsAlreadyPublishing
+  href: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.html#LiveStreamingServerNet_Rtmp_Test_Services_RtmpStreamManagerServiceTest_StartSubscribingStream_Should_ReturnAlreadyPublishing_When_SubscriberIsAlreadyPublishing
+  name: StartSubscribingStream_Should_ReturnAlreadyPublishing_When_SubscriberIsAlreadyPublishing
+  nameWithType: RtmpStreamManagerServiceTest.StartSubscribingStream_Should_ReturnAlreadyPublishing_When_SubscriberIsAlreadyPublishing
+  fullName: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StartSubscribingStream_Should_ReturnAlreadyPublishing_When_SubscriberIsAlreadyPublishing
+- uid: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StartSubscribingStream_Should_ReturnAlreadySubscribing_When_SubscriberIsAlreadySubscribing*
+  commentId: Overload:LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StartSubscribingStream_Should_ReturnAlreadySubscribing_When_SubscriberIsAlreadySubscribing
+  href: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.html#LiveStreamingServerNet_Rtmp_Test_Services_RtmpStreamManagerServiceTest_StartSubscribingStream_Should_ReturnAlreadySubscribing_When_SubscriberIsAlreadySubscribing
+  name: StartSubscribingStream_Should_ReturnAlreadySubscribing_When_SubscriberIsAlreadySubscribing
+  nameWithType: RtmpStreamManagerServiceTest.StartSubscribingStream_Should_ReturnAlreadySubscribing_When_SubscriberIsAlreadySubscribing
+  fullName: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StartSubscribingStream_Should_ReturnAlreadySubscribing_When_SubscriberIsAlreadySubscribing
+- uid: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StopSubscribingStream_Should_RemoveSubscriberAndReturnTrue*
+  commentId: Overload:LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StopSubscribingStream_Should_RemoveSubscriberAndReturnTrue
+  href: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.html#LiveStreamingServerNet_Rtmp_Test_Services_RtmpStreamManagerServiceTest_StopSubscribingStream_Should_RemoveSubscriberAndReturnTrue
+  name: StopSubscribingStream_Should_RemoveSubscriberAndReturnTrue
+  nameWithType: RtmpStreamManagerServiceTest.StopSubscribingStream_Should_RemoveSubscriberAndReturnTrue
+  fullName: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StopSubscribingStream_Should_RemoveSubscriberAndReturnTrue
+- uid: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StopSubscribingStream_Should_ReturnFalse_When_SubscriberDoesNotExist*
+  commentId: Overload:LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StopSubscribingStream_Should_ReturnFalse_When_SubscriberDoesNotExist
+  href: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.html#LiveStreamingServerNet_Rtmp_Test_Services_RtmpStreamManagerServiceTest_StopSubscribingStream_Should_ReturnFalse_When_SubscriberDoesNotExist
+  name: StopSubscribingStream_Should_ReturnFalse_When_SubscriberDoesNotExist
+  nameWithType: RtmpStreamManagerServiceTest.StopSubscribingStream_Should_ReturnFalse_When_SubscriberDoesNotExist
+  fullName: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StopSubscribingStream_Should_ReturnFalse_When_SubscriberDoesNotExist
+- uid: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.GetSubscribersLocked_Should_ReturnCorrectSubscribers*
+  commentId: Overload:LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.GetSubscribersLocked_Should_ReturnCorrectSubscribers
+  href: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.html#LiveStreamingServerNet_Rtmp_Test_Services_RtmpStreamManagerServiceTest_GetSubscribersLocked_Should_ReturnCorrectSubscribers
+  name: GetSubscribersLocked_Should_ReturnCorrectSubscribers
+  nameWithType: RtmpStreamManagerServiceTest.GetSubscribersLocked_Should_ReturnCorrectSubscribers
+  fullName: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.GetSubscribersLocked_Should_ReturnCorrectSubscribers
+- uid: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.GetSubscribers_Should_ReturnCorrectSubscribers*
+  commentId: Overload:LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.GetSubscribers_Should_ReturnCorrectSubscribers
+  href: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.html#LiveStreamingServerNet_Rtmp_Test_Services_RtmpStreamManagerServiceTest_GetSubscribers_Should_ReturnCorrectSubscribers
+  name: GetSubscribers_Should_ReturnCorrectSubscribers
+  nameWithType: RtmpStreamManagerServiceTest.GetSubscribers_Should_ReturnCorrectSubscribers
+  fullName: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.GetSubscribers_Should_ReturnCorrectSubscribers
+- uid: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StartPublishingStream_Should_ReturnCorrectSubscribers*
+  commentId: Overload:LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StartPublishingStream_Should_ReturnCorrectSubscribers
+  href: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.html#LiveStreamingServerNet_Rtmp_Test_Services_RtmpStreamManagerServiceTest_StartPublishingStream_Should_ReturnCorrectSubscribers
+  name: StartPublishingStream_Should_ReturnCorrectSubscribers
+  nameWithType: RtmpStreamManagerServiceTest.StartPublishingStream_Should_ReturnCorrectSubscribers
+  fullName: LiveStreamingServerNet.Rtmp.Test.Services.RtmpStreamManagerServiceTest.StartPublishingStream_Should_ReturnCorrectSubscribers

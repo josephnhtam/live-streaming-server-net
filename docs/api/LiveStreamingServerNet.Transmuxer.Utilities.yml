@@ -1,0 +1,23 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.Transmuxer.Utilities
+  commentId: N:LiveStreamingServerNet.Transmuxer.Utilities
+  id: LiveStreamingServerNet.Transmuxer.Utilities
+  children:
+  - LiveStreamingServerNet.Transmuxer.Utilities.ExecutableFinder
+  langs:
+  - csharp
+  - vb
+  name: LiveStreamingServerNet.Transmuxer.Utilities
+  nameWithType: LiveStreamingServerNet.Transmuxer.Utilities
+  fullName: LiveStreamingServerNet.Transmuxer.Utilities
+  type: Namespace
+  assemblies:
+  - LiveStreamingServerNet.Transmuxer
+references:
+- uid: LiveStreamingServerNet.Transmuxer.Utilities.ExecutableFinder
+  commentId: T:LiveStreamingServerNet.Transmuxer.Utilities.ExecutableFinder
+  href: LiveStreamingServerNet.Transmuxer.Utilities.ExecutableFinder.html
+  name: ExecutableFinder
+  nameWithType: ExecutableFinder
+  fullName: LiveStreamingServerNet.Transmuxer.Utilities.ExecutableFinder

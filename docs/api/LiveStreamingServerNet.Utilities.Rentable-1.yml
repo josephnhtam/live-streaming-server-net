@@ -1,0 +1,681 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.Utilities.Rentable`1
+  commentId: T:LiveStreamingServerNet.Utilities.Rentable`1
+  id: Rentable`1
+  parent: LiveStreamingServerNet.Utilities
+  children:
+  - LiveStreamingServerNet.Utilities.Rentable`1.#ctor(`0,System.Action)
+  - LiveStreamingServerNet.Utilities.Rentable`1.Dispose
+  - LiveStreamingServerNet.Utilities.Rentable`1.Value
+  langs:
+  - csharp
+  - vb
+  name: Rentable<T>
+  nameWithType: Rentable<T>
+  fullName: LiveStreamingServerNet.Utilities.Rentable<T>
+  type: Class
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Utilities/Rentable.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: Rentable
+    path: ../src/LiveStreamingServerNet.Utilities/Rentable.cs
+    startLine: 4
+  assemblies:
+  - LiveStreamingServerNet.Utilities
+  namespace: LiveStreamingServerNet.Utilities
+  syntax:
+    content: 'public sealed class Rentable<T> : IRentable<T>, IDisposable'
+    typeParameters:
+    - id: T
+    content.vb: Public NotInheritable Class Rentable(Of T) Implements IRentable(Of T), IDisposable
+  inheritance:
+  - System.Object
+  implements:
+  - LiveStreamingServerNet.Utilities.Contracts.IRentable{{T}}
+  - System.IDisposable
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  extensionMethods:
+  - System.Object.LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Action)
+  nameWithType.vb: Rentable(Of T)
+  fullName.vb: LiveStreamingServerNet.Utilities.Rentable(Of T)
+  name.vb: Rentable(Of T)
+- uid: LiveStreamingServerNet.Utilities.Rentable`1.Value
+  commentId: P:LiveStreamingServerNet.Utilities.Rentable`1.Value
+  id: Value
+  parent: LiveStreamingServerNet.Utilities.Rentable`1
+  langs:
+  - csharp
+  - vb
+  name: Value
+  nameWithType: Rentable<T>.Value
+  fullName: LiveStreamingServerNet.Utilities.Rentable<T>.Value
+  type: Property
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Utilities/Rentable.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: Value
+    path: ../src/LiveStreamingServerNet.Utilities/Rentable.cs
+    startLine: 8
+  assemblies:
+  - LiveStreamingServerNet.Utilities
+  namespace: LiveStreamingServerNet.Utilities
+  example: []
+  syntax:
+    content: public T Value { get; }
+    parameters: []
+    return:
+      type: '{T}'
+    content.vb: Public ReadOnly Property Value As T
+  overload: LiveStreamingServerNet.Utilities.Rentable`1.Value*
+  implements:
+  - LiveStreamingServerNet.Utilities.Contracts.IRentable{{T}}.Value
+  nameWithType.vb: Rentable(Of T).Value
+  fullName.vb: LiveStreamingServerNet.Utilities.Rentable(Of T).Value
+- uid: LiveStreamingServerNet.Utilities.Rentable`1.#ctor(`0,System.Action)
+  commentId: M:LiveStreamingServerNet.Utilities.Rentable`1.#ctor(`0,System.Action)
+  id: '#ctor(`0,System.Action)'
+  parent: LiveStreamingServerNet.Utilities.Rentable`1
+  langs:
+  - csharp
+  - vb
+  name: Rentable(T, Action?)
+  nameWithType: Rentable<T>.Rentable(T, Action?)
+  fullName: LiveStreamingServerNet.Utilities.Rentable<T>.Rentable(T, System.Action?)
+  type: Constructor
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Utilities/Rentable.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: .ctor
+    path: ../src/LiveStreamingServerNet.Utilities/Rentable.cs
+    startLine: 10
+  assemblies:
+  - LiveStreamingServerNet.Utilities
+  namespace: LiveStreamingServerNet.Utilities
+  syntax:
+    content: public Rentable(T value, Action? callback)
+    parameters:
+    - id: value
+      type: '{T}'
+    - id: callback
+      type: System.Action
+    content.vb: Public Sub New(value As T, callback As Action)
+  overload: LiveStreamingServerNet.Utilities.Rentable`1.#ctor*
+  nameWithType.vb: Rentable(Of T).New(T, Action)
+  fullName.vb: LiveStreamingServerNet.Utilities.Rentable(Of T).New(T, System.Action)
+  name.vb: New(T, Action)
+- uid: LiveStreamingServerNet.Utilities.Rentable`1.Dispose
+  commentId: M:LiveStreamingServerNet.Utilities.Rentable`1.Dispose
+  id: Dispose
+  parent: LiveStreamingServerNet.Utilities.Rentable`1
+  langs:
+  - csharp
+  - vb
+  name: Dispose()
+  nameWithType: Rentable<T>.Dispose()
+  fullName: LiveStreamingServerNet.Utilities.Rentable<T>.Dispose()
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Utilities/Rentable.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: Dispose
+    path: ../src/LiveStreamingServerNet.Utilities/Rentable.cs
+    startLine: 16
+  assemblies:
+  - LiveStreamingServerNet.Utilities
+  namespace: LiveStreamingServerNet.Utilities
+  summary: Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+  example: []
+  syntax:
+    content: public void Dispose()
+    content.vb: Public Sub Dispose()
+  overload: LiveStreamingServerNet.Utilities.Rentable`1.Dispose*
+  implements:
+  - System.IDisposable.Dispose
+  nameWithType.vb: Rentable(Of T).Dispose()
+  fullName.vb: LiveStreamingServerNet.Utilities.Rentable(Of T).Dispose()
+references:
+- uid: LiveStreamingServerNet.Utilities
+  commentId: N:LiveStreamingServerNet.Utilities
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.Utilities
+  nameWithType: LiveStreamingServerNet.Utilities
+  fullName: LiveStreamingServerNet.Utilities
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities
+    name: Utilities
+    href: LiveStreamingServerNet.Utilities.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities
+    name: Utilities
+    href: LiveStreamingServerNet.Utilities.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: LiveStreamingServerNet.Utilities.Contracts.IRentable{{T}}
+  commentId: T:LiveStreamingServerNet.Utilities.Contracts.IRentable{`0}
+  parent: LiveStreamingServerNet.Utilities.Contracts
+  definition: LiveStreamingServerNet.Utilities.Contracts.IRentable`1
+  href: LiveStreamingServerNet.Utilities.Contracts.IRentable-1.html
+  name: IRentable<T>
+  nameWithType: IRentable<T>
+  fullName: LiveStreamingServerNet.Utilities.Contracts.IRentable<T>
+  nameWithType.vb: IRentable(Of T)
+  fullName.vb: LiveStreamingServerNet.Utilities.Contracts.IRentable(Of T)
+  name.vb: IRentable(Of T)
+  spec.csharp:
+  - uid: LiveStreamingServerNet.Utilities.Contracts.IRentable`1
+    name: IRentable
+    href: LiveStreamingServerNet.Utilities.Contracts.IRentable-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: LiveStreamingServerNet.Utilities.Contracts.IRentable`1
+    name: IRentable
+    href: LiveStreamingServerNet.Utilities.Contracts.IRentable-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.IDisposable
+  commentId: T:System.IDisposable
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.idisposable
+  name: IDisposable
+  nameWithType: IDisposable
+  fullName: System.IDisposable
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Action)
+  commentId: M:LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  parent: LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+  definition: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  name: Lock(object, Action)
+  nameWithType: LockExtensions.Lock(object, Action)
+  fullName: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(object, System.Action)
+  nameWithType.vb: LockExtensions.Lock(Object, Action)
+  fullName.vb: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(Object, System.Action)
+  name.vb: Lock(Object, Action)
+  spec.csharp:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+  spec.vb:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: LiveStreamingServerNet.Utilities.Contracts.IRentable`1
+  commentId: T:LiveStreamingServerNet.Utilities.Contracts.IRentable`1
+  href: LiveStreamingServerNet.Utilities.Contracts.IRentable-1.html
+  name: IRentable<T>
+  nameWithType: IRentable<T>
+  fullName: LiveStreamingServerNet.Utilities.Contracts.IRentable<T>
+  nameWithType.vb: IRentable(Of T)
+  fullName.vb: LiveStreamingServerNet.Utilities.Contracts.IRentable(Of T)
+  name.vb: IRentable(Of T)
+  spec.csharp:
+  - uid: LiveStreamingServerNet.Utilities.Contracts.IRentable`1
+    name: IRentable
+    href: LiveStreamingServerNet.Utilities.Contracts.IRentable-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: LiveStreamingServerNet.Utilities.Contracts.IRentable`1
+    name: IRentable
+    href: LiveStreamingServerNet.Utilities.Contracts.IRentable-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: LiveStreamingServerNet.Utilities.Contracts
+  commentId: N:LiveStreamingServerNet.Utilities.Contracts
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.Utilities.Contracts
+  nameWithType: LiveStreamingServerNet.Utilities.Contracts
+  fullName: LiveStreamingServerNet.Utilities.Contracts
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities
+    name: Utilities
+    href: LiveStreamingServerNet.Utilities.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities.Contracts
+    name: Contracts
+    href: LiveStreamingServerNet.Utilities.Contracts.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities
+    name: Utilities
+    href: LiveStreamingServerNet.Utilities.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities.Contracts
+    name: Contracts
+    href: LiveStreamingServerNet.Utilities.Contracts.html
+- uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  commentId: M:LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  isExternal: true
+  href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  name: Lock(object, Action)
+  nameWithType: LockExtensions.Lock(object, Action)
+  fullName: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(object, System.Action)
+  nameWithType.vb: LockExtensions.Lock(Object, Action)
+  fullName.vb: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(Object, System.Action)
+  name.vb: Lock(Object, Action)
+  spec.csharp:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+  spec.vb:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+- uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+  commentId: T:LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+  parent: LiveStreamingServerNet.Utilities.Extensions
+  href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html
+  name: LockExtensions
+  nameWithType: LockExtensions
+  fullName: LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+- uid: LiveStreamingServerNet.Utilities.Extensions
+  commentId: N:LiveStreamingServerNet.Utilities.Extensions
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.Utilities.Extensions
+  nameWithType: LiveStreamingServerNet.Utilities.Extensions
+  fullName: LiveStreamingServerNet.Utilities.Extensions
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities
+    name: Utilities
+    href: LiveStreamingServerNet.Utilities.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities.Extensions
+    name: Extensions
+    href: LiveStreamingServerNet.Utilities.Extensions.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities
+    name: Utilities
+    href: LiveStreamingServerNet.Utilities.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities.Extensions
+    name: Extensions
+    href: LiveStreamingServerNet.Utilities.Extensions.html
+- uid: LiveStreamingServerNet.Utilities.Rentable`1.Value*
+  commentId: Overload:LiveStreamingServerNet.Utilities.Rentable`1.Value
+  href: LiveStreamingServerNet.Utilities.Rentable-1.html#LiveStreamingServerNet_Utilities_Rentable_1_Value
+  name: Value
+  nameWithType: Rentable<T>.Value
+  fullName: LiveStreamingServerNet.Utilities.Rentable<T>.Value
+  nameWithType.vb: Rentable(Of T).Value
+  fullName.vb: LiveStreamingServerNet.Utilities.Rentable(Of T).Value
+- uid: LiveStreamingServerNet.Utilities.Contracts.IRentable{{T}}.Value
+  commentId: P:LiveStreamingServerNet.Utilities.Contracts.IRentable{`0}.Value
+  parent: LiveStreamingServerNet.Utilities.Contracts.IRentable{{T}}
+  definition: LiveStreamingServerNet.Utilities.Contracts.IRentable`1.Value
+  href: LiveStreamingServerNet.Utilities.Contracts.IRentable-1.html#LiveStreamingServerNet_Utilities_Contracts_IRentable_1_Value
+  name: Value
+  nameWithType: IRentable<T>.Value
+  fullName: LiveStreamingServerNet.Utilities.Contracts.IRentable<T>.Value
+  nameWithType.vb: IRentable(Of T).Value
+  fullName.vb: LiveStreamingServerNet.Utilities.Contracts.IRentable(Of T).Value
+- uid: '{T}'
+  commentId: '!:T'
+  definition: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: LiveStreamingServerNet.Utilities.Contracts.IRentable`1.Value
+  commentId: P:LiveStreamingServerNet.Utilities.Contracts.IRentable`1.Value
+  href: LiveStreamingServerNet.Utilities.Contracts.IRentable-1.html#LiveStreamingServerNet_Utilities_Contracts_IRentable_1_Value
+  name: Value
+  nameWithType: IRentable<T>.Value
+  fullName: LiveStreamingServerNet.Utilities.Contracts.IRentable<T>.Value
+  nameWithType.vb: IRentable(Of T).Value
+  fullName.vb: LiveStreamingServerNet.Utilities.Contracts.IRentable(Of T).Value
+- uid: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: LiveStreamingServerNet.Utilities.Rentable`1.#ctor*
+  commentId: Overload:LiveStreamingServerNet.Utilities.Rentable`1.#ctor
+  href: LiveStreamingServerNet.Utilities.Rentable-1.html#LiveStreamingServerNet_Utilities_Rentable_1__ctor__0_System_Action_
+  name: Rentable
+  nameWithType: Rentable<T>.Rentable
+  fullName: LiveStreamingServerNet.Utilities.Rentable<T>.Rentable
+  nameWithType.vb: Rentable(Of T).New
+  fullName.vb: LiveStreamingServerNet.Utilities.Rentable(Of T).New
+  name.vb: New
+- uid: System.Action
+  commentId: T:System.Action
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.action
+  name: Action
+  nameWithType: Action
+  fullName: System.Action
+- uid: LiveStreamingServerNet.Utilities.Rentable`1.Dispose*
+  commentId: Overload:LiveStreamingServerNet.Utilities.Rentable`1.Dispose
+  href: LiveStreamingServerNet.Utilities.Rentable-1.html#LiveStreamingServerNet_Utilities_Rentable_1_Dispose
+  name: Dispose
+  nameWithType: Rentable<T>.Dispose
+  fullName: LiveStreamingServerNet.Utilities.Rentable<T>.Dispose
+  nameWithType.vb: Rentable(Of T).Dispose
+  fullName.vb: LiveStreamingServerNet.Utilities.Rentable(Of T).Dispose
+- uid: System.IDisposable.Dispose
+  commentId: M:System.IDisposable.Dispose
+  parent: System.IDisposable
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.idisposable.dispose
+  name: Dispose()
+  nameWithType: IDisposable.Dispose()
+  fullName: System.IDisposable.Dispose()
+  spec.csharp:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.idisposable.dispose
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.idisposable.dispose
+  - name: (
+  - name: )

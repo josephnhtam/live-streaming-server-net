@@ -1,0 +1,348 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.KubernetesOperator.Services.Contracts.IFleetScaler
+  commentId: T:LiveStreamingServerNet.KubernetesOperator.Services.Contracts.IFleetScaler
+  id: IFleetScaler
+  parent: LiveStreamingServerNet.KubernetesOperator.Services.Contracts
+  children:
+  - LiveStreamingServerNet.KubernetesOperator.Services.Contracts.IFleetScaler.ScaleFleetAsync(LiveStreamingServerNet.KubernetesOperator.Entities.V1LiveStreamingServerFleet,System.Threading.CancellationToken)
+  langs:
+  - csharp
+  - vb
+  name: IFleetScaler
+  nameWithType: IFleetScaler
+  fullName: LiveStreamingServerNet.KubernetesOperator.Services.Contracts.IFleetScaler
+  type: Interface
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.KubernetesOperator/Services/Contracts/IFleetScaler.cs
+      branch: develop
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: IFleetScaler
+    path: ../src/LiveStreamingServerNet.KubernetesOperator/Services/Contracts/IFleetScaler.cs
+    startLine: 4
+  assemblies:
+  - LiveStreamingServerNet.KubernetesOperator
+  namespace: LiveStreamingServerNet.KubernetesOperator.Services.Contracts
+  syntax:
+    content: public interface IFleetScaler
+    content.vb: Public Interface IFleetScaler
+  extensionMethods:
+  - System.Object.LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Action)
+- uid: LiveStreamingServerNet.KubernetesOperator.Services.Contracts.IFleetScaler.ScaleFleetAsync(LiveStreamingServerNet.KubernetesOperator.Entities.V1LiveStreamingServerFleet,System.Threading.CancellationToken)
+  commentId: M:LiveStreamingServerNet.KubernetesOperator.Services.Contracts.IFleetScaler.ScaleFleetAsync(LiveStreamingServerNet.KubernetesOperator.Entities.V1LiveStreamingServerFleet,System.Threading.CancellationToken)
+  id: ScaleFleetAsync(LiveStreamingServerNet.KubernetesOperator.Entities.V1LiveStreamingServerFleet,System.Threading.CancellationToken)
+  parent: LiveStreamingServerNet.KubernetesOperator.Services.Contracts.IFleetScaler
+  langs:
+  - csharp
+  - vb
+  name: ScaleFleetAsync(V1LiveStreamingServerFleet, CancellationToken)
+  nameWithType: IFleetScaler.ScaleFleetAsync(V1LiveStreamingServerFleet, CancellationToken)
+  fullName: LiveStreamingServerNet.KubernetesOperator.Services.Contracts.IFleetScaler.ScaleFleetAsync(LiveStreamingServerNet.KubernetesOperator.Entities.V1LiveStreamingServerFleet, System.Threading.CancellationToken)
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.KubernetesOperator/Services/Contracts/IFleetScaler.cs
+      branch: develop
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: ScaleFleetAsync
+    path: ../src/LiveStreamingServerNet.KubernetesOperator/Services/Contracts/IFleetScaler.cs
+    startLine: 6
+  assemblies:
+  - LiveStreamingServerNet.KubernetesOperator
+  namespace: LiveStreamingServerNet.KubernetesOperator.Services.Contracts
+  syntax:
+    content: Task ScaleFleetAsync(V1LiveStreamingServerFleet entity, CancellationToken cancellationToken)
+    parameters:
+    - id: entity
+      type: LiveStreamingServerNet.KubernetesOperator.Entities.V1LiveStreamingServerFleet
+    - id: cancellationToken
+      type: System.Threading.CancellationToken
+    return:
+      type: System.Threading.Tasks.Task
+    content.vb: Function ScaleFleetAsync(entity As V1LiveStreamingServerFleet, cancellationToken As CancellationToken) As Task
+  overload: LiveStreamingServerNet.KubernetesOperator.Services.Contracts.IFleetScaler.ScaleFleetAsync*
+references:
+- uid: LiveStreamingServerNet.KubernetesOperator.Services.Contracts
+  commentId: N:LiveStreamingServerNet.KubernetesOperator.Services.Contracts
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.KubernetesOperator.Services.Contracts
+  nameWithType: LiveStreamingServerNet.KubernetesOperator.Services.Contracts
+  fullName: LiveStreamingServerNet.KubernetesOperator.Services.Contracts
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.KubernetesOperator
+    name: KubernetesOperator
+    href: LiveStreamingServerNet.KubernetesOperator.html
+  - name: .
+  - uid: LiveStreamingServerNet.KubernetesOperator.Services
+    name: Services
+    href: LiveStreamingServerNet.KubernetesOperator.Services.html
+  - name: .
+  - uid: LiveStreamingServerNet.KubernetesOperator.Services.Contracts
+    name: Contracts
+    href: LiveStreamingServerNet.KubernetesOperator.Services.Contracts.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.KubernetesOperator
+    name: KubernetesOperator
+    href: LiveStreamingServerNet.KubernetesOperator.html
+  - name: .
+  - uid: LiveStreamingServerNet.KubernetesOperator.Services
+    name: Services
+    href: LiveStreamingServerNet.KubernetesOperator.Services.html
+  - name: .
+  - uid: LiveStreamingServerNet.KubernetesOperator.Services.Contracts
+    name: Contracts
+    href: LiveStreamingServerNet.KubernetesOperator.Services.Contracts.html
+- uid: System.Object.LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Action)
+  commentId: M:LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  parent: LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+  definition: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  name: Lock(object, Action)
+  nameWithType: LockExtensions.Lock(object, Action)
+  fullName: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(object, System.Action)
+  nameWithType.vb: LockExtensions.Lock(Object, Action)
+  fullName.vb: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(Object, System.Action)
+  name.vb: Lock(Object, Action)
+  spec.csharp:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+  spec.vb:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+- uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  commentId: M:LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  isExternal: true
+  href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  name: Lock(object, Action)
+  nameWithType: LockExtensions.Lock(object, Action)
+  fullName: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(object, System.Action)
+  nameWithType.vb: LockExtensions.Lock(Object, Action)
+  fullName.vb: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(Object, System.Action)
+  name.vb: Lock(Object, Action)
+  spec.csharp:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+  spec.vb:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+- uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+  commentId: T:LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+  parent: LiveStreamingServerNet.Utilities.Extensions
+  href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html
+  name: LockExtensions
+  nameWithType: LockExtensions
+  fullName: LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+- uid: LiveStreamingServerNet.Utilities.Extensions
+  commentId: N:LiveStreamingServerNet.Utilities.Extensions
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.Utilities.Extensions
+  nameWithType: LiveStreamingServerNet.Utilities.Extensions
+  fullName: LiveStreamingServerNet.Utilities.Extensions
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities
+    name: Utilities
+    href: LiveStreamingServerNet.Utilities.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities.Extensions
+    name: Extensions
+    href: LiveStreamingServerNet.Utilities.Extensions.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities
+    name: Utilities
+    href: LiveStreamingServerNet.Utilities.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities.Extensions
+    name: Extensions
+    href: LiveStreamingServerNet.Utilities.Extensions.html
+- uid: LiveStreamingServerNet.KubernetesOperator.Services.Contracts.IFleetScaler.ScaleFleetAsync*
+  commentId: Overload:LiveStreamingServerNet.KubernetesOperator.Services.Contracts.IFleetScaler.ScaleFleetAsync
+  href: LiveStreamingServerNet.KubernetesOperator.Services.Contracts.IFleetScaler.html#LiveStreamingServerNet_KubernetesOperator_Services_Contracts_IFleetScaler_ScaleFleetAsync_LiveStreamingServerNet_KubernetesOperator_Entities_V1LiveStreamingServerFleet_System_Threading_CancellationToken_
+  name: ScaleFleetAsync
+  nameWithType: IFleetScaler.ScaleFleetAsync
+  fullName: LiveStreamingServerNet.KubernetesOperator.Services.Contracts.IFleetScaler.ScaleFleetAsync
+- uid: LiveStreamingServerNet.KubernetesOperator.Entities.V1LiveStreamingServerFleet
+  commentId: T:LiveStreamingServerNet.KubernetesOperator.Entities.V1LiveStreamingServerFleet
+  parent: LiveStreamingServerNet.KubernetesOperator.Entities
+  href: LiveStreamingServerNet.KubernetesOperator.Entities.V1LiveStreamingServerFleet.html
+  name: V1LiveStreamingServerFleet
+  nameWithType: V1LiveStreamingServerFleet
+  fullName: LiveStreamingServerNet.KubernetesOperator.Entities.V1LiveStreamingServerFleet
+- uid: System.Threading.CancellationToken
+  commentId: T:System.Threading.CancellationToken
+  parent: System.Threading
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken
+  name: CancellationToken
+  nameWithType: CancellationToken
+  fullName: System.Threading.CancellationToken
+- uid: System.Threading.Tasks.Task
+  commentId: T:System.Threading.Tasks.Task
+  parent: System.Threading.Tasks
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task
+  name: Task
+  nameWithType: Task
+  fullName: System.Threading.Tasks.Task
+- uid: LiveStreamingServerNet.KubernetesOperator.Entities
+  commentId: N:LiveStreamingServerNet.KubernetesOperator.Entities
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.KubernetesOperator.Entities
+  nameWithType: LiveStreamingServerNet.KubernetesOperator.Entities
+  fullName: LiveStreamingServerNet.KubernetesOperator.Entities
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.KubernetesOperator
+    name: KubernetesOperator
+    href: LiveStreamingServerNet.KubernetesOperator.html
+  - name: .
+  - uid: LiveStreamingServerNet.KubernetesOperator.Entities
+    name: Entities
+    href: LiveStreamingServerNet.KubernetesOperator.Entities.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.KubernetesOperator
+    name: KubernetesOperator
+    href: LiveStreamingServerNet.KubernetesOperator.html
+  - name: .
+  - uid: LiveStreamingServerNet.KubernetesOperator.Entities
+    name: Entities
+    href: LiveStreamingServerNet.KubernetesOperator.Entities.html
+- uid: System.Threading
+  commentId: N:System.Threading
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Threading
+  nameWithType: System.Threading
+  fullName: System.Threading
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+- uid: System.Threading.Tasks
+  commentId: N:System.Threading.Tasks
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Threading.Tasks
+  nameWithType: System.Threading.Tasks
+  fullName: System.Threading.Tasks
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  - name: .
+  - uid: System.Threading.Tasks
+    name: Tasks
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  - name: .
+  - uid: System.Threading.Tasks
+    name: Tasks
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks

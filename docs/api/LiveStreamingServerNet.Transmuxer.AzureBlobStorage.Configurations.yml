@@ -1,0 +1,23 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.Transmuxer.AzureBlobStorage.Configurations
+  commentId: N:LiveStreamingServerNet.Transmuxer.AzureBlobStorage.Configurations
+  id: LiveStreamingServerNet.Transmuxer.AzureBlobStorage.Configurations
+  children:
+  - LiveStreamingServerNet.Transmuxer.AzureBlobStorage.Configurations.HlsAzureBlobStorageConfiguration
+  langs:
+  - csharp
+  - vb
+  name: LiveStreamingServerNet.Transmuxer.AzureBlobStorage.Configurations
+  nameWithType: LiveStreamingServerNet.Transmuxer.AzureBlobStorage.Configurations
+  fullName: LiveStreamingServerNet.Transmuxer.AzureBlobStorage.Configurations
+  type: Namespace
+  assemblies:
+  - LiveStreamingServerNet.Transmuxer.AzureBlobStorage
+references:
+- uid: LiveStreamingServerNet.Transmuxer.AzureBlobStorage.Configurations.HlsAzureBlobStorageConfiguration
+  commentId: T:LiveStreamingServerNet.Transmuxer.AzureBlobStorage.Configurations.HlsAzureBlobStorageConfiguration
+  href: LiveStreamingServerNet.Transmuxer.AzureBlobStorage.Configurations.HlsAzureBlobStorageConfiguration.html
+  name: HlsAzureBlobStorageConfiguration
+  nameWithType: HlsAzureBlobStorageConfiguration
+  fullName: LiveStreamingServerNet.Transmuxer.AzureBlobStorage.Configurations.HlsAzureBlobStorageConfiguration

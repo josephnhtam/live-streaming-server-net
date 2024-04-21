@@ -1,0 +1,562 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.Transmuxer.AmazonS3.Configurations.HlsAmazonS3Configuration
+  commentId: T:LiveStreamingServerNet.Transmuxer.AmazonS3.Configurations.HlsAmazonS3Configuration
+  id: HlsAmazonS3Configuration
+  parent: LiveStreamingServerNet.Transmuxer.AmazonS3.Configurations
+  children:
+  - LiveStreamingServerNet.Transmuxer.AmazonS3.Configurations.HlsAmazonS3Configuration.ObjectPathResolver
+  - LiveStreamingServerNet.Transmuxer.AmazonS3.Configurations.HlsAmazonS3Configuration.ObjectUriResolver
+  langs:
+  - csharp
+  - vb
+  name: HlsAmazonS3Configuration
+  nameWithType: HlsAmazonS3Configuration
+  fullName: LiveStreamingServerNet.Transmuxer.AmazonS3.Configurations.HlsAmazonS3Configuration
+  type: Class
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Transmuxer.AmazonS3/Configurations/HlsAmazonS3Configuration.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: HlsAmazonS3Configuration
+    path: ../src/LiveStreamingServerNet.Transmuxer.AmazonS3/Configurations/HlsAmazonS3Configuration.cs
+    startLine: 4
+  assemblies:
+  - LiveStreamingServerNet.Transmuxer.AmazonS3
+  namespace: LiveStreamingServerNet.Transmuxer.AmazonS3.Configurations
+  syntax:
+    content: public class HlsAmazonS3Configuration
+    content.vb: Public Class HlsAmazonS3Configuration
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  extensionMethods:
+  - System.Object.LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Action)
+- uid: LiveStreamingServerNet.Transmuxer.AmazonS3.Configurations.HlsAmazonS3Configuration.ObjectPathResolver
+  commentId: P:LiveStreamingServerNet.Transmuxer.AmazonS3.Configurations.HlsAmazonS3Configuration.ObjectPathResolver
+  id: ObjectPathResolver
+  parent: LiveStreamingServerNet.Transmuxer.AmazonS3.Configurations.HlsAmazonS3Configuration
+  langs:
+  - csharp
+  - vb
+  name: ObjectPathResolver
+  nameWithType: HlsAmazonS3Configuration.ObjectPathResolver
+  fullName: LiveStreamingServerNet.Transmuxer.AmazonS3.Configurations.HlsAmazonS3Configuration.ObjectPathResolver
+  type: Property
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Transmuxer.AmazonS3/Configurations/HlsAmazonS3Configuration.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: ObjectPathResolver
+    path: ../src/LiveStreamingServerNet.Transmuxer.AmazonS3/Configurations/HlsAmazonS3Configuration.cs
+    startLine: 6
+  assemblies:
+  - LiveStreamingServerNet.Transmuxer.AmazonS3
+  namespace: LiveStreamingServerNet.Transmuxer.AmazonS3.Configurations
+  syntax:
+    content: public IHlsObjectPathResolver ObjectPathResolver { get; set; }
+    parameters: []
+    return:
+      type: LiveStreamingServerNet.Transmuxer.AmazonS3.Contracts.IHlsObjectPathResolver
+    content.vb: Public Property ObjectPathResolver As IHlsObjectPathResolver
+  overload: LiveStreamingServerNet.Transmuxer.AmazonS3.Configurations.HlsAmazonS3Configuration.ObjectPathResolver*
+- uid: LiveStreamingServerNet.Transmuxer.AmazonS3.Configurations.HlsAmazonS3Configuration.ObjectUriResolver
+  commentId: P:LiveStreamingServerNet.Transmuxer.AmazonS3.Configurations.HlsAmazonS3Configuration.ObjectUriResolver
+  id: ObjectUriResolver
+  parent: LiveStreamingServerNet.Transmuxer.AmazonS3.Configurations.HlsAmazonS3Configuration
+  langs:
+  - csharp
+  - vb
+  name: ObjectUriResolver
+  nameWithType: HlsAmazonS3Configuration.ObjectUriResolver
+  fullName: LiveStreamingServerNet.Transmuxer.AmazonS3.Configurations.HlsAmazonS3Configuration.ObjectUriResolver
+  type: Property
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Transmuxer.AmazonS3/Configurations/HlsAmazonS3Configuration.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: ObjectUriResolver
+    path: ../src/LiveStreamingServerNet.Transmuxer.AmazonS3/Configurations/HlsAmazonS3Configuration.cs
+    startLine: 7
+  assemblies:
+  - LiveStreamingServerNet.Transmuxer.AmazonS3
+  namespace: LiveStreamingServerNet.Transmuxer.AmazonS3.Configurations
+  syntax:
+    content: public IHlsObjectUriResolver ObjectUriResolver { get; set; }
+    parameters: []
+    return:
+      type: LiveStreamingServerNet.Transmuxer.AmazonS3.Contracts.IHlsObjectUriResolver
+    content.vb: Public Property ObjectUriResolver As IHlsObjectUriResolver
+  overload: LiveStreamingServerNet.Transmuxer.AmazonS3.Configurations.HlsAmazonS3Configuration.ObjectUriResolver*
+references:
+- uid: LiveStreamingServerNet.Transmuxer.AmazonS3.Configurations
+  commentId: N:LiveStreamingServerNet.Transmuxer.AmazonS3.Configurations
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.Transmuxer.AmazonS3.Configurations
+  nameWithType: LiveStreamingServerNet.Transmuxer.AmazonS3.Configurations
+  fullName: LiveStreamingServerNet.Transmuxer.AmazonS3.Configurations
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Transmuxer
+    name: Transmuxer
+    href: LiveStreamingServerNet.Transmuxer.html
+  - name: .
+  - uid: LiveStreamingServerNet.Transmuxer.AmazonS3
+    name: AmazonS3
+    href: LiveStreamingServerNet.Transmuxer.AmazonS3.html
+  - name: .
+  - uid: LiveStreamingServerNet.Transmuxer.AmazonS3.Configurations
+    name: Configurations
+    href: LiveStreamingServerNet.Transmuxer.AmazonS3.Configurations.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Transmuxer
+    name: Transmuxer
+    href: LiveStreamingServerNet.Transmuxer.html
+  - name: .
+  - uid: LiveStreamingServerNet.Transmuxer.AmazonS3
+    name: AmazonS3
+    href: LiveStreamingServerNet.Transmuxer.AmazonS3.html
+  - name: .
+  - uid: LiveStreamingServerNet.Transmuxer.AmazonS3.Configurations
+    name: Configurations
+    href: LiveStreamingServerNet.Transmuxer.AmazonS3.Configurations.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Action)
+  commentId: M:LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  parent: LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+  definition: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  name: Lock(object, Action)
+  nameWithType: LockExtensions.Lock(object, Action)
+  fullName: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(object, System.Action)
+  nameWithType.vb: LockExtensions.Lock(Object, Action)
+  fullName.vb: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(Object, System.Action)
+  name.vb: Lock(Object, Action)
+  spec.csharp:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+  spec.vb:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  commentId: M:LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  isExternal: true
+  href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  name: Lock(object, Action)
+  nameWithType: LockExtensions.Lock(object, Action)
+  fullName: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(object, System.Action)
+  nameWithType.vb: LockExtensions.Lock(Object, Action)
+  fullName.vb: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(Object, System.Action)
+  name.vb: Lock(Object, Action)
+  spec.csharp:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+  spec.vb:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+- uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+  commentId: T:LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+  parent: LiveStreamingServerNet.Utilities.Extensions
+  href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html
+  name: LockExtensions
+  nameWithType: LockExtensions
+  fullName: LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+- uid: LiveStreamingServerNet.Utilities.Extensions
+  commentId: N:LiveStreamingServerNet.Utilities.Extensions
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.Utilities.Extensions
+  nameWithType: LiveStreamingServerNet.Utilities.Extensions
+  fullName: LiveStreamingServerNet.Utilities.Extensions
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities
+    name: Utilities
+    href: LiveStreamingServerNet.Utilities.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities.Extensions
+    name: Extensions
+    href: LiveStreamingServerNet.Utilities.Extensions.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities
+    name: Utilities
+    href: LiveStreamingServerNet.Utilities.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities.Extensions
+    name: Extensions
+    href: LiveStreamingServerNet.Utilities.Extensions.html
+- uid: LiveStreamingServerNet.Transmuxer.AmazonS3.Configurations.HlsAmazonS3Configuration.ObjectPathResolver*
+  commentId: Overload:LiveStreamingServerNet.Transmuxer.AmazonS3.Configurations.HlsAmazonS3Configuration.ObjectPathResolver
+  href: LiveStreamingServerNet.Transmuxer.AmazonS3.Configurations.HlsAmazonS3Configuration.html#LiveStreamingServerNet_Transmuxer_AmazonS3_Configurations_HlsAmazonS3Configuration_ObjectPathResolver
+  name: ObjectPathResolver
+  nameWithType: HlsAmazonS3Configuration.ObjectPathResolver
+  fullName: LiveStreamingServerNet.Transmuxer.AmazonS3.Configurations.HlsAmazonS3Configuration.ObjectPathResolver
+- uid: LiveStreamingServerNet.Transmuxer.AmazonS3.Contracts.IHlsObjectPathResolver
+  commentId: T:LiveStreamingServerNet.Transmuxer.AmazonS3.Contracts.IHlsObjectPathResolver
+  parent: LiveStreamingServerNet.Transmuxer.AmazonS3.Contracts
+  href: LiveStreamingServerNet.Transmuxer.AmazonS3.Contracts.IHlsObjectPathResolver.html
+  name: IHlsObjectPathResolver
+  nameWithType: IHlsObjectPathResolver
+  fullName: LiveStreamingServerNet.Transmuxer.AmazonS3.Contracts.IHlsObjectPathResolver
+- uid: LiveStreamingServerNet.Transmuxer.AmazonS3.Contracts
+  commentId: N:LiveStreamingServerNet.Transmuxer.AmazonS3.Contracts
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.Transmuxer.AmazonS3.Contracts
+  nameWithType: LiveStreamingServerNet.Transmuxer.AmazonS3.Contracts
+  fullName: LiveStreamingServerNet.Transmuxer.AmazonS3.Contracts
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Transmuxer
+    name: Transmuxer
+    href: LiveStreamingServerNet.Transmuxer.html
+  - name: .
+  - uid: LiveStreamingServerNet.Transmuxer.AmazonS3
+    name: AmazonS3
+    href: LiveStreamingServerNet.Transmuxer.AmazonS3.html
+  - name: .
+  - uid: LiveStreamingServerNet.Transmuxer.AmazonS3.Contracts
+    name: Contracts
+    href: LiveStreamingServerNet.Transmuxer.AmazonS3.Contracts.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Transmuxer
+    name: Transmuxer
+    href: LiveStreamingServerNet.Transmuxer.html
+  - name: .
+  - uid: LiveStreamingServerNet.Transmuxer.AmazonS3
+    name: AmazonS3
+    href: LiveStreamingServerNet.Transmuxer.AmazonS3.html
+  - name: .
+  - uid: LiveStreamingServerNet.Transmuxer.AmazonS3.Contracts
+    name: Contracts
+    href: LiveStreamingServerNet.Transmuxer.AmazonS3.Contracts.html
+- uid: LiveStreamingServerNet.Transmuxer.AmazonS3.Configurations.HlsAmazonS3Configuration.ObjectUriResolver*
+  commentId: Overload:LiveStreamingServerNet.Transmuxer.AmazonS3.Configurations.HlsAmazonS3Configuration.ObjectUriResolver
+  href: LiveStreamingServerNet.Transmuxer.AmazonS3.Configurations.HlsAmazonS3Configuration.html#LiveStreamingServerNet_Transmuxer_AmazonS3_Configurations_HlsAmazonS3Configuration_ObjectUriResolver
+  name: ObjectUriResolver
+  nameWithType: HlsAmazonS3Configuration.ObjectUriResolver
+  fullName: LiveStreamingServerNet.Transmuxer.AmazonS3.Configurations.HlsAmazonS3Configuration.ObjectUriResolver
+- uid: LiveStreamingServerNet.Transmuxer.AmazonS3.Contracts.IHlsObjectUriResolver
+  commentId: T:LiveStreamingServerNet.Transmuxer.AmazonS3.Contracts.IHlsObjectUriResolver
+  parent: LiveStreamingServerNet.Transmuxer.AmazonS3.Contracts
+  href: LiveStreamingServerNet.Transmuxer.AmazonS3.Contracts.IHlsObjectUriResolver.html
+  name: IHlsObjectUriResolver
+  nameWithType: IHlsObjectUriResolver
+  fullName: LiveStreamingServerNet.Transmuxer.AmazonS3.Contracts.IHlsObjectUriResolver

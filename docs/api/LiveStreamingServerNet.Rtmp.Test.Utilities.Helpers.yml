@@ -1,0 +1,741 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.Rtmp.Test.Utilities.Helpers
+  commentId: T:LiveStreamingServerNet.Rtmp.Test.Utilities.Helpers
+  id: Helpers
+  parent: LiveStreamingServerNet.Rtmp.Test.Utilities
+  children:
+  - LiveStreamingServerNet.Rtmp.Test.Utilities.Helpers.CreateExpectedCommandProperties(System.String,System.String)
+  - LiveStreamingServerNet.Rtmp.Test.Utilities.Helpers.CreateExpectedMetaData``1(System.String,``0)
+  - LiveStreamingServerNet.Rtmp.Test.Utilities.Helpers.CreateExpectedStreamArguments(System.String,System.String)
+  - LiveStreamingServerNet.Rtmp.Test.Utilities.Helpers.CreateRandomChunkStreamId
+  langs:
+  - csharp
+  - vb
+  name: Helpers
+  nameWithType: Helpers
+  fullName: LiveStreamingServerNet.Rtmp.Test.Utilities.Helpers
+  type: Class
+  source:
+    remote:
+      path: test/LiveStreamingServerNet.Rtmp.Test/Utilities/Helpers.cs
+      branch: develop
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: Helpers
+    path: ../test/LiveStreamingServerNet.Rtmp.Test/Utilities/Helpers.cs
+    startLine: 5
+  assemblies:
+  - LiveStreamingServerNet.Rtmp.Test
+  namespace: LiveStreamingServerNet.Rtmp.Test.Utilities
+  syntax:
+    content: public static class Helpers
+    content.vb: Public Module Helpers
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+- uid: LiveStreamingServerNet.Rtmp.Test.Utilities.Helpers.CreateRandomChunkStreamId
+  commentId: M:LiveStreamingServerNet.Rtmp.Test.Utilities.Helpers.CreateRandomChunkStreamId
+  id: CreateRandomChunkStreamId
+  parent: LiveStreamingServerNet.Rtmp.Test.Utilities.Helpers
+  langs:
+  - csharp
+  - vb
+  name: CreateRandomChunkStreamId()
+  nameWithType: Helpers.CreateRandomChunkStreamId()
+  fullName: LiveStreamingServerNet.Rtmp.Test.Utilities.Helpers.CreateRandomChunkStreamId()
+  type: Method
+  source:
+    remote:
+      path: test/LiveStreamingServerNet.Rtmp.Test/Utilities/Helpers.cs
+      branch: develop
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: CreateRandomChunkStreamId
+    path: ../test/LiveStreamingServerNet.Rtmp.Test/Utilities/Helpers.cs
+    startLine: 7
+  assemblies:
+  - LiveStreamingServerNet.Rtmp.Test
+  namespace: LiveStreamingServerNet.Rtmp.Test.Utilities
+  syntax:
+    content: public static uint CreateRandomChunkStreamId()
+    return:
+      type: System.UInt32
+    content.vb: Public Shared Function CreateRandomChunkStreamId() As UInteger
+  overload: LiveStreamingServerNet.Rtmp.Test.Utilities.Helpers.CreateRandomChunkStreamId*
+- uid: LiveStreamingServerNet.Rtmp.Test.Utilities.Helpers.CreateExpectedCommandProperties(System.String,System.String)
+  commentId: M:LiveStreamingServerNet.Rtmp.Test.Utilities.Helpers.CreateExpectedCommandProperties(System.String,System.String)
+  id: CreateExpectedCommandProperties(System.String,System.String)
+  parent: LiveStreamingServerNet.Rtmp.Test.Utilities.Helpers
+  langs:
+  - csharp
+  - vb
+  name: CreateExpectedCommandProperties(string, string)
+  nameWithType: Helpers.CreateExpectedCommandProperties(string, string)
+  fullName: LiveStreamingServerNet.Rtmp.Test.Utilities.Helpers.CreateExpectedCommandProperties(string, string)
+  type: Method
+  source:
+    remote:
+      path: test/LiveStreamingServerNet.Rtmp.Test/Utilities/Helpers.cs
+      branch: develop
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: CreateExpectedCommandProperties
+    path: ../test/LiveStreamingServerNet.Rtmp.Test/Utilities/Helpers.cs
+    startLine: 11
+  assemblies:
+  - LiveStreamingServerNet.Rtmp.Test
+  namespace: LiveStreamingServerNet.Rtmp.Test.Utilities
+  syntax:
+    content: public static List<object?> CreateExpectedCommandProperties(string level, string code)
+    parameters:
+    - id: level
+      type: System.String
+    - id: code
+      type: System.String
+    return:
+      type: System.Collections.Generic.List{System.Object}
+    content.vb: Public Shared Function CreateExpectedCommandProperties(level As String, code As String) As List(Of Object)
+  overload: LiveStreamingServerNet.Rtmp.Test.Utilities.Helpers.CreateExpectedCommandProperties*
+  nameWithType.vb: Helpers.CreateExpectedCommandProperties(String, String)
+  fullName.vb: LiveStreamingServerNet.Rtmp.Test.Utilities.Helpers.CreateExpectedCommandProperties(String, String)
+  name.vb: CreateExpectedCommandProperties(String, String)
+- uid: LiveStreamingServerNet.Rtmp.Test.Utilities.Helpers.CreateExpectedStreamArguments(System.String,System.String)
+  commentId: M:LiveStreamingServerNet.Rtmp.Test.Utilities.Helpers.CreateExpectedStreamArguments(System.String,System.String)
+  id: CreateExpectedStreamArguments(System.String,System.String)
+  parent: LiveStreamingServerNet.Rtmp.Test.Utilities.Helpers
+  langs:
+  - csharp
+  - vb
+  name: CreateExpectedStreamArguments(string, string)
+  nameWithType: Helpers.CreateExpectedStreamArguments(string, string)
+  fullName: LiveStreamingServerNet.Rtmp.Test.Utilities.Helpers.CreateExpectedStreamArguments(string, string)
+  type: Method
+  source:
+    remote:
+      path: test/LiveStreamingServerNet.Rtmp.Test/Utilities/Helpers.cs
+      branch: develop
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: CreateExpectedStreamArguments
+    path: ../test/LiveStreamingServerNet.Rtmp.Test/Utilities/Helpers.cs
+    startLine: 19
+  assemblies:
+  - LiveStreamingServerNet.Rtmp.Test
+  namespace: LiveStreamingServerNet.Rtmp.Test.Utilities
+  syntax:
+    content: public static IReadOnlyDictionary<string, string> CreateExpectedStreamArguments(string key, string value)
+    parameters:
+    - id: key
+      type: System.String
+    - id: value
+      type: System.String
+    return:
+      type: System.Collections.Generic.IReadOnlyDictionary{System.String,System.String}
+    content.vb: Public Shared Function CreateExpectedStreamArguments(key As String, value As String) As IReadOnlyDictionary(Of String, String)
+  overload: LiveStreamingServerNet.Rtmp.Test.Utilities.Helpers.CreateExpectedStreamArguments*
+  nameWithType.vb: Helpers.CreateExpectedStreamArguments(String, String)
+  fullName.vb: LiveStreamingServerNet.Rtmp.Test.Utilities.Helpers.CreateExpectedStreamArguments(String, String)
+  name.vb: CreateExpectedStreamArguments(String, String)
+- uid: LiveStreamingServerNet.Rtmp.Test.Utilities.Helpers.CreateExpectedMetaData``1(System.String,``0)
+  commentId: M:LiveStreamingServerNet.Rtmp.Test.Utilities.Helpers.CreateExpectedMetaData``1(System.String,``0)
+  id: CreateExpectedMetaData``1(System.String,``0)
+  parent: LiveStreamingServerNet.Rtmp.Test.Utilities.Helpers
+  langs:
+  - csharp
+  - vb
+  name: CreateExpectedMetaData<TValue>(string, TValue)
+  nameWithType: Helpers.CreateExpectedMetaData<TValue>(string, TValue)
+  fullName: LiveStreamingServerNet.Rtmp.Test.Utilities.Helpers.CreateExpectedMetaData<TValue>(string, TValue)
+  type: Method
+  source:
+    remote:
+      path: test/LiveStreamingServerNet.Rtmp.Test/Utilities/Helpers.cs
+      branch: develop
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: CreateExpectedMetaData
+    path: ../test/LiveStreamingServerNet.Rtmp.Test/Utilities/Helpers.cs
+    startLine: 24
+  assemblies:
+  - LiveStreamingServerNet.Rtmp.Test
+  namespace: LiveStreamingServerNet.Rtmp.Test.Utilities
+  syntax:
+    content: 'public static IReadOnlyDictionary<string, object> CreateExpectedMetaData<TValue>(string key, TValue value) where TValue : struct, IEquatable<TValue>'
+    parameters:
+    - id: key
+      type: System.String
+    - id: value
+      type: '{TValue}'
+    typeParameters:
+    - id: TValue
+    return:
+      type: System.Collections.Generic.IReadOnlyDictionary{System.String,System.Object}
+    content.vb: Public Shared Function CreateExpectedMetaData(Of TValue As {Structure, IEquatable(Of TValue)})(key As String, value As TValue) As IReadOnlyDictionary(Of String, Object)
+  overload: LiveStreamingServerNet.Rtmp.Test.Utilities.Helpers.CreateExpectedMetaData*
+  nameWithType.vb: Helpers.CreateExpectedMetaData(Of TValue)(String, TValue)
+  fullName.vb: LiveStreamingServerNet.Rtmp.Test.Utilities.Helpers.CreateExpectedMetaData(Of TValue)(String, TValue)
+  name.vb: CreateExpectedMetaData(Of TValue)(String, TValue)
+references:
+- uid: LiveStreamingServerNet.Rtmp.Test.Utilities
+  commentId: N:LiveStreamingServerNet.Rtmp.Test.Utilities
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.Rtmp.Test.Utilities
+  nameWithType: LiveStreamingServerNet.Rtmp.Test.Utilities
+  fullName: LiveStreamingServerNet.Rtmp.Test.Utilities
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Rtmp
+    name: Rtmp
+    href: LiveStreamingServerNet.Rtmp.html
+  - name: .
+  - uid: LiveStreamingServerNet.Rtmp.Test
+    name: Test
+    href: LiveStreamingServerNet.Rtmp.Test.html
+  - name: .
+  - uid: LiveStreamingServerNet.Rtmp.Test.Utilities
+    name: Utilities
+    href: LiveStreamingServerNet.Rtmp.Test.Utilities.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Rtmp
+    name: Rtmp
+    href: LiveStreamingServerNet.Rtmp.html
+  - name: .
+  - uid: LiveStreamingServerNet.Rtmp.Test
+    name: Test
+    href: LiveStreamingServerNet.Rtmp.Test.html
+  - name: .
+  - uid: LiveStreamingServerNet.Rtmp.Test.Utilities
+    name: Utilities
+    href: LiveStreamingServerNet.Rtmp.Test.Utilities.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: LiveStreamingServerNet.Rtmp.Test.Utilities.Helpers.CreateRandomChunkStreamId*
+  commentId: Overload:LiveStreamingServerNet.Rtmp.Test.Utilities.Helpers.CreateRandomChunkStreamId
+  href: LiveStreamingServerNet.Rtmp.Test.Utilities.Helpers.html#LiveStreamingServerNet_Rtmp_Test_Utilities_Helpers_CreateRandomChunkStreamId
+  name: CreateRandomChunkStreamId
+  nameWithType: Helpers.CreateRandomChunkStreamId
+  fullName: LiveStreamingServerNet.Rtmp.Test.Utilities.Helpers.CreateRandomChunkStreamId
+- uid: System.UInt32
+  commentId: T:System.UInt32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.uint32
+  name: uint
+  nameWithType: uint
+  fullName: uint
+  nameWithType.vb: UInteger
+  fullName.vb: UInteger
+  name.vb: UInteger
+- uid: LiveStreamingServerNet.Rtmp.Test.Utilities.Helpers.CreateExpectedCommandProperties*
+  commentId: Overload:LiveStreamingServerNet.Rtmp.Test.Utilities.Helpers.CreateExpectedCommandProperties
+  href: LiveStreamingServerNet.Rtmp.Test.Utilities.Helpers.html#LiveStreamingServerNet_Rtmp_Test_Utilities_Helpers_CreateExpectedCommandProperties_System_String_System_String_
+  name: CreateExpectedCommandProperties
+  nameWithType: Helpers.CreateExpectedCommandProperties
+  fullName: LiveStreamingServerNet.Rtmp.Test.Utilities.Helpers.CreateExpectedCommandProperties
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: System.Collections.Generic.List{System.Object}
+  commentId: T:System.Collections.Generic.List{System.Object}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<object>
+  nameWithType: List<object>
+  fullName: System.Collections.Generic.List<object>
+  nameWithType.vb: List(Of Object)
+  fullName.vb: System.Collections.Generic.List(Of Object)
+  name.vb: List(Of Object)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Collections.Generic.List`1
+  commentId: T:System.Collections.Generic.List`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<T>
+  nameWithType: List<T>
+  fullName: System.Collections.Generic.List<T>
+  nameWithType.vb: List(Of T)
+  fullName.vb: System.Collections.Generic.List(Of T)
+  name.vb: List(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+- uid: LiveStreamingServerNet.Rtmp.Test.Utilities.Helpers.CreateExpectedStreamArguments*
+  commentId: Overload:LiveStreamingServerNet.Rtmp.Test.Utilities.Helpers.CreateExpectedStreamArguments
+  href: LiveStreamingServerNet.Rtmp.Test.Utilities.Helpers.html#LiveStreamingServerNet_Rtmp_Test_Utilities_Helpers_CreateExpectedStreamArguments_System_String_System_String_
+  name: CreateExpectedStreamArguments
+  nameWithType: Helpers.CreateExpectedStreamArguments
+  fullName: LiveStreamingServerNet.Rtmp.Test.Utilities.Helpers.CreateExpectedStreamArguments
+- uid: System.Collections.Generic.IReadOnlyDictionary{System.String,System.String}
+  commentId: T:System.Collections.Generic.IReadOnlyDictionary{System.String,System.String}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IReadOnlyDictionary`2
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlydictionary-2
+  name: IReadOnlyDictionary<string, string>
+  nameWithType: IReadOnlyDictionary<string, string>
+  fullName: System.Collections.Generic.IReadOnlyDictionary<string, string>
+  nameWithType.vb: IReadOnlyDictionary(Of String, String)
+  fullName.vb: System.Collections.Generic.IReadOnlyDictionary(Of String, String)
+  name.vb: IReadOnlyDictionary(Of String, String)
+  spec.csharp:
+  - uid: System.Collections.Generic.IReadOnlyDictionary`2
+    name: IReadOnlyDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlydictionary-2
+  - name: <
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IReadOnlyDictionary`2
+    name: IReadOnlyDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlydictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+- uid: System.Collections.Generic.IReadOnlyDictionary`2
+  commentId: T:System.Collections.Generic.IReadOnlyDictionary`2
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlydictionary-2
+  name: IReadOnlyDictionary<TKey, TValue>
+  nameWithType: IReadOnlyDictionary<TKey, TValue>
+  fullName: System.Collections.Generic.IReadOnlyDictionary<TKey, TValue>
+  nameWithType.vb: IReadOnlyDictionary(Of TKey, TValue)
+  fullName.vb: System.Collections.Generic.IReadOnlyDictionary(Of TKey, TValue)
+  name.vb: IReadOnlyDictionary(Of TKey, TValue)
+  spec.csharp:
+  - uid: System.Collections.Generic.IReadOnlyDictionary`2
+    name: IReadOnlyDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlydictionary-2
+  - name: <
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IReadOnlyDictionary`2
+    name: IReadOnlyDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlydictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: )
+- uid: LiveStreamingServerNet.Rtmp.Test.Utilities.Helpers.CreateExpectedMetaData*
+  commentId: Overload:LiveStreamingServerNet.Rtmp.Test.Utilities.Helpers.CreateExpectedMetaData
+  href: LiveStreamingServerNet.Rtmp.Test.Utilities.Helpers.html#LiveStreamingServerNet_Rtmp_Test_Utilities_Helpers_CreateExpectedMetaData__1_System_String___0_
+  name: CreateExpectedMetaData
+  nameWithType: Helpers.CreateExpectedMetaData
+  fullName: LiveStreamingServerNet.Rtmp.Test.Utilities.Helpers.CreateExpectedMetaData
+- uid: '{TValue}'
+  commentId: '!:TValue'
+  definition: TValue
+  name: TValue
+  nameWithType: TValue
+  fullName: TValue
+- uid: System.Collections.Generic.IReadOnlyDictionary{System.String,System.Object}
+  commentId: T:System.Collections.Generic.IReadOnlyDictionary{System.String,System.Object}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IReadOnlyDictionary`2
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlydictionary-2
+  name: IReadOnlyDictionary<string, object>
+  nameWithType: IReadOnlyDictionary<string, object>
+  fullName: System.Collections.Generic.IReadOnlyDictionary<string, object>
+  nameWithType.vb: IReadOnlyDictionary(Of String, Object)
+  fullName.vb: System.Collections.Generic.IReadOnlyDictionary(Of String, Object)
+  name.vb: IReadOnlyDictionary(Of String, Object)
+  spec.csharp:
+  - uid: System.Collections.Generic.IReadOnlyDictionary`2
+    name: IReadOnlyDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlydictionary-2
+  - name: <
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IReadOnlyDictionary`2
+    name: IReadOnlyDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlydictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: TValue
+  commentId: '!:TValue'
+  name: TValue
+  nameWithType: TValue
+  fullName: TValue

@@ -1,0 +1,2526 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer
+  commentId: T:LiveStreamingServerNet.Networking.Contracts.INetBuffer
+  id: INetBuffer
+  parent: LiveStreamingServerNet.Networking.Contracts
+  children:
+  - LiveStreamingServerNet.Networking.Contracts.INetBuffer.AppendStreamData(System.IO.Stream,System.Int32,System.Threading.CancellationToken)
+  - LiveStreamingServerNet.Networking.Contracts.INetBuffer.CopyAllTo(LiveStreamingServerNet.Networking.Contracts.INetBuffer)
+  - LiveStreamingServerNet.Networking.Contracts.INetBuffer.Flush(LiveStreamingServerNet.Networking.Contracts.INetBuffer)
+  - LiveStreamingServerNet.Networking.Contracts.INetBuffer.Flush(System.IO.Stream)
+  - LiveStreamingServerNet.Networking.Contracts.INetBuffer.FlushAsync(System.IO.Stream)
+  - LiveStreamingServerNet.Networking.Contracts.INetBuffer.FromStreamData(System.IO.Stream,System.Int32,System.Threading.CancellationToken)
+  - LiveStreamingServerNet.Networking.Contracts.INetBuffer.MoveTo(System.Int32)
+  - LiveStreamingServerNet.Networking.Contracts.INetBuffer.Position
+  - LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadAndWriteTo(LiveStreamingServerNet.Networking.Contracts.INetBuffer,System.Int32)
+  - LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadBoolean
+  - LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadByte
+  - LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadBytes(System.Byte[],System.Int32,System.Int32)
+  - LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadBytes(System.Int32)
+  - LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadChar
+  - LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadDouble
+  - LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadInt16
+  - LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadInt16BiEndian
+  - LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadInt24BigEndian
+  - LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadInt32
+  - LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadInt32BigEndian
+  - LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadInt64
+  - LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadSingle
+  - LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadUInt16
+  - LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadUInt16BigEndian
+  - LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadUInt24BigEndian
+  - LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadUInt32
+  - LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadUInt32BigEndian
+  - LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadUInt64
+  - LiveStreamingServerNet.Networking.Contracts.INetBuffer.Reset
+  - LiveStreamingServerNet.Networking.Contracts.INetBuffer.Size
+  - LiveStreamingServerNet.Networking.Contracts.INetBuffer.UnderlyingBuffer
+  - LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(System.Boolean)
+  - LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(System.Byte)
+  - LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(System.Byte[])
+  - LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(System.Byte[],System.Int32,System.Int32)
+  - LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(System.Char)
+  - LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(System.Double)
+  - LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(System.Int16)
+  - LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(System.Int32)
+  - LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(System.Int64)
+  - LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(System.Memory{System.Byte})
+  - LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(System.ReadOnlySpan{System.Byte})
+  - LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(System.Single)
+  - LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(System.UInt16)
+  - LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(System.UInt32)
+  - LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(System.UInt64)
+  - LiveStreamingServerNet.Networking.Contracts.INetBuffer.WriteInt16BigEndian(System.Int16)
+  - LiveStreamingServerNet.Networking.Contracts.INetBuffer.WriteInt24BigEndian(System.Int32)
+  - LiveStreamingServerNet.Networking.Contracts.INetBuffer.WriteInt32BigEndian(System.Int32)
+  - LiveStreamingServerNet.Networking.Contracts.INetBuffer.WriteRandomBytes(System.Int32)
+  - LiveStreamingServerNet.Networking.Contracts.INetBuffer.WriteUInt24BigEndian(System.UInt32)
+  - LiveStreamingServerNet.Networking.Contracts.INetBuffer.WriteUInt32BigEndian(System.UInt32)
+  - LiveStreamingServerNet.Networking.Contracts.INetBuffer.WriteUint16BigEndian(System.UInt16)
+  langs:
+  - csharp
+  - vb
+  name: INetBuffer
+  nameWithType: INetBuffer
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer
+  type: Interface
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: INetBuffer
+    path: ../src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+    startLine: 2
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking.Contracts
+  syntax:
+    content: 'public interface INetBuffer : IDisposable'
+    content.vb: Public Interface INetBuffer Inherits IDisposable
+  inheritedMembers:
+  - System.IDisposable.Dispose
+  extensionMethods:
+  - System.Object.LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Action)
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Position
+  commentId: P:LiveStreamingServerNet.Networking.Contracts.INetBuffer.Position
+  id: Position
+  parent: LiveStreamingServerNet.Networking.Contracts.INetBuffer
+  langs:
+  - csharp
+  - vb
+  name: Position
+  nameWithType: INetBuffer.Position
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Position
+  type: Property
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: Position
+    path: ../src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+    startLine: 4
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking.Contracts
+  syntax:
+    content: int Position { get; set; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Property Position As Integer
+  overload: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Position*
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Size
+  commentId: P:LiveStreamingServerNet.Networking.Contracts.INetBuffer.Size
+  id: Size
+  parent: LiveStreamingServerNet.Networking.Contracts.INetBuffer
+  langs:
+  - csharp
+  - vb
+  name: Size
+  nameWithType: INetBuffer.Size
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Size
+  type: Property
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: Size
+    path: ../src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+    startLine: 5
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking.Contracts
+  syntax:
+    content: int Size { get; set; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Property Size As Integer
+  overload: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Size*
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.UnderlyingBuffer
+  commentId: P:LiveStreamingServerNet.Networking.Contracts.INetBuffer.UnderlyingBuffer
+  id: UnderlyingBuffer
+  parent: LiveStreamingServerNet.Networking.Contracts.INetBuffer
+  langs:
+  - csharp
+  - vb
+  name: UnderlyingBuffer
+  nameWithType: INetBuffer.UnderlyingBuffer
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.UnderlyingBuffer
+  type: Property
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: UnderlyingBuffer
+    path: ../src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+    startLine: 7
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking.Contracts
+  syntax:
+    content: byte[] UnderlyingBuffer { get; }
+    parameters: []
+    return:
+      type: System.Byte[]
+    content.vb: ReadOnly Property UnderlyingBuffer As Byte()
+  overload: LiveStreamingServerNet.Networking.Contracts.INetBuffer.UnderlyingBuffer*
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.MoveTo(System.Int32)
+  commentId: M:LiveStreamingServerNet.Networking.Contracts.INetBuffer.MoveTo(System.Int32)
+  id: MoveTo(System.Int32)
+  parent: LiveStreamingServerNet.Networking.Contracts.INetBuffer
+  langs:
+  - csharp
+  - vb
+  name: MoveTo(int)
+  nameWithType: INetBuffer.MoveTo(int)
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.MoveTo(int)
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: MoveTo
+    path: ../src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+    startLine: 9
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking.Contracts
+  syntax:
+    content: INetBuffer MoveTo(int position)
+    parameters:
+    - id: position
+      type: System.Int32
+    return:
+      type: LiveStreamingServerNet.Networking.Contracts.INetBuffer
+    content.vb: Function MoveTo(position As Integer) As INetBuffer
+  overload: LiveStreamingServerNet.Networking.Contracts.INetBuffer.MoveTo*
+  nameWithType.vb: INetBuffer.MoveTo(Integer)
+  fullName.vb: LiveStreamingServerNet.Networking.Contracts.INetBuffer.MoveTo(Integer)
+  name.vb: MoveTo(Integer)
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Reset
+  commentId: M:LiveStreamingServerNet.Networking.Contracts.INetBuffer.Reset
+  id: Reset
+  parent: LiveStreamingServerNet.Networking.Contracts.INetBuffer
+  langs:
+  - csharp
+  - vb
+  name: Reset()
+  nameWithType: INetBuffer.Reset()
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Reset()
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: Reset
+    path: ../src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+    startLine: 10
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking.Contracts
+  syntax:
+    content: void Reset()
+    content.vb: Sub Reset()
+  overload: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Reset*
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.FlushAsync(System.IO.Stream)
+  commentId: M:LiveStreamingServerNet.Networking.Contracts.INetBuffer.FlushAsync(System.IO.Stream)
+  id: FlushAsync(System.IO.Stream)
+  parent: LiveStreamingServerNet.Networking.Contracts.INetBuffer
+  langs:
+  - csharp
+  - vb
+  name: FlushAsync(Stream)
+  nameWithType: INetBuffer.FlushAsync(Stream)
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.FlushAsync(System.IO.Stream)
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: FlushAsync
+    path: ../src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+    startLine: 11
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking.Contracts
+  syntax:
+    content: Task FlushAsync(Stream output)
+    parameters:
+    - id: output
+      type: System.IO.Stream
+    return:
+      type: System.Threading.Tasks.Task
+    content.vb: Function FlushAsync(output As Stream) As Task
+  overload: LiveStreamingServerNet.Networking.Contracts.INetBuffer.FlushAsync*
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Flush(System.IO.Stream)
+  commentId: M:LiveStreamingServerNet.Networking.Contracts.INetBuffer.Flush(System.IO.Stream)
+  id: Flush(System.IO.Stream)
+  parent: LiveStreamingServerNet.Networking.Contracts.INetBuffer
+  langs:
+  - csharp
+  - vb
+  name: Flush(Stream)
+  nameWithType: INetBuffer.Flush(Stream)
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Flush(System.IO.Stream)
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: Flush
+    path: ../src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+    startLine: 12
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking.Contracts
+  syntax:
+    content: void Flush(Stream output)
+    parameters:
+    - id: output
+      type: System.IO.Stream
+    content.vb: Sub Flush(output As Stream)
+  overload: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Flush*
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Flush(LiveStreamingServerNet.Networking.Contracts.INetBuffer)
+  commentId: M:LiveStreamingServerNet.Networking.Contracts.INetBuffer.Flush(LiveStreamingServerNet.Networking.Contracts.INetBuffer)
+  id: Flush(LiveStreamingServerNet.Networking.Contracts.INetBuffer)
+  parent: LiveStreamingServerNet.Networking.Contracts.INetBuffer
+  langs:
+  - csharp
+  - vb
+  name: Flush(INetBuffer)
+  nameWithType: INetBuffer.Flush(INetBuffer)
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Flush(LiveStreamingServerNet.Networking.Contracts.INetBuffer)
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: Flush
+    path: ../src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+    startLine: 13
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking.Contracts
+  syntax:
+    content: void Flush(INetBuffer output)
+    parameters:
+    - id: output
+      type: LiveStreamingServerNet.Networking.Contracts.INetBuffer
+    content.vb: Sub Flush(output As INetBuffer)
+  overload: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Flush*
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.CopyAllTo(LiveStreamingServerNet.Networking.Contracts.INetBuffer)
+  commentId: M:LiveStreamingServerNet.Networking.Contracts.INetBuffer.CopyAllTo(LiveStreamingServerNet.Networking.Contracts.INetBuffer)
+  id: CopyAllTo(LiveStreamingServerNet.Networking.Contracts.INetBuffer)
+  parent: LiveStreamingServerNet.Networking.Contracts.INetBuffer
+  langs:
+  - csharp
+  - vb
+  name: CopyAllTo(INetBuffer)
+  nameWithType: INetBuffer.CopyAllTo(INetBuffer)
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.CopyAllTo(LiveStreamingServerNet.Networking.Contracts.INetBuffer)
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: CopyAllTo
+    path: ../src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+    startLine: 14
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking.Contracts
+  syntax:
+    content: void CopyAllTo(INetBuffer targetBuffer)
+    parameters:
+    - id: targetBuffer
+      type: LiveStreamingServerNet.Networking.Contracts.INetBuffer
+    content.vb: Sub CopyAllTo(targetBuffer As INetBuffer)
+  overload: LiveStreamingServerNet.Networking.Contracts.INetBuffer.CopyAllTo*
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadAndWriteTo(LiveStreamingServerNet.Networking.Contracts.INetBuffer,System.Int32)
+  commentId: M:LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadAndWriteTo(LiveStreamingServerNet.Networking.Contracts.INetBuffer,System.Int32)
+  id: ReadAndWriteTo(LiveStreamingServerNet.Networking.Contracts.INetBuffer,System.Int32)
+  parent: LiveStreamingServerNet.Networking.Contracts.INetBuffer
+  langs:
+  - csharp
+  - vb
+  name: ReadAndWriteTo(INetBuffer, int)
+  nameWithType: INetBuffer.ReadAndWriteTo(INetBuffer, int)
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadAndWriteTo(LiveStreamingServerNet.Networking.Contracts.INetBuffer, int)
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: ReadAndWriteTo
+    path: ../src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+    startLine: 15
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking.Contracts
+  syntax:
+    content: void ReadAndWriteTo(INetBuffer targetBuffer, int bytesCount)
+    parameters:
+    - id: targetBuffer
+      type: LiveStreamingServerNet.Networking.Contracts.INetBuffer
+    - id: bytesCount
+      type: System.Int32
+    content.vb: Sub ReadAndWriteTo(targetBuffer As INetBuffer, bytesCount As Integer)
+  overload: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadAndWriteTo*
+  nameWithType.vb: INetBuffer.ReadAndWriteTo(INetBuffer, Integer)
+  fullName.vb: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadAndWriteTo(LiveStreamingServerNet.Networking.Contracts.INetBuffer, Integer)
+  name.vb: ReadAndWriteTo(INetBuffer, Integer)
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.FromStreamData(System.IO.Stream,System.Int32,System.Threading.CancellationToken)
+  commentId: M:LiveStreamingServerNet.Networking.Contracts.INetBuffer.FromStreamData(System.IO.Stream,System.Int32,System.Threading.CancellationToken)
+  id: FromStreamData(System.IO.Stream,System.Int32,System.Threading.CancellationToken)
+  parent: LiveStreamingServerNet.Networking.Contracts.INetBuffer
+  langs:
+  - csharp
+  - vb
+  name: FromStreamData(Stream, int, CancellationToken)
+  nameWithType: INetBuffer.FromStreamData(Stream, int, CancellationToken)
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.FromStreamData(System.IO.Stream, int, System.Threading.CancellationToken)
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: FromStreamData
+    path: ../src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+    startLine: 16
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking.Contracts
+  syntax:
+    content: ValueTask FromStreamData(Stream stream, int bytesCount, CancellationToken cancellationToken = default)
+    parameters:
+    - id: stream
+      type: System.IO.Stream
+    - id: bytesCount
+      type: System.Int32
+    - id: cancellationToken
+      type: System.Threading.CancellationToken
+    return:
+      type: System.Threading.Tasks.ValueTask
+    content.vb: Function FromStreamData(stream As Stream, bytesCount As Integer, cancellationToken As CancellationToken = Nothing) As ValueTask
+  overload: LiveStreamingServerNet.Networking.Contracts.INetBuffer.FromStreamData*
+  nameWithType.vb: INetBuffer.FromStreamData(Stream, Integer, CancellationToken)
+  fullName.vb: LiveStreamingServerNet.Networking.Contracts.INetBuffer.FromStreamData(System.IO.Stream, Integer, System.Threading.CancellationToken)
+  name.vb: FromStreamData(Stream, Integer, CancellationToken)
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.AppendStreamData(System.IO.Stream,System.Int32,System.Threading.CancellationToken)
+  commentId: M:LiveStreamingServerNet.Networking.Contracts.INetBuffer.AppendStreamData(System.IO.Stream,System.Int32,System.Threading.CancellationToken)
+  id: AppendStreamData(System.IO.Stream,System.Int32,System.Threading.CancellationToken)
+  parent: LiveStreamingServerNet.Networking.Contracts.INetBuffer
+  langs:
+  - csharp
+  - vb
+  name: AppendStreamData(Stream, int, CancellationToken)
+  nameWithType: INetBuffer.AppendStreamData(Stream, int, CancellationToken)
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.AppendStreamData(System.IO.Stream, int, System.Threading.CancellationToken)
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: AppendStreamData
+    path: ../src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+    startLine: 17
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking.Contracts
+  syntax:
+    content: ValueTask AppendStreamData(Stream stream, int bytesCount, CancellationToken cancellationToken = default)
+    parameters:
+    - id: stream
+      type: System.IO.Stream
+    - id: bytesCount
+      type: System.Int32
+    - id: cancellationToken
+      type: System.Threading.CancellationToken
+    return:
+      type: System.Threading.Tasks.ValueTask
+    content.vb: Function AppendStreamData(stream As Stream, bytesCount As Integer, cancellationToken As CancellationToken = Nothing) As ValueTask
+  overload: LiveStreamingServerNet.Networking.Contracts.INetBuffer.AppendStreamData*
+  nameWithType.vb: INetBuffer.AppendStreamData(Stream, Integer, CancellationToken)
+  fullName.vb: LiveStreamingServerNet.Networking.Contracts.INetBuffer.AppendStreamData(System.IO.Stream, Integer, System.Threading.CancellationToken)
+  name.vb: AppendStreamData(Stream, Integer, CancellationToken)
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.WriteRandomBytes(System.Int32)
+  commentId: M:LiveStreamingServerNet.Networking.Contracts.INetBuffer.WriteRandomBytes(System.Int32)
+  id: WriteRandomBytes(System.Int32)
+  parent: LiveStreamingServerNet.Networking.Contracts.INetBuffer
+  langs:
+  - csharp
+  - vb
+  name: WriteRandomBytes(int)
+  nameWithType: INetBuffer.WriteRandomBytes(int)
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.WriteRandomBytes(int)
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: WriteRandomBytes
+    path: ../src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+    startLine: 19
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking.Contracts
+  syntax:
+    content: void WriteRandomBytes(int count)
+    parameters:
+    - id: count
+      type: System.Int32
+    content.vb: Sub WriteRandomBytes(count As Integer)
+  overload: LiveStreamingServerNet.Networking.Contracts.INetBuffer.WriteRandomBytes*
+  nameWithType.vb: INetBuffer.WriteRandomBytes(Integer)
+  fullName.vb: LiveStreamingServerNet.Networking.Contracts.INetBuffer.WriteRandomBytes(Integer)
+  name.vb: WriteRandomBytes(Integer)
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadBoolean
+  commentId: M:LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadBoolean
+  id: ReadBoolean
+  parent: LiveStreamingServerNet.Networking.Contracts.INetBuffer
+  langs:
+  - csharp
+  - vb
+  name: ReadBoolean()
+  nameWithType: INetBuffer.ReadBoolean()
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadBoolean()
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: ReadBoolean
+    path: ../src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+    startLine: 20
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking.Contracts
+  syntax:
+    content: bool ReadBoolean()
+    return:
+      type: System.Boolean
+    content.vb: Function ReadBoolean() As Boolean
+  overload: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadBoolean*
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadByte
+  commentId: M:LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadByte
+  id: ReadByte
+  parent: LiveStreamingServerNet.Networking.Contracts.INetBuffer
+  langs:
+  - csharp
+  - vb
+  name: ReadByte()
+  nameWithType: INetBuffer.ReadByte()
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadByte()
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: ReadByte
+    path: ../src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+    startLine: 21
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking.Contracts
+  syntax:
+    content: byte ReadByte()
+    return:
+      type: System.Byte
+    content.vb: Function ReadByte() As Byte
+  overload: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadByte*
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadBytes(System.Byte[],System.Int32,System.Int32)
+  commentId: M:LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadBytes(System.Byte[],System.Int32,System.Int32)
+  id: ReadBytes(System.Byte[],System.Int32,System.Int32)
+  parent: LiveStreamingServerNet.Networking.Contracts.INetBuffer
+  langs:
+  - csharp
+  - vb
+  name: ReadBytes(byte[], int, int)
+  nameWithType: INetBuffer.ReadBytes(byte[], int, int)
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadBytes(byte[], int, int)
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: ReadBytes
+    path: ../src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+    startLine: 22
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking.Contracts
+  syntax:
+    content: void ReadBytes(byte[] buffer, int index, int count)
+    parameters:
+    - id: buffer
+      type: System.Byte[]
+    - id: index
+      type: System.Int32
+    - id: count
+      type: System.Int32
+    content.vb: Sub ReadBytes(buffer As Byte(), index As Integer, count As Integer)
+  overload: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadBytes*
+  nameWithType.vb: INetBuffer.ReadBytes(Byte(), Integer, Integer)
+  fullName.vb: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadBytes(Byte(), Integer, Integer)
+  name.vb: ReadBytes(Byte(), Integer, Integer)
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadBytes(System.Int32)
+  commentId: M:LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadBytes(System.Int32)
+  id: ReadBytes(System.Int32)
+  parent: LiveStreamingServerNet.Networking.Contracts.INetBuffer
+  langs:
+  - csharp
+  - vb
+  name: ReadBytes(int)
+  nameWithType: INetBuffer.ReadBytes(int)
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadBytes(int)
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: ReadBytes
+    path: ../src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+    startLine: 23
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking.Contracts
+  syntax:
+    content: byte[] ReadBytes(int count)
+    parameters:
+    - id: count
+      type: System.Int32
+    return:
+      type: System.Byte[]
+    content.vb: Function ReadBytes(count As Integer) As Byte()
+  overload: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadBytes*
+  nameWithType.vb: INetBuffer.ReadBytes(Integer)
+  fullName.vb: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadBytes(Integer)
+  name.vb: ReadBytes(Integer)
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadChar
+  commentId: M:LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadChar
+  id: ReadChar
+  parent: LiveStreamingServerNet.Networking.Contracts.INetBuffer
+  langs:
+  - csharp
+  - vb
+  name: ReadChar()
+  nameWithType: INetBuffer.ReadChar()
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadChar()
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: ReadChar
+    path: ../src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+    startLine: 24
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking.Contracts
+  syntax:
+    content: char ReadChar()
+    return:
+      type: System.Char
+    content.vb: Function ReadChar() As Char
+  overload: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadChar*
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadDouble
+  commentId: M:LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadDouble
+  id: ReadDouble
+  parent: LiveStreamingServerNet.Networking.Contracts.INetBuffer
+  langs:
+  - csharp
+  - vb
+  name: ReadDouble()
+  nameWithType: INetBuffer.ReadDouble()
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadDouble()
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: ReadDouble
+    path: ../src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+    startLine: 25
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking.Contracts
+  syntax:
+    content: double ReadDouble()
+    return:
+      type: System.Double
+    content.vb: Function ReadDouble() As Double
+  overload: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadDouble*
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadInt16
+  commentId: M:LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadInt16
+  id: ReadInt16
+  parent: LiveStreamingServerNet.Networking.Contracts.INetBuffer
+  langs:
+  - csharp
+  - vb
+  name: ReadInt16()
+  nameWithType: INetBuffer.ReadInt16()
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadInt16()
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: ReadInt16
+    path: ../src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+    startLine: 26
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking.Contracts
+  syntax:
+    content: short ReadInt16()
+    return:
+      type: System.Int16
+    content.vb: Function ReadInt16() As Short
+  overload: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadInt16*
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadInt32
+  commentId: M:LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadInt32
+  id: ReadInt32
+  parent: LiveStreamingServerNet.Networking.Contracts.INetBuffer
+  langs:
+  - csharp
+  - vb
+  name: ReadInt32()
+  nameWithType: INetBuffer.ReadInt32()
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadInt32()
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: ReadInt32
+    path: ../src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+    startLine: 27
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking.Contracts
+  syntax:
+    content: int ReadInt32()
+    return:
+      type: System.Int32
+    content.vb: Function ReadInt32() As Integer
+  overload: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadInt32*
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadInt64
+  commentId: M:LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadInt64
+  id: ReadInt64
+  parent: LiveStreamingServerNet.Networking.Contracts.INetBuffer
+  langs:
+  - csharp
+  - vb
+  name: ReadInt64()
+  nameWithType: INetBuffer.ReadInt64()
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadInt64()
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: ReadInt64
+    path: ../src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+    startLine: 28
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking.Contracts
+  syntax:
+    content: long ReadInt64()
+    return:
+      type: System.Int64
+    content.vb: Function ReadInt64() As Long
+  overload: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadInt64*
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadSingle
+  commentId: M:LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadSingle
+  id: ReadSingle
+  parent: LiveStreamingServerNet.Networking.Contracts.INetBuffer
+  langs:
+  - csharp
+  - vb
+  name: ReadSingle()
+  nameWithType: INetBuffer.ReadSingle()
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadSingle()
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: ReadSingle
+    path: ../src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+    startLine: 29
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking.Contracts
+  syntax:
+    content: float ReadSingle()
+    return:
+      type: System.Single
+    content.vb: Function ReadSingle() As Single
+  overload: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadSingle*
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadUInt16
+  commentId: M:LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadUInt16
+  id: ReadUInt16
+  parent: LiveStreamingServerNet.Networking.Contracts.INetBuffer
+  langs:
+  - csharp
+  - vb
+  name: ReadUInt16()
+  nameWithType: INetBuffer.ReadUInt16()
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadUInt16()
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: ReadUInt16
+    path: ../src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+    startLine: 30
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking.Contracts
+  syntax:
+    content: ushort ReadUInt16()
+    return:
+      type: System.UInt16
+    content.vb: Function ReadUInt16() As UShort
+  overload: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadUInt16*
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadUInt32
+  commentId: M:LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadUInt32
+  id: ReadUInt32
+  parent: LiveStreamingServerNet.Networking.Contracts.INetBuffer
+  langs:
+  - csharp
+  - vb
+  name: ReadUInt32()
+  nameWithType: INetBuffer.ReadUInt32()
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadUInt32()
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: ReadUInt32
+    path: ../src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+    startLine: 31
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking.Contracts
+  syntax:
+    content: uint ReadUInt32()
+    return:
+      type: System.UInt32
+    content.vb: Function ReadUInt32() As UInteger
+  overload: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadUInt32*
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadUInt64
+  commentId: M:LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadUInt64
+  id: ReadUInt64
+  parent: LiveStreamingServerNet.Networking.Contracts.INetBuffer
+  langs:
+  - csharp
+  - vb
+  name: ReadUInt64()
+  nameWithType: INetBuffer.ReadUInt64()
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadUInt64()
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: ReadUInt64
+    path: ../src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+    startLine: 32
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking.Contracts
+  syntax:
+    content: ulong ReadUInt64()
+    return:
+      type: System.UInt64
+    content.vb: Function ReadUInt64() As ULong
+  overload: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadUInt64*
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadUInt16BigEndian
+  commentId: M:LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadUInt16BigEndian
+  id: ReadUInt16BigEndian
+  parent: LiveStreamingServerNet.Networking.Contracts.INetBuffer
+  langs:
+  - csharp
+  - vb
+  name: ReadUInt16BigEndian()
+  nameWithType: INetBuffer.ReadUInt16BigEndian()
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadUInt16BigEndian()
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: ReadUInt16BigEndian
+    path: ../src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+    startLine: 33
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking.Contracts
+  syntax:
+    content: ushort ReadUInt16BigEndian()
+    return:
+      type: System.UInt16
+    content.vb: Function ReadUInt16BigEndian() As UShort
+  overload: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadUInt16BigEndian*
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadUInt24BigEndian
+  commentId: M:LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadUInt24BigEndian
+  id: ReadUInt24BigEndian
+  parent: LiveStreamingServerNet.Networking.Contracts.INetBuffer
+  langs:
+  - csharp
+  - vb
+  name: ReadUInt24BigEndian()
+  nameWithType: INetBuffer.ReadUInt24BigEndian()
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadUInt24BigEndian()
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: ReadUInt24BigEndian
+    path: ../src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+    startLine: 34
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking.Contracts
+  syntax:
+    content: uint ReadUInt24BigEndian()
+    return:
+      type: System.UInt32
+    content.vb: Function ReadUInt24BigEndian() As UInteger
+  overload: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadUInt24BigEndian*
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadUInt32BigEndian
+  commentId: M:LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadUInt32BigEndian
+  id: ReadUInt32BigEndian
+  parent: LiveStreamingServerNet.Networking.Contracts.INetBuffer
+  langs:
+  - csharp
+  - vb
+  name: ReadUInt32BigEndian()
+  nameWithType: INetBuffer.ReadUInt32BigEndian()
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadUInt32BigEndian()
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: ReadUInt32BigEndian
+    path: ../src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+    startLine: 35
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking.Contracts
+  syntax:
+    content: uint ReadUInt32BigEndian()
+    return:
+      type: System.UInt32
+    content.vb: Function ReadUInt32BigEndian() As UInteger
+  overload: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadUInt32BigEndian*
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadInt16BiEndian
+  commentId: M:LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadInt16BiEndian
+  id: ReadInt16BiEndian
+  parent: LiveStreamingServerNet.Networking.Contracts.INetBuffer
+  langs:
+  - csharp
+  - vb
+  name: ReadInt16BiEndian()
+  nameWithType: INetBuffer.ReadInt16BiEndian()
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadInt16BiEndian()
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: ReadInt16BiEndian
+    path: ../src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+    startLine: 36
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking.Contracts
+  syntax:
+    content: short ReadInt16BiEndian()
+    return:
+      type: System.Int16
+    content.vb: Function ReadInt16BiEndian() As Short
+  overload: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadInt16BiEndian*
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadInt24BigEndian
+  commentId: M:LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadInt24BigEndian
+  id: ReadInt24BigEndian
+  parent: LiveStreamingServerNet.Networking.Contracts.INetBuffer
+  langs:
+  - csharp
+  - vb
+  name: ReadInt24BigEndian()
+  nameWithType: INetBuffer.ReadInt24BigEndian()
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadInt24BigEndian()
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: ReadInt24BigEndian
+    path: ../src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+    startLine: 37
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking.Contracts
+  syntax:
+    content: int ReadInt24BigEndian()
+    return:
+      type: System.Int32
+    content.vb: Function ReadInt24BigEndian() As Integer
+  overload: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadInt24BigEndian*
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadInt32BigEndian
+  commentId: M:LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadInt32BigEndian
+  id: ReadInt32BigEndian
+  parent: LiveStreamingServerNet.Networking.Contracts.INetBuffer
+  langs:
+  - csharp
+  - vb
+  name: ReadInt32BigEndian()
+  nameWithType: INetBuffer.ReadInt32BigEndian()
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadInt32BigEndian()
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: ReadInt32BigEndian
+    path: ../src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+    startLine: 38
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking.Contracts
+  syntax:
+    content: int ReadInt32BigEndian()
+    return:
+      type: System.Int32
+    content.vb: Function ReadInt32BigEndian() As Integer
+  overload: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadInt32BigEndian*
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(System.Boolean)
+  commentId: M:LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(System.Boolean)
+  id: Write(System.Boolean)
+  parent: LiveStreamingServerNet.Networking.Contracts.INetBuffer
+  langs:
+  - csharp
+  - vb
+  name: Write(bool)
+  nameWithType: INetBuffer.Write(bool)
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(bool)
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: Write
+    path: ../src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+    startLine: 40
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking.Contracts
+  syntax:
+    content: void Write(bool value)
+    parameters:
+    - id: value
+      type: System.Boolean
+    content.vb: Sub Write(value As Boolean)
+  overload: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write*
+  nameWithType.vb: INetBuffer.Write(Boolean)
+  fullName.vb: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(Boolean)
+  name.vb: Write(Boolean)
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(System.Byte)
+  commentId: M:LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(System.Byte)
+  id: Write(System.Byte)
+  parent: LiveStreamingServerNet.Networking.Contracts.INetBuffer
+  langs:
+  - csharp
+  - vb
+  name: Write(byte)
+  nameWithType: INetBuffer.Write(byte)
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(byte)
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: Write
+    path: ../src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+    startLine: 41
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking.Contracts
+  syntax:
+    content: void Write(byte value)
+    parameters:
+    - id: value
+      type: System.Byte
+    content.vb: Sub Write(value As Byte)
+  overload: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write*
+  nameWithType.vb: INetBuffer.Write(Byte)
+  fullName.vb: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(Byte)
+  name.vb: Write(Byte)
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(System.Byte[])
+  commentId: M:LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(System.Byte[])
+  id: Write(System.Byte[])
+  parent: LiveStreamingServerNet.Networking.Contracts.INetBuffer
+  langs:
+  - csharp
+  - vb
+  name: Write(byte[])
+  nameWithType: INetBuffer.Write(byte[])
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(byte[])
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: Write
+    path: ../src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+    startLine: 42
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking.Contracts
+  syntax:
+    content: void Write(byte[] buffer)
+    parameters:
+    - id: buffer
+      type: System.Byte[]
+    content.vb: Sub Write(buffer As Byte())
+  overload: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write*
+  nameWithType.vb: INetBuffer.Write(Byte())
+  fullName.vb: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(Byte())
+  name.vb: Write(Byte())
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(System.Byte[],System.Int32,System.Int32)
+  commentId: M:LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(System.Byte[],System.Int32,System.Int32)
+  id: Write(System.Byte[],System.Int32,System.Int32)
+  parent: LiveStreamingServerNet.Networking.Contracts.INetBuffer
+  langs:
+  - csharp
+  - vb
+  name: Write(byte[], int, int)
+  nameWithType: INetBuffer.Write(byte[], int, int)
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(byte[], int, int)
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: Write
+    path: ../src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+    startLine: 43
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking.Contracts
+  syntax:
+    content: void Write(byte[] buffer, int offset, int count)
+    parameters:
+    - id: buffer
+      type: System.Byte[]
+    - id: offset
+      type: System.Int32
+    - id: count
+      type: System.Int32
+    content.vb: Sub Write(buffer As Byte(), offset As Integer, count As Integer)
+  overload: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write*
+  nameWithType.vb: INetBuffer.Write(Byte(), Integer, Integer)
+  fullName.vb: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(Byte(), Integer, Integer)
+  name.vb: Write(Byte(), Integer, Integer)
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(System.Char)
+  commentId: M:LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(System.Char)
+  id: Write(System.Char)
+  parent: LiveStreamingServerNet.Networking.Contracts.INetBuffer
+  langs:
+  - csharp
+  - vb
+  name: Write(char)
+  nameWithType: INetBuffer.Write(char)
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(char)
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: Write
+    path: ../src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+    startLine: 44
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking.Contracts
+  syntax:
+    content: void Write(char value)
+    parameters:
+    - id: value
+      type: System.Char
+    content.vb: Sub Write(value As Char)
+  overload: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write*
+  nameWithType.vb: INetBuffer.Write(Char)
+  fullName.vb: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(Char)
+  name.vb: Write(Char)
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(System.Double)
+  commentId: M:LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(System.Double)
+  id: Write(System.Double)
+  parent: LiveStreamingServerNet.Networking.Contracts.INetBuffer
+  langs:
+  - csharp
+  - vb
+  name: Write(double)
+  nameWithType: INetBuffer.Write(double)
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(double)
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: Write
+    path: ../src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+    startLine: 45
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking.Contracts
+  syntax:
+    content: void Write(double value)
+    parameters:
+    - id: value
+      type: System.Double
+    content.vb: Sub Write(value As Double)
+  overload: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write*
+  nameWithType.vb: INetBuffer.Write(Double)
+  fullName.vb: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(Double)
+  name.vb: Write(Double)
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(System.Single)
+  commentId: M:LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(System.Single)
+  id: Write(System.Single)
+  parent: LiveStreamingServerNet.Networking.Contracts.INetBuffer
+  langs:
+  - csharp
+  - vb
+  name: Write(float)
+  nameWithType: INetBuffer.Write(float)
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(float)
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: Write
+    path: ../src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+    startLine: 46
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking.Contracts
+  syntax:
+    content: void Write(float value)
+    parameters:
+    - id: value
+      type: System.Single
+    content.vb: Sub Write(value As Single)
+  overload: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write*
+  nameWithType.vb: INetBuffer.Write(Single)
+  fullName.vb: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(Single)
+  name.vb: Write(Single)
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(System.Int32)
+  commentId: M:LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(System.Int32)
+  id: Write(System.Int32)
+  parent: LiveStreamingServerNet.Networking.Contracts.INetBuffer
+  langs:
+  - csharp
+  - vb
+  name: Write(int)
+  nameWithType: INetBuffer.Write(int)
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(int)
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: Write
+    path: ../src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+    startLine: 47
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking.Contracts
+  syntax:
+    content: void Write(int value)
+    parameters:
+    - id: value
+      type: System.Int32
+    content.vb: Sub Write(value As Integer)
+  overload: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write*
+  nameWithType.vb: INetBuffer.Write(Integer)
+  fullName.vb: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(Integer)
+  name.vb: Write(Integer)
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(System.Int64)
+  commentId: M:LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(System.Int64)
+  id: Write(System.Int64)
+  parent: LiveStreamingServerNet.Networking.Contracts.INetBuffer
+  langs:
+  - csharp
+  - vb
+  name: Write(long)
+  nameWithType: INetBuffer.Write(long)
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(long)
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: Write
+    path: ../src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+    startLine: 48
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking.Contracts
+  syntax:
+    content: void Write(long value)
+    parameters:
+    - id: value
+      type: System.Int64
+    content.vb: Sub Write(value As Long)
+  overload: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write*
+  nameWithType.vb: INetBuffer.Write(Long)
+  fullName.vb: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(Long)
+  name.vb: Write(Long)
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(System.Memory{System.Byte})
+  commentId: M:LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(System.Memory{System.Byte})
+  id: Write(System.Memory{System.Byte})
+  parent: LiveStreamingServerNet.Networking.Contracts.INetBuffer
+  langs:
+  - csharp
+  - vb
+  name: Write(Memory<byte>)
+  nameWithType: INetBuffer.Write(Memory<byte>)
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(System.Memory<byte>)
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: Write
+    path: ../src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+    startLine: 49
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking.Contracts
+  syntax:
+    content: void Write(Memory<byte> memory)
+    parameters:
+    - id: memory
+      type: System.Memory{System.Byte}
+    content.vb: Sub Write(memory As Memory(Of Byte))
+  overload: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write*
+  nameWithType.vb: INetBuffer.Write(Memory(Of Byte))
+  fullName.vb: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(System.Memory(Of Byte))
+  name.vb: Write(Memory(Of Byte))
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(System.ReadOnlySpan{System.Byte})
+  commentId: M:LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(System.ReadOnlySpan{System.Byte})
+  id: Write(System.ReadOnlySpan{System.Byte})
+  parent: LiveStreamingServerNet.Networking.Contracts.INetBuffer
+  langs:
+  - csharp
+  - vb
+  name: Write(ReadOnlySpan<byte>)
+  nameWithType: INetBuffer.Write(ReadOnlySpan<byte>)
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(System.ReadOnlySpan<byte>)
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: Write
+    path: ../src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+    startLine: 50
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking.Contracts
+  syntax:
+    content: void Write(ReadOnlySpan<byte> buffer)
+    parameters:
+    - id: buffer
+      type: System.ReadOnlySpan{System.Byte}
+    content.vb: Sub Write(buffer As ReadOnlySpan(Of Byte))
+  overload: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write*
+  nameWithType.vb: INetBuffer.Write(ReadOnlySpan(Of Byte))
+  fullName.vb: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(System.ReadOnlySpan(Of Byte))
+  name.vb: Write(ReadOnlySpan(Of Byte))
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(System.Int16)
+  commentId: M:LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(System.Int16)
+  id: Write(System.Int16)
+  parent: LiveStreamingServerNet.Networking.Contracts.INetBuffer
+  langs:
+  - csharp
+  - vb
+  name: Write(short)
+  nameWithType: INetBuffer.Write(short)
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(short)
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: Write
+    path: ../src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+    startLine: 51
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking.Contracts
+  syntax:
+    content: void Write(short value)
+    parameters:
+    - id: value
+      type: System.Int16
+    content.vb: Sub Write(value As Short)
+  overload: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write*
+  nameWithType.vb: INetBuffer.Write(Short)
+  fullName.vb: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(Short)
+  name.vb: Write(Short)
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(System.UInt32)
+  commentId: M:LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(System.UInt32)
+  id: Write(System.UInt32)
+  parent: LiveStreamingServerNet.Networking.Contracts.INetBuffer
+  langs:
+  - csharp
+  - vb
+  name: Write(uint)
+  nameWithType: INetBuffer.Write(uint)
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(uint)
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: Write
+    path: ../src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+    startLine: 52
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking.Contracts
+  syntax:
+    content: void Write(uint value)
+    parameters:
+    - id: value
+      type: System.UInt32
+    content.vb: Sub Write(value As UInteger)
+  overload: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write*
+  nameWithType.vb: INetBuffer.Write(UInteger)
+  fullName.vb: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(UInteger)
+  name.vb: Write(UInteger)
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(System.UInt64)
+  commentId: M:LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(System.UInt64)
+  id: Write(System.UInt64)
+  parent: LiveStreamingServerNet.Networking.Contracts.INetBuffer
+  langs:
+  - csharp
+  - vb
+  name: Write(ulong)
+  nameWithType: INetBuffer.Write(ulong)
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(ulong)
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: Write
+    path: ../src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+    startLine: 53
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking.Contracts
+  syntax:
+    content: void Write(ulong value)
+    parameters:
+    - id: value
+      type: System.UInt64
+    content.vb: Sub Write(value As ULong)
+  overload: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write*
+  nameWithType.vb: INetBuffer.Write(ULong)
+  fullName.vb: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(ULong)
+  name.vb: Write(ULong)
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(System.UInt16)
+  commentId: M:LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(System.UInt16)
+  id: Write(System.UInt16)
+  parent: LiveStreamingServerNet.Networking.Contracts.INetBuffer
+  langs:
+  - csharp
+  - vb
+  name: Write(ushort)
+  nameWithType: INetBuffer.Write(ushort)
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(ushort)
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: Write
+    path: ../src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+    startLine: 54
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking.Contracts
+  syntax:
+    content: void Write(ushort value)
+    parameters:
+    - id: value
+      type: System.UInt16
+    content.vb: Sub Write(value As UShort)
+  overload: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write*
+  nameWithType.vb: INetBuffer.Write(UShort)
+  fullName.vb: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write(UShort)
+  name.vb: Write(UShort)
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.WriteUint16BigEndian(System.UInt16)
+  commentId: M:LiveStreamingServerNet.Networking.Contracts.INetBuffer.WriteUint16BigEndian(System.UInt16)
+  id: WriteUint16BigEndian(System.UInt16)
+  parent: LiveStreamingServerNet.Networking.Contracts.INetBuffer
+  langs:
+  - csharp
+  - vb
+  name: WriteUint16BigEndian(ushort)
+  nameWithType: INetBuffer.WriteUint16BigEndian(ushort)
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.WriteUint16BigEndian(ushort)
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: WriteUint16BigEndian
+    path: ../src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+    startLine: 56
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking.Contracts
+  syntax:
+    content: void WriteUint16BigEndian(ushort value)
+    parameters:
+    - id: value
+      type: System.UInt16
+    content.vb: Sub WriteUint16BigEndian(value As UShort)
+  overload: LiveStreamingServerNet.Networking.Contracts.INetBuffer.WriteUint16BigEndian*
+  nameWithType.vb: INetBuffer.WriteUint16BigEndian(UShort)
+  fullName.vb: LiveStreamingServerNet.Networking.Contracts.INetBuffer.WriteUint16BigEndian(UShort)
+  name.vb: WriteUint16BigEndian(UShort)
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.WriteUInt24BigEndian(System.UInt32)
+  commentId: M:LiveStreamingServerNet.Networking.Contracts.INetBuffer.WriteUInt24BigEndian(System.UInt32)
+  id: WriteUInt24BigEndian(System.UInt32)
+  parent: LiveStreamingServerNet.Networking.Contracts.INetBuffer
+  langs:
+  - csharp
+  - vb
+  name: WriteUInt24BigEndian(uint)
+  nameWithType: INetBuffer.WriteUInt24BigEndian(uint)
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.WriteUInt24BigEndian(uint)
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: WriteUInt24BigEndian
+    path: ../src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+    startLine: 57
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking.Contracts
+  syntax:
+    content: void WriteUInt24BigEndian(uint value)
+    parameters:
+    - id: value
+      type: System.UInt32
+    content.vb: Sub WriteUInt24BigEndian(value As UInteger)
+  overload: LiveStreamingServerNet.Networking.Contracts.INetBuffer.WriteUInt24BigEndian*
+  nameWithType.vb: INetBuffer.WriteUInt24BigEndian(UInteger)
+  fullName.vb: LiveStreamingServerNet.Networking.Contracts.INetBuffer.WriteUInt24BigEndian(UInteger)
+  name.vb: WriteUInt24BigEndian(UInteger)
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.WriteUInt32BigEndian(System.UInt32)
+  commentId: M:LiveStreamingServerNet.Networking.Contracts.INetBuffer.WriteUInt32BigEndian(System.UInt32)
+  id: WriteUInt32BigEndian(System.UInt32)
+  parent: LiveStreamingServerNet.Networking.Contracts.INetBuffer
+  langs:
+  - csharp
+  - vb
+  name: WriteUInt32BigEndian(uint)
+  nameWithType: INetBuffer.WriteUInt32BigEndian(uint)
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.WriteUInt32BigEndian(uint)
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: WriteUInt32BigEndian
+    path: ../src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+    startLine: 58
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking.Contracts
+  syntax:
+    content: void WriteUInt32BigEndian(uint value)
+    parameters:
+    - id: value
+      type: System.UInt32
+    content.vb: Sub WriteUInt32BigEndian(value As UInteger)
+  overload: LiveStreamingServerNet.Networking.Contracts.INetBuffer.WriteUInt32BigEndian*
+  nameWithType.vb: INetBuffer.WriteUInt32BigEndian(UInteger)
+  fullName.vb: LiveStreamingServerNet.Networking.Contracts.INetBuffer.WriteUInt32BigEndian(UInteger)
+  name.vb: WriteUInt32BigEndian(UInteger)
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.WriteInt16BigEndian(System.Int16)
+  commentId: M:LiveStreamingServerNet.Networking.Contracts.INetBuffer.WriteInt16BigEndian(System.Int16)
+  id: WriteInt16BigEndian(System.Int16)
+  parent: LiveStreamingServerNet.Networking.Contracts.INetBuffer
+  langs:
+  - csharp
+  - vb
+  name: WriteInt16BigEndian(short)
+  nameWithType: INetBuffer.WriteInt16BigEndian(short)
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.WriteInt16BigEndian(short)
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: WriteInt16BigEndian
+    path: ../src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+    startLine: 59
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking.Contracts
+  syntax:
+    content: void WriteInt16BigEndian(short value)
+    parameters:
+    - id: value
+      type: System.Int16
+    content.vb: Sub WriteInt16BigEndian(value As Short)
+  overload: LiveStreamingServerNet.Networking.Contracts.INetBuffer.WriteInt16BigEndian*
+  nameWithType.vb: INetBuffer.WriteInt16BigEndian(Short)
+  fullName.vb: LiveStreamingServerNet.Networking.Contracts.INetBuffer.WriteInt16BigEndian(Short)
+  name.vb: WriteInt16BigEndian(Short)
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.WriteInt24BigEndian(System.Int32)
+  commentId: M:LiveStreamingServerNet.Networking.Contracts.INetBuffer.WriteInt24BigEndian(System.Int32)
+  id: WriteInt24BigEndian(System.Int32)
+  parent: LiveStreamingServerNet.Networking.Contracts.INetBuffer
+  langs:
+  - csharp
+  - vb
+  name: WriteInt24BigEndian(int)
+  nameWithType: INetBuffer.WriteInt24BigEndian(int)
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.WriteInt24BigEndian(int)
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: WriteInt24BigEndian
+    path: ../src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+    startLine: 60
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking.Contracts
+  syntax:
+    content: void WriteInt24BigEndian(int value)
+    parameters:
+    - id: value
+      type: System.Int32
+    content.vb: Sub WriteInt24BigEndian(value As Integer)
+  overload: LiveStreamingServerNet.Networking.Contracts.INetBuffer.WriteInt24BigEndian*
+  nameWithType.vb: INetBuffer.WriteInt24BigEndian(Integer)
+  fullName.vb: LiveStreamingServerNet.Networking.Contracts.INetBuffer.WriteInt24BigEndian(Integer)
+  name.vb: WriteInt24BigEndian(Integer)
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.WriteInt32BigEndian(System.Int32)
+  commentId: M:LiveStreamingServerNet.Networking.Contracts.INetBuffer.WriteInt32BigEndian(System.Int32)
+  id: WriteInt32BigEndian(System.Int32)
+  parent: LiveStreamingServerNet.Networking.Contracts.INetBuffer
+  langs:
+  - csharp
+  - vb
+  name: WriteInt32BigEndian(int)
+  nameWithType: INetBuffer.WriteInt32BigEndian(int)
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.WriteInt32BigEndian(int)
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: WriteInt32BigEndian
+    path: ../src/LiveStreamingServerNet.Networking/Contracts/INetBuffer.cs
+    startLine: 61
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking.Contracts
+  syntax:
+    content: void WriteInt32BigEndian(int value)
+    parameters:
+    - id: value
+      type: System.Int32
+    content.vb: Sub WriteInt32BigEndian(value As Integer)
+  overload: LiveStreamingServerNet.Networking.Contracts.INetBuffer.WriteInt32BigEndian*
+  nameWithType.vb: INetBuffer.WriteInt32BigEndian(Integer)
+  fullName.vb: LiveStreamingServerNet.Networking.Contracts.INetBuffer.WriteInt32BigEndian(Integer)
+  name.vb: WriteInt32BigEndian(Integer)
+references:
+- uid: LiveStreamingServerNet.Networking.Contracts
+  commentId: N:LiveStreamingServerNet.Networking.Contracts
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.Networking.Contracts
+  nameWithType: LiveStreamingServerNet.Networking.Contracts
+  fullName: LiveStreamingServerNet.Networking.Contracts
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Networking
+    name: Networking
+    href: LiveStreamingServerNet.Networking.html
+  - name: .
+  - uid: LiveStreamingServerNet.Networking.Contracts
+    name: Contracts
+    href: LiveStreamingServerNet.Networking.Contracts.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Networking
+    name: Networking
+    href: LiveStreamingServerNet.Networking.html
+  - name: .
+  - uid: LiveStreamingServerNet.Networking.Contracts
+    name: Contracts
+    href: LiveStreamingServerNet.Networking.Contracts.html
+- uid: System.IDisposable.Dispose
+  commentId: M:System.IDisposable.Dispose
+  parent: System.IDisposable
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.idisposable.dispose
+  name: Dispose()
+  nameWithType: IDisposable.Dispose()
+  fullName: System.IDisposable.Dispose()
+  spec.csharp:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.idisposable.dispose
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.idisposable.dispose
+  - name: (
+  - name: )
+- uid: System.Object.LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Action)
+  commentId: M:LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  parent: LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+  definition: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  name: Lock(object, Action)
+  nameWithType: LockExtensions.Lock(object, Action)
+  fullName: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(object, System.Action)
+  nameWithType.vb: LockExtensions.Lock(Object, Action)
+  fullName.vb: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(Object, System.Action)
+  name.vb: Lock(Object, Action)
+  spec.csharp:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+  spec.vb:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+- uid: System.IDisposable
+  commentId: T:System.IDisposable
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.idisposable
+  name: IDisposable
+  nameWithType: IDisposable
+  fullName: System.IDisposable
+- uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  commentId: M:LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  isExternal: true
+  href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  name: Lock(object, Action)
+  nameWithType: LockExtensions.Lock(object, Action)
+  fullName: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(object, System.Action)
+  nameWithType.vb: LockExtensions.Lock(Object, Action)
+  fullName.vb: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(Object, System.Action)
+  name.vb: Lock(Object, Action)
+  spec.csharp:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+  spec.vb:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+- uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+  commentId: T:LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+  parent: LiveStreamingServerNet.Utilities.Extensions
+  href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html
+  name: LockExtensions
+  nameWithType: LockExtensions
+  fullName: LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: LiveStreamingServerNet.Utilities.Extensions
+  commentId: N:LiveStreamingServerNet.Utilities.Extensions
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.Utilities.Extensions
+  nameWithType: LiveStreamingServerNet.Utilities.Extensions
+  fullName: LiveStreamingServerNet.Utilities.Extensions
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities
+    name: Utilities
+    href: LiveStreamingServerNet.Utilities.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities.Extensions
+    name: Extensions
+    href: LiveStreamingServerNet.Utilities.Extensions.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities
+    name: Utilities
+    href: LiveStreamingServerNet.Utilities.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities.Extensions
+    name: Extensions
+    href: LiveStreamingServerNet.Utilities.Extensions.html
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Position*
+  commentId: Overload:LiveStreamingServerNet.Networking.Contracts.INetBuffer.Position
+  href: LiveStreamingServerNet.Networking.Contracts.INetBuffer.html#LiveStreamingServerNet_Networking_Contracts_INetBuffer_Position
+  name: Position
+  nameWithType: INetBuffer.Position
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Position
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Size*
+  commentId: Overload:LiveStreamingServerNet.Networking.Contracts.INetBuffer.Size
+  href: LiveStreamingServerNet.Networking.Contracts.INetBuffer.html#LiveStreamingServerNet_Networking_Contracts_INetBuffer_Size
+  name: Size
+  nameWithType: INetBuffer.Size
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Size
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.UnderlyingBuffer*
+  commentId: Overload:LiveStreamingServerNet.Networking.Contracts.INetBuffer.UnderlyingBuffer
+  href: LiveStreamingServerNet.Networking.Contracts.INetBuffer.html#LiveStreamingServerNet_Networking_Contracts_INetBuffer_UnderlyingBuffer
+  name: UnderlyingBuffer
+  nameWithType: INetBuffer.UnderlyingBuffer
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.UnderlyingBuffer
+- uid: System.Byte[]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.byte
+  name: byte[]
+  nameWithType: byte[]
+  fullName: byte[]
+  nameWithType.vb: Byte()
+  fullName.vb: Byte()
+  name.vb: Byte()
+  spec.csharp:
+  - uid: System.Byte
+    name: byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: System.Byte
+    name: Byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: (
+  - name: )
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.MoveTo*
+  commentId: Overload:LiveStreamingServerNet.Networking.Contracts.INetBuffer.MoveTo
+  href: LiveStreamingServerNet.Networking.Contracts.INetBuffer.html#LiveStreamingServerNet_Networking_Contracts_INetBuffer_MoveTo_System_Int32_
+  name: MoveTo
+  nameWithType: INetBuffer.MoveTo
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.MoveTo
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer
+  commentId: T:LiveStreamingServerNet.Networking.Contracts.INetBuffer
+  parent: LiveStreamingServerNet.Networking.Contracts
+  href: LiveStreamingServerNet.Networking.Contracts.INetBuffer.html
+  name: INetBuffer
+  nameWithType: INetBuffer
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Reset*
+  commentId: Overload:LiveStreamingServerNet.Networking.Contracts.INetBuffer.Reset
+  href: LiveStreamingServerNet.Networking.Contracts.INetBuffer.html#LiveStreamingServerNet_Networking_Contracts_INetBuffer_Reset
+  name: Reset
+  nameWithType: INetBuffer.Reset
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Reset
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.FlushAsync*
+  commentId: Overload:LiveStreamingServerNet.Networking.Contracts.INetBuffer.FlushAsync
+  href: LiveStreamingServerNet.Networking.Contracts.INetBuffer.html#LiveStreamingServerNet_Networking_Contracts_INetBuffer_FlushAsync_System_IO_Stream_
+  name: FlushAsync
+  nameWithType: INetBuffer.FlushAsync
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.FlushAsync
+- uid: System.IO.Stream
+  commentId: T:System.IO.Stream
+  parent: System.IO
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.io.stream
+  name: Stream
+  nameWithType: Stream
+  fullName: System.IO.Stream
+- uid: System.Threading.Tasks.Task
+  commentId: T:System.Threading.Tasks.Task
+  parent: System.Threading.Tasks
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task
+  name: Task
+  nameWithType: Task
+  fullName: System.Threading.Tasks.Task
+- uid: System.IO
+  commentId: N:System.IO
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.IO
+  nameWithType: System.IO
+  fullName: System.IO
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.IO
+    name: IO
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.io
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.IO
+    name: IO
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.io
+- uid: System.Threading.Tasks
+  commentId: N:System.Threading.Tasks
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Threading.Tasks
+  nameWithType: System.Threading.Tasks
+  fullName: System.Threading.Tasks
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  - name: .
+  - uid: System.Threading.Tasks
+    name: Tasks
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  - name: .
+  - uid: System.Threading.Tasks
+    name: Tasks
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Flush*
+  commentId: Overload:LiveStreamingServerNet.Networking.Contracts.INetBuffer.Flush
+  href: LiveStreamingServerNet.Networking.Contracts.INetBuffer.html#LiveStreamingServerNet_Networking_Contracts_INetBuffer_Flush_System_IO_Stream_
+  name: Flush
+  nameWithType: INetBuffer.Flush
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Flush
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.CopyAllTo*
+  commentId: Overload:LiveStreamingServerNet.Networking.Contracts.INetBuffer.CopyAllTo
+  href: LiveStreamingServerNet.Networking.Contracts.INetBuffer.html#LiveStreamingServerNet_Networking_Contracts_INetBuffer_CopyAllTo_LiveStreamingServerNet_Networking_Contracts_INetBuffer_
+  name: CopyAllTo
+  nameWithType: INetBuffer.CopyAllTo
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.CopyAllTo
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadAndWriteTo*
+  commentId: Overload:LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadAndWriteTo
+  href: LiveStreamingServerNet.Networking.Contracts.INetBuffer.html#LiveStreamingServerNet_Networking_Contracts_INetBuffer_ReadAndWriteTo_LiveStreamingServerNet_Networking_Contracts_INetBuffer_System_Int32_
+  name: ReadAndWriteTo
+  nameWithType: INetBuffer.ReadAndWriteTo
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadAndWriteTo
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.FromStreamData*
+  commentId: Overload:LiveStreamingServerNet.Networking.Contracts.INetBuffer.FromStreamData
+  href: LiveStreamingServerNet.Networking.Contracts.INetBuffer.html#LiveStreamingServerNet_Networking_Contracts_INetBuffer_FromStreamData_System_IO_Stream_System_Int32_System_Threading_CancellationToken_
+  name: FromStreamData
+  nameWithType: INetBuffer.FromStreamData
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.FromStreamData
+- uid: System.Threading.CancellationToken
+  commentId: T:System.Threading.CancellationToken
+  parent: System.Threading
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken
+  name: CancellationToken
+  nameWithType: CancellationToken
+  fullName: System.Threading.CancellationToken
+- uid: System.Threading.Tasks.ValueTask
+  commentId: T:System.Threading.Tasks.ValueTask
+  parent: System.Threading.Tasks
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.valuetask
+  name: ValueTask
+  nameWithType: ValueTask
+  fullName: System.Threading.Tasks.ValueTask
+- uid: System.Threading
+  commentId: N:System.Threading
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Threading
+  nameWithType: System.Threading
+  fullName: System.Threading
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.AppendStreamData*
+  commentId: Overload:LiveStreamingServerNet.Networking.Contracts.INetBuffer.AppendStreamData
+  href: LiveStreamingServerNet.Networking.Contracts.INetBuffer.html#LiveStreamingServerNet_Networking_Contracts_INetBuffer_AppendStreamData_System_IO_Stream_System_Int32_System_Threading_CancellationToken_
+  name: AppendStreamData
+  nameWithType: INetBuffer.AppendStreamData
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.AppendStreamData
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.WriteRandomBytes*
+  commentId: Overload:LiveStreamingServerNet.Networking.Contracts.INetBuffer.WriteRandomBytes
+  href: LiveStreamingServerNet.Networking.Contracts.INetBuffer.html#LiveStreamingServerNet_Networking_Contracts_INetBuffer_WriteRandomBytes_System_Int32_
+  name: WriteRandomBytes
+  nameWithType: INetBuffer.WriteRandomBytes
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.WriteRandomBytes
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadBoolean*
+  commentId: Overload:LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadBoolean
+  href: LiveStreamingServerNet.Networking.Contracts.INetBuffer.html#LiveStreamingServerNet_Networking_Contracts_INetBuffer_ReadBoolean
+  name: ReadBoolean
+  nameWithType: INetBuffer.ReadBoolean
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadBoolean
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadByte*
+  commentId: Overload:LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadByte
+  href: LiveStreamingServerNet.Networking.Contracts.INetBuffer.html#LiveStreamingServerNet_Networking_Contracts_INetBuffer_ReadByte
+  name: ReadByte
+  nameWithType: INetBuffer.ReadByte
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadByte
+- uid: System.Byte
+  commentId: T:System.Byte
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.byte
+  name: byte
+  nameWithType: byte
+  fullName: byte
+  nameWithType.vb: Byte
+  fullName.vb: Byte
+  name.vb: Byte
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadBytes*
+  commentId: Overload:LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadBytes
+  href: LiveStreamingServerNet.Networking.Contracts.INetBuffer.html#LiveStreamingServerNet_Networking_Contracts_INetBuffer_ReadBytes_System_Byte___System_Int32_System_Int32_
+  name: ReadBytes
+  nameWithType: INetBuffer.ReadBytes
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadBytes
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadChar*
+  commentId: Overload:LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadChar
+  href: LiveStreamingServerNet.Networking.Contracts.INetBuffer.html#LiveStreamingServerNet_Networking_Contracts_INetBuffer_ReadChar
+  name: ReadChar
+  nameWithType: INetBuffer.ReadChar
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadChar
+- uid: System.Char
+  commentId: T:System.Char
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.char
+  name: char
+  nameWithType: char
+  fullName: char
+  nameWithType.vb: Char
+  fullName.vb: Char
+  name.vb: Char
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadDouble*
+  commentId: Overload:LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadDouble
+  href: LiveStreamingServerNet.Networking.Contracts.INetBuffer.html#LiveStreamingServerNet_Networking_Contracts_INetBuffer_ReadDouble
+  name: ReadDouble
+  nameWithType: INetBuffer.ReadDouble
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadDouble
+- uid: System.Double
+  commentId: T:System.Double
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.double
+  name: double
+  nameWithType: double
+  fullName: double
+  nameWithType.vb: Double
+  fullName.vb: Double
+  name.vb: Double
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadInt16*
+  commentId: Overload:LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadInt16
+  href: LiveStreamingServerNet.Networking.Contracts.INetBuffer.html#LiveStreamingServerNet_Networking_Contracts_INetBuffer_ReadInt16
+  name: ReadInt16
+  nameWithType: INetBuffer.ReadInt16
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadInt16
+- uid: System.Int16
+  commentId: T:System.Int16
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int16
+  name: short
+  nameWithType: short
+  fullName: short
+  nameWithType.vb: Short
+  fullName.vb: Short
+  name.vb: Short
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadInt32*
+  commentId: Overload:LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadInt32
+  href: LiveStreamingServerNet.Networking.Contracts.INetBuffer.html#LiveStreamingServerNet_Networking_Contracts_INetBuffer_ReadInt32
+  name: ReadInt32
+  nameWithType: INetBuffer.ReadInt32
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadInt32
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadInt64*
+  commentId: Overload:LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadInt64
+  href: LiveStreamingServerNet.Networking.Contracts.INetBuffer.html#LiveStreamingServerNet_Networking_Contracts_INetBuffer_ReadInt64
+  name: ReadInt64
+  nameWithType: INetBuffer.ReadInt64
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadInt64
+- uid: System.Int64
+  commentId: T:System.Int64
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int64
+  name: long
+  nameWithType: long
+  fullName: long
+  nameWithType.vb: Long
+  fullName.vb: Long
+  name.vb: Long
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadSingle*
+  commentId: Overload:LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadSingle
+  href: LiveStreamingServerNet.Networking.Contracts.INetBuffer.html#LiveStreamingServerNet_Networking_Contracts_INetBuffer_ReadSingle
+  name: ReadSingle
+  nameWithType: INetBuffer.ReadSingle
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadSingle
+- uid: System.Single
+  commentId: T:System.Single
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.single
+  name: float
+  nameWithType: float
+  fullName: float
+  nameWithType.vb: Single
+  fullName.vb: Single
+  name.vb: Single
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadUInt16*
+  commentId: Overload:LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadUInt16
+  href: LiveStreamingServerNet.Networking.Contracts.INetBuffer.html#LiveStreamingServerNet_Networking_Contracts_INetBuffer_ReadUInt16
+  name: ReadUInt16
+  nameWithType: INetBuffer.ReadUInt16
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadUInt16
+- uid: System.UInt16
+  commentId: T:System.UInt16
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.uint16
+  name: ushort
+  nameWithType: ushort
+  fullName: ushort
+  nameWithType.vb: UShort
+  fullName.vb: UShort
+  name.vb: UShort
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadUInt32*
+  commentId: Overload:LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadUInt32
+  href: LiveStreamingServerNet.Networking.Contracts.INetBuffer.html#LiveStreamingServerNet_Networking_Contracts_INetBuffer_ReadUInt32
+  name: ReadUInt32
+  nameWithType: INetBuffer.ReadUInt32
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadUInt32
+- uid: System.UInt32
+  commentId: T:System.UInt32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.uint32
+  name: uint
+  nameWithType: uint
+  fullName: uint
+  nameWithType.vb: UInteger
+  fullName.vb: UInteger
+  name.vb: UInteger
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadUInt64*
+  commentId: Overload:LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadUInt64
+  href: LiveStreamingServerNet.Networking.Contracts.INetBuffer.html#LiveStreamingServerNet_Networking_Contracts_INetBuffer_ReadUInt64
+  name: ReadUInt64
+  nameWithType: INetBuffer.ReadUInt64
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadUInt64
+- uid: System.UInt64
+  commentId: T:System.UInt64
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.uint64
+  name: ulong
+  nameWithType: ulong
+  fullName: ulong
+  nameWithType.vb: ULong
+  fullName.vb: ULong
+  name.vb: ULong
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadUInt16BigEndian*
+  commentId: Overload:LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadUInt16BigEndian
+  href: LiveStreamingServerNet.Networking.Contracts.INetBuffer.html#LiveStreamingServerNet_Networking_Contracts_INetBuffer_ReadUInt16BigEndian
+  name: ReadUInt16BigEndian
+  nameWithType: INetBuffer.ReadUInt16BigEndian
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadUInt16BigEndian
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadUInt24BigEndian*
+  commentId: Overload:LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadUInt24BigEndian
+  href: LiveStreamingServerNet.Networking.Contracts.INetBuffer.html#LiveStreamingServerNet_Networking_Contracts_INetBuffer_ReadUInt24BigEndian
+  name: ReadUInt24BigEndian
+  nameWithType: INetBuffer.ReadUInt24BigEndian
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadUInt24BigEndian
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadUInt32BigEndian*
+  commentId: Overload:LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadUInt32BigEndian
+  href: LiveStreamingServerNet.Networking.Contracts.INetBuffer.html#LiveStreamingServerNet_Networking_Contracts_INetBuffer_ReadUInt32BigEndian
+  name: ReadUInt32BigEndian
+  nameWithType: INetBuffer.ReadUInt32BigEndian
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadUInt32BigEndian
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadInt16BiEndian*
+  commentId: Overload:LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadInt16BiEndian
+  href: LiveStreamingServerNet.Networking.Contracts.INetBuffer.html#LiveStreamingServerNet_Networking_Contracts_INetBuffer_ReadInt16BiEndian
+  name: ReadInt16BiEndian
+  nameWithType: INetBuffer.ReadInt16BiEndian
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadInt16BiEndian
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadInt24BigEndian*
+  commentId: Overload:LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadInt24BigEndian
+  href: LiveStreamingServerNet.Networking.Contracts.INetBuffer.html#LiveStreamingServerNet_Networking_Contracts_INetBuffer_ReadInt24BigEndian
+  name: ReadInt24BigEndian
+  nameWithType: INetBuffer.ReadInt24BigEndian
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadInt24BigEndian
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadInt32BigEndian*
+  commentId: Overload:LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadInt32BigEndian
+  href: LiveStreamingServerNet.Networking.Contracts.INetBuffer.html#LiveStreamingServerNet_Networking_Contracts_INetBuffer_ReadInt32BigEndian
+  name: ReadInt32BigEndian
+  nameWithType: INetBuffer.ReadInt32BigEndian
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.ReadInt32BigEndian
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write*
+  commentId: Overload:LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write
+  href: LiveStreamingServerNet.Networking.Contracts.INetBuffer.html#LiveStreamingServerNet_Networking_Contracts_INetBuffer_Write_System_Boolean_
+  name: Write
+  nameWithType: INetBuffer.Write
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.Write
+- uid: System.Memory{System.Byte}
+  commentId: T:System.Memory{System.Byte}
+  parent: System
+  definition: System.Memory`1
+  href: https://learn.microsoft.com/dotnet/api/system.memory-1
+  name: Memory<byte>
+  nameWithType: Memory<byte>
+  fullName: System.Memory<byte>
+  nameWithType.vb: Memory(Of Byte)
+  fullName.vb: System.Memory(Of Byte)
+  name.vb: Memory(Of Byte)
+  spec.csharp:
+  - uid: System.Memory`1
+    name: Memory
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.memory-1
+  - name: <
+  - uid: System.Byte
+    name: byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: '>'
+  spec.vb:
+  - uid: System.Memory`1
+    name: Memory
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.memory-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Byte
+    name: Byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: )
+- uid: System.Memory`1
+  commentId: T:System.Memory`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.memory-1
+  name: Memory<T>
+  nameWithType: Memory<T>
+  fullName: System.Memory<T>
+  nameWithType.vb: Memory(Of T)
+  fullName.vb: System.Memory(Of T)
+  name.vb: Memory(Of T)
+  spec.csharp:
+  - uid: System.Memory`1
+    name: Memory
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.memory-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Memory`1
+    name: Memory
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.memory-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.ReadOnlySpan{System.Byte}
+  commentId: T:System.ReadOnlySpan{System.Byte}
+  parent: System
+  definition: System.ReadOnlySpan`1
+  href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
+  name: ReadOnlySpan<byte>
+  nameWithType: ReadOnlySpan<byte>
+  fullName: System.ReadOnlySpan<byte>
+  nameWithType.vb: ReadOnlySpan(Of Byte)
+  fullName.vb: System.ReadOnlySpan(Of Byte)
+  name.vb: ReadOnlySpan(Of Byte)
+  spec.csharp:
+  - uid: System.ReadOnlySpan`1
+    name: ReadOnlySpan
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
+  - name: <
+  - uid: System.Byte
+    name: byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: '>'
+  spec.vb:
+  - uid: System.ReadOnlySpan`1
+    name: ReadOnlySpan
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Byte
+    name: Byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: )
+- uid: System.ReadOnlySpan`1
+  commentId: T:System.ReadOnlySpan`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
+  name: ReadOnlySpan<T>
+  nameWithType: ReadOnlySpan<T>
+  fullName: System.ReadOnlySpan<T>
+  nameWithType.vb: ReadOnlySpan(Of T)
+  fullName.vb: System.ReadOnlySpan(Of T)
+  name.vb: ReadOnlySpan(Of T)
+  spec.csharp:
+  - uid: System.ReadOnlySpan`1
+    name: ReadOnlySpan
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.ReadOnlySpan`1
+    name: ReadOnlySpan
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.WriteUint16BigEndian*
+  commentId: Overload:LiveStreamingServerNet.Networking.Contracts.INetBuffer.WriteUint16BigEndian
+  href: LiveStreamingServerNet.Networking.Contracts.INetBuffer.html#LiveStreamingServerNet_Networking_Contracts_INetBuffer_WriteUint16BigEndian_System_UInt16_
+  name: WriteUint16BigEndian
+  nameWithType: INetBuffer.WriteUint16BigEndian
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.WriteUint16BigEndian
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.WriteUInt24BigEndian*
+  commentId: Overload:LiveStreamingServerNet.Networking.Contracts.INetBuffer.WriteUInt24BigEndian
+  href: LiveStreamingServerNet.Networking.Contracts.INetBuffer.html#LiveStreamingServerNet_Networking_Contracts_INetBuffer_WriteUInt24BigEndian_System_UInt32_
+  name: WriteUInt24BigEndian
+  nameWithType: INetBuffer.WriteUInt24BigEndian
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.WriteUInt24BigEndian
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.WriteUInt32BigEndian*
+  commentId: Overload:LiveStreamingServerNet.Networking.Contracts.INetBuffer.WriteUInt32BigEndian
+  href: LiveStreamingServerNet.Networking.Contracts.INetBuffer.html#LiveStreamingServerNet_Networking_Contracts_INetBuffer_WriteUInt32BigEndian_System_UInt32_
+  name: WriteUInt32BigEndian
+  nameWithType: INetBuffer.WriteUInt32BigEndian
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.WriteUInt32BigEndian
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.WriteInt16BigEndian*
+  commentId: Overload:LiveStreamingServerNet.Networking.Contracts.INetBuffer.WriteInt16BigEndian
+  href: LiveStreamingServerNet.Networking.Contracts.INetBuffer.html#LiveStreamingServerNet_Networking_Contracts_INetBuffer_WriteInt16BigEndian_System_Int16_
+  name: WriteInt16BigEndian
+  nameWithType: INetBuffer.WriteInt16BigEndian
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.WriteInt16BigEndian
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.WriteInt24BigEndian*
+  commentId: Overload:LiveStreamingServerNet.Networking.Contracts.INetBuffer.WriteInt24BigEndian
+  href: LiveStreamingServerNet.Networking.Contracts.INetBuffer.html#LiveStreamingServerNet_Networking_Contracts_INetBuffer_WriteInt24BigEndian_System_Int32_
+  name: WriteInt24BigEndian
+  nameWithType: INetBuffer.WriteInt24BigEndian
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.WriteInt24BigEndian
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer.WriteInt32BigEndian*
+  commentId: Overload:LiveStreamingServerNet.Networking.Contracts.INetBuffer.WriteInt32BigEndian
+  href: LiveStreamingServerNet.Networking.Contracts.INetBuffer.html#LiveStreamingServerNet_Networking_Contracts_INetBuffer_WriteInt32BigEndian_System_Int32_
+  name: WriteInt32BigEndian
+  nameWithType: INetBuffer.WriteInt32BigEndian
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer.WriteInt32BigEndian

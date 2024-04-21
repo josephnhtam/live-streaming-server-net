@@ -1,0 +1,30 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.Transmuxer.Hls.Contracts
+  commentId: N:LiveStreamingServerNet.Transmuxer.Hls.Contracts
+  id: LiveStreamingServerNet.Transmuxer.Hls.Contracts
+  children:
+  - LiveStreamingServerNet.Transmuxer.Hls.Contracts.IHlsStorageAdapter
+  - LiveStreamingServerNet.Transmuxer.Hls.Contracts.IHlsStorageEventHandler
+  langs:
+  - csharp
+  - vb
+  name: LiveStreamingServerNet.Transmuxer.Hls.Contracts
+  nameWithType: LiveStreamingServerNet.Transmuxer.Hls.Contracts
+  fullName: LiveStreamingServerNet.Transmuxer.Hls.Contracts
+  type: Namespace
+  assemblies:
+  - LiveStreamingServerNet.Transmuxer
+references:
+- uid: LiveStreamingServerNet.Transmuxer.Hls.Contracts.IHlsStorageAdapter
+  commentId: T:LiveStreamingServerNet.Transmuxer.Hls.Contracts.IHlsStorageAdapter
+  href: LiveStreamingServerNet.Transmuxer.Hls.Contracts.IHlsStorageAdapter.html
+  name: IHlsStorageAdapter
+  nameWithType: IHlsStorageAdapter
+  fullName: LiveStreamingServerNet.Transmuxer.Hls.Contracts.IHlsStorageAdapter
+- uid: LiveStreamingServerNet.Transmuxer.Hls.Contracts.IHlsStorageEventHandler
+  commentId: T:LiveStreamingServerNet.Transmuxer.Hls.Contracts.IHlsStorageEventHandler
+  href: LiveStreamingServerNet.Transmuxer.Hls.Contracts.IHlsStorageEventHandler.html
+  name: IHlsStorageEventHandler
+  nameWithType: IHlsStorageEventHandler
+  fullName: LiveStreamingServerNet.Transmuxer.Hls.Contracts.IHlsStorageEventHandler

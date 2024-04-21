@@ -1,0 +1,23 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.StandaloneDemo
+  commentId: N:LiveStreamingServerNet.StandaloneDemo
+  id: LiveStreamingServerNet.StandaloneDemo
+  children:
+  - LiveStreamingServerNet.StandaloneDemo.Program
+  langs:
+  - csharp
+  - vb
+  name: LiveStreamingServerNet.StandaloneDemo
+  nameWithType: LiveStreamingServerNet.StandaloneDemo
+  fullName: LiveStreamingServerNet.StandaloneDemo
+  type: Namespace
+  assemblies:
+  - LiveStreamingServerNet.StandaloneDemo
+references:
+- uid: LiveStreamingServerNet.StandaloneDemo.Program
+  commentId: T:LiveStreamingServerNet.StandaloneDemo.Program
+  href: LiveStreamingServerNet.StandaloneDemo.Program.html
+  name: Program
+  nameWithType: Program
+  fullName: LiveStreamingServerNet.StandaloneDemo.Program

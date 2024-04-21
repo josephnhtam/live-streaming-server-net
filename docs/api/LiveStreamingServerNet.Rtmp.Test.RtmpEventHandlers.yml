@@ -1,0 +1,23 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers
+  commentId: N:LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers
+  id: LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers
+  children:
+  - LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.RtmpChunkEventHandlerTest
+  langs:
+  - csharp
+  - vb
+  name: LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers
+  nameWithType: LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers
+  fullName: LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers
+  type: Namespace
+  assemblies:
+  - LiveStreamingServerNet.Rtmp.Test
+references:
+- uid: LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.RtmpChunkEventHandlerTest
+  commentId: T:LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.RtmpChunkEventHandlerTest
+  href: LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.RtmpChunkEventHandlerTest.html
+  name: RtmpChunkEventHandlerTest
+  nameWithType: RtmpChunkEventHandlerTest
+  fullName: LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.RtmpChunkEventHandlerTest

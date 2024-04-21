@@ -1,0 +1,374 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.Networking.Contracts.IClientControl
+  commentId: T:LiveStreamingServerNet.Networking.Contracts.IClientControl
+  id: IClientControl
+  parent: LiveStreamingServerNet.Networking.Contracts
+  children:
+  - LiveStreamingServerNet.Networking.Contracts.IClientControl.Disconnect
+  - LiveStreamingServerNet.Networking.Contracts.IClientControl.DisconnectAsync(System.Threading.CancellationToken)
+  langs:
+  - csharp
+  - vb
+  name: IClientControl
+  nameWithType: IClientControl
+  fullName: LiveStreamingServerNet.Networking.Contracts.IClientControl
+  type: Interface
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/Contracts/IClient.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: IClientControl
+    path: ../src/LiveStreamingServerNet.Networking/Contracts/IClient.cs
+    startLine: 13
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking.Contracts
+  syntax:
+    content: 'public interface IClientControl : IClientInfo'
+    content.vb: Public Interface IClientControl Inherits IClientInfo
+  inheritedMembers:
+  - LiveStreamingServerNet.Networking.Contracts.IClientInfo.ClientId
+  - LiveStreamingServerNet.Networking.Contracts.IClientInfo.IsConnected
+  - LiveStreamingServerNet.Networking.Contracts.IClientInfo.LocalEndPoint
+  - LiveStreamingServerNet.Networking.Contracts.IClientInfo.RemoteEndPoint
+  extensionMethods:
+  - System.Object.LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Action)
+- uid: LiveStreamingServerNet.Networking.Contracts.IClientControl.Disconnect
+  commentId: M:LiveStreamingServerNet.Networking.Contracts.IClientControl.Disconnect
+  id: Disconnect
+  parent: LiveStreamingServerNet.Networking.Contracts.IClientControl
+  langs:
+  - csharp
+  - vb
+  name: Disconnect()
+  nameWithType: IClientControl.Disconnect()
+  fullName: LiveStreamingServerNet.Networking.Contracts.IClientControl.Disconnect()
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/Contracts/IClient.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: Disconnect
+    path: ../src/LiveStreamingServerNet.Networking/Contracts/IClient.cs
+    startLine: 15
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking.Contracts
+  syntax:
+    content: void Disconnect()
+    content.vb: Sub Disconnect()
+  overload: LiveStreamingServerNet.Networking.Contracts.IClientControl.Disconnect*
+- uid: LiveStreamingServerNet.Networking.Contracts.IClientControl.DisconnectAsync(System.Threading.CancellationToken)
+  commentId: M:LiveStreamingServerNet.Networking.Contracts.IClientControl.DisconnectAsync(System.Threading.CancellationToken)
+  id: DisconnectAsync(System.Threading.CancellationToken)
+  parent: LiveStreamingServerNet.Networking.Contracts.IClientControl
+  langs:
+  - csharp
+  - vb
+  name: DisconnectAsync(CancellationToken)
+  nameWithType: IClientControl.DisconnectAsync(CancellationToken)
+  fullName: LiveStreamingServerNet.Networking.Contracts.IClientControl.DisconnectAsync(System.Threading.CancellationToken)
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/Contracts/IClient.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: DisconnectAsync
+    path: ../src/LiveStreamingServerNet.Networking/Contracts/IClient.cs
+    startLine: 16
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking.Contracts
+  syntax:
+    content: Task DisconnectAsync(CancellationToken cancellation = default)
+    parameters:
+    - id: cancellation
+      type: System.Threading.CancellationToken
+    return:
+      type: System.Threading.Tasks.Task
+    content.vb: Function DisconnectAsync(cancellation As CancellationToken = Nothing) As Task
+  overload: LiveStreamingServerNet.Networking.Contracts.IClientControl.DisconnectAsync*
+references:
+- uid: LiveStreamingServerNet.Networking.Contracts
+  commentId: N:LiveStreamingServerNet.Networking.Contracts
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.Networking.Contracts
+  nameWithType: LiveStreamingServerNet.Networking.Contracts
+  fullName: LiveStreamingServerNet.Networking.Contracts
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Networking
+    name: Networking
+    href: LiveStreamingServerNet.Networking.html
+  - name: .
+  - uid: LiveStreamingServerNet.Networking.Contracts
+    name: Contracts
+    href: LiveStreamingServerNet.Networking.Contracts.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Networking
+    name: Networking
+    href: LiveStreamingServerNet.Networking.html
+  - name: .
+  - uid: LiveStreamingServerNet.Networking.Contracts
+    name: Contracts
+    href: LiveStreamingServerNet.Networking.Contracts.html
+- uid: LiveStreamingServerNet.Networking.Contracts.IClientInfo.ClientId
+  commentId: P:LiveStreamingServerNet.Networking.Contracts.IClientInfo.ClientId
+  parent: LiveStreamingServerNet.Networking.Contracts.IClientInfo
+  href: LiveStreamingServerNet.Networking.Contracts.IClientInfo.html#LiveStreamingServerNet_Networking_Contracts_IClientInfo_ClientId
+  name: ClientId
+  nameWithType: IClientInfo.ClientId
+  fullName: LiveStreamingServerNet.Networking.Contracts.IClientInfo.ClientId
+- uid: LiveStreamingServerNet.Networking.Contracts.IClientInfo.IsConnected
+  commentId: P:LiveStreamingServerNet.Networking.Contracts.IClientInfo.IsConnected
+  parent: LiveStreamingServerNet.Networking.Contracts.IClientInfo
+  href: LiveStreamingServerNet.Networking.Contracts.IClientInfo.html#LiveStreamingServerNet_Networking_Contracts_IClientInfo_IsConnected
+  name: IsConnected
+  nameWithType: IClientInfo.IsConnected
+  fullName: LiveStreamingServerNet.Networking.Contracts.IClientInfo.IsConnected
+- uid: LiveStreamingServerNet.Networking.Contracts.IClientInfo.LocalEndPoint
+  commentId: P:LiveStreamingServerNet.Networking.Contracts.IClientInfo.LocalEndPoint
+  parent: LiveStreamingServerNet.Networking.Contracts.IClientInfo
+  href: LiveStreamingServerNet.Networking.Contracts.IClientInfo.html#LiveStreamingServerNet_Networking_Contracts_IClientInfo_LocalEndPoint
+  name: LocalEndPoint
+  nameWithType: IClientInfo.LocalEndPoint
+  fullName: LiveStreamingServerNet.Networking.Contracts.IClientInfo.LocalEndPoint
+- uid: LiveStreamingServerNet.Networking.Contracts.IClientInfo.RemoteEndPoint
+  commentId: P:LiveStreamingServerNet.Networking.Contracts.IClientInfo.RemoteEndPoint
+  parent: LiveStreamingServerNet.Networking.Contracts.IClientInfo
+  href: LiveStreamingServerNet.Networking.Contracts.IClientInfo.html#LiveStreamingServerNet_Networking_Contracts_IClientInfo_RemoteEndPoint
+  name: RemoteEndPoint
+  nameWithType: IClientInfo.RemoteEndPoint
+  fullName: LiveStreamingServerNet.Networking.Contracts.IClientInfo.RemoteEndPoint
+- uid: System.Object.LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Action)
+  commentId: M:LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  parent: LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+  definition: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  name: Lock(object, Action)
+  nameWithType: LockExtensions.Lock(object, Action)
+  fullName: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(object, System.Action)
+  nameWithType.vb: LockExtensions.Lock(Object, Action)
+  fullName.vb: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(Object, System.Action)
+  name.vb: Lock(Object, Action)
+  spec.csharp:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+  spec.vb:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+- uid: LiveStreamingServerNet.Networking.Contracts.IClientInfo
+  commentId: T:LiveStreamingServerNet.Networking.Contracts.IClientInfo
+  parent: LiveStreamingServerNet.Networking.Contracts
+  href: LiveStreamingServerNet.Networking.Contracts.IClientInfo.html
+  name: IClientInfo
+  nameWithType: IClientInfo
+  fullName: LiveStreamingServerNet.Networking.Contracts.IClientInfo
+- uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  commentId: M:LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  isExternal: true
+  href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  name: Lock(object, Action)
+  nameWithType: LockExtensions.Lock(object, Action)
+  fullName: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(object, System.Action)
+  nameWithType.vb: LockExtensions.Lock(Object, Action)
+  fullName.vb: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(Object, System.Action)
+  name.vb: Lock(Object, Action)
+  spec.csharp:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+  spec.vb:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+- uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+  commentId: T:LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+  parent: LiveStreamingServerNet.Utilities.Extensions
+  href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html
+  name: LockExtensions
+  nameWithType: LockExtensions
+  fullName: LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+- uid: LiveStreamingServerNet.Utilities.Extensions
+  commentId: N:LiveStreamingServerNet.Utilities.Extensions
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.Utilities.Extensions
+  nameWithType: LiveStreamingServerNet.Utilities.Extensions
+  fullName: LiveStreamingServerNet.Utilities.Extensions
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities
+    name: Utilities
+    href: LiveStreamingServerNet.Utilities.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities.Extensions
+    name: Extensions
+    href: LiveStreamingServerNet.Utilities.Extensions.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities
+    name: Utilities
+    href: LiveStreamingServerNet.Utilities.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities.Extensions
+    name: Extensions
+    href: LiveStreamingServerNet.Utilities.Extensions.html
+- uid: LiveStreamingServerNet.Networking.Contracts.IClientControl.Disconnect*
+  commentId: Overload:LiveStreamingServerNet.Networking.Contracts.IClientControl.Disconnect
+  href: LiveStreamingServerNet.Networking.Contracts.IClientControl.html#LiveStreamingServerNet_Networking_Contracts_IClientControl_Disconnect
+  name: Disconnect
+  nameWithType: IClientControl.Disconnect
+  fullName: LiveStreamingServerNet.Networking.Contracts.IClientControl.Disconnect
+- uid: LiveStreamingServerNet.Networking.Contracts.IClientControl.DisconnectAsync*
+  commentId: Overload:LiveStreamingServerNet.Networking.Contracts.IClientControl.DisconnectAsync
+  href: LiveStreamingServerNet.Networking.Contracts.IClientControl.html#LiveStreamingServerNet_Networking_Contracts_IClientControl_DisconnectAsync_System_Threading_CancellationToken_
+  name: DisconnectAsync
+  nameWithType: IClientControl.DisconnectAsync
+  fullName: LiveStreamingServerNet.Networking.Contracts.IClientControl.DisconnectAsync
+- uid: System.Threading.CancellationToken
+  commentId: T:System.Threading.CancellationToken
+  parent: System.Threading
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken
+  name: CancellationToken
+  nameWithType: CancellationToken
+  fullName: System.Threading.CancellationToken
+- uid: System.Threading.Tasks.Task
+  commentId: T:System.Threading.Tasks.Task
+  parent: System.Threading.Tasks
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task
+  name: Task
+  nameWithType: Task
+  fullName: System.Threading.Tasks.Task
+- uid: System.Threading
+  commentId: N:System.Threading
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Threading
+  nameWithType: System.Threading
+  fullName: System.Threading
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+- uid: System.Threading.Tasks
+  commentId: N:System.Threading.Tasks
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Threading.Tasks
+  nameWithType: System.Threading.Tasks
+  fullName: System.Threading.Tasks
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  - name: .
+  - uid: System.Threading.Tasks
+    name: Tasks
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  - name: .
+  - uid: System.Threading.Tasks
+    name: Tasks
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks

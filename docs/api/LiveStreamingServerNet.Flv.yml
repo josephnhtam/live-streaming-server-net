@@ -1,0 +1,30 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.Flv
+  commentId: N:LiveStreamingServerNet.Flv
+  id: LiveStreamingServerNet.Flv
+  children:
+  - LiveStreamingServerNet.Flv.DefaultStreamPathResolver
+  - LiveStreamingServerNet.Flv.FlvStreamContext
+  langs:
+  - csharp
+  - vb
+  name: LiveStreamingServerNet.Flv
+  nameWithType: LiveStreamingServerNet.Flv
+  fullName: LiveStreamingServerNet.Flv
+  type: Namespace
+  assemblies:
+  - LiveStreamingServerNet.Flv
+references:
+- uid: LiveStreamingServerNet.Flv.DefaultStreamPathResolver
+  commentId: T:LiveStreamingServerNet.Flv.DefaultStreamPathResolver
+  href: LiveStreamingServerNet.Flv.DefaultStreamPathResolver.html
+  name: DefaultStreamPathResolver
+  nameWithType: DefaultStreamPathResolver
+  fullName: LiveStreamingServerNet.Flv.DefaultStreamPathResolver
+- uid: LiveStreamingServerNet.Flv.FlvStreamContext
+  commentId: T:LiveStreamingServerNet.Flv.FlvStreamContext
+  href: LiveStreamingServerNet.Flv.FlvStreamContext.html
+  name: FlvStreamContext
+  nameWithType: FlvStreamContext
+  fullName: LiveStreamingServerNet.Flv.FlvStreamContext

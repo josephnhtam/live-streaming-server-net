@@ -1,0 +1,69 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.Flv.Configurations
+  commentId: N:LiveStreamingServerNet.Flv.Configurations
+  id: LiveStreamingServerNet.Flv.Configurations
+  children:
+  - LiveStreamingServerNet.Flv.Configurations.HttpFlvOptions
+  - LiveStreamingServerNet.Flv.Configurations.MediaMessageConfiguration
+  - LiveStreamingServerNet.Flv.Configurations.WebSocketFlvOptions
+  langs:
+  - csharp
+  - vb
+  name: LiveStreamingServerNet.Flv.Configurations
+  nameWithType: LiveStreamingServerNet.Flv.Configurations
+  fullName: LiveStreamingServerNet.Flv.Configurations
+  type: Namespace
+  assemblies:
+  - LiveStreamingServerNet.Flv
+references:
+- uid: LiveStreamingServerNet.Flv.Configurations.HttpFlvOptions
+  commentId: T:LiveStreamingServerNet.Flv.Configurations.HttpFlvOptions
+  parent: LiveStreamingServerNet.Flv.Configurations
+  href: LiveStreamingServerNet.Flv.Configurations.HttpFlvOptions.html
+  name: HttpFlvOptions
+  nameWithType: HttpFlvOptions
+  fullName: LiveStreamingServerNet.Flv.Configurations.HttpFlvOptions
+- uid: LiveStreamingServerNet.Flv.Configurations.MediaMessageConfiguration
+  commentId: T:LiveStreamingServerNet.Flv.Configurations.MediaMessageConfiguration
+  href: LiveStreamingServerNet.Flv.Configurations.MediaMessageConfiguration.html
+  name: MediaMessageConfiguration
+  nameWithType: MediaMessageConfiguration
+  fullName: LiveStreamingServerNet.Flv.Configurations.MediaMessageConfiguration
+- uid: LiveStreamingServerNet.Flv.Configurations.WebSocketFlvOptions
+  commentId: T:LiveStreamingServerNet.Flv.Configurations.WebSocketFlvOptions
+  parent: LiveStreamingServerNet.Flv.Configurations
+  href: LiveStreamingServerNet.Flv.Configurations.WebSocketFlvOptions.html
+  name: WebSocketFlvOptions
+  nameWithType: WebSocketFlvOptions
+  fullName: LiveStreamingServerNet.Flv.Configurations.WebSocketFlvOptions
+- uid: LiveStreamingServerNet.Flv.Configurations
+  commentId: N:LiveStreamingServerNet.Flv.Configurations
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.Flv.Configurations
+  nameWithType: LiveStreamingServerNet.Flv.Configurations
+  fullName: LiveStreamingServerNet.Flv.Configurations
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Flv
+    name: Flv
+    href: LiveStreamingServerNet.Flv.html
+  - name: .
+  - uid: LiveStreamingServerNet.Flv.Configurations
+    name: Configurations
+    href: LiveStreamingServerNet.Flv.Configurations.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Flv
+    name: Flv
+    href: LiveStreamingServerNet.Flv.html
+  - name: .
+  - uid: LiveStreamingServerNet.Flv.Configurations
+    name: Configurations
+    href: LiveStreamingServerNet.Flv.Configurations.html

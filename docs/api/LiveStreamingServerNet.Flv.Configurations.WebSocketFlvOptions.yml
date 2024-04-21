@@ -1,0 +1,713 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.Flv.Configurations.WebSocketFlvOptions
+  commentId: T:LiveStreamingServerNet.Flv.Configurations.WebSocketFlvOptions
+  id: WebSocketFlvOptions
+  parent: LiveStreamingServerNet.Flv.Configurations
+  children:
+  - LiveStreamingServerNet.Flv.Configurations.WebSocketFlvOptions.OnPrepareResponse
+  - LiveStreamingServerNet.Flv.Configurations.WebSocketFlvOptions.StreamPathResolver
+  - LiveStreamingServerNet.Flv.Configurations.WebSocketFlvOptions.WebSocketAcceptContext
+  langs:
+  - csharp
+  - vb
+  name: WebSocketFlvOptions
+  nameWithType: WebSocketFlvOptions
+  fullName: LiveStreamingServerNet.Flv.Configurations.WebSocketFlvOptions
+  type: Class
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Flv/Configurations/WebSocketFlvOptions.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: WebSocketFlvOptions
+    path: ../src/LiveStreamingServerNet.Flv/Configurations/WebSocketFlvOptions.cs
+    startLine: 5
+  assemblies:
+  - LiveStreamingServerNet.Flv
+  namespace: LiveStreamingServerNet.Flv.Configurations
+  syntax:
+    content: public class WebSocketFlvOptions
+    content.vb: Public Class WebSocketFlvOptions
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  extensionMethods:
+  - System.Object.LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Action)
+- uid: LiveStreamingServerNet.Flv.Configurations.WebSocketFlvOptions.StreamPathResolver
+  commentId: P:LiveStreamingServerNet.Flv.Configurations.WebSocketFlvOptions.StreamPathResolver
+  id: StreamPathResolver
+  parent: LiveStreamingServerNet.Flv.Configurations.WebSocketFlvOptions
+  langs:
+  - csharp
+  - vb
+  name: StreamPathResolver
+  nameWithType: WebSocketFlvOptions.StreamPathResolver
+  fullName: LiveStreamingServerNet.Flv.Configurations.WebSocketFlvOptions.StreamPathResolver
+  type: Property
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Flv/Configurations/WebSocketFlvOptions.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: StreamPathResolver
+    path: ../src/LiveStreamingServerNet.Flv/Configurations/WebSocketFlvOptions.cs
+    startLine: 7
+  assemblies:
+  - LiveStreamingServerNet.Flv
+  namespace: LiveStreamingServerNet.Flv.Configurations
+  syntax:
+    content: public IStreamPathResolver? StreamPathResolver { get; set; }
+    parameters: []
+    return:
+      type: LiveStreamingServerNet.Flv.Contracts.IStreamPathResolver
+    content.vb: Public Property StreamPathResolver As IStreamPathResolver
+  overload: LiveStreamingServerNet.Flv.Configurations.WebSocketFlvOptions.StreamPathResolver*
+- uid: LiveStreamingServerNet.Flv.Configurations.WebSocketFlvOptions.WebSocketAcceptContext
+  commentId: P:LiveStreamingServerNet.Flv.Configurations.WebSocketFlvOptions.WebSocketAcceptContext
+  id: WebSocketAcceptContext
+  parent: LiveStreamingServerNet.Flv.Configurations.WebSocketFlvOptions
+  langs:
+  - csharp
+  - vb
+  name: WebSocketAcceptContext
+  nameWithType: WebSocketFlvOptions.WebSocketAcceptContext
+  fullName: LiveStreamingServerNet.Flv.Configurations.WebSocketFlvOptions.WebSocketAcceptContext
+  type: Property
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Flv/Configurations/WebSocketFlvOptions.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: WebSocketAcceptContext
+    path: ../src/LiveStreamingServerNet.Flv/Configurations/WebSocketFlvOptions.cs
+    startLine: 8
+  assemblies:
+  - LiveStreamingServerNet.Flv
+  namespace: LiveStreamingServerNet.Flv.Configurations
+  syntax:
+    content: public WebSocketAcceptContext? WebSocketAcceptContext { get; set; }
+    parameters: []
+    return:
+      type: Microsoft.AspNetCore.Http.WebSocketAcceptContext
+    content.vb: Public Property WebSocketAcceptContext As WebSocketAcceptContext
+  overload: LiveStreamingServerNet.Flv.Configurations.WebSocketFlvOptions.WebSocketAcceptContext*
+- uid: LiveStreamingServerNet.Flv.Configurations.WebSocketFlvOptions.OnPrepareResponse
+  commentId: P:LiveStreamingServerNet.Flv.Configurations.WebSocketFlvOptions.OnPrepareResponse
+  id: OnPrepareResponse
+  parent: LiveStreamingServerNet.Flv.Configurations.WebSocketFlvOptions
+  langs:
+  - csharp
+  - vb
+  name: OnPrepareResponse
+  nameWithType: WebSocketFlvOptions.OnPrepareResponse
+  fullName: LiveStreamingServerNet.Flv.Configurations.WebSocketFlvOptions.OnPrepareResponse
+  type: Property
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Flv/Configurations/WebSocketFlvOptions.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: OnPrepareResponse
+    path: ../src/LiveStreamingServerNet.Flv/Configurations/WebSocketFlvOptions.cs
+    startLine: 9
+  assemblies:
+  - LiveStreamingServerNet.Flv
+  namespace: LiveStreamingServerNet.Flv.Configurations
+  syntax:
+    content: public Func<FlvStreamContext, Task<bool>>? OnPrepareResponse { get; set; }
+    parameters: []
+    return:
+      type: System.Func{LiveStreamingServerNet.Flv.FlvStreamContext,System.Threading.Tasks.Task{System.Boolean}}
+    content.vb: Public Property OnPrepareResponse As Func(Of FlvStreamContext, Task(Of Boolean))
+  overload: LiveStreamingServerNet.Flv.Configurations.WebSocketFlvOptions.OnPrepareResponse*
+references:
+- uid: LiveStreamingServerNet.Flv.Configurations
+  commentId: N:LiveStreamingServerNet.Flv.Configurations
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.Flv.Configurations
+  nameWithType: LiveStreamingServerNet.Flv.Configurations
+  fullName: LiveStreamingServerNet.Flv.Configurations
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Flv
+    name: Flv
+    href: LiveStreamingServerNet.Flv.html
+  - name: .
+  - uid: LiveStreamingServerNet.Flv.Configurations
+    name: Configurations
+    href: LiveStreamingServerNet.Flv.Configurations.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Flv
+    name: Flv
+    href: LiveStreamingServerNet.Flv.html
+  - name: .
+  - uid: LiveStreamingServerNet.Flv.Configurations
+    name: Configurations
+    href: LiveStreamingServerNet.Flv.Configurations.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Action)
+  commentId: M:LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  parent: LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+  definition: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  name: Lock(object, Action)
+  nameWithType: LockExtensions.Lock(object, Action)
+  fullName: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(object, System.Action)
+  nameWithType.vb: LockExtensions.Lock(Object, Action)
+  fullName.vb: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(Object, System.Action)
+  name.vb: Lock(Object, Action)
+  spec.csharp:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+  spec.vb:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  commentId: M:LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  isExternal: true
+  href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  name: Lock(object, Action)
+  nameWithType: LockExtensions.Lock(object, Action)
+  fullName: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(object, System.Action)
+  nameWithType.vb: LockExtensions.Lock(Object, Action)
+  fullName.vb: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(Object, System.Action)
+  name.vb: Lock(Object, Action)
+  spec.csharp:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+  spec.vb:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+- uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+  commentId: T:LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+  parent: LiveStreamingServerNet.Utilities.Extensions
+  href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html
+  name: LockExtensions
+  nameWithType: LockExtensions
+  fullName: LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+- uid: LiveStreamingServerNet.Utilities.Extensions
+  commentId: N:LiveStreamingServerNet.Utilities.Extensions
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.Utilities.Extensions
+  nameWithType: LiveStreamingServerNet.Utilities.Extensions
+  fullName: LiveStreamingServerNet.Utilities.Extensions
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities
+    name: Utilities
+    href: LiveStreamingServerNet.Utilities.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities.Extensions
+    name: Extensions
+    href: LiveStreamingServerNet.Utilities.Extensions.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities
+    name: Utilities
+    href: LiveStreamingServerNet.Utilities.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities.Extensions
+    name: Extensions
+    href: LiveStreamingServerNet.Utilities.Extensions.html
+- uid: LiveStreamingServerNet.Flv.Configurations.WebSocketFlvOptions.StreamPathResolver*
+  commentId: Overload:LiveStreamingServerNet.Flv.Configurations.WebSocketFlvOptions.StreamPathResolver
+  href: LiveStreamingServerNet.Flv.Configurations.WebSocketFlvOptions.html#LiveStreamingServerNet_Flv_Configurations_WebSocketFlvOptions_StreamPathResolver
+  name: StreamPathResolver
+  nameWithType: WebSocketFlvOptions.StreamPathResolver
+  fullName: LiveStreamingServerNet.Flv.Configurations.WebSocketFlvOptions.StreamPathResolver
+- uid: LiveStreamingServerNet.Flv.Contracts.IStreamPathResolver
+  commentId: T:LiveStreamingServerNet.Flv.Contracts.IStreamPathResolver
+  parent: LiveStreamingServerNet.Flv.Contracts
+  href: LiveStreamingServerNet.Flv.Contracts.IStreamPathResolver.html
+  name: IStreamPathResolver
+  nameWithType: IStreamPathResolver
+  fullName: LiveStreamingServerNet.Flv.Contracts.IStreamPathResolver
+- uid: LiveStreamingServerNet.Flv.Contracts
+  commentId: N:LiveStreamingServerNet.Flv.Contracts
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.Flv.Contracts
+  nameWithType: LiveStreamingServerNet.Flv.Contracts
+  fullName: LiveStreamingServerNet.Flv.Contracts
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Flv
+    name: Flv
+    href: LiveStreamingServerNet.Flv.html
+  - name: .
+  - uid: LiveStreamingServerNet.Flv.Contracts
+    name: Contracts
+    href: LiveStreamingServerNet.Flv.Contracts.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Flv
+    name: Flv
+    href: LiveStreamingServerNet.Flv.html
+  - name: .
+  - uid: LiveStreamingServerNet.Flv.Contracts
+    name: Contracts
+    href: LiveStreamingServerNet.Flv.Contracts.html
+- uid: LiveStreamingServerNet.Flv.Configurations.WebSocketFlvOptions.WebSocketAcceptContext*
+  commentId: Overload:LiveStreamingServerNet.Flv.Configurations.WebSocketFlvOptions.WebSocketAcceptContext
+  href: LiveStreamingServerNet.Flv.Configurations.WebSocketFlvOptions.html#LiveStreamingServerNet_Flv_Configurations_WebSocketFlvOptions_WebSocketAcceptContext
+  name: WebSocketAcceptContext
+  nameWithType: WebSocketFlvOptions.WebSocketAcceptContext
+  fullName: LiveStreamingServerNet.Flv.Configurations.WebSocketFlvOptions.WebSocketAcceptContext
+- uid: Microsoft.AspNetCore.Http.WebSocketAcceptContext
+  commentId: T:Microsoft.AspNetCore.Http.WebSocketAcceptContext
+  parent: Microsoft.AspNetCore.Http
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.http.websocketacceptcontext
+  name: WebSocketAcceptContext
+  nameWithType: WebSocketAcceptContext
+  fullName: Microsoft.AspNetCore.Http.WebSocketAcceptContext
+- uid: Microsoft.AspNetCore.Http
+  commentId: N:Microsoft.AspNetCore.Http
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft
+  name: Microsoft.AspNetCore.Http
+  nameWithType: Microsoft.AspNetCore.Http
+  fullName: Microsoft.AspNetCore.Http
+  spec.csharp:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.AspNetCore
+    name: AspNetCore
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore
+  - name: .
+  - uid: Microsoft.AspNetCore.Http
+    name: Http
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.http
+  spec.vb:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.AspNetCore
+    name: AspNetCore
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore
+  - name: .
+  - uid: Microsoft.AspNetCore.Http
+    name: Http
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.http
+- uid: LiveStreamingServerNet.Flv.Configurations.WebSocketFlvOptions.OnPrepareResponse*
+  commentId: Overload:LiveStreamingServerNet.Flv.Configurations.WebSocketFlvOptions.OnPrepareResponse
+  href: LiveStreamingServerNet.Flv.Configurations.WebSocketFlvOptions.html#LiveStreamingServerNet_Flv_Configurations_WebSocketFlvOptions_OnPrepareResponse
+  name: OnPrepareResponse
+  nameWithType: WebSocketFlvOptions.OnPrepareResponse
+  fullName: LiveStreamingServerNet.Flv.Configurations.WebSocketFlvOptions.OnPrepareResponse
+- uid: System.Func{LiveStreamingServerNet.Flv.FlvStreamContext,System.Threading.Tasks.Task{System.Boolean}}
+  commentId: T:System.Func{LiveStreamingServerNet.Flv.FlvStreamContext,System.Threading.Tasks.Task{System.Boolean}}
+  parent: System
+  definition: System.Func`2
+  href: https://learn.microsoft.com/dotnet/api/system.func-2
+  name: Func<FlvStreamContext, Task<bool>>
+  nameWithType: Func<FlvStreamContext, Task<bool>>
+  fullName: System.Func<LiveStreamingServerNet.Flv.FlvStreamContext, System.Threading.Tasks.Task<bool>>
+  nameWithType.vb: Func(Of FlvStreamContext, Task(Of Boolean))
+  fullName.vb: System.Func(Of LiveStreamingServerNet.Flv.FlvStreamContext, System.Threading.Tasks.Task(Of Boolean))
+  name.vb: Func(Of FlvStreamContext, Task(Of Boolean))
+  spec.csharp:
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-2
+  - name: <
+  - uid: LiveStreamingServerNet.Flv.FlvStreamContext
+    name: FlvStreamContext
+    href: LiveStreamingServerNet.Flv.FlvStreamContext.html
+  - name: ','
+  - name: " "
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: <
+  - uid: System.Boolean
+    name: bool
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: '>'
+  - name: '>'
+  spec.vb:
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: LiveStreamingServerNet.Flv.FlvStreamContext
+    name: FlvStreamContext
+    href: LiveStreamingServerNet.Flv.FlvStreamContext.html
+  - name: ','
+  - name: " "
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Boolean
+    name: Boolean
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+  - name: )
+- uid: System.Func`2
+  commentId: T:System.Func`2
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.func-2
+  name: Func<T, TResult>
+  nameWithType: Func<T, TResult>
+  fullName: System.Func<T, TResult>
+  nameWithType.vb: Func(Of T, TResult)
+  fullName.vb: System.Func(Of T, TResult)
+  name.vb: Func(Of T, TResult)
+  spec.csharp:
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-2
+  - name: <
+  - name: T
+  - name: ','
+  - name: " "
+  - name: TResult
+  - name: '>'
+  spec.vb:
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-2
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: ','
+  - name: " "
+  - name: TResult
+  - name: )

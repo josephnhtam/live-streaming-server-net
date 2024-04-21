@@ -1,0 +1,70 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.KubernetesPod.Installer.Contracts
+  commentId: N:LiveStreamingServerNet.KubernetesPod.Installer.Contracts
+  id: LiveStreamingServerNet.KubernetesPod.Installer.Contracts
+  children:
+  - LiveStreamingServerNet.KubernetesPod.Installer.Contracts.IKubernetesPodConfigurator
+  - LiveStreamingServerNet.KubernetesPod.Installer.Contracts.IStreamRegistryConfigurator
+  langs:
+  - csharp
+  - vb
+  name: LiveStreamingServerNet.KubernetesPod.Installer.Contracts
+  nameWithType: LiveStreamingServerNet.KubernetesPod.Installer.Contracts
+  fullName: LiveStreamingServerNet.KubernetesPod.Installer.Contracts
+  type: Namespace
+  assemblies:
+  - LiveStreamingServerNet.KubernetesPod
+references:
+- uid: LiveStreamingServerNet.KubernetesPod.Installer.Contracts.IKubernetesPodConfigurator
+  commentId: T:LiveStreamingServerNet.KubernetesPod.Installer.Contracts.IKubernetesPodConfigurator
+  parent: LiveStreamingServerNet.KubernetesPod.Installer.Contracts
+  href: LiveStreamingServerNet.KubernetesPod.Installer.Contracts.IKubernetesPodConfigurator.html
+  name: IKubernetesPodConfigurator
+  nameWithType: IKubernetesPodConfigurator
+  fullName: LiveStreamingServerNet.KubernetesPod.Installer.Contracts.IKubernetesPodConfigurator
+- uid: LiveStreamingServerNet.KubernetesPod.Installer.Contracts.IStreamRegistryConfigurator
+  commentId: T:LiveStreamingServerNet.KubernetesPod.Installer.Contracts.IStreamRegistryConfigurator
+  parent: LiveStreamingServerNet.KubernetesPod.Installer.Contracts
+  href: LiveStreamingServerNet.KubernetesPod.Installer.Contracts.IStreamRegistryConfigurator.html
+  name: IStreamRegistryConfigurator
+  nameWithType: IStreamRegistryConfigurator
+  fullName: LiveStreamingServerNet.KubernetesPod.Installer.Contracts.IStreamRegistryConfigurator
+- uid: LiveStreamingServerNet.KubernetesPod.Installer.Contracts
+  commentId: N:LiveStreamingServerNet.KubernetesPod.Installer.Contracts
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.KubernetesPod.Installer.Contracts
+  nameWithType: LiveStreamingServerNet.KubernetesPod.Installer.Contracts
+  fullName: LiveStreamingServerNet.KubernetesPod.Installer.Contracts
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.KubernetesPod
+    name: KubernetesPod
+    href: LiveStreamingServerNet.KubernetesPod.html
+  - name: .
+  - uid: LiveStreamingServerNet.KubernetesPod.Installer
+    name: Installer
+    href: LiveStreamingServerNet.KubernetesPod.Installer.html
+  - name: .
+  - uid: LiveStreamingServerNet.KubernetesPod.Installer.Contracts
+    name: Contracts
+    href: LiveStreamingServerNet.KubernetesPod.Installer.Contracts.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.KubernetesPod
+    name: KubernetesPod
+    href: LiveStreamingServerNet.KubernetesPod.html
+  - name: .
+  - uid: LiveStreamingServerNet.KubernetesPod.Installer
+    name: Installer
+    href: LiveStreamingServerNet.KubernetesPod.Installer.html
+  - name: .
+  - uid: LiveStreamingServerNet.KubernetesPod.Installer.Contracts
+    name: Contracts
+    href: LiveStreamingServerNet.KubernetesPod.Installer.Contracts.html

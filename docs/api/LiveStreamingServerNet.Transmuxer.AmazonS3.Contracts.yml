@@ -1,0 +1,70 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.Transmuxer.AmazonS3.Contracts
+  commentId: N:LiveStreamingServerNet.Transmuxer.AmazonS3.Contracts
+  id: LiveStreamingServerNet.Transmuxer.AmazonS3.Contracts
+  children:
+  - LiveStreamingServerNet.Transmuxer.AmazonS3.Contracts.IHlsObjectPathResolver
+  - LiveStreamingServerNet.Transmuxer.AmazonS3.Contracts.IHlsObjectUriResolver
+  langs:
+  - csharp
+  - vb
+  name: LiveStreamingServerNet.Transmuxer.AmazonS3.Contracts
+  nameWithType: LiveStreamingServerNet.Transmuxer.AmazonS3.Contracts
+  fullName: LiveStreamingServerNet.Transmuxer.AmazonS3.Contracts
+  type: Namespace
+  assemblies:
+  - LiveStreamingServerNet.Transmuxer.AmazonS3
+references:
+- uid: LiveStreamingServerNet.Transmuxer.AmazonS3.Contracts.IHlsObjectPathResolver
+  commentId: T:LiveStreamingServerNet.Transmuxer.AmazonS3.Contracts.IHlsObjectPathResolver
+  parent: LiveStreamingServerNet.Transmuxer.AmazonS3.Contracts
+  href: LiveStreamingServerNet.Transmuxer.AmazonS3.Contracts.IHlsObjectPathResolver.html
+  name: IHlsObjectPathResolver
+  nameWithType: IHlsObjectPathResolver
+  fullName: LiveStreamingServerNet.Transmuxer.AmazonS3.Contracts.IHlsObjectPathResolver
+- uid: LiveStreamingServerNet.Transmuxer.AmazonS3.Contracts.IHlsObjectUriResolver
+  commentId: T:LiveStreamingServerNet.Transmuxer.AmazonS3.Contracts.IHlsObjectUriResolver
+  parent: LiveStreamingServerNet.Transmuxer.AmazonS3.Contracts
+  href: LiveStreamingServerNet.Transmuxer.AmazonS3.Contracts.IHlsObjectUriResolver.html
+  name: IHlsObjectUriResolver
+  nameWithType: IHlsObjectUriResolver
+  fullName: LiveStreamingServerNet.Transmuxer.AmazonS3.Contracts.IHlsObjectUriResolver
+- uid: LiveStreamingServerNet.Transmuxer.AmazonS3.Contracts
+  commentId: N:LiveStreamingServerNet.Transmuxer.AmazonS3.Contracts
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.Transmuxer.AmazonS3.Contracts
+  nameWithType: LiveStreamingServerNet.Transmuxer.AmazonS3.Contracts
+  fullName: LiveStreamingServerNet.Transmuxer.AmazonS3.Contracts
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Transmuxer
+    name: Transmuxer
+    href: LiveStreamingServerNet.Transmuxer.html
+  - name: .
+  - uid: LiveStreamingServerNet.Transmuxer.AmazonS3
+    name: AmazonS3
+    href: LiveStreamingServerNet.Transmuxer.AmazonS3.html
+  - name: .
+  - uid: LiveStreamingServerNet.Transmuxer.AmazonS3.Contracts
+    name: Contracts
+    href: LiveStreamingServerNet.Transmuxer.AmazonS3.Contracts.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Transmuxer
+    name: Transmuxer
+    href: LiveStreamingServerNet.Transmuxer.html
+  - name: .
+  - uid: LiveStreamingServerNet.Transmuxer.AmazonS3
+    name: AmazonS3
+    href: LiveStreamingServerNet.Transmuxer.AmazonS3.html
+  - name: .
+  - uid: LiveStreamingServerNet.Transmuxer.AmazonS3.Contracts
+    name: Contracts
+    href: LiveStreamingServerNet.Transmuxer.AmazonS3.Contracts.html

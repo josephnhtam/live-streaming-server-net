@@ -1,0 +1,708 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.Networking.NetBufferPool
+  commentId: T:LiveStreamingServerNet.Networking.NetBufferPool
+  id: NetBufferPool
+  parent: LiveStreamingServerNet.Networking
+  children:
+  - LiveStreamingServerNet.Networking.NetBufferPool.#ctor(Microsoft.Extensions.Options.IOptions{LiveStreamingServerNet.Networking.Configurations.NetBufferPoolConfiguration})
+  - LiveStreamingServerNet.Networking.NetBufferPool.Dispose
+  - LiveStreamingServerNet.Networking.NetBufferPool.Obtain
+  langs:
+  - csharp
+  - vb
+  name: NetBufferPool
+  nameWithType: NetBufferPool
+  fullName: LiveStreamingServerNet.Networking.NetBufferPool
+  type: Class
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/NetBufferPool.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: NetBufferPool
+    path: ../src/LiveStreamingServerNet.Networking/NetBufferPool.cs
+    startLine: 8
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking
+  syntax:
+    content: 'public sealed class NetBufferPool : INetBufferPool, IDisposable'
+    content.vb: Public NotInheritable Class NetBufferPool Implements INetBufferPool, IDisposable
+  inheritance:
+  - System.Object
+  implements:
+  - LiveStreamingServerNet.Networking.Contracts.INetBufferPool
+  - System.IDisposable
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  extensionMethods:
+  - System.Object.LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Action)
+- uid: LiveStreamingServerNet.Networking.NetBufferPool.#ctor(Microsoft.Extensions.Options.IOptions{LiveStreamingServerNet.Networking.Configurations.NetBufferPoolConfiguration})
+  commentId: M:LiveStreamingServerNet.Networking.NetBufferPool.#ctor(Microsoft.Extensions.Options.IOptions{LiveStreamingServerNet.Networking.Configurations.NetBufferPoolConfiguration})
+  id: '#ctor(Microsoft.Extensions.Options.IOptions{LiveStreamingServerNet.Networking.Configurations.NetBufferPoolConfiguration})'
+  parent: LiveStreamingServerNet.Networking.NetBufferPool
+  langs:
+  - csharp
+  - vb
+  name: NetBufferPool(IOptions<NetBufferPoolConfiguration>)
+  nameWithType: NetBufferPool.NetBufferPool(IOptions<NetBufferPoolConfiguration>)
+  fullName: LiveStreamingServerNet.Networking.NetBufferPool.NetBufferPool(Microsoft.Extensions.Options.IOptions<LiveStreamingServerNet.Networking.Configurations.NetBufferPoolConfiguration>)
+  type: Constructor
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/NetBufferPool.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: .ctor
+    path: ../src/LiveStreamingServerNet.Networking/NetBufferPool.cs
+    startLine: 15
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking
+  syntax:
+    content: public NetBufferPool(IOptions<NetBufferPoolConfiguration> config)
+    parameters:
+    - id: config
+      type: Microsoft.Extensions.Options.IOptions{LiveStreamingServerNet.Networking.Configurations.NetBufferPoolConfiguration}
+    content.vb: Public Sub New(config As IOptions(Of NetBufferPoolConfiguration))
+  overload: LiveStreamingServerNet.Networking.NetBufferPool.#ctor*
+  nameWithType.vb: NetBufferPool.New(IOptions(Of NetBufferPoolConfiguration))
+  fullName.vb: LiveStreamingServerNet.Networking.NetBufferPool.New(Microsoft.Extensions.Options.IOptions(Of LiveStreamingServerNet.Networking.Configurations.NetBufferPoolConfiguration))
+  name.vb: New(IOptions(Of NetBufferPoolConfiguration))
+- uid: LiveStreamingServerNet.Networking.NetBufferPool.Obtain
+  commentId: M:LiveStreamingServerNet.Networking.NetBufferPool.Obtain
+  id: Obtain
+  parent: LiveStreamingServerNet.Networking.NetBufferPool
+  langs:
+  - csharp
+  - vb
+  name: Obtain()
+  nameWithType: NetBufferPool.Obtain()
+  fullName: LiveStreamingServerNet.Networking.NetBufferPool.Obtain()
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/NetBufferPool.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: Obtain
+    path: ../src/LiveStreamingServerNet.Networking/NetBufferPool.cs
+    startLine: 29
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking
+  example: []
+  syntax:
+    content: public INetBuffer Obtain()
+    return:
+      type: LiveStreamingServerNet.Networking.Contracts.INetBuffer
+    content.vb: Public Function Obtain() As INetBuffer
+  overload: LiveStreamingServerNet.Networking.NetBufferPool.Obtain*
+  implements:
+  - LiveStreamingServerNet.Networking.Contracts.INetBufferPool.Obtain
+- uid: LiveStreamingServerNet.Networking.NetBufferPool.Dispose
+  commentId: M:LiveStreamingServerNet.Networking.NetBufferPool.Dispose
+  id: Dispose
+  parent: LiveStreamingServerNet.Networking.NetBufferPool
+  langs:
+  - csharp
+  - vb
+  name: Dispose()
+  nameWithType: NetBufferPool.Dispose()
+  fullName: LiveStreamingServerNet.Networking.NetBufferPool.Dispose()
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Networking/NetBufferPool.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: Dispose
+    path: ../src/LiveStreamingServerNet.Networking/NetBufferPool.cs
+    startLine: 48
+  assemblies:
+  - LiveStreamingServerNet.Networking
+  namespace: LiveStreamingServerNet.Networking
+  summary: Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+  example: []
+  syntax:
+    content: public void Dispose()
+    content.vb: Public Sub Dispose()
+  overload: LiveStreamingServerNet.Networking.NetBufferPool.Dispose*
+  implements:
+  - System.IDisposable.Dispose
+references:
+- uid: LiveStreamingServerNet.Networking
+  commentId: N:LiveStreamingServerNet.Networking
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.Networking
+  nameWithType: LiveStreamingServerNet.Networking
+  fullName: LiveStreamingServerNet.Networking
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Networking
+    name: Networking
+    href: LiveStreamingServerNet.Networking.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Networking
+    name: Networking
+    href: LiveStreamingServerNet.Networking.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBufferPool
+  commentId: T:LiveStreamingServerNet.Networking.Contracts.INetBufferPool
+  parent: LiveStreamingServerNet.Networking.Contracts
+  href: LiveStreamingServerNet.Networking.Contracts.INetBufferPool.html
+  name: INetBufferPool
+  nameWithType: INetBufferPool
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBufferPool
+- uid: System.IDisposable
+  commentId: T:System.IDisposable
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.idisposable
+  name: IDisposable
+  nameWithType: IDisposable
+  fullName: System.IDisposable
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Action)
+  commentId: M:LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  parent: LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+  definition: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  name: Lock(object, Action)
+  nameWithType: LockExtensions.Lock(object, Action)
+  fullName: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(object, System.Action)
+  nameWithType.vb: LockExtensions.Lock(Object, Action)
+  fullName.vb: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(Object, System.Action)
+  name.vb: Lock(Object, Action)
+  spec.csharp:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+  spec.vb:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: LiveStreamingServerNet.Networking.Contracts
+  commentId: N:LiveStreamingServerNet.Networking.Contracts
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.Networking.Contracts
+  nameWithType: LiveStreamingServerNet.Networking.Contracts
+  fullName: LiveStreamingServerNet.Networking.Contracts
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Networking
+    name: Networking
+    href: LiveStreamingServerNet.Networking.html
+  - name: .
+  - uid: LiveStreamingServerNet.Networking.Contracts
+    name: Contracts
+    href: LiveStreamingServerNet.Networking.Contracts.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Networking
+    name: Networking
+    href: LiveStreamingServerNet.Networking.html
+  - name: .
+  - uid: LiveStreamingServerNet.Networking.Contracts
+    name: Contracts
+    href: LiveStreamingServerNet.Networking.Contracts.html
+- uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  commentId: M:LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  isExternal: true
+  href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  name: Lock(object, Action)
+  nameWithType: LockExtensions.Lock(object, Action)
+  fullName: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(object, System.Action)
+  nameWithType.vb: LockExtensions.Lock(Object, Action)
+  fullName.vb: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(Object, System.Action)
+  name.vb: Lock(Object, Action)
+  spec.csharp:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+  spec.vb:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+- uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+  commentId: T:LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+  parent: LiveStreamingServerNet.Utilities.Extensions
+  href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html
+  name: LockExtensions
+  nameWithType: LockExtensions
+  fullName: LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+- uid: LiveStreamingServerNet.Utilities.Extensions
+  commentId: N:LiveStreamingServerNet.Utilities.Extensions
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.Utilities.Extensions
+  nameWithType: LiveStreamingServerNet.Utilities.Extensions
+  fullName: LiveStreamingServerNet.Utilities.Extensions
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities
+    name: Utilities
+    href: LiveStreamingServerNet.Utilities.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities.Extensions
+    name: Extensions
+    href: LiveStreamingServerNet.Utilities.Extensions.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities
+    name: Utilities
+    href: LiveStreamingServerNet.Utilities.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities.Extensions
+    name: Extensions
+    href: LiveStreamingServerNet.Utilities.Extensions.html
+- uid: LiveStreamingServerNet.Networking.NetBufferPool.#ctor*
+  commentId: Overload:LiveStreamingServerNet.Networking.NetBufferPool.#ctor
+  href: LiveStreamingServerNet.Networking.NetBufferPool.html#LiveStreamingServerNet_Networking_NetBufferPool__ctor_Microsoft_Extensions_Options_IOptions_LiveStreamingServerNet_Networking_Configurations_NetBufferPoolConfiguration__
+  name: NetBufferPool
+  nameWithType: NetBufferPool.NetBufferPool
+  fullName: LiveStreamingServerNet.Networking.NetBufferPool.NetBufferPool
+  nameWithType.vb: NetBufferPool.New
+  fullName.vb: LiveStreamingServerNet.Networking.NetBufferPool.New
+  name.vb: New
+- uid: Microsoft.Extensions.Options.IOptions{LiveStreamingServerNet.Networking.Configurations.NetBufferPoolConfiguration}
+  commentId: T:Microsoft.Extensions.Options.IOptions{LiveStreamingServerNet.Networking.Configurations.NetBufferPoolConfiguration}
+  parent: Microsoft.Extensions.Options
+  definition: Microsoft.Extensions.Options.IOptions`1
+  href: https://learn.microsoft.com/dotnet/api/microsoft.extensions.options.ioptions-1
+  name: IOptions<NetBufferPoolConfiguration>
+  nameWithType: IOptions<NetBufferPoolConfiguration>
+  fullName: Microsoft.Extensions.Options.IOptions<LiveStreamingServerNet.Networking.Configurations.NetBufferPoolConfiguration>
+  nameWithType.vb: IOptions(Of NetBufferPoolConfiguration)
+  fullName.vb: Microsoft.Extensions.Options.IOptions(Of LiveStreamingServerNet.Networking.Configurations.NetBufferPoolConfiguration)
+  name.vb: IOptions(Of NetBufferPoolConfiguration)
+  spec.csharp:
+  - uid: Microsoft.Extensions.Options.IOptions`1
+    name: IOptions
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.extensions.options.ioptions-1
+  - name: <
+  - uid: LiveStreamingServerNet.Networking.Configurations.NetBufferPoolConfiguration
+    name: NetBufferPoolConfiguration
+    href: LiveStreamingServerNet.Networking.Configurations.NetBufferPoolConfiguration.html
+  - name: '>'
+  spec.vb:
+  - uid: Microsoft.Extensions.Options.IOptions`1
+    name: IOptions
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.extensions.options.ioptions-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: LiveStreamingServerNet.Networking.Configurations.NetBufferPoolConfiguration
+    name: NetBufferPoolConfiguration
+    href: LiveStreamingServerNet.Networking.Configurations.NetBufferPoolConfiguration.html
+  - name: )
+- uid: Microsoft.Extensions.Options.IOptions`1
+  commentId: T:Microsoft.Extensions.Options.IOptions`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.extensions.options.ioptions-1
+  name: IOptions<TOptions>
+  nameWithType: IOptions<TOptions>
+  fullName: Microsoft.Extensions.Options.IOptions<TOptions>
+  nameWithType.vb: IOptions(Of TOptions)
+  fullName.vb: Microsoft.Extensions.Options.IOptions(Of TOptions)
+  name.vb: IOptions(Of TOptions)
+  spec.csharp:
+  - uid: Microsoft.Extensions.Options.IOptions`1
+    name: IOptions
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.extensions.options.ioptions-1
+  - name: <
+  - name: TOptions
+  - name: '>'
+  spec.vb:
+  - uid: Microsoft.Extensions.Options.IOptions`1
+    name: IOptions
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.extensions.options.ioptions-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TOptions
+  - name: )
+- uid: Microsoft.Extensions.Options
+  commentId: N:Microsoft.Extensions.Options
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft
+  name: Microsoft.Extensions.Options
+  nameWithType: Microsoft.Extensions.Options
+  fullName: Microsoft.Extensions.Options
+  spec.csharp:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.Extensions
+    name: Extensions
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.extensions
+  - name: .
+  - uid: Microsoft.Extensions.Options
+    name: Options
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.extensions.options
+  spec.vb:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.Extensions
+    name: Extensions
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.extensions
+  - name: .
+  - uid: Microsoft.Extensions.Options
+    name: Options
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.extensions.options
+- uid: LiveStreamingServerNet.Networking.NetBufferPool.Obtain*
+  commentId: Overload:LiveStreamingServerNet.Networking.NetBufferPool.Obtain
+  href: LiveStreamingServerNet.Networking.NetBufferPool.html#LiveStreamingServerNet_Networking_NetBufferPool_Obtain
+  name: Obtain
+  nameWithType: NetBufferPool.Obtain
+  fullName: LiveStreamingServerNet.Networking.NetBufferPool.Obtain
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBufferPool.Obtain
+  commentId: M:LiveStreamingServerNet.Networking.Contracts.INetBufferPool.Obtain
+  parent: LiveStreamingServerNet.Networking.Contracts.INetBufferPool
+  href: LiveStreamingServerNet.Networking.Contracts.INetBufferPool.html#LiveStreamingServerNet_Networking_Contracts_INetBufferPool_Obtain
+  name: Obtain()
+  nameWithType: INetBufferPool.Obtain()
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBufferPool.Obtain()
+  spec.csharp:
+  - uid: LiveStreamingServerNet.Networking.Contracts.INetBufferPool.Obtain
+    name: Obtain
+    href: LiveStreamingServerNet.Networking.Contracts.INetBufferPool.html#LiveStreamingServerNet_Networking_Contracts_INetBufferPool_Obtain
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: LiveStreamingServerNet.Networking.Contracts.INetBufferPool.Obtain
+    name: Obtain
+    href: LiveStreamingServerNet.Networking.Contracts.INetBufferPool.html#LiveStreamingServerNet_Networking_Contracts_INetBufferPool_Obtain
+  - name: (
+  - name: )
+- uid: LiveStreamingServerNet.Networking.Contracts.INetBuffer
+  commentId: T:LiveStreamingServerNet.Networking.Contracts.INetBuffer
+  parent: LiveStreamingServerNet.Networking.Contracts
+  href: LiveStreamingServerNet.Networking.Contracts.INetBuffer.html
+  name: INetBuffer
+  nameWithType: INetBuffer
+  fullName: LiveStreamingServerNet.Networking.Contracts.INetBuffer
+- uid: LiveStreamingServerNet.Networking.NetBufferPool.Dispose*
+  commentId: Overload:LiveStreamingServerNet.Networking.NetBufferPool.Dispose
+  href: LiveStreamingServerNet.Networking.NetBufferPool.html#LiveStreamingServerNet_Networking_NetBufferPool_Dispose
+  name: Dispose
+  nameWithType: NetBufferPool.Dispose
+  fullName: LiveStreamingServerNet.Networking.NetBufferPool.Dispose
+- uid: System.IDisposable.Dispose
+  commentId: M:System.IDisposable.Dispose
+  parent: System.IDisposable
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.idisposable.dispose
+  name: Dispose()
+  nameWithType: IDisposable.Dispose()
+  fullName: System.IDisposable.Dispose()
+  spec.csharp:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.idisposable.dispose
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.idisposable.dispose
+  - name: (
+  - name: )

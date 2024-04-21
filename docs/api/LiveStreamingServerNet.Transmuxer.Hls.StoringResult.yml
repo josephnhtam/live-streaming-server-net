@@ -1,0 +1,717 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.Transmuxer.Hls.StoringResult
+  commentId: T:LiveStreamingServerNet.Transmuxer.Hls.StoringResult
+  id: StoringResult
+  parent: LiveStreamingServerNet.Transmuxer.Hls
+  children:
+  - LiveStreamingServerNet.Transmuxer.Hls.StoringResult.#ctor(System.Collections.Generic.IReadOnlyList{LiveStreamingServerNet.Transmuxer.Hls.StoredManifest},System.Collections.Generic.IReadOnlyList{LiveStreamingServerNet.Transmuxer.Hls.StoredTsFile})
+  - LiveStreamingServerNet.Transmuxer.Hls.StoringResult.ManifestFiles
+  - LiveStreamingServerNet.Transmuxer.Hls.StoringResult.TsFiles
+  langs:
+  - csharp
+  - vb
+  name: StoringResult
+  nameWithType: StoringResult
+  fullName: LiveStreamingServerNet.Transmuxer.Hls.StoringResult
+  type: Struct
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Transmuxer/Hls/StoringResult.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: StoringResult
+    path: ../src/LiveStreamingServerNet.Transmuxer/Hls/StoringResult.cs
+    startLine: 2
+  assemblies:
+  - LiveStreamingServerNet.Transmuxer
+  namespace: LiveStreamingServerNet.Transmuxer.Hls
+  syntax:
+    content: 'public record struct StoringResult : IEquatable<StoringResult>'
+    content.vb: Public Structure StoringResult Implements IEquatable(Of StoringResult)
+  implements:
+  - System.IEquatable{LiveStreamingServerNet.Transmuxer.Hls.StoringResult}
+  inheritedMembers:
+  - System.ValueType.Equals(System.Object)
+  - System.ValueType.GetHashCode
+  - System.ValueType.ToString
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetType
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  extensionMethods:
+  - System.Object.LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Action)
+- uid: LiveStreamingServerNet.Transmuxer.Hls.StoringResult.#ctor(System.Collections.Generic.IReadOnlyList{LiveStreamingServerNet.Transmuxer.Hls.StoredManifest},System.Collections.Generic.IReadOnlyList{LiveStreamingServerNet.Transmuxer.Hls.StoredTsFile})
+  commentId: M:LiveStreamingServerNet.Transmuxer.Hls.StoringResult.#ctor(System.Collections.Generic.IReadOnlyList{LiveStreamingServerNet.Transmuxer.Hls.StoredManifest},System.Collections.Generic.IReadOnlyList{LiveStreamingServerNet.Transmuxer.Hls.StoredTsFile})
+  id: '#ctor(System.Collections.Generic.IReadOnlyList{LiveStreamingServerNet.Transmuxer.Hls.StoredManifest},System.Collections.Generic.IReadOnlyList{LiveStreamingServerNet.Transmuxer.Hls.StoredTsFile})'
+  parent: LiveStreamingServerNet.Transmuxer.Hls.StoringResult
+  langs:
+  - csharp
+  - vb
+  name: StoringResult(IReadOnlyList<StoredManifest>, IReadOnlyList<StoredTsFile>)
+  nameWithType: StoringResult.StoringResult(IReadOnlyList<StoredManifest>, IReadOnlyList<StoredTsFile>)
+  fullName: LiveStreamingServerNet.Transmuxer.Hls.StoringResult.StoringResult(System.Collections.Generic.IReadOnlyList<LiveStreamingServerNet.Transmuxer.Hls.StoredManifest>, System.Collections.Generic.IReadOnlyList<LiveStreamingServerNet.Transmuxer.Hls.StoredTsFile>)
+  type: Constructor
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Transmuxer/Hls/StoringResult.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: .ctor
+    path: ../src/LiveStreamingServerNet.Transmuxer/Hls/StoringResult.cs
+    startLine: 2
+  assemblies:
+  - LiveStreamingServerNet.Transmuxer
+  namespace: LiveStreamingServerNet.Transmuxer.Hls
+  syntax:
+    content: public StoringResult(IReadOnlyList<StoredManifest> ManifestFiles, IReadOnlyList<StoredTsFile> TsFiles)
+    parameters:
+    - id: ManifestFiles
+      type: System.Collections.Generic.IReadOnlyList{LiveStreamingServerNet.Transmuxer.Hls.StoredManifest}
+    - id: TsFiles
+      type: System.Collections.Generic.IReadOnlyList{LiveStreamingServerNet.Transmuxer.Hls.StoredTsFile}
+    content.vb: Public Sub New(ManifestFiles As IReadOnlyList(Of StoredManifest), TsFiles As IReadOnlyList(Of StoredTsFile))
+  overload: LiveStreamingServerNet.Transmuxer.Hls.StoringResult.#ctor*
+  nameWithType.vb: StoringResult.New(IReadOnlyList(Of StoredManifest), IReadOnlyList(Of StoredTsFile))
+  fullName.vb: LiveStreamingServerNet.Transmuxer.Hls.StoringResult.New(System.Collections.Generic.IReadOnlyList(Of LiveStreamingServerNet.Transmuxer.Hls.StoredManifest), System.Collections.Generic.IReadOnlyList(Of LiveStreamingServerNet.Transmuxer.Hls.StoredTsFile))
+  name.vb: New(IReadOnlyList(Of StoredManifest), IReadOnlyList(Of StoredTsFile))
+- uid: LiveStreamingServerNet.Transmuxer.Hls.StoringResult.ManifestFiles
+  commentId: P:LiveStreamingServerNet.Transmuxer.Hls.StoringResult.ManifestFiles
+  id: ManifestFiles
+  parent: LiveStreamingServerNet.Transmuxer.Hls.StoringResult
+  langs:
+  - csharp
+  - vb
+  name: ManifestFiles
+  nameWithType: StoringResult.ManifestFiles
+  fullName: LiveStreamingServerNet.Transmuxer.Hls.StoringResult.ManifestFiles
+  type: Property
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Transmuxer/Hls/StoringResult.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: ManifestFiles
+    path: ../src/LiveStreamingServerNet.Transmuxer/Hls/StoringResult.cs
+    startLine: 2
+  assemblies:
+  - LiveStreamingServerNet.Transmuxer
+  namespace: LiveStreamingServerNet.Transmuxer.Hls
+  syntax:
+    content: public IReadOnlyList<StoredManifest> ManifestFiles { readonly get; set; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.IReadOnlyList{LiveStreamingServerNet.Transmuxer.Hls.StoredManifest}
+    content.vb: Public Property ManifestFiles As IReadOnlyList(Of StoredManifest)
+  overload: LiveStreamingServerNet.Transmuxer.Hls.StoringResult.ManifestFiles*
+- uid: LiveStreamingServerNet.Transmuxer.Hls.StoringResult.TsFiles
+  commentId: P:LiveStreamingServerNet.Transmuxer.Hls.StoringResult.TsFiles
+  id: TsFiles
+  parent: LiveStreamingServerNet.Transmuxer.Hls.StoringResult
+  langs:
+  - csharp
+  - vb
+  name: TsFiles
+  nameWithType: StoringResult.TsFiles
+  fullName: LiveStreamingServerNet.Transmuxer.Hls.StoringResult.TsFiles
+  type: Property
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Transmuxer/Hls/StoringResult.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: TsFiles
+    path: ../src/LiveStreamingServerNet.Transmuxer/Hls/StoringResult.cs
+    startLine: 2
+  assemblies:
+  - LiveStreamingServerNet.Transmuxer
+  namespace: LiveStreamingServerNet.Transmuxer.Hls
+  syntax:
+    content: public IReadOnlyList<StoredTsFile> TsFiles { readonly get; set; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.IReadOnlyList{LiveStreamingServerNet.Transmuxer.Hls.StoredTsFile}
+    content.vb: Public Property TsFiles As IReadOnlyList(Of StoredTsFile)
+  overload: LiveStreamingServerNet.Transmuxer.Hls.StoringResult.TsFiles*
+references:
+- uid: LiveStreamingServerNet.Transmuxer.Hls
+  commentId: N:LiveStreamingServerNet.Transmuxer.Hls
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.Transmuxer.Hls
+  nameWithType: LiveStreamingServerNet.Transmuxer.Hls
+  fullName: LiveStreamingServerNet.Transmuxer.Hls
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Transmuxer
+    name: Transmuxer
+    href: LiveStreamingServerNet.Transmuxer.html
+  - name: .
+  - uid: LiveStreamingServerNet.Transmuxer.Hls
+    name: Hls
+    href: LiveStreamingServerNet.Transmuxer.Hls.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Transmuxer
+    name: Transmuxer
+    href: LiveStreamingServerNet.Transmuxer.html
+  - name: .
+  - uid: LiveStreamingServerNet.Transmuxer.Hls
+    name: Hls
+    href: LiveStreamingServerNet.Transmuxer.Hls.html
+- uid: System.IEquatable{LiveStreamingServerNet.Transmuxer.Hls.StoringResult}
+  commentId: T:System.IEquatable{LiveStreamingServerNet.Transmuxer.Hls.StoringResult}
+  parent: System
+  definition: System.IEquatable`1
+  href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  name: IEquatable<StoringResult>
+  nameWithType: IEquatable<StoringResult>
+  fullName: System.IEquatable<LiveStreamingServerNet.Transmuxer.Hls.StoringResult>
+  nameWithType.vb: IEquatable(Of StoringResult)
+  fullName.vb: System.IEquatable(Of LiveStreamingServerNet.Transmuxer.Hls.StoringResult)
+  name.vb: IEquatable(Of StoringResult)
+  spec.csharp:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  - name: <
+  - uid: LiveStreamingServerNet.Transmuxer.Hls.StoringResult
+    name: StoringResult
+    href: LiveStreamingServerNet.Transmuxer.Hls.StoringResult.html
+  - name: '>'
+  spec.vb:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: LiveStreamingServerNet.Transmuxer.Hls.StoringResult
+    name: StoringResult
+    href: LiveStreamingServerNet.Transmuxer.Hls.StoringResult.html
+  - name: )
+- uid: System.ValueType.Equals(System.Object)
+  commentId: M:System.ValueType.Equals(System.Object)
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  name: Equals(object)
+  nameWithType: ValueType.Equals(object)
+  fullName: System.ValueType.Equals(object)
+  nameWithType.vb: ValueType.Equals(Object)
+  fullName.vb: System.ValueType.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.ValueType.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.ValueType.GetHashCode
+  commentId: M:System.ValueType.GetHashCode
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  name: GetHashCode()
+  nameWithType: ValueType.GetHashCode()
+  fullName: System.ValueType.GetHashCode()
+  spec.csharp:
+  - uid: System.ValueType.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  - name: (
+  - name: )
+- uid: System.ValueType.ToString
+  commentId: M:System.ValueType.ToString
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  name: ToString()
+  nameWithType: ValueType.ToString()
+  fullName: System.ValueType.ToString()
+  spec.csharp:
+  - uid: System.ValueType.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Action)
+  commentId: M:LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  parent: LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+  definition: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  name: Lock(object, Action)
+  nameWithType: LockExtensions.Lock(object, Action)
+  fullName: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(object, System.Action)
+  nameWithType.vb: LockExtensions.Lock(Object, Action)
+  fullName.vb: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(Object, System.Action)
+  name.vb: Lock(Object, Action)
+  spec.csharp:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+  spec.vb:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+- uid: System.IEquatable`1
+  commentId: T:System.IEquatable`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  name: IEquatable<T>
+  nameWithType: IEquatable<T>
+  fullName: System.IEquatable<T>
+  nameWithType.vb: IEquatable(Of T)
+  fullName.vb: System.IEquatable(Of T)
+  name.vb: IEquatable(Of T)
+  spec.csharp:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: System.ValueType
+  commentId: T:System.ValueType
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype
+  name: ValueType
+  nameWithType: ValueType
+  fullName: System.ValueType
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  commentId: M:LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+  isExternal: true
+  href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  name: Lock(object, Action)
+  nameWithType: LockExtensions.Lock(object, Action)
+  fullName: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(object, System.Action)
+  nameWithType.vb: LockExtensions.Lock(Object, Action)
+  fullName.vb: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(Object, System.Action)
+  name.vb: Lock(Object, Action)
+  spec.csharp:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+  spec.vb:
+  - uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.Lock(System.Object,System.Action)
+    name: Lock
+    href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html#LiveStreamingServerNet_Utilities_Extensions_LockExtensions_Lock_System_Object_System_Action_
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+- uid: LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+  commentId: T:LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+  parent: LiveStreamingServerNet.Utilities.Extensions
+  href: LiveStreamingServerNet.Utilities.Extensions.LockExtensions.html
+  name: LockExtensions
+  nameWithType: LockExtensions
+  fullName: LiveStreamingServerNet.Utilities.Extensions.LockExtensions
+- uid: LiveStreamingServerNet.Utilities.Extensions
+  commentId: N:LiveStreamingServerNet.Utilities.Extensions
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.Utilities.Extensions
+  nameWithType: LiveStreamingServerNet.Utilities.Extensions
+  fullName: LiveStreamingServerNet.Utilities.Extensions
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities
+    name: Utilities
+    href: LiveStreamingServerNet.Utilities.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities.Extensions
+    name: Extensions
+    href: LiveStreamingServerNet.Utilities.Extensions.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities
+    name: Utilities
+    href: LiveStreamingServerNet.Utilities.html
+  - name: .
+  - uid: LiveStreamingServerNet.Utilities.Extensions
+    name: Extensions
+    href: LiveStreamingServerNet.Utilities.Extensions.html
+- uid: LiveStreamingServerNet.Transmuxer.Hls.StoringResult.#ctor*
+  commentId: Overload:LiveStreamingServerNet.Transmuxer.Hls.StoringResult.#ctor
+  href: LiveStreamingServerNet.Transmuxer.Hls.StoringResult.html#LiveStreamingServerNet_Transmuxer_Hls_StoringResult__ctor_System_Collections_Generic_IReadOnlyList_LiveStreamingServerNet_Transmuxer_Hls_StoredManifest__System_Collections_Generic_IReadOnlyList_LiveStreamingServerNet_Transmuxer_Hls_StoredTsFile__
+  name: StoringResult
+  nameWithType: StoringResult.StoringResult
+  fullName: LiveStreamingServerNet.Transmuxer.Hls.StoringResult.StoringResult
+  nameWithType.vb: StoringResult.New
+  fullName.vb: LiveStreamingServerNet.Transmuxer.Hls.StoringResult.New
+  name.vb: New
+- uid: System.Collections.Generic.IReadOnlyList{LiveStreamingServerNet.Transmuxer.Hls.StoredManifest}
+  commentId: T:System.Collections.Generic.IReadOnlyList{LiveStreamingServerNet.Transmuxer.Hls.StoredManifest}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IReadOnlyList`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1
+  name: IReadOnlyList<StoredManifest>
+  nameWithType: IReadOnlyList<StoredManifest>
+  fullName: System.Collections.Generic.IReadOnlyList<LiveStreamingServerNet.Transmuxer.Hls.StoredManifest>
+  nameWithType.vb: IReadOnlyList(Of StoredManifest)
+  fullName.vb: System.Collections.Generic.IReadOnlyList(Of LiveStreamingServerNet.Transmuxer.Hls.StoredManifest)
+  name.vb: IReadOnlyList(Of StoredManifest)
+  spec.csharp:
+  - uid: System.Collections.Generic.IReadOnlyList`1
+    name: IReadOnlyList
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1
+  - name: <
+  - uid: LiveStreamingServerNet.Transmuxer.Hls.StoredManifest
+    name: StoredManifest
+    href: LiveStreamingServerNet.Transmuxer.Hls.StoredManifest.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IReadOnlyList`1
+    name: IReadOnlyList
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: LiveStreamingServerNet.Transmuxer.Hls.StoredManifest
+    name: StoredManifest
+    href: LiveStreamingServerNet.Transmuxer.Hls.StoredManifest.html
+  - name: )
+- uid: System.Collections.Generic.IReadOnlyList{LiveStreamingServerNet.Transmuxer.Hls.StoredTsFile}
+  commentId: T:System.Collections.Generic.IReadOnlyList{LiveStreamingServerNet.Transmuxer.Hls.StoredTsFile}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IReadOnlyList`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1
+  name: IReadOnlyList<StoredTsFile>
+  nameWithType: IReadOnlyList<StoredTsFile>
+  fullName: System.Collections.Generic.IReadOnlyList<LiveStreamingServerNet.Transmuxer.Hls.StoredTsFile>
+  nameWithType.vb: IReadOnlyList(Of StoredTsFile)
+  fullName.vb: System.Collections.Generic.IReadOnlyList(Of LiveStreamingServerNet.Transmuxer.Hls.StoredTsFile)
+  name.vb: IReadOnlyList(Of StoredTsFile)
+  spec.csharp:
+  - uid: System.Collections.Generic.IReadOnlyList`1
+    name: IReadOnlyList
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1
+  - name: <
+  - uid: LiveStreamingServerNet.Transmuxer.Hls.StoredTsFile
+    name: StoredTsFile
+    href: LiveStreamingServerNet.Transmuxer.Hls.StoredTsFile.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IReadOnlyList`1
+    name: IReadOnlyList
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: LiveStreamingServerNet.Transmuxer.Hls.StoredTsFile
+    name: StoredTsFile
+    href: LiveStreamingServerNet.Transmuxer.Hls.StoredTsFile.html
+  - name: )
+- uid: System.Collections.Generic.IReadOnlyList`1
+  commentId: T:System.Collections.Generic.IReadOnlyList`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1
+  name: IReadOnlyList<T>
+  nameWithType: IReadOnlyList<T>
+  fullName: System.Collections.Generic.IReadOnlyList<T>
+  nameWithType.vb: IReadOnlyList(Of T)
+  fullName.vb: System.Collections.Generic.IReadOnlyList(Of T)
+  name.vb: IReadOnlyList(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IReadOnlyList`1
+    name: IReadOnlyList
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IReadOnlyList`1
+    name: IReadOnlyList
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+- uid: LiveStreamingServerNet.Transmuxer.Hls.StoringResult.ManifestFiles*
+  commentId: Overload:LiveStreamingServerNet.Transmuxer.Hls.StoringResult.ManifestFiles
+  href: LiveStreamingServerNet.Transmuxer.Hls.StoringResult.html#LiveStreamingServerNet_Transmuxer_Hls_StoringResult_ManifestFiles
+  name: ManifestFiles
+  nameWithType: StoringResult.ManifestFiles
+  fullName: LiveStreamingServerNet.Transmuxer.Hls.StoringResult.ManifestFiles
+- uid: LiveStreamingServerNet.Transmuxer.Hls.StoringResult.TsFiles*
+  commentId: Overload:LiveStreamingServerNet.Transmuxer.Hls.StoringResult.TsFiles
+  href: LiveStreamingServerNet.Transmuxer.Hls.StoringResult.html#LiveStreamingServerNet_Transmuxer_Hls_StoringResult_TsFiles
+  name: TsFiles
+  nameWithType: StoringResult.TsFiles
+  fullName: LiveStreamingServerNet.Transmuxer.Hls.StoringResult.TsFiles

@@ -1,0 +1,75 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.Rtmp.Contracts
+  commentId: N:LiveStreamingServerNet.Rtmp.Contracts
+  id: LiveStreamingServerNet.Rtmp.Contracts
+  children:
+  - LiveStreamingServerNet.Rtmp.Contracts.IRtmpMediaMessageInterceptor
+  - LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerConnectionEventHandler
+  - LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerContext
+  - LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler
+  langs:
+  - csharp
+  - vb
+  name: LiveStreamingServerNet.Rtmp.Contracts
+  nameWithType: LiveStreamingServerNet.Rtmp.Contracts
+  fullName: LiveStreamingServerNet.Rtmp.Contracts
+  type: Namespace
+  assemblies:
+  - LiveStreamingServerNet.Rtmp
+references:
+- uid: LiveStreamingServerNet.Rtmp.Contracts.IRtmpMediaMessageInterceptor
+  commentId: T:LiveStreamingServerNet.Rtmp.Contracts.IRtmpMediaMessageInterceptor
+  href: LiveStreamingServerNet.Rtmp.Contracts.IRtmpMediaMessageInterceptor.html
+  name: IRtmpMediaMessageInterceptor
+  nameWithType: IRtmpMediaMessageInterceptor
+  fullName: LiveStreamingServerNet.Rtmp.Contracts.IRtmpMediaMessageInterceptor
+- uid: LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerContext
+  commentId: T:LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerContext
+  parent: LiveStreamingServerNet.Rtmp.Contracts
+  href: LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerContext.html
+  name: IRtmpServerContext
+  nameWithType: IRtmpServerContext
+  fullName: LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerContext
+- uid: LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerConnectionEventHandler
+  commentId: T:LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerConnectionEventHandler
+  href: LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerConnectionEventHandler.html
+  name: IRtmpServerConnectionEventHandler
+  nameWithType: IRtmpServerConnectionEventHandler
+  fullName: LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerConnectionEventHandler
+- uid: LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler
+  commentId: T:LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler
+  href: LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler.html
+  name: IRtmpServerStreamEventHandler
+  nameWithType: IRtmpServerStreamEventHandler
+  fullName: LiveStreamingServerNet.Rtmp.Contracts.IRtmpServerStreamEventHandler
+- uid: LiveStreamingServerNet.Rtmp.Contracts
+  commentId: N:LiveStreamingServerNet.Rtmp.Contracts
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.Rtmp.Contracts
+  nameWithType: LiveStreamingServerNet.Rtmp.Contracts
+  fullName: LiveStreamingServerNet.Rtmp.Contracts
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Rtmp
+    name: Rtmp
+    href: LiveStreamingServerNet.Rtmp.html
+  - name: .
+  - uid: LiveStreamingServerNet.Rtmp.Contracts
+    name: Contracts
+    href: LiveStreamingServerNet.Rtmp.Contracts.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Rtmp
+    name: Rtmp
+    href: LiveStreamingServerNet.Rtmp.html
+  - name: .
+  - uid: LiveStreamingServerNet.Rtmp.Contracts
+    name: Contracts
+    href: LiveStreamingServerNet.Rtmp.Contracts.html

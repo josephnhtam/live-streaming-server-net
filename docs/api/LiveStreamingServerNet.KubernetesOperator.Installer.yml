@@ -1,0 +1,37 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.KubernetesOperator.Installer
+  commentId: N:LiveStreamingServerNet.KubernetesOperator.Installer
+  id: LiveStreamingServerNet.KubernetesOperator.Installer
+  children:
+  - LiveStreamingServerNet.KubernetesOperator.Installer.ControllerServicesInstaller
+  - LiveStreamingServerNet.KubernetesOperator.Installer.KubernetesInstaller
+  - LiveStreamingServerNet.KubernetesOperator.Installer.ResiliencePipelineInstaller
+  langs:
+  - csharp
+  - vb
+  name: LiveStreamingServerNet.KubernetesOperator.Installer
+  nameWithType: LiveStreamingServerNet.KubernetesOperator.Installer
+  fullName: LiveStreamingServerNet.KubernetesOperator.Installer
+  type: Namespace
+  assemblies:
+  - LiveStreamingServerNet.KubernetesOperator
+references:
+- uid: LiveStreamingServerNet.KubernetesOperator.Installer.ControllerServicesInstaller
+  commentId: T:LiveStreamingServerNet.KubernetesOperator.Installer.ControllerServicesInstaller
+  href: LiveStreamingServerNet.KubernetesOperator.Installer.ControllerServicesInstaller.html
+  name: ControllerServicesInstaller
+  nameWithType: ControllerServicesInstaller
+  fullName: LiveStreamingServerNet.KubernetesOperator.Installer.ControllerServicesInstaller
+- uid: LiveStreamingServerNet.KubernetesOperator.Installer.KubernetesInstaller
+  commentId: T:LiveStreamingServerNet.KubernetesOperator.Installer.KubernetesInstaller
+  href: LiveStreamingServerNet.KubernetesOperator.Installer.KubernetesInstaller.html
+  name: KubernetesInstaller
+  nameWithType: KubernetesInstaller
+  fullName: LiveStreamingServerNet.KubernetesOperator.Installer.KubernetesInstaller
+- uid: LiveStreamingServerNet.KubernetesOperator.Installer.ResiliencePipelineInstaller
+  commentId: T:LiveStreamingServerNet.KubernetesOperator.Installer.ResiliencePipelineInstaller
+  href: LiveStreamingServerNet.KubernetesOperator.Installer.ResiliencePipelineInstaller.html
+  name: ResiliencePipelineInstaller
+  nameWithType: ResiliencePipelineInstaller
+  fullName: LiveStreamingServerNet.KubernetesOperator.Installer.ResiliencePipelineInstaller

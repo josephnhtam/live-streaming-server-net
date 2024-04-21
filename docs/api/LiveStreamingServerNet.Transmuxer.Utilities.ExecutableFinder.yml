@@ -1,0 +1,436 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.Transmuxer.Utilities.ExecutableFinder
+  commentId: T:LiveStreamingServerNet.Transmuxer.Utilities.ExecutableFinder
+  id: ExecutableFinder
+  parent: LiveStreamingServerNet.Transmuxer.Utilities
+  children:
+  - LiveStreamingServerNet.Transmuxer.Utilities.ExecutableFinder.FindExecutable(System.String,System.String)
+  - LiveStreamingServerNet.Transmuxer.Utilities.ExecutableFinder.FindExecutableFromPATH(System.String)
+  langs:
+  - csharp
+  - vb
+  name: ExecutableFinder
+  nameWithType: ExecutableFinder
+  fullName: LiveStreamingServerNet.Transmuxer.Utilities.ExecutableFinder
+  type: Class
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Transmuxer/Utilities/ExecutableFinder.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: ExecutableFinder
+    path: ../src/LiveStreamingServerNet.Transmuxer/Utilities/ExecutableFinder.cs
+    startLine: 4
+  assemblies:
+  - LiveStreamingServerNet.Transmuxer
+  namespace: LiveStreamingServerNet.Transmuxer.Utilities
+  syntax:
+    content: public static class ExecutableFinder
+    content.vb: Public Module ExecutableFinder
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+- uid: LiveStreamingServerNet.Transmuxer.Utilities.ExecutableFinder.FindExecutableFromPATH(System.String)
+  commentId: M:LiveStreamingServerNet.Transmuxer.Utilities.ExecutableFinder.FindExecutableFromPATH(System.String)
+  id: FindExecutableFromPATH(System.String)
+  parent: LiveStreamingServerNet.Transmuxer.Utilities.ExecutableFinder
+  langs:
+  - csharp
+  - vb
+  name: FindExecutableFromPATH(string)
+  nameWithType: ExecutableFinder.FindExecutableFromPATH(string)
+  fullName: LiveStreamingServerNet.Transmuxer.Utilities.ExecutableFinder.FindExecutableFromPATH(string)
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Transmuxer/Utilities/ExecutableFinder.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: FindExecutableFromPATH
+    path: ../src/LiveStreamingServerNet.Transmuxer/Utilities/ExecutableFinder.cs
+    startLine: 6
+  assemblies:
+  - LiveStreamingServerNet.Transmuxer
+  namespace: LiveStreamingServerNet.Transmuxer.Utilities
+  syntax:
+    content: public static string? FindExecutableFromPATH(string executableName)
+    parameters:
+    - id: executableName
+      type: System.String
+    return:
+      type: System.String
+    content.vb: Public Shared Function FindExecutableFromPATH(executableName As String) As String
+  overload: LiveStreamingServerNet.Transmuxer.Utilities.ExecutableFinder.FindExecutableFromPATH*
+  nameWithType.vb: ExecutableFinder.FindExecutableFromPATH(String)
+  fullName.vb: LiveStreamingServerNet.Transmuxer.Utilities.ExecutableFinder.FindExecutableFromPATH(String)
+  name.vb: FindExecutableFromPATH(String)
+- uid: LiveStreamingServerNet.Transmuxer.Utilities.ExecutableFinder.FindExecutable(System.String,System.String)
+  commentId: M:LiveStreamingServerNet.Transmuxer.Utilities.ExecutableFinder.FindExecutable(System.String,System.String)
+  id: FindExecutable(System.String,System.String)
+  parent: LiveStreamingServerNet.Transmuxer.Utilities.ExecutableFinder
+  langs:
+  - csharp
+  - vb
+  name: FindExecutable(string, string)
+  nameWithType: ExecutableFinder.FindExecutable(string, string)
+  fullName: LiveStreamingServerNet.Transmuxer.Utilities.ExecutableFinder.FindExecutable(string, string)
+  type: Method
+  source:
+    remote:
+      path: src/LiveStreamingServerNet.Transmuxer/Utilities/ExecutableFinder.cs
+      branch: features/docs
+      repo: https://josephnhtam@github.com/josephnhtam/live-streaming-server-net.git
+    id: FindExecutable
+    path: ../src/LiveStreamingServerNet.Transmuxer/Utilities/ExecutableFinder.cs
+    startLine: 18
+  assemblies:
+  - LiveStreamingServerNet.Transmuxer
+  namespace: LiveStreamingServerNet.Transmuxer.Utilities
+  syntax:
+    content: public static FileInfo? FindExecutable(string directoryPath, string executableName)
+    parameters:
+    - id: directoryPath
+      type: System.String
+    - id: executableName
+      type: System.String
+    return:
+      type: System.IO.FileInfo
+    content.vb: Public Shared Function FindExecutable(directoryPath As String, executableName As String) As FileInfo
+  overload: LiveStreamingServerNet.Transmuxer.Utilities.ExecutableFinder.FindExecutable*
+  nameWithType.vb: ExecutableFinder.FindExecutable(String, String)
+  fullName.vb: LiveStreamingServerNet.Transmuxer.Utilities.ExecutableFinder.FindExecutable(String, String)
+  name.vb: FindExecutable(String, String)
+references:
+- uid: LiveStreamingServerNet.Transmuxer.Utilities
+  commentId: N:LiveStreamingServerNet.Transmuxer.Utilities
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.Transmuxer.Utilities
+  nameWithType: LiveStreamingServerNet.Transmuxer.Utilities
+  fullName: LiveStreamingServerNet.Transmuxer.Utilities
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Transmuxer
+    name: Transmuxer
+    href: LiveStreamingServerNet.Transmuxer.html
+  - name: .
+  - uid: LiveStreamingServerNet.Transmuxer.Utilities
+    name: Utilities
+    href: LiveStreamingServerNet.Transmuxer.Utilities.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Transmuxer
+    name: Transmuxer
+    href: LiveStreamingServerNet.Transmuxer.html
+  - name: .
+  - uid: LiveStreamingServerNet.Transmuxer.Utilities
+    name: Utilities
+    href: LiveStreamingServerNet.Transmuxer.Utilities.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: LiveStreamingServerNet.Transmuxer.Utilities.ExecutableFinder.FindExecutableFromPATH*
+  commentId: Overload:LiveStreamingServerNet.Transmuxer.Utilities.ExecutableFinder.FindExecutableFromPATH
+  href: LiveStreamingServerNet.Transmuxer.Utilities.ExecutableFinder.html#LiveStreamingServerNet_Transmuxer_Utilities_ExecutableFinder_FindExecutableFromPATH_System_String_
+  name: FindExecutableFromPATH
+  nameWithType: ExecutableFinder.FindExecutableFromPATH
+  fullName: LiveStreamingServerNet.Transmuxer.Utilities.ExecutableFinder.FindExecutableFromPATH
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: LiveStreamingServerNet.Transmuxer.Utilities.ExecutableFinder.FindExecutable*
+  commentId: Overload:LiveStreamingServerNet.Transmuxer.Utilities.ExecutableFinder.FindExecutable
+  href: LiveStreamingServerNet.Transmuxer.Utilities.ExecutableFinder.html#LiveStreamingServerNet_Transmuxer_Utilities_ExecutableFinder_FindExecutable_System_String_System_String_
+  name: FindExecutable
+  nameWithType: ExecutableFinder.FindExecutable
+  fullName: LiveStreamingServerNet.Transmuxer.Utilities.ExecutableFinder.FindExecutable
+- uid: System.IO.FileInfo
+  commentId: T:System.IO.FileInfo
+  parent: System.IO
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.io.fileinfo
+  name: FileInfo
+  nameWithType: FileInfo
+  fullName: System.IO.FileInfo
+- uid: System.IO
+  commentId: N:System.IO
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.IO
+  nameWithType: System.IO
+  fullName: System.IO
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.IO
+    name: IO
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.io
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.IO
+    name: IO
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.io

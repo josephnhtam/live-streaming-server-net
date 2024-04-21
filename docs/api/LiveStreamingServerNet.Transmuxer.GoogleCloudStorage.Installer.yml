@@ -1,0 +1,23 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Installer
+  commentId: N:LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Installer
+  id: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Installer
+  children:
+  - LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Installer.HlsGoogleCloudStorageInstaller
+  langs:
+  - csharp
+  - vb
+  name: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Installer
+  nameWithType: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Installer
+  fullName: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Installer
+  type: Namespace
+  assemblies:
+  - LiveStreamingServerNet.Transmuxer.GoogleCloudStorage
+references:
+- uid: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Installer.HlsGoogleCloudStorageInstaller
+  commentId: T:LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Installer.HlsGoogleCloudStorageInstaller
+  href: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Installer.HlsGoogleCloudStorageInstaller.html
+  name: HlsGoogleCloudStorageInstaller
+  nameWithType: HlsGoogleCloudStorageInstaller
+  fullName: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Installer.HlsGoogleCloudStorageInstaller

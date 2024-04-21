@@ -1,0 +1,70 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Contracts
+  commentId: N:LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Contracts
+  id: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Contracts
+  children:
+  - LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Contracts.IHlsObjectPathResolver
+  - LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Contracts.IHlsObjectUriResolver
+  langs:
+  - csharp
+  - vb
+  name: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Contracts
+  nameWithType: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Contracts
+  fullName: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Contracts
+  type: Namespace
+  assemblies:
+  - LiveStreamingServerNet.Transmuxer.GoogleCloudStorage
+references:
+- uid: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Contracts.IHlsObjectPathResolver
+  commentId: T:LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Contracts.IHlsObjectPathResolver
+  parent: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Contracts
+  href: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Contracts.IHlsObjectPathResolver.html
+  name: IHlsObjectPathResolver
+  nameWithType: IHlsObjectPathResolver
+  fullName: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Contracts.IHlsObjectPathResolver
+- uid: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Contracts.IHlsObjectUriResolver
+  commentId: T:LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Contracts.IHlsObjectUriResolver
+  parent: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Contracts
+  href: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Contracts.IHlsObjectUriResolver.html
+  name: IHlsObjectUriResolver
+  nameWithType: IHlsObjectUriResolver
+  fullName: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Contracts.IHlsObjectUriResolver
+- uid: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Contracts
+  commentId: N:LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Contracts
+  href: LiveStreamingServerNet.html
+  name: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Contracts
+  nameWithType: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Contracts
+  fullName: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Contracts
+  spec.csharp:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Transmuxer
+    name: Transmuxer
+    href: LiveStreamingServerNet.Transmuxer.html
+  - name: .
+  - uid: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage
+    name: GoogleCloudStorage
+    href: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.html
+  - name: .
+  - uid: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Contracts
+    name: Contracts
+    href: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Contracts.html
+  spec.vb:
+  - uid: LiveStreamingServerNet
+    name: LiveStreamingServerNet
+    href: LiveStreamingServerNet.html
+  - name: .
+  - uid: LiveStreamingServerNet.Transmuxer
+    name: Transmuxer
+    href: LiveStreamingServerNet.Transmuxer.html
+  - name: .
+  - uid: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage
+    name: GoogleCloudStorage
+    href: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.html
+  - name: .
+  - uid: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Contracts
+    name: Contracts
+    href: LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.Contracts.html

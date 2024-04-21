@@ -1,0 +1,37 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.Rtmp.Test
+  commentId: N:LiveStreamingServerNet.Rtmp.Test
+  id: LiveStreamingServerNet.Rtmp.Test
+  children:
+  - LiveStreamingServerNet.Rtmp.Test.MediaPackageDiscarderTest
+  - LiveStreamingServerNet.Rtmp.Test.RtmpClientHandlerTest
+  - LiveStreamingServerNet.Rtmp.Test.StreamUtilitiesTest
+  langs:
+  - csharp
+  - vb
+  name: LiveStreamingServerNet.Rtmp.Test
+  nameWithType: LiveStreamingServerNet.Rtmp.Test
+  fullName: LiveStreamingServerNet.Rtmp.Test
+  type: Namespace
+  assemblies:
+  - LiveStreamingServerNet.Rtmp.Test
+references:
+- uid: LiveStreamingServerNet.Rtmp.Test.MediaPackageDiscarderTest
+  commentId: T:LiveStreamingServerNet.Rtmp.Test.MediaPackageDiscarderTest
+  href: LiveStreamingServerNet.Rtmp.Test.MediaPackageDiscarderTest.html
+  name: MediaPackageDiscarderTest
+  nameWithType: MediaPackageDiscarderTest
+  fullName: LiveStreamingServerNet.Rtmp.Test.MediaPackageDiscarderTest
+- uid: LiveStreamingServerNet.Rtmp.Test.RtmpClientHandlerTest
+  commentId: T:LiveStreamingServerNet.Rtmp.Test.RtmpClientHandlerTest
+  href: LiveStreamingServerNet.Rtmp.Test.RtmpClientHandlerTest.html
+  name: RtmpClientHandlerTest
+  nameWithType: RtmpClientHandlerTest
+  fullName: LiveStreamingServerNet.Rtmp.Test.RtmpClientHandlerTest
+- uid: LiveStreamingServerNet.Rtmp.Test.StreamUtilitiesTest
+  commentId: T:LiveStreamingServerNet.Rtmp.Test.StreamUtilitiesTest
+  href: LiveStreamingServerNet.Rtmp.Test.StreamUtilitiesTest.html
+  name: StreamUtilitiesTest
+  nameWithType: StreamUtilitiesTest
+  fullName: LiveStreamingServerNet.Rtmp.Test.StreamUtilitiesTest

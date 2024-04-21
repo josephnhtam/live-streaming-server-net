@@ -1,0 +1,30 @@
+### YamlMime:ManagedReference
+items:
+- uid: LiveStreamingServerNet.Flv.Middlewares
+  commentId: N:LiveStreamingServerNet.Flv.Middlewares
+  id: LiveStreamingServerNet.Flv.Middlewares
+  children:
+  - LiveStreamingServerNet.Flv.Middlewares.HttpFlvMiddleware
+  - LiveStreamingServerNet.Flv.Middlewares.WebSocketFlvMiddleware
+  langs:
+  - csharp
+  - vb
+  name: LiveStreamingServerNet.Flv.Middlewares
+  nameWithType: LiveStreamingServerNet.Flv.Middlewares
+  fullName: LiveStreamingServerNet.Flv.Middlewares
+  type: Namespace
+  assemblies:
+  - LiveStreamingServerNet.Flv
+references:
+- uid: LiveStreamingServerNet.Flv.Middlewares.HttpFlvMiddleware
+  commentId: T:LiveStreamingServerNet.Flv.Middlewares.HttpFlvMiddleware
+  href: LiveStreamingServerNet.Flv.Middlewares.HttpFlvMiddleware.html
+  name: HttpFlvMiddleware
+  nameWithType: HttpFlvMiddleware
+  fullName: LiveStreamingServerNet.Flv.Middlewares.HttpFlvMiddleware
+- uid: LiveStreamingServerNet.Flv.Middlewares.WebSocketFlvMiddleware
+  commentId: T:LiveStreamingServerNet.Flv.Middlewares.WebSocketFlvMiddleware
+  href: LiveStreamingServerNet.Flv.Middlewares.WebSocketFlvMiddleware.html
+  name: WebSocketFlvMiddleware
+  nameWithType: WebSocketFlvMiddleware
+  fullName: LiveStreamingServerNet.Flv.Middlewares.WebSocketFlvMiddleware
