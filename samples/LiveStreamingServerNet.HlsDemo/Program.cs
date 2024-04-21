@@ -1,7 +1,7 @@
 using LiveStreamingServerNet.Networking.Helpers;
 using LiveStreamingServerNet.Transmuxer.Contracts;
 using LiveStreamingServerNet.Transmuxer.Installer;
-using LiveStreamingServerNet.Transmuxer.Internal.Utilities;
+using LiveStreamingServerNet.Transmuxer.Utilities;
 using LiveStreamingServerNet.Utilities.Contracts;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.FileProviders;

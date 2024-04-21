@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace LiveStreamingServerNet.Transmuxer.Internal.Utilities
+namespace LiveStreamingServerNet.Transmuxer.Utilities
 {
     public static class ExecutableFinder
     {
