@@ -6,6 +6,8 @@
 
 This repository contains an implementation of RTMP server which allows you to build your own live streaming server using .NET.
 
+> A more detailed [documentation](https://josephnhtam.github.io/live-streaming-server-net/) is currently under construction.
+
 ## Features
 
 - **RTMP/RTMPS protocol**: Supports the RTMP and RTMPS protocols for streaming audio, video, and data.
