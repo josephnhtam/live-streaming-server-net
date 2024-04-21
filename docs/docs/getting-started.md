@@ -4,7 +4,7 @@ LiveStreamingServerNet is a RTMP server framework that allows you to create your
 
 ## Setting Up Your Live Streaming Server
 
-This guide will walk you through the process of setting up your live streaming server.
+This guide will walk you through the process of setting up your own live streaming server using LiveStreamingServerNet. By following these steps, you'll be able to create a server that can accept RTMP streams and broadcast them to viewers.
 
 ### Step 1: Initialize a New Project
 
@@ -14,6 +14,8 @@ Create a new .NET console application using the following command:
 dotnet new console
 ```
 
+In this guide, we will use a basic console application as the foundation for the live streaming server. However, it is not mandatory, and you are free to run a live streaming server with an ASP.NET Core application as well.
+
 ### Step 2: Add Required Packages
 
 Add the necessary packages to the created project with these commands:
@@ -22,6 +24,8 @@ Add the necessary packages to the created project with these commands:
 dotnet add package LiveStreamingServerNet
 dotnet add package Microsoft.Extensions.Logging.Console
 ```
+
+These commands will install the LiveStreamingServerNet package, which is the core library for building a live streaming server, as well as the Microsoft.Extensions.Logging.Console package, which allows you to log events to the console.
 
 ### Step 3: Configure Your Live Streaming Server
 
@@ -38,6 +42,8 @@ using var server = LiveStreamingServerBuilder.Create()
 
 await server.RunAsync(new IPEndPoint(IPAddress.Any, 1935));
 ```
+
+This code sets up the server using LiveStreamingServerNet and configures it to log events to the console. It also specifies that the server should listen on port 1935 for RTMP streams.
 
 ### Step 4: Launch Your Live Streaming Server
 
@@ -68,7 +74,7 @@ You have the flexibility to publish your stream using a tool of your choice, suc
 
 **With FFmpeg**
 
-Assume you have a media file at `input_file`, which could be in formats like mp4, wmv, etc. To publish it as a live stream using FFmpeg, execute the following command:
+Assuming you have a media file at `input_file`, which could be in formats like mp4, wmv, etc. To publish it as a live stream using FFmpeg, execute the following command:
 
 ```
 ffmpeg -re -i <input_file> -c:v libx264 -c:a aac -f flv rtmp://localhost:1935/live/demo
