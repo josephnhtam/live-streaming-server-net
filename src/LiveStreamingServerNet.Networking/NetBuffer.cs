@@ -1,5 +1,6 @@
 ﻿using LiveStreamingServerNet.Networking.Contracts;
 using System.Buffers;
+using System.Runtime.CompilerServices;
 
 namespace LiveStreamingServerNet.Networking
 {
@@ -44,17 +45,31 @@ namespace LiveStreamingServerNet.Networking
             _buffer = ArrayPool<byte>.Shared.Rent(initialCapacity);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void EnsureCapacity(int capacity)
         {
             if (capacity < Capacity)
                 return;
 
-            var newCapacity = Math.Max(capacity, Capacity * 2);
-
+            var newCapacity = CalculateNextCapacity(Capacity, capacity);
             var buffer = ArrayPool<byte>.Shared.Rent(newCapacity);
             _buffer.AsSpan().CopyTo(buffer);
             ArrayPool<byte>.Shared.Return(_buffer);
             _buffer = buffer;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private int CalculateNextCapacity(int current, int required)
+        {
+            if (current * 2 > required)
+                return current * 2;
+
+            int nextPowerOf2 = 1;
+
+            while (nextPowerOf2 <= required)
+                nextPowerOf2 <<= 1;
+
+            return nextPowerOf2;
         }
 
         public INetBuffer MoveTo(int position)
