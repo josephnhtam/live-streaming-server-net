@@ -1,4 +1,28 @@
-- name: Introduction
-  href: introduction.md
 - name: Getting Started
   href: getting-started.md
+  
+- name: Tutorials
+  items:
+  - name: Adding an Admin Panel
+    href: admin-panel.md
+  - name: Serving FLV Live Streams
+    href: serving-flv.md
+  - name: Serving HLS Live Streams
+    href: serving-hls.md
+  - name: Securing Streams with RTMPS
+    href: rtmps.md
+  - name: Custom Authorization
+    href: custom-authorization.md
+  - name: Custom Transmuxer
+    href: custom-transmuxer.md
+
+- name: Kubernetes Integration
+  items:
+  - name: Introduction
+    href: kubernetes-intro.md
+  - name: Kubernetes Operator
+    href: kubernetes-operator.md
+  - name: Kubernetes Pod
+    href: kubernetes-pod.md
+  - name: Live Streaming Server Fleet
+    href: fleet.md

@@ -45,8 +45,7 @@
       "_appTitle": "LiveStreamingServerNET",
       "_enableSearch": true,
       "_disableContribution": true,
-      "_appFaviconPath": "favicon.ico",
-      "pdf": true
+      "_appFaviconPath": "favicon.ico"
     }
   }
 }
