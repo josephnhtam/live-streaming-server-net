@@ -140,7 +140,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
                 var rentedBuffer = new RentedBuffer(tempBuffer.Size, subscribers.Count);
                 tempBuffer.MoveTo(0).ReadBytes(rentedBuffer.Buffer, 0, rentedBuffer.Size);
 
-                var mediaPackage = new ClientMediaPackage(rentedBuffer, isSkippable);
+                var mediaPackage = new ClientMediaPackage(rentedBuffer, isSkippable, timestamp, type);
 
                 foreach (var subscriber in subscribers)
                 {
@@ -166,6 +166,9 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
                     try
                     {
                         if (clientContext.StreamSubscriptionContext == null)
+                            continue;
+
+                        if (!clientContext.UpdateTimestamp(package.Timestamp, package.MediaType) && package.IsSkippable)
                             continue;
 
                         if (!subscriptionInitialized)
@@ -260,6 +263,6 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             }
         }
 
-        private record struct ClientMediaPackage(IRentedBuffer RentedPayload, bool IsSkippable);
+        private record struct ClientMediaPackage(IRentedBuffer RentedPayload, bool IsSkippable, uint Timestamp, MediaType MediaType);
     }
 }

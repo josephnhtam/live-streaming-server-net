@@ -183,10 +183,10 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
             var clientContext = Substitute.For<IRtmpClientContext>();
             var publishStreamContext = Substitute.For<IRtmpPublishStreamContext>();
             var audioSequenceHeader = _fixture.Create<byte[]>();
-            var timestamp = _fixture.Create<uint>();
             var streamId = _fixture.Create<uint>();
 
             publishStreamContext.AudioSequenceHeader.Returns(audioSequenceHeader);
+            clientContext.UpdateTimestamp(Arg.Any<uint>(), Arg.Any<MediaType>()).Returns(true);
 
             using var audioBuffer = new NetBuffer();
             _chunkMessageSender.When(
@@ -199,7 +199,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
             ).Do(x => x.Arg<Action<INetBuffer>>().Invoke(audioBuffer));
 
             // Act
-            _sut.SendCachedHeaderMessages(clientContext, publishStreamContext, timestamp, streamId);
+            _sut.SendCachedHeaderMessages(clientContext, publishStreamContext, streamId);
 
             // Assert
             _chunkMessageSender.Received(1).Send(
@@ -218,10 +218,10 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
             var clientContext = Substitute.For<IRtmpClientContext>();
             var publishStreamContext = Substitute.For<IRtmpPublishStreamContext>();
             var videoSequenceHeader = _fixture.Create<byte[]>();
-            var timestamp = _fixture.Create<uint>();
             var streamId = _fixture.Create<uint>();
 
             publishStreamContext.VideoSequenceHeader.Returns(videoSequenceHeader);
+            clientContext.UpdateTimestamp(Arg.Any<uint>(), Arg.Any<MediaType>()).Returns(true);
 
             using var videoBuffer = new NetBuffer();
             _chunkMessageSender.When(
@@ -234,7 +234,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
             ).Do(x => x.Arg<Action<INetBuffer>>().Invoke(videoBuffer));
 
             // Act
-            _sut.SendCachedHeaderMessages(clientContext, publishStreamContext, timestamp, streamId);
+            _sut.SendCachedHeaderMessages(clientContext, publishStreamContext, streamId);
 
             // Assert
             _chunkMessageSender.Received(1).Send(
@@ -333,16 +333,17 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
             var outChunkSize = _fixture.Create<uint>();
 
             clientContext.OutChunkSize.Returns(outChunkSize);
+            clientContext.UpdateTimestamp(Arg.Any<uint>(), Arg.Any<MediaType>()).Returns(true);
 
             var pictureCache1 = new PictureCache(
                 _fixture.Create<MediaType>(),
-                _fixture.Create<uint>(),
+                1,
                 new RentedBuffer(_fixture.Create<int>())
             );
 
             var pictureCache2 = new PictureCache(
                 _fixture.Create<MediaType>(),
-                _fixture.Create<uint>(),
+                2,
                 new RentedBuffer(_fixture.Create<int>())
             );
 

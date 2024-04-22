@@ -113,14 +113,14 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Commands
             var streamPath = "/appName/streamName";
             var streamId = _fixture.Create<uint>();
             var chunkStreamId = Helpers.CreateRandomChunkStreamId();
-            var timstamp = _fixture.Create<uint>();
+            var timestamp = _fixture.Create<uint>();
             var messageStreamId = _fixture.Create<uint>();
             var command = new RtmpPlayCommand(transactionId, commandObject, streamName, 0, 0, false);
 
             _clientContext.StreamId.Returns(streamId);
             _clientContext.AppName.Returns(appName);
             _chunkStreamContext.ChunkStreamId.Returns(chunkStreamId);
-            _chunkStreamContext.MessageHeader.Timestamp.Returns(timstamp);
+            _chunkStreamContext.MessageHeader.Timestamp.Returns(timestamp);
             _chunkStreamContext.MessageHeader.MessageStreamId.Returns(messageStreamId);
 
             if (publishStreamExists)
@@ -155,10 +155,10 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Commands
                 if (publishStreamExists)
                 {
                     _mediaMessageCacher.Received(1).SendCachedStreamMetaDataMessage(
-                        _clientContext, _publishStreamContext, timstamp, messageStreamId);
+                        _clientContext, _publishStreamContext, timestamp, messageStreamId);
 
                     _mediaMessageCacher.Received(1).SendCachedHeaderMessages(
-                        _clientContext, _publishStreamContext, timstamp, messageStreamId);
+                        _clientContext, _publishStreamContext, messageStreamId);
 
                     if (gopCacheActivated)
                         _mediaMessageCacher.Received(1).SendCachedGroupOfPictures(
@@ -187,7 +187,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Commands
             var streamPath = "/appName/streamName";
             var streamId = _fixture.Create<uint>();
             var chunkStreamId = Helpers.CreateRandomChunkStreamId();
-            var timstamp = _fixture.Create<uint>();
+            var timestamp = _fixture.Create<uint>();
             var messageStreamId = _fixture.Create<uint>();
             var command = new RtmpPlayCommand(transactionId, commandObject, streamName, 0, 0, false);
 

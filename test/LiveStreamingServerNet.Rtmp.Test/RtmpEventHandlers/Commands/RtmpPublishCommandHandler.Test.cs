@@ -113,14 +113,14 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Commands
             var streamId = _fixture.Create<uint>();
             var publishingType = "live";
             var chunkStreamId = Helpers.CreateRandomChunkStreamId();
-            var timstamp = _fixture.Create<uint>();
+            var timestamp = _fixture.Create<uint>();
             var messageStreamId = _fixture.Create<uint>();
             var command = new RtmpPublishCommand(transactionId, commandObject, streamName, publishingType);
 
             _clientContext.StreamId.Returns(streamId);
             _clientContext.AppName.Returns(appName);
             _chunkStreamContext.ChunkStreamId.Returns(chunkStreamId);
-            _chunkStreamContext.MessageHeader.Timestamp.Returns(timstamp);
+            _chunkStreamContext.MessageHeader.Timestamp.Returns(timestamp);
             _chunkStreamContext.MessageHeader.MessageStreamId.Returns(messageStreamId);
 
             if (publishStreamExists)
@@ -174,7 +174,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Commands
             var streamId = _fixture.Create<uint>();
             var publishingType = "live";
             var chunkStreamId = Helpers.CreateRandomChunkStreamId();
-            var timstamp = _fixture.Create<uint>();
+            var timestamp = _fixture.Create<uint>();
             var messageStreamId = _fixture.Create<uint>();
             var command = new RtmpPublishCommand(transactionId, commandObject, streamName, publishingType);
 

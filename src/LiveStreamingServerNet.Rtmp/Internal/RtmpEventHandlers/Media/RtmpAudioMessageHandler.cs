@@ -13,7 +13,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
     {
         private readonly IRtmpStreamManagerService _streamManager;
         private readonly IRtmpMediaMessageCacherService _mediaMessageCacher;
-        private readonly IRtmpMediaMessageBroadcasterService _mediaMessagrBroadcaster;
+        private readonly IRtmpMediaMessageBroadcasterService _mediaMessageBroadcaster;
         private readonly ILogger _logger;
 
         public RtmpAudioMessageHandler(
@@ -24,7 +24,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
         {
             _streamManager = streamManager;
             _mediaMessageCacher = mediaMessageCacher;
-            _mediaMessagrBroadcaster = mediaMessageBroadcaster;
+            _mediaMessageBroadcaster = mediaMessageBroadcaster;
             _logger = logger;
         }
 
@@ -43,36 +43,32 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
             }
 
             var hasHeader = await CacheAudioSequenceAsync(chunkStreamContext, publishStreamContext, payloadBuffer);
-            await BroacastAudioMessageToSubscribersAsync(chunkStreamContext, publishStreamContext, payloadBuffer, hasHeader);
+            await BroacastAudioMessageToSubscribersAsync(chunkStreamContext, clientContext, publishStreamContext, payloadBuffer, hasHeader);
             return true;
         }
 
         private async ValueTask BroacastAudioMessageToSubscribersAsync(
             IRtmpChunkStreamContext chunkStreamContext,
+            IRtmpClientContext clientContext,
             IRtmpPublishStreamContext publishStreamContext,
             INetBuffer payloadBuffer,
             bool hasSequenceHeader)
         {
-            if (hasSequenceHeader)
-            {
-                using var subscribers = _streamManager.GetSubscribersLocked(publishStreamContext.StreamPath);
-                await BroacastAudioMessageToSubscribersAsync(chunkStreamContext, publishStreamContext, false, payloadBuffer, subscribers.Value);
-            }
-            else
-            {
-                var subscribers = _streamManager.GetSubscribers(publishStreamContext.StreamPath);
-                await BroacastAudioMessageToSubscribersAsync(chunkStreamContext, publishStreamContext, true, payloadBuffer, subscribers);
-            }
+            var subscribers = _streamManager.GetSubscribers(publishStreamContext.StreamPath);
+            await BroacastAudioMessageToSubscribersAsync(chunkStreamContext, clientContext, publishStreamContext, !hasSequenceHeader, payloadBuffer, subscribers);
         }
 
         private async ValueTask BroacastAudioMessageToSubscribersAsync(
             IRtmpChunkStreamContext chunkStreamContext,
+            IRtmpClientContext clientContext,
             IRtmpPublishStreamContext publishStreamContext,
             bool isSkippable,
             INetBuffer payloadBuffer,
             IReadOnlyList<IRtmpClientContext> subscribers)
         {
-            await _mediaMessagrBroadcaster.BroadcastMediaMessageAsync(
+            clientContext.UpdateTimestamp(chunkStreamContext.MessageHeader.Timestamp, MediaType.Audio);
+
+            await _mediaMessageBroadcaster.BroadcastMediaMessageAsync(
                 publishStreamContext,
                 subscribers,
                 MediaType.Audio,

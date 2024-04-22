@@ -21,7 +21,6 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services.Contracts
         void SendCachedHeaderMessages(
             IRtmpClientContext clientContext,
             IRtmpPublishStreamContext publishStreamContext,
-            uint timestamp,
             uint messageStreamId);
 
         void SendCachedStreamMetaDataMessage(

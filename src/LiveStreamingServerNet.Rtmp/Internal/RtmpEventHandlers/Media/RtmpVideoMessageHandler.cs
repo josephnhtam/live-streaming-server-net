@@ -48,35 +48,31 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
             }
 
             var hasHeader = await CacheVideoSequenceAsync(chunkStreamContext, publishStreamContext, payloadBuffer);
-            await BroacastVideoMessageToSubscribersAsync(chunkStreamContext, publishStreamContext, payloadBuffer, hasHeader);
+            await BroacastVideoMessageToSubscribersAsync(chunkStreamContext, clientContext, publishStreamContext, payloadBuffer, hasHeader);
             return true;
         }
 
         private async ValueTask BroacastVideoMessageToSubscribersAsync(
             IRtmpChunkStreamContext chunkStreamContext,
+            IRtmpClientContext clientContext,
             IRtmpPublishStreamContext publishStreamContext,
             INetBuffer payloadBuffer,
             bool hasSequenceHeader)
         {
-            if (hasSequenceHeader)
-            {
-                using var subscribers = _streamManager.GetSubscribersLocked(publishStreamContext.StreamPath);
-                await BroacastVideoMessageToSubscribersAsync(chunkStreamContext, publishStreamContext, false, payloadBuffer, subscribers.Value);
-            }
-            else
-            {
-                var subscribers = _streamManager.GetSubscribers(publishStreamContext.StreamPath);
-                await BroacastVideoMessageToSubscribersAsync(chunkStreamContext, publishStreamContext, true, payloadBuffer, subscribers);
-            }
+            var subscribers = _streamManager.GetSubscribers(publishStreamContext.StreamPath);
+            await BroacastVideoMessageToSubscribersAsync(chunkStreamContext, clientContext, publishStreamContext, !hasSequenceHeader, payloadBuffer, subscribers);
         }
 
         private async ValueTask BroacastVideoMessageToSubscribersAsync(
             IRtmpChunkStreamContext chunkStreamContext,
+            IRtmpClientContext clientContext,
             IRtmpPublishStreamContext publishStreamContext,
             bool isSkippable,
             INetBuffer payloadBuffer,
             IReadOnlyList<IRtmpClientContext> subscribers)
         {
+            clientContext.UpdateTimestamp(chunkStreamContext.MessageHeader.Timestamp, MediaType.Video);
+
             await _mediaMessageBroadcaster.BroadcastMediaMessageAsync(
                 publishStreamContext,
                 subscribers,

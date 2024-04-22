@@ -22,6 +22,9 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Contracts
         string AppName { get; set; }
         uint? StreamId { get; }
 
+        uint VideoTimestamp { get; }
+        uint AudioTimestamp { get; }
+
         uint CreateNewStream();
         void DeleteStream();
 
@@ -32,6 +35,8 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Contracts
         IRtmpStreamSubscriptionContext CreateStreamSubscriptionContext(uint chunkStreamId, string streamPath, IReadOnlyDictionary<string, string> streamArguments);
 
         IRtmpChunkStreamContext GetChunkStreamContext(uint chunkStreamId);
+
+        bool UpdateTimestamp(uint timestamp, MediaType mediaType);
     }
 
     internal interface IRtmpPublishStreamContext

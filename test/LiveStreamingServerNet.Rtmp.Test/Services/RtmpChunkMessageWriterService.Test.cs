@@ -69,8 +69,8 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
                 {
                     chunkMessageHeader.Timestamp.Should().Be(0xffffff);
                     chunkMessageHeader.HasExtendedTimestamp().Should().BeTrue();
-                    var extendedTimstampHeader = await RtmpChunkExtendedTimestampHeader.ReadAsync(readerBuffer, stream, default);
-                    extendedTimstampHeader.ExtendedTimestamp.Should().Be(expectedTimestamp);
+                    var extendedtimestampHeader = await RtmpChunkExtendedTimestampHeader.ReadAsync(readerBuffer, stream, default);
+                    extendedtimestampHeader.ExtendedTimestamp.Should().Be(expectedTimestamp);
                 }
                 else
                 {
@@ -95,8 +95,8 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
 
                 if (expectedTimestamp >= 0xffffff)
                 {
-                    var extendedTimstampHeader = await RtmpChunkExtendedTimestampHeader.ReadAsync(readerBuffer, stream, default);
-                    extendedTimstampHeader.ExtendedTimestamp.Should().Be(expectedTimestamp);
+                    var extendedTimestampHeader = await RtmpChunkExtendedTimestampHeader.ReadAsync(readerBuffer, stream, default);
+                    extendedTimestampHeader.ExtendedTimestamp.Should().Be(expectedTimestamp);
                 }
 
                 using var tempBuffer = new NetBuffer();

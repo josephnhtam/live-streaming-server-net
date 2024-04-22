@@ -81,19 +81,18 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
         public void SendCachedHeaderMessages(
             IRtmpClientContext clientContext,
             IRtmpPublishStreamContext publishStreamContext,
-            uint timestamp,
             uint messageStreamId)
         {
             var audioSequenceHeader = publishStreamContext.AudioSequenceHeader;
             if (audioSequenceHeader != null)
             {
-                SendMediaPackage(clientContext, MediaType.Audio, audioSequenceHeader, audioSequenceHeader.Length, timestamp, messageStreamId);
+                SendMediaPackage(clientContext, MediaType.Audio, audioSequenceHeader, audioSequenceHeader.Length, 0, messageStreamId, true);
             }
 
             var videoSequenceHeader = publishStreamContext.VideoSequenceHeader;
             if (videoSequenceHeader != null)
             {
-                SendMediaPackage(clientContext, MediaType.Video, videoSequenceHeader, videoSequenceHeader.Length, timestamp, messageStreamId);
+                SendMediaPackage(clientContext, MediaType.Video, videoSequenceHeader, videoSequenceHeader.Length, 0, messageStreamId, true);
             }
         }
 
@@ -146,7 +145,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
         {
             foreach (var picture in publishStreamContext.GroupOfPicturesCache.Get())
             {
-                SendMediaPackage(clientContext, picture.Type, picture.Payload.Buffer, picture.Payload.Size, picture.Timestamp, messageStreamId);
+                SendMediaPackage(clientContext, picture.Type, picture.Payload.Buffer, picture.Payload.Size, picture.Timestamp, messageStreamId, false);
                 picture.Payload.Unclaim();
             }
         }
@@ -157,13 +156,17 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             byte[] payloadBuffer,
             int payloadSize,
             uint timestamp,
-            uint messageStreamId)
+            uint messageStreamId,
+            bool isHeader)
         {
+            if (!clientContext.UpdateTimestamp(timestamp, type) && !isHeader)
+                return;
+
             var basicHeader = new RtmpChunkBasicHeader(
-                    0,
-                    type == MediaType.Video ?
-                    RtmpConstants.VideoMessageChunkStreamId :
-                    RtmpConstants.AudioMessageChunkStreamId);
+                0,
+                type == MediaType.Video ?
+                RtmpConstants.VideoMessageChunkStreamId :
+                RtmpConstants.AudioMessageChunkStreamId);
 
             var messageHeader = new RtmpChunkMessageHeaderType0(
                 timestamp,

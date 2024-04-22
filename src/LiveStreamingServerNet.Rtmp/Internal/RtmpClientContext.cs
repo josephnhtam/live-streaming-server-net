@@ -23,11 +23,18 @@ namespace LiveStreamingServerNet.Rtmp.Internal
         public string AppName { get; set; } = default!;
         public uint? StreamId => _isStreamCreated ? _streamId : null;
 
+        public uint VideoTimestamp => _videoTimestamp;
+        public uint AudioTimestamp => _audioTimestamp;
+
         public IRtmpPublishStreamContext? PublishStreamContext { get; private set; }
         public IRtmpStreamSubscriptionContext? StreamSubscriptionContext { get; private set; }
 
         private uint _streamId;
         private bool _isStreamCreated;
+        private uint _videoTimestamp;
+        private uint _audioTimestamp;
+        private object _videoTimestampSyncLock = new();
+        private object _audioTimestampSyncLock = new();
         private readonly ConcurrentDictionary<uint, IRtmpChunkStreamContext> _chunkStreamContexts = new();
 
         public RtmpClientContext(IClientHandle client)
@@ -67,6 +74,36 @@ namespace LiveStreamingServerNet.Rtmp.Internal
             _isStreamCreated = false;
             PublishStreamContext = null;
             StreamSubscriptionContext = null;
+        }
+
+        public bool UpdateTimestamp(uint timestamp, MediaType mediaType)
+        {
+            switch (mediaType)
+            {
+                case MediaType.Audio:
+                    lock (_videoTimestampSyncLock)
+                    {
+                        if (timestamp > _videoTimestamp)
+                        {
+                            _videoTimestamp = timestamp;
+                            return true;
+                        }
+
+                        return false;
+                    }
+
+                default:
+                    lock (_audioTimestampSyncLock)
+                    {
+                        if (timestamp > _audioTimestamp)
+                        {
+                            _audioTimestamp = timestamp;
+                            return true;
+                        }
+
+                        return false;
+                    }
+            }
         }
     }
 

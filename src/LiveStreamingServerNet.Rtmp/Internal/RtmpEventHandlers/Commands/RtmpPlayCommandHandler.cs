@@ -140,7 +140,6 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
 
             _mediaMessageCacher.SendCachedHeaderMessages(
                 clientContext, publishStreamContext,
-                chunkStreamContext.MessageHeader.Timestamp,
                 chunkStreamContext.MessageHeader.MessageStreamId);
 
             if (publishStreamContext.GroupOfPicturesCacheActivated)
