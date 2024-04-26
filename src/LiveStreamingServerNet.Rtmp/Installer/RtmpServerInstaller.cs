@@ -10,17 +10,12 @@ using LiveStreamingServerNet.Rtmp.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.MediaPackageDiscarding;
 using LiveStreamingServerNet.Rtmp.Internal.MediaPackageDiscarding.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands.Dispatcher;
-using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands.Dispatcher.Attributes;
-using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands.Dispatcher.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Dispatcher;
-using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Dispatcher.Attributes;
-using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Dispatcher.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpServerEventHandlers;
 using LiveStreamingServerNet.Rtmp.Internal.Services;
 using LiveStreamingServerNet.Rtmp.Internal.Services.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using System.Reflection;
 
 namespace LiveStreamingServerNet.Rtmp.Installer
 {
