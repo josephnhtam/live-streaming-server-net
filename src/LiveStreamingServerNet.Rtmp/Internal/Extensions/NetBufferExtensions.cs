@@ -17,7 +17,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Extensions
                     if (type == AmfEncodingType.Amf0)
                         writer.WriteAmf0(array.Map);
                     else
-                        writer.WriteAmf3(array.Map);
+                        writer.WriteAmf3(array.Map.ToDictionary(x => (object)x.Key, x => x.Value));
 
                     continue;
                 }

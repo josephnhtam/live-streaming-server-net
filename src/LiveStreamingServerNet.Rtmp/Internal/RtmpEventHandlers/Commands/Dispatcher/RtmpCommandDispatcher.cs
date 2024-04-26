@@ -66,6 +66,9 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands.Dispat
                     if (parameter is IAmfObject amfObject)
                         parameter = amfObject.ToObject();
 
+                    if (parameter is Dictionary<object, object> dictionary)
+                        parameter = dictionary.ToDictionary(x => x.Key.ToString()!, x => x.Value);
+
                     results[i] = parameter;
                 }
             }
