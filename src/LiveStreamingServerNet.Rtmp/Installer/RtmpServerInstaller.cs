@@ -85,46 +85,12 @@ namespace LiveStreamingServerNet.Rtmp.Installer
 
         private static IServiceCollection AddRtmpMessageHandlers(this IServiceCollection services)
         {
-            var assembly = typeof(RtmpMessageDispatcher).Assembly;
-
-            var handlerMap = assembly.GetTypes()
-                .Where(t => t.IsClass && !t.IsAbstract && t.IsAssignableTo(typeof(IRtmpMessageHandler)))
-                .Select(t => (HandlerType: t, MessageType: t.GetCustomAttributes<RtmpMessageTypeAttribute>()))
-                .Where(x => x.MessageType.Any())
-                .SelectMany(x => x.MessageType.Select(y => (x.HandlerType, MessageType: y)))
-                .ToDictionary(x => x.MessageType!.MessageTypeId, x => x.HandlerType);
-
-            foreach (var handlerType in handlerMap.Values)
-            {
-                services.AddSingleton(handlerType);
-            }
-
-            services.AddSingleton<IRtmpMessageHandlerMap>(new RtmpMessageHandlerMap(handlerMap))
-                    .AddSingleton<IRtmpMessageDispatcher, RtmpMessageDispatcher>();
-
-            return services;
+            return services.AddRtmpMessageHandlers(typeof(RtmpMessageDispatcher).Assembly);
         }
 
         private static IServiceCollection AddRtmpCommandHandlers(this IServiceCollection services)
         {
-            var assembly = typeof(RtmpCommandDispatcher).Assembly;
-
-            var handlerMap = assembly.GetTypes()
-                .Where(t => t.IsClass && !t.IsAbstract && t.IsAssignableTo(typeof(RtmpCommandHandler)))
-                .Select(t => (HandlerType: t, Command: t.GetCustomAttributes<RtmpCommandAttribute>()))
-                .Where(x => x.Command.Any())
-                .SelectMany(x => x.Command.Select(y => (x.HandlerType, Command: y)))
-                .ToDictionary(x => x.Command!.Name, x => x.HandlerType);
-
-            foreach (var handlerType in handlerMap.Values)
-            {
-                services.AddSingleton(handlerType);
-            }
-
-            services.AddSingleton<IRtmpCommandHanlderMap>(new RtmpCommandHandlerMap(handlerMap))
-                    .AddSingleton<IRtmpCommandDispatcher, RtmpCommandDispatcher>();
-
-            return services;
+            return services.AddRtmpCommandHandlers(typeof(RtmpCommandDispatcher).Assembly);
         }
 
         private static IServiceCollection AddRtmpServerEventDispatchers(this IServiceCollection services)
