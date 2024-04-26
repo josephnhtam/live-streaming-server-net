@@ -9,7 +9,12 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Dispatcher
     {
         public static IServiceCollection AddRtmpMessageHandlers(this IServiceCollection services, params Assembly[] assemblies)
         {
-            var handlerMap = assemblies.SelectMany(x => x.GetTypes())
+            return services.AddRtmpMessageHandlers(assemblies.SelectMany(x => x.GetTypes()).ToArray());
+        }
+
+        public static IServiceCollection AddRtmpMessageHandlers(this IServiceCollection services, params Type[] handlerTypes)
+        {
+            var handlerMap = handlerTypes
                 .Where(t => t.IsClass && !t.IsAbstract && t.IsAssignableTo(typeof(IRtmpMessageHandler)))
                 .Select(t => (HandlerType: t, MessageType: t.GetCustomAttributes<RtmpMessageTypeAttribute>()))
                 .Where(x => x.MessageType.Any())
