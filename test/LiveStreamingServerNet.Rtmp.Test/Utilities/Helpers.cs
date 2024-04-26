@@ -27,5 +27,25 @@ namespace LiveStreamingServerNet.Rtmp.Test.Utilities
         {
             return Arg.Is<IReadOnlyDictionary<string, object>>(x => ((TValue)x[key]).Equals(value));
         }
+
+        public static bool Match(this IDictionary<string, object>? map1, IDictionary<string, object>? map2)
+        {
+            if (map1 == null && map2 == null)
+                return true;
+
+            if (map1 == null || map2 == null)
+                return false;
+
+            if (map1.Count != map2.Count)
+                return false;
+
+            foreach (var (key, value) in map1)
+            {
+                if (!map2.TryGetValue(key, out var otherValue) || !value.Equals(otherValue))
+                    return false;
+            }
+
+            return true;
+        }
     }
 }

@@ -26,6 +26,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\src\LiveStreamingServerNet.Rtmp\LiveStreamingServerNet.Rtmp.csproj" />
   </ItemGroup>
   

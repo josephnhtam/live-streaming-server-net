@@ -56,7 +56,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Media
         [Fact]
         public async Task HandleAsync_Should_ReturnFalse_When_StreamNotYetCreated()
         {
-            // Assign
+            // Arrange
             _clientContext.PublishStreamContext.Returns((IRtmpPublishStreamContext?)null);
 
             // Act
@@ -82,7 +82,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Media
         internal async Task HandleAsync_Should_HandleCacheAndBroadcastAndReturnTrue(
             bool gopCacheActivated, VideoFrameType frameType, VideoCodecId codecId, AVCPacketType avcPacketType)
         {
-            // Assign
+            // Arrange
             _config.EnableGopCaching = gopCacheActivated;
 
             var stremaPath = _fixture.Create<string>();

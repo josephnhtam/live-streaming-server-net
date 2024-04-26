@@ -55,7 +55,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Data
         [Fact]
         public async Task HandleAsync_Should_CacheAndBroadcastMetaDatas_For_MetaDataMessage_When_StreamExists()
         {
-            // Assign
+            // Arrange
             _clientContext.PublishStreamContext.Returns(_publishStreamContext);
 
             // Act
@@ -70,7 +70,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Data
         [Fact]
         public async Task HandleAsync_Should_ReturnFalse_For_MetaDataMessage_When_StreamDoesntExist()
         {
-            // Assign
+            // Arrange
             _clientContext.PublishStreamContext.Returns((IRtmpPublishStreamContext?)null);
 
             // Act
