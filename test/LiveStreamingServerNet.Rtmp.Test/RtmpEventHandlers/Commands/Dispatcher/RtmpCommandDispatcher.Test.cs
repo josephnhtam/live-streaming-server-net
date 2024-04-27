@@ -15,7 +15,7 @@ using NSubstitute;
 
 namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Commands.Dispatcher
 {
-    public class RtmpMessageDispatcherTest
+    public class RtmpCommandDispatcherTest
     {
         private readonly IFixture _fixture;
         private readonly TestHandler _testHandler;
@@ -24,7 +24,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Commands.Dispatcher
         private readonly IRtmpChunkStreamContext _chunkStreamContext;
         private readonly IRtmpCommandDispatcher _sut;
 
-        public RtmpMessageDispatcherTest()
+        public RtmpCommandDispatcherTest()
         {
             _fixture = new Fixture();
             _testHandler = Substitute.For<TestHandler>();
