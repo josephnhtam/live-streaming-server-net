@@ -22,18 +22,17 @@ namespace LiveStreamingServerNet.Flv.Internal
 
         public FlvClient(
             IFlvMediaTagManagerService mediaTagManager,
-            IFlvWriter flvWriter,
             string clientId,
             string streamPath,
             IStreamWriter streamWriter,
+            IFlvWriterFactory flvWriterFactory,
             CancellationToken stoppingToken)
         {
             _mediaTagManager = mediaTagManager;
-            FlvWriter = flvWriter;
+            FlvWriter = flvWriterFactory.Create(this, streamWriter);
 
             ClientId = clientId;
             StreamPath = streamPath;
-            FlvWriter.Initialize(this, streamWriter);
 
             _stoppingCts = CancellationTokenSource.CreateLinkedTokenSource(stoppingToken);
             StoppingToken = _stoppingCts.Token;

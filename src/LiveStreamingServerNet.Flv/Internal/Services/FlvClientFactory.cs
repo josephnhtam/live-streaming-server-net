@@ -16,8 +16,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
 
         public IFlvClient Create(string clientId, string streamPath, IStreamWriter streamWriter, CancellationToken stoppingToken)
         {
-            var flvWriter = _flvWriterFactory.Create();
-            return new FlvClient(_mediaTagManager, flvWriter, clientId, streamPath, streamWriter, stoppingToken);
+            return new FlvClient(_mediaTagManager, clientId, streamPath, streamWriter, _flvWriterFactory, stoppingToken);
         }
     }
 }

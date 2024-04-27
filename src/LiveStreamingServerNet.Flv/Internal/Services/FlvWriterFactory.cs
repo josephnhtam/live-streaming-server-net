@@ -13,9 +13,9 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
             _logger = logger;
         }
 
-        public IFlvWriter Create()
+        public IFlvWriter Create(IFlvClient client, IStreamWriter streamWriter)
         {
-            return new FlvWriter(_logger);
+            return new FlvWriter(client, streamWriter, _logger);
         }
     }
 }

@@ -8,27 +8,22 @@ namespace LiveStreamingServerNet.Flv.Internal
 {
     internal class FlvWriter : IFlvWriter
     {
+        private readonly IFlvClient _client;
+        private readonly IStreamWriter _streamWriter;
         private readonly ILogger _logger;
         private readonly INetBuffer _netBuffer;
         private readonly SemaphoreSlim _syncLock;
 
-        private IFlvClient _client = default!;
-        private IStreamWriter _streamWriter = default!;
-
         private bool _isDisposed;
 
-        public FlvWriter(ILogger<FlvWriter> logger)
+        public FlvWriter(IFlvClient client, IStreamWriter streamWriter, ILogger<FlvWriter> logger)
         {
+            _client = client;
+            _streamWriter = streamWriter;
             _logger = logger;
 
             _netBuffer = new NetBuffer();
             _syncLock = new SemaphoreSlim(1, 1);
-        }
-
-        public void Initialize(IFlvClient client, IStreamWriter streamWriter)
-        {
-            _client = client;
-            _streamWriter = streamWriter;
         }
 
         public async ValueTask WriteHeaderAsync(bool allowAudioTags, bool allowVideoTags, CancellationToken cancellationToken)
