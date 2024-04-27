@@ -117,7 +117,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
 
             var flvTagHeader = new FlvTagHeader(flvTagType, (uint)payloadSize, timestamp);
 
-            await client.FlvWriter.WriteTagAsync(flvTagHeader,
+            await client.WriteTagAsync(flvTagHeader,
                 (netBuffer) => netBuffer.Write(payloadBuffer, 0, payloadSize), cancellation);
         }
     }

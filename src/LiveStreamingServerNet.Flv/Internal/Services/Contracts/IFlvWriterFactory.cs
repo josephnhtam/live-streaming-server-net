@@ -4,6 +4,6 @@ namespace LiveStreamingServerNet.Flv.Internal.Services.Contracts
 {
     internal interface IFlvWriterFactory
     {
-        IFlvWriter Create(IFlvClient client, IStreamWriter streamWriter);
+        IFlvWriter Create(IStreamWriter streamWriter);
     }
 }

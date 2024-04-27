@@ -6,16 +6,9 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
 {
     internal class FlvWriterFactory : IFlvWriterFactory
     {
-        private readonly ILogger<FlvWriter> _logger;
-
-        public FlvWriterFactory(ILogger<FlvWriter> logger)
+        public IFlvWriter Create(IStreamWriter streamWriter)
         {
-            _logger = logger;
-        }
-
-        public IFlvWriter Create(IFlvClient client, IStreamWriter streamWriter)
-        {
-            return new FlvWriter(client, streamWriter, _logger);
+            return new FlvWriter(streamWriter);
         }
     }
 }

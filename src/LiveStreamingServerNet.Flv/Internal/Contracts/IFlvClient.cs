@@ -1,14 +1,17 @@
-﻿namespace LiveStreamingServerNet.Flv.Internal.Contracts
+﻿using LiveStreamingServerNet.Networking.Contracts;
+
+namespace LiveStreamingServerNet.Flv.Internal.Contracts
 {
     internal interface IFlvClient : IAsyncDisposable
     {
         string ClientId { get; }
         string StreamPath { get; }
         CancellationToken StoppingToken { get; }
-        IFlvWriter FlvWriter { get; }
         void Stop();
         void CompleteInitialization();
         Task UntilIntializationComplete();
         Task UntilComplete();
+        ValueTask WriteHeaderAsync(bool allowAudioTags, bool allowVideoTags, CancellationToken cancellationToken);
+        ValueTask WriteTagAsync(FlvTagHeader tagHeader, Action<INetBuffer> payloadBufer, CancellationToken cancellationToken);
     }
 }

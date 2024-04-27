@@ -37,7 +37,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
             var hasAudio = streamContext.AudioSequenceHeader != null;
             var hasVideo = streamContext.VideoSequenceHeader != null;
 
-            await client.FlvWriter.WriteHeaderAsync(hasAudio, hasVideo, cancellationToken);
+            await client.WriteHeaderAsync(hasAudio, hasVideo, cancellationToken);
         }
 
         private async ValueTask SendCachedFlvTagsAsync(IFlvClient client, IFlvStreamContext streamContext, CancellationToken cancellationToken)

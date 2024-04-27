@@ -1,15 +1,19 @@
 ﻿using LiveStreamingServerNet.Flv.Internal.Contracts;
+using LiveStreamingServerNet.Flv.Internal.Logging;
 using LiveStreamingServerNet.Flv.Internal.Services.Contracts;
+using LiveStreamingServerNet.Networking.Contracts;
+using Microsoft.Extensions.Logging;
 
 namespace LiveStreamingServerNet.Flv.Internal
 {
     internal class FlvClient : IFlvClient
     {
-        public string ClientId { get; private set; } = default!;
-        public string StreamPath { get; private set; } = default!;
-        public CancellationToken StoppingToken { get; private set; } = default!;
-        public IFlvWriter FlvWriter { get; }
+        public string ClientId { get; }
+        public string StreamPath { get; }
+        public CancellationToken StoppingToken { get; }
 
+        private readonly ILogger _logger;
+        private readonly IFlvWriter _flvWriter;
         private readonly IFlvMediaTagManagerService _mediaTagManager;
         private readonly TaskCompletionSource _initializationTcs = new();
 
@@ -21,15 +25,16 @@ namespace LiveStreamingServerNet.Flv.Internal
         private bool _isDiposed;
 
         public FlvClient(
-            IFlvMediaTagManagerService mediaTagManager,
             string clientId,
             string streamPath,
-            IStreamWriter streamWriter,
-            IFlvWriterFactory flvWriterFactory,
+            IFlvMediaTagManagerService mediaTagManager,
+            IFlvWriter flvWriter,
+            ILogger<FlvClient> logger,
             CancellationToken stoppingToken)
         {
             _mediaTagManager = mediaTagManager;
-            FlvWriter = flvWriterFactory.Create(this, streamWriter);
+            _flvWriter = flvWriter;
+            _logger = logger;
 
             ClientId = clientId;
             StreamPath = streamPath;
@@ -83,9 +88,35 @@ namespace LiveStreamingServerNet.Flv.Internal
             if (_stoppingCts != null)
                 _stoppingCts.Dispose();
 
-            await FlvWriter.DisposeAsync();
+            await _flvWriter.DisposeAsync();
 
             GC.SuppressFinalize(this);
+        }
+
+        public async ValueTask WriteHeaderAsync(bool allowAudioTags, bool allowVideoTags, CancellationToken cancellationToken)
+        {
+            try
+            {
+                await _flvWriter.WriteHeaderAsync(allowAudioTags, allowVideoTags, cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                _logger.FailedToWriteFlvHeader(ClientId, ex);
+                Stop();
+            }
+        }
+
+        public async ValueTask WriteTagAsync(FlvTagHeader tagHeader, Action<INetBuffer> payloadBufer, CancellationToken cancellationToken)
+        {
+            try
+            {
+                await _flvWriter.WriteTagAsync(tagHeader, payloadBufer, cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                _logger.FailedToWriteFlvTag(ClientId, ex);
+                Stop();
+            }
         }
     }
 }
