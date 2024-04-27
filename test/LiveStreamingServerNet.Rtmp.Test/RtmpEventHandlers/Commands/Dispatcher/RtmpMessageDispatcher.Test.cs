@@ -20,13 +20,18 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Commands.Dispatcher
         private readonly IFixture _fixture;
         private readonly TestHandler _testHandler;
         private readonly Test2Handler _test2Handler;
-        private readonly IServiceProvider _services;
+        private readonly IRtmpClientContext _clientContext;
+        private readonly IRtmpChunkStreamContext _chunkStreamContext;
+        private readonly IRtmpCommandDispatcher _sut;
 
         public RtmpMessageDispatcherTest()
         {
             _fixture = new Fixture();
             _testHandler = Substitute.For<TestHandler>();
             _test2Handler = Substitute.For<Test2Handler>();
+
+            _clientContext = Substitute.For<IRtmpClientContext>();
+            _chunkStreamContext = Substitute.For<IRtmpChunkStreamContext>();
 
             var map = new RtmpCommandHandlerMap(new Dictionary<string, Type> {
                 { "test", typeof(TestHandler) },
@@ -38,7 +43,8 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Commands.Dispatcher
             services.AddSingleton(_testHandler)
                     .AddSingleton(_test2Handler)
                     .AddSingleton<IRtmpCommandDispatcher>(svc => new RtmpCommandDispatcher(svc, map, logger));
-            _services = services.BuildServiceProvider();
+
+            _sut = services.BuildServiceProvider().GetRequiredService<IRtmpCommandDispatcher>();
         }
 
         [Theory]
@@ -47,9 +53,6 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Commands.Dispatcher
         public async Task DispatchAsync_Should_DispatchTest1CommandToTest1Handler(byte messageTypeId)
         {
             // Arrange
-            var sut = _services.GetRequiredService<IRtmpCommandDispatcher>();
-            var clientContext = Substitute.For<IRtmpClientContext>();
-
             var commandName = "test";
             var transactionId = _fixture.Create<double>();
             var commandObject = new Dictionary<string, object> { { "key1", 1.0 }, { "key2", "value2" }, { "key3", true } };
@@ -62,21 +65,20 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Commands.Dispatcher
             }, messageTypeId == RtmpMessageType.CommandMessageAmf3 ? AmfEncodingType.Amf3 : AmfEncodingType.Amf0);
             payloadBuffer.MoveTo(0);
 
-            var chunkStreamContext = Substitute.For<IRtmpChunkStreamContext>();
-            chunkStreamContext.MessageHeader.MessageTypeId.Returns(messageTypeId);
-            chunkStreamContext.MessageHeader.MessageLength.Returns(payloadBuffer.Size);
+            _chunkStreamContext.MessageHeader.MessageTypeId.Returns(messageTypeId);
+            _chunkStreamContext.MessageHeader.MessageLength.Returns(payloadBuffer.Size);
 
             var expectedResult = _fixture.Create<bool>();
-            _testHandler.HandleAsync(chunkStreamContext, clientContext, Arg.Any<TestCommand>(), Arg.Any<CancellationToken>())
+            _testHandler.HandleAsync(_chunkStreamContext, _clientContext, Arg.Any<TestCommand>(), Arg.Any<CancellationToken>())
                 .Returns(expectedResult);
 
             // Act
-            var result = await sut.DispatchAsync(chunkStreamContext, clientContext, payloadBuffer, default);
+            var result = await _sut.DispatchAsync(_chunkStreamContext, _clientContext, payloadBuffer, default);
 
             // Assert
             await _testHandler.Received(1).HandleAsync(
-                chunkStreamContext,
-                clientContext,
+                _chunkStreamContext,
+                _clientContext,
                 Arg.Is<TestCommand>(x =>
                     x.TransactionId == transactionId &&
                     x.CommandObject.Match(commandObject) &&
@@ -92,9 +94,6 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Commands.Dispatcher
         public async Task DispatchAsync_Should_DispatchTest2CommandToTest2Handler(byte messageTypeId)
         {
             // Arrange
-            var sut = _services.GetRequiredService<IRtmpCommandDispatcher>();
-            var clientContext = Substitute.For<IRtmpClientContext>();
-
             var commandName = "test2";
             var transactionId = _fixture.Create<double>();
             var flag = _fixture.Create<bool>();
@@ -109,21 +108,20 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Commands.Dispatcher
             }, messageTypeId == RtmpMessageType.CommandMessageAmf3 ? AmfEncodingType.Amf3 : AmfEncodingType.Amf0);
             payloadBuffer.MoveTo(0);
 
-            var chunkStreamContext = Substitute.For<IRtmpChunkStreamContext>();
-            chunkStreamContext.MessageHeader.MessageTypeId.Returns(messageTypeId);
-            chunkStreamContext.MessageHeader.MessageLength.Returns(payloadBuffer.Size);
+            _chunkStreamContext.MessageHeader.MessageTypeId.Returns(messageTypeId);
+            _chunkStreamContext.MessageHeader.MessageLength.Returns(payloadBuffer.Size);
 
             var expectedResult = _fixture.Create<bool>();
-            _test2Handler.HandleAsync(chunkStreamContext, clientContext, Arg.Any<Test2Command>(), Arg.Any<CancellationToken>())
+            _test2Handler.HandleAsync(_chunkStreamContext, _clientContext, Arg.Any<Test2Command>(), Arg.Any<CancellationToken>())
                 .Returns(expectedResult);
 
             // Act
-            var result = await sut.DispatchAsync(chunkStreamContext, clientContext, payloadBuffer, default);
+            var result = await _sut.DispatchAsync(_chunkStreamContext, _clientContext, payloadBuffer, default);
 
             // Assert
             await _test2Handler.Received(1).HandleAsync(
-                  chunkStreamContext,
-                  clientContext,
+                  _chunkStreamContext,
+                  _clientContext,
                   Arg.Is<Test2Command>(x =>
                       x.TransactionId == transactionId &&
                       x.Flag == flag &&
@@ -141,9 +139,6 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Commands.Dispatcher
         public async Task DispatchAsync_Should_ReturnTrue_When_NoMatchingCommandHandler(byte messageTypeId)
         {
             // Arrange
-            var sut = _services.GetRequiredService<IRtmpCommandDispatcher>();
-            var clientContext = Substitute.For<IRtmpClientContext>();
-
             var commandName = "test3";
 
             var payloadBuffer = new NetBuffer();
@@ -151,12 +146,11 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Commands.Dispatcher
                 messageTypeId == RtmpMessageType.CommandMessageAmf3 ? AmfEncodingType.Amf3 : AmfEncodingType.Amf0);
             payloadBuffer.MoveTo(0);
 
-            var chunkStreamContext = Substitute.For<IRtmpChunkStreamContext>();
-            chunkStreamContext.MessageHeader.MessageTypeId.Returns(messageTypeId);
-            chunkStreamContext.MessageHeader.MessageLength.Returns(payloadBuffer.Size);
+            _chunkStreamContext.MessageHeader.MessageTypeId.Returns(messageTypeId);
+            _chunkStreamContext.MessageHeader.MessageLength.Returns(payloadBuffer.Size);
 
             // Act
-            var result = await sut.DispatchAsync(chunkStreamContext, clientContext, payloadBuffer, default);
+            var result = await _sut.DispatchAsync(_chunkStreamContext, _clientContext, payloadBuffer, default);
 
             // Assert
             result.Should().BeTrue();
