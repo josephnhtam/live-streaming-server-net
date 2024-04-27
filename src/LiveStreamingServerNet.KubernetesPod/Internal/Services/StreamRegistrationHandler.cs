@@ -31,7 +31,7 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
             return AuthorizationResult.Unauthorized(result.Reason ?? "Failed to register stream.");
         }
 
-        public async Task<AuthorizationResult> AuthorizeSubscriptionAsync(
+        public async Task<AuthorizationResult> AuthorizeSubscribingAsync(
             IClientInfo client,
             string streamPath,
             IReadOnlyDictionary<string, string> streamArguments)

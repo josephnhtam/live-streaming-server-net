@@ -46,7 +46,7 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
             return Task.FromResult(AuthorizationResult.Authorized());
         }
 
-        public Task<AuthorizationResult> AuthorizeSubscriptionAsync(
+        public Task<AuthorizationResult> AuthorizeSubscribingAsync(
             IClientInfo client, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
             return Task.FromResult(AuthorizationResult.Authorized());

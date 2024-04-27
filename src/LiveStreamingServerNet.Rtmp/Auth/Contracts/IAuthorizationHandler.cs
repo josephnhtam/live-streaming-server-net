@@ -6,6 +6,6 @@ namespace LiveStreamingServerNet.Rtmp.Auth.Contracts
     {
         int GetOrder() => 0;
         Task<AuthorizationResult> AuthorizePublishingAsync(IClientInfo client, string streamPath, IReadOnlyDictionary<string, string> streamArguments, string publishingType);
-        Task<AuthorizationResult> AuthorizeSubscriptionAsync(IClientInfo client, string streamPath, IReadOnlyDictionary<string, string> streamArguments);
+        Task<AuthorizationResult> AuthorizeSubscribingAsync(IClientInfo client, string streamPath, IReadOnlyDictionary<string, string> streamArguments);
     }
 }

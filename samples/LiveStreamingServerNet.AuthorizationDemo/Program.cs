@@ -75,7 +75,7 @@ namespace LiveStreamingServerNet.AuthorizationDemo
             return Task.FromResult(AuthorizationResult.Unauthorized("incorrect password"));
         }
 
-        public Task<AuthorizationResult> AuthorizeSubscriptionAsync(
+        public Task<AuthorizationResult> AuthorizeSubscribingAsync(
             IClientInfo client,
             string streamPath,
             IReadOnlyDictionary<string, string> streamArguments)

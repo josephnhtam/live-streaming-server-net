@@ -47,7 +47,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Authorization
 
             foreach (var authorizationHandler in _services.GetServices<IAuthorizationHandler>().OrderBy(x => x.GetOrder()))
             {
-                var result = await authorizationHandler.AuthorizeSubscriptionAsync(
+                var result = await authorizationHandler.AuthorizeSubscribingAsync(
                     clientContext.Client, streamPath, streamArguments);
 
                 if (!result.IsAuthorized)
