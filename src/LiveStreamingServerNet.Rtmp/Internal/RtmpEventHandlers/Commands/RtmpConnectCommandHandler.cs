@@ -9,7 +9,7 @@ using Microsoft.Extensions.Options;
 
 namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
 {
-    internal record RtmpConnectCommand(double TransactionId, IDictionary<string, object> CommandObject, IDictionary<string, object> Arguments);
+    internal record RtmpConnectCommand(double TransactionId, IDictionary<string, object> CommandObject, IDictionary<string, object>? Arguments);
 
     [RtmpCommand("connect")]
     internal class RtmpConnectCommandHandler : RtmpCommandHandler<RtmpConnectCommand>

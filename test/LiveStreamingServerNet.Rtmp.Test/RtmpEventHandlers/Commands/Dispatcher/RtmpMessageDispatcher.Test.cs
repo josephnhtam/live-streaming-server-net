@@ -1,4 +1,5 @@
 ﻿using AutoFixture;
+using FluentAssertions;
 using LiveStreamingServerNet.Networking;
 using LiveStreamingServerNet.Rtmp.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.Extensions;
@@ -51,7 +52,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Commands.Dispatcher
 
             var commandName = "test";
             var transactionId = _fixture.Create<double>();
-            var commandObject = new Dictionary<string, object> { { "key1", 1.0 }, { "key2", "value2" } };
+            var commandObject = new Dictionary<string, object> { { "key1", 1.0 }, { "key2", "value2" }, { "key3", true } };
             var publishingName = _fixture.Create<string>();
 
             var payloadBuffer = new NetBuffer();
@@ -59,15 +60,18 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Commands.Dispatcher
             {
                commandName, transactionId, new AmfArray(commandObject), publishingName
             }, messageTypeId == RtmpMessageType.CommandMessageAmf3 ? AmfEncodingType.Amf3 : AmfEncodingType.Amf0);
+            payloadBuffer.MoveTo(0);
 
             var chunkStreamContext = Substitute.For<IRtmpChunkStreamContext>();
             chunkStreamContext.MessageHeader.MessageTypeId.Returns(messageTypeId);
-            chunkStreamContext.MessageHeader.MessageLength.Returns(payloadBuffer.Position);
+            chunkStreamContext.MessageHeader.MessageLength.Returns(payloadBuffer.Size);
 
-            payloadBuffer.MoveTo(0);
+            var expectedResult = _fixture.Create<bool>();
+            _testHandler.HandleAsync(chunkStreamContext, clientContext, Arg.Any<TestCommand>(), Arg.Any<CancellationToken>())
+                .Returns(expectedResult);
 
             // Act
-            await sut.DispatchAsync(chunkStreamContext, clientContext, payloadBuffer, default);
+            var result = await sut.DispatchAsync(chunkStreamContext, clientContext, payloadBuffer, default);
 
             // Assert
             await _testHandler.Received(1).HandleAsync(
@@ -78,6 +82,8 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Commands.Dispatcher
                     x.CommandObject.Match(commandObject) &&
                     x.PublishingName == publishingName),
                 Arg.Any<CancellationToken>());
+
+            result.Should().Be(expectedResult);
         }
 
         [Theory]
@@ -93,40 +99,45 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Commands.Dispatcher
             var transactionId = _fixture.Create<double>();
             var flag = _fixture.Create<bool>();
             var publishingName = _fixture.Create<string>();
-            var commandObject = new Dictionary<string, object> { { "key1", 1.0 }, { "key2", "value2" } };
+            var commandObject = new Dictionary<string, object> { { "key1", 1.0 }, { "key2", "value2" }, { "key3", true } };
 
             var payloadBuffer = new NetBuffer();
             payloadBuffer.WriteAmf(new List<object?>
             {
                commandName, transactionId, flag, publishingName, new AmfArray(commandObject)
             }, messageTypeId == RtmpMessageType.CommandMessageAmf3 ? AmfEncodingType.Amf3 : AmfEncodingType.Amf0);
+            payloadBuffer.MoveTo(0);
 
             var chunkStreamContext = Substitute.For<IRtmpChunkStreamContext>();
             chunkStreamContext.MessageHeader.MessageTypeId.Returns(messageTypeId);
-            chunkStreamContext.MessageHeader.MessageLength.Returns(payloadBuffer.Position);
+            chunkStreamContext.MessageHeader.MessageLength.Returns(payloadBuffer.Size);
 
-            payloadBuffer.MoveTo(0);
+            var expectedResult = _fixture.Create<bool>();
+            _test2Handler.HandleAsync(chunkStreamContext, clientContext, Arg.Any<Test2Command>(), Arg.Any<CancellationToken>())
+                .Returns(expectedResult);
 
             // Act
             await sut.DispatchAsync(chunkStreamContext, clientContext, payloadBuffer, default);
 
             // Assert
-            await _test2Handler.Received(1).HandleAsync(
-                chunkStreamContext,
-                clientContext,
-                Arg.Is<Test2Command>(x =>
-                    x.TransactionId == transactionId &&
-                    x.Flag == flag &&
-                    x.PublishingName == publishingName &&
-                    x.CommandObject.Match(commandObject) &&
-                    x.Optional == null),
-                Arg.Any<CancellationToken>());
+            var result = await _test2Handler.Received(1).HandleAsync(
+                  chunkStreamContext,
+                  clientContext,
+                  Arg.Is<Test2Command>(x =>
+                      x.TransactionId == transactionId &&
+                      x.Flag == flag &&
+                      x.PublishingName == publishingName &&
+                      x.CommandObject.Match(commandObject) &&
+                      x.Optional == null),
+                  Arg.Any<CancellationToken>());
+
+            result.Should().Be(expectedResult);
         }
 
         internal record TestCommand(double TransactionId, IDictionary<string, object> CommandObject, string PublishingName);
         [RtmpCommand("test")] internal abstract class TestHandler : RtmpCommandHandler<TestCommand> { }
 
-        internal record Test2Command(double TransactionId, bool Flag, string PublishingName, IDictionary<string, object> CommandObject, IDictionary<string, object> Optional);
+        internal record Test2Command(double TransactionId, bool Flag, string PublishingName, IDictionary<string, object> CommandObject, IDictionary<string, object>? Optional);
         [RtmpCommand("test2")] internal abstract class Test2Handler : RtmpCommandHandler<Test2Command> { }
     }
 }
