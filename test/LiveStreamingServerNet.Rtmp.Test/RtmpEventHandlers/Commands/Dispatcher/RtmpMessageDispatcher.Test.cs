@@ -10,7 +10,6 @@ using LiveStreamingServerNet.Rtmp.Internal.Utilities;
 using LiveStreamingServerNet.Rtmp.Test.Utilities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities.ObjectModel;
 using NSubstitute;
 
 namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Commands.Dispatcher
@@ -19,26 +18,32 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Commands.Dispatcher
     {
         private readonly IFixture _fixture;
         private readonly TestHandler _testHandler;
+        private readonly Test2Handler _test2Handler;
         private readonly IServiceProvider _services;
 
         public RtmpMessageDispatcherTest()
         {
             _fixture = new Fixture();
             _testHandler = Substitute.For<TestHandler>();
+            _test2Handler = Substitute.For<Test2Handler>();
 
-            var map = new RtmpCommandHandlerMap(new Dictionary<string, Type> { { "test", typeof(TestHandler) } });
+            var map = new RtmpCommandHandlerMap(new Dictionary<string, Type> {
+                { "test", typeof(TestHandler) },
+                { "test2", typeof(Test2Handler) },
+            });
             var logger = Substitute.For<ILogger<RtmpCommandDispatcher>>();
 
             var services = new ServiceCollection();
-            services.AddSingleton(_testHandler);
-            services.AddSingleton<IRtmpCommandDispatcher>(svc => new RtmpCommandDispatcher(svc, map, logger));
+            services.AddSingleton(_testHandler)
+                    .AddSingleton(_test2Handler)
+                    .AddSingleton<IRtmpCommandDispatcher>(svc => new RtmpCommandDispatcher(svc, map, logger));
             _services = services.BuildServiceProvider();
         }
 
         [Theory]
         [InlineData(RtmpMessageType.CommandMessageAmf0)]
         [InlineData(RtmpMessageType.CommandMessageAmf3)]
-        public async Task DispatchAsync(byte messageTypeId)
+        public async Task DispatchAsync_For_Test1Command(byte messageTypeId)
         {
             // Arrange
             var sut = _services.GetRequiredService<IRtmpCommandDispatcher>();
@@ -75,9 +80,53 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Commands.Dispatcher
                 Arg.Any<CancellationToken>());
         }
 
-        internal record TestCommand(double TransactionId, IDictionary<string, object> CommandObject, string PublishingName);
+        [Theory]
+        [InlineData(RtmpMessageType.CommandMessageAmf0)]
+        [InlineData(RtmpMessageType.CommandMessageAmf3)]
+        public async Task DispatchAsync_For_Test2Command(byte messageTypeId)
+        {
+            // Arrange
+            var sut = _services.GetRequiredService<IRtmpCommandDispatcher>();
+            var clientContext = Substitute.For<IRtmpClientContext>();
 
-        [RtmpCommand("test")]
-        internal abstract class TestHandler : RtmpCommandHandler<TestCommand> { }
+            var commandName = "test2";
+            var transactionId = _fixture.Create<double>();
+            var flag = _fixture.Create<bool>();
+            var publishingName = _fixture.Create<string>();
+            var commandObject = new Dictionary<string, object> { { "key1", 1.0 }, { "key2", "value2" } };
+
+            var payloadBuffer = new NetBuffer();
+            payloadBuffer.WriteAmf(new List<object?>
+            {
+               commandName, transactionId, flag, publishingName, new AmfArray(commandObject)
+            }, messageTypeId == RtmpMessageType.CommandMessageAmf3 ? AmfEncodingType.Amf3 : AmfEncodingType.Amf0);
+
+            var chunkStreamContext = Substitute.For<IRtmpChunkStreamContext>();
+            chunkStreamContext.MessageHeader.MessageTypeId.Returns(messageTypeId);
+            chunkStreamContext.MessageHeader.MessageLength.Returns(payloadBuffer.Position);
+
+            payloadBuffer.MoveTo(0);
+
+            // Act
+            await sut.DispatchAsync(chunkStreamContext, clientContext, payloadBuffer, default);
+
+            // Assert
+            await _test2Handler.Received(1).HandleAsync(
+                chunkStreamContext,
+                clientContext,
+                Arg.Is<Test2Command>(x =>
+                    x.TransactionId == transactionId &&
+                    x.Flag == flag &&
+                    x.PublishingName == publishingName &&
+                    x.CommandObject.Match(commandObject) &&
+                    x.Optional == null),
+                Arg.Any<CancellationToken>());
+        }
+
+        internal record TestCommand(double TransactionId, IDictionary<string, object> CommandObject, string PublishingName);
+        [RtmpCommand("test")] internal abstract class TestHandler : RtmpCommandHandler<TestCommand> { }
+
+        internal record Test2Command(double TransactionId, bool Flag, string PublishingName, IDictionary<string, object> CommandObject, IDictionary<string, object> Optional);
+        [RtmpCommand("test2")] internal abstract class Test2Handler : RtmpCommandHandler<Test2Command> { }
     }
 }
