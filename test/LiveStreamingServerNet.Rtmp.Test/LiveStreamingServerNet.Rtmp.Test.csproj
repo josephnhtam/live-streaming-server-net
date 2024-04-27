@@ -32,9 +32,5 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\LiveStreamingServerNet.Rtmp\LiveStreamingServerNet.Rtmp.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="RtmpEventHandlers\Dispatcher\" />
-  </ItemGroup>
   
 </Project>
