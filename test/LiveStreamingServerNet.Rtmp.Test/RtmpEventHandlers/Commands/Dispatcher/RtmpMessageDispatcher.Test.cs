@@ -43,7 +43,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Commands.Dispatcher
         [Theory]
         [InlineData(RtmpMessageType.CommandMessageAmf0)]
         [InlineData(RtmpMessageType.CommandMessageAmf3)]
-        public async Task DispatchAsync_For_Test1Command(byte messageTypeId)
+        public async Task DispatchAsync_Should_DispatchTest1CommandToTest1Handler(byte messageTypeId)
         {
             // Arrange
             var sut = _services.GetRequiredService<IRtmpCommandDispatcher>();
@@ -83,7 +83,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Commands.Dispatcher
         [Theory]
         [InlineData(RtmpMessageType.CommandMessageAmf0)]
         [InlineData(RtmpMessageType.CommandMessageAmf3)]
-        public async Task DispatchAsync_For_Test2Command(byte messageTypeId)
+        public async Task DispatchAsync_Should_DispatchTest2CommandToTest2Handler(byte messageTypeId)
         {
             // Arrange
             var sut = _services.GetRequiredService<IRtmpCommandDispatcher>();
