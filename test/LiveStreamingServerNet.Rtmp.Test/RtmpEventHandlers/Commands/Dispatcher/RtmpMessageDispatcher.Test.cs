@@ -101,6 +101,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Commands.Dispatcher
             var publishingName = _fixture.Create<string>();
             var commandObject = new Dictionary<string, object> { { "key1", 1.0 }, { "key2", "value2" }, { "key3", true } };
 
+
             var payloadBuffer = new NetBuffer();
             payloadBuffer.WriteAmf(new List<object?>
             {
@@ -117,10 +118,10 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Commands.Dispatcher
                 .Returns(expectedResult);
 
             // Act
-            await sut.DispatchAsync(chunkStreamContext, clientContext, payloadBuffer, default);
+            var result = await sut.DispatchAsync(chunkStreamContext, clientContext, payloadBuffer, default);
 
             // Assert
-            var result = await _test2Handler.Received(1).HandleAsync(
+            await _test2Handler.Received(1).HandleAsync(
                   chunkStreamContext,
                   clientContext,
                   Arg.Is<Test2Command>(x =>
@@ -132,6 +133,33 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Commands.Dispatcher
                   Arg.Any<CancellationToken>());
 
             result.Should().Be(expectedResult);
+        }
+
+        [Theory]
+        [InlineData(RtmpMessageType.CommandMessageAmf0)]
+        [InlineData(RtmpMessageType.CommandMessageAmf3)]
+        public async Task DispatchAsync_Should_ReturnTrue_When_NoMatchingCommandHandler(byte messageTypeId)
+        {
+            // Arrange
+            var sut = _services.GetRequiredService<IRtmpCommandDispatcher>();
+            var clientContext = Substitute.For<IRtmpClientContext>();
+
+            var commandName = "test3";
+
+            var payloadBuffer = new NetBuffer();
+            payloadBuffer.WriteAmf(new List<object?> { commandName },
+                messageTypeId == RtmpMessageType.CommandMessageAmf3 ? AmfEncodingType.Amf3 : AmfEncodingType.Amf0);
+            payloadBuffer.MoveTo(0);
+
+            var chunkStreamContext = Substitute.For<IRtmpChunkStreamContext>();
+            chunkStreamContext.MessageHeader.MessageTypeId.Returns(messageTypeId);
+            chunkStreamContext.MessageHeader.MessageLength.Returns(payloadBuffer.Size);
+
+            // Act
+            var result = await sut.DispatchAsync(chunkStreamContext, clientContext, payloadBuffer, default);
+
+            // Assert
+            result.Should().BeTrue();
         }
 
         internal record TestCommand(double TransactionId, IDictionary<string, object> CommandObject, string PublishingName);
