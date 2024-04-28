@@ -1,8 +1,6 @@
 ﻿using LiveStreamingServerNet.Flv.Internal.Contracts;
-using LiveStreamingServerNet.Networking;
 using LiveStreamingServerNet.Networking.Contracts;
 using Nito.AsyncEx;
-using System.Threading;
 
 namespace LiveStreamingServerNet.Flv.Internal
 {
@@ -44,7 +42,7 @@ namespace LiveStreamingServerNet.Flv.Internal
             catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { }
         }
 
-        public async ValueTask WriteTagAsync(FlvTagHeader tagHeader, Action<INetBuffer> payloadBufer, CancellationToken cancellationToken)
+        public async ValueTask WriteTagAsync(FlvTagType tagType, uint timestamp, Action<INetBuffer> payloadBufer, CancellationToken cancellationToken)
         {
             try
             {
@@ -52,9 +50,16 @@ namespace LiveStreamingServerNet.Flv.Internal
 
                 using var netBuffer = _netBufferPool.Obtain();
 
-                tagHeader.Write(netBuffer);
+                netBuffer.MoveTo(FlvTagHeader.Size);
                 payloadBufer.Invoke(netBuffer);
-                netBuffer.WriteUInt32BigEndian((uint)netBuffer.Size);
+
+                var payloadSize = (uint)(netBuffer.Size - FlvTagHeader.Size);
+                var packageSize = (uint)netBuffer.Size;
+
+                netBuffer.WriteUInt32BigEndian(packageSize);
+
+                var header = new FlvTagHeader(tagType, payloadSize, timestamp);
+                header.Write(netBuffer.MoveTo(0));
 
                 await _streamWriter.WriteAsync(
                     new ArraySegment<byte>(netBuffer.UnderlyingBuffer, 0, netBuffer.Size),

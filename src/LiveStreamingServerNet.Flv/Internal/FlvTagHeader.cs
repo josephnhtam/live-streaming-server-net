@@ -4,6 +4,8 @@ namespace LiveStreamingServerNet.Flv.Internal
 {
     internal record struct FlvTagHeader(FlvTagType tagType, uint dataSize, uint timestamp)
     {
+        public const int Size = 11;
+
         public void Write(INetBuffer netBuffer)
         {
             netBuffer.Write((byte)tagType);

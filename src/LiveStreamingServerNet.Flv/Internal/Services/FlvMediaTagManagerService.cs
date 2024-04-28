@@ -115,9 +115,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
                 _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
             };
 
-            var flvTagHeader = new FlvTagHeader(flvTagType, (uint)payloadSize, timestamp);
-
-            await client.WriteTagAsync(flvTagHeader,
+            await client.WriteTagAsync(flvTagType, timestamp,
                 (netBuffer) => netBuffer.Write(payloadBuffer, 0, payloadSize), cancellation);
         }
     }
