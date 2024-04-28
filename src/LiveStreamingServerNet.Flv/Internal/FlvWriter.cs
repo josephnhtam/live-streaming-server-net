@@ -1,29 +1,33 @@
 ﻿using LiveStreamingServerNet.Flv.Internal.Contracts;
 using LiveStreamingServerNet.Networking;
 using LiveStreamingServerNet.Networking.Contracts;
+using Nito.AsyncEx;
+using System.Threading;
 
 namespace LiveStreamingServerNet.Flv.Internal
 {
     internal class FlvWriter : IFlvWriter
     {
         private readonly IStreamWriter _streamWriter;
-        private readonly INetBuffer _netBuffer;
-        private readonly SemaphoreSlim _syncLock;
+        private readonly INetBufferPool _netBufferPool;
+        private readonly AsyncLock _syncLock;
 
         private bool _isDisposed;
 
-        public FlvWriter(IStreamWriter streamWriter)
+        public FlvWriter(IStreamWriter streamWriter, INetBufferPool netBufferPool)
         {
             _streamWriter = streamWriter;
 
-            _netBuffer = new NetBuffer();
-            _syncLock = new SemaphoreSlim(1, 1);
+            _netBufferPool = netBufferPool;
+            _syncLock = new AsyncLock();
         }
 
         public async ValueTask WriteHeaderAsync(bool allowAudioTags, bool allowVideoTags, CancellationToken cancellationToken)
         {
             try
             {
+                using var _ = await _syncLock.LockAsync(cancellationToken);
+
                 byte typeFlags = 0;
 
                 if (allowAudioTags)
@@ -34,7 +38,7 @@ namespace LiveStreamingServerNet.Flv.Internal
 
                 await _streamWriter.WriteAsync(
                     new byte[] {
-                    0x46, 0x4c, 0x56, 0x01, typeFlags, 0x00, 0x00, 0x00, 0x09, 0x00, 0x00, 0x00, 0x00
+                        0x46, 0x4c, 0x56, 0x01, typeFlags, 0x00, 0x00, 0x00, 0x09, 0x00, 0x00, 0x00, 0x00
                     }, cancellationToken);
             }
             catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { }
@@ -44,22 +48,19 @@ namespace LiveStreamingServerNet.Flv.Internal
         {
             try
             {
-                await _syncLock.WaitAsync(cancellationToken);
+                using var _ = await _syncLock.LockAsync(cancellationToken);
 
-                tagHeader.Write(_netBuffer);
-                payloadBufer.Invoke(_netBuffer);
-                _netBuffer.WriteUInt32BigEndian((uint)_netBuffer.Size);
+                using var netBuffer = _netBufferPool.Obtain();
+
+                tagHeader.Write(netBuffer);
+                payloadBufer.Invoke(netBuffer);
+                netBuffer.WriteUInt32BigEndian((uint)netBuffer.Size);
 
                 await _streamWriter.WriteAsync(
-                    new ArraySegment<byte>(_netBuffer.UnderlyingBuffer, 0, _netBuffer.Size),
+                    new ArraySegment<byte>(netBuffer.UnderlyingBuffer, 0, netBuffer.Size),
                     cancellationToken);
             }
             catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { }
-            finally
-            {
-                _netBuffer.Reset();
-                _syncLock.Release();
-            }
         }
 
         public async ValueTask DisposeAsync()
@@ -67,18 +68,9 @@ namespace LiveStreamingServerNet.Flv.Internal
             if (_isDisposed)
                 return;
 
+            using var _ = await _syncLock.LockAsync();
+
             _isDisposed = true;
-
-            try
-            {
-                await _syncLock.WaitAsync();
-                _netBuffer.Dispose();
-            }
-            finally
-            {
-                _syncLock.Release();
-            }
-
             GC.SuppressFinalize(this);
         }
     }
