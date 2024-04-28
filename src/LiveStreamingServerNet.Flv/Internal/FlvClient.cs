@@ -84,6 +84,7 @@ namespace LiveStreamingServerNet.Flv.Internal
             _isDiposed = true;
 
             _mediaTagManager.UnregisterClient(this);
+            _stoppingCts.Cancel();
             _stoppingCts.Dispose();
             await _flvWriter.DisposeAsync();
 
