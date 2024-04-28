@@ -10,7 +10,7 @@ using System.Threading.Channels;
 
 namespace LiveStreamingServerNet.Flv.Internal.Services
 {
-    internal class FlvMediaTagManagerService : IFlvMediaTagManagerService, IAsyncDisposable
+    internal class FlvMediaTagBroadcasterService : IFlvMediaTagBroadcasterService, IAsyncDisposable
     {
         private readonly IMediaPackageDiscarderFactory _mediaPackageDiscarderFactory;
         private readonly IFlvMediaTagSenderService _mediaTagSender;
@@ -19,17 +19,17 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
         private readonly ConcurrentDictionary<IFlvClient, ClientMediaContext> _clientMediaContexts = new();
         private readonly ConcurrentDictionary<IFlvClient, Task> _clientTasks = new();
 
-        public FlvMediaTagManagerService(
+        public FlvMediaTagBroadcasterService(
             IMediaPackageDiscarderFactory mediaPackageDiscarderFactory,
             IFlvMediaTagSenderService mediaTagSender,
-            ILogger<FlvMediaTagManagerService> logger)
+            ILogger<FlvMediaTagBroadcasterService> logger)
         {
             _mediaPackageDiscarderFactory = mediaPackageDiscarderFactory;
             _mediaTagSender = mediaTagSender;
             _logger = logger;
         }
 
-        public ValueTask EnqueueMediaTagAsync(IFlvStreamContext streamContext, IReadOnlyList<IFlvClient> subscribers, MediaType mediaType, uint timestamp, bool isSkippable, IRentedBuffer rentedBuffer)
+        public ValueTask BroadcastMediaTagAsync(IFlvStreamContext streamContext, IReadOnlyList<IFlvClient> subscribers, MediaType mediaType, uint timestamp, bool isSkippable, IRentedBuffer rentedBuffer)
         {
             if (!subscribers.Any())
                 return ValueTask.CompletedTask;

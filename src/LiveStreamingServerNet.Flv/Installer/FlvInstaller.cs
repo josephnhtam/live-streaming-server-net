@@ -37,7 +37,7 @@ namespace LiveStreamingServerNet.Flv.Installer
             services.AddSingleton<IFlvMediaTagSenderService, FlvMediaTagSenderService>()
                     .AddSingleton<IFlvMediaTagCacherService, FlvMediaTagCacherService>()
                     .AddSingleton<IFlvStreamManagerService, FlvStreamManagerService>()
-                    .AddSingleton<IFlvMediaTagManagerService, FlvMediaTagManagerService>();
+                    .AddSingleton<IFlvMediaTagBroadcasterService, FlvMediaTagBroadcasterService>();
 
             configure?.Invoke(new FlvConfigurator(services));
 

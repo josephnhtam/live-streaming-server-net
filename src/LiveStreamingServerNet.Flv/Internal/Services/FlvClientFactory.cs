@@ -7,23 +7,23 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
     internal class FlvClientFactory : IFlvClientFactory
     {
         private readonly IFlvWriterFactory _flvWriterFactory;
-        private readonly IFlvMediaTagManagerService _mediaTagManager;
+        private readonly IFlvMediaTagBroadcasterService _mediaTagBroadcaster;
         private readonly ILogger<FlvClient> _logger;
 
         public FlvClientFactory(
             IFlvWriterFactory flvWriterFactory,
-            IFlvMediaTagManagerService mediaTagManager,
+            IFlvMediaTagBroadcasterService mediaTagBroadcaster,
             ILogger<FlvClient> logger)
         {
             _flvWriterFactory = flvWriterFactory;
-            _mediaTagManager = mediaTagManager;
+            _mediaTagBroadcaster = mediaTagBroadcaster;
             _logger = logger;
         }
 
         public IFlvClient Create(string clientId, string streamPath, IStreamWriter streamWriter, CancellationToken stoppingToken)
         {
             var flvWriter = _flvWriterFactory.Create(streamWriter);
-            return new FlvClient(clientId, streamPath, _mediaTagManager, flvWriter, _logger, stoppingToken);
+            return new FlvClient(clientId, streamPath, _mediaTagBroadcaster, flvWriter, _logger, stoppingToken);
         }
     }
 }

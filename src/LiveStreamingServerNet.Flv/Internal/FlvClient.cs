@@ -14,7 +14,7 @@ namespace LiveStreamingServerNet.Flv.Internal
 
         private readonly ILogger _logger;
         private readonly IFlvWriter _flvWriter;
-        private readonly IFlvMediaTagManagerService _mediaTagManager;
+        private readonly IFlvMediaTagBroadcasterService _mediaTagBroadcaster;
         private readonly TaskCompletionSource _initializationTcs = new();
 
         private readonly CancellationTokenSource _stoppingCts;
@@ -27,12 +27,12 @@ namespace LiveStreamingServerNet.Flv.Internal
         public FlvClient(
             string clientId,
             string streamPath,
-            IFlvMediaTagManagerService mediaTagManager,
+            IFlvMediaTagBroadcasterService mediaTagBroadcaster,
             IFlvWriter flvWriter,
             ILogger<FlvClient> logger,
             CancellationToken stoppingToken)
         {
-            _mediaTagManager = mediaTagManager;
+            _mediaTagBroadcaster = mediaTagBroadcaster;
             _flvWriter = flvWriter;
             _logger = logger;
 
@@ -53,7 +53,7 @@ namespace LiveStreamingServerNet.Flv.Internal
             _initializationTask = _initializationTcs.Task;
             _completeTask = _taskCompletionSource.Task;
 
-            _mediaTagManager.RegisterClient(this);
+            _mediaTagBroadcaster.RegisterClient(this);
         }
 
         public void CompleteInitialization()
@@ -83,7 +83,7 @@ namespace LiveStreamingServerNet.Flv.Internal
 
             _isDiposed = true;
 
-            _mediaTagManager.UnregisterClient(this);
+            _mediaTagBroadcaster.UnregisterClient(this);
             _stoppingCts.Cancel();
             _stoppingCts.Dispose();
             await _flvWriter.DisposeAsync();

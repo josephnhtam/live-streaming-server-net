@@ -4,9 +4,9 @@ using LiveStreamingServerNet.Utilities.Contracts;
 
 namespace LiveStreamingServerNet.Flv.Internal.Services.Contracts
 {
-    internal interface IFlvMediaTagManagerService
+    internal interface IFlvMediaTagBroadcasterService
     {
-        ValueTask EnqueueMediaTagAsync(
+        ValueTask BroadcastMediaTagAsync(
             IFlvStreamContext streamContext,
             IReadOnlyList<IFlvClient> subscribers,
             MediaType mediaType,
