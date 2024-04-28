@@ -6,12 +6,12 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
     internal class FlvClientHandler : IFlvClientHandler
     {
         private readonly IFlvStreamManagerService _streamManager;
-        private readonly IFlvMediaTagManagerService _mediaTagManager;
+        private readonly IFlvMediaTagCacherService _mediaTagCacher;
 
-        public FlvClientHandler(IFlvStreamManagerService streamManager, IFlvMediaTagManagerService mediaTagManager)
+        public FlvClientHandler(IFlvStreamManagerService streamManager, IFlvMediaTagCacherService mediaTagCacher)
         {
             _streamManager = streamManager;
-            _mediaTagManager = mediaTagManager;
+            _mediaTagCacher = mediaTagCacher;
         }
 
         public async Task RunClientAsync(IFlvClient client)
@@ -42,8 +42,8 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
 
         private async ValueTask SendCachedFlvTagsAsync(IFlvClient client, IFlvStreamContext streamContext, CancellationToken cancellationToken)
         {
-            await _mediaTagManager.SendCachedHeaderTagsAsync(client, streamContext, 0, cancellationToken);
-            await _mediaTagManager.SendCachedGroupOfPicturesTagsAsync(client, streamContext, cancellationToken);
+            await _mediaTagCacher.SendCachedHeaderTagsAsync(client, streamContext, 0, cancellationToken);
+            await _mediaTagCacher.SendCachedGroupOfPicturesTagsAsync(client, streamContext, cancellationToken);
         }
     }
 }

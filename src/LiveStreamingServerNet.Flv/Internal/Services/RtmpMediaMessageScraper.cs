@@ -9,12 +9,17 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
     internal class RtmpMediaMessageScraper : IRtmpMediaMessageInterceptor
     {
         private readonly IFlvStreamManagerService _streamManager;
-        private readonly IFlvMediaTagManagerService _mediaMessageManager;
+        private readonly IFlvMediaTagManagerService _mediaTagManager;
+        private readonly IFlvMediaTagCacherService _mediaTagCacher;
 
-        public RtmpMediaMessageScraper(IFlvStreamManagerService streamManager, IFlvMediaTagManagerService mediaMessageManager)
+        public RtmpMediaMessageScraper(
+            IFlvStreamManagerService streamManager,
+            IFlvMediaTagManagerService mediaMessageManager,
+            IFlvMediaTagCacherService mediaTagCacher)
         {
             _streamManager = streamManager;
-            _mediaMessageManager = mediaMessageManager;
+            _mediaTagManager = mediaMessageManager;
+            _mediaTagCacher = mediaTagCacher;
         }
 
         public async ValueTask OnCachePicture(string streamPath, MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp)
@@ -23,7 +28,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
             if (streamContext == null)
                 return;
 
-            await _mediaMessageManager.CachePictureAsync(streamContext, mediaType, rentedBuffer, timestamp);
+            await _mediaTagCacher.CachePictureAsync(streamContext, mediaType, rentedBuffer, timestamp);
         }
 
         public async ValueTask OnClearGroupOfPicturesCache(string streamPath)
@@ -32,7 +37,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
             if (streamContext == null)
                 return;
 
-            await _mediaMessageManager.ClearGroupOfPicturesCacheAsync(streamContext);
+            await _mediaTagCacher.ClearGroupOfPicturesCacheAsync(streamContext);
         }
 
         public async ValueTask OnCacheSequenceHeader(string streamPath, MediaType mediaType, byte[] sequenceHeader)
@@ -41,7 +46,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
             if (streamContext == null)
                 return;
 
-            await _mediaMessageManager.CacheSequenceHeaderAsync(streamContext, mediaType, sequenceHeader);
+            await _mediaTagCacher.CacheSequenceHeaderAsync(streamContext, mediaType, sequenceHeader);
 
             var subscribers = _streamManager.GetSubscribers(streamPath);
             if (!subscribers.Any())
@@ -50,7 +55,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
             var rentedBuffer = new RentedBuffer(sequenceHeader.Length, subscribers.Count);
             Array.Copy(sequenceHeader, rentedBuffer.Buffer, sequenceHeader.Length);
 
-            await _mediaMessageManager.EnqueueMediaTagAsync(streamContext, subscribers, mediaType, 0, false, rentedBuffer);
+            await _mediaTagManager.EnqueueMediaTagAsync(streamContext, subscribers, mediaType, 0, false, rentedBuffer);
         }
 
         public async ValueTask OnReceiveMediaMessage(string streamPath, MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp, bool isSkippable)
@@ -63,7 +68,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
             if (!subscribers.Any())
                 return;
 
-            await _mediaMessageManager.EnqueueMediaTagAsync(streamContext, subscribers, mediaType, timestamp, isSkippable, rentedBuffer);
+            await _mediaTagManager.EnqueueMediaTagAsync(streamContext, subscribers, mediaType, timestamp, isSkippable, rentedBuffer);
         }
     }
 }

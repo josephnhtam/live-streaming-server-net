@@ -1,80 +1,32 @@
 ﻿using LiveStreamingServerNet.Flv.Internal.Contracts;
+using LiveStreamingServerNet.Flv.Internal.Logging;
 using LiveStreamingServerNet.Flv.Internal.MediaPackageDiscarding.Contracts;
 using LiveStreamingServerNet.Flv.Internal.Services.Contracts;
 using LiveStreamingServerNet.Rtmp;
 using LiveStreamingServerNet.Utilities.Contracts;
 using Microsoft.Extensions.Logging;
+using System.Collections.Concurrent;
+using System.Threading.Channels;
 
 namespace LiveStreamingServerNet.Flv.Internal.Services
 {
-    internal partial class FlvMediaTagManagerService : IFlvMediaTagManagerService, IAsyncDisposable
+    internal class FlvMediaTagManagerService : IFlvMediaTagManagerService, IAsyncDisposable
     {
         private readonly IMediaPackageDiscarderFactory _mediaPackageDiscarderFactory;
+        private readonly IFlvMediaTagSenderService _mediaTagSender;
         private readonly ILogger _logger;
+
+        private readonly ConcurrentDictionary<IFlvClient, ClientMediaContext> _clientMediaContexts = new();
+        private readonly ConcurrentDictionary<IFlvClient, Task> _clientTasks = new();
 
         public FlvMediaTagManagerService(
             IMediaPackageDiscarderFactory mediaPackageDiscarderFactory,
+            IFlvMediaTagSenderService mediaTagSender,
             ILogger<FlvMediaTagManagerService> logger)
         {
             _mediaPackageDiscarderFactory = mediaPackageDiscarderFactory;
+            _mediaTagSender = mediaTagSender;
             _logger = logger;
-        }
-
-        public ValueTask CacheSequenceHeaderAsync(IFlvStreamContext streamContext, MediaType mediaType, byte[] sequenceHeader)
-        {
-            switch (mediaType)
-            {
-                case MediaType.Video:
-                    streamContext.VideoSequenceHeader = sequenceHeader;
-                    break;
-                case MediaType.Audio:
-                    streamContext.AudioSequenceHeader = sequenceHeader;
-                    break;
-            }
-
-            return ValueTask.CompletedTask;
-        }
-
-        public ValueTask CachePictureAsync(IFlvStreamContext streamContext, MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp)
-        {
-            rentedBuffer.Claim();
-            streamContext.GroupOfPicturesCache.Add(new PicturesCache(mediaType, timestamp, rentedBuffer));
-            return ValueTask.CompletedTask;
-        }
-
-        public ValueTask ClearGroupOfPicturesCacheAsync(IFlvStreamContext streamContext)
-        {
-            streamContext.GroupOfPicturesCache.Clear();
-            return ValueTask.CompletedTask;
-        }
-
-        public async ValueTask SendCachedGroupOfPicturesTagsAsync(IFlvClient client, IFlvStreamContext streamContext, CancellationToken cancellation)
-        {
-            foreach (var picture in streamContext.GroupOfPicturesCache.Get())
-            {
-                await SendMediaTagAsync(client, picture.Type, picture.Payload.Buffer, picture.Payload.Size, picture.Timestamp, cancellation);
-                picture.Payload.Unclaim();
-            }
-        }
-
-        public async ValueTask SendCachedHeaderTagsAsync(IFlvClient client, IFlvStreamContext streamContext, uint timestamp, CancellationToken cancellation)
-        {
-            var audioSequenceHeader = streamContext.AudioSequenceHeader;
-            if (audioSequenceHeader != null)
-            {
-                await SendMediaTagAsync(client, MediaType.Audio, audioSequenceHeader, audioSequenceHeader.Length, timestamp, cancellation);
-            }
-
-            var videoSequenceHeader = streamContext.VideoSequenceHeader;
-            if (videoSequenceHeader != null)
-            {
-                await SendMediaTagAsync(client, MediaType.Video, videoSequenceHeader, videoSequenceHeader.Length, timestamp, cancellation);
-            }
-        }
-
-        public ValueTask SendCachedMetaDataTagAsync(IFlvClient client, IFlvStreamContext streamContext, uint timestamp, CancellationToken cancellation)
-        {
-            return ValueTask.CompletedTask;
         }
 
         public ValueTask EnqueueMediaTagAsync(IFlvStreamContext streamContext, IReadOnlyList<IFlvClient> subscribers, MediaType mediaType, uint timestamp, bool isSkippable, IRentedBuffer rentedBuffer)
@@ -100,23 +52,147 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
             return ValueTask.CompletedTask;
         }
 
-        private async ValueTask SendMediaTagAsync(
-            IFlvClient client,
-            MediaType type,
-            byte[] payloadBuffer,
-            int payloadSize,
-            uint timestamp,
-            CancellationToken cancellation)
+        private ClientMediaContext? GetMediaContext(IFlvClient clientContext)
         {
-            var flvTagType = type switch
-            {
-                MediaType.Video => FlvTagType.Video,
-                MediaType.Audio => FlvTagType.Audio,
-                _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
-            };
-
-            await client.WriteTagAsync(flvTagType, timestamp,
-                (netBuffer) => netBuffer.Write(payloadBuffer, 0, payloadSize), cancellation);
+            return _clientMediaContexts.GetValueOrDefault(clientContext);
         }
+
+        public void RegisterClient(IFlvClient client)
+        {
+            var mediaPackageDiscarder = _mediaPackageDiscarderFactory.Create(client.ClientId);
+            var context = new ClientMediaContext(client, mediaPackageDiscarder);
+            _clientMediaContexts[client] = context;
+
+            var clientTask = Task.Run(() => ClientTask(context));
+            _clientTasks[client] = clientTask;
+            _ = clientTask.ContinueWith(_ => _clientTasks.TryRemove(client, out var _));
+        }
+
+        public void UnregisterClient(IFlvClient client)
+        {
+            if (_clientMediaContexts.TryRemove(client, out var context))
+            {
+                context.Stop();
+            }
+        }
+
+        public async ValueTask DisposeAsync()
+        {
+            await Task.WhenAll(_clientTasks.Values);
+        }
+
+        private async Task ClientTask(ClientMediaContext context)
+        {
+            var client = context.Client;
+            var cancellation = context.CancellationToken;
+
+            try
+            {
+                await client.UntilIntializationComplete();
+
+                while (!cancellation.IsCancellationRequested)
+                {
+                    var package = await context.ReadPackageAsync(cancellation);
+
+                    try
+                    {
+                        await _mediaTagSender.SendMediaTagAsync(
+                            client,
+                            package.MediaType,
+                            package.RentedPayload.Buffer,
+                            package.RentedPayload.Size,
+                            package.Timestamp,
+                            cancellation);
+                    }
+                    catch (OperationCanceledException) when (cancellation.IsCancellationRequested) { }
+                    catch (Exception ex)
+                    {
+                        _logger.FailedToSendMediaMessage(client.ClientId, ex);
+                    }
+                    finally
+                    {
+                        package.RentedPayload.Unclaim();
+                    }
+                }
+            }
+            catch (OperationCanceledException) when (cancellation.IsCancellationRequested) { }
+            catch (ChannelClosedException) { }
+
+            while (context.ReadPackage(out var package))
+            {
+                package.RentedPayload.Unclaim();
+            }
+        }
+
+        private class ClientMediaContext
+        {
+            public readonly IFlvClient Client;
+            public readonly CancellationToken CancellationToken;
+            public long OutstandingPackagesSize => _outstandingPackagesSize;
+            public long OutstandingPackagesCount => _packageChannel.Reader.Count;
+
+            private readonly IMediaPackageDiscarder _mediaPackageDiscarder;
+
+            private readonly Channel<ClientMediaPackage> _packageChannel;
+            private readonly CancellationTokenSource _cts;
+
+            private long _outstandingPackagesSize;
+
+            public ClientMediaContext(IFlvClient client, IMediaPackageDiscarder mediaPackageDiscarder)
+            {
+                Client = client;
+                _mediaPackageDiscarder = mediaPackageDiscarder;
+
+                _packageChannel = Channel.CreateUnbounded<ClientMediaPackage>();
+                _cts = new CancellationTokenSource();
+                CancellationToken = _cts.Token;
+            }
+
+            public void Stop()
+            {
+                _packageChannel.Writer.Complete();
+                _cts.Cancel();
+            }
+
+            public bool AddPackage(ref ClientMediaPackage package)
+            {
+                if (ShouldSkipPackage(this, ref package))
+                {
+                    return false;
+                }
+
+                if (!_packageChannel.Writer.TryWrite(package))
+                {
+                    return false;
+                }
+
+                Interlocked.Add(ref _outstandingPackagesSize, package.RentedPayload.Size);
+                return true;
+            }
+
+            public async ValueTask<ClientMediaPackage> ReadPackageAsync(CancellationToken cancellation)
+            {
+                var package = await _packageChannel.Reader.ReadAsync(cancellation);
+                Interlocked.Add(ref _outstandingPackagesSize, -package.RentedPayload.Size);
+                return package;
+            }
+
+            public bool ReadPackage(out ClientMediaPackage package)
+            {
+                return _packageChannel.Reader.TryRead(out package);
+            }
+
+            private bool ShouldSkipPackage(ClientMediaContext context, ref ClientMediaPackage package)
+            {
+                return _mediaPackageDiscarder.ShouldDiscardMediaPackage(
+                    package.IsSkippable, context.OutstandingPackagesSize, context.OutstandingPackagesCount);
+            }
+        }
+
+        private record struct ClientMediaPackage(
+            MediaType MediaType,
+            uint Timestamp,
+            IRentedBuffer RentedPayload,
+            bool IsSkippable);
     }
 }
