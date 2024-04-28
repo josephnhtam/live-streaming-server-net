@@ -73,7 +73,7 @@ namespace LiveStreamingServerNet.Flv.Internal
 
         public void Stop()
         {
-            _stoppingCts?.Cancel();
+            _stoppingCts.Cancel();
         }
 
         public async ValueTask DisposeAsync()
@@ -84,10 +84,7 @@ namespace LiveStreamingServerNet.Flv.Internal
             _isDiposed = true;
 
             _mediaTagManager.UnregisterClient(this);
-
-            if (_stoppingCts != null)
-                _stoppingCts.Dispose();
-
+            _stoppingCts.Dispose();
             await _flvWriter.DisposeAsync();
 
             GC.SuppressFinalize(this);
