@@ -42,7 +42,7 @@ namespace LiveStreamingServerNet.Flv.Test
             // Assert
             _mediaTagBroadcaster.Received(1).RegisterClient(_sut);
 
-            _sut.UntilIntializationComplete().IsCompleted.Should().BeFalse();
+            _sut.UntilInitializationComplete().IsCompleted.Should().BeFalse();
             _sut.UntilComplete().IsCompleted.Should().BeFalse();
         }
 
@@ -53,7 +53,7 @@ namespace LiveStreamingServerNet.Flv.Test
             _sut.CompleteInitialization();
 
             // Assert
-            _sut.UntilIntializationComplete().IsCompleted.Should().BeTrue();
+            _sut.UntilInitializationComplete().IsCompleted.Should().BeTrue();
         }
 
         [Fact]
@@ -63,7 +63,7 @@ namespace LiveStreamingServerNet.Flv.Test
             _sut.Stop();
 
             // Assert
-            _sut.UntilIntializationComplete().IsCanceled.Should().BeTrue();
+            _sut.UntilInitializationComplete().IsCanceled.Should().BeTrue();
             _sut.UntilComplete().IsCompleted.Should().BeTrue();
         }
 
@@ -74,7 +74,7 @@ namespace LiveStreamingServerNet.Flv.Test
             _stoppingCts.Cancel();
 
             // Assert
-            _sut.UntilIntializationComplete().IsCanceled.Should().BeTrue();
+            _sut.UntilInitializationComplete().IsCanceled.Should().BeTrue();
             _sut.UntilComplete().IsCompleted.Should().BeTrue();
         }
 
@@ -95,7 +95,7 @@ namespace LiveStreamingServerNet.Flv.Test
             await _sut.DisposeAsync();
 
             // Assert
-            _sut.UntilIntializationComplete().IsCanceled.Should().BeTrue();
+            _sut.UntilInitializationComplete().IsCanceled.Should().BeTrue();
             _sut.UntilComplete().IsCompleted.Should().BeTrue();
         }
 
