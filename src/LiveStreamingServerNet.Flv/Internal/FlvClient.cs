@@ -17,10 +17,10 @@ namespace LiveStreamingServerNet.Flv.Internal
         private readonly IFlvMediaTagManagerService _mediaTagManager;
         private readonly TaskCompletionSource _initializationTcs = new();
 
-        private CancellationTokenSource? _stoppingCts;
-        private TaskCompletionSource? _taskCompletionSource;
-        private Task? _initializationTask;
-        private Task? _completeTask;
+        private readonly CancellationTokenSource _stoppingCts;
+        private readonly TaskCompletionSource _taskCompletionSource;
+        private readonly Task _initializationTask;
+        private readonly Task _completeTask;
 
         private bool _isDiposed;
 
@@ -63,12 +63,12 @@ namespace LiveStreamingServerNet.Flv.Internal
 
         public Task UntilIntializationComplete()
         {
-            return _initializationTask ?? Task.CompletedTask;
+            return _initializationTask;
         }
 
         public Task UntilComplete()
         {
-            return _completeTask ?? Task.CompletedTask;
+            return _completeTask;
         }
 
         public void Stop()
