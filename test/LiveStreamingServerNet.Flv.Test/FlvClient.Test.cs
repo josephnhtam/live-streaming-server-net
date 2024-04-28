@@ -17,7 +17,7 @@ namespace LiveStreamingServerNet.Flv.Test
         private readonly string _streamPath;
         private readonly CancellationTokenSource _stoppingCts;
         private readonly CancellationToken _stoppingToken;
-        private readonly IFlvMediaTagManagerService _mediaTagManager;
+        private readonly IFlvMediaTagBroadcasterService _mediaTagBroadcaster;
         private readonly IFlvWriter _flvWriter;
         private readonly ILogger<FlvClient> _logger;
         private readonly IFlvClient _sut;
@@ -30,17 +30,17 @@ namespace LiveStreamingServerNet.Flv.Test
             _stoppingCts = new CancellationTokenSource();
             _stoppingToken = _stoppingCts.Token;
 
-            _mediaTagManager = Substitute.For<IFlvMediaTagManagerService>();
+            _mediaTagBroadcaster = Substitute.For<IFlvMediaTagBroadcasterService>();
             _flvWriter = Substitute.For<IFlvWriter>();
             _logger = Substitute.For<ILogger<FlvClient>>();
-            _sut = new FlvClient(_clientId, _streamPath, _mediaTagManager, _flvWriter, _logger, _stoppingToken);
+            _sut = new FlvClient(_clientId, _streamPath, _mediaTagBroadcaster, _flvWriter, _logger, _stoppingToken);
         }
 
         [Fact]
         public void Constructor_Should_RegisterClient_WithMediaTagManager()
         {
             // Assert
-            _mediaTagManager.Received(1).RegisterClient(_sut);
+            _mediaTagBroadcaster.Received(1).RegisterClient(_sut);
 
             _sut.UntilIntializationComplete().IsCompleted.Should().BeFalse();
             _sut.UntilComplete().IsCompleted.Should().BeFalse();
@@ -85,7 +85,7 @@ namespace LiveStreamingServerNet.Flv.Test
             await _sut.DisposeAsync();
 
             // Assert
-            _mediaTagManager.Received(1).UnregisterClient(_sut);
+            _mediaTagBroadcaster.Received(1).UnregisterClient(_sut);
         }
 
         [Fact]
