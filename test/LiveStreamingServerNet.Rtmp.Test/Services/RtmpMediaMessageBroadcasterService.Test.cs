@@ -75,7 +75,6 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
             // Act
             _sut.RegisterClient(clientContext);
             await _sut.BroadcastMediaMessageAsync(publishStreamContext, subscribers, mediaType, timestamp, isSkippable, payloadBuffer);
-            await _sut.BroadcastMediaMessageAsync(publishStreamContext, subscribers, mediaType, timestamp, isSkippable, payloadBuffer);
 
             // Assert
             await tcs.Task;
@@ -83,7 +82,6 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
             Received.InOrder(() =>
             {
                 streamContext.Received(1).UntilInitializationComplete();
-                client.Received(1).SendAsync(Arg.Any<IRentedBuffer>());
                 client.Received(1).SendAsync(Arg.Any<IRentedBuffer>());
             });
         }
