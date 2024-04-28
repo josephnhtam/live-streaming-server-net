@@ -145,26 +145,28 @@ namespace LiveStreamingServerNet.Flv.Test
         public async Task WriteTagAsync_Should_WriteTag()
         {
             // Arrange
-            var tagHeader = _fixture.Create<FlvTagHeader>();
+            var tagType = _fixture.Create<FlvTagType>();
+            var timestamp = _fixture.Create<uint>();
             var payloadBufer = Substitute.For<Action<INetBuffer>>();
 
             // Act
-            await _sut.WriteTagAsync(tagHeader, payloadBufer, default);
+            await _sut.WriteTagAsync(tagType, timestamp, payloadBufer, default);
 
             // Assert
-            await _flvWriter.Received(1).WriteTagAsync(tagHeader, payloadBufer, Arg.Any<CancellationToken>());
+            await _flvWriter.Received(1).WriteTagAsync(tagType, timestamp, payloadBufer, Arg.Any<CancellationToken>());
         }
 
         [Fact]
         public async Task WriteTagAsync_Should_Stop_When_ExceptionThrown()
         {
             // Arrange
-            var tagHeader = _fixture.Create<FlvTagHeader>();
+            var tagType = _fixture.Create<FlvTagType>();
+            var timestamp = _fixture.Create<uint>();
             var payloadBufer = Substitute.For<Action<INetBuffer>>();
-            _flvWriter.WriteTagAsync(tagHeader, payloadBufer, Arg.Any<CancellationToken>()).Throws(new Exception());
+            _flvWriter.WriteTagAsync(tagType, timestamp, payloadBufer, Arg.Any<CancellationToken>()).Throws(new Exception());
 
             // Act
-            await _sut.WriteTagAsync(tagHeader, payloadBufer, default);
+            await _sut.WriteTagAsync(tagType, timestamp, payloadBufer, default);
 
             // Assert
             _sut.UntilComplete().IsCompleted.Should().BeTrue();
