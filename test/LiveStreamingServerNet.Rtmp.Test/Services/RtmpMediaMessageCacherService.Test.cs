@@ -19,7 +19,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
 {
     public class RtmpMediaMessageCacherServiceTest
     {
-        private readonly Fixture _fixture;
+        private readonly IFixture _fixture;
         private readonly IRtmpChunkMessageSenderService _chunkMessageSender;
         private readonly IRtmpMediaMessageInterceptionService _interception;
         private readonly MediaMessageConfiguration _config;

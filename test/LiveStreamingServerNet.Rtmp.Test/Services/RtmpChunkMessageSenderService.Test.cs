@@ -11,7 +11,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
 {
     public class RtmpChunkMessageSenderServiceTest
     {
-        private readonly Fixture _fixture;
+        private readonly IFixture _fixture;
         private readonly INetBufferPool _netBufferPool;
         private readonly IRtmpChunkMessageWriterService _writer;
         private readonly IRtmpChunkMessageSenderService _sut;

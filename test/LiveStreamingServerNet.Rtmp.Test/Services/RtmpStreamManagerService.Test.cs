@@ -9,7 +9,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
 {
     public class RtmpStreamManagerServiceTest
     {
-        private readonly Fixture _fixture;
+        private readonly IFixture _fixture;
 
         public RtmpStreamManagerServiceTest()
         {

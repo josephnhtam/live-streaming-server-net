@@ -14,7 +14,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Authorization
 {
     public class StreamAuthorizationTest
     {
-        private readonly Fixture _fixture;
+        private readonly IFixture _fixture;
         private readonly string _authCode;
         private readonly IRtmpClientContext _clientContext;
         private readonly IRtmpServerContext _serverContext;
