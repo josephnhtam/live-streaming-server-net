@@ -65,7 +65,6 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
 
             var tcs = new TaskCompletionSource();
 
-            int sendCount = 0;
             client.When(x => x.SendAsync(Arg.Any<IRentedBuffer>())).Do(_ => tcs.TrySetResult());
 
             // Act
