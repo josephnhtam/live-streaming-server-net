@@ -53,7 +53,7 @@ Execute your live streaming server by running:
 dotnet run
 ```
 
-Now, you live streaming server should be running and ready to accept RTMP stream via 1935 port.
+Now, your live streaming server should be running and ready to accept RTMP stream via 1935 port.
 
 ## Interacting with your Live Streaming Server
 
