@@ -19,9 +19,6 @@ namespace LiveStreamingServerNet.StandaloneDemo
 
             var app = builder.Build();
 
-            app.UseWebSockets();
-            app.UseWebSocketFlv(liveStreamingServer);
-
             app.UseHttpFlv(liveStreamingServer);
 
             app.MapStandaloneServerApiEndPoints(liveStreamingServer);
