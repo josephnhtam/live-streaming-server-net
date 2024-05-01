@@ -14,7 +14,7 @@ namespace LiveStreamingServerNet.HlsDemo
     {
         public static async Task Main(string[] args)
         {
-            var trasmuxerOutputPath = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly()!.Location)!, "TransmuxerOutput");
+            var trasmuxerOutputPath = Path.Combine(Directory.GetCurrentDirectory(), "TransmuxerOutput");
             new DirectoryInfo(trasmuxerOutputPath).Create();
 
             using var liveStreamingServer = CreateLiveStreamingServer(trasmuxerOutputPath);

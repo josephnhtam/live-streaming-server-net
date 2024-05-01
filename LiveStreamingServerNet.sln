@@ -57,7 +57,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.HlsA
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.BasicDemo", "samples\LiveStreamingServerNet.BasicDemo\LiveStreamingServerNet.BasicDemo.csproj", "{883076CB-8F91-4029-9BDF-13C5D3510F98}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveStreamingServerNet.EventsDemo", "samples\LiveStreamingServerNet.EventsDemo\LiveStreamingServerNet.EventsDemo.csproj", "{5C771D81-B7E2-4056-B56B-9C6F4616045C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.EventsDemo", "samples\LiveStreamingServerNet.EventsDemo\LiveStreamingServerNet.EventsDemo.csproj", "{5C771D81-B7E2-4056-B56B-9C6F4616045C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveStreamingServerNet.Mp4ArchiveDemo", "samples\LiveStreamingServerNet.Mp4ArchiveDemo\LiveStreamingServerNet.Mp4ArchiveDemo.csproj", "{8171A185-DA91-4FCC-A668-26B9466CAA3D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -169,6 +171,10 @@ Global
 		{5C771D81-B7E2-4056-B56B-9C6F4616045C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5C771D81-B7E2-4056-B56B-9C6F4616045C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5C771D81-B7E2-4056-B56B-9C6F4616045C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8171A185-DA91-4FCC-A668-26B9466CAA3D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8171A185-DA91-4FCC-A668-26B9466CAA3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8171A185-DA91-4FCC-A668-26B9466CAA3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8171A185-DA91-4FCC-A668-26B9466CAA3D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -186,6 +192,7 @@ Global
 		{6851BC63-D32C-44B9-A705-4A5AE2641104} = {45761E33-F086-403D-BB6E-8059F8CC6BA8}
 		{883076CB-8F91-4029-9BDF-13C5D3510F98} = {45761E33-F086-403D-BB6E-8059F8CC6BA8}
 		{5C771D81-B7E2-4056-B56B-9C6F4616045C} = {45761E33-F086-403D-BB6E-8059F8CC6BA8}
+		{8171A185-DA91-4FCC-A668-26B9466CAA3D} = {45761E33-F086-403D-BB6E-8059F8CC6BA8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0A9A3928-2852-49B9-85EF-F00480E9FE7F}
