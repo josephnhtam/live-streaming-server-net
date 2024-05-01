@@ -41,12 +41,12 @@ namespace LiveStreamingServerNet.AuthorizationDemo
 
     public interface IPasswordValidator
     {
-        bool ValidatePassowrd(string password);
+        bool ValidatePassword(string password);
     }
 
     public class DemoPasswordValidator : IPasswordValidator
     {
-        public bool ValidatePassowrd(string password)
+        public bool ValidatePassword(string password)
         {
             return password == "123456";
         }
@@ -69,7 +69,7 @@ namespace LiveStreamingServerNet.AuthorizationDemo
         {
             // Accepting only the publishing path that includes a valid password parameter
             // For example: rtmp://127.0.0.1:1935/live/stream?password=123456
-            if (streamArguments.TryGetValue("password", out var password) && _passwordValidator.ValidatePassowrd(password))
+            if (streamArguments.TryGetValue("password", out var password) && _passwordValidator.ValidatePassword(password))
                 return Task.FromResult(AuthorizationResult.Authorized());
 
             return Task.FromResult(AuthorizationResult.Unauthorized("incorrect password"));
