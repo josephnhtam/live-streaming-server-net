@@ -112,7 +112,7 @@ Once a live stream is published to `rtmp://localhost:1935/live/demo`, you can vi
 
 The following will use Azure Blob Storage as an example.
 
-### Step 1: Add The Required Package
+### Step 1: Add the Required Package
 
 Add the necessary package using the following commands:
 
