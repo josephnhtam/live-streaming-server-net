@@ -2,7 +2,7 @@
 
 This guide will provide an explanation about adding an admin panel to the live streaming server. The admin panel allows you to browse the list of live streams, delete them, and preview the live streams via HTTP-FLV.
 
-### Step 1: Initialize a New Project and add Required Packages
+### Step 1: Initialize a New Project and Add Required Packages
 
 An admin panel is served by a middleware of ASP.NET Core. Create an empty ASP.NET Core Web application and add the necessary packages using the following commands:
 

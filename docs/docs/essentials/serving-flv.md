@@ -2,7 +2,7 @@
 
 This guide will introduce the way to serve live streams via HTTP-FLV and WebSocket-FLV.
 
-### Step 1: Initialize a New Project and add Required Packages
+### Step 1: Initialize a New Project and Add Required Packages
 
 Both HTTP-FLV and WebSocket-FLV will be served via middlewares of ASP.NET Core. Create an empty ASP.NET Core Web application and add the necessary packages using the following commands:
 
