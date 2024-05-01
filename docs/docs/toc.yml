@@ -8,7 +8,7 @@
 - href: ./essentials/rtmps.md
 - href: ./essentials/rtmp-server-events.md
 - href: ./essentials/custom-authorization.md
-- href: ./essentials/custom-transmuxer.md
+- href: ./essentials/custom-ffmpeg-process.md
 
 - name: Advanced
 - name: Kubernetes Integration
