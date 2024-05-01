@@ -1,6 +1,4 @@
-﻿using System.Reflection;
-
-namespace LiveStreamingServerNet.Transmuxer.Utilities
+﻿namespace LiveStreamingServerNet.Transmuxer.Utilities
 {
     public static class ExecutableFinder
     {
@@ -39,7 +37,7 @@ namespace LiveStreamingServerNet.Transmuxer.Utilities
                 foreach (var path in pathEnvVar.Split(Path.PathSeparator))
                     yield return path;
 
-            var entryPath = Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location);
+            var entryPath = Directory.GetCurrentDirectory();
             if (!string.IsNullOrEmpty(entryPath))
                 yield return entryPath;
         }

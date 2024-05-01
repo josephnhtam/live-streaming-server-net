@@ -67,7 +67,7 @@ namespace LiveStreamingServerNet.Transmuxer
             }
             catch (Exception ex)
             {
-                await TerminateProcessGracefully(process, _gracefulTerminationSeconds);
+                await WaitForProcessTerminatingGracefully(process, _gracefulTerminationSeconds);
 
                 if (ex is OperationCanceledException && cancellation.IsCancellationRequested)
                     throw;
@@ -81,9 +81,9 @@ namespace LiveStreamingServerNet.Transmuxer
             }
         }
 
-        private static async Task TerminateProcessGracefully(Process process, int gracefulPeriod)
+        private static async Task WaitForProcessTerminatingGracefully(Process process, int gracefulPeriod)
         {
-            if (!process.HasExited && process.CloseMainWindow())
+            if (!process.HasExited)
             {
                 using var shutdownCts = new CancellationTokenSource(TimeSpan.FromSeconds(gracefulPeriod));
                 try
