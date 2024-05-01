@@ -51,7 +51,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.Rtmp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.AuthorizationDemo", "samples\LiveStreamingServerNet.AuthorizationDemo\LiveStreamingServerNet.AuthorizationDemo.csproj", "{F6C4B2F6-5913-4CCE-A9E8-32EA51247D51}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveStreamingServerNet.Flv.Test", "test\LiveStreamingServerNet.Flv.Test\LiveStreamingServerNet.Flv.Test.csproj", "{8691F386-9132-4C8A-A662-F123B7DCB50F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.Flv.Test", "test\LiveStreamingServerNet.Flv.Test\LiveStreamingServerNet.Flv.Test.csproj", "{8691F386-9132-4C8A-A662-F123B7DCB50F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveStreamingServerNet.HlsAzureBlobStorageDemo", "samples\LiveStreamingServerNet.HlsAzureBlobStorageDemo\LiveStreamingServerNet.HlsAzureBlobStorageDemo.csproj", "{6851BC63-D32C-44B9-A705-4A5AE2641104}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -151,6 +153,10 @@ Global
 		{8691F386-9132-4C8A-A662-F123B7DCB50F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8691F386-9132-4C8A-A662-F123B7DCB50F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8691F386-9132-4C8A-A662-F123B7DCB50F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6851BC63-D32C-44B9-A705-4A5AE2641104}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6851BC63-D32C-44B9-A705-4A5AE2641104}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6851BC63-D32C-44B9-A705-4A5AE2641104}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6851BC63-D32C-44B9-A705-4A5AE2641104}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -165,6 +171,7 @@ Global
 		{91B1B8A8-A311-468B-B5E0-0B6DCBA20246} = {C85AC04A-5060-4C4B-830A-D7F51F602749}
 		{F6C4B2F6-5913-4CCE-A9E8-32EA51247D51} = {45761E33-F086-403D-BB6E-8059F8CC6BA8}
 		{8691F386-9132-4C8A-A662-F123B7DCB50F} = {C85AC04A-5060-4C4B-830A-D7F51F602749}
+		{6851BC63-D32C-44B9-A705-4A5AE2641104} = {45761E33-F086-403D-BB6E-8059F8CC6BA8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0A9A3928-2852-49B9-85EF-F00480E9FE7F}
