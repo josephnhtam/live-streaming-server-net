@@ -6,7 +6,7 @@
 - href: ./essentials/serving-hls.md
 - href: ./essentials/admin-panel.md
 - href: ./essentials/rtmps.md
-- href: ./essentials/rtmp-server-event.md
+- href: ./essentials/rtmp-server-events.md
 - href: ./essentials/custom-authorization.md
 - href: ./essentials/custom-transmuxer.md
 
