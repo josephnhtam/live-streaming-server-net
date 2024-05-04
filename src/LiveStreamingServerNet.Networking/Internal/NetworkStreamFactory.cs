@@ -1,4 +1,5 @@
-﻿using LiveStreamingServerNet.Networking.Installer.Contracts;
+﻿using LiveStreamingServerNet.Networking.Contracts;
+using LiveStreamingServerNet.Networking.Installer.Contracts;
 using LiveStreamingServerNet.Networking.Internal.Contracts;
 
 namespace LiveStreamingServerNet.Networking.Internal
@@ -12,7 +13,7 @@ namespace LiveStreamingServerNet.Networking.Internal
             _sslStreamFactory = sslStreamFactory;
         }
 
-        public async Task<Stream> CreateNetworkStreamAsync(
+        public async Task<INetworkStream> CreateNetworkStreamAsync(
             ITcpClientInternal tcpClient,
             ServerEndPoint serverEndPoint,
             CancellationToken cancellationToken)
@@ -22,10 +23,10 @@ namespace LiveStreamingServerNet.Networking.Internal
                 var sslStream = await _sslStreamFactory.CreateAsync(tcpClient, cancellationToken);
 
                 if (sslStream != null)
-                    return sslStream;
+                    return new NetworkStream(sslStream);
             }
 
-            return tcpClient.GetStream();
+            return new NetworkStream(tcpClient.GetStream());
         }
     }
 }

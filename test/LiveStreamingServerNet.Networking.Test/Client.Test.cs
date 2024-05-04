@@ -14,7 +14,7 @@ namespace LiveStreamingServerNet.Networking.Test
         private readonly IClientHandler _clientHandler;
         private readonly ITcpClientInternal _tcpClient;
         private readonly INetBufferSender _bufferSender;
-        private readonly Stream _networkStream;
+        private readonly INetworkStream _networkStream;
         private readonly INetworkStreamFactory _networkStreamFactory;
         private readonly ILogger<Client> _logger;
         private readonly IClient _sut;
@@ -31,9 +31,9 @@ namespace LiveStreamingServerNet.Networking.Test
             _logger = Substitute.For<ILogger<Client>>();
 
             _tcpClient.Connected.Returns(true, false);
-            _clientHandler.HandleClientLoopAsync(Arg.Any<ReadOnlyStream>(), Arg.Any<CancellationToken>()).Returns(true, false);
+            _clientHandler.HandleClientLoopAsync(Arg.Any<INetworkStream>(), Arg.Any<CancellationToken>()).Returns(true, false);
 
-            _networkStream = Substitute.For<Stream>();
+            _networkStream = Substitute.For<INetworkStream>();
             _networkStreamFactory = Substitute.For<INetworkStreamFactory>();
             _networkStreamFactory
                 .CreateNetworkStreamAsync(_tcpClient, _serverEndPoint, Arg.Any<CancellationToken>())
@@ -69,8 +69,7 @@ namespace LiveStreamingServerNet.Networking.Test
         public async Task RunAsync_Should_StartBufferSender()
         {
             // Arrange
-            var networkStream = Substitute.For<Stream>();
-            _networkStreamFactory.CreateNetworkStreamAsync(_tcpClient, _serverEndPoint, Arg.Any<CancellationToken>()).Returns(networkStream);
+            _networkStreamFactory.CreateNetworkStreamAsync(_tcpClient, _serverEndPoint, Arg.Any<CancellationToken>()).Returns(_networkStream);
 
             _tcpClient.Connected.Returns(false);
 
@@ -78,7 +77,7 @@ namespace LiveStreamingServerNet.Networking.Test
             await _sut.RunAsync(_clientHandler, _serverEndPoint, _cancellationToken);
 
             // Assert
-            _bufferSender.Received(1).Start(networkStream, Arg.Any<CancellationToken>());
+            _bufferSender.Received(1).Start(_networkStream, Arg.Any<CancellationToken>());
         }
 
         [Fact]
@@ -87,21 +86,21 @@ namespace LiveStreamingServerNet.Networking.Test
             // Arrange
             _tcpClient.Connected.Returns(true);
 
-            _clientHandler.HandleClientLoopAsync(Arg.Any<ReadOnlyStream>(), Arg.Any<CancellationToken>())
+            _clientHandler.HandleClientLoopAsync(Arg.Any<INetworkStream>(), Arg.Any<CancellationToken>())
                 .Returns(true, true, false);
 
             // Act
             await _sut.RunAsync(_clientHandler, _serverEndPoint, _cancellationToken);
 
             // Assert
-            _ = _clientHandler.Received(3).HandleClientLoopAsync(Arg.Any<ReadOnlyStream>(), Arg.Any<CancellationToken>());
+            _ = _clientHandler.Received(3).HandleClientLoopAsync(Arg.Any<INetworkStream>(), Arg.Any<CancellationToken>());
         }
 
         [Fact]
         public async Task RunAsync_Should_BeCancellable()
         {
             _tcpClient.Connected.Returns(true);
-            _clientHandler.HandleClientLoopAsync(Arg.Any<ReadOnlyStream>(), Arg.Any<CancellationToken>())
+            _clientHandler.HandleClientLoopAsync(Arg.Any<INetworkStream>(), Arg.Any<CancellationToken>())
                 .Returns(Task.Delay(100).ContinueWith(_ => true));
 
             // Act
@@ -111,7 +110,7 @@ namespace LiveStreamingServerNet.Networking.Test
             await clientTask;
 
             // Assert
-            _ = _clientHandler.Received().HandleClientLoopAsync(Arg.Any<ReadOnlyStream>(), Arg.Any<CancellationToken>());
+            _ = _clientHandler.Received().HandleClientLoopAsync(Arg.Any<INetworkStream>(), Arg.Any<CancellationToken>());
 
             _ = _bufferSender.Received().DisposeAsync();
             _ = _clientHandler.Received().DisposeAsync();
@@ -123,7 +122,7 @@ namespace LiveStreamingServerNet.Networking.Test
         public async Task Disconnect_Should_CancelRunAsync()
         {
             _tcpClient.Connected.Returns(true);
-            _clientHandler.HandleClientLoopAsync(Arg.Any<ReadOnlyStream>(), Arg.Any<CancellationToken>())
+            _clientHandler.HandleClientLoopAsync(Arg.Any<INetworkStream>(), Arg.Any<CancellationToken>())
                 .Returns(Task.Delay(100).ContinueWith(_ => true));
 
             // Act

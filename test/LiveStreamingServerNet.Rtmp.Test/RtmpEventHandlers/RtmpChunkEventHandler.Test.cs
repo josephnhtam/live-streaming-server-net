@@ -25,7 +25,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers
         internal async Task Handle_Should_HandleChunksCorrectly<TRtmpChunkMessageHeader>(
             IRtmpClientContext clientContext,
             IRtmpChunkStreamContext streamContext,
-            ReadOnlyStream stream,
+            Stream stream,
             byte[] payload,
             RtmpChunkBasicHeader basicHeader,
             TRtmpChunkMessageHeader messageHeader)
@@ -46,12 +46,13 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers
                     resultPayloadBuffer.MoveTo(0);
                 });
 
+            var networkStream = new NetworkStream(stream);
             var sut = new RtmpChunkEventHandler(netBufferPool, dispatcher, protocolControlMessageSender, logger);
 
             while (stream.Position < stream.Length)
             {
                 // Act
-                var @event = new RtmpChunkEvent(clientContext, stream);
+                var @event = new RtmpChunkEvent(clientContext, networkStream);
                 var result = await sut.Handle(@event, default);
 
                 // Assert
@@ -195,7 +196,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers
             }
         }
 
-        private static ReadOnlyStream CreateStream<TRtmpChunkMessageHeader>
+        private static Stream CreateStream<TRtmpChunkMessageHeader>
             (RtmpChunkBasicHeader basicHeader, TRtmpChunkMessageHeader messageHeader, byte[] payload, uint chunkSize)
             where TRtmpChunkMessageHeader : struct, IRtmpChunkMessageHeader
         {
@@ -207,7 +208,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers
 
             using var tempBuffer = new NetBuffer();
             writer.Write(tempBuffer, basicHeader, messageHeader, payloadBuffer, chunkSize);
-            return new ReadOnlyStream(new MemoryStream(tempBuffer.UnderlyingBuffer.Take(tempBuffer.Size).ToArray()));
+            return new MemoryStream(tempBuffer.UnderlyingBuffer.Take(tempBuffer.Size).ToArray());
         }
     }
 }

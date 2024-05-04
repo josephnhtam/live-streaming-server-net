@@ -27,7 +27,7 @@ namespace LiveStreamingServerNet.Networking.Internal
             _pendingMessageChannel = Channel.CreateUnbounded<PendingMessage>();
         }
 
-        public void Start(Stream networkStream, CancellationToken cancellationToken)
+        public void Start(INetworkStreamWriter networkStream, CancellationToken cancellationToken)
         {
             _task = Task.Run(() => SendOutstandingBuffersAsync(networkStream, cancellationToken), cancellationToken);
         }
@@ -145,7 +145,7 @@ namespace LiveStreamingServerNet.Networking.Internal
             return _netBufferPool.Obtain();
         }
 
-        private async Task SendOutstandingBuffersAsync(Stream networkStream, CancellationToken cancellationToken)
+        private async Task SendOutstandingBuffersAsync(INetworkStreamWriter networkStream, CancellationToken cancellationToken)
         {
             try
             {

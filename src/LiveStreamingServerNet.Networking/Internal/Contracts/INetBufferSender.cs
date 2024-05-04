@@ -5,7 +5,7 @@ namespace LiveStreamingServerNet.Networking.Internal.Contracts
 {
     internal interface INetBufferSender : IAsyncDisposable
     {
-        void Start(Stream networkStream, CancellationToken cancellationToken);
+        void Start(INetworkStreamWriter networkStream, CancellationToken cancellationToken);
         void Send(INetBuffer netBuffer, Action<bool>? callback);
         void Send(IRentedBuffer rentedBuffer, Action<bool>? callback);
         void Send(Action<INetBuffer> writer, Action<bool>? callback);

@@ -1,5 +1,4 @@
-﻿using LiveStreamingServerNet.Networking;
-using LiveStreamingServerNet.Networking.Contracts;
+﻿using LiveStreamingServerNet.Networking.Contracts;
 
 namespace LiveStreamingServerNet.Rtmp.Internal.RtmpHeaders
 {
@@ -8,7 +7,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpHeaders
         public const int kSize = 4;
         public int Size => kSize;
 
-        public static async ValueTask<RtmpChunkExtendedTimestampHeader> ReadAsync(INetBuffer netBuffer, ReadOnlyStream networkStream, CancellationToken cancellationToken)
+        public static async ValueTask<RtmpChunkExtendedTimestampHeader> ReadAsync(INetBuffer netBuffer, INetworkStreamReader networkStream, CancellationToken cancellationToken)
         {
             await netBuffer.FromStreamData(networkStream, kSize, cancellationToken);
 

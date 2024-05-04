@@ -36,7 +36,8 @@ namespace LiveStreamingServerNet.Networking.Test
         public async Task SendAsync_Should_WriteBufferIntoNetworkStream()
         {
             // Arrange
-            using var networkStream = new MemoryStream();
+            using var innerStream = new MemoryStream();
+            using var networkStream = new NetworkStream(innerStream);
             var expectedBuffer = _fixture.Create<byte[]>();
 
             _sut.Start(networkStream, _cancellationToken);
@@ -48,11 +49,11 @@ namespace LiveStreamingServerNet.Networking.Test
             await _sut.SendAsync(netBuffer);
 
             // Assert
-            networkStream.Should().HaveLength(expectedBuffer.Length);
+            innerStream.Should().HaveLength(expectedBuffer.Length);
 
-            networkStream.Position = 0;
+            innerStream.Position = 0;
             var actualBuffer = new byte[expectedBuffer.Length];
-            await networkStream.ReadAsync(actualBuffer, 0, expectedBuffer.Length);
+            await innerStream.ReadAsync(actualBuffer, 0, expectedBuffer.Length);
 
             actualBuffer.Should().Equal(expectedBuffer);
         }
@@ -61,7 +62,8 @@ namespace LiveStreamingServerNet.Networking.Test
         public async Task SendAsyncWithRentedBuffer_Should_WriteBufferIntoNetworkStream()
         {
             // Arrange
-            using var networkStream = new MemoryStream();
+            using var innerStream = new MemoryStream();
+            using var networkStream = new NetworkStream(innerStream);
             var expectedBuffer = _fixture.Create<byte[]>();
 
             _sut.Start(networkStream, _cancellationToken);
@@ -75,11 +77,11 @@ namespace LiveStreamingServerNet.Networking.Test
             rentedBuffer.Unclaim();
 
             // Assert
-            networkStream.Should().HaveLength(expectedBuffer.Length);
+            innerStream.Should().HaveLength(expectedBuffer.Length);
 
-            networkStream.Position = 0;
+            innerStream.Position = 0;
             var actualBuffer = new byte[expectedBuffer.Length];
-            await networkStream.ReadAsync(actualBuffer, 0, expectedBuffer.Length);
+            await innerStream.ReadAsync(actualBuffer, 0, expectedBuffer.Length);
 
             actualBuffer.Should().Equal(expectedBuffer);
         }
@@ -88,7 +90,8 @@ namespace LiveStreamingServerNet.Networking.Test
         public async Task SendAsyncWithWriter_Should_WriteBufferIntoNetworkStream()
         {
             // Arrange
-            using var networkStream = new MemoryStream();
+            using var innerStream = new MemoryStream();
+            using var networkStream = new NetworkStream(innerStream);
             var expectedBuffer = _fixture.Create<byte[]>();
 
             _sut.Start(networkStream, _cancellationToken);
@@ -97,11 +100,11 @@ namespace LiveStreamingServerNet.Networking.Test
             await _sut.SendAsync(netBuffer => netBuffer.Write(expectedBuffer));
 
             // Assert
-            networkStream.Should().HaveLength(expectedBuffer.Length);
+            innerStream.Should().HaveLength(expectedBuffer.Length);
 
-            networkStream.Position = 0;
+            innerStream.Position = 0;
             var actualBuffer = new byte[expectedBuffer.Length];
-            await networkStream.ReadAsync(actualBuffer, 0, expectedBuffer.Length);
+            await innerStream.ReadAsync(actualBuffer, 0, expectedBuffer.Length);
 
             actualBuffer.Should().Equal(expectedBuffer);
         }
@@ -110,7 +113,8 @@ namespace LiveStreamingServerNet.Networking.Test
         public async Task Send_Should_WriteBufferIntoNetworkStream()
         {
             // Arrange
-            using var networkStream = new MemoryStream();
+            using var innerStream = new MemoryStream();
+            using var networkStream = new NetworkStream(innerStream);
             var expectedBuffer = _fixture.Create<byte[]>();
 
             _sut.Start(networkStream, _cancellationToken);
@@ -124,11 +128,11 @@ namespace LiveStreamingServerNet.Networking.Test
             await tcs.Task;
 
             // Assert
-            networkStream.Should().HaveLength(expectedBuffer.Length);
+            innerStream.Should().HaveLength(expectedBuffer.Length);
 
-            networkStream.Position = 0;
+            innerStream.Position = 0;
             var actualBuffer = new byte[expectedBuffer.Length];
-            await networkStream.ReadAsync(actualBuffer, 0, expectedBuffer.Length);
+            await innerStream.ReadAsync(actualBuffer, 0, expectedBuffer.Length);
 
             actualBuffer.Should().Equal(expectedBuffer);
         }
@@ -137,7 +141,8 @@ namespace LiveStreamingServerNet.Networking.Test
         public async Task SendWithRentedBuffer_Should_WriteBufferIntoNetworkStream()
         {
             // Arrange
-            using var networkStream = new MemoryStream();
+            using var innerStream = new MemoryStream();
+            using var networkStream = new NetworkStream(innerStream);
             var expectedBuffer = _fixture.Create<byte[]>();
 
             _sut.Start(networkStream, _cancellationToken);
@@ -153,11 +158,11 @@ namespace LiveStreamingServerNet.Networking.Test
             rentedBuffer.Unclaim();
 
             // Assert
-            networkStream.Should().HaveLength(expectedBuffer.Length);
+            innerStream.Should().HaveLength(expectedBuffer.Length);
 
-            networkStream.Position = 0;
+            innerStream.Position = 0;
             var actualBuffer = new byte[expectedBuffer.Length];
-            await networkStream.ReadAsync(actualBuffer, 0, expectedBuffer.Length);
+            await innerStream.ReadAsync(actualBuffer, 0, expectedBuffer.Length);
 
             actualBuffer.Should().Equal(expectedBuffer);
         }
@@ -166,7 +171,8 @@ namespace LiveStreamingServerNet.Networking.Test
         public async Task SendWithWriter_Should_WriteBufferIntoNetworkStream()
         {
             // Arrange
-            using var networkStream = new MemoryStream();
+            using var innerStream = new MemoryStream();
+            using var networkStream = new NetworkStream(innerStream);
             var expectedBuffer = _fixture.Create<byte[]>();
 
             _sut.Start(networkStream, _cancellationToken);
@@ -177,11 +183,11 @@ namespace LiveStreamingServerNet.Networking.Test
             await tcs.Task;
 
             // Assert
-            networkStream.Should().HaveLength(expectedBuffer.Length);
+            innerStream.Should().HaveLength(expectedBuffer.Length);
 
-            networkStream.Position = 0;
+            innerStream.Position = 0;
             var actualBuffer = new byte[expectedBuffer.Length];
-            await networkStream.ReadAsync(actualBuffer, 0, expectedBuffer.Length);
+            await innerStream.ReadAsync(actualBuffer, 0, expectedBuffer.Length);
 
             actualBuffer.Should().Equal(expectedBuffer);
         }
@@ -190,7 +196,8 @@ namespace LiveStreamingServerNet.Networking.Test
         public async Task NetBufferSender_Should_BeCancellable()
         {
             // Arrange
-            using var networkStream = new MemoryStream();
+            using var innerStream = new MemoryStream();
+            using var networkStream = new NetworkStream(innerStream);
 
             _sut.Start(networkStream, _cancellationToken);
 
@@ -207,7 +214,8 @@ namespace LiveStreamingServerNet.Networking.Test
         public async Task Send_Should_WriteBufferIntoNetworkStreamInOrder()
         {
             // Arrange
-            using var networkStream = new MemoryStream();
+            using var innerStream = new MemoryStream();
+            using var networkStream = new NetworkStream(innerStream);
             var expectedBuffer = _fixture.CreateMany<byte>(100).ToArray();
 
             _sut.Start(networkStream, _cancellationToken);
@@ -228,11 +236,11 @@ namespace LiveStreamingServerNet.Networking.Test
             await tcs.Task;
 
             // Assert
-            networkStream.Should().HaveLength(expectedBuffer.Length);
+            innerStream.Should().HaveLength(expectedBuffer.Length);
 
-            networkStream.Position = 0;
+            innerStream.Position = 0;
             var actualBuffer = new byte[expectedBuffer.Length];
-            await networkStream.ReadAsync(actualBuffer, 0, expectedBuffer.Length);
+            await innerStream.ReadAsync(actualBuffer, 0, expectedBuffer.Length);
 
             actualBuffer.Should().Equal(expectedBuffer);
         }

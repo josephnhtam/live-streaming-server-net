@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using LiveStreamingServerNet.Networking;
+using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpHeaders;
 using LiveStreamingServerNet.Rtmp.Internal.Services;
 using LiveStreamingServerNet.Rtmp.Test.Utilities;
@@ -39,7 +40,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
             service.Write(streamBuffer, basicHeader, messageHeader, payloadBuffer.MoveTo(0), (uint)expectedChunkSize);
 
             // Assert
-            using var stream = new ReadOnlyStream(new MemoryStream(streamBuffer.UnderlyingBuffer));
+            using var stream = new NetworkStream(new MemoryStream(streamBuffer.UnderlyingBuffer));
             using var targetBuffer = new NetBuffer();
 
             var remainingPayloadSize = expectedPayload.Length;
@@ -52,7 +53,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
             var result = targetBuffer.MoveTo(0).ReadBytes(targetBuffer.Size);
             result.Should().BeEquivalentTo(expectedPayload);
 
-            async Task AssertFirstChunk(ReadOnlyStream stream)
+            async Task AssertFirstChunk(INetworkStreamReader stream)
             {
                 using var readerBuffer = new NetBuffer(expectedPayload.Length);
 
@@ -85,7 +86,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
                 remainingPayloadSize -= expectedChunkSize;
             }
 
-            async Task AssertRemainingChunk(ReadOnlyStream stream)
+            async Task AssertRemainingChunk(INetworkStreamReader stream)
             {
                 using var readerBuffer = new NetBuffer(expectedPayload.Length);
 

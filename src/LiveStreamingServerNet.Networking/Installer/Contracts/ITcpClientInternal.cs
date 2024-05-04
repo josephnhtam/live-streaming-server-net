@@ -7,6 +7,6 @@ namespace LiveStreamingServerNet.Networking.Installer.Contracts
     {
         void Close();
         Socket Client { get; }
-        NetworkStream GetStream();
+        Stream GetStream();
     }
 }

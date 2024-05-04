@@ -49,18 +49,16 @@ namespace LiveStreamingServerNet.Networking.Internal
             _cts = CancellationTokenSource.CreateLinkedTokenSource(stoppingToken);
             var cancellationToken = _cts.Token;
 
-            Stream? networkStream = null;
+            INetworkStream? networkStream = null;
 
             try
             {
                 networkStream = await CreateNetworkStreamAsync(serverEndPoint, cancellationToken);
                 _bufferSender.Start(networkStream, cancellationToken);
 
-                var readOnlyNetworkStream = new ReadOnlyStream(networkStream);
-
                 while (_tcpClient.Connected && !cancellationToken.IsCancellationRequested)
                 {
-                    if (!await handler.HandleClientLoopAsync(readOnlyNetworkStream, cancellationToken))
+                    if (!await handler.HandleClientLoopAsync(networkStream, cancellationToken))
                         break;
                 }
             }
@@ -131,7 +129,7 @@ namespace LiveStreamingServerNet.Networking.Internal
             return ValueTask.CompletedTask;
         }
 
-        private async Task<Stream> CreateNetworkStreamAsync(ServerEndPoint serverEndPoint, CancellationToken cancellationToken)
+        private async Task<INetworkStream> CreateNetworkStreamAsync(ServerEndPoint serverEndPoint, CancellationToken cancellationToken)
         {
             return await _networkStreamFactory.CreateNetworkStreamAsync(_tcpClient, serverEndPoint, cancellationToken);
         }

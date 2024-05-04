@@ -1,4 +1,4 @@
-﻿using LiveStreamingServerNet.Networking;
+﻿using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.Contracts;
 using MediatR;
 
@@ -6,5 +6,5 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEvents
 {
     internal record struct RtmpChunkEvent(
         IRtmpClientContext ClientContext,
-        ReadOnlyStream NetworkStream) : IRequest<RtmpEventConsumingResult>;
+        INetworkStreamReader NetworkStream) : IRequest<RtmpEventConsumingResult>;
 }

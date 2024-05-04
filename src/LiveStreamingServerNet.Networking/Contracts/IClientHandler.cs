@@ -3,6 +3,6 @@
     public interface IClientHandler : IAsyncDisposable
     {
         Task InitializeAsync(IClientHandle client);
-        Task<bool> HandleClientLoopAsync(ReadOnlyStream networkStream, CancellationToken cancellationToken);
+        Task<bool> HandleClientLoopAsync(INetworkStreamReader networkStream, CancellationToken cancellationToken);
     }
 }

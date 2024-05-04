@@ -6,7 +6,6 @@ using LiveStreamingServerNet.Utilities.Contracts;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.FileProviders;
 using System.Net;
-using System.Reflection;
 
 namespace LiveStreamingServerNet.HlsDemo
 {

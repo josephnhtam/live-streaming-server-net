@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using LiveStreamingServerNet.Networking;
 using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal;
 using LiveStreamingServerNet.Rtmp.Internal.Contracts;
@@ -21,7 +20,7 @@ namespace LiveStreamingServerNet.Rtmp.Test
         private readonly IRtmpClientContextFactory _clientContextFactory;
         private readonly IBandwidthLimiter _bandwidthLimiter;
         private readonly IBandwidthLimiterFactory _bandwidthLimiterFactory;
-        private readonly ReadOnlyStream _networkStream;
+        private readonly INetworkStream _networkStream;
         private readonly RtmpClientHandler _sut;
 
         public RtmpClientHandlerTest()
@@ -42,7 +41,7 @@ namespace LiveStreamingServerNet.Rtmp.Test
             _bandwidthLimiterFactory = Substitute.For<IBandwidthLimiterFactory>();
             _bandwidthLimiterFactory.Create().Returns(_bandwidthLimiter);
 
-            _networkStream = new ReadOnlyStream(new MemoryStream());
+            _networkStream = Substitute.For<INetworkStream>();
 
             _sut = new RtmpClientHandler(_mediator, _eventDispatcher, _clientContextFactory, _logger, _bandwidthLimiterFactory);
         }

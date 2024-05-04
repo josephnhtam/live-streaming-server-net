@@ -35,7 +35,7 @@ namespace LiveStreamingServerNet.Networking.Test
 
             // Assert
             _ = _sslStreamFactory.Received(1).CreateAsync(_tcpClient, Arg.Any<CancellationToken>());
-            Assert.Equal(_sslStream, result);
+            Assert.Equal(_sslStream, result.InnerStream);
         }
 
         [Fact]
