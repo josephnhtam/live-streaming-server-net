@@ -9,15 +9,20 @@ namespace LiveStreamingServerNet.Networking.Test
 {
     public class NetworkStreamFactoryTest : IDisposable
     {
+        private readonly MemoryStream _stream;
         private readonly SslStream _sslStream;
-        private ITcpClientInternal _tcpClient;
-        private ISslStreamFactory _sslStreamFactory;
+        private readonly ITcpClientInternal _tcpClient;
+        private readonly ISslStreamFactory _sslStreamFactory;
 
         public NetworkStreamFactoryTest()
         {
-            _sslStream = new SslStream(new MemoryStream());
+            _stream = new MemoryStream();
+            _sslStream = Substitute.For<SslStream>(_stream);
+            _sslStream.CanRead.Returns(true);
+            _sslStream.CanWrite.Returns(true);
 
             _tcpClient = Substitute.For<ITcpClientInternal>();
+            _tcpClient.GetStream().Returns(_stream);
 
             _sslStreamFactory = Substitute.For<ISslStreamFactory>();
             _sslStreamFactory.CreateAsync(_tcpClient, Arg.Any<CancellationToken>()).Returns(_sslStream);

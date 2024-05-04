@@ -38,18 +38,21 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers
             var logger = Substitute.For<ILogger<RtmpChunkEventHandler>>();
 
             using INetBuffer resultPayloadBuffer = new NetBuffer();
+
+            var tcs = new TaskCompletionSource();
             dispatcher.DispatchAsync(streamContext, clientContext, Arg.Any<CancellationToken>())
                 .Returns(true)
                 .AndDoes(x =>
                 {
                     streamContext.PayloadBuffer!.ReadAndWriteTo(resultPayloadBuffer, streamContext.PayloadBuffer.Size);
                     resultPayloadBuffer.MoveTo(0);
+                    tcs.SetResult();
                 });
 
             var networkStream = new NetworkStream(stream);
             var sut = new RtmpChunkEventHandler(netBufferPool, dispatcher, protocolControlMessageSender, logger);
 
-            while (stream.Position < stream.Length)
+            while (!tcs.Task.IsCompleted)
             {
                 // Act
                 var @event = new RtmpChunkEvent(clientContext, networkStream);
