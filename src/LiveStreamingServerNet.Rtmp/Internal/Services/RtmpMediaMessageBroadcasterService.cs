@@ -204,20 +204,22 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             public readonly IRtmpClientContext ClientContext;
             public readonly CancellationToken CancellationToken;
             public long OutstandingPackagesSize => _outstandingPackagesSize;
-            public long OutstandingPackagesCount => _packageChannel.Reader.Count;
+            public long OutstandingPackagesCount => _outstandingPackageCount;
 
             private readonly IMediaPackageDiscarder _mediaPackageDiscarder;
             private readonly Channel<ClientMediaPackage> _packageChannel;
             private readonly CancellationTokenSource _cts;
 
             private long _outstandingPackagesSize;
+            private long _outstandingPackageCount;
 
             public ClientMediaContext(IRtmpClientContext clientContext, IMediaPackageDiscarderFactory mediaPackageDiscarderFactory)
             {
                 ClientContext = clientContext;
                 _mediaPackageDiscarder = mediaPackageDiscarderFactory.Create(clientContext.Client.ClientId);
 
-                _packageChannel = Channel.CreateUnbounded<ClientMediaPackage>();
+                _packageChannel = Channel.CreateUnbounded<ClientMediaPackage>(
+                    new UnboundedChannelOptions { SingleReader = true });
                 _cts = new CancellationTokenSource();
                 CancellationToken = _cts.Token;
             }
@@ -241,6 +243,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
                 }
 
                 Interlocked.Add(ref _outstandingPackagesSize, package.RentedPayload.Size);
+                Interlocked.Increment(ref _outstandingPackageCount);
                 return true;
             }
 
@@ -248,6 +251,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             {
                 var package = await _packageChannel.Reader.ReadAsync(cancellation);
                 Interlocked.Add(ref _outstandingPackagesSize, -package.RentedPayload.Size);
+                Interlocked.Decrement(ref _outstandingPackageCount);
                 return package;
             }
 

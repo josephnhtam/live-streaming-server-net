@@ -129,7 +129,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
             public readonly IFlvClient Client;
             public readonly CancellationToken CancellationToken;
             public long OutstandingPackagesSize => _outstandingPackagesSize;
-            public long OutstandingPackagesCount => _packageChannel.Reader.Count;
+            public long OutstandingPackagesCount => _outstandingPackageCount;
 
             private readonly IMediaPackageDiscarder _mediaPackageDiscarder;
 
@@ -137,13 +137,15 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
             private readonly CancellationTokenSource _cts;
 
             private long _outstandingPackagesSize;
+            private long _outstandingPackageCount;
 
             public ClientMediaContext(IFlvClient client, IMediaPackageDiscarder mediaPackageDiscarder)
             {
                 Client = client;
                 _mediaPackageDiscarder = mediaPackageDiscarder;
 
-                _packageChannel = Channel.CreateUnbounded<ClientMediaPackage>();
+                _packageChannel = Channel.CreateUnbounded<ClientMediaPackage>(
+                    new UnboundedChannelOptions { SingleReader = true });
                 _cts = new CancellationTokenSource();
                 CancellationToken = _cts.Token;
             }
@@ -167,6 +169,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
                 }
 
                 Interlocked.Add(ref _outstandingPackagesSize, package.RentedPayload.Size);
+                Interlocked.Increment(ref _outstandingPackageCount);
                 return true;
             }
 
@@ -174,6 +177,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
             {
                 var package = await _packageChannel.Reader.ReadAsync(cancellation);
                 Interlocked.Add(ref _outstandingPackagesSize, -package.RentedPayload.Size);
+                Interlocked.Decrement(ref _outstandingPackageCount);
                 return package;
             }
 

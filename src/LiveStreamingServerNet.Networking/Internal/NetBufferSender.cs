@@ -24,7 +24,8 @@ namespace LiveStreamingServerNet.Networking.Internal
             _netBufferPool = netBufferPool;
             _logger = logger;
 
-            _pendingMessageChannel = Channel.CreateUnbounded<PendingMessage>();
+            _pendingMessageChannel = Channel.CreateUnbounded<PendingMessage>(
+                new UnboundedChannelOptions { SingleReader = true });
         }
 
         public void Start(INetworkStreamWriter networkStream, CancellationToken cancellationToken)
