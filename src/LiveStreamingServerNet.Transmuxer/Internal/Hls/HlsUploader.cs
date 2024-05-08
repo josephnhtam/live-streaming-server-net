@@ -87,15 +87,13 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Hls
             var addedTsFiles = tsFiles.Except(lastTsFiles).ToList();
             var updatedManifests = addedTsFiles.Select(x => x.ManifestName).Distinct().Select(x => manifests[x]).ToList();
 
-            var adapterTasks = _storageAdapters.Select(adapter => StoreAsync(adapter, updatedManifests, addedTsFiles));
+            await Task.WhenAll(_storageAdapters.Select(adapter => StoreAsync(adapter, updatedManifests, addedTsFiles)));
 
             if (_config.DeleteOutdatedTsFiles)
             {
                 var removedTsFiles = lastTsFiles.Except(tsFiles).ToList();
-                adapterTasks = adapterTasks.Concat(_storageAdapters.Select(adapter => DeleteOutdatedAsync(adapter, removedTsFiles)));
+                await Task.WhenAll(_storageAdapters.Select(adapter => DeleteOutdatedAsync(adapter, removedTsFiles)));
             }
-
-            await Task.WhenAll(adapterTasks);
 
             return new List<TsFile>(tsFiles);
 
