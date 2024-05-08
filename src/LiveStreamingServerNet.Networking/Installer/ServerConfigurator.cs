@@ -21,6 +21,14 @@ namespace LiveStreamingServerNet.Networking.Installer
             return this;
         }
 
+        public IServerConfigurator ConfigureNetwork(Action<NetworkConfiguration>? configure)
+        {
+            if (configure != null)
+                Services.Configure(configure);
+
+            return this;
+        }
+
         public IServerConfigurator ConfigureSecurity(Action<SecurityConfiguration>? configure)
         {
             if (configure != null)

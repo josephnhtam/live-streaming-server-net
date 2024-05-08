@@ -48,6 +48,14 @@ namespace LiveStreamingServerNet.KubernetesPodDemo
             var blobContainerClient = CreateBlobContainerClient(configuration);
 
             return LiveStreamingServerBuilder.Create()
+                .ConfigureServer(serverConfigurator =>
+                {
+                    serverConfigurator.ConfigureNetwork(options =>
+                    {
+                        options.EnableNagleAalgorithm = false;
+                        options.FlushingInterval = TimeSpan.FromMilliseconds(500);
+                    });
+                })
                 .ConfigureRtmpServer(rtmpServerConfigurator =>
                 {
                     if (blobContainerClient != null)

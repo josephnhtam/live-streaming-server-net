@@ -11,6 +11,8 @@ namespace LiveStreamingServerNet.Networking.Installer.Contracts
         IServerConfigurator AddServerEventHandler<TServerEventHandler>()
             where TServerEventHandler : class, IServerEventHandler;
 
+        IServerConfigurator ConfigureNetwork(Action<NetworkConfiguration>? configure);
+
         IServerConfigurator ConfigureSecurity(Action<SecurityConfiguration>? configure);
 
         IServerConfigurator ConfigureNetBufferPool(Action<NetBufferPoolConfiguration>? configure);
