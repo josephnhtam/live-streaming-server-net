@@ -1,6 +1,8 @@
-﻿using LiveStreamingServerNet.Networking.Installer.Contracts;
+﻿using LiveStreamingServerNet.Networking.Configurations;
+using LiveStreamingServerNet.Networking.Installer.Contracts;
 using LiveStreamingServerNet.Networking.Internal;
 using LiveStreamingServerNet.Networking.Internal.Contracts;
+using Microsoft.Extensions.Options;
 using NSubstitute;
 using System.Net;
 using System.Net.Security;
@@ -33,7 +35,7 @@ namespace LiveStreamingServerNet.Networking.Test
         {
             // Arrange
             var serverEndPoint = new ServerEndPoint(new IPEndPoint(IPAddress.Any, 433), true);
-            var sut = new NetworkStreamFactory(_sslStreamFactory);
+            var sut = new NetworkStreamFactory(_sslStreamFactory, Options.Create(new NetworkConfiguration()));
 
             // Act
             var result = await sut.CreateNetworkStreamAsync(_tcpClient, serverEndPoint, default);
@@ -48,7 +50,7 @@ namespace LiveStreamingServerNet.Networking.Test
         {
             // Arrange
             var serverEndPoint = new ServerEndPoint(new IPEndPoint(IPAddress.Any, 1935), false);
-            var sut = new NetworkStreamFactory(_sslStreamFactory);
+            var sut = new NetworkStreamFactory(_sslStreamFactory, Options.Create(new NetworkConfiguration()));
 
             // Act
             await sut.CreateNetworkStreamAsync(_tcpClient, serverEndPoint, default);
