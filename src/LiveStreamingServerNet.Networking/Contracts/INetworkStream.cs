@@ -12,6 +12,6 @@
 
     public interface INetworkStreamWriter
     {
-        Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken = default);
+        ValueTask WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken = default);
     }
 }

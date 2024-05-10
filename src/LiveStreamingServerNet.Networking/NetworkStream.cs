@@ -1,5 +1,7 @@
 ﻿using LiveStreamingServerNet.Networking.Contracts;
+using System;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace LiveStreamingServerNet.Networking
 {
@@ -24,9 +26,9 @@ namespace LiveStreamingServerNet.Networking
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken = default)
+        public ValueTask WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken = default)
         {
-            return InnerStream.WriteAsync(buffer, offset, count, cancellationToken);
+            return InnerStream.WriteAsync(new Memory<byte>(buffer, offset, count), cancellationToken);
         }
     }
 }

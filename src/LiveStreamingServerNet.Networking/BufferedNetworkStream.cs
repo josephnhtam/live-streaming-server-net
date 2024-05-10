@@ -34,7 +34,7 @@ namespace LiveStreamingServerNet.Networking
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public async Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken = default)
+        public async ValueTask WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken = default)
         {
             await _writeLock.WaitAsync(cancellationToken);
 
@@ -63,7 +63,7 @@ namespace LiveStreamingServerNet.Networking
 
             try
             {
-                await InnerStream.WriteAsync(_buffer.UnderlyingBuffer, 0, _buffer.Size);
+                await InnerStream.WriteAsync(new Memory<byte>(_buffer.UnderlyingBuffer, 0, _buffer.Size));
             }
             catch { }
             finally
