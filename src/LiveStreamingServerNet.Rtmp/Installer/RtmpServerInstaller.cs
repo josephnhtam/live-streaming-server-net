@@ -51,8 +51,7 @@ namespace LiveStreamingServerNet.Rtmp.Installer
         {
             services.AddServer<RtmpClientHandlerFactory>(options => configureServer?.Invoke(options));
 
-            services.AddMediatR(options =>
-                options.RegisterServicesFromAssemblyContaining<RtmpClientHandler>());
+            services.AddMediator();
 
             services.AddSingleton<Rtmp.Contracts.IRtmpServerContext, RtmpServerContext>()
                     .AddSingleton<IRtmpClientContextFactory, RtmpClientContextFactory>()

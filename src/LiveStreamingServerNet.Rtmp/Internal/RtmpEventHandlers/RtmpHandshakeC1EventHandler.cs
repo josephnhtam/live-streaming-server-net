@@ -2,7 +2,7 @@
 using LiveStreamingServerNet.Rtmp.Internal.Logging;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Handshakes;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEvents;
-using MediatR;
+using Mediator;
 using Microsoft.Extensions.Logging;
 
 namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
@@ -20,7 +20,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
             _logger = logger;
         }
 
-        public async Task<RtmpEventConsumingResult> Handle(RtmpHandshakeC1Event @event, CancellationToken cancellationToken)
+        public async ValueTask<RtmpEventConsumingResult> Handle(RtmpHandshakeC1Event @event, CancellationToken cancellationToken)
         {
             using var incomingBuffer = _netBufferPool.Obtain();
             await incomingBuffer.FromStreamData(@event.NetworkStream, HandshakeC1Size, cancellationToken);

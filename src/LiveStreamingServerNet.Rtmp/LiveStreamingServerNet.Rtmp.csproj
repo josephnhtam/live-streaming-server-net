@@ -14,7 +14,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MediatR" Version="12.2.0" />
+    <PackageReference Include="Mediator.Abstractions" Version="3.0.0-preview.27" />
+    <PackageReference Include="Mediator.SourceGenerator" Version="3.0.0-preview.27">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="mtanksl.ActionMessageFormat" Version="1.0.4" />
   </ItemGroup>
 

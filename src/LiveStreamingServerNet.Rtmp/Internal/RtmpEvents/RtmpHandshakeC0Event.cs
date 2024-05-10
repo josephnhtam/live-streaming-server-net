@@ -1,6 +1,6 @@
 ﻿using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.Contracts;
-using MediatR;
+using Mediator;
 
 namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEvents
 {

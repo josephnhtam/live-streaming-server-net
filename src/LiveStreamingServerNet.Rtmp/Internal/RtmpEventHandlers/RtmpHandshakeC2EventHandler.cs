@@ -2,7 +2,7 @@
 using LiveStreamingServerNet.Rtmp.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.Logging;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEvents;
-using MediatR;
+using Mediator;
 using Microsoft.Extensions.Logging;
 
 namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
@@ -26,7 +26,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
         }
 
         // todo: add validation
-        public async Task<RtmpEventConsumingResult> Handle(RtmpHandshakeC2Event @event, CancellationToken cancellationToken)
+        public async ValueTask<RtmpEventConsumingResult> Handle(RtmpHandshakeC2Event @event, CancellationToken cancellationToken)
         {
             using var incomingBuffer = _netBufferPool.Obtain();
             await incomingBuffer.FromStreamData(@event.NetworkStream, HandshakeC2Size, cancellationToken);

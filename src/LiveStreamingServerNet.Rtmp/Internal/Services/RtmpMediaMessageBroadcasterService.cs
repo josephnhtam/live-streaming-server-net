@@ -177,7 +177,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
                             subscriptionInitialized = true;
                         }
 
-                        await clientContext.Client.SendAsync(package.RentedPayload).WithCancellation(cancellation);
+                        clientContext.Client.Send(package.RentedPayload);
                     }
                     catch (OperationCanceledException) when (cancellation.IsCancellationRequested) { }
                     catch (Exception ex)

@@ -1,6 +1,6 @@
 ﻿using LiveStreamingServerNet.Rtmp.Internal.Logging;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEvents;
-using MediatR;
+using Mediator;
 using Microsoft.Extensions.Logging;
 
 namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
@@ -14,7 +14,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
             _logger = logger;
         }
 
-        public async Task<RtmpEventConsumingResult> Handle(RtmpHandshakeC0Event @event, CancellationToken cancellationToken)
+        public async ValueTask<RtmpEventConsumingResult> Handle(RtmpHandshakeC0Event @event, CancellationToken cancellationToken)
         {
             var payload = new byte[1];
             await @event.NetworkStream.ReadExactlyAsync(payload, 0, 1, cancellationToken);
