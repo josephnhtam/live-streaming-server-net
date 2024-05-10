@@ -1,5 +1,4 @@
 ﻿using LiveStreamingServerNet.Rtmp.Internal.Contracts;
-using LiveStreamingServerNet.Utilities.Contracts;
 
 namespace LiveStreamingServerNet.Rtmp.Internal.Services.Contracts
 {
@@ -16,7 +15,6 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services.Contracts
         SubscribingStreamResult StartSubscribingStream(IRtmpClientContext subscriberClientContext, uint chunkStreamId, string streamPath, IReadOnlyDictionary<string, string> streamArguments);
         bool StopSubscribingStream(IRtmpClientContext subscriberClientContext);
 
-        IRentable<IReadOnlyList<IRtmpClientContext>> GetSubscribersLocked(string streamPath);
         IReadOnlyList<IRtmpClientContext> GetSubscribers(string streamPath);
     }
 

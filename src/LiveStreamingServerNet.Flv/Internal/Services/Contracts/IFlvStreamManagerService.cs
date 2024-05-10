@@ -1,5 +1,4 @@
 ﻿using LiveStreamingServerNet.Flv.Internal.Contracts;
-using LiveStreamingServerNet.Utilities.Contracts;
 
 namespace LiveStreamingServerNet.Flv.Internal.Services.Contracts
 {
@@ -13,7 +12,6 @@ namespace LiveStreamingServerNet.Flv.Internal.Services.Contracts
 
         SubscribingStreamResult StartSubscribingStream(IFlvClient client, string streamPath);
         bool StopSubscribingStream(IFlvClient client);
-        IRentable<IReadOnlyList<IFlvClient>> GetSubscribersLocked(string streamPath);
         IReadOnlyList<IFlvClient> GetSubscribers(string streamPath);
     }
 

@@ -8,7 +8,7 @@ namespace LiveStreamingServerNet.Flv.Internal
     {
         private readonly IStreamWriter _streamWriter;
         private readonly INetBufferPool _netBufferPool;
-        private readonly AsyncLock _syncLock;
+        private readonly SemaphoreSlim _syncLock = new SemaphoreSlim(1, 1);
 
         private bool _isDisposed;
 
@@ -17,14 +17,13 @@ namespace LiveStreamingServerNet.Flv.Internal
             _streamWriter = streamWriter;
 
             _netBufferPool = netBufferPool;
-            _syncLock = new AsyncLock();
         }
 
         public async ValueTask WriteHeaderAsync(bool allowAudioTags, bool allowVideoTags, CancellationToken cancellationToken)
         {
             try
             {
-                using var _ = await _syncLock.LockAsync(cancellationToken);
+                await _syncLock.WaitAsync(cancellationToken);
 
                 byte typeFlags = 0;
 
@@ -40,6 +39,10 @@ namespace LiveStreamingServerNet.Flv.Internal
                     }, cancellationToken);
             }
             catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { }
+            finally
+            {
+                _syncLock.Release();
+            }
         }
 
         public async ValueTask WriteTagAsync(FlvTagType tagType, uint timestamp, Action<INetBuffer> payloadBufer, CancellationToken cancellationToken)

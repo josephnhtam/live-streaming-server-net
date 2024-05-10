@@ -283,28 +283,6 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
         }
 
         [Fact]
-        public void GetSubscribersLocked_Should_ReturnCorrectSubscribers()
-        {
-            // Arrange
-            var subscriberClientContext1 = Substitute.For<IRtmpClientContext>();
-            var subscriberClientContext2 = Substitute.For<IRtmpClientContext>();
-            var streamPath = _fixture.Create<string>();
-            var streamArguments = _fixture.Create<Dictionary<string, string>>();
-            var sut = new RtmpStreamManagerService();
-            sut.StartSubscribingStream(subscriberClientContext1, 1, streamPath, streamArguments);
-            sut.StartSubscribingStream(subscriberClientContext2, 2, streamPath, streamArguments);
-
-            // Act
-            using (var subscribers = sut.GetSubscribersLocked(streamPath))
-            {
-                // Assert
-                subscribers.Value.Should().HaveCount(2);
-                subscribers.Value.Should().Contain(subscriberClientContext1);
-                subscribers.Value.Should().Contain(subscriberClientContext2);
-            }
-        }
-
-        [Fact]
         public void GetSubscribers_Should_ReturnCorrectSubscribers()
         {
             // Arrange
