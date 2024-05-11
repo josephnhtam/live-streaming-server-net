@@ -43,11 +43,11 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
             }
 
             var hasHeader = await CacheAudioSequenceAsync(chunkStreamContext, publishStreamContext, payloadBuffer);
-            await BroacastAudioMessageToSubscribersAsync(chunkStreamContext, clientContext, publishStreamContext, payloadBuffer, hasHeader);
+            await BroadcastAudioMessageToSubscribersAsync(chunkStreamContext, clientContext, publishStreamContext, payloadBuffer, hasHeader);
             return true;
         }
 
-        private async ValueTask BroacastAudioMessageToSubscribersAsync(
+        private async ValueTask BroadcastAudioMessageToSubscribersAsync(
             IRtmpChunkStreamContext chunkStreamContext,
             IRtmpClientContext clientContext,
             IRtmpPublishStreamContext publishStreamContext,
@@ -55,10 +55,10 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
             bool hasSequenceHeader)
         {
             var subscribers = _streamManager.GetSubscribers(publishStreamContext.StreamPath);
-            await BroacastAudioMessageToSubscribersAsync(chunkStreamContext, clientContext, publishStreamContext, !hasSequenceHeader, payloadBuffer, subscribers);
+            await BroadcastAudioMessageToSubscribersAsync(chunkStreamContext, clientContext, publishStreamContext, !hasSequenceHeader, payloadBuffer, subscribers);
         }
 
-        private async ValueTask BroacastAudioMessageToSubscribersAsync(
+        private async ValueTask BroadcastAudioMessageToSubscribersAsync(
             IRtmpChunkStreamContext chunkStreamContext,
             IRtmpClientContext clientContext,
             IRtmpPublishStreamContext publishStreamContext,

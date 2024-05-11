@@ -48,11 +48,11 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
             }
 
             var hasHeader = await CacheVideoSequenceAsync(chunkStreamContext, publishStreamContext, payloadBuffer);
-            await BroacastVideoMessageToSubscribersAsync(chunkStreamContext, clientContext, publishStreamContext, payloadBuffer, hasHeader);
+            await BroadcastVideoMessageToSubscribersAsync(chunkStreamContext, clientContext, publishStreamContext, payloadBuffer, hasHeader);
             return true;
         }
 
-        private async ValueTask BroacastVideoMessageToSubscribersAsync(
+        private async ValueTask BroadcastVideoMessageToSubscribersAsync(
             IRtmpChunkStreamContext chunkStreamContext,
             IRtmpClientContext clientContext,
             IRtmpPublishStreamContext publishStreamContext,
@@ -60,10 +60,10 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
             bool hasSequenceHeader)
         {
             var subscribers = _streamManager.GetSubscribers(publishStreamContext.StreamPath);
-            await BroacastVideoMessageToSubscribersAsync(chunkStreamContext, clientContext, publishStreamContext, !hasSequenceHeader, payloadBuffer, subscribers);
+            await BroadcastVideoMessageToSubscribersAsync(chunkStreamContext, clientContext, publishStreamContext, !hasSequenceHeader, payloadBuffer, subscribers);
         }
 
-        private async ValueTask BroacastVideoMessageToSubscribersAsync(
+        private async ValueTask BroadcastVideoMessageToSubscribersAsync(
             IRtmpChunkStreamContext chunkStreamContext,
             IRtmpClientContext clientContext,
             IRtmpPublishStreamContext publishStreamContext,
