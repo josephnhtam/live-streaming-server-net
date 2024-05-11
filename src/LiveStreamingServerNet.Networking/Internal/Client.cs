@@ -96,17 +96,17 @@ namespace LiveStreamingServerNet.Networking.Internal
             _bufferSender.Send(writer, callback);
         }
 
-        public Task SendAsync(INetBuffer netBuffer)
+        public ValueTask SendAsync(INetBuffer netBuffer)
         {
             return _bufferSender.SendAsync(netBuffer);
         }
 
-        public Task SendAsync(IRentedBuffer rentedBuffer)
+        public ValueTask SendAsync(IRentedBuffer rentedBuffer)
         {
             return _bufferSender.SendAsync(rentedBuffer);
         }
 
-        public Task SendAsync(Action<INetBuffer> writer)
+        public ValueTask SendAsync(Action<INetBuffer> writer)
         {
             return _bufferSender.SendAsync(writer);
         }

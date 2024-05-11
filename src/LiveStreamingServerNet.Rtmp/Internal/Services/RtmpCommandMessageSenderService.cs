@@ -3,6 +3,7 @@ using LiveStreamingServerNet.Rtmp.Internal.Extensions;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpHeaders;
 using LiveStreamingServerNet.Rtmp.Internal.Services.Contracts;
+using LiveStreamingServerNet.Utilities;
 
 namespace LiveStreamingServerNet.Rtmp.Internal.Services
 {
@@ -36,9 +37,9 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             }, callback);
         }
 
-        public Task SendCommandMessageAsync(IRtmpClientContext clientContext, uint chunkStreamId, string commandName, double transactionId, IReadOnlyDictionary<string, object>? commandObject, IReadOnlyList<object?> parameters, AmfEncodingType amfEncodingType = AmfEncodingType.Amf0)
+        public ValueTask SendCommandMessageAsync(IRtmpClientContext clientContext, uint chunkStreamId, string commandName, double transactionId, IReadOnlyDictionary<string, object>? commandObject, IReadOnlyList<object?> parameters, AmfEncodingType amfEncodingType = AmfEncodingType.Amf0)
         {
-            var tcs = new TaskCompletionSource();
+            var tcs = new ValueTaskCompletionSource();
             SendCommandMessage(clientContext, chunkStreamId, commandName, transactionId, commandObject, parameters, amfEncodingType, _ => tcs.SetResult());
             return tcs.Task;
         }

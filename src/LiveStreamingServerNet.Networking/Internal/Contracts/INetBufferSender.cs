@@ -9,8 +9,8 @@ namespace LiveStreamingServerNet.Networking.Internal.Contracts
         void Send(INetBuffer netBuffer, Action<bool>? callback);
         void Send(IRentedBuffer rentedBuffer, Action<bool>? callback);
         void Send(Action<INetBuffer> writer, Action<bool>? callback);
-        Task SendAsync(INetBuffer netBuffer);
-        Task SendAsync(IRentedBuffer rentedBuffer);
-        Task SendAsync(Action<INetBuffer> writer);
+        ValueTask SendAsync(INetBuffer netBuffer);
+        ValueTask SendAsync(IRentedBuffer rentedBuffer);
+        ValueTask SendAsync(Action<INetBuffer> writer);
     }
 }

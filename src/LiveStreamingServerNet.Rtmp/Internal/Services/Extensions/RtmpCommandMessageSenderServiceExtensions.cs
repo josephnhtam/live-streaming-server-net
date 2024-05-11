@@ -1,6 +1,7 @@
 ﻿using LiveStreamingServerNet.Rtmp.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.Extensions;
 using LiveStreamingServerNet.Rtmp.Internal.Services.Contracts;
+using LiveStreamingServerNet.Utilities;
 
 namespace LiveStreamingServerNet.Rtmp.Internal.Services.Extensions
 {
@@ -45,7 +46,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services.Extensions
             sender.SendCommandMessage(clientContexts, publishStreamId, "onStatus", 0, null, new List<object?> { properties }, amfEncodingType);
         }
 
-        public static Task SendOnStatusCommandMessageAsync(
+        public static ValueTask SendOnStatusCommandMessageAsync(
             this IRtmpCommandMessageSenderService sender,
             IRtmpClientContext clientContext,
             uint publishStreamId,
@@ -54,7 +55,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services.Extensions
             string description,
             AmfEncodingType amfEncodingType = AmfEncodingType.Amf0)
         {
-            var tcs = new TaskCompletionSource();
+            var tcs = new ValueTaskCompletionSource();
             sender.SendOnStatusCommandMessage(clientContext, publishStreamId, level, code, description, amfEncodingType, _ => tcs.SetResult());
             return tcs.Task;
         }

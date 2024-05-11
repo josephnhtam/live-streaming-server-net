@@ -22,8 +22,8 @@ namespace LiveStreamingServerNet.Networking.Contracts
         void Send(INetBuffer netBuffer, Action<bool>? callback = null);
         void Send(IRentedBuffer rentedBuffer, Action<bool>? callback = null);
         void Send(Action<INetBuffer> writer, Action<bool>? callback = null);
-        Task SendAsync(INetBuffer netBuffer);
-        Task SendAsync(IRentedBuffer rentedBuffer);
-        Task SendAsync(Action<INetBuffer> writer);
+        ValueTask SendAsync(INetBuffer netBuffer);
+        ValueTask SendAsync(IRentedBuffer rentedBuffer);
+        ValueTask SendAsync(Action<INetBuffer> writer);
     }
 }

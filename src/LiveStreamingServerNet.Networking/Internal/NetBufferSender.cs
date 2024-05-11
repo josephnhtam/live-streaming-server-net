@@ -96,9 +96,9 @@ namespace LiveStreamingServerNet.Networking.Internal
             }
         }
 
-        public Task SendAsync(INetBuffer netBuffer)
+        public ValueTask SendAsync(INetBuffer netBuffer)
         {
-            var tcs = new TaskCompletionSource();
+            var tcs = new ValueTaskCompletionSource();
             Send(netBuffer, SetResult);
             return tcs.Task;
 
@@ -111,9 +111,9 @@ namespace LiveStreamingServerNet.Networking.Internal
             }
         }
 
-        public Task SendAsync(IRentedBuffer rentedBuffer)
+        public ValueTask SendAsync(IRentedBuffer rentedBuffer)
         {
-            var tcs = new TaskCompletionSource();
+            var tcs = new ValueTaskCompletionSource();
             Send(rentedBuffer, SetResult);
             return tcs.Task;
 
@@ -126,9 +126,9 @@ namespace LiveStreamingServerNet.Networking.Internal
             }
         }
 
-        public Task SendAsync(Action<INetBuffer> writer)
+        public ValueTask SendAsync(Action<INetBuffer> writer)
         {
-            var tcs = new TaskCompletionSource();
+            var tcs = new ValueTaskCompletionSource();
             Send(writer, SetResult);
             return tcs.Task;
 

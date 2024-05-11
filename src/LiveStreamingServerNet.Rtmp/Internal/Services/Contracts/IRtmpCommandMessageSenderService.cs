@@ -15,7 +15,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services.Contracts
             AmfEncodingType amfEncodingType = AmfEncodingType.Amf0,
             Action<bool>? callback = null);
 
-        Task SendCommandMessageAsync(
+        ValueTask SendCommandMessageAsync(
             IRtmpClientContext clientContext,
             uint chunkStreamId,
             string commandName,

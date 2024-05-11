@@ -2,6 +2,7 @@
 using LiveStreamingServerNet.Rtmp.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpHeaders;
 using LiveStreamingServerNet.Rtmp.Internal.Services.Contracts;
+using LiveStreamingServerNet.Utilities;
 
 namespace LiveStreamingServerNet.Rtmp.Internal.Services
 {
@@ -31,9 +32,9 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             );
         }
 
-        public Task SendAsync<TRtmpChunkMessageHeader>(IRtmpClientContext clientContext, RtmpChunkBasicHeader basicHeader, TRtmpChunkMessageHeader messageHeader, Action<INetBuffer> payloadWriter) where TRtmpChunkMessageHeader : struct, IRtmpChunkMessageHeader
+        public ValueTask SendAsync<TRtmpChunkMessageHeader>(IRtmpClientContext clientContext, RtmpChunkBasicHeader basicHeader, TRtmpChunkMessageHeader messageHeader, Action<INetBuffer> payloadWriter) where TRtmpChunkMessageHeader : struct, IRtmpChunkMessageHeader
         {
-            var tcs = new TaskCompletionSource();
+            var tcs = new ValueTaskCompletionSource();
             Send(clientContext, basicHeader, messageHeader, payloadWriter, _ => tcs.SetResult());
             return tcs.Task;
         }

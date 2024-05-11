@@ -1,7 +1,6 @@
 ﻿using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Handshakes;
-using System.Collections.Concurrent;
 
 namespace LiveStreamingServerNet.Rtmp.Internal
 {
