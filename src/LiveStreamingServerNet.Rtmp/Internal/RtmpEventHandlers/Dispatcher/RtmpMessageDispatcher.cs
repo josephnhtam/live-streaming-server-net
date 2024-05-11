@@ -17,7 +17,9 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Dispatcher
 
         public async ValueTask<bool> DispatchAsync(IRtmpChunkStreamContext chunkStreamContext, IRtmpClientContext clientContext, CancellationToken cancellationToken)
         {
-            var handler = _handlerCache[chunkStreamContext.MessageHeader.MessageTypeId];
+            var handler = _handlerCache.GetValueOrDefault(chunkStreamContext.MessageHeader.MessageTypeId) ??
+                throw new InvalidOperationException($"No handler found for message type {chunkStreamContext.MessageHeader.MessageTypeId}");
+
             return await handler.HandleAsync(chunkStreamContext, clientContext, chunkStreamContext.PayloadBuffer!, cancellationToken);
         }
 
