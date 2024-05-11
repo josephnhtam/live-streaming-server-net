@@ -15,5 +15,10 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Dispatcher
         {
             return _handlerMap.TryGetValue(messageTypeId, out var handlerType) ? handlerType : null;
         }
+
+        public IReadOnlyDictionary<byte, Type> GetHandlers()
+        {
+            return _handlerMap;
+        }
     }
 }

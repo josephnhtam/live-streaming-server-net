@@ -17,6 +17,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands.Dispat
         private readonly IRtmpCommandHanlderMap _handlerMap;
         private readonly ILogger _logger;
         private readonly ConcurrentDictionary<Type, (Type, ParameterInfo[])> _commandParametersMap;
+        private readonly ConcurrentDictionary<Type, RtmpCommandHandler> _clientHandlerCache;
 
         public RtmpCommandDispatcher(IServiceProvider services, IRtmpCommandHanlderMap handlerMap, ILogger<RtmpCommandDispatcher> logger)
         {
@@ -24,6 +25,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands.Dispat
             _handlerMap = handlerMap;
             _logger = logger;
             _commandParametersMap = new ConcurrentDictionary<Type, (Type, ParameterInfo[])>();
+            _clientHandlerCache = new ConcurrentDictionary<Type, RtmpCommandHandler>();
         }
 
         public async ValueTask<bool> DispatchAsync(
@@ -48,8 +50,8 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands.Dispat
             var (commandType, commandParameterInfos) = GetCommandInfo(commandHandlerType);
             var commandParameters = ReadParameters(commandParameterInfos, reader, isUsingAmf3);
             var command = Activator.CreateInstance(commandType, commandParameters)!;
+            var commandHandler = GetCommandHandler(commandHandlerType);
 
-            var commandHandler = (_services.GetRequiredService(commandHandlerType) as RtmpCommandHandler)!;
             return await commandHandler.HandleAsync(chunkStreamContext, clientContext, command, cancellationToken);
         }
 
@@ -86,6 +88,13 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands.Dispat
 
                 return (commandType, commandConstructor.GetParameters());
             });
+        }
+
+        private RtmpCommandHandler GetCommandHandler(Type commandHandlerType)
+        {
+            return _clientHandlerCache.GetOrAdd(commandHandlerType, (commandHandlerType) =>
+                (_services.GetRequiredService(commandHandlerType) as RtmpCommandHandler)!
+            );
         }
 
         private static bool IsUsingAmf3(IRtmpChunkStreamContext chunkStreamContext)

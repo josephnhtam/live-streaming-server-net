@@ -3,5 +3,6 @@
     internal interface IRtmpMessageHandlerMap
     {
         Type? GetHandlerType(byte messageTypeId);
+        IReadOnlyDictionary<byte, Type> GetHandlers();
     }
 }
