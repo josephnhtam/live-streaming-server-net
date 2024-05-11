@@ -4,7 +4,7 @@ using Mediator;
 
 namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEvents
 {
-    internal record struct RtmpHandshakeC1Event(
+    internal record RtmpHandshakeC1Event(
         IRtmpClientContext ClientContext,
         INetworkStreamReader NetworkStream) : IRequest<RtmpEventConsumingResult>;
 }

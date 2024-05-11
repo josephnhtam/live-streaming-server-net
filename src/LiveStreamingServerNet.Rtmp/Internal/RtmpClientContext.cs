@@ -33,9 +33,9 @@ namespace LiveStreamingServerNet.Rtmp.Internal
         private bool _isStreamCreated;
         private uint _videoTimestamp;
         private uint _audioTimestamp;
-        private object _videoTimestampSyncLock = new();
-        private object _audioTimestampSyncLock = new();
-        private readonly ConcurrentDictionary<uint, IRtmpChunkStreamContext> _chunkStreamContexts = new();
+        private readonly object _videoTimestampSyncLock = new();
+        private readonly object _audioTimestampSyncLock = new();
+        private readonly Dictionary<uint, IRtmpChunkStreamContext> _chunkStreamContexts = new();
 
         public RtmpClientContext(IClientHandle client)
         {
@@ -59,7 +59,13 @@ namespace LiveStreamingServerNet.Rtmp.Internal
 
         public IRtmpChunkStreamContext GetChunkStreamContext(uint chunkStreamId)
         {
-            return _chunkStreamContexts.GetOrAdd(chunkStreamId, new RtmpChunkStreamContext(chunkStreamId));
+            lock (_chunkStreamContexts)
+            {
+                if (_chunkStreamContexts.TryGetValue(chunkStreamId, out var context))
+                    return context;
+
+                return _chunkStreamContexts[chunkStreamId] = new RtmpChunkStreamContext(chunkStreamId);
+            }
         }
 
         public uint CreateNewStream()

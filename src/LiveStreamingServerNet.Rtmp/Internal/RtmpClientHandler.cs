@@ -3,6 +3,8 @@ using LiveStreamingServerNet.Rtmp.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.Logging;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEvents;
 using LiveStreamingServerNet.Rtmp.RateLimiting.Contracts;
+using LiveStreamingServerNet.Utilities;
+using LiveStreamingServerNet.Utilities.Contracts;
 using Mediator;
 using Microsoft.Extensions.Logging;
 
@@ -15,6 +17,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal
         private readonly IRtmpClientContextFactory _clientContextFactory;
         private readonly ILogger _logger;
         private readonly IBandwidthLimiter? _bandwidthLimiter;
+        private readonly IPool<RtmpChunkEvent> _rtmpChunkEventPool;
 
         private IRtmpClientContext _clientContext = default!;
 
@@ -30,6 +33,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal
             _clientContextFactory = clientContextFactory;
             _logger = logger;
             _bandwidthLimiter = bandwidthLimiterFactory?.Create();
+            _rtmpChunkEventPool = new Pool<RtmpChunkEvent>(() => new RtmpChunkEvent());
         }
 
         public async Task InitializeAsync(IClientHandle client)
@@ -87,7 +91,19 @@ namespace LiveStreamingServerNet.Rtmp.Internal
 
         private async ValueTask<RtmpEventConsumingResult> HandleChunkAsync(IRtmpClientContext clientContext, INetworkStreamReader networkStream, CancellationToken cancellationToken)
         {
-            return await _mediator.Send(new RtmpChunkEvent(clientContext, networkStream), cancellationToken);
+            var @event = _rtmpChunkEventPool.Obtain();
+
+            try
+            {
+                @event.ClientContext = clientContext;
+                @event.NetworkStream = networkStream;
+
+                return await _mediator.Send(@event, cancellationToken);
+            }
+            finally
+            {
+                _rtmpChunkEventPool.Recycle(@event);
+            }
         }
 
         public async ValueTask DisposeAsync()

@@ -4,7 +4,9 @@ using Mediator;
 
 namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEvents
 {
-    internal record struct RtmpChunkEvent(
-        IRtmpClientContext ClientContext,
-        INetworkStreamReader NetworkStream) : IRequest<RtmpEventConsumingResult>;
+    internal class RtmpChunkEvent : IRequest<RtmpEventConsumingResult>
+    {
+        public IRtmpClientContext ClientContext { get; set; } = default!;
+        public INetworkStreamReader NetworkStream { get; set; } = default!;
+    }
 }

@@ -55,7 +55,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers
             while (!tcs.Task.IsCompleted)
             {
                 // Act
-                var @event = new RtmpChunkEvent(clientContext, networkStream);
+                var @event = new RtmpChunkEvent { ClientContext = clientContext, NetworkStream = networkStream };
                 var result = await sut.Handle(@event, default);
 
                 // Assert
