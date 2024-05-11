@@ -27,7 +27,7 @@ namespace LiveStreamingServerNet.Networking.Internal
             var tcpClient = await _tcpListener.AcceptTcpClientAsync(cancellationToken);
             tcpClient.ReceiveBufferSize = _config.ReceiveBufferSize;
             tcpClient.SendBufferSize = _config.SendBufferSize;
-            tcpClient.NoDelay = !_config.EnableNagleAalgorithm;
+            tcpClient.NoDelay = _config.NoDelay;
 
             return new TcpClientWrapper(tcpClient);
         }
