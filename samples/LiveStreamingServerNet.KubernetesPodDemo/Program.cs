@@ -52,8 +52,8 @@ namespace LiveStreamingServerNet.KubernetesPodDemo
                 {
                     serverConfigurator.ConfigureNetwork(options =>
                     {
-                        options.EnableNagleAalgorithm = false;
-                        options.FlushingInterval = TimeSpan.FromMilliseconds(500);
+                        options.NoDelay = true;
+                        options.FlushingInterval = TimeSpan.FromMilliseconds(350);
                     });
                 })
                 .ConfigureRtmpServer(rtmpServerConfigurator =>
