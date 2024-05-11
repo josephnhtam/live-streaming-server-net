@@ -20,7 +20,7 @@ namespace LiveStreamingServerNet.Networking
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public ValueTask ReadExactlyAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken = default)
         {
-            return InnerStream.ReadExactlyAsync(buffer, offset, count, cancellationToken);
+            return InnerStream.ReadExactlyAsync(new Memory<byte>(buffer, offset, count), cancellationToken);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
