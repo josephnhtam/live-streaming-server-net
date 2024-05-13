@@ -1,5 +1,4 @@
 ﻿using LiveStreamingServerNet.Networking.Contracts;
-using LiveStreamingServerNet.Networking.Installer.Contracts;
 
 namespace LiveStreamingServerNet.Networking.Internal.Contracts
 {

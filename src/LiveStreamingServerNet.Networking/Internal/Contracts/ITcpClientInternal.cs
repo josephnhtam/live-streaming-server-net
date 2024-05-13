@@ -1,7 +1,7 @@
 ﻿using LiveStreamingServerNet.Networking.Contracts;
 using System.Net.Sockets;
 
-namespace LiveStreamingServerNet.Networking.Installer.Contracts
+namespace LiveStreamingServerNet.Networking.Internal.Contracts
 {
     internal interface ITcpClientInternal : ITcpClient
     {

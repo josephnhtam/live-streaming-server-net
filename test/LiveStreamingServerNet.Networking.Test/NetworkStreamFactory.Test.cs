@@ -1,5 +1,4 @@
 ﻿using LiveStreamingServerNet.Networking.Configurations;
-using LiveStreamingServerNet.Networking.Installer.Contracts;
 using LiveStreamingServerNet.Networking.Internal;
 using LiveStreamingServerNet.Networking.Internal.Contracts;
 using Microsoft.Extensions.Options;

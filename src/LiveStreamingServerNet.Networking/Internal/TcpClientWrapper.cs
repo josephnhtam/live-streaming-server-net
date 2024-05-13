@@ -1,4 +1,4 @@
-﻿using LiveStreamingServerNet.Networking.Installer.Contracts;
+﻿using LiveStreamingServerNet.Networking.Internal.Contracts;
 using System.Diagnostics.CodeAnalysis;
 using System.Net.Sockets;
 
