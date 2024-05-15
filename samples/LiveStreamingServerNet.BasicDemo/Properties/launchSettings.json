@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "LiveStreamingServerNet.BasicDemo": {
+      "commandName": "Project"
+    },
+    "Container (Dockerfile)": {
+      "commandName": "Docker"
+    }
+  }
+}
