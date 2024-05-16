@@ -2,6 +2,7 @@
 using LiveStreamingServerNet.Networking.Internal.Contracts;
 using System.Net;
 using System.Net.Sockets;
+using System.Reflection;
 
 namespace LiveStreamingServerNet.Networking.Internal
 {
@@ -24,6 +25,13 @@ namespace LiveStreamingServerNet.Networking.Internal
         public async ValueTask<ITcpClientInternal> AcceptTcpClientAsync(CancellationToken cancellationToken)
         {
             var tcpClient = await _tcpListener.AcceptTcpClientAsync(cancellationToken);
+
+            if (_config.PreferInlineCompletionsOnNonWindows && Environment.OSVersion.Platform != PlatformID.Win32NT)
+            {
+                typeof(Socket).GetProperty("PreferInlineCompletions", BindingFlags.NonPublic | BindingFlags.Instance)?
+                    .SetValue(tcpClient.Client, true);
+            }
+
             tcpClient.ReceiveBufferSize = _config.ReceiveBufferSize;
             tcpClient.SendBufferSize = _config.SendBufferSize;
             tcpClient.NoDelay = _config.NoDelay;

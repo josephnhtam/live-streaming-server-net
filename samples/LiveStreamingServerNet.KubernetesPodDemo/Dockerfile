@@ -28,9 +28,4 @@ WORKDIR /app
 COPY --from=publish /app/publish .
 
 ENV ASPNETCORE_URLS=http://+:80
-
-# ref: https://github.com/dotnet/runtime/issues/72153
-ENV DOTNET_SYSTEM_NET_SOCKETS_INLINE_COMPLETIONS=1
-ENV DOTNET_ThreadPool_UnfairSemaphoreSpinLimit=0
-
 ENTRYPOINT ["dotnet", "LiveStreamingServerNet.KubernetesPodDemo.dll"]
