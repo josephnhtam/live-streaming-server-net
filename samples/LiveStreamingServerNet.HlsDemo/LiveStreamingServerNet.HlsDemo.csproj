@@ -7,9 +7,13 @@
     <InvariantGlobalization>true</InvariantGlobalization>
     <IsPackable>false</IsPackable>
     <ServerGarbageCollection>false</ServerGarbageCollection>
+    <UserSecretsId>280e8dcf-1156-4046-ad81-2938621cd0ff</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>..\..</DockerfileContext>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.6" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
 

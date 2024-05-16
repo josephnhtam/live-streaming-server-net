@@ -57,6 +57,12 @@ namespace LiveStreamingServerNet.HlsDemo
         private static ILiveStreamingServer CreateLiveStreamingServer(string trasmuxerOutputPath)
         {
             return LiveStreamingServerBuilder.Create()
+                .ConfigureServer(options => options
+                    .ConfigureNetwork(options =>
+                    {
+                        options.NoDelay = true;
+                        options.FlushingInterval = TimeSpan.FromMilliseconds(300);
+                    }))
                 .ConfigureRtmpServer(options => options
                     .AddTransmuxer(options =>
                     {
@@ -65,6 +71,11 @@ namespace LiveStreamingServerNet.HlsDemo
                     })
                     .AddFFmpeg(options =>
                     {
+                        options.FFmpegArguments =
+                                    "-i {inputPath} -c:v copy -c:a copy " +
+                                    "-preset ultrafast -tune zerolatency -hls_time 1 " +
+                                    "-hls_flags delete_segments -hls_list_size 20 -f hls {outputPath}";
+
                         options.FFmpegPath = ExecutableFinder.FindExecutableFromPATH("ffmpeg")!;
                         options.OutputPathResolver = (contextIdentifier, streamPath, streamArguments)
                             => Task.FromResult(Path.Combine(trasmuxerOutputPath, streamPath.Trim('/'), "output.m3u8"));
