@@ -65,7 +65,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
 
             var tcs = new TaskCompletionSource();
 
-            client.When(x => x.Send(Arg.Any<IRentedBuffer>())).Do(_ => tcs.TrySetResult());
+            client.When(x => x.SendAsync(Arg.Any<IRentedBuffer>())).Do(_ => tcs.TrySetResult());
 
             // Act
             _sut.RegisterClient(clientContext);
@@ -77,7 +77,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
             Received.InOrder(() =>
             {
                 streamContext.Received(1).UntilInitializationComplete();
-                client.Received(1).Send(Arg.Any<IRentedBuffer>());
+                client.Received(1).SendAsync(Arg.Any<IRentedBuffer>());
             });
         }
     }
