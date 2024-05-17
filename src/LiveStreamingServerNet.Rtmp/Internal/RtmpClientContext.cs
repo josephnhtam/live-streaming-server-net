@@ -110,6 +110,15 @@ namespace LiveStreamingServerNet.Rtmp.Internal
                     }
             }
         }
+
+        public async ValueTask DisposeAsync()
+        {
+            if (PublishStreamContext != null)
+                await PublishStreamContext.DisposeAsync();
+
+            if (StreamSubscriptionContext != null)
+                await StreamSubscriptionContext.DisposeAsync();
+        }
     }
 
     internal class RtmpPublishStreamContext : IRtmpPublishStreamContext
@@ -129,6 +138,11 @@ namespace LiveStreamingServerNet.Rtmp.Internal
             StreamPath = streamPath;
             StreamArguments = new Dictionary<string, string>(streamArguments);
             GroupOfPicturesCache = new GroupOfPicturesCache();
+        }
+
+        public ValueTask DisposeAsync()
+        {
+            return ValueTask.CompletedTask;
         }
     }
 
@@ -212,6 +226,12 @@ namespace LiveStreamingServerNet.Rtmp.Internal
         public Task UntilInitializationComplete()
         {
             return _initializationTask;
+        }
+
+        public ValueTask DisposeAsync()
+        {
+            _initializationTcs.TrySetCanceled();
+            return ValueTask.CompletedTask;
         }
     }
 }

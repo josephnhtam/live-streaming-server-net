@@ -4,7 +4,7 @@ using LiveStreamingServerNet.Utilities.Contracts;
 
 namespace LiveStreamingServerNet.Rtmp.Internal.Contracts
 {
-    internal interface IRtmpClientContext
+    internal interface IRtmpClientContext : IAsyncDisposable
     {
         IClientHandle Client { get; }
         RtmpClientState State { get; set; }
@@ -39,7 +39,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Contracts
         bool UpdateTimestamp(uint timestamp, MediaType mediaType);
     }
 
-    internal interface IRtmpPublishStreamContext
+    internal interface IRtmpPublishStreamContext : IAsyncDisposable
     {
         uint StreamId { get; }
         string StreamPath { get; }
@@ -51,7 +51,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Contracts
         IGroupOfPicturesCache GroupOfPicturesCache { get; }
     }
 
-    internal interface IRtmpStreamSubscriptionContext
+    internal interface IRtmpStreamSubscriptionContext : IAsyncDisposable
     {
         uint StreamId { get; }
         uint ChunkStreamId { get; }
