@@ -25,7 +25,7 @@ namespace LiveStreamingServerNet.Networking.Internal
             _logger = logger;
 
             _pendingMessageChannel = Channel.CreateUnbounded<PendingMessage>(
-                new UnboundedChannelOptions { SingleReader = true });
+                new UnboundedChannelOptions { SingleReader = true, AllowSynchronousContinuations = true });
         }
 
         public void Start(INetworkStreamWriter networkStream, CancellationToken cancellationToken)

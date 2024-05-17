@@ -218,7 +218,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
                 _mediaPackageDiscarder = mediaPackageDiscarderFactory.Create(clientContext.Client.ClientId);
 
                 _packageChannel = Channel.CreateUnbounded<ClientMediaPackage>(
-                    new UnboundedChannelOptions { SingleReader = true });
+                    new UnboundedChannelOptions { SingleReader = true, AllowSynchronousContinuations = true });
                 _cts = new CancellationTokenSource();
                 CancellationToken = _cts.Token;
             }

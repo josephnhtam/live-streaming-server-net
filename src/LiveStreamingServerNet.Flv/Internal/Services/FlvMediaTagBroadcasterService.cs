@@ -145,7 +145,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
                 _mediaPackageDiscarder = mediaPackageDiscarder;
 
                 _packageChannel = Channel.CreateUnbounded<ClientMediaPackage>(
-                    new UnboundedChannelOptions { SingleReader = true });
+                    new UnboundedChannelOptions { SingleReader = true, AllowSynchronousContinuations = true });
                 _cts = new CancellationTokenSource();
                 CancellationToken = _cts.Token;
             }
