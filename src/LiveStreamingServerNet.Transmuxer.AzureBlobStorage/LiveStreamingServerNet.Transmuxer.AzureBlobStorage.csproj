@@ -10,7 +10,7 @@
     <PackageTags>live-streaming;rtmp;transmuxer;hls;azure</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <Version>0.9.1</Version>
+    <Version>0.9.3</Version>
   </PropertyGroup>
 
   <ItemGroup>
