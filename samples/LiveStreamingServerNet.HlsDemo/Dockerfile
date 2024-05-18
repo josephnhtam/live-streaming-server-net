@@ -26,6 +26,5 @@ RUN dotnet publish "./LiveStreamingServerNet.HlsDemo.csproj" -c $BUILD_CONFIGURA
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-
 ENV ASPNETCORE_URLS=http://+:80
 ENTRYPOINT ["dotnet", "LiveStreamingServerNet.HlsDemo.dll"]
