@@ -1,4 +1,5 @@
 ﻿using LiveStreamingServerNet.Networking.Contracts;
+using LiveStreamingServerNet.Networking.Exceptions;
 using LiveStreamingServerNet.Rtmp.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.Logging;
 using LiveStreamingServerNet.Rtmp.Internal.MediaPackageDiscarding.Contracts;
@@ -152,7 +153,11 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
 
         private async Task ClientTask(IRtmpClientContext clientContext)
         {
-            var context = _clientMediaContexts[clientContext];
+            var context = _clientMediaContexts.GetValueOrDefault(clientContext);
+
+            if (context == null)
+                return;
+
             var cancellation = context.CancellationToken;
             var subscriptionInitialized = false;
 
@@ -179,6 +184,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
                         await clientContext.Client.SendAsync(package.RentedPayload);
                     }
                     catch (OperationCanceledException) when (cancellation.IsCancellationRequested) { }
+                    catch (BufferSendingException) when (!context.ClientContext.Client.IsConnected) { }
                     catch (Exception ex)
                     {
                         _logger.FailedToSendMediaMessage(clientContext.Client.ClientId, ex);
