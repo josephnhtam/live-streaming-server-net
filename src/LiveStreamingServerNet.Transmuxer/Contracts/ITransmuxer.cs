@@ -7,6 +7,6 @@
     {
         string Name { get; }
         Guid ContextIdentifier { get; }
-        Task RunAsync(string inputPath, OnTransmuxerStarted? onStarted, OnTransmuxerEnded? onEnded, CancellationToken cancellation);
+        Task RunAsync(string inputPath, string streamPath, IReadOnlyDictionary<string, string> streamArguments, OnTransmuxerStarted? onStarted, OnTransmuxerEnded? onEnded, CancellationToken cancellation);
     }
 }

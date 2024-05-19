@@ -1,6 +1,6 @@
 ﻿using LiveStreamingServerNet.Transmuxer.Hls;
 
-namespace LiveStreamingServerNet.Transmuxer.Internal.Hls.Contracts
+namespace LiveStreamingServerNet.Transmuxer.Internal.Hls.Services.Contracts
 {
     internal interface IHlsStorageEventDispatcher
     {

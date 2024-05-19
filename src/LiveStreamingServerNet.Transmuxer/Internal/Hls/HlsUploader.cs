@@ -4,6 +4,7 @@ using LiveStreamingServerNet.Transmuxer.Hls.Contracts;
 using LiveStreamingServerNet.Transmuxer.Internal.Hls.Contracts;
 using LiveStreamingServerNet.Transmuxer.Internal.Hls.M3u8;
 using LiveStreamingServerNet.Transmuxer.Internal.Hls.M3u8.Contracts;
+using LiveStreamingServerNet.Transmuxer.Internal.Hls.Services.Contracts;
 using LiveStreamingServerNet.Transmuxer.Internal.Logging;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;

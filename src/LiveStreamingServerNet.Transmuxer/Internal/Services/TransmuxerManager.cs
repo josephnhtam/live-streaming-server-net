@@ -84,7 +84,7 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Services
 
             try
             {
-                await transmuxer.RunAsync(inputPath, TransmuxerStarted, TransmuxerStopped, cts.Token);
+                await transmuxer.RunAsync(inputPath, streamPath, streamArguments, TransmuxerStarted, TransmuxerStopped, cts.Token);
             }
             catch (OperationCanceledException) when (cts.IsCancellationRequested) { }
             catch (Exception ex)

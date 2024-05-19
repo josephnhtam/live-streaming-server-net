@@ -1,12 +1,12 @@
 ﻿using LiveStreamingServerNet.Transmuxer.Hls;
 using LiveStreamingServerNet.Transmuxer.Hls.Contracts;
-using LiveStreamingServerNet.Transmuxer.Internal.Hls.Contracts;
+using LiveStreamingServerNet.Transmuxer.Internal.Hls.Services.Contracts;
 using LiveStreamingServerNet.Transmuxer.Internal.Logging;
 using LiveStreamingServerNet.Utilities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace LiveStreamingServerNet.Transmuxer.Internal.Hls
+namespace LiveStreamingServerNet.Transmuxer.Internal.Hls.Services
 {
     internal class HlsStorageEventDispatcher : IHlsStorageEventDispatcher
     {

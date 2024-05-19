@@ -26,6 +26,8 @@ namespace LiveStreamingServerNet.Transmuxer
 
         public async Task RunAsync(
             string inputPath,
+            string streamPath,
+            IReadOnlyDictionary<string, string> streamArguments,
             OnTransmuxerStarted? onStarted,
             OnTransmuxerEnded? onEnded,
             CancellationToken cancellation)
