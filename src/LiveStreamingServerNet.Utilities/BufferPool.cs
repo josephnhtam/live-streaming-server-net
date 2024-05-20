@@ -12,7 +12,10 @@ namespace LiveStreamingServerNet.Utilities
 
         static BufferPool()
         {
-            _pool = ArrayPool<byte>.Create(_maxBufferLength, _maxNumberOfBuffersPerBucket);
+            _pool = ArrayPool<byte>.Create(
+                _maxBufferLength,
+                Math.Max(1, Environment.ProcessorCount) * _maxNumberOfBuffersPerBucket
+            );
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
