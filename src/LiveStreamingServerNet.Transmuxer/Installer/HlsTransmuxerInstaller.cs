@@ -19,9 +19,11 @@ namespace LiveStreamingServerNet.Transmuxer.Installer
             var config = new HlsTransmuxerConfiguration();
             configure?.Invoke(config);
 
-            services.AddSingleton<ITransmuxerFactory, HlsTransmuxerFactory>();
             services.TryAddSingleton<IHlsTransmuxerManager, HlsTransmuxerManager>();
             services.TryAddSingleton<IRtmpMediaMessageInterceptor, HlsRtmpMediaMessageScraper>();
+
+            services.AddSingleton<ITransmuxerFactory>(svc =>
+                new HlsTransmuxerFactory(svc.GetRequiredService<IHlsTransmuxerManager>(), config));
 
             return transmuxerBuilder;
         }

@@ -10,7 +10,6 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Hls
     internal class HlsTransmuxer : IHlsTransmuxer
     {
         private readonly IHlsTransmuxerManager _transmuxerManager;
-        private readonly string _outputDir;
 
         private TsMuxer _tsMuxer;
         private bool _hasVideo;
@@ -22,15 +21,15 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Hls
 
         public HlsTransmuxer(string name, Guid contextIdentifier, IHlsTransmuxerManager transmuxerManager, string manifestOutputhPath, string tsFileOutputPath)
         {
+            new DirectoryInfo(Path.GetDirectoryName(manifestOutputhPath)!).Create();
+            new DirectoryInfo(Path.GetDirectoryName(tsFileOutputPath)!).Create();
+
             _transmuxerManager = transmuxerManager;
             _tsMuxer = new TsMuxer(tsFileOutputPath);
 
-            _outputDir = Path.Combine(Directory.GetCurrentDirectory(), "output");
-            new DirectoryInfo(_outputDir).Create();
-
             Name = name;
             ContextIdentifier = contextIdentifier;
-            OutputPath = Path.Combine(_outputDir, "output.m3u8");
+            OutputPath = manifestOutputhPath;
         }
 
         public ValueTask OnReceiveMediaMessage(MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp)
