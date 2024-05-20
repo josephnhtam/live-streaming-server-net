@@ -3,6 +3,7 @@ using LiveStreamingServerNet.Transmuxer.Contracts;
 using LiveStreamingServerNet.Transmuxer.Internal.Containers;
 using LiveStreamingServerNet.Transmuxer.Internal.Hls.Contracts;
 using LiveStreamingServerNet.Transmuxer.Internal.Hls.Services.Contracts;
+using LiveStreamingServerNet.Utilities;
 using LiveStreamingServerNet.Utilities.Contracts;
 
 namespace LiveStreamingServerNet.Transmuxer.Internal.Hls
@@ -21,8 +22,8 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Hls
 
         public HlsTransmuxer(string name, Guid contextIdentifier, IHlsTransmuxerManager transmuxerManager, string manifestOutputhPath, string tsFileOutputPath)
         {
-            new DirectoryInfo(Path.GetDirectoryName(manifestOutputhPath)!).Create();
-            new DirectoryInfo(Path.GetDirectoryName(tsFileOutputPath)!).Create();
+            DirectoryUtility.CreateDirectoryIfNotExists(Path.GetDirectoryName(manifestOutputhPath));
+            DirectoryUtility.CreateDirectoryIfNotExists(Path.GetDirectoryName(tsFileOutputPath));
 
             _transmuxerManager = transmuxerManager;
             _tsMuxer = new TsMuxer(tsFileOutputPath);

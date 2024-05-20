@@ -1,5 +1,6 @@
 ﻿using LiveStreamingServerNet.Transmuxer.Contracts;
 using LiveStreamingServerNet.Transmuxer.Exceptions;
+using LiveStreamingServerNet.Utilities;
 using System.Diagnostics;
 
 namespace LiveStreamingServerNet.Transmuxer.Internal.FFmpeg
@@ -32,7 +33,7 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.FFmpeg
             OnTransmuxerEnded? onEnded,
             CancellationToken cancellation)
         {
-            new DirectoryInfo(Path.GetDirectoryName(_outputPath)!).Create();
+            DirectoryUtility.CreateDirectoryIfNotExists(Path.GetDirectoryName(_outputPath));
             await RunProcessAsync(inputPath, _outputPath, onStarted, onEnded, cancellation);
         }
 
