@@ -1,5 +1,4 @@
 ﻿using LiveStreamingServerNet.Utilities.Contracts;
-using System.Buffers;
 
 namespace LiveStreamingServerNet.Utilities
 {
@@ -12,12 +11,14 @@ namespace LiveStreamingServerNet.Utilities
         private byte[] _buffer;
         private int _claimed;
 
+        public static int MinimumBufferSize { get; set; } = 512;
+
         public RentedBuffer(int size, int initialClaim = 1)
         {
             if (initialClaim <= 0)
                 throw new ArgumentOutOfRangeException(nameof(initialClaim));
 
-            _buffer = ArrayPool<byte>.Shared.Rent(size);
+            _buffer = BufferPool.Rent(Math.Max(size, MinimumBufferSize));
             _claimed = initialClaim;
             Size = size;
         }
@@ -32,7 +33,7 @@ namespace LiveStreamingServerNet.Utilities
             byte[] bytes;
 
             if (Interlocked.Add(ref _claimed, -count) <= 0 && (bytes = Interlocked.Exchange(ref _buffer, null!)) != null)
-                ArrayPool<byte>.Shared.Return(bytes);
+                BufferPool.Return(bytes);
         }
     }
 }

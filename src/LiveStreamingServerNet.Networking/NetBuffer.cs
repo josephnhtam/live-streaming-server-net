@@ -1,17 +1,16 @@
 ﻿using LiveStreamingServerNet.Networking.Contracts;
-using System.Buffers;
+using LiveStreamingServerNet.Utilities;
 using System.Runtime.CompilerServices;
 
 namespace LiveStreamingServerNet.Networking
 {
     public partial class NetBuffer : INetBuffer
     {
+        private byte[] _buffer;
+        private int _position;
+        private int _size;
         private bool _isDisposed;
 
-        private byte[] _buffer;
-        public byte[] UnderlyingBuffer => _buffer;
-
-        private int _position;
         public int Position
         {
             get => _position;
@@ -22,7 +21,6 @@ namespace LiveStreamingServerNet.Networking
             }
         }
 
-        private int _size;
         public int Size
         {
             get => _size;
@@ -35,14 +33,13 @@ namespace LiveStreamingServerNet.Networking
 
         public int Capacity => _buffer.Length;
 
-        public NetBuffer()
-        {
-            _buffer = ArrayPool<byte>.Shared.Rent(128);
-        }
+        public byte[] UnderlyingBuffer => _buffer;
+
+        public NetBuffer() : this(1024) { }
 
         public NetBuffer(int initialCapacity)
         {
-            _buffer = ArrayPool<byte>.Shared.Rent(initialCapacity);
+            _buffer = BufferPool.Rent(initialCapacity);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -52,9 +49,11 @@ namespace LiveStreamingServerNet.Networking
                 return;
 
             var newCapacity = CalculateNextCapacity(Capacity, capacity);
-            var buffer = ArrayPool<byte>.Shared.Rent(newCapacity);
+
+            var buffer = BufferPool.Rent(newCapacity);
             _buffer.AsSpan().CopyTo(buffer);
-            ArrayPool<byte>.Shared.Return(_buffer);
+
+            BufferPool.Return(_buffer);
             _buffer = buffer;
         }
 
@@ -157,7 +156,7 @@ namespace LiveStreamingServerNet.Networking
 
             _isDisposed = true;
 
-            ArrayPool<byte>.Shared.Return(_buffer);
+            BufferPool.Return(_buffer);
             _buffer = null!;
         }
     }
