@@ -115,6 +115,9 @@ ClientBin
 [Ss]tyle[Cc]op.*
 ~$*
 *.dbmdl
+*.m3u8
+*.ts
+*.mp4
 Generated_Code #added for RIA/Silverlight projects
 
 # Backup & report files from converting an old project file to a newer
