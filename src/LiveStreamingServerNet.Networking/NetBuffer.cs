@@ -48,27 +48,11 @@ namespace LiveStreamingServerNet.Networking
             if (capacity < Capacity)
                 return;
 
-            var newCapacity = CalculateNextCapacity(Capacity, capacity);
-
-            var buffer = BufferPool.Rent(newCapacity);
+            var buffer = BufferPool.Rent(capacity);
             _buffer.AsSpan().CopyTo(buffer);
 
             BufferPool.Return(_buffer);
             _buffer = buffer;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private int CalculateNextCapacity(int current, int required)
-        {
-            if (current * 2 > required)
-                return current * 2;
-
-            int nextPowerOf2 = 1;
-
-            while (nextPowerOf2 <= required)
-                nextPowerOf2 <<= 1;
-
-            return nextPowerOf2;
         }
 
         public INetBuffer MoveTo(int position)
