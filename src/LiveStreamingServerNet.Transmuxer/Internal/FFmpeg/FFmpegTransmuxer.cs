@@ -2,9 +2,9 @@
 using LiveStreamingServerNet.Transmuxer.Exceptions;
 using System.Diagnostics;
 
-namespace LiveStreamingServerNet.Transmuxer
+namespace LiveStreamingServerNet.Transmuxer.Internal.FFmpeg
 {
-    public class FFmpegTransmuxer : ITransmuxer
+    internal class FFmpegTransmuxer : ITransmuxer
     {
         private readonly string _ffmpegPath;
         private readonly string _arguments;

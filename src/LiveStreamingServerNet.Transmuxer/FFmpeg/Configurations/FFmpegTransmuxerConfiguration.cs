@@ -1,8 +1,8 @@
 ﻿using LiveStreamingServerNet.Transmuxer.Utilities;
 
-namespace LiveStreamingServerNet.Transmuxer.Configurations
+namespace LiveStreamingServerNet.Transmuxer.FFmpeg.Configurations
 {
-    public class FFmpegTransmuxerFactoryConfiguration
+    public class FFmpegTransmuxerConfiguration
     {
         public string Name { get; set; }
         public string FFmpegPath { get; set; }
@@ -10,10 +10,7 @@ namespace LiveStreamingServerNet.Transmuxer.Configurations
         public int GracefulShutdownTimeoutSeconds { get; set; }
         public FFmpegOutputPathResolverDelegate OutputPathResolver { get; set; }
 
-        [Obsolete($"Use {nameof(FFmpegArguments)} instead")]
-        public string FFmpegTransmuxerArguments { get => FFmpegArguments; set => FFmpegArguments = value; }
-
-        public FFmpegTransmuxerFactoryConfiguration()
+        public FFmpegTransmuxerConfiguration()
         {
             Name = "ffmpeg";
             FFmpegPath = ExecutableFinder.FindExecutableFromPATH("ffmpeg") ?? string.Empty;

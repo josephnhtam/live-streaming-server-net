@@ -1,13 +1,13 @@
-﻿using LiveStreamingServerNet.Transmuxer.Configurations;
-using LiveStreamingServerNet.Transmuxer.Contracts;
+﻿using LiveStreamingServerNet.Transmuxer.Contracts;
+using LiveStreamingServerNet.Transmuxer.FFmpeg.Configurations;
 
-namespace LiveStreamingServerNet.Transmuxer
+namespace LiveStreamingServerNet.Transmuxer.Internal.FFmpeg
 {
-    public class FFmpegTransmuxerFactory : ITransmuxerFactory
+    internal class FFmpegTransmuxerFactory : ITransmuxerFactory
     {
-        private readonly FFmpegTransmuxerFactoryConfiguration _config;
+        private readonly FFmpegTransmuxerConfiguration _config;
 
-        public FFmpegTransmuxerFactory(FFmpegTransmuxerFactoryConfiguration config)
+        public FFmpegTransmuxerFactory(FFmpegTransmuxerConfiguration config)
         {
             _config = config;
         }
