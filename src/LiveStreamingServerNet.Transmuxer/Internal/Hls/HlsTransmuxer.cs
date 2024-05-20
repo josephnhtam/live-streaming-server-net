@@ -20,10 +20,10 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Hls
         public Guid ContextIdentifier { get; }
         public string OutputPath { get; }
 
-        public HlsTransmuxer(string name, Guid contextIdentifier, IHlsTransmuxerManager transmuxerManager)
+        public HlsTransmuxer(string name, Guid contextIdentifier, IHlsTransmuxerManager transmuxerManager, string manifestOutputhPath, string tsFileOutputPath)
         {
             _transmuxerManager = transmuxerManager;
-            _tsMuxer = new TsMuxer();
+            _tsMuxer = new TsMuxer(tsFileOutputPath);
 
             _outputDir = Path.Combine(Directory.GetCurrentDirectory(), "output");
             new DirectoryInfo(_outputDir).Create();

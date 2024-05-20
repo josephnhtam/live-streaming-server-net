@@ -2,26 +2,27 @@
 using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.Transmuxer.Internal.Utilities;
 using System.Diagnostics;
-using static LiveStreamingServerNet.Transmuxer.Internal.Containers.TsMuxer;
 
 namespace LiveStreamingServerNet.Transmuxer.Internal.Containers
 {
     internal partial class TsMuxer : IDisposable
     {
         private readonly INetBuffer _tsBuffer;
+        private readonly byte[] _adtsBuffer;
+        private readonly string _outputPath;
 
         private AvcSequenceHeader? _avcSequenceHeader;
         private AacSequenceHeader? _aacSequenceHeader;
-        private byte[] _adtsBuffer;
 
         private byte _videoContinuityCounter;
         private byte _audioContinuityCounter;
         private uint _sequenceNumber;
 
-        public TsMuxer()
+        public TsMuxer(string outputPath)
         {
-            _tsBuffer = new NetBuffer(4096);
-            _adtsBuffer = new byte[AduioDataTransportStreamHeader.Size];
+            _outputPath = outputPath;
+            _tsBuffer = new NetBuffer(8192);
+            _adtsBuffer = new byte[AudioDataTransportStreamHeader.Size];
         }
 
         public void SetAvcSequenceHeader(AvcSequenceHeader avcSequenceHeader)
@@ -99,7 +100,7 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Containers
             var decodingTimestamp = (int)(timestamp * TsConstants.H264Frequency);
             var presentationTimestamp = decodingTimestamp;
 
-            var adtsHeader = new AduioDataTransportStreamHeader(_aacSequenceHeader, buffer.Count);
+            var adtsHeader = new AudioDataTransportStreamHeader(_aacSequenceHeader, buffer.Count);
             adtsHeader.FillBuffer(_adtsBuffer);
 
             var dataBuffer = new BytesSegments(new List<ArraySegment<byte>> { _adtsBuffer, buffer });
@@ -142,7 +143,7 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Containers
 
                 if (remainingSize > 0)
                 {
-                    adaptionField.StuffingSize = remainingSize - (adaptionField.Present ? 0 : 2);
+                    adaptionField.StuffingSize = remainingSize - (adaptionField.Present ? 0 : AdaptionField.BaseSize);
 
                     dataSize = Math.Min(
                         bufferSize - position,
@@ -169,11 +170,11 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Containers
             continuityCounter = (byte)((continuityCounter + 1) & 0xf);
         }
 
-        public async ValueTask FlushAsync()
+        public async ValueTask<string?> FlushAsync()
         {
             if (_tsBuffer.Size > 0)
             {
-                var path = Path.Combine(Directory.GetCurrentDirectory(), "output", $"output_{_sequenceNumber++}.ts");
+                var path = _outputPath.Replace("{seqNum}", _sequenceNumber.ToString());
 
                 using var fileStream = new FileStream(path, FileMode.OpenOrCreate);
 
@@ -181,7 +182,12 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Containers
                 await fileStream.WriteAsync(_tsBuffer.UnderlyingBuffer.AsMemory(0, _tsBuffer.Size));
 
                 _tsBuffer.Reset();
+                _sequenceNumber++;
+
+                return path;
             }
+
+            return null;
         }
 
         public void Dispose()

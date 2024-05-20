@@ -1,5 +1,4 @@
 ﻿using LiveStreamingServerNet.Networking.Contracts;
-using LiveStreamingServerNet.Utilities.Contracts;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
@@ -53,7 +52,8 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Containers
 
         public record struct AdaptionField(int? DecodingTimstamp)
         {
-            public int Size => (Present ? 2 : 0) + (DecodingTimstamp.HasValue ? 6 : 0) + (StuffingSize ?? 0);
+            public const int BaseSize = 2;
+            public int Size => (Present ? BaseSize : 0) + (DecodingTimstamp.HasValue ? 6 : 0) + (StuffingSize ?? 0);
             public int? StuffingSize { get; set; }
             public bool Present => DecodingTimstamp.HasValue || StuffingSize.HasValue;
 
@@ -172,7 +172,7 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Containers
             }
         }
 
-        private record struct AduioDataTransportStreamHeader(AacSequenceHeader SequenceHeader, int DataSize)
+        private record struct AudioDataTransportStreamHeader(AacSequenceHeader SequenceHeader, int DataSize)
         {
             public const int Size = 7;
 

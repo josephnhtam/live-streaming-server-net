@@ -1,4 +1,5 @@
 ﻿using LiveStreamingServerNet.Transmuxer.Contracts;
+using LiveStreamingServerNet.Transmuxer.Hls.Configurations;
 using LiveStreamingServerNet.Transmuxer.Internal.Hls.Services.Contracts;
 
 namespace LiveStreamingServerNet.Transmuxer.Internal.Hls
@@ -6,17 +7,26 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Hls
     internal class HlsTransmuxerFactory : ITransmuxerFactory
     {
         private readonly IHlsTransmuxerManager _transmuxerManager;
+        private readonly HlsTransmuxerConfiguration _config;
 
-        public HlsTransmuxerFactory(IHlsTransmuxerManager transmuxerManager)
+        public HlsTransmuxerFactory(IHlsTransmuxerManager transmuxerManager, HlsTransmuxerConfiguration config)
         {
             _transmuxerManager = transmuxerManager;
+            _config = config;
         }
 
-        public Task<ITransmuxer> CreateAsync(
+        public async Task<ITransmuxer> CreateAsync(
             Guid contextIdentifier, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
-            ITransmuxer tranmuxer = new HlsTransmuxer("HLS Transmuxer", contextIdentifier, _transmuxerManager);
-            return Task.FromResult(tranmuxer);
+            var outputPaths = await _config.OutputPathResolver.ResolveOutputPath(contextIdentifier, streamPath, streamArguments);
+
+            return new HlsTransmuxer(
+                _config.Name,
+                contextIdentifier,
+                _transmuxerManager,
+                outputPaths.ManifestOutputPath,
+                outputPaths.TsFileOutputPath
+            );
         }
     }
 }
