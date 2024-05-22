@@ -22,6 +22,7 @@ This repository contains an implementation of RTMP server which allows you to bu
 
 - **Custom Kubernetes Operator and Kubernetes Integration**: The objective is to achieve automatic horizontal autoscaling by scaling out the pods when more streams are published, and scaling in the pods when streams are deleted, all without affecting the existing connections.
 - **Redis Integration**: Integrate with Redis to share stream information among pods in the fleet.
+- **Built-in HLS Transmuxer**: This enables HLS transmuxing without the need for FFmpeg. Although it isn’t as feature-rich as FFmpeg, it would produce less overhead and have lower CPU utilization.
 
 ## Roadmap
 
