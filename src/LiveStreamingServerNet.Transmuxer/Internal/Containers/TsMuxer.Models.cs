@@ -1,5 +1,6 @@
 ﻿using LiveStreamingServerNet.Networking.Contracts;
 using System.Diagnostics;
+using System.IO.Hashing;
 using System.Runtime.CompilerServices;
 
 namespace LiveStreamingServerNet.Transmuxer.Internal.Containers
@@ -7,7 +8,7 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Containers
     internal partial class TsMuxer
     {
         private record struct TransportStreamHeader(
-            bool IsFirst, short PacketId, bool HasPayload, byte ContinuityCounter)
+            bool IsFirst, ushort PacketId, bool HasPayload, byte ContinuityCounter)
         {
             public int Size => 4;
             public bool HasAdaptionField { get; set; }
@@ -96,7 +97,7 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Containers
             private void WriteStuffing(INetBuffer netBuffer)
             {
                 for (var i = 0; i < StuffingSize; i++)
-                    netBuffer.Write((byte)0xff);
+                    netBuffer.Write(TsConstants.StuffingByte);
             }
         }
 
@@ -189,6 +190,72 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Containers
                 buffer[4] = (byte)(payloadLength >> 3);
                 buffer[5] = (byte)(0x1f | payloadLength << 5);
                 buffer[6] = 0xfc;
+            }
+        }
+
+        private record struct ProgramSpecificInformationHeader(byte TableId, int DataSize)
+        {
+            public int Size => 4;
+            public int ChecksumOffset => 1;
+
+            public void Write(INetBuffer netBuffer)
+            {
+                WritePointerField(netBuffer);
+                WriteTableHeader(netBuffer);
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            private void WritePointerField(INetBuffer netBuffer)
+            {
+                netBuffer.Write((byte)0);
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            private void WriteTableHeader(INetBuffer netBuffer)
+            {
+                netBuffer.Write(TableId);
+                netBuffer.WriteUint16BigEndian((ushort)(0x1 << 15 | 0x3 << 12 | (DataSize + TableChecksum.Size)));
+            }
+        }
+
+        private record struct ProgramAssociationTable(ushort TableIdExtension)
+        {
+            public int Size => 2 + 3 + 4;
+
+            public const ushort ProgramNumber = 1;
+            public const ushort ProgramMapPid = TsConstants.PmtSID;
+
+            public void Write(INetBuffer netBuffer)
+            {
+                WriteTablePrefix(netBuffer);
+                WriteTable(netBuffer);
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            private void WriteTablePrefix(INetBuffer netBuffer)
+            {
+                netBuffer.WriteUint16BigEndian(TableIdExtension);
+                netBuffer.Write((byte)((0x3 << 6) | 1));
+                netBuffer.Write((byte)0x00);
+                netBuffer.Write((byte)0x00);
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            private static void WriteTable(INetBuffer netBuffer)
+            {
+                netBuffer.WriteUint16BigEndian(ProgramNumber);
+                netBuffer.WriteUint16BigEndian(0xe000 | ProgramMapPid);
+            }
+        }
+
+        private record struct TableChecksum(byte[] Buffer, int Start, int Length)
+        {
+            public const int Size = 4;
+
+            public void Write(INetBuffer netBuffer)
+            {
+                var checksum = Crc32.HashToUInt32(Buffer.AsSpan(Start, Length));
+                netBuffer.WriteUInt32BigEndian(checksum);
             }
         }
     }

@@ -7,21 +7,27 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Containers
 {
     internal partial class TsMuxer : IDisposable
     {
-        private readonly INetBuffer _tsBuffer;
+        private readonly INetBuffer _headerBuffer;
+        private readonly INetBuffer _payloadBuffer;
         private readonly byte[] _adtsBuffer;
         private readonly string _outputPath;
 
         private AvcSequenceHeader? _avcSequenceHeader;
         private AacSequenceHeader? _aacSequenceHeader;
 
+        private byte _patContinuityCounter;
+        private byte _pmtContinuityCounter;
         private byte _videoContinuityCounter;
         private byte _audioContinuityCounter;
         private uint _sequenceNumber;
 
+        private byte[]? _patBuffer;
+
         public TsMuxer(string outputPath)
         {
             _outputPath = outputPath;
-            _tsBuffer = new NetBuffer(8192);
+            _headerBuffer = new NetBuffer(512);
+            _payloadBuffer = new NetBuffer(8192);
             _adtsBuffer = new byte[AudioDataTransportStreamHeader.Size];
         }
 
@@ -35,28 +41,60 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Containers
             _aacSequenceHeader = aacSequenceHeader;
         }
 
+        private void WritePatPacket(INetBuffer tsBuffer)
+        {
+            var startPosition = tsBuffer.Position;
+
+            var tsHeader = new TransportStreamHeader(true, TsConstants.PatPID, true, _patContinuityCounter);
+            tsHeader.Write(tsBuffer);
+
+            var psiStartPosition = tsBuffer.Position;
+
+            var pat = new ProgramAssociationTable(TsConstants.PatTableIdExtension);
+            var psiHeader = new ProgramSpecificInformationHeader(TsConstants.PatTableId, pat.Size);
+            psiHeader.Write(tsBuffer);
+            pat.Write(tsBuffer);
+
+            var checksumStart = psiStartPosition + psiHeader.ChecksumOffset;
+            var checksumLength = tsBuffer.Position - checksumStart;
+            var checksum = new TableChecksum(tsBuffer.UnderlyingBuffer, checksumStart, checksumLength);
+            checksum.Write(tsBuffer);
+
+            var remainingSize = TsConstants.TsPacketSize - (tsBuffer.Position - startPosition);
+            for (int i = 0; i < remainingSize; i++)
+                tsBuffer.Write(TsConstants.StuffingByte);
+
+            IncreaseContinuityCounter(ref _patContinuityCounter);
+        }
+
+        private void WritePmtPacket(INetBuffer tsBuffer)
+        {
+            tsBuffer.Write(TsConstants.PMT);
+        }
+
         public bool WriteVideoPacket(ArraySegment<byte> dataBuffer, uint timestamp, uint compositionTime, bool isKeyFrame)
         {
             if (_avcSequenceHeader == null)
                 return false;
 
-            var decodingTimestamp = (int)(timestamp * TsConstants.H264Frequency);
-            var presentationTimestamp = decodingTimestamp + (int)(compositionTime * TsConstants.H264Frequency);
+            var decodingTimestamp = (int)(timestamp * AvcConstants.H264Frequency);
+            var presentationTimestamp = decodingTimestamp + (int)(compositionTime * AvcConstants.H264Frequency);
 
             var rawNALUs = GetRawNALUs(dataBuffer, isKeyFrame);
             var nalus = ConvertToAnnexB(rawNALUs);
 
-            WritePacket(
-                _tsBuffer,
+            WritePesPacket(
+                _payloadBuffer,
                 new BytesSegments(nalus),
                 isKeyFrame,
                 TsConstants.VideoPID,
                 TsConstants.VideoSID,
                 decodingTimestamp,
                 presentationTimestamp,
-                ref _videoContinuityCounter
+                _videoContinuityCounter
             );
 
+            IncreaseContinuityCounter(ref _videoContinuityCounter);
             return true;
         }
 
@@ -73,7 +111,6 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Containers
             }
 
             rawNALUs.AddRange(AvcParser.SplitNALUs(dataBuffer));
-
             return rawNALUs;
         }
 
@@ -97,7 +134,7 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Containers
             if (_aacSequenceHeader == null)
                 return false;
 
-            var decodingTimestamp = (int)(timestamp * TsConstants.H264Frequency);
+            var decodingTimestamp = (int)(timestamp * AvcConstants.H264Frequency);
             var presentationTimestamp = decodingTimestamp;
 
             var adtsHeader = new AudioDataTransportStreamHeader(_aacSequenceHeader, buffer.Count);
@@ -105,26 +142,27 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Containers
 
             var dataBuffer = new BytesSegments(new List<ArraySegment<byte>> { _adtsBuffer, buffer });
 
-            WritePacket(
-               _tsBuffer,
-               dataBuffer,
-               true,
-               TsConstants.AudioPID,
-               TsConstants.AudioSID,
-               decodingTimestamp,
-               presentationTimestamp,
-               ref _audioContinuityCounter
-           );
+            WritePesPacket(
+                _payloadBuffer,
+                dataBuffer,
+                true,
+                TsConstants.AudioPID,
+                TsConstants.AudioSID,
+                decodingTimestamp,
+                presentationTimestamp,
+                _audioContinuityCounter
+            );
 
+            IncreaseContinuityCounter(ref _audioContinuityCounter);
             return true;
         }
 
-        private void WritePacket(INetBuffer tsBuffer, BytesSegments dataBuffer, bool isKeyFrame, short packetId, byte streamId, int decodingTimestamp, int presentationTimestamp, ref byte continuityCounter)
+        private void WritePesPacket(INetBuffer tsBuffer, BytesSegments dataBuffer, bool isKeyFrame, ushort packetId, byte streamId, int decodingTimestamp, int presentationTimestamp, byte continuityCounter)
         {
             var position = 0;
             var bufferSize = dataBuffer.Length;
 
-            var pesHeader = new PacketizedElementaryStreamHeader(streamId, decodingTimestamp, presentationTimestamp, bufferSize - position);
+            var pesHeader = new PacketizedElementaryStreamHeader(streamId, decodingTimestamp, presentationTimestamp, bufferSize);
 
             while (position < bufferSize)
             {
@@ -160,7 +198,6 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Containers
                 if (isFirst) pesHeader.Write(tsBuffer);
                 dataBuffer.WriteTo(tsBuffer, position, dataSize);
 
-                IncreaseContinuityCounter(ref continuityCounter);
                 position += dataSize;
             }
         }
@@ -170,18 +207,26 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Containers
             continuityCounter = (byte)((continuityCounter + 1) & 0xf);
         }
 
+        private void WriteHeaderPackets(INetBuffer tsBuffer)
+        {
+            WritePatPacket(tsBuffer);
+            WritePmtPacket(tsBuffer);
+        }
+
         public async ValueTask<string?> FlushAsync()
         {
-            if (_tsBuffer.Size > 0)
+            if (_payloadBuffer.Size > 0)
             {
+                WriteHeaderPackets(_headerBuffer);
+
                 var path = _outputPath.Replace("{seqNum}", _sequenceNumber.ToString());
-
                 using var fileStream = new FileStream(path, FileMode.OpenOrCreate);
+                await fileStream.WriteAsync(_headerBuffer.UnderlyingBuffer.AsMemory(0, _headerBuffer.Size));
+                await fileStream.WriteAsync(_payloadBuffer.UnderlyingBuffer.AsMemory(0, _payloadBuffer.Size));
 
-                await fileStream.WriteAsync(TsConstants.TsHeader);
-                await fileStream.WriteAsync(_tsBuffer.UnderlyingBuffer.AsMemory(0, _tsBuffer.Size));
+                _headerBuffer.Reset();
+                _payloadBuffer.Reset();
 
-                _tsBuffer.Reset();
                 _sequenceNumber++;
 
                 return path;
@@ -192,7 +237,7 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Containers
 
         public void Dispose()
         {
-            _tsBuffer.Dispose();
+            _payloadBuffer.Dispose();
         }
     }
 }
