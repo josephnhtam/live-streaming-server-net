@@ -64,7 +64,7 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Containers
                 if (!Present) return;
 
                 WriteSizeAndFlags(netBuffer);
-                WritePcr(netBuffer);
+                WritePCR(netBuffer);
                 WriteStuffing(netBuffer);
             }
 
@@ -81,7 +81,7 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Containers
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            private void WritePcr(INetBuffer netBuffer)
+            private void WritePCR(INetBuffer netBuffer)
             {
                 if (!DecodingTimstamp.HasValue) return;
 
@@ -218,9 +218,15 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Containers
             }
         }
 
-        private record struct ProgramAssociationTable(ushort TransportStreamIdentifier, ushort ProgramNumber, ushort ProgramMapPID)
+        private interface IPSITable
         {
-            public int Size => 2 + 3 + 4;
+            int Size { get; }
+            void Write(INetBuffer netBuffer);
+        }
+
+        private record struct ProgramAssociationTable(ushort TransportStreamIdentifier, ushort ProgramNumber, ushort ProgramMapPID) : IPSITable
+        {
+            public int Size => 5 + 4;
 
             public void Write(INetBuffer netBuffer)
             {
@@ -253,8 +259,37 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Containers
             {
                 netBuffer.Write(StreamType);
                 netBuffer.WriteUint16BigEndian((ushort)(0x07 << 13 | ElementaryPID));
+                netBuffer.WriteUint16BigEndian(0x0f << 12);
+            }
+        }
+
+        private record struct ProgramMapTable(ushort ProgramNumber, ushort PCRPID, IList<ElementaryStreamInfo> ElementaryStreamInfos) : IPSITable
+        {
+            public int Size => 5 + 4 + ElementaryStreamInfos.Sum(x => x.Size);
+
+            public void Write(INetBuffer netBuffer)
+            {
+                WriteTablePrefix(netBuffer);
+                WriteTable(netBuffer);
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            private void WriteTablePrefix(INetBuffer netBuffer)
+            {
+                netBuffer.WriteUint16BigEndian(ProgramNumber);
+                netBuffer.Write((byte)((0x3 << 6) | 1));
                 netBuffer.Write((byte)0x00);
                 netBuffer.Write((byte)0x00);
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            private void WriteTable(INetBuffer netBuffer)
+            {
+                netBuffer.WriteUint16BigEndian((ushort)(0x07 << 13 | PCRPID));
+                netBuffer.WriteUint16BigEndian(0x0f << 12);
+
+                foreach (var info in ElementaryStreamInfos)
+                    info.Write(netBuffer);
             }
         }
 

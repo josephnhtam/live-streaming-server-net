@@ -41,19 +41,60 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Containers
             _aacSequenceHeader = aacSequenceHeader;
         }
 
-        private void WritePatPacket(INetBuffer tsBuffer)
+        private void WritePATPacket(INetBuffer tsBuffer)
+        {
+            var pat = new ProgramAssociationTable(
+                TsConstants.TransportStreamIdentifier,
+                TsConstants.ProgramNumber,
+                TsConstants.ProgramMapPID
+            );
+
+            WritePSIPacket(
+                tsBuffer,
+                TsConstants.ProgramAssociationPID,
+                TsConstants.ProgramAssociationTableID,
+                pat,
+                ref _patContinuityCounter
+            );
+        }
+
+        private void WritePMTPacket(INetBuffer tsBuffer)
+        {
+            var elementaryStreamInfos = new List<ElementaryStreamInfo>();
+
+            if (_avcSequenceHeader != null)
+                elementaryStreamInfos.Add(new ElementaryStreamInfo(TsConstants.AVCStreamType, TsConstants.VideoPID));
+
+            if (_aacSequenceHeader != null)
+                elementaryStreamInfos.Add(new ElementaryStreamInfo(TsConstants.AACStreamType, TsConstants.AudioPID));
+
+            var pmt = new ProgramMapTable(
+                TsConstants.ProgramNumber,
+                TsConstants.VideoPID,
+                elementaryStreamInfos
+            );
+
+            WritePSIPacket(
+                tsBuffer,
+                TsConstants.ProgramMapPID,
+                TsConstants.ProgramMapTableID,
+                pmt,
+                ref _pmtContinuityCounter
+            );
+        }
+
+        private void WritePSIPacket(INetBuffer tsBuffer, ushort packetID, byte tableID, IPSITable psiTable, ref byte continuityCounter)
         {
             var startPosition = tsBuffer.Position;
 
-            var tsHeader = new TransportStreamHeader(true, TsConstants.ProgramAssociationPID, true, _patContinuityCounter);
+            var tsHeader = new TransportStreamHeader(true, packetID, true, continuityCounter);
             tsHeader.Write(tsBuffer);
 
             var psiStartPosition = tsBuffer.Position;
 
-            var pat = new ProgramAssociationTable(TsConstants.TransportStreamIdentifier, TsConstants.ProgramNumber, TsConstants.ProgramMapPID);
-            var psiHeader = new ProgramSpecificInformationHeader(TsConstants.ProgramAssociationTableID, pat.Size);
+            var psiHeader = new ProgramSpecificInformationHeader(tableID, psiTable.Size);
             psiHeader.Write(tsBuffer);
-            pat.Write(tsBuffer);
+            psiTable.Write(tsBuffer);
 
             var checksumStart = psiStartPosition + psiHeader.ChecksumOffset;
             var checksumLength = tsBuffer.Position - checksumStart;
@@ -64,12 +105,7 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Containers
             for (int i = 0; i < remainingSize; i++)
                 tsBuffer.Write(TsConstants.StuffingByte);
 
-            IncreaseContinuityCounter(ref _patContinuityCounter);
-        }
-
-        private void WritePmtPacket(INetBuffer tsBuffer)
-        {
-            tsBuffer.Write(TsConstants.PMT);
+            IncreaseContinuityCounter(ref continuityCounter);
         }
 
         public bool WriteVideoPacket(ArraySegment<byte> dataBuffer, uint timestamp, uint compositionTime, bool isKeyFrame)
@@ -83,7 +119,7 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Containers
             var rawNALUs = GetRawNALUs(dataBuffer, isKeyFrame);
             var nalus = ConvertToAnnexB(rawNALUs);
 
-            WritePesPacket(
+            WritePESPacket(
                 _payloadBuffer,
                 new BytesSegments(nalus),
                 isKeyFrame,
@@ -142,7 +178,7 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Containers
 
             var dataBuffer = new BytesSegments(new List<ArraySegment<byte>> { _adtsBuffer, buffer });
 
-            WritePesPacket(
+            WritePESPacket(
                 _payloadBuffer,
                 dataBuffer,
                 true,
@@ -157,7 +193,7 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Containers
             return true;
         }
 
-        private void WritePesPacket(INetBuffer tsBuffer, BytesSegments dataBuffer, bool isKeyFrame, ushort packetId, byte streamId, int decodingTimestamp, int presentationTimestamp, byte continuityCounter)
+        private void WritePESPacket(INetBuffer tsBuffer, BytesSegments dataBuffer, bool isKeyFrame, ushort packetId, byte streamId, int decodingTimestamp, int presentationTimestamp, byte continuityCounter)
         {
             var position = 0;
             var bufferSize = dataBuffer.Length;
@@ -209,8 +245,8 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Containers
 
         private void WriteHeaderPackets(INetBuffer tsBuffer)
         {
-            WritePatPacket(tsBuffer);
-            WritePmtPacket(tsBuffer);
+            WritePATPacket(tsBuffer);
+            WritePMTPacket(tsBuffer);
         }
 
         public async ValueTask<string?> FlushAsync()
