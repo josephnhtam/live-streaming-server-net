@@ -1,13 +1,13 @@
 using LiveStreamingServerNet.Networking.Helpers;
 using LiveStreamingServerNet.Transmuxer.Contracts;
-using LiveStreamingServerNet.Transmuxer.Hls.Contracts;
 using LiveStreamingServerNet.Transmuxer.Installer;
+using LiveStreamingServerNet.Transmuxer.Utilities;
 using LiveStreamingServerNet.Utilities.Contracts;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.FileProviders;
 using System.Net;
 
-namespace LiveStreamingServerNet.HlsDemo
+namespace LiveStreamingServerNet.HlsDemoWithFFmpeg
 {
     public static class Program
     {
@@ -57,6 +57,12 @@ namespace LiveStreamingServerNet.HlsDemo
         private static ILiveStreamingServer CreateLiveStreamingServer(string trasmuxerOutputPath)
         {
             return LiveStreamingServerBuilder.Create()
+                .ConfigureServer(options => options
+                    .ConfigureNetwork(options =>
+                    {
+                        options.NoDelay = true;
+                        options.FlushingInterval = TimeSpan.FromMilliseconds(300);
+                    }))
                 .ConfigureRtmpServer(options => options
                     .Configure(options => options.EnableGopCaching = false)
                     .AddTransmuxer(options =>
@@ -64,31 +70,20 @@ namespace LiveStreamingServerNet.HlsDemo
                         options.AddTransmuxerEventHandler(svc =>
                                 new TransmuxerEventListener(trasmuxerOutputPath, svc.GetRequiredService<ILogger<TransmuxerEventListener>>()));
                     })
-                    .AddHlsTransmuxer(options => options.OutputPathResolver = new HlsOutputPathResolver(trasmuxerOutputPath))
+                    .AddFFmpeg(options =>
+                    {
+                        options.FFmpegArguments =
+                                    "-i {inputPath} -c:v copy -c:a copy " +
+                                    "-preset ultrafast -tune zerolatency -hls_time 1 " +
+                                    "-hls_flags delete_segments -hls_list_size 20 -f hls {outputPath}";
+
+                        options.FFmpegPath = ExecutableFinder.FindExecutableFromPATH("ffmpeg")!;
+                        options.OutputPathResolver = (contextIdentifier, streamPath, streamArguments)
+                            => Task.FromResult(Path.Combine(trasmuxerOutputPath, streamPath.Trim('/'), "output.m3u8"));
+                    })
                 )
                 .ConfigureLogging(options => options.AddConsole())
                 .Build();
-        }
-
-        public class HlsOutputPathResolver : IHlsOutputPathResolver
-        {
-            private readonly string _outputPath;
-
-            public HlsOutputPathResolver(string outputPath)
-            {
-                _outputPath = outputPath;
-            }
-
-            public Task<HlsOutputPath> ResolveOutputPath(Guid contextIdentifier, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
-            {
-                var basePath = Path.Combine(_outputPath, streamPath.Trim('/'));
-
-                return Task.FromResult(new HlsOutputPath
-                {
-                    ManifestOutputPath = Path.Combine(basePath, "output.m3u8"),
-                    TsFileOutputPath = Path.Combine(basePath, "output{seqNum}.ts")
-                });
-            }
         }
 
         public class TransmuxerEventListener : ITransmuxerEventHandler

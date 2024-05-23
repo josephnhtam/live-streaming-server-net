@@ -59,7 +59,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.Basi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.EventsDemo", "samples\LiveStreamingServerNet.EventsDemo\LiveStreamingServerNet.EventsDemo.csproj", "{5C771D81-B7E2-4056-B56B-9C6F4616045C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveStreamingServerNet.Mp4ArchiveDemo", "samples\LiveStreamingServerNet.Mp4ArchiveDemo\LiveStreamingServerNet.Mp4ArchiveDemo.csproj", "{8171A185-DA91-4FCC-A668-26B9466CAA3D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.Mp4ArchiveDemo", "samples\LiveStreamingServerNet.Mp4ArchiveDemo\LiveStreamingServerNet.Mp4ArchiveDemo.csproj", "{8171A185-DA91-4FCC-A668-26B9466CAA3D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveStreamingServerNet.HlsWithFFmpegDemo", "samples\LiveStreamingServerNet.HlsWithFFmpegDemo\LiveStreamingServerNet.HlsWithFFmpegDemo.csproj", "{37264685-FFD1-4938-BB86-FB64526A5A8E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -175,6 +177,10 @@ Global
 		{8171A185-DA91-4FCC-A668-26B9466CAA3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8171A185-DA91-4FCC-A668-26B9466CAA3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8171A185-DA91-4FCC-A668-26B9466CAA3D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{37264685-FFD1-4938-BB86-FB64526A5A8E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{37264685-FFD1-4938-BB86-FB64526A5A8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{37264685-FFD1-4938-BB86-FB64526A5A8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{37264685-FFD1-4938-BB86-FB64526A5A8E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -193,6 +199,7 @@ Global
 		{883076CB-8F91-4029-9BDF-13C5D3510F98} = {45761E33-F086-403D-BB6E-8059F8CC6BA8}
 		{5C771D81-B7E2-4056-B56B-9C6F4616045C} = {45761E33-F086-403D-BB6E-8059F8CC6BA8}
 		{8171A185-DA91-4FCC-A668-26B9466CAA3D} = {45761E33-F086-403D-BB6E-8059F8CC6BA8}
+		{37264685-FFD1-4938-BB86-FB64526A5A8E} = {45761E33-F086-403D-BB6E-8059F8CC6BA8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0A9A3928-2852-49B9-85EF-F00480E9FE7F}
