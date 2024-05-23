@@ -258,8 +258,6 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Containers
             }
         }
 
-        private record struct ProgramMapTable(ushort PrcPID, 
-
         private record struct TableChecksum(byte[] Buffer, int Start, int Length)
         {
             public const int Size = 4;
