@@ -68,10 +68,10 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Hls
             if (tagHeader.FrameType == VideoFrameType.KeyFrame)
                 await FlushAsync();
 
-            if (tagHeader.FrameType == VideoFrameType.KeyFrame && tagHeader.AvcPacketType == AVCPacketType.SequenceHeader)
+            if (tagHeader.FrameType == VideoFrameType.KeyFrame && tagHeader.AVCPacketType == AVCPacketType.SequenceHeader)
             {
-                var sequenceHeader = AvcParser.ParseSequenceHeader(dataBuffer);
-                _tsMuxer.SetAvcSequenceHeader(sequenceHeader);
+                var sequenceHeader = AVCParser.ParseSequenceHeader(dataBuffer);
+                _tsMuxer.SetAVCSequenceHeader(sequenceHeader);
                 return;
             }
 
@@ -97,8 +97,8 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Hls
 
             if (tagHeader.AACPacketType == AACPacketType.SequenceHeader)
             {
-                var sequenceHeader = AacParser.ParseSequenceHeader(dataBuffer);
-                _tsMuxer.SetAacSequenceHeader(sequenceHeader);
+                var sequenceHeader = AACParser.ParseSequenceHeader(dataBuffer);
+                _tsMuxer.SetAACSequenceHeader(sequenceHeader);
                 return ValueTask.CompletedTask;
             }
 

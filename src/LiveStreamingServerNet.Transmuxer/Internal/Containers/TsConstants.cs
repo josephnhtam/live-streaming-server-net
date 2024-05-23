@@ -4,14 +4,14 @@
     {
         public const int TsPacketSize = 188;
 
-        public const ushort PatPID = 0x0;
-        public const ushort PmtSID = 0x1000;
+        public const ushort ProgramAssociationPID = 0x0;
+        public const byte ProgramAssociationTableID = 0;
 
-        public const byte PatTableId = 0;
-        public const ushort PatTableIdExtension = 1;
+        public const ushort ProgramMapPID = 0x1000;
+        public const byte ProgramMapTableID = 2;
 
-        public const byte PmtTableId = 2;
-        public const ushort PmtTableIdExtension = 1;
+        public const ushort TransportStreamIdentifier = 1;
+        public const ushort ProgramNumber = 1;
 
         public const ushort VideoPID = 0x100;
         public const byte VideoSID = 0xE0;

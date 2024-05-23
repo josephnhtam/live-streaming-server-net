@@ -12,8 +12,8 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Containers
         private readonly byte[] _adtsBuffer;
         private readonly string _outputPath;
 
-        private AvcSequenceHeader? _avcSequenceHeader;
-        private AacSequenceHeader? _aacSequenceHeader;
+        private AVCSequenceHeader? _avcSequenceHeader;
+        private AACSequenceHeader? _aacSequenceHeader;
 
         private byte _patContinuityCounter;
         private byte _pmtContinuityCounter;
@@ -31,12 +31,12 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Containers
             _adtsBuffer = new byte[AudioDataTransportStreamHeader.Size];
         }
 
-        public void SetAvcSequenceHeader(AvcSequenceHeader avcSequenceHeader)
+        public void SetAVCSequenceHeader(AVCSequenceHeader avcSequenceHeader)
         {
             _avcSequenceHeader = avcSequenceHeader;
         }
 
-        public void SetAacSequenceHeader(AacSequenceHeader aacSequenceHeader)
+        public void SetAACSequenceHeader(AACSequenceHeader aacSequenceHeader)
         {
             _aacSequenceHeader = aacSequenceHeader;
         }
@@ -45,13 +45,13 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Containers
         {
             var startPosition = tsBuffer.Position;
 
-            var tsHeader = new TransportStreamHeader(true, TsConstants.PatPID, true, _patContinuityCounter);
+            var tsHeader = new TransportStreamHeader(true, TsConstants.ProgramAssociationPID, true, _patContinuityCounter);
             tsHeader.Write(tsBuffer);
 
             var psiStartPosition = tsBuffer.Position;
 
-            var pat = new ProgramAssociationTable(TsConstants.PatTableIdExtension);
-            var psiHeader = new ProgramSpecificInformationHeader(TsConstants.PatTableId, pat.Size);
+            var pat = new ProgramAssociationTable(TsConstants.TransportStreamIdentifier, TsConstants.ProgramNumber, TsConstants.ProgramMapPID);
+            var psiHeader = new ProgramSpecificInformationHeader(TsConstants.ProgramAssociationTableID, pat.Size);
             psiHeader.Write(tsBuffer);
             pat.Write(tsBuffer);
 
@@ -77,8 +77,8 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Containers
             if (_avcSequenceHeader == null)
                 return false;
 
-            var decodingTimestamp = (int)(timestamp * AvcConstants.H264Frequency);
-            var presentationTimestamp = decodingTimestamp + (int)(compositionTime * AvcConstants.H264Frequency);
+            var decodingTimestamp = (int)(timestamp * AVCConstants.H264Frequency);
+            var presentationTimestamp = decodingTimestamp + (int)(compositionTime * AVCConstants.H264Frequency);
 
             var rawNALUs = GetRawNALUs(dataBuffer, isKeyFrame);
             var nalus = ConvertToAnnexB(rawNALUs);
@@ -110,7 +110,7 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Containers
                 rawNALUs.Add(_avcSequenceHeader.PPS);
             }
 
-            rawNALUs.AddRange(AvcParser.SplitNALUs(dataBuffer));
+            rawNALUs.AddRange(AVCParser.SplitNALUs(dataBuffer));
             return rawNALUs;
         }
 
@@ -118,11 +118,11 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Containers
         {
             Debug.Assert(_avcSequenceHeader != null);
 
-            var nalus = new List<ArraySegment<byte>>(1 + rawNALUs.Count * 2) { AvcConstants.NALU_AUD };
+            var nalus = new List<ArraySegment<byte>>(1 + rawNALUs.Count * 2) { AVCConstants.NALU_AUD };
 
             for (int i = 0; i < rawNALUs.Count; i++)
             {
-                nalus.Add(AvcConstants.NALU_StartCode);
+                nalus.Add(AVCConstants.NALU_StartCode);
                 nalus.Add(rawNALUs[i]);
             }
 
@@ -134,7 +134,7 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Containers
             if (_aacSequenceHeader == null)
                 return false;
 
-            var decodingTimestamp = (int)(timestamp * AvcConstants.H264Frequency);
+            var decodingTimestamp = (int)(timestamp * AVCConstants.H264Frequency);
             var presentationTimestamp = decodingTimestamp;
 
             var adtsHeader = new AudioDataTransportStreamHeader(_aacSequenceHeader, buffer.Count);

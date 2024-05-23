@@ -64,22 +64,24 @@ namespace LiveStreamingServerNet.HlsDemo
                         options.FlushingInterval = TimeSpan.FromMilliseconds(300);
                     }))
                 .ConfigureRtmpServer(options => options
+                    .Configure(options => options.EnableGopCaching = false)
                     .AddTransmuxer(options =>
                     {
                         options.AddTransmuxerEventHandler(svc =>
                                 new TransmuxerEventListener(trasmuxerOutputPath, svc.GetRequiredService<ILogger<TransmuxerEventListener>>()));
                     })
-                    .AddFFmpeg(options =>
-                    {
-                        options.FFmpegArguments =
-                                    "-i {inputPath} -c:v copy -c:a copy " +
-                                    "-preset ultrafast -tune zerolatency -hls_time 1 " +
-                                    "-hls_flags delete_segments -hls_list_size 20 -f hls {outputPath}";
+                    .AddHlsTransmuxer()
+                //.AddFFmpeg(options =>
+                //{
+                //    options.FFmpegArguments =
+                //                "-i {inputPath} -c:v copy -c:a copy " +
+                //                "-preset ultrafast -tune zerolatency -hls_time 1 " +
+                //                "-hls_flags delete_segments -hls_list_size 20 -f hls {outputPath}";
 
-                        options.FFmpegPath = ExecutableFinder.FindExecutableFromPATH("ffmpeg")!;
-                        options.OutputPathResolver = (contextIdentifier, streamPath, streamArguments)
-                            => Task.FromResult(Path.Combine(trasmuxerOutputPath, streamPath.Trim('/'), "output.m3u8"));
-                    })
+                //    options.FFmpegPath = ExecutableFinder.FindExecutableFromPATH("ffmpeg")!;
+                //    options.OutputPathResolver = (contextIdentifier, streamPath, streamArguments)
+                //        => Task.FromResult(Path.Combine(trasmuxerOutputPath, streamPath.Trim('/'), "output.m3u8"));
+                //})
                 )
                 .ConfigureLogging(options => options.AddConsole())
                 .Build();

@@ -53,7 +53,7 @@
         Raw = 1
     }
 
-    internal record struct FlvVideoTagHeader(VideoFrameType FrameType, VideoCodecId CodecId, AVCPacketType AvcPacketType, uint CompositionTime)
+    internal record struct FlvVideoTagHeader(VideoFrameType FrameType, VideoCodecId CodecId, AVCPacketType AVCPacketType, uint CompositionTime)
     {
         public const int Size = 5;
     }

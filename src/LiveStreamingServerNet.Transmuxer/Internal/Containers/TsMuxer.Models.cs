@@ -173,7 +173,7 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Containers
             }
         }
 
-        private record struct AudioDataTransportStreamHeader(AacSequenceHeader SequenceHeader, int DataSize)
+        private record struct AudioDataTransportStreamHeader(AACSequenceHeader SequenceHeader, int DataSize)
         {
             public const int Size = 7;
 
@@ -218,12 +218,9 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Containers
             }
         }
 
-        private record struct ProgramAssociationTable(ushort TableIdExtension)
+        private record struct ProgramAssociationTable(ushort TransportStreamIdentifier, ushort ProgramNumber, ushort ProgramMapPID)
         {
             public int Size => 2 + 3 + 4;
-
-            public const ushort ProgramNumber = 1;
-            public const ushort ProgramMapPid = TsConstants.PmtSID;
 
             public void Write(INetBuffer netBuffer)
             {
@@ -234,19 +231,34 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Containers
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             private void WriteTablePrefix(INetBuffer netBuffer)
             {
-                netBuffer.WriteUint16BigEndian(TableIdExtension);
+                netBuffer.WriteUint16BigEndian(TransportStreamIdentifier);
                 netBuffer.Write((byte)((0x3 << 6) | 1));
                 netBuffer.Write((byte)0x00);
                 netBuffer.Write((byte)0x00);
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            private static void WriteTable(INetBuffer netBuffer)
+            private void WriteTable(INetBuffer netBuffer)
             {
                 netBuffer.WriteUint16BigEndian(ProgramNumber);
-                netBuffer.WriteUint16BigEndian(0xe000 | ProgramMapPid);
+                netBuffer.WriteUint16BigEndian((ushort)(0xe000 | ProgramMapPID));
             }
         }
+
+        private record struct ElementaryStreamInfo(byte StreamType, ushort ElementaryPID)
+        {
+            public int Size => 5;
+
+            public void Write(INetBuffer netBuffer)
+            {
+                netBuffer.Write(StreamType);
+                netBuffer.WriteUint16BigEndian((ushort)(0x07 << 13 | ElementaryPID));
+                netBuffer.Write((byte)0x00);
+                netBuffer.Write((byte)0x00);
+            }
+        }
+
+        private record struct ProgramMapTable(ushort PrcPID, 
 
         private record struct TableChecksum(byte[] Buffer, int Start, int Length)
         {
