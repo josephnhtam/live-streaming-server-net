@@ -107,6 +107,8 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Containers
             checksum.Write(tsBuffer);
 
             var remainingSize = TsConstants.TsPacketSize - (tsBuffer.Position - startPosition);
+            Debug.Assert(remainingSize >= 0);
+
             for (int i = 0; i < remainingSize; i++)
                 tsBuffer.Write(TsConstants.StuffingByte);
 
@@ -230,7 +232,7 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Containers
 
                 if (remainingSize > 0)
                 {
-                    adaptationField.StuffingSize = remainingSize - (adaptationField.Present ? 0 : AdaptationField.BaseSize);
+                    adaptationField.StuffingSize = Math.Max(0, remainingSize - (adaptationField.Present ? 0 : AdaptationField.BaseSize));
 
                     dataSize = Math.Min(
                         bufferSize - position,
