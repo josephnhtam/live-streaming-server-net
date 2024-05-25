@@ -93,9 +93,6 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Hls
 
         public ValueTask OnReceiveAudioMessage(IRentedBuffer rentedBuffer, uint timestamp)
         {
-            if (_tsMuxer == null)
-                return ValueTask.CompletedTask;
-
             var tagHeader = FlvParser.ParseAudioTagHeader(rentedBuffer.Buffer);
 
             if (tagHeader.SoundFormat != AudioSoundFormat.AAC)
