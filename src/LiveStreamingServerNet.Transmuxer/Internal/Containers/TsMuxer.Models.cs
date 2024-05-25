@@ -52,12 +52,12 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Containers
             }
         }
 
-        public record struct AdaptationField(int? DecodingTimstamp)
+        public record struct AdaptationField(bool AllowRandomAccess, int? DecodingTimstamp)
         {
             public const int BaseSize = 2;
             public int Size => (Present ? BaseSize : 0) + (DecodingTimstamp.HasValue ? 6 : 0) + (StuffingSize ?? 0);
             public int? StuffingSize { get; set; }
-            public bool Present => DecodingTimstamp.HasValue || StuffingSize.HasValue;
+            public bool Present => AllowRandomAccess || DecodingTimstamp.HasValue || StuffingSize.HasValue;
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public void Write(INetBuffer netBuffer)
@@ -74,8 +74,9 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Containers
             {
                 var size = (byte)(Size - 1);
 
-                // Random Access Indicator + PCR Flag
-                var flags = (byte)(DecodingTimstamp.HasValue ? 0x50 : 0x00);
+                byte flags = 0x00;
+                if (DecodingTimstamp.HasValue) flags |= 0x10;
+                if (AllowRandomAccess) flags |= 0x40;
 
                 netBuffer.Write(size);
                 netBuffer.Write(flags);
