@@ -1,5 +1,7 @@
 ﻿using LiveStreamingServerNet.Transmuxer.Contracts;
 using LiveStreamingServerNet.Transmuxer.Hls.Configurations;
+using LiveStreamingServerNet.Transmuxer.Internal.Containers;
+using LiveStreamingServerNet.Transmuxer.Internal.Hls.M3u8.Marshal.Contracts;
 using LiveStreamingServerNet.Transmuxer.Internal.Hls.Services.Contracts;
 
 namespace LiveStreamingServerNet.Transmuxer.Internal.Hls
@@ -7,11 +9,13 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Hls
     internal class HlsTransmuxerFactory : ITransmuxerFactory
     {
         private readonly IHlsTransmuxerManager _transmuxerManager;
+        private readonly IManifestWriter _manifestWriter;
         private readonly HlsTransmuxerConfiguration _config;
 
-        public HlsTransmuxerFactory(IHlsTransmuxerManager transmuxerManager, HlsTransmuxerConfiguration config)
+        public HlsTransmuxerFactory(IHlsTransmuxerManager transmuxerManager, IManifestWriter manifestWriter, HlsTransmuxerConfiguration config)
         {
             _transmuxerManager = transmuxerManager;
+            _manifestWriter = manifestWriter;
             _config = config;
         }
 
@@ -20,13 +24,18 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Hls
         {
             var outputPaths = await _config.OutputPathResolver.ResolveOutputPath(contextIdentifier, streamPath, streamArguments);
 
-            return new HlsTransmuxer(
-                _config.Name,
+            var tsMuxer = new TsMuxer(outputPaths.TsFileOutputPath);
+
+            var config = new HlsTransmuxer.Configuration(
                 contextIdentifier,
-                _transmuxerManager,
+                _config.Name,
                 outputPaths.ManifestOutputPath,
-                outputPaths.TsFileOutputPath
+                outputPaths.TsFileOutputPath,
+                _config.SegmentListSize,
+                _config.DeleteOutdatedSegments
             );
+
+            return new HlsTransmuxer(_transmuxerManager, _manifestWriter, tsMuxer, config);
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using LiveStreamingServerNet.Transmuxer.Hls;
 
-namespace LiveStreamingServerNet.Transmuxer.Internal.Hls.M3u8.Contracts
+namespace LiveStreamingServerNet.Transmuxer.Internal.Hls.M3u8.Unmarshal.Contracts
 {
     internal interface IPlaylist : IManifestContainer, ITsFilesContainer
     {

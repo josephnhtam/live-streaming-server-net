@@ -1,7 +1,7 @@
 ﻿using LiveStreamingServerNet.Transmuxer.Hls;
-using LiveStreamingServerNet.Transmuxer.Internal.Hls.M3u8.Contracts;
+using LiveStreamingServerNet.Transmuxer.Internal.Hls.M3u8.Unmarshal.Contracts;
 
-namespace LiveStreamingServerNet.Transmuxer.Internal.Hls.M3u8
+namespace LiveStreamingServerNet.Transmuxer.Internal.Hls.M3u8.Unmarshal
 {
     internal class MasterPlaylist : IPlaylist
     {

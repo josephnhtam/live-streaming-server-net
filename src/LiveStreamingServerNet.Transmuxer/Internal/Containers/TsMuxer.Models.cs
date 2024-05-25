@@ -5,6 +5,8 @@ using System.Runtime.CompilerServices;
 
 namespace LiveStreamingServerNet.Transmuxer.Internal.Containers
 {
+    internal record struct TsSegment(string FilePath, uint SequenceNumber, int Duration);
+
     internal partial class TsMuxer
     {
         private record struct TransportStreamHeader(

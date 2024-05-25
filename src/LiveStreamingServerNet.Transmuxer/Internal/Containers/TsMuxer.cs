@@ -1,11 +1,12 @@
 ﻿using LiveStreamingServerNet.Networking;
 using LiveStreamingServerNet.Networking.Contracts;
+using LiveStreamingServerNet.Transmuxer.Internal.Containers.Contracts;
 using LiveStreamingServerNet.Transmuxer.Internal.Utilities;
 using System.Diagnostics;
 
 namespace LiveStreamingServerNet.Transmuxer.Internal.Containers
 {
-    internal partial class TsMuxer : IDisposable
+    internal partial class TsMuxer : ITsMuxer
     {
         private readonly INetBuffer _headerBuffer;
         private readonly INetBuffer _payloadBuffer;
@@ -20,8 +21,12 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Containers
         private byte _videoContinuityCounter;
         private byte _audioContinuityCounter;
         private uint _sequenceNumber;
-
         private byte[]? _patBuffer;
+
+        private uint? timestampStart;
+
+        public uint SequenceNumber => _sequenceNumber;
+        public int BufferSize => _payloadBuffer.Size;
 
         public TsMuxer(string outputPath)
         {
@@ -113,6 +118,9 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Containers
             if (_avcSequenceHeader == null)
                 return false;
 
+            if (timestampStart == null)
+                timestampStart = timestamp;
+
             var decodingTimestamp = (int)(timestamp * AVCConstants.H264Frequency);
             var presentationTimestamp = decodingTimestamp + (int)(compositionTime * AVCConstants.H264Frequency);
 
@@ -169,6 +177,9 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Containers
         {
             if (_aacSequenceHeader == null)
                 return false;
+
+            if (timestampStart == null)
+                timestampStart = timestamp;
 
             var decodingTimestamp = (int)(timestamp * AVCConstants.H264Frequency);
             var presentationTimestamp = decodingTimestamp;
@@ -249,10 +260,13 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Containers
             WritePMTPacket(tsBuffer);
         }
 
-        public async ValueTask<string?> FlushAsync()
+        public async ValueTask<TsSegment?> FlushAsync(uint timestamp)
         {
             if (_payloadBuffer.Size > 0)
             {
+                Debug.Assert(timestampStart.HasValue);
+                var duration = (int)(timestamp - timestampStart);
+
                 WriteHeaderPackets(_headerBuffer);
 
                 var path = _outputPath.Replace("{seqNum}", _sequenceNumber.ToString());
@@ -260,12 +274,15 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Containers
                 await fileStream.WriteAsync(_headerBuffer.UnderlyingBuffer.AsMemory(0, _headerBuffer.Size));
                 await fileStream.WriteAsync(_payloadBuffer.UnderlyingBuffer.AsMemory(0, _payloadBuffer.Size));
 
+                var segment = new TsSegment(path, _sequenceNumber, duration);
+
                 _headerBuffer.Reset();
                 _payloadBuffer.Reset();
 
                 _sequenceNumber++;
+                timestampStart = null;
 
-                return path;
+                return segment;
             }
 
             return null;

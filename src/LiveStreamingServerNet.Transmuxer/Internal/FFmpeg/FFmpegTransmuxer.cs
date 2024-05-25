@@ -5,24 +5,18 @@ using System.Diagnostics;
 
 namespace LiveStreamingServerNet.Transmuxer.Internal.FFmpeg
 {
-    internal class FFmpegTransmuxer : ITransmuxer
+    internal partial class FFmpegTransmuxer : ITransmuxer
     {
-        private readonly string _ffmpegPath;
-        private readonly string _arguments;
-        private readonly int _gracefulTerminationSeconds;
-        private readonly string _outputPath;
+        private readonly Configuration _config;
 
         public string Name { get; }
         public Guid ContextIdentifier { get; }
 
-        public FFmpegTransmuxer(Guid contextIdentifier, string name, string ffmpegPath, string arguments, int gracefulTerminationSeconds, string outputPath)
+        public FFmpegTransmuxer(Configuration config)
         {
-            ContextIdentifier = contextIdentifier;
-            Name = name;
-            _ffmpegPath = ffmpegPath;
-            _arguments = arguments;
-            _gracefulTerminationSeconds = gracefulTerminationSeconds;
-            _outputPath = outputPath;
+            Name = config.Name;
+            ContextIdentifier = config.ContextIdentifier;
+            _config = config;
         }
 
         public async Task RunAsync(
@@ -33,13 +27,13 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.FFmpeg
             OnTransmuxerEnded? onEnded,
             CancellationToken cancellation)
         {
-            DirectoryUtility.CreateDirectoryIfNotExists(Path.GetDirectoryName(_outputPath));
-            await RunProcessAsync(inputPath, _outputPath, onStarted, onEnded, cancellation);
+            DirectoryUtility.CreateDirectoryIfNotExists(Path.GetDirectoryName(_config.OutputPath));
+            await RunProcessAsync(inputPath, _config.OutputPath, onStarted, onEnded, cancellation);
         }
 
         private async Task RunProcessAsync(string inputPath, string outputPath, OnTransmuxerStarted? onStarted, OnTransmuxerEnded? onEnded, CancellationToken cancellation)
         {
-            var arguments = _arguments
+            var arguments = _config.Arguments
                 .Replace("{inputPath}", inputPath, StringComparison.InvariantCultureIgnoreCase)
                 .Replace("{outputPath}", outputPath, StringComparison.InvariantCultureIgnoreCase);
 
@@ -51,7 +45,7 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.FFmpeg
 
                 process.StartInfo = new ProcessStartInfo
                 {
-                    FileName = _ffmpegPath,
+                    FileName = _config.FFmpegPath,
                     Arguments = arguments,
                     CreateNoWindow = true,
                     UseShellExecute = false,
@@ -70,7 +64,7 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.FFmpeg
             }
             catch (Exception ex)
             {
-                await WaitForProcessTerminatingGracefully(process, _gracefulTerminationSeconds);
+                await WaitForProcessTerminatingGracefully(process, _config.GracefulTerminationSeconds);
 
                 if (ex is OperationCanceledException && cancellation.IsCancellationRequested)
                     throw;
