@@ -23,7 +23,7 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Containers
         private uint _sequenceNumber;
         private byte[]? _patBuffer;
 
-        private uint? timestampStart;
+        private uint? _timestampStart;
 
         public uint SequenceNumber => _sequenceNumber;
         public int BufferSize => _payloadBuffer.Size;
@@ -118,8 +118,8 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Containers
             if (_avcSequenceHeader == null)
                 return false;
 
-            if (timestampStart == null)
-                timestampStart = timestamp;
+            if (_timestampStart == null)
+                _timestampStart = timestamp;
 
             var decodingTimestamp = (int)(timestamp * AVCConstants.H264Frequency);
             var presentationTimestamp = decodingTimestamp + (int)(compositionTime * AVCConstants.H264Frequency);
@@ -180,8 +180,8 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Containers
             if (_aacSequenceHeader == null)
                 return false;
 
-            if (timestampStart == null)
-                timestampStart = timestamp;
+            if (_timestampStart == null)
+                _timestampStart = timestamp;
 
             var decodingTimestamp = (int)(timestamp * AVCConstants.H264Frequency);
             var presentationTimestamp = decodingTimestamp;
@@ -269,8 +269,8 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Containers
         {
             if (_payloadBuffer.Size > 0)
             {
-                Debug.Assert(timestampStart.HasValue);
-                var duration = (int)(timestamp - timestampStart);
+                Debug.Assert(_timestampStart.HasValue);
+                var duration = (int)(timestamp - _timestampStart);
 
                 WriteHeaderPackets(_headerBuffer);
 
@@ -285,7 +285,7 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Containers
                 _payloadBuffer.Reset();
 
                 _sequenceNumber++;
-                timestampStart = null;
+                _timestampStart = null;
 
                 return segment;
             }
