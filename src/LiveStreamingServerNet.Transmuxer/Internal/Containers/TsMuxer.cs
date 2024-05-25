@@ -132,7 +132,7 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Containers
                 new BytesSegments(nalus),
                 isKeyFrame,
                 false,
-                true,
+                isKeyFrame,
                 TsConstants.VideoPID,
                 TsConstants.VideoSID,
                 decodingTimestamp,
@@ -218,10 +218,9 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Containers
             while (position < bufferSize)
             {
                 var isFirst = position == 0;
-                var isKeyFrameInit = isFirst && isKeyFrame;
 
                 var tsHeader = new TransportStreamHeader(isFirst, packetId, true, continuityCounter);
-                var adaptationField = new AdaptationField(isKeyFrameInit && writeRAI, isKeyFrameInit && writePCR ? decodingTimestamp : null);
+                var adaptationField = new AdaptationField(isFirst && writeRAI, isFirst && writePCR ? decodingTimestamp : null);
 
                 var pesHeaderSize = isFirst ? pesHeader.Size : 0;
 
