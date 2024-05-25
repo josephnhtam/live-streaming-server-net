@@ -130,7 +130,6 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Containers
             WritePESPacket(
                 _payloadBuffer,
                 new BytesSegments(nalus),
-                isKeyFrame,
                 false,
                 isKeyFrame,
                 TsConstants.VideoPID,
@@ -195,7 +194,6 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Containers
                 _payloadBuffer,
                 dataBuffer,
                 true,
-                true,
                 false,
                 TsConstants.AudioPID,
                 TsConstants.AudioSID,
@@ -208,7 +206,7 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Containers
             return true;
         }
 
-        private void WritePESPacket(INetBuffer tsBuffer, BytesSegments dataBuffer, bool isKeyFrame, bool writeRAI, bool writePCR, ushort packetId, byte streamId, int decodingTimestamp, int presentationTimestamp, byte continuityCounter)
+        private void WritePESPacket(INetBuffer tsBuffer, BytesSegments dataBuffer, bool writeRAI, bool writePCR, ushort packetId, byte streamId, int decodingTimestamp, int presentationTimestamp, byte continuityCounter)
         {
             var position = 0;
             var bufferSize = dataBuffer.Length;
