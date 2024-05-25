@@ -131,6 +131,8 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Containers
                 _payloadBuffer,
                 new BytesSegments(nalus),
                 isKeyFrame,
+                false,
+                true,
                 TsConstants.VideoPID,
                 TsConstants.VideoSID,
                 decodingTimestamp,
@@ -193,6 +195,8 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Containers
                 _payloadBuffer,
                 dataBuffer,
                 true,
+                true,
+                false,
                 TsConstants.AudioPID,
                 TsConstants.AudioSID,
                 decodingTimestamp,
@@ -204,7 +208,7 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Containers
             return true;
         }
 
-        private void WritePESPacket(INetBuffer tsBuffer, BytesSegments dataBuffer, bool isKeyFrame, ushort packetId, byte streamId, int decodingTimestamp, int presentationTimestamp, byte continuityCounter)
+        private void WritePESPacket(INetBuffer tsBuffer, BytesSegments dataBuffer, bool isKeyFrame, bool writeRAI, bool writePCR, ushort packetId, byte streamId, int decodingTimestamp, int presentationTimestamp, byte continuityCounter)
         {
             var position = 0;
             var bufferSize = dataBuffer.Length;
@@ -214,9 +218,10 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Containers
             while (position < bufferSize)
             {
                 var isFirst = position == 0;
+                var isKeyFrameInit = isFirst && isKeyFrame;
 
                 var tsHeader = new TransportStreamHeader(isFirst, packetId, true, continuityCounter);
-                var adaptationField = new AdaptationField((isFirst && isKeyFrame) ? decodingTimestamp : null);
+                var adaptationField = new AdaptationField(isKeyFrameInit && writeRAI, isKeyFrameInit && writePCR ? decodingTimestamp : null);
 
                 var pesHeaderSize = isFirst ? pesHeader.Size : 0;
 
