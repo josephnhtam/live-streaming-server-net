@@ -1,6 +1,5 @@
 ﻿using LiveStreamingServerNet.Networking.Contracts;
 using System.Diagnostics;
-using System.IO.Hashing;
 using System.Runtime.CompilerServices;
 
 namespace LiveStreamingServerNet.Transmuxer.Internal.Containers
@@ -301,7 +300,7 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Containers
 
             public void Write(INetBuffer netBuffer)
             {
-                var checksum = Crc32.HashToUInt32(Buffer.AsSpan(Start, Length));
+                var checksum = CRC32.Generate(Buffer, Start, Length);
                 netBuffer.WriteUInt32BigEndian(checksum);
             }
         }
