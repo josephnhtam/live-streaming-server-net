@@ -52,7 +52,7 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Containers
             }
         }
 
-        public record struct AdaptionField(int? DecodingTimstamp)
+        public record struct AdaptationField(int? DecodingTimstamp)
         {
             public const int BaseSize = 2;
             public int Size => (Present ? BaseSize : 0) + (DecodingTimstamp.HasValue ? 6 : 0) + (StuffingSize ?? 0);

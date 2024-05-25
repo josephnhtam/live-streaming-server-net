@@ -216,31 +216,31 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Containers
                 var isFirst = position == 0;
 
                 var tsHeader = new TransportStreamHeader(isFirst, packetId, true, continuityCounter);
-                var adaptionField = new AdaptionField((isFirst && isKeyFrame) ? decodingTimestamp : null);
+                var adaptationField = new AdaptationField((isFirst && isKeyFrame) ? decodingTimestamp : null);
 
                 var pesHeaderSize = isFirst ? pesHeader.Size : 0;
 
                 var dataSize = Math.Min(
                     bufferSize - position,
-                    TsConstants.TsPacketSize - tsHeader.Size - adaptionField.Size - pesHeaderSize);
+                    TsConstants.TsPacketSize - tsHeader.Size - adaptationField.Size - pesHeaderSize);
 
-                var remainingSize = TsConstants.TsPacketSize - tsHeader.Size - adaptionField.Size - pesHeaderSize - dataSize;
+                var remainingSize = TsConstants.TsPacketSize - tsHeader.Size - adaptationField.Size - pesHeaderSize - dataSize;
 
                 if (remainingSize > 0)
                 {
-                    adaptionField.StuffingSize = remainingSize - (adaptionField.Present ? 0 : AdaptionField.BaseSize);
+                    adaptationField.StuffingSize = remainingSize - (adaptationField.Present ? 0 : AdaptationField.BaseSize);
 
                     dataSize = Math.Min(
                         bufferSize - position,
-                        TsConstants.TsPacketSize - tsHeader.Size - adaptionField.Size - pesHeaderSize);
+                        TsConstants.TsPacketSize - tsHeader.Size - adaptationField.Size - pesHeaderSize);
 
-                    Debug.Assert((tsHeader.Size + adaptionField.Size + pesHeaderSize + dataSize) == TsConstants.TsPacketSize);
+                    Debug.Assert((tsHeader.Size + adaptationField.Size + pesHeaderSize + dataSize) == TsConstants.TsPacketSize);
                 }
 
-                tsHeader.HasAdaptionField = adaptionField.Present;
+                tsHeader.HasAdaptionField = adaptationField.Present;
 
                 tsHeader.Write(tsBuffer);
-                adaptionField.Write(tsBuffer);
+                adaptationField.Write(tsBuffer);
 
                 if (isFirst) pesHeader.Write(tsBuffer);
                 dataBuffer.WriteTo(tsBuffer, position, dataSize);
