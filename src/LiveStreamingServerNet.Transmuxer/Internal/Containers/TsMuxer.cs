@@ -138,10 +138,9 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Containers
                 TsConstants.VideoSID,
                 decodingTimestamp,
                 presentationTimestamp,
-                _videoContinuityCounter
+                ref _videoContinuityCounter
             );
 
-            IncreaseContinuityCounter(ref _videoContinuityCounter);
             return true;
         }
 
@@ -201,14 +200,13 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Containers
                 TsConstants.AudioSID,
                 decodingTimestamp,
                 presentationTimestamp,
-                _audioContinuityCounter
+                ref _audioContinuityCounter
             );
 
-            IncreaseContinuityCounter(ref _audioContinuityCounter);
             return true;
         }
 
-        private void WritePESPacket(INetBuffer tsBuffer, BytesSegments dataBuffer, bool writeRAI, bool writePCR, ushort packetId, byte streamId, int decodingTimestamp, int presentationTimestamp, byte continuityCounter)
+        private void WritePESPacket(INetBuffer tsBuffer, BytesSegments dataBuffer, bool writeRAI, bool writePCR, ushort packetId, byte streamId, int decodingTimestamp, int presentationTimestamp, ref byte continuityCounter)
         {
             var position = 0;
             var bufferSize = dataBuffer.Length;
@@ -250,6 +248,8 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Containers
                 dataBuffer.WriteTo(tsBuffer, position, dataSize);
 
                 position += dataSize;
+
+                IncreaseContinuityCounter(ref continuityCounter);
             }
         }
 
