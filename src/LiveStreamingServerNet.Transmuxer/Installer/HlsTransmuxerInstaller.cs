@@ -9,6 +9,7 @@ using LiveStreamingServerNet.Transmuxer.Internal.Hls.Services;
 using LiveStreamingServerNet.Transmuxer.Internal.Hls.Services.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Logging;
 
 namespace LiveStreamingServerNet.Transmuxer.Installer
 {
@@ -29,7 +30,8 @@ namespace LiveStreamingServerNet.Transmuxer.Installer
                 new HlsTransmuxerFactory(
                     svc.GetRequiredService<IHlsTransmuxerManager>(),
                     svc.GetRequiredService<IManifestWriter>(),
-                    config
+                    config,
+                    svc.GetRequiredService<ILogger<HlsTransmuxer>>()
                 )
             );
 

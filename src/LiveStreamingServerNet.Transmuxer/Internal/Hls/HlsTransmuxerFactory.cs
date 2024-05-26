@@ -3,6 +3,7 @@ using LiveStreamingServerNet.Transmuxer.Hls.Configurations;
 using LiveStreamingServerNet.Transmuxer.Internal.Containers;
 using LiveStreamingServerNet.Transmuxer.Internal.Hls.M3u8.Marshal.Contracts;
 using LiveStreamingServerNet.Transmuxer.Internal.Hls.Services.Contracts;
+using Microsoft.Extensions.Logging;
 
 namespace LiveStreamingServerNet.Transmuxer.Internal.Hls
 {
@@ -11,12 +12,14 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Hls
         private readonly IHlsTransmuxerManager _transmuxerManager;
         private readonly IManifestWriter _manifestWriter;
         private readonly HlsTransmuxerConfiguration _config;
+        private readonly ILogger<HlsTransmuxer> _logger;
 
-        public HlsTransmuxerFactory(IHlsTransmuxerManager transmuxerManager, IManifestWriter manifestWriter, HlsTransmuxerConfiguration config)
+        public HlsTransmuxerFactory(IHlsTransmuxerManager transmuxerManager, IManifestWriter manifestWriter, HlsTransmuxerConfiguration config, ILogger<HlsTransmuxer> logger)
         {
             _transmuxerManager = transmuxerManager;
             _manifestWriter = manifestWriter;
             _config = config;
+            _logger = logger;
         }
 
         public async Task<ITransmuxer> CreateAsync(
@@ -35,7 +38,7 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Hls
                 _config.DeleteOutdatedSegments
             );
 
-            return new HlsTransmuxer(_transmuxerManager, _manifestWriter, tsMuxer, config);
+            return new HlsTransmuxer(_transmuxerManager, _manifestWriter, tsMuxer, config, _logger);
         }
     }
 }
