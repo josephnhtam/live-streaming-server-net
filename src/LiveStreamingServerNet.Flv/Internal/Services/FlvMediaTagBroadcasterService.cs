@@ -117,6 +117,10 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
             }
             catch (OperationCanceledException) when (cancellation.IsCancellationRequested) { }
             catch (ChannelClosedException) { }
+            catch (Exception ex)
+            {
+                _logger.FailedToSendMediaMessage(client.ClientId, ex);
+            }
 
             while (context.ReadPackage(out var package))
             {
