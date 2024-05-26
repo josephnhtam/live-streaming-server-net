@@ -8,6 +8,7 @@ namespace LiveStreamingServerNet.Networking.Internal
 {
     internal class ClientManager : IClientManager
     {
+        private readonly ConcurrentDictionary<uint, IClient> _clients = new();
         private readonly ConcurrentDictionary<uint, ClientTask> _clientTasks = new();
         private readonly IClientFactory _clientFactory;
         private readonly IClientHandlerFactory _clientHandlerFactory;
@@ -38,6 +39,8 @@ namespace LiveStreamingServerNet.Networking.Internal
             var client = CreateClient(clientId, tcpClient);
 
             var clientHandler = CreateClientHandler();
+
+            _clients.TryAdd(clientId, client);
             var clientTask = client.RunAsync(clientHandler, serverEndPoint, cancellationToken);
 
             _clientTasks.TryAdd(clientId, new(client, clientTask));
@@ -46,7 +49,8 @@ namespace LiveStreamingServerNet.Networking.Internal
             _ = clientTask.ContinueWith(async _ =>
             {
                 await OnClientDisconnected(client);
-                _clientTasks.TryRemove(clientId, out var removed);
+                _clients.TryRemove(clientId, out var _);
+                _clientTasks.TryRemove(clientId, out var _);
                 await client.DisposeAsync();
             });
         }
@@ -63,12 +67,12 @@ namespace LiveStreamingServerNet.Networking.Internal
 
         public IClientHandle? GetClient(uint clientId)
         {
-            return _clientTasks.GetValueOrDefault(clientId)?.Client;
+            return _clients.GetValueOrDefault(clientId);
         }
 
         public IReadOnlyList<IClientHandle> GetClientHandles()
         {
-            return _clientTasks.Select(x => x.Value.Client).OfType<IClientHandle>().ToList();
+            return _clients.Select(x => x.Value).OfType<IClientHandle>().ToList();
         }
 
         private IClientHandler CreateClientHandler()
