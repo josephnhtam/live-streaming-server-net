@@ -1,4 +1,5 @@
-﻿using LiveStreamingServerNet.Transmuxer.Contracts;
+﻿using LiveStreamingServerNet.Networking.Contracts;
+using LiveStreamingServerNet.Transmuxer.Contracts;
 using LiveStreamingServerNet.Transmuxer.FFmpeg.Configurations;
 
 namespace LiveStreamingServerNet.Transmuxer.Internal.FFmpeg
@@ -12,7 +13,7 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.FFmpeg
             _config = config;
         }
 
-        public async Task<ITransmuxer> CreateAsync(Guid contextIdentifier, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
+        public async Task<ITransmuxer> CreateAsync(IClientHandle client, Guid contextIdentifier, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
             var config = new FFmpegTransmuxer.Configuration(
                 contextIdentifier,

@@ -8,7 +8,8 @@
             string ManifestOutputhPath,
             string TsFileOutputPath,
             int SegmentListSize,
-            bool DeleteOutdatedSegments
+            bool DeleteOutdatedSegments,
+            int MaxSegmentBufferSize
         );
     }
 }

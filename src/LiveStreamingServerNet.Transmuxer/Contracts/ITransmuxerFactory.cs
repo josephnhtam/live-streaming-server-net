@@ -1,7 +1,9 @@
-﻿namespace LiveStreamingServerNet.Transmuxer.Contracts
+﻿using LiveStreamingServerNet.Networking.Contracts;
+
+namespace LiveStreamingServerNet.Transmuxer.Contracts
 {
     public interface ITransmuxerFactory
     {
-        Task<ITransmuxer> CreateAsync(Guid contextIdentifier, string streamPath, IReadOnlyDictionary<string, string> streamArguments);
+        Task<ITransmuxer> CreateAsync(IClientHandle client, Guid contextIdentifier, string streamPath, IReadOnlyDictionary<string, string> streamArguments);
     }
 }

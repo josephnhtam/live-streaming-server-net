@@ -1,4 +1,5 @@
-﻿using LiveStreamingServerNet.Rtmp;
+﻿using LiveStreamingServerNet.Networking.Contracts;
+using LiveStreamingServerNet.Rtmp;
 using LiveStreamingServerNet.Transmuxer.Contracts;
 using LiveStreamingServerNet.Transmuxer.Internal.Containers;
 using LiveStreamingServerNet.Transmuxer.Internal.Containers.Contracts;
@@ -15,6 +16,7 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Hls
 {
     internal partial class HlsTransmuxer : IHlsTransmuxer
     {
+        private readonly IClientHandle _client;
         private readonly IHlsTransmuxerManager _transmuxerManager;
         private readonly IManifestWriter _manifestWriter;
         private readonly ITsMuxer _tsMuxer;
@@ -33,7 +35,14 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Hls
         public string Name { get; }
         public Guid ContextIdentifier { get; }
 
-        public HlsTransmuxer(IHlsTransmuxerManager transmuxerManager, IManifestWriter manifestWriter, ITsMuxer tsMuxer, Configuration config, ILogger<HlsTransmuxer> logger)
+
+        public HlsTransmuxer(
+            IClientHandle client,
+            IHlsTransmuxerManager transmuxerManager,
+            IManifestWriter manifestWriter,
+            ITsMuxer tsMuxer,
+            Configuration config,
+            ILogger<HlsTransmuxer> logger)
         {
             DirectoryUtility.CreateDirectoryIfNotExists(Path.GetDirectoryName(config.ManifestOutputhPath));
             DirectoryUtility.CreateDirectoryIfNotExists(Path.GetDirectoryName(config.TsFileOutputPath));
@@ -41,6 +50,7 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Hls
             Name = config.Name;
             ContextIdentifier = config.ContextIdentifier;
 
+            _client = client;
             _transmuxerManager = transmuxerManager;
             _manifestWriter = manifestWriter;
             _tsMuxer = tsMuxer;
@@ -58,18 +68,21 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Hls
             return _channel.Writer.WriteAsync(new PendingMediaPacket(mediaType, rentedBuffer, timestamp));
         }
 
-        private ValueTask ProcessMediaPacket(MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp)
+        private async ValueTask ProcessMediaPacket(MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp)
         {
             switch (mediaType)
             {
                 case MediaType.Video:
-                    return ProcessVideoPacket(rentedBuffer, timestamp);
+                    await ProcessVideoPacket(rentedBuffer, timestamp);
+                    break;
 
                 case MediaType.Audio:
-                    return ProcessAudioPacket(rentedBuffer, timestamp);
+                    await ProcessAudioPacket(rentedBuffer, timestamp);
+                    break;
             }
 
-            return ValueTask.CompletedTask;
+            if (_tsMuxer.BufferSize > _config.MaxSegmentBufferSize)
+                throw new OutOfMemoryException("Segment buffer size exceeded the maximum allowed size");
         }
 
         private async ValueTask ProcessVideoPacket(IRentedBuffer rentedBuffer, uint timestamp)
@@ -203,11 +216,6 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Hls
                     {
                         await ProcessMediaPacket(message.MediaType, message.RentedBuffer, message.Timestamp);
                     }
-                    catch (OperationCanceledException) when (cancellation.IsCancellationRequested) { }
-                    catch (Exception ex)
-                    {
-                        _logger.ProcessingHlsTransmuxingError(Name, ContextIdentifier, _config.ManifestOutputhPath, streamPath, ex);
-                    }
                     finally
                     {
                         message.RentedBuffer.Unclaim();
@@ -218,6 +226,7 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Hls
             catch (Exception ex)
             {
                 _logger.ProcessingHlsTransmuxingError(Name, ContextIdentifier, _config.ManifestOutputhPath, streamPath, ex);
+                await _client.DisconnectAsync();
             }
             finally
             {

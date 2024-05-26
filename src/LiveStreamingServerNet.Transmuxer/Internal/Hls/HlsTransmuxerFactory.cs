@@ -1,4 +1,5 @@
-﻿using LiveStreamingServerNet.Transmuxer.Contracts;
+﻿using LiveStreamingServerNet.Networking.Contracts;
+using LiveStreamingServerNet.Transmuxer.Contracts;
 using LiveStreamingServerNet.Transmuxer.Hls.Configurations;
 using LiveStreamingServerNet.Transmuxer.Internal.Containers;
 using LiveStreamingServerNet.Transmuxer.Internal.Hls.M3u8.Marshal.Contracts;
@@ -23,7 +24,7 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Hls
         }
 
         public async Task<ITransmuxer> CreateAsync(
-            Guid contextIdentifier, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
+            IClientHandle client, Guid contextIdentifier, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
             var outputPaths = await _config.OutputPathResolver.ResolveOutputPath(contextIdentifier, streamPath, streamArguments);
 
@@ -35,10 +36,11 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Hls
                 outputPaths.ManifestOutputPath,
                 outputPaths.TsFileOutputPath,
                 _config.SegmentListSize,
-                _config.DeleteOutdatedSegments
+                _config.DeleteOutdatedSegments,
+                _config.MaxSegmentBufferSize
             );
 
-            return new HlsTransmuxer(_transmuxerManager, _manifestWriter, tsMuxer, config, _logger);
+            return new HlsTransmuxer(client, _transmuxerManager, _manifestWriter, tsMuxer, config, _logger);
         }
     }
 }
