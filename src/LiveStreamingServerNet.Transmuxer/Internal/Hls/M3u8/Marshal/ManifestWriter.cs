@@ -8,6 +8,9 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Hls.M3u8.Marshal
     {
         public async Task WriteAsync(string ManifestOutputPath, IEnumerable<TsSegment> segments, CancellationToken cancellationToken)
         {
+            var dirPath = Path.GetDirectoryName(ManifestOutputPath) ?? string.Empty;
+            var tempManifestOutputPath = Path.Combine(dirPath, $"tmp_{Path.GetFileName(ManifestOutputPath)}");
+
             var sb = new StringBuilder();
 
             sb.AppendLine("#EXTM3U");
@@ -18,25 +21,22 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Hls.M3u8.Marshal
 
             foreach (var segment in segments)
             {
-                var dirPath = Path.GetDirectoryName(ManifestOutputPath) ?? string.Empty;
                 var relativePath = Path.GetRelativePath(dirPath, segment.FilePath).Replace('\\', '/');
 
                 sb.AppendLine($"#EXTINF:{CalculateDuration(segment)},");
                 sb.AppendLine(relativePath);
             }
 
-            var tempFilePath = $"{ManifestOutputPath}.tmp";
-
             try
             {
-                await File.WriteAllTextAsync(tempFilePath, sb.ToString(), cancellationToken);
-                File.Move(tempFilePath, ManifestOutputPath, true);
+                await File.WriteAllTextAsync(tempManifestOutputPath, sb.ToString(), cancellationToken);
+                File.Move(tempManifestOutputPath, ManifestOutputPath, true);
             }
             catch
             {
                 try
                 {
-                    File.Delete(tempFilePath);
+                    File.Delete(tempManifestOutputPath);
                 }
                 catch { }
 
