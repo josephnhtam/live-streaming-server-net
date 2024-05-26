@@ -50,7 +50,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
             }
 
             var audioCodec = ParseAudioMessageProperties(payloadBuffer);
-            if (!IsAudioCodecAllowed(audioCodec)) return false;
+            if (!IsAudioCodecAllowed(clientContext, publishStreamContext, audioCodec)) return false;
 
             var hasHeader = await HandleAudioSequenceHeaderAsync(chunkStreamContext, publishStreamContext, audioCodec, payloadBuffer);
             await BroadcastAudioMessageToSubscribersAsync(chunkStreamContext, clientContext, publishStreamContext, payloadBuffer.MoveTo(0), hasHeader);
@@ -89,10 +89,13 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private bool IsAudioCodecAllowed(AudioCodec audioCodec)
+        private bool IsAudioCodecAllowed(IRtmpClientContext clientContext, IRtmpPublishStreamContext publishStreamContext, AudioCodec audioCodec)
         {
             if (_audioCodecFilter != null && !_audioCodecFilter.IsAllowed(audioCodec))
+            {
+                _logger.AudioCodecNotAllowed(clientContext.Client.ClientId, publishStreamContext.StreamPath, audioCodec);
                 return false;
+            }
 
             return true;
         }

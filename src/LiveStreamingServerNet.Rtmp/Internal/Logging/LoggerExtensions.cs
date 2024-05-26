@@ -126,5 +126,11 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Logging
 
         [LoggerMessage(LogLevel.Error, "ClientId: {ClientId} | An error occurred while dispatching RTMP stream unsubscribed event")]
         public static partial void DispatchingRtmpStreamUnsubscribedEventError(this ILogger logger, uint clientId, Exception ex);
+
+        [LoggerMessage(LogLevel.Warning, "ClientId: {ClientId} | StreamPath: {StreamPath} | VideoCodec: {VideoCodec} | Video codec not allowed")]
+        public static partial void VideoCodecNotAllowed(this ILogger logger, uint clientId, string streamPath, VideoCodec videoCodec);
+
+        [LoggerMessage(LogLevel.Warning, "ClientId: {ClientId} | StreamPath: {StreamPath} | AudioCodec: {AudioCodec} | Audio codec not allowed")]
+        public static partial void AudioCodecNotAllowed(this ILogger logger, uint clientId, string streamPath, AudioCodec audioCodec);
     }
 }

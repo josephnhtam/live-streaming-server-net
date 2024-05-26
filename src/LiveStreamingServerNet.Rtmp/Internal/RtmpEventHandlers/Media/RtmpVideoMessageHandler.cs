@@ -55,7 +55,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
             }
 
             var (frameType, videoCodec) = ParseVideoMessageProperties(payloadBuffer);
-            if (!IsVideoCodecAllowed(videoCodec)) return false;
+            if (!IsVideoCodecAllowed(clientContext, publishStreamContext, videoCodec)) return false;
 
             var hasHeader = await HandleVideoSequenceHeaderAsync(chunkStreamContext, publishStreamContext, frameType, videoCodec, payloadBuffer);
             await BroadcastVideoMessageToSubscribersAsync(chunkStreamContext, clientContext, publishStreamContext, payloadBuffer.MoveTo(0), hasHeader);
@@ -94,10 +94,13 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private bool IsVideoCodecAllowed(VideoCodec videoCodec)
+        private bool IsVideoCodecAllowed(IRtmpClientContext clientContext, IRtmpPublishStreamContext publishStreamContext, VideoCodec videoCodec)
         {
             if (_videoCodecFilter != null && !_videoCodecFilter.IsAllowed(videoCodec))
+            {
+                _logger.VideoCodecNotAllowed(clientContext.Client.ClientId, publishStreamContext.StreamPath, videoCodec);
                 return false;
+            }
 
             return true;
         }
