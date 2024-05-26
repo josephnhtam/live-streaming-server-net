@@ -89,9 +89,9 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
         {
             var firstByte = payloadBuffer.ReadByte();
             var frameType = (VideoFrameType)(firstByte >> 4);
-            var codecId = (VideoCodecId)(firstByte & 0x0f);
+            var videoCodec = (VideoCodec)(firstByte & 0x0f);
 
-            if (codecId is VideoCodecId.AVC or VideoCodecId.HVC or VideoCodecId.Opus)
+            if (videoCodec is VideoCodec.AVC or VideoCodec.HVC or VideoCodec.Opus)
             {
                 publishStreamContext.GroupOfPicturesCacheActivated = _config.EnableGopCaching;
                 var avcPackageType = (AVCPacketType)payloadBuffer.ReadByte();

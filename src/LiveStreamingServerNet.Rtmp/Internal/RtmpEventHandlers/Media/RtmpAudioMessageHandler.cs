@@ -83,9 +83,9 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
             INetBuffer payloadBuffer)
         {
             var firstByte = payloadBuffer.ReadByte();
-            var soundFormat = (AudioSoundFormat)(firstByte >> 4);
+            var audioCodec = (AudioCodec)(firstByte >> 4);
 
-            if (soundFormat is AudioSoundFormat.AAC or AudioSoundFormat.Opus)
+            if (audioCodec is AudioCodec.AAC or AudioCodec.Opus)
             {
                 var aacPackageType = (AACPacketType)payloadBuffer.ReadByte();
                 if (aacPackageType == AACPacketType.SequenceHeader)

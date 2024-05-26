@@ -68,7 +68,7 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Hls
         {
             var tagHeader = FlvParser.ParseVideoTagHeader(rentedBuffer.Buffer);
 
-            if (tagHeader.CodecId != VideoCodecId.AVC)
+            if (tagHeader.VideoCodec != VideoCodec.AVC)
                 return;
 
             var dataBuffer = new ArraySegment<byte>(rentedBuffer.Buffer, FlvVideoTagHeader.Size, rentedBuffer.Size - FlvVideoTagHeader.Size);
@@ -95,7 +95,7 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Hls
         {
             var tagHeader = FlvParser.ParseAudioTagHeader(rentedBuffer.Buffer);
 
-            if (tagHeader.SoundFormat != AudioSoundFormat.AAC)
+            if (tagHeader.AudioCodec != AudioCodec.AAC)
                 return ValueTask.CompletedTask;
 
             var dataBuffer = new ArraySegment<byte>(rentedBuffer.Buffer, FlvAudioTagHeader.Size, rentedBuffer.Size - FlvAudioTagHeader.Size);

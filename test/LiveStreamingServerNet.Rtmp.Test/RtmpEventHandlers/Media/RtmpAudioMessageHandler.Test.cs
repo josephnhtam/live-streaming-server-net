@@ -62,16 +62,16 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Media
         }
 
         [Theory]
-        [InlineData(true, AudioSoundFormat.AAC, AACPacketType.SequenceHeader)]
-        [InlineData(true, AudioSoundFormat.AAC, AACPacketType.Raw)]
-        [InlineData(true, AudioSoundFormat.Opus, AACPacketType.SequenceHeader)]
-        [InlineData(true, AudioSoundFormat.Opus, AACPacketType.Raw)]
-        [InlineData(false, AudioSoundFormat.AAC, AACPacketType.SequenceHeader)]
-        [InlineData(false, AudioSoundFormat.AAC, AACPacketType.Raw)]
-        [InlineData(false, AudioSoundFormat.Opus, AACPacketType.SequenceHeader)]
-        [InlineData(false, AudioSoundFormat.Opus, AACPacketType.Raw)]
+        [InlineData(true, AudioCodec.AAC, AACPacketType.SequenceHeader)]
+        [InlineData(true, AudioCodec.AAC, AACPacketType.Raw)]
+        [InlineData(true, AudioCodec.Opus, AACPacketType.SequenceHeader)]
+        [InlineData(true, AudioCodec.Opus, AACPacketType.Raw)]
+        [InlineData(false, AudioCodec.AAC, AACPacketType.SequenceHeader)]
+        [InlineData(false, AudioCodec.AAC, AACPacketType.Raw)]
+        [InlineData(false, AudioCodec.Opus, AACPacketType.SequenceHeader)]
+        [InlineData(false, AudioCodec.Opus, AACPacketType.Raw)]
         internal async Task HandleAsync_Should_HandleCacheAndBroadcastAndReturnTrue(
-            bool gopCacheActivated, AudioSoundFormat soundFormat, AACPacketType aacPacketType)
+            bool gopCacheActivated, AudioCodec audioCodec, AACPacketType aacPacketType)
         {
             // Arrange
             var stremaPath = _fixture.Create<string>();
@@ -86,17 +86,17 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Media
             _clientContext.PublishStreamContext.Returns(publishStreamContext);
             _streamManager.GetSubscribers(stremaPath).Returns(subscribers);
 
-            var firstByte = (byte)((byte)soundFormat << 4);
+            var firstByte = (byte)((byte)audioCodec << 4);
             _netBuffer.Write(firstByte);
             _netBuffer.Write((byte)aacPacketType);
             _netBuffer.Write(_fixture.Create<byte[]>());
             _netBuffer.MoveTo(0);
 
             var hasHeader =
-                (soundFormat is AudioSoundFormat.AAC or AudioSoundFormat.Opus) &&
+                (audioCodec is AudioCodec.AAC or AudioCodec.Opus) &&
                 aacPacketType is AACPacketType.SequenceHeader;
 
-            bool isPictureCachable = (soundFormat is AudioSoundFormat.AAC or AudioSoundFormat.Opus) && aacPacketType is not AACPacketType.SequenceHeader;
+            bool isPictureCachable = (audioCodec is AudioCodec.AAC or AudioCodec.Opus) && aacPacketType is not AACPacketType.SequenceHeader;
 
             var isSkippable = !hasHeader;
 
