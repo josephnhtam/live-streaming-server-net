@@ -4,7 +4,7 @@
 [![Nuget](https://img.shields.io/nuget/v/LiveStreamingServerNet)](https://www.nuget.org/packages/LiveStreamingServerNet/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-This repository contains an implementation of RTMP server which allows you to build your own live streaming server using .NET.
+Live-Streaming-Server-Net is a high-performance and flexible toolset that allows you to build your own live streaming server using .NET.
 
 > A more detailed [documentation](https://josephnhtam.github.io/live-streaming-server-net/) is currently under construction.
 
@@ -17,12 +17,12 @@ This repository contains an implementation of RTMP server which allows you to bu
 - **Custom authorization**: Enables you to implement custom authorization mechanisms for accessing live streams.
 - **Admin panel**: Includes an admin panel that provides an user interface for managing and monitoring the live streaming server.
 - **Cloud Storage Integration**: Enabling real-time uploading of HLS files to cloud storage services like Azure Blob Storage, Google Cloud Storage, and AWS S3, which ensures scalable and efficient HLS stream distribution through CDN.
+- **Built-in HLS Transmuxer**: This enables HLS transmuxing without the need for FFmpeg. Although it isn’t as feature-rich as FFmpeg, it produces less overhead and has lower CPU utilization.
 
 ## In-Progress
 
 - **Custom Kubernetes Operator and Kubernetes Integration**: The objective is to achieve automatic horizontal autoscaling by scaling out the pods when more streams are published, and scaling in the pods when streams are deleted, all without affecting the existing connections.
 - **Redis Integration**: Integrate with Redis to share stream information among pods in the fleet.
-- **Built-in HLS Transmuxer**: This enables HLS transmuxing without the need for FFmpeg. Although it isn’t as feature-rich as FFmpeg, it would produce less overhead and have lower CPU utilization.
 
 ## Roadmap
 
