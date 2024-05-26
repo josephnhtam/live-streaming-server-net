@@ -2,6 +2,7 @@ using Azure.Storage.Blobs;
 using LiveStreamingServerNet.KubernetesPod.Installer;
 using LiveStreamingServerNet.KubernetesPod.Redis.Installer;
 using LiveStreamingServerNet.Networking.Helpers;
+using LiveStreamingServerNet.Rtmp;
 using LiveStreamingServerNet.Transmuxer;
 using LiveStreamingServerNet.Transmuxer.AzureBlobStorage.Installer;
 using LiveStreamingServerNet.Transmuxer.Hls;
@@ -48,19 +49,13 @@ namespace LiveStreamingServerNet.KubernetesPodDemo
             var blobContainerClient = CreateBlobContainerClient(configuration);
 
             return LiveStreamingServerBuilder.Create()
-                .ConfigureServer(serverConfigurator =>
-                {
-                    serverConfigurator.ConfigureNetwork(options =>
-                    {
-                        options.NoDelay = true;
-                        options.FlushingInterval = TimeSpan.FromMilliseconds(350);
-                    });
-                })
                 .ConfigureRtmpServer(rtmpServerConfigurator =>
                 {
                     if (blobContainerClient != null)
                     {
                         rtmpServerConfigurator
+                            .AddVideoCodecFilter(builder => builder.Include(VideoCodec.AVC))
+                            .AddAudioCodecFilter(builder => builder.Include(AudioCodec.AAC))
                             .AddTransmuxer(transmuxerConfigurator =>
                             {
                                 transmuxerConfigurator.AddHlsUploader(hlsUploaderConfigurator =>
@@ -69,13 +64,7 @@ namespace LiveStreamingServerNet.KubernetesPodDemo
                                     hlsUploaderConfigurator.AddHlsStorageEventHandler<HlsStorageEventHandler>();
                                 });
                             })
-                            .AddFFmpeg(options =>
-                            {
-                                options.FFmpegArguments =
-                                    "-i {inputPath} -c:v copy -c:a copy " +
-                                    "-preset ultrafast -tune zerolatency -hls_time 1 " +
-                                    "-hls_flags delete_segments -hls_list_size 20 -f hls {outputPath}";
-                            });
+                            .AddHlsTransmuxer();
                     }
 
                     rtmpServerConfigurator.AddKubernetesPodServices(podConfigurator =>
