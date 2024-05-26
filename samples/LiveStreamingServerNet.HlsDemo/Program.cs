@@ -1,4 +1,5 @@
 using LiveStreamingServerNet.Networking.Helpers;
+using LiveStreamingServerNet.Rtmp;
 using LiveStreamingServerNet.Transmuxer.Contracts;
 using LiveStreamingServerNet.Transmuxer.Hls.Contracts;
 using LiveStreamingServerNet.Transmuxer.Installer;
@@ -59,6 +60,8 @@ namespace LiveStreamingServerNet.HlsDemo
             return LiveStreamingServerBuilder.Create()
                 .ConfigureRtmpServer(options => options
                     .Configure(options => options.EnableGopCaching = false)
+                    .AddVideoCodecFilter(builder => builder.Include(VideoCodec.AVC))
+                    .AddAudioCodecFilter(builder => builder.Include(AudioCodec.AAC))
                     .AddTransmuxer(options =>
                     {
                         options.AddTransmuxerEventHandler(svc =>

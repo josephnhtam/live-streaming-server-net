@@ -2,6 +2,7 @@
 using LiveStreamingServerNet.Rtmp.Configurations;
 using LiveStreamingServerNet.Rtmp.Contracts;
 using LiveStreamingServerNet.Rtmp.Installer.Contracts;
+using LiveStreamingServerNet.Rtmp.Internal.Filtering;
 using LiveStreamingServerNet.Rtmp.RateLimiting;
 using LiveStreamingServerNet.Rtmp.RateLimiting.Contracts;
 using Microsoft.Extensions.DependencyInjection;
@@ -111,6 +112,22 @@ namespace LiveStreamingServerNet.Rtmp.Installer
         public IRtmpServerConfigurator AddBandwidthLimiter(Func<IServiceProvider, IBandwidthLimiterFactory> factory)
         {
             Services.TryAddSingleton(factory);
+            return this;
+        }
+
+        public IRtmpServerConfigurator AddVideoCodecFilter(Action<IFilterBuilder<VideoCodec>> configure)
+        {
+            var builder = new FilterBuilder<VideoCodec>();
+            configure(builder);
+            Services.TryAddSingleton(builder.Build());
+            return this;
+        }
+
+        public IRtmpServerConfigurator AddAudioCodecFilter(Action<IFilterBuilder<AudioCodec>> configure)
+        {
+            var builder = new FilterBuilder<AudioCodec>();
+            configure(builder);
+            Services.TryAddSingleton(builder.Build());
             return this;
         }
     }

@@ -1,10 +1,12 @@
 ﻿using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.Contracts;
+using LiveStreamingServerNet.Rtmp.Internal.Filtering.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.Logging;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Dispatcher.Attributes;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Dispatcher.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.Services.Contracts;
 using Microsoft.Extensions.Logging;
+using System.Runtime.CompilerServices;
 
 namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
 {
@@ -16,16 +18,21 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
         private readonly IRtmpMediaMessageBroadcasterService _mediaMessageBroadcaster;
         private readonly ILogger _logger;
 
+        private readonly IFilter<AudioCodec>? _audioCodecFilter;
+
         public RtmpAudioMessageHandler(
             IRtmpStreamManagerService streamManager,
             IRtmpMediaMessageCacherService mediaMessageCacher,
             IRtmpMediaMessageBroadcasterService mediaMessageBroadcaster,
-            ILogger<RtmpAudioMessageHandler> logger)
+            ILogger<RtmpAudioMessageHandler> logger,
+            IFilter<AudioCodec>? audioCodecFilter = null)
         {
             _streamManager = streamManager;
             _mediaMessageCacher = mediaMessageCacher;
             _mediaMessageBroadcaster = mediaMessageBroadcaster;
             _logger = logger;
+
+            _audioCodecFilter = audioCodecFilter;
         }
 
         public async ValueTask<bool> HandleAsync(
@@ -42,8 +49,12 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
                 return false;
             }
 
-            var hasHeader = await CacheAudioSequenceAsync(chunkStreamContext, publishStreamContext, payloadBuffer);
-            await BroadcastAudioMessageToSubscribersAsync(chunkStreamContext, clientContext, publishStreamContext, payloadBuffer, hasHeader);
+            var audioCodec = ParseAudioMessageProperties(payloadBuffer);
+            if (!IsAudioCodecAllowed(audioCodec)) return false;
+
+            var hasHeader = await HandleAudioSequenceHeaderAsync(chunkStreamContext, publishStreamContext, audioCodec, payloadBuffer);
+            await BroadcastAudioMessageToSubscribersAsync(chunkStreamContext, clientContext, publishStreamContext, payloadBuffer.MoveTo(0), hasHeader);
+
             return true;
         }
 
@@ -77,14 +88,32 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
                 payloadBuffer);
         }
 
-        private async ValueTask<bool> CacheAudioSequenceAsync(
-            IRtmpChunkStreamContext chunkStreamContext,
-            IRtmpPublishStreamContext publishStreamContext,
-            INetBuffer payloadBuffer)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private bool IsAudioCodecAllowed(AudioCodec audioCodec)
+        {
+            if (_audioCodecFilter != null && !_audioCodecFilter.IsAllowed(audioCodec))
+                return false;
+
+            return true;
+        }
+
+        private AudioCodec ParseAudioMessageProperties(INetBuffer payloadBuffer)
         {
             var firstByte = payloadBuffer.ReadByte();
             var audioCodec = (AudioCodec)(firstByte >> 4);
 
+            if (_audioCodecFilter != null && !_audioCodecFilter.IsAllowed(audioCodec))
+                return audioCodec;
+
+            return audioCodec;
+        }
+
+        private async ValueTask<bool> HandleAudioSequenceHeaderAsync(
+            IRtmpChunkStreamContext chunkStreamContext,
+            IRtmpPublishStreamContext publishStreamContext,
+            AudioCodec audioCodec,
+            INetBuffer payloadBuffer)
+        {
             if (audioCodec is AudioCodec.AAC or AudioCodec.Opus)
             {
                 var aacPackageType = (AACPacketType)payloadBuffer.ReadByte();
@@ -99,7 +128,6 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
                 }
             }
 
-            payloadBuffer.MoveTo(0);
             return false;
         }
     }
