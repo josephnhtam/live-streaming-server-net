@@ -6,10 +6,10 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Hls.M3u8.Marshal
 {
     internal class ManifestWriter : IManifestWriter
     {
-        public async Task WriteAsync(string ManifestOutputPath, IEnumerable<TsSegment> segments, CancellationToken cancellationToken)
+        public async Task WriteAsync(string manifestOutputPath, IEnumerable<TsSegment> segments, CancellationToken cancellationToken)
         {
-            var dirPath = Path.GetDirectoryName(ManifestOutputPath) ?? string.Empty;
-            var tempManifestOutputPath = Path.Combine(dirPath, $"tmp_{Path.GetFileName(ManifestOutputPath)}");
+            var dirPath = Path.GetDirectoryName(manifestOutputPath) ?? string.Empty;
+            var tempManifestOutputPath = Path.Combine(dirPath, $"tmp_{Path.GetFileName(manifestOutputPath)}");
 
             var sb = new StringBuilder();
 
@@ -30,7 +30,7 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Hls.M3u8.Marshal
             try
             {
                 await File.WriteAllTextAsync(tempManifestOutputPath, sb.ToString(), cancellationToken);
-                File.Move(tempManifestOutputPath, ManifestOutputPath, true);
+                File.Move(tempManifestOutputPath, manifestOutputPath, true);
             }
             catch
             {

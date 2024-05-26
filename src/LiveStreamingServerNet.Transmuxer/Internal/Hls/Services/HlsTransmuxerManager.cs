@@ -18,7 +18,7 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Hls.Services
         public ValueTask OnReceiveMediaMessage(string streamPath, MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp)
         {
             if (_transmuxers.TryGetValue(streamPath, out var transmuxer))
-                return transmuxer.OnReceiveMediaMessage(mediaType, rentedBuffer, timestamp);
+                return transmuxer.AddMediaPacket(mediaType, rentedBuffer, timestamp);
 
             return ValueTask.CompletedTask;
         }

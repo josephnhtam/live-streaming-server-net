@@ -6,6 +6,6 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Hls.Contracts
 {
     internal interface IHlsTransmuxer : ITransmuxer
     {
-        ValueTask OnReceiveMediaMessage(MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp);
+        ValueTask AddMediaPacket(MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp);
     }
 }

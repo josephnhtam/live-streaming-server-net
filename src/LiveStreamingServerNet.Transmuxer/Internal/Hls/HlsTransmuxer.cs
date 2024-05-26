@@ -5,8 +5,11 @@ using LiveStreamingServerNet.Transmuxer.Internal.Containers.Contracts;
 using LiveStreamingServerNet.Transmuxer.Internal.Hls.Contracts;
 using LiveStreamingServerNet.Transmuxer.Internal.Hls.M3u8.Marshal.Contracts;
 using LiveStreamingServerNet.Transmuxer.Internal.Hls.Services.Contracts;
+using LiveStreamingServerNet.Transmuxer.Internal.Logging;
 using LiveStreamingServerNet.Utilities;
 using LiveStreamingServerNet.Utilities.Contracts;
+using Microsoft.Extensions.Logging;
+using System.Threading.Channels;
 
 namespace LiveStreamingServerNet.Transmuxer.Internal.Hls
 {
@@ -17,15 +20,20 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Hls
         private readonly ITsMuxer _tsMuxer;
 
         private readonly Configuration _config;
+        private readonly ILogger _logger;
+
         private readonly Queue<TsSegment> _segments;
+        private readonly Channel<PendingMediaPacket> _channel;
 
         private bool _hasVideo;
         private bool _hasAudio;
 
+        private string _streamPath = string.Empty;
+
         public string Name { get; }
         public Guid ContextIdentifier { get; }
 
-        public HlsTransmuxer(IHlsTransmuxerManager transmuxerManager, IManifestWriter manifestWriter, ITsMuxer tsMuxer, Configuration config)
+        public HlsTransmuxer(IHlsTransmuxerManager transmuxerManager, IManifestWriter manifestWriter, ITsMuxer tsMuxer, Configuration config, ILogger<HlsTransmuxer> logger)
         {
             DirectoryUtility.CreateDirectoryIfNotExists(Path.GetDirectoryName(config.ManifestOutputhPath));
             DirectoryUtility.CreateDirectoryIfNotExists(Path.GetDirectoryName(config.TsFileOutputPath));
@@ -38,33 +46,33 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Hls
             _tsMuxer = tsMuxer;
 
             _config = config;
+            _logger = logger;
+
             _segments = new Queue<TsSegment>();
+            _channel = Channel.CreateUnbounded<PendingMediaPacket>(new UnboundedChannelOptions { SingleReader = true, AllowSynchronousContinuations = true });
         }
 
-        public ValueTask OnReceiveMediaMessage(MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp)
+        public ValueTask AddMediaPacket(MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp)
         {
             rentedBuffer.Claim();
-
-            try
-            {
-                switch (mediaType)
-                {
-                    case MediaType.Video:
-                        return OnReceiveVideoMessage(rentedBuffer, timestamp);
-
-                    case MediaType.Audio:
-                        return OnReceiveAudioMessage(rentedBuffer, timestamp);
-                }
-
-                return ValueTask.CompletedTask;
-            }
-            finally
-            {
-                rentedBuffer.Unclaim();
-            }
+            return _channel.Writer.WriteAsync(new PendingMediaPacket(mediaType, rentedBuffer, timestamp));
         }
 
-        public async ValueTask OnReceiveVideoMessage(IRentedBuffer rentedBuffer, uint timestamp)
+        private ValueTask ProcessMediaPacket(MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp)
+        {
+            switch (mediaType)
+            {
+                case MediaType.Video:
+                    return ProcessVideoPacket(rentedBuffer, timestamp);
+
+                case MediaType.Audio:
+                    return ProcessAudioPacket(rentedBuffer, timestamp);
+            }
+
+            return ValueTask.CompletedTask;
+        }
+
+        private async ValueTask ProcessVideoPacket(IRentedBuffer rentedBuffer, uint timestamp)
         {
             var tagHeader = FlvParser.ParseVideoTagHeader(rentedBuffer.Buffer);
 
@@ -91,7 +99,7 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Hls
             );
         }
 
-        public ValueTask OnReceiveAudioMessage(IRentedBuffer rentedBuffer, uint timestamp)
+        private ValueTask ProcessAudioPacket(IRentedBuffer rentedBuffer, uint timestamp)
         {
             var tagHeader = FlvParser.ParseAudioTagHeader(rentedBuffer.Buffer);
 
@@ -118,8 +126,18 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Hls
 
             _hasVideo = _hasAudio = false;
 
-            var tsSegment = await _tsMuxer.FlushAsync(timestamp);
+            var tsSegment = await FlushTsMuxer(timestamp);
             if (tsSegment != null) await RefreshHlsAsync(tsSegment.Value);
+        }
+
+        private async ValueTask<TsSegment?> FlushTsMuxer(uint timestamp)
+        {
+            var tsSegment = await _tsMuxer.FlushAsync(timestamp);
+
+            if (tsSegment.HasValue)
+                _logger.TsSegmentCreated(Name, ContextIdentifier, _streamPath, tsSegment.Value.FilePath, tsSegment.Value.SequenceNumber, tsSegment.Value.Duration);
+
+            return tsSegment;
         }
 
         private async ValueTask RefreshHlsAsync(TsSegment newSegment)
@@ -134,20 +152,25 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Hls
 
             if (_segments.Count > _config.SegmentListSize)
             {
-                TsSegment removedSegment = _segments.Dequeue();
+                var removedSegment = _segments.Dequeue();
 
                 if (_config.DeleteOutdatedSegments)
-                {
-                    // todo: delete removed segment
-                }
+                    DeleteOutdatedSegments(removedSegment);
             }
 
             return ValueTask.CompletedTask;
         }
 
-        private Task WriteManifestAsync()
+        private void DeleteOutdatedSegments(TsSegment removedSegment)
         {
-            return _manifestWriter.WriteAsync(_config.ManifestOutputhPath, _segments);
+            File.Delete(removedSegment.FilePath);
+            _logger.OutdatedTsSegmentDeleted(Name, ContextIdentifier, _streamPath, removedSegment.FilePath);
+        }
+
+        private async Task WriteManifestAsync()
+        {
+            await _manifestWriter.WriteAsync(_config.ManifestOutputhPath, _segments);
+            _logger.HlsManifestUpdated(Name, ContextIdentifier, _config.ManifestOutputhPath, _streamPath);
         }
 
         public async Task RunAsync(
@@ -158,26 +181,59 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Hls
             OnTransmuxerEnded? onEnded,
             CancellationToken cancellation)
         {
+            _streamPath = streamPath;
+
+            if (!_transmuxerManager.RegisterTransmuxer(streamPath, this))
+            {
+                _logger.RegisteringHlsTransmuxerFailed(streamPath);
+                return;
+            }
+
             try
             {
-                if (!_transmuxerManager.RegisterTransmuxer(streamPath, this))
-                {
-                    // failed to register transmuxer
-                    return;
-                }
+                _logger.HlsTransmuxerStarted(Name, ContextIdentifier, _config.ManifestOutputhPath, streamPath);
 
                 onStarted?.Invoke(_config.ManifestOutputhPath);
 
-                await Task.Delay(Timeout.InfiniteTimeSpan, cancellation);
+                while (!cancellation.IsCancellationRequested)
+                {
+                    var message = await _channel.Reader.ReadAsync(cancellation);
+
+                    try
+                    {
+                        await ProcessMediaPacket(message.MediaType, message.RentedBuffer, message.Timestamp);
+                    }
+                    catch (OperationCanceledException) when (cancellation.IsCancellationRequested) { }
+                    catch (Exception ex)
+                    {
+                        _logger.ProcessingHlsTransmuxingError(Name, ContextIdentifier, _config.ManifestOutputhPath, streamPath, ex);
+                    }
+                    finally
+                    {
+                        message.RentedBuffer.Unclaim();
+                    }
+                }
             }
-            catch { }
+            catch (OperationCanceledException) when (cancellation.IsCancellationRequested) { }
+            catch (Exception ex)
+            {
+                _logger.ProcessingHlsTransmuxingError(Name, ContextIdentifier, _config.ManifestOutputhPath, streamPath, ex);
+            }
             finally
             {
                 _transmuxerManager.UnregisterTransmuxer(streamPath);
                 onEnded?.Invoke(_config.ManifestOutputhPath);
-
                 _tsMuxer?.Dispose();
+
+                _logger.HlsTransmuxerEnded(Name, ContextIdentifier, _config.ManifestOutputhPath, streamPath);
+            }
+
+            while (_channel.Reader.TryRead(out var package))
+            {
+                package.RentedBuffer.Unclaim();
             }
         }
+
+        private record struct PendingMediaPacket(MediaType MediaType, IRentedBuffer RentedBuffer, uint Timestamp);
     }
 }
