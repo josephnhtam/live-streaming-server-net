@@ -25,7 +25,23 @@ namespace LiveStreamingServerNet.Transmuxer.Internal.Hls.M3u8.Marshal
                 sb.AppendLine(relativePath);
             }
 
-            await File.WriteAllTextAsync(ManifestOutputPath, sb.ToString(), cancellationToken);
+            var tempFilePath = $"{ManifestOutputPath}.tmp";
+
+            try
+            {
+                await File.WriteAllTextAsync(tempFilePath, sb.ToString(), cancellationToken);
+                File.Move(tempFilePath, ManifestOutputPath, true);
+            }
+            catch
+            {
+                try
+                {
+                    File.Delete(tempFilePath);
+                }
+                catch { }
+
+                throw;
+            }
         }
 
         private static string CalculateTargetDuration(IEnumerable<TsSegment> segments)
