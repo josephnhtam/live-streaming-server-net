@@ -12,12 +12,12 @@ Live-Streaming-Server-Net is a high-performance and flexible toolset that allows
 
 - **RTMP/RTMPS protocol**: Supports the RTMP and RTMPS protocols for streaming audio, video, and data.
 - **HTTP-FLV/WebSocket-FLV with ASP.NET CORE**: Provides support for serving FLV live streams using HTTP-FLV and WebSocket-FLV protocols within an ASP.NET Core application.
-- **Transmuxing RTMP streams into HLS/DASH streams**: Allows you to transmux RTMP streams into HLS (HTTP Live Streaming) or DASH (Dynamic Adaptive Streaming over HTTP) streams.
+- **Transmuxing RTMP streams into HLS streams**: Allows you to transmux RTMP streams into HLS (HTTP Live Streaming) streams using the built-in HLS transmuxer.
+- **Integration with FFmpeg**: Provides support for processing the incoming RTMP stream with FFmpeg, for example, to create an MP4 archive.
 - **GOP caching**: Supports caching the Group of Pictures (GOP) to ensure immediate availability of live streaming content.
 - **Custom authorization**: Enables you to implement custom authorization mechanisms for accessing live streams.
 - **Admin panel**: Includes an admin panel that provides an user interface for managing and monitoring the live streaming server.
 - **Cloud Storage Integration**: Enabling real-time uploading of HLS files to cloud storage services like Azure Blob Storage, Google Cloud Storage, and AWS S3, which ensures scalable and efficient HLS stream distribution through CDN.
-- **Built-in HLS Transmuxer**: This enables HLS transmuxing without the need for FFmpeg. Although it isn’t as feature-rich as FFmpeg, it produces less overhead and has lower CPU utilization.
 
 ## In-Progress
 
@@ -204,20 +204,20 @@ Please refer to the [LiveStreamServerNet.StandaloneDemo](https://github.com/jose
       <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet.Rtmp"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.Rtmp.svg?logo=nuget"></a></td>
     </tr>
     <tr>
-      <th>LiveStreamingServerNet.Transmuxer</th>
-      <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet.Transmuxer"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.Transmuxer.svg?logo=nuget"></a></td>
+      <th>LiveStreamingServerNet.StreamProcessor</th>
+      <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet.StreamProcessor"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.StreamProcessor.svg?logo=nuget"></a></td>
     </tr>
     <tr>
-      <th>LiveStreamingServerNet.Transmuxer.AmazonS3</th>
-      <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet.Transmuxer.AmazonS3"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.Transmuxer.AmazonS3.svg?logo=nuget"></a></td>
+      <th>LiveStreamingServerNet.StreamProcessor.AmazonS3</th>
+      <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet.StreamProcessor.AmazonS3"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.StreamProcessor.AmazonS3.svg?logo=nuget"></a></td>
     </tr>
     <tr>
-      <th>LiveStreamingServerNet.Transmuxer.AzureBlobStorage</th>
-      <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet.Transmuxer.AzureBlobStorage"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.Transmuxer.AzureBlobStorage.svg?logo=nuget"></a></td>
+      <th>LiveStreamingServerNet.StreamProcessor.AzureBlobStorage</th>
+      <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet.StreamProcessor.AzureBlobStorage"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.StreamProcessor.AzureBlobStorage.svg?logo=nuget"></a></td>
     </tr>
     <tr>
-      <th>LiveStreamingServerNet.Transmuxer.GoogleCloudStorage</th>
-      <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet.Transmuxer.GoogleCloudStorage"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.svg?logo=nuget"></a></td>
+      <th>LiveStreamingServerNet.StreamProcessor.GoogleCloudStorage</th>
+      <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet.StreamProcessor.GoogleCloudStorage"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.StreamProcessor.GoogleCloudStorage.svg?logo=nuget"></a></td>
     </tr>
     <tr>
       <th>LiveStreamingServerNet.Utilities</th>
