@@ -19,7 +19,7 @@ The `LiveStreamingServerNet.AdminPanelUI` package is responsible for supplying t
 
 Edit `Program.cs` file:
 
-```
+```cs
 using LiveStreamingServerNet;
 using LiveStreamingServerNet.AdminPanelUI;
 using LiveStreamingServerNet.Flv.Installer;

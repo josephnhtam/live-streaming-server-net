@@ -6,7 +6,7 @@ In the following example, publishing will only be authorized when the publishing
 
 ### Create the Password Validator Service
 
-```
+```cs
 public interface IPasswordValidator
 {
     ValueTask<bool> ValidatePassword(string password);
@@ -25,7 +25,7 @@ This `DemoPasswordValidator` is a simple example class to check if the password 
 
 ### Implement the IAuthorizationHandler
 
-```
+```cs
 using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.Rtmp.Auth;
 using LiveStreamingServerNet.Rtmp.Auth.Contracts;
@@ -66,7 +66,7 @@ This `DemoAuthorizationHandler` injects the IPasswordValidator in the constructo
 
 ### Register the Authorization Handler
 
-```
+```cs
 using LiveStreamingServerNet;
 using LiveStreamingServerNet.Networking;
 using Microsoft.Extensions.DependencyInjection;

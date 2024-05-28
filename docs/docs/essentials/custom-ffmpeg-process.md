@@ -6,22 +6,22 @@ This guide will provide an example to use [FFmpeg](https://ffmpeg.org/) to store
 
 ```
 dotnet add package LiveStreamingServerNet
-dotnet add package LiveStreamingServerNet.Transmuxer
+dotnet add package LiveStreamingServerNet.StreamProcessor
 ```
 
 ### Configure Your Live Streaming Server
 
-```
+```cs
 using LiveStreamingServerNet;
 using LiveStreamingServerNet.Networking;
-using LiveStreamingServerNet.Transmuxer.Installer;
-using LiveStreamingServerNet.Transmuxer.Utilities;
+using LiveStreamingServerNet.StreamProcessor.Installer;
+using LiveStreamingServerNet.StreamProcessor.Utilities;
 using Microsoft.Extensions.Logging;
 using System.Net;
 
 using var liveStreamingServer = LiveStreamingServerBuilder.Create()
     .ConfigureRtmpServer(options => options
-        .AddTransmuxer()
+        .AddStreamProcessor()
         .AddFFmpeg(options =>
         {
             options.Name = "mp4-archive";

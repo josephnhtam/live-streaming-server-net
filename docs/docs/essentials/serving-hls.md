@@ -1,6 +1,6 @@
 # Serving HLS Live Streams
 
-LiveStreamingServerNet currently supports the transmuxing of the RTMP stream to an HLS stream via [FFmpeg](https://ffmpeg.org/). To use this feature, you need to have FFmpeg installed first.
+LiveStreamingServerNet supports the transmuxing of the RTMP stream to an HLS stream via the built-in HLS transmuxer without the need for [FFmpeg](https://ffmpeg.org/).
 
 ## Setting Up Your Live Streaming Server
 
@@ -13,7 +13,7 @@ Create an empty ASP.NET Core Web application and add the necessary packages usin
 ```
 dotnet new web
 dotnet add package LiveStreamingServerNet
-dotnet add package LiveStreamingServerNet.Transmuxer
+dotnet add package LiveStreamingServerNet.StreamProcessor
 ```
 
 In this guide, we will use an ASP.NET Core Web app as the foundation to facilitate the serving of HLS streams as static files.
@@ -22,12 +22,12 @@ In this guide, we will use an ASP.NET Core Web app as the foundation to facilita
 
 Edit `Program.cs` file:
 
-```
+```cs
 using LiveStreamingServerNet;
 using LiveStreamingServerNet.Networking.Helpers;
-using LiveStreamingServerNet.Transmuxer.Contracts;
-using LiveStreamingServerNet.Transmuxer.Installer;
-using LiveStreamingServerNet.Transmuxer.Utilities;
+using LiveStreamingServerNet.StreamProcessor.Contracts;
+using LiveStreamingServerNet.StreamProcessor.Hls.Contracts;
+using LiveStreamingServerNet.StreamProcessor.Installer;
 using LiveStreamingServerNet.Utilities.Contracts;
 using System.Net;
 
@@ -36,13 +36,8 @@ new DirectoryInfo(outputDir).Create();
 
 var liveStreamingServer = LiveStreamingServerBuilder.Create()
     .ConfigureRtmpServer(options => options
-        .AddTransmuxer(options => options.AddTransmuxerEventHandler<TransmuxerEventListener>())
-        .AddFFmpeg(options =>
-        {
-            options.FFmpegPath = ExecutableFinder.FindExecutableFromPATH("ffmpeg")!;
-            options.OutputPathResolver = (contextIdentifier, streamPath, streamArguments)
-                => Task.FromResult(Path.Combine(outputDir, streamPath.Trim('/'), "output.m3u8"));
-        })
+        .AddStreamProcessor(options => options.AddStreamProcessorEventHandler<HlsTransmuxerEventListener>())
+        .AddHlsTransmuxer(options => options.OutputPathResolver = new HlsTransmuxerOutputPathResolver(outputDir))
     )
     .ConfigureLogging(options => options.AddConsole())
     .Build();
@@ -55,22 +50,41 @@ var app = builder.Build();
 
 app.Run();
 
-public class TransmuxerEventListener : ITransmuxerEventHandler
+public class HlsTransmuxerOutputPathResolver : IHlsOutputPathResolver
+{
+    private readonly string _outputDir;
+
+    public HlsTransmuxerOutputPathResolver(string outputDir)
+    {
+        _outputDir = outputDir;
+    }
+
+    public Task<HlsOutputPath> ResolveOutputPath(Guid contextIdentifier, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
+    {
+        return Task.FromResult(new HlsOutputPath
+        {
+            ManifestOutputPath = Path.Combine(_outputDir, streamPath.Trim('/'), "output.m3u8"),
+            TsFileOutputPath = Path.Combine(_outputDir, streamPath.Trim('/'), "output{seqNum}.ts")
+        });
+    }
+}
+
+public class HlsTransmuxerEventListener : IStreamProcessorEventHandler
 {
     private readonly ILogger _logger;
 
-    public TransmuxerEventListener(ILogger<TransmuxerEventListener> logger)
+    public HlsTransmuxerEventListener(ILogger<HlsTransmuxerEventListener> logger)
     {
         _logger = logger;
     }
 
-    public Task OnTransmuxerStartedAsync(IEventContext context, string transmuxer, Guid identifier, uint clientId, string inputPath, string outputPath, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
+    public Task OnStreamProcessorStartedAsync(IEventContext context, string transmuxer, Guid identifier, uint clientId, string inputPath, string outputPath, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
     {
         _logger.LogInformation($"[{identifier}] Transmuxer {transmuxer} started: {inputPath} -> {outputPath}");
         return Task.CompletedTask;
     }
 
-    public Task OnTransmuxerStoppedAsync(IEventContext context, string transmuxer, Guid identifier, uint clientId, string inputPath, string outputPath, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
+    public Task OnStreamProcessorStoppedAsync(IEventContext context, string transmuxer, Guid identifier, uint clientId, string inputPath, string outputPath, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
     {
         _logger.LogInformation($"[{identifier}] Transmuxer {transmuxer} stopped: {inputPath} -> {outputPath}");
         return Task.CompletedTask;
@@ -78,7 +92,7 @@ public class TransmuxerEventListener : ITransmuxerEventHandler
 }
 ```
 
-This code sets up the server using LiveStreamingServerNet to listen on port 1935 for RTMP streams. Whenever an RTMP stream is published to the server, a FFmpeg process will be started to convert the RTMP stream into an HLS stream, and its manifest will be stored as `/output/{streamPath}/output.m3u8`. Additionally, the `TransmuxerEventListener` is added to log out the transmuxer events.
+This code sets up the server using LiveStreamingServerNet to listen on port 1935 for RTMP streams. Whenever an RTMP stream is published to the server, a HLS transmuxer will be created to convert the RTMP stream into an HLS stream, and its manifest will be stored as `/output/{streamPath}/output.m3u8`. Additionally, the `HlsTransmuxerEventListener` is added to log out the transmuxer events.
 
 ### Step 3: Launch Your Live Streaming Server
 
@@ -94,7 +108,7 @@ An output HLS stream can be viewed with a VLC player.
 
 To serve the output HLS streams with static file middleware, you can add the snippet under `var app = builder.Build()`:
 
-```
+```cs
 app.UseStaticFiles(new StaticFileOptions
 {
     RequestPath = "/hls",
@@ -117,23 +131,22 @@ The following will use Azure Blob Storage as an example.
 Add the necessary package using the following commands:
 
 ```
-dotnet add package LiveStreamingServerNet.Transmuxer.AzureBlobStorage
+dotnet add package LiveStreamingServerNet.StreamProcessor.AzureBlobStorage
 ```
 
 ### Step 2: Configure Your Live Streaming Server
 
 Modify `Program.cs` file:
 
-```
+```cs
 using Azure.Storage.Blobs;
 using LiveStreamingServerNet;
 using LiveStreamingServerNet.Networking.Helpers;
-using LiveStreamingServerNet.Transmuxer;
-using LiveStreamingServerNet.Transmuxer.AzureBlobStorage.Installer;
-using LiveStreamingServerNet.Transmuxer.Hls;
-using LiveStreamingServerNet.Transmuxer.Hls.Contracts;
-using LiveStreamingServerNet.Transmuxer.Installer;
-using LiveStreamingServerNet.Transmuxer.Utilities;
+using LiveStreamingServerNet.StreamProcessor;
+using LiveStreamingServerNet.StreamProcessor.AzureBlobStorage.Installer;
+using LiveStreamingServerNet.StreamProcessor.Hls;
+using LiveStreamingServerNet.StreamProcessor.Hls.Contracts;
+using LiveStreamingServerNet.StreamProcessor.Installer;
 using LiveStreamingServerNet.Utilities.Contracts;
 using System.Net;
 
@@ -146,7 +159,7 @@ var blobContainerClient = new BlobContainerClient(
 
 var liveStreamingServer = LiveStreamingServerBuilder.Create()
     .ConfigureRtmpServer(options => options
-        .AddTransmuxer(options =>
+        .AddStreamProcessor(options =>
         {
             options.AddHlsUploader(uploaderOptions =>
             {
@@ -154,12 +167,7 @@ var liveStreamingServer = LiveStreamingServerBuilder.Create()
                 uploaderOptions.AddAzureBlobStorage(blobContainerClient);
             });
         })
-        .AddFFmpeg(options =>
-        {
-            options.FFmpegPath = ExecutableFinder.FindExecutableFromPATH("ffmpeg")!;
-            options.OutputPathResolver = (contextIdentifier, streamPath, streamArguments)
-                => Task.FromResult(Path.Combine(outputDir, streamPath.Trim('/'), "output.m3u8"));
-        })
+        .AddHlsTransmuxer()
     )
     .ConfigureLogging(options => options.AddConsole())
     .Build();
@@ -183,7 +191,7 @@ public class HlsStorageEventListener : IHlsStorageEventHandler
 
     public Task OnHlsFilesStoredAsync(
         IEventContext eventContext,
-        TransmuxingContext context,
+        StreamProcessingContext context,
         bool initial,
         IReadOnlyList<StoredManifest> storedManifests,
         IReadOnlyList<StoredTsFile> storedTsFiles)
@@ -200,14 +208,14 @@ public class HlsStorageEventListener : IHlsStorageEventHandler
         return Task.CompletedTask;
     }
 
-    public Task OnHlsFilesStoringCompleteAsync(IEventContext eventContext, TransmuxingContext context)
+    public Task OnHlsFilesStoringCompleteAsync(IEventContext eventContext, StreamProcessingContext context)
     {
         return Task.CompletedTask;
     }
 }
 ```
 
-This setup allows the server to receive RTMP streams, transmux them to HLS using FFmpeg, and then upload the HLS files to Azure Blob Storage. Besides, the HlsStorageEventListener will log information about the stored files for monitoring purposes.
+This setup allows the server to receive RTMP streams, transmux them to HLS formats, and then upload the HLS files to Azure Blob Storage. Besides, the HlsStorageEventListener will log information about the stored files for monitoring purposes.
 
 ### Step 3: Launch Your Live Streaming Server
 

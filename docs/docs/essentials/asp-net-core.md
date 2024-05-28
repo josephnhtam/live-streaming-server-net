@@ -15,7 +15,7 @@ dotnet add package LiveStreamingServerNet
 
 Edit `Program.cs` file:
 
-```
+```cs
 using System.Net;
 using LiveStreamingServerNet;
 using LiveStreamingServerNet.Networking.Helpers;

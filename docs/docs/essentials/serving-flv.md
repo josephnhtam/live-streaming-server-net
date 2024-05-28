@@ -16,7 +16,7 @@ dotnet add package LiveStreamingServerNet.Flv
 
 Edit `Program.cs` file:
 
-```
+```cs
 using System.Net;
 using LiveStreamingServerNet;
 using LiveStreamingServerNet.Flv.Installer;
@@ -47,7 +47,7 @@ Note that `app.UseWebSockets()` must be added before `app.UseWebSocketFlv(liveSt
 
 If CORS is required, you can add the CORS service and middleware as usual. For example:
 
-```
+```cs
 using var liveStreamingServer = LiveStreamingServerBuilder.Create()
     .ConfigureRtmpServer(options => options.AddFlv())
     .ConfigureLogging(options => options.AddConsole())

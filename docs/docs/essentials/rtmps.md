@@ -18,7 +18,7 @@ LiveStreamingServerNet uses `System.Net.Security.SslStream` to internally encryp
 
 Assuming you have a PFX archive file, edit the `Program.cs` file:
 
-```
+```cs
 using LiveStreamingServerNet;
 using Microsoft.Extensions.Logging;
 using System.Security.Cryptography.X509Certificates;
@@ -45,7 +45,7 @@ await liveStreamingServer.RunAsync(new ServerEndPoint(new IPEndPoint(IPAddress.A
 
 LiveStreamingServerNet also supports running the live streaming server on multiple ports. Therefore, it’s possible to run the server with both the RTMP and RTMPS protocols simultaneously.
 
-```
+```cs
 var endPoints = new List<ServerEndPoint> {
     new ServerEndPoint(new IPEndPoint(IPAddress.Any, 1935), IsSecure: false),
     new ServerEndPoint(new IPEndPoint(IPAddress.Any, 443), IsSecure: true)
