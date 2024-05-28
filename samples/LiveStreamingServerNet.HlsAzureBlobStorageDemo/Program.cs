@@ -1,11 +1,11 @@
 ﻿using Azure.Storage.Blobs;
 using LiveStreamingServerNet.Networking;
-using LiveStreamingServerNet.Transmuxer;
-using LiveStreamingServerNet.Transmuxer.AzureBlobStorage.Installer;
-using LiveStreamingServerNet.Transmuxer.Hls;
-using LiveStreamingServerNet.Transmuxer.Hls.Contracts;
-using LiveStreamingServerNet.Transmuxer.Installer;
-using LiveStreamingServerNet.Transmuxer.Utilities;
+using LiveStreamingServerNet.StreamProcessor;
+using LiveStreamingServerNet.StreamProcessor.AzureBlobStorage.Installer;
+using LiveStreamingServerNet.StreamProcessor.Hls;
+using LiveStreamingServerNet.StreamProcessor.Hls.Contracts;
+using LiveStreamingServerNet.StreamProcessor.Installer;
+using LiveStreamingServerNet.StreamProcessor.Utilities;
 using LiveStreamingServerNet.Utilities.Contracts;
 using Microsoft.Extensions.Logging;
 using System.Net;
@@ -34,7 +34,7 @@ namespace LiveStreamingServerNet.HlsAzureBlobStorageDemo
         {
             return LiveStreamingServerBuilder.Create()
                 .ConfigureRtmpServer(options => options
-                    .AddTransmuxer(options =>
+                    .AddStreamProcessor(options =>
                     {
                         var blobContainerClient = new BlobContainerClient(
                             Environment.GetEnvironmentVariable("AZURE_BLOB_STORAGE_CONNECTION_STRING"),
@@ -66,7 +66,7 @@ namespace LiveStreamingServerNet.HlsAzureBlobStorageDemo
 
         public Task OnHlsFilesStoredAsync(
             IEventContext eventContext,
-            TransmuxingContext context,
+            StreamProcessingContext context,
             bool initial,
             IReadOnlyList<StoredManifest> storedManifests,
             IReadOnlyList<StoredTsFile> storedTsFiles)
@@ -83,7 +83,7 @@ namespace LiveStreamingServerNet.HlsAzureBlobStorageDemo
             return Task.CompletedTask;
         }
 
-        public Task OnHlsFilesStoringCompleteAsync(IEventContext eventContext, TransmuxingContext context)
+        public Task OnHlsFilesStoringCompleteAsync(IEventContext eventContext, StreamProcessingContext context)
         {
             return Task.CompletedTask;
         }

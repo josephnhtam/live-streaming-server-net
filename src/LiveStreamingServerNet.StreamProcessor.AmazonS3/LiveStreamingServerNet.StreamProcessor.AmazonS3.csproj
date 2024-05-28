@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net8.0;net7.0</TargetFrameworks>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>true</IsPackable>
+    <Authors>Joseph NH Tam</Authors>
+    <Description>This package provides the capability to upload transmuxed HLS files to Amazon S3 in real time.</Description>
+    <PackageTags>live-streaming;rtmp;transmuxer;transcoder;hls;aws</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <Version>0.9.3</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AWSSDK.S3" Version="3.7.307.11" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LiveStreamingServerNet.StreamProcessor\LiveStreamingServerNet.StreamProcessor.csproj" />
+  </ItemGroup>
+
+</Project>

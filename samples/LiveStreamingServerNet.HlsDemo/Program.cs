@@ -1,8 +1,8 @@
 using LiveStreamingServerNet.Networking.Helpers;
 using LiveStreamingServerNet.Rtmp;
-using LiveStreamingServerNet.Transmuxer.Contracts;
-using LiveStreamingServerNet.Transmuxer.Hls.Contracts;
-using LiveStreamingServerNet.Transmuxer.Installer;
+using LiveStreamingServerNet.StreamProcessor.Contracts;
+using LiveStreamingServerNet.StreamProcessor.Hls.Contracts;
+using LiveStreamingServerNet.StreamProcessor.Installer;
 using LiveStreamingServerNet.Utilities.Contracts;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.FileProviders;
@@ -14,10 +14,10 @@ namespace LiveStreamingServerNet.HlsDemo
     {
         public static async Task Main(string[] args)
         {
-            var trasmuxerOutputPath = Path.Combine(Directory.GetCurrentDirectory(), "TransmuxerOutput");
-            new DirectoryInfo(trasmuxerOutputPath).Create();
+            var transmuxerOutputPath = Path.Combine(Directory.GetCurrentDirectory(), "TransmuxerOutput");
+            new DirectoryInfo(transmuxerOutputPath).Create();
 
-            using var liveStreamingServer = CreateLiveStreamingServer(trasmuxerOutputPath);
+            using var liveStreamingServer = CreateLiveStreamingServer(transmuxerOutputPath);
 
             var builder = WebApplication.CreateBuilder(args);
 
@@ -35,7 +35,7 @@ namespace LiveStreamingServerNet.HlsDemo
 
             app.UseCors();
 
-            var (fileProvider, contentTypeProvider) = CreateProviders(trasmuxerOutputPath);
+            var (fileProvider, contentTypeProvider) = CreateProviders(transmuxerOutputPath);
             app.UseStaticFiles(new StaticFileOptions
             {
                 FileProvider = fileProvider,
@@ -62,10 +62,10 @@ namespace LiveStreamingServerNet.HlsDemo
                     .Configure(options => options.EnableGopCaching = false)
                     .AddVideoCodecFilter(builder => builder.Include(VideoCodec.AVC))
                     .AddAudioCodecFilter(builder => builder.Include(AudioCodec.AAC))
-                    .AddTransmuxer(options =>
+                    .AddStreamProcessor(options =>
                     {
-                        options.AddTransmuxerEventHandler(svc =>
-                                new TransmuxerEventListener(trasmuxerOutputPath, svc.GetRequiredService<ILogger<TransmuxerEventListener>>()));
+                        options.AddStreamProcessorEventHandler(svc =>
+                                new StreamProcessorEventListener(trasmuxerOutputPath, svc.GetRequiredService<ILogger<StreamProcessorEventListener>>()));
                     })
                     .AddHlsTransmuxer(options => options.OutputPathResolver = new HlsOutputPathResolver(trasmuxerOutputPath))
                 )
@@ -94,28 +94,28 @@ namespace LiveStreamingServerNet.HlsDemo
             }
         }
 
-        public class TransmuxerEventListener : ITransmuxerEventHandler
+        public class StreamProcessorEventListener : IStreamProcessorEventHandler
         {
             private readonly string _trasmuxerOutputPath;
             private readonly ILogger _logger;
 
-            public TransmuxerEventListener(string trasmuxerOutputPath, ILogger<TransmuxerEventListener> logger)
+            public StreamProcessorEventListener(string trasmuxerOutputPath, ILogger<StreamProcessorEventListener> logger)
             {
                 _trasmuxerOutputPath = trasmuxerOutputPath;
                 _logger = logger;
             }
 
-            public Task OnTransmuxerStartedAsync(IEventContext context, string transmuxer, Guid identifier, uint clientId, string inputPath, string outputPath, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
+            public Task OnStreamProcessorStartedAsync(IEventContext context, string processor, Guid identifier, uint clientId, string inputPath, string outputPath, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
             {
                 outputPath = Path.GetRelativePath(_trasmuxerOutputPath, outputPath);
-                _logger.LogInformation($"[{identifier}] Transmuxer {transmuxer} started: {inputPath} -> {outputPath}");
+                _logger.LogInformation($"[{identifier}] Streaming processor {processor} started: {inputPath} -> {outputPath}");
                 return Task.CompletedTask;
             }
 
-            public Task OnTransmuxerStoppedAsync(IEventContext context, string transmuxer, Guid identifier, uint clientId, string inputPath, string outputPath, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
+            public Task OnStreamProcessorStoppedAsync(IEventContext context, string processor, Guid identifier, uint clientId, string inputPath, string outputPath, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
             {
                 outputPath = Path.GetRelativePath(_trasmuxerOutputPath, outputPath);
-                _logger.LogInformation($"[{identifier}] Transmuxer {transmuxer} stopped: {inputPath} -> {outputPath}");
+                _logger.LogInformation($"[{identifier}] Streaming processor {processor} stopped: {inputPath} -> {outputPath}");
                 return Task.CompletedTask;
             }
         }

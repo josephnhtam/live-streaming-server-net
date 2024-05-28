@@ -20,7 +20,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\LiveStreamingServerNet.KubernetesPod.Redis\LiveStreamingServerNet.KubernetesPod.Redis.csproj" />
     <ProjectReference Include="..\..\src\LiveStreamingServerNet.KubernetesPod\LiveStreamingServerNet.KubernetesPod.csproj" />
-    <ProjectReference Include="..\..\src\LiveStreamingServerNet.Transmuxer.AzureBlobStorage\LiveStreamingServerNet.Transmuxer.AzureBlobStorage.csproj" />
+    <ProjectReference Include="..\..\src\LiveStreamingServerNet.StreamProcessor.AzureBlobStorage\LiveStreamingServerNet.StreamProcessor.AzureBlobStorage.csproj" />
   </ItemGroup>
 
 </Project>

@@ -3,11 +3,11 @@ using LiveStreamingServerNet.KubernetesPod.Installer;
 using LiveStreamingServerNet.KubernetesPod.Redis.Installer;
 using LiveStreamingServerNet.Networking.Helpers;
 using LiveStreamingServerNet.Rtmp;
-using LiveStreamingServerNet.Transmuxer;
-using LiveStreamingServerNet.Transmuxer.AzureBlobStorage.Installer;
-using LiveStreamingServerNet.Transmuxer.Hls;
-using LiveStreamingServerNet.Transmuxer.Hls.Contracts;
-using LiveStreamingServerNet.Transmuxer.Installer;
+using LiveStreamingServerNet.StreamProcessor;
+using LiveStreamingServerNet.StreamProcessor.AzureBlobStorage.Installer;
+using LiveStreamingServerNet.StreamProcessor.Hls;
+using LiveStreamingServerNet.StreamProcessor.Hls.Contracts;
+using LiveStreamingServerNet.StreamProcessor.Installer;
 using LiveStreamingServerNet.Utilities.Contracts;
 using StackExchange.Redis;
 using System.Net;
@@ -56,9 +56,9 @@ namespace LiveStreamingServerNet.KubernetesPodDemo
                         rtmpServerConfigurator
                             .AddVideoCodecFilter(builder => builder.Include(VideoCodec.AVC))
                             .AddAudioCodecFilter(builder => builder.Include(AudioCodec.AAC))
-                            .AddTransmuxer(transmuxerConfigurator =>
+                            .AddStreamProcessor(streamProcessingConfigurator =>
                             {
-                                transmuxerConfigurator.AddHlsUploader(hlsUploaderConfigurator =>
+                                streamProcessingConfigurator.AddHlsUploader(hlsUploaderConfigurator =>
                                 {
                                     hlsUploaderConfigurator.AddAzureBlobStorage(blobContainerClient);
                                     hlsUploaderConfigurator.AddHlsStorageEventHandler<HlsStorageEventHandler>();
@@ -107,7 +107,7 @@ namespace LiveStreamingServerNet.KubernetesPodDemo
 
             public Task OnHlsFilesStoredAsync(
                 IEventContext eventContext,
-                TransmuxingContext context,
+                StreamProcessingContext context,
                 bool initial,
                 IReadOnlyList<StoredManifest> storedManifests,
                 IReadOnlyList<StoredTsFile> storedTsFiles)
@@ -128,7 +128,7 @@ namespace LiveStreamingServerNet.KubernetesPodDemo
 
             public Task OnHlsFilesStoringCompleteAsync(
                 IEventContext eventContext,
-                TransmuxingContext context)
+                StreamProcessingContext context)
             {
                 _logger.LogInformation($"[{context.Identifier}] HLS files storing complete");
                 return Task.CompletedTask;

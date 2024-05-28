@@ -1,6 +1,6 @@
 ﻿using LiveStreamingServerNet.Networking;
-using LiveStreamingServerNet.Transmuxer.Installer;
-using LiveStreamingServerNet.Transmuxer.Utilities;
+using LiveStreamingServerNet.StreamProcessor.Installer;
+using LiveStreamingServerNet.StreamProcessor.Utilities;
 using Microsoft.Extensions.Logging;
 using System.Net;
 
@@ -28,7 +28,7 @@ namespace LiveStreamingServerNet.Mp4ArchiveDemo
         {
             return LiveStreamingServerBuilder.Create()
                 .ConfigureRtmpServer(options => options
-                    .AddTransmuxer()
+                    .AddStreamProcessor()
                     .AddFFmpeg(options =>
                     {
                         options.Name = "mp4-archive";

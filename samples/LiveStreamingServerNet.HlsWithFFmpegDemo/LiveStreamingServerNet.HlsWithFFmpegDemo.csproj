@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\LiveStreamingServerNet.Transmuxer\LiveStreamingServerNet.Transmuxer.csproj" />
+    <ProjectReference Include="..\..\src\LiveStreamingServerNet.StreamProcessor\LiveStreamingServerNet.StreamProcessor.csproj" />
     <ProjectReference Include="..\..\src\LiveStreamingServerNet\LiveStreamingServerNet.csproj" />
   </ItemGroup>
 

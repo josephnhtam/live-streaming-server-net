@@ -19,8 +19,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.Rtmp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.FlvDemo", "samples\LiveStreamingServerNet.FlvDemo\LiveStreamingServerNet.FlvDemo.csproj", "{F67288DC-13C8-4765-900D-325DB79994DD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.Transmuxer", "src\LiveStreamingServerNet.Transmuxer\LiveStreamingServerNet.Transmuxer.csproj", "{FB345474-9A61-461D-BB31-28C20823F187}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.HlsDemo", "samples\LiveStreamingServerNet.HlsDemo\LiveStreamingServerNet.HlsDemo.csproj", "{3C0C2F0E-E274-4F36-8CB1-CF60441FA46A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.StandaloneDemo", "samples\LiveStreamingServerNet.StandaloneDemo\LiveStreamingServerNet.StandaloneDemo.csproj", "{B4B870FA-2634-46E5-9586-05E5CACF6D6F}"
@@ -36,12 +34,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.KubernetesPodDemo", "samples\LiveStreamingServerNet.KubernetesPodDemo\LiveStreamingServerNet.KubernetesPodDemo.csproj", "{7EFF979E-F81E-4938-8504-A53FA9E02AFD}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.KubernetesPod.Redis", "src\LiveStreamingServerNet.KubernetesPod.Redis\LiveStreamingServerNet.KubernetesPod.Redis.csproj", "{D69DDDBC-C7C3-4EFE-8124-4A643314DDED}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.Transmuxer.AzureBlobStorage", "src\LiveStreamingServerNet.Transmuxer.AzureBlobStorage\LiveStreamingServerNet.Transmuxer.AzureBlobStorage.csproj", "{A10CF8BE-3E85-4C85-B837-F223C9C4AD59}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.Transmuxer.GoogleCloudStorage", "src\LiveStreamingServerNet.Transmuxer.GoogleCloudStorage\LiveStreamingServerNet.Transmuxer.GoogleCloudStorage.csproj", "{BB88974C-82E1-4470-8FEE-8FB2534F40FA}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.Transmuxer.AmazonS3", "src\LiveStreamingServerNet.Transmuxer.AmazonS3\LiveStreamingServerNet.Transmuxer.AmazonS3.csproj", "{F6F84F4D-91C1-4A65-A6A7-C52AEE84B91E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{C85AC04A-5060-4C4B-830A-D7F51F602749}"
 EndProject
@@ -61,7 +53,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.Even
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.Mp4ArchiveDemo", "samples\LiveStreamingServerNet.Mp4ArchiveDemo\LiveStreamingServerNet.Mp4ArchiveDemo.csproj", "{8171A185-DA91-4FCC-A668-26B9466CAA3D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveStreamingServerNet.HlsWithFFmpegDemo", "samples\LiveStreamingServerNet.HlsWithFFmpegDemo\LiveStreamingServerNet.HlsWithFFmpegDemo.csproj", "{37264685-FFD1-4938-BB86-FB64526A5A8E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.HlsWithFFmpegDemo", "samples\LiveStreamingServerNet.HlsWithFFmpegDemo\LiveStreamingServerNet.HlsWithFFmpegDemo.csproj", "{37264685-FFD1-4938-BB86-FB64526A5A8E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.StreamProcessor", "src\LiveStreamingServerNet.StreamProcessor\LiveStreamingServerNet.StreamProcessor.csproj", "{5F4647B5-7660-4B46-83AD-2F5AA9C1E7E9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.StreamProcessor.AmazonS3", "src\LiveStreamingServerNet.StreamProcessor.AmazonS3\LiveStreamingServerNet.StreamProcessor.AmazonS3.csproj", "{850EB675-C229-40C4-834E-DB549E6FD682}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.StreamProcessor.AzureBlobStorage", "src\LiveStreamingServerNet.StreamProcessor.AzureBlobStorage\LiveStreamingServerNet.StreamProcessor.AzureBlobStorage.csproj", "{759950DA-188B-448C-9B7E-307C43D15753}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.StreamProcessor.GoogleCloudStorage", "src\LiveStreamingServerNet.StreamProcessor.GoogleCloudStorage\LiveStreamingServerNet.StreamProcessor.GoogleCloudStorage.csproj", "{DB6FF705-9710-444B-A848-85895A94FF44}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -97,10 +97,6 @@ Global
 		{F67288DC-13C8-4765-900D-325DB79994DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F67288DC-13C8-4765-900D-325DB79994DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F67288DC-13C8-4765-900D-325DB79994DD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FB345474-9A61-461D-BB31-28C20823F187}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FB345474-9A61-461D-BB31-28C20823F187}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FB345474-9A61-461D-BB31-28C20823F187}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FB345474-9A61-461D-BB31-28C20823F187}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3C0C2F0E-E274-4F36-8CB1-CF60441FA46A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3C0C2F0E-E274-4F36-8CB1-CF60441FA46A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3C0C2F0E-E274-4F36-8CB1-CF60441FA46A}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -133,18 +129,6 @@ Global
 		{D69DDDBC-C7C3-4EFE-8124-4A643314DDED}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D69DDDBC-C7C3-4EFE-8124-4A643314DDED}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D69DDDBC-C7C3-4EFE-8124-4A643314DDED}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A10CF8BE-3E85-4C85-B837-F223C9C4AD59}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A10CF8BE-3E85-4C85-B837-F223C9C4AD59}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A10CF8BE-3E85-4C85-B837-F223C9C4AD59}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A10CF8BE-3E85-4C85-B837-F223C9C4AD59}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BB88974C-82E1-4470-8FEE-8FB2534F40FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BB88974C-82E1-4470-8FEE-8FB2534F40FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BB88974C-82E1-4470-8FEE-8FB2534F40FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BB88974C-82E1-4470-8FEE-8FB2534F40FA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F6F84F4D-91C1-4A65-A6A7-C52AEE84B91E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F6F84F4D-91C1-4A65-A6A7-C52AEE84B91E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F6F84F4D-91C1-4A65-A6A7-C52AEE84B91E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F6F84F4D-91C1-4A65-A6A7-C52AEE84B91E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{67DCDCEA-6E4F-476D-B993-FF5BA02ACA7F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{67DCDCEA-6E4F-476D-B993-FF5BA02ACA7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{67DCDCEA-6E4F-476D-B993-FF5BA02ACA7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -181,6 +165,22 @@ Global
 		{37264685-FFD1-4938-BB86-FB64526A5A8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{37264685-FFD1-4938-BB86-FB64526A5A8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{37264685-FFD1-4938-BB86-FB64526A5A8E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F4647B5-7660-4B46-83AD-2F5AA9C1E7E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F4647B5-7660-4B46-83AD-2F5AA9C1E7E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F4647B5-7660-4B46-83AD-2F5AA9C1E7E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F4647B5-7660-4B46-83AD-2F5AA9C1E7E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{850EB675-C229-40C4-834E-DB549E6FD682}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{850EB675-C229-40C4-834E-DB549E6FD682}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{850EB675-C229-40C4-834E-DB549E6FD682}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{850EB675-C229-40C4-834E-DB549E6FD682}.Release|Any CPU.Build.0 = Release|Any CPU
+		{759950DA-188B-448C-9B7E-307C43D15753}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{759950DA-188B-448C-9B7E-307C43D15753}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{759950DA-188B-448C-9B7E-307C43D15753}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{759950DA-188B-448C-9B7E-307C43D15753}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DB6FF705-9710-444B-A848-85895A94FF44}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB6FF705-9710-444B-A848-85895A94FF44}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB6FF705-9710-444B-A848-85895A94FF44}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB6FF705-9710-444B-A848-85895A94FF44}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
