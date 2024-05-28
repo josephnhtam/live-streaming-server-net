@@ -42,7 +42,7 @@ dotnet add package Microsoft.Extensions.Logging.Console
 
 Program.cs
 
-```
+```cs
 using LiveStreamingServerNet;
 using Microsoft.Extensions.Logging;
 using System.Net;
@@ -110,7 +110,7 @@ dotnet add package LiveStreamingServerNet.Flv
 
 Program.cs
 
-```
+```cs
 using System.Net;
 using LiveStreamingServerNet;
 using LiveStreamingServerNet.Flv.Installer;
