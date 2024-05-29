@@ -27,15 +27,15 @@ namespace LiveStreamingServerNet.StreamProcessor.Installer
 
             services.TryAddSingleton<IInputPathResolver, DefaultInputPathResolver>();
 
-            return new StreamProcessorBuilder(services);
+            return new StreamProcessingBuilder(services);
         }
     }
 
-    public class StreamProcessorBuilder : IStreamProcessingBuilder
+    public class StreamProcessingBuilder : IStreamProcessingBuilder
     {
         public IServiceCollection Services { get; }
 
-        public StreamProcessorBuilder(IServiceCollection services)
+        public StreamProcessingBuilder(IServiceCollection services)
         {
             Services = services;
         }
