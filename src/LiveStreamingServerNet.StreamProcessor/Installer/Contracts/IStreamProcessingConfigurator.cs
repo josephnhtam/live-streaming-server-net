@@ -9,10 +9,10 @@ namespace LiveStreamingServerNet.StreamProcessor.Installer.Contracts
 
         IStreamProcessingConfigurator UseInputPathResolver<TInputPathResolver>()
             where TInputPathResolver : class, IInputPathResolver;
-        IStreamProcessingConfigurator UseInputPathResolver(Func<IServiceProvider, IInputPathResolver> implmentationFactory);
+        IStreamProcessingConfigurator UseInputPathResolver(Func<IServiceProvider, IInputPathResolver> implementationFactory);
 
         IStreamProcessingConfigurator AddStreamProcessorEventHandler<TStreamProcessorEventHandler>()
             where TStreamProcessorEventHandler : class, IStreamProcessorEventHandler;
-        IStreamProcessingConfigurator AddStreamProcessorEventHandler(Func<IServiceProvider, IStreamProcessorEventHandler> implmentationFactory);
+        IStreamProcessingConfigurator AddStreamProcessorEventHandler(Func<IServiceProvider, IStreamProcessorEventHandler> implementationFactory);
     }
 }

@@ -40,9 +40,9 @@ namespace LiveStreamingServerNet.Rtmp.Installer
             return this;
         }
 
-        public IRtmpServerConfigurator AddAuthCodeProvider(Func<IServiceProvider, IAuthCodeProvider> implmentationFactory)
+        public IRtmpServerConfigurator AddAuthCodeProvider(Func<IServiceProvider, IAuthCodeProvider> implementationFactory)
         {
-            Services.TryAddSingleton(implmentationFactory);
+            Services.TryAddSingleton(implementationFactory);
             return this;
         }
 
@@ -53,9 +53,9 @@ namespace LiveStreamingServerNet.Rtmp.Installer
             return this;
         }
 
-        public IRtmpServerConfigurator AddAuthorizationHandler(Func<IServiceProvider, IAuthorizationHandler> implmentationFactory)
+        public IRtmpServerConfigurator AddAuthorizationHandler(Func<IServiceProvider, IAuthorizationHandler> implementationFactory)
         {
-            Services.AddSingleton(implmentationFactory);
+            Services.AddSingleton(implementationFactory);
             return this;
         }
 
@@ -66,9 +66,9 @@ namespace LiveStreamingServerNet.Rtmp.Installer
             return this;
         }
 
-        public IRtmpServerConfigurator AddMediaMessageInterceptor(Func<IServiceProvider, IRtmpMediaMessageInterceptor> implmentationFactory)
+        public IRtmpServerConfigurator AddMediaMessageInterceptor(Func<IServiceProvider, IRtmpMediaMessageInterceptor> implementationFactory)
         {
-            Services.AddSingleton(implmentationFactory);
+            Services.AddSingleton(implementationFactory);
             return this;
         }
 
@@ -79,9 +79,9 @@ namespace LiveStreamingServerNet.Rtmp.Installer
             return this;
         }
 
-        public IRtmpServerConfigurator AddConnectionEventHandler(Func<IServiceProvider, IRtmpServerConnectionEventHandler> implmentationFactory)
+        public IRtmpServerConfigurator AddConnectionEventHandler(Func<IServiceProvider, IRtmpServerConnectionEventHandler> implementationFactory)
         {
-            Services.AddSingleton(implmentationFactory);
+            Services.AddSingleton(implementationFactory);
             return this;
         }
 
@@ -92,9 +92,9 @@ namespace LiveStreamingServerNet.Rtmp.Installer
             return this;
         }
 
-        public IRtmpServerConfigurator AddStreamEventHandler(Func<IServiceProvider, IRtmpServerStreamEventHandler> implmentationFactory)
+        public IRtmpServerConfigurator AddStreamEventHandler(Func<IServiceProvider, IRtmpServerStreamEventHandler> implementationFactory)
         {
-            Services.AddSingleton(implmentationFactory);
+            Services.AddSingleton(implementationFactory);
             return this;
         }
 

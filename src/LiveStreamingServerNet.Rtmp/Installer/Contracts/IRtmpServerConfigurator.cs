@@ -14,23 +14,23 @@ namespace LiveStreamingServerNet.Rtmp.Installer.Contracts
 
         IRtmpServerConfigurator AddAuthCodeProvider<TAuthCodeProvider>()
             where TAuthCodeProvider : class, IAuthCodeProvider;
-        IRtmpServerConfigurator AddAuthCodeProvider(Func<IServiceProvider, IAuthCodeProvider> implmentationFactory);
+        IRtmpServerConfigurator AddAuthCodeProvider(Func<IServiceProvider, IAuthCodeProvider> implementationFactory);
 
         IRtmpServerConfigurator AddAuthorizationHandler<TAuthorizationHandler>()
             where TAuthorizationHandler : class, IAuthorizationHandler;
-        IRtmpServerConfigurator AddAuthorizationHandler(Func<IServiceProvider, IAuthorizationHandler> implmentationFactory);
+        IRtmpServerConfigurator AddAuthorizationHandler(Func<IServiceProvider, IAuthorizationHandler> implementationFactory);
 
         IRtmpServerConfigurator AddMediaMessageInterceptor<TMediaMessageInterceptor>()
             where TMediaMessageInterceptor : class, IRtmpMediaMessageInterceptor;
-        IRtmpServerConfigurator AddMediaMessageInterceptor(Func<IServiceProvider, IRtmpMediaMessageInterceptor> implmentationFactory);
+        IRtmpServerConfigurator AddMediaMessageInterceptor(Func<IServiceProvider, IRtmpMediaMessageInterceptor> implementationFactory);
 
         IRtmpServerConfigurator AddConnectionEventHandler<TConnectionEventHandler>()
             where TConnectionEventHandler : class, IRtmpServerConnectionEventHandler;
-        IRtmpServerConfigurator AddConnectionEventHandler(Func<IServiceProvider, IRtmpServerConnectionEventHandler> implmentationFactory);
+        IRtmpServerConfigurator AddConnectionEventHandler(Func<IServiceProvider, IRtmpServerConnectionEventHandler> implementationFactory);
 
         IRtmpServerConfigurator AddStreamEventHandler<TStreamEventHandler>()
             where TStreamEventHandler : class, IRtmpServerStreamEventHandler;
-        IRtmpServerConfigurator AddStreamEventHandler(Func<IServiceProvider, IRtmpServerStreamEventHandler> implmentationFactory);
+        IRtmpServerConfigurator AddStreamEventHandler(Func<IServiceProvider, IRtmpServerStreamEventHandler> implementationFactory);
 
         IRtmpServerConfigurator AddBandwidthLimiter(long bytesPerSecond);
         IRtmpServerConfigurator AddBandwidthLimiter(long bytesPerSecond, long bytesLimit);

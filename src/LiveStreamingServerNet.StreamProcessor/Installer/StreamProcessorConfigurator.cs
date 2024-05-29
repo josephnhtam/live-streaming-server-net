@@ -20,9 +20,9 @@ namespace LiveStreamingServerNet.StreamProcessor.Installer
             return this;
         }
 
-        public IStreamProcessingConfigurator UseInputPathResolver(Func<IServiceProvider, IInputPathResolver> implmentationFactory)
+        public IStreamProcessingConfigurator UseInputPathResolver(Func<IServiceProvider, IInputPathResolver> implementationFactory)
         {
-            Services.AddSingleton(implmentationFactory);
+            Services.AddSingleton(implementationFactory);
             return this;
         }
 
@@ -33,9 +33,9 @@ namespace LiveStreamingServerNet.StreamProcessor.Installer
             return this;
         }
 
-        public IStreamProcessingConfigurator AddStreamProcessorEventHandler(Func<IServiceProvider, IStreamProcessorEventHandler> implmentationFactory)
+        public IStreamProcessingConfigurator AddStreamProcessorEventHandler(Func<IServiceProvider, IStreamProcessorEventHandler> implementationFactory)
         {
-            Services.AddSingleton(implmentationFactory);
+            Services.AddSingleton(implementationFactory);
             return this;
         }
     }

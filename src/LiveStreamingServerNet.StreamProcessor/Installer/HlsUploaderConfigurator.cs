@@ -20,9 +20,9 @@ namespace LiveStreamingServerNet.StreamProcessor.Installer
             return this;
         }
 
-        public IHlsUploaderConfigurator AddHlsStorageEventHandler(Func<IServiceProvider, IHlsStorageEventHandler> implmentationFactory)
+        public IHlsUploaderConfigurator AddHlsStorageEventHandler(Func<IServiceProvider, IHlsStorageEventHandler> implementationFactory)
         {
-            Services.AddSingleton(implmentationFactory);
+            Services.AddSingleton(implementationFactory);
             return this;
         }
     }

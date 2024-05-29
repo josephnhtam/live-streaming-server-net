@@ -9,6 +9,6 @@ namespace LiveStreamingServerNet.StreamProcessor.Installer.Contracts
 
         IHlsUploaderConfigurator AddHlsStorageEventHandler<THlsStorageEventHandler>()
             where THlsStorageEventHandler : class, IHlsStorageEventHandler;
-        IHlsUploaderConfigurator AddHlsStorageEventHandler(Func<IServiceProvider, IHlsStorageEventHandler> implmentationFactory);
+        IHlsUploaderConfigurator AddHlsStorageEventHandler(Func<IServiceProvider, IHlsStorageEventHandler> implementationFactory);
     }
 }
