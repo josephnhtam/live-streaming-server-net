@@ -123,8 +123,8 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Containers
             if (_timestampStart == null)
                 _timestampStart = timestamp;
 
-            var decodingTimestamp = (int)(timestamp * AVCConstants.H264Frequency);
-            var presentationTimestamp = decodingTimestamp + (int)(compositionTime * AVCConstants.H264Frequency);
+            var decodingTimestamp = timestamp * AVCConstants.H264Frequency;
+            var presentationTimestamp = decodingTimestamp + compositionTime * AVCConstants.H264Frequency;
 
             var rawNALUs = GetRawNALUs(dataBuffer, isKeyFrame);
             var nalus = ConvertToAnnexB(rawNALUs);
@@ -183,7 +183,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Containers
             if (_timestampStart == null)
                 _timestampStart = timestamp;
 
-            var decodingTimestamp = (int)(timestamp * AVCConstants.H264Frequency);
+            var decodingTimestamp = timestamp * AVCConstants.H264Frequency;
             var presentationTimestamp = decodingTimestamp;
 
             var adtsHeader = new AudioDataTransportStreamHeader(_aacSequenceHeader, buffer.Count);
@@ -206,7 +206,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Containers
             return true;
         }
 
-        private void WritePESPacket(INetBuffer tsBuffer, BytesSegments dataBuffer, bool writeRAI, bool writePCR, ushort packetId, byte streamId, int decodingTimestamp, int presentationTimestamp, ref byte continuityCounter)
+        private void WritePESPacket(INetBuffer tsBuffer, BytesSegments dataBuffer, bool writeRAI, bool writePCR, ushort packetId, byte streamId, uint decodingTimestamp, uint presentationTimestamp, ref byte continuityCounter)
         {
             var position = 0;
             var bufferSize = dataBuffer.Length;

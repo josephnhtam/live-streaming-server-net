@@ -52,12 +52,12 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Containers
             }
         }
 
-        public record struct AdaptationField(bool AllowRandomAccess, int? DecodingTimstamp)
+        public record struct AdaptationField(bool AllowRandomAccess, uint? DecodingTimestamp)
         {
             public const int BaseSize = 2;
-            public int Size => (Present ? BaseSize : 0) + (DecodingTimstamp.HasValue ? 6 : 0) + (StuffingSize ?? 0);
+            public int Size => (Present ? BaseSize : 0) + (DecodingTimestamp.HasValue ? 6 : 0) + (StuffingSize ?? 0);
             public int? StuffingSize { get; set; }
-            public bool Present => AllowRandomAccess || DecodingTimstamp.HasValue || StuffingSize.HasValue;
+            public bool Present => AllowRandomAccess || DecodingTimestamp.HasValue || StuffingSize.HasValue;
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public void Write(INetBuffer netBuffer)
@@ -75,7 +75,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Containers
                 var size = (byte)(Size - 1);
 
                 byte flags = 0x00;
-                if (DecodingTimstamp.HasValue) flags |= 0x10;
+                if (DecodingTimestamp.HasValue) flags |= 0x10;
                 if (AllowRandomAccess) flags |= 0x40;
 
                 netBuffer.Write(size);
@@ -85,13 +85,13 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Containers
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             private void WritePCR(INetBuffer netBuffer)
             {
-                if (!DecodingTimstamp.HasValue) return;
+                if (!DecodingTimestamp.HasValue) return;
 
-                netBuffer.Write((byte)(DecodingTimstamp.Value >> 25));
-                netBuffer.Write((byte)(DecodingTimstamp.Value >> 17));
-                netBuffer.Write((byte)(DecodingTimstamp.Value >> 9));
-                netBuffer.Write((byte)(DecodingTimstamp.Value >> 1));
-                netBuffer.Write((byte)(((DecodingTimstamp.Value & 0x1) << 7) | 0x7e));
+                netBuffer.Write((byte)(DecodingTimestamp.Value >> 25));
+                netBuffer.Write((byte)(DecodingTimestamp.Value >> 17));
+                netBuffer.Write((byte)(DecodingTimestamp.Value >> 9));
+                netBuffer.Write((byte)(DecodingTimestamp.Value >> 1));
+                netBuffer.Write((byte)(((DecodingTimestamp.Value & 0x1) << 7) | 0x7e));
                 netBuffer.Write((byte)0x00);
             }
 
@@ -103,9 +103,9 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Containers
             }
         }
 
-        private record struct PacketizedElementaryStreamHeader(byte StreamId, int DecodingTimstamp, int PresentationTimestamp, int DataSize)
+        private record struct PacketizedElementaryStreamHeader(byte StreamId, uint DecodingTimestamp, uint PresentationTimestamp, int DataSize)
         {
-            public int Size => 14 + (DecodingTimstamp != PresentationTimestamp ? 5 : 0);
+            public int Size => 14 + (DecodingTimestamp != PresentationTimestamp ? 5 : 0);
 
             public void Write(INetBuffer netBuffer)
             {
@@ -134,7 +134,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Containers
                 var headerSize = 5;
                 var flags = 0x80;
 
-                bool writeDts = DecodingTimstamp != PresentationTimestamp;
+                bool writeDts = DecodingTimestamp != PresentationTimestamp;
                 if (writeDts)
                 {
                     headerSize += 5;
@@ -154,15 +154,15 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Containers
                 netBuffer.Write((byte)headerSize);
 
                 WriteTimestamp(netBuffer, (byte)(flags >> 6), PresentationTimestamp);
-                if (writeDts) WriteTimestamp(netBuffer, 1, DecodingTimstamp);
+                if (writeDts) WriteTimestamp(netBuffer, 1, DecodingTimestamp);
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            private void WriteTimestamp(INetBuffer netBuffer, byte flags, int timestamp)
+            private void WriteTimestamp(INetBuffer netBuffer, byte flags, uint timestamp)
             {
-                int val;
+                uint val;
 
-                val = flags << 4 | (((timestamp >> 30) & 0x07) << 1) | 1;
+                val = (uint)(flags << 4) | ((timestamp >> 30) & 0x07) << 1 | 1;
                 netBuffer.Write((byte)val);
 
                 val = (((timestamp >> 15) & 0x7fff) << 1) | 1;
