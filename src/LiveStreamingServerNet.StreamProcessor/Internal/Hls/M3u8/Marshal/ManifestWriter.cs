@@ -40,7 +40,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.M3u8.Marshal
                 }
                 catch { }
 
-                throw;
+                await File.WriteAllTextAsync(manifestOutputPath, sb.ToString(), cancellationToken);
             }
         }
 
