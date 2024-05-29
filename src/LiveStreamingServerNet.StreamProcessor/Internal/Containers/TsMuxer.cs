@@ -132,7 +132,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Containers
             WritePESPacket(
                 _payloadBuffer,
                 new BytesSegments(nalus),
-                false,
+                isKeyFrame,
                 isKeyFrame,
                 TsConstants.VideoPID,
                 TsConstants.VideoSID,
