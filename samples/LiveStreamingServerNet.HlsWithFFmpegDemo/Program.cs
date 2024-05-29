@@ -44,9 +44,9 @@ namespace LiveStreamingServerNet.HlsDemoWithFFmpeg
             await app.RunAsync();
         }
 
-        private static (PhysicalFileProvider, FileExtensionContentTypeProvider) CreateProviders(string trasmuxerOutputPath)
+        private static (PhysicalFileProvider, FileExtensionContentTypeProvider) CreateProviders(string transmuxerOutputPath)
         {
-            var fileProvider = new PhysicalFileProvider(trasmuxerOutputPath);
+            var fileProvider = new PhysicalFileProvider(transmuxerOutputPath);
 
             var contentTypeProvider = new FileExtensionContentTypeProvider();
             contentTypeProvider.Mappings[".m3u8"] = "application/x-mpegURL";
@@ -54,7 +54,7 @@ namespace LiveStreamingServerNet.HlsDemoWithFFmpeg
             return (fileProvider, contentTypeProvider);
         }
 
-        private static ILiveStreamingServer CreateLiveStreamingServer(string trasmuxerOutputPath)
+        private static ILiveStreamingServer CreateLiveStreamingServer(string transmuxerOutputPath)
         {
             return LiveStreamingServerBuilder.Create()
                 .ConfigureServer(options => options
@@ -68,7 +68,7 @@ namespace LiveStreamingServerNet.HlsDemoWithFFmpeg
                     .AddStreamProcessor(options =>
                     {
                         options.AddStreamProcessorEventHandler(svc =>
-                                new StreamProcessorEventListener(trasmuxerOutputPath, svc.GetRequiredService<ILogger<StreamProcessorEventListener>>()));
+                                new StreamProcessorEventListener(transmuxerOutputPath, svc.GetRequiredService<ILogger<StreamProcessorEventListener>>()));
                     })
                     .AddFFmpeg(options =>
                     {
@@ -79,7 +79,7 @@ namespace LiveStreamingServerNet.HlsDemoWithFFmpeg
 
                         options.FFmpegPath = ExecutableFinder.FindExecutableFromPATH("ffmpeg")!;
                         options.OutputPathResolver = (contextIdentifier, streamPath, streamArguments)
-                            => Task.FromResult(Path.Combine(trasmuxerOutputPath, streamPath.Trim('/'), "output.m3u8"));
+                            => Task.FromResult(Path.Combine(transmuxerOutputPath, streamPath.Trim('/'), "output.m3u8"));
                     })
                 )
                 .ConfigureLogging(options => options.AddConsole())
@@ -88,25 +88,25 @@ namespace LiveStreamingServerNet.HlsDemoWithFFmpeg
 
         public class StreamProcessorEventListener : IStreamProcessorEventHandler
         {
-            private readonly string _trasmuxerOutputPath;
+            private readonly string _transmuxerOutputPath;
             private readonly ILogger _logger;
 
-            public StreamProcessorEventListener(string trasmuxerOutputPath, ILogger<StreamProcessorEventListener> logger)
+            public StreamProcessorEventListener(string transmuxerOutputPath, ILogger<StreamProcessorEventListener> logger)
             {
-                _trasmuxerOutputPath = trasmuxerOutputPath;
+                _transmuxerOutputPath = transmuxerOutputPath;
                 _logger = logger;
             }
 
             public Task OnStreamProcessorStartedAsync(IEventContext context, string processor, Guid identifier, uint clientId, string inputPath, string outputPath, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
             {
-                outputPath = Path.GetRelativePath(_trasmuxerOutputPath, outputPath);
+                outputPath = Path.GetRelativePath(_transmuxerOutputPath, outputPath);
                 _logger.LogInformation($"[{identifier}] Streaming processor {processor} started: {inputPath} -> {outputPath}");
                 return Task.CompletedTask;
             }
 
             public Task OnStreamProcessorStoppedAsync(IEventContext context, string processor, Guid identifier, uint clientId, string inputPath, string outputPath, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
             {
-                outputPath = Path.GetRelativePath(_trasmuxerOutputPath, outputPath);
+                outputPath = Path.GetRelativePath(_transmuxerOutputPath, outputPath);
                 _logger.LogInformation($"[{identifier}] Streaming processor {processor} stopped: {inputPath} -> {outputPath}");
                 return Task.CompletedTask;
             }
