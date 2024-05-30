@@ -13,7 +13,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.FFmpeg
             _config = config;
         }
 
-        public async Task<IStreamProcessor> CreateAsync(IClientHandle client, Guid contextIdentifier, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
+        public async Task<IStreamProcessor?> CreateAsync(IClientHandle client, Guid contextIdentifier, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
             var config = new FFmpegProcess.Configuration(
                 contextIdentifier,

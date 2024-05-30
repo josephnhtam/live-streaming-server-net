@@ -23,24 +23,31 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls
             _logger = logger;
         }
 
-        public async Task<IStreamProcessor> CreateAsync(
+        public async Task<IStreamProcessor?> CreateAsync(
             IClientHandle client, Guid contextIdentifier, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
-            var outputPaths = await _config.OutputPathResolver.ResolveOutputPath(contextIdentifier, streamPath, streamArguments);
+            try
+            {
+                var outputPaths = await _config.OutputPathResolver.ResolveOutputPath(contextIdentifier, streamPath, streamArguments);
 
-            var tsMuxer = new TsMuxer(outputPaths.TsFileOutputPath);
+                var tsMuxer = new TsMuxer(outputPaths.TsFileOutputPath);
 
-            var config = new HlsTransmuxer.Configuration(
-                contextIdentifier,
-                _config.Name,
-                outputPaths.ManifestOutputPath,
-                outputPaths.TsFileOutputPath,
-                _config.SegmentListSize,
-                _config.DeleteOutdatedSegments,
-                _config.MaxSegmentBufferSize
-            );
+                var config = new HlsTransmuxer.Configuration(
+                    contextIdentifier,
+                    _config.Name,
+                    outputPaths.ManifestOutputPath,
+                    outputPaths.TsFileOutputPath,
+                    _config.SegmentListSize,
+                    _config.DeleteOutdatedSegments,
+                    _config.MaxSegmentBufferSize
+                );
 
-            return new HlsTransmuxer(client, _transmuxerManager, _manifestWriter, tsMuxer, config, _logger);
+                return new HlsTransmuxer(streamPath, client, _transmuxerManager, _manifestWriter, tsMuxer, config, _logger);
+            }
+            catch
+            {
+                return null;
+            }
         }
     }
 }

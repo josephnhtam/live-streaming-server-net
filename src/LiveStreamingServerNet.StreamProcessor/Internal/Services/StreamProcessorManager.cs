@@ -40,6 +40,10 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Services
             var cts = new CancellationTokenSource();
 
             var streamProcessors = await CreateStreamProcessors(client, streamPath, streamArguments);
+
+            if (!streamProcessors.Any())
+                return;
+
             var task = RunStreamProcessors(streamProcessors, client, streamPath, streamArguments, cts);
 
             _processorTasks[streamPath] = new StreamProcessorTask(task, cts);
@@ -53,7 +57,10 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Services
             foreach (var processorFactory in _processorFactories)
             {
                 var contextIdentifier = Guid.NewGuid();
-                streamProcessors.Add(await processorFactory.CreateAsync(client, contextIdentifier, streamPath, streamArguments));
+                var streamProcessor = await processorFactory.CreateAsync(client, contextIdentifier, streamPath, streamArguments);
+
+                if (streamProcessor != null)
+                    streamProcessors.Add(streamProcessor);
             }
 
             return streamProcessors;

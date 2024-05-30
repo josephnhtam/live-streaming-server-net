@@ -35,8 +35,8 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls
         public string Name { get; }
         public Guid ContextIdentifier { get; }
 
-
         public HlsTransmuxer(
+            string streamPath,
             IClientHandle client,
             IHlsTransmuxerManager transmuxerManager,
             IManifestWriter manifestWriter,
@@ -60,6 +60,12 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls
 
             _segments = new Queue<TsSegment>();
             _channel = Channel.CreateUnbounded<PendingMediaPacket>(new UnboundedChannelOptions { SingleReader = true, AllowSynchronousContinuations = true });
+
+            if (!_transmuxerManager.RegisterTransmuxer(streamPath, this))
+            {
+                _logger.RegisteringHlsTransmuxerFailed(streamPath);
+                throw new InvalidOperationException("A HLS transmuxer of the same stream path is already registered");
+            }
         }
 
         public ValueTask AddMediaPacket(MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp)
@@ -195,12 +201,6 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls
             CancellationToken cancellation)
         {
             _streamPath = streamPath;
-
-            if (!_transmuxerManager.RegisterTransmuxer(streamPath, this))
-            {
-                _logger.RegisteringHlsTransmuxerFailed(streamPath);
-                return;
-            }
 
             try
             {
