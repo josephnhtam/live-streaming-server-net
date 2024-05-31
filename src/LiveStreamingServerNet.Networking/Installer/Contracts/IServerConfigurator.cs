@@ -1,5 +1,6 @@
 ﻿using LiveStreamingServerNet.Networking.Configurations;
 using LiveStreamingServerNet.Networking.Contracts;
+using LiveStreamingServerNet.Utilities.Configurations;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LiveStreamingServerNet.Networking.Installer.Contracts
@@ -16,5 +17,7 @@ namespace LiveStreamingServerNet.Networking.Installer.Contracts
         IServerConfigurator ConfigureSecurity(Action<SecurityConfiguration>? configure);
 
         IServerConfigurator ConfigureNetBufferPool(Action<NetBufferPoolConfiguration>? configure);
+
+        IServerConfigurator ConfigureBufferPool(Action<BufferPoolConfiguration>? configure);
     }
 }

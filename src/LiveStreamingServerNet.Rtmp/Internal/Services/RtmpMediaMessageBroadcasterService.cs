@@ -21,7 +21,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
         private readonly INetBufferPool _netBufferPool;
         private readonly IMediaPackageDiscarderFactory _mediaPackageDiscarderFactory;
         private readonly ILogger _logger;
-
+        private readonly IBufferPool? _bufferPool;
         private readonly ConcurrentDictionary<IRtmpClientContext, ClientMediaContext> _clientMediaContexts = new();
         private readonly ConcurrentDictionary<IRtmpClientContext, Task> _clientTasks = new();
 
@@ -30,13 +30,15 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             IRtmpMediaMessageInterceptionService interception,
             INetBufferPool netBufferPool,
             IMediaPackageDiscarderFactory mediaPackageDiscarderFactory,
-            ILogger<RtmpMediaMessageBroadcasterService> logger)
+            ILogger<RtmpMediaMessageBroadcasterService> logger,
+            IBufferPool? bufferPool = null)
         {
             _chunkMessageWriter = chunkMessageWriter;
             _interception = interception;
             _netBufferPool = netBufferPool;
             _mediaPackageDiscarderFactory = mediaPackageDiscarderFactory;
             _logger = logger;
+            _bufferPool = bufferPool;
         }
 
         private ClientMediaContext? GetMediaContext(IRtmpClientContext clientContext)
@@ -137,7 +139,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
                 using var tempBuffer = _netBufferPool.Obtain();
                 _chunkMessageWriter.Write(tempBuffer, basicHeader, messageHeader, payloadBuffer.MoveTo(0), outChunkSize);
 
-                var rentedBuffer = new RentedBuffer(tempBuffer.Size, subscribers.Count);
+                var rentedBuffer = new RentedBuffer(_bufferPool, tempBuffer.Size, subscribers.Count);
                 tempBuffer.MoveTo(0).ReadBytes(rentedBuffer.Buffer, 0, rentedBuffer.Size);
 
                 var mediaPackage = new ClientMediaPackage(rentedBuffer, isSkippable, timestamp, type);

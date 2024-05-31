@@ -11,15 +11,18 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
         private readonly IFlvStreamManagerService _streamManager;
         private readonly IFlvMediaTagBroadcasterService _mediaTagBroadcaster;
         private readonly IFlvMediaTagCacherService _mediaTagCacher;
+        private readonly IBufferPool? _bufferPool;
 
         public RtmpMediaMessageScraper(
             IFlvStreamManagerService streamManager,
             IFlvMediaTagBroadcasterService mediaMessageManager,
-            IFlvMediaTagCacherService mediaTagCacher)
+            IFlvMediaTagCacherService mediaTagCacher,
+            IBufferPool? bufferPool = null)
         {
             _streamManager = streamManager;
             _mediaTagBroadcaster = mediaMessageManager;
             _mediaTagCacher = mediaTagCacher;
+            _bufferPool = bufferPool;
         }
 
         public async ValueTask OnCachePicture(string streamPath, MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp)
@@ -52,7 +55,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
             if (!subscribers.Any())
                 return;
 
-            var rentedBuffer = new RentedBuffer(sequenceHeader.Length, subscribers.Count);
+            var rentedBuffer = new RentedBuffer(_bufferPool, sequenceHeader.Length, subscribers.Count);
             Array.Copy(sequenceHeader, rentedBuffer.Buffer, sequenceHeader.Length);
 
             await _mediaTagBroadcaster.BroadcastMediaTagAsync(streamContext, subscribers, mediaType, 0, false, rentedBuffer);

@@ -1,11 +1,13 @@
 ﻿using LiveStreamingServerNet.Networking.Contracts;
-using LiveStreamingServerNet.Utilities;
+using LiveStreamingServerNet.Utilities.Contracts;
+using System.Buffers;
 using System.Runtime.CompilerServices;
 
 namespace LiveStreamingServerNet.Networking
 {
     public partial class NetBuffer : INetBuffer
     {
+        private readonly IBufferPool? _bufferPool;
         private byte[] _buffer;
         private int _position;
         private int _size;
@@ -37,9 +39,12 @@ namespace LiveStreamingServerNet.Networking
 
         public NetBuffer() : this(1024) { }
 
-        public NetBuffer(int initialCapacity)
+        public NetBuffer(int initialCapacity) : this(null, initialCapacity) { }
+
+        public NetBuffer(IBufferPool? bufferPool, int initialCapacity)
         {
-            _buffer = BufferPool.Rent(initialCapacity);
+            _bufferPool = bufferPool;
+            _buffer = _bufferPool?.Rent(initialCapacity) ?? ArrayPool<byte>.Shared.Rent(initialCapacity);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -48,10 +53,21 @@ namespace LiveStreamingServerNet.Networking
             if (capacity < Capacity)
                 return;
 
-            var buffer = BufferPool.Rent(capacity);
-            _buffer.AsSpan().CopyTo(buffer);
+            byte[] buffer;
 
-            BufferPool.Return(_buffer);
+            if (_bufferPool != null)
+            {
+                buffer = _bufferPool.Rent(capacity);
+                _buffer.AsSpan().CopyTo(buffer);
+                _bufferPool.Return(_buffer);
+            }
+            else
+            {
+                buffer = ArrayPool<byte>.Shared.Rent(capacity);
+                _buffer.AsSpan().CopyTo(buffer);
+                ArrayPool<byte>.Shared.Return(_buffer);
+            }
+
             _buffer = buffer;
         }
 
@@ -140,7 +156,11 @@ namespace LiveStreamingServerNet.Networking
 
             _isDisposed = true;
 
-            BufferPool.Return(_buffer);
+            if (_bufferPool != null)
+                _bufferPool.Return(_buffer);
+            else
+                ArrayPool<byte>.Shared.Return(_buffer);
+
             _buffer = null!;
         }
     }

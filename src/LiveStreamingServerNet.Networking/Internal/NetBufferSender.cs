@@ -15,14 +15,16 @@ namespace LiveStreamingServerNet.Networking.Internal
         private readonly INetBufferPool _netBufferPool;
         private readonly Channel<PendingMessage> _pendingMessageChannel;
         private readonly ILogger _logger;
+        private readonly IBufferPool? _bufferPool;
 
         private Task? _task;
 
-        public NetBufferSender(uint clientId, INetBufferPool netBufferPool, ILogger<NetBufferSender> logger)
+        public NetBufferSender(uint clientId, INetBufferPool netBufferPool, ILogger<NetBufferSender> logger, IBufferPool? bufferPool = null)
         {
             _clientId = clientId;
             _netBufferPool = netBufferPool;
             _logger = logger;
+            _bufferPool = bufferPool;
 
             _pendingMessageChannel = Channel.CreateUnbounded<PendingMessage>(
                 new UnboundedChannelOptions { SingleReader = true, AllowSynchronousContinuations = true });
@@ -35,7 +37,7 @@ namespace LiveStreamingServerNet.Networking.Internal
 
         public void Send(INetBuffer netBuffer, Action<bool>? callback)
         {
-            var rentedBuffer = new RentedBuffer(netBuffer.Size);
+            var rentedBuffer = new RentedBuffer(_bufferPool, netBuffer.Size);
 
             try
             {
@@ -78,7 +80,7 @@ namespace LiveStreamingServerNet.Networking.Internal
             using var netBuffer = ObtainNetBuffer();
             writer.Invoke(netBuffer);
 
-            var rentedBuffer = new RentedBuffer(netBuffer.Size);
+            var rentedBuffer = new RentedBuffer(_bufferPool, netBuffer.Size);
 
             try
             {

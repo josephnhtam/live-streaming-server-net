@@ -1,31 +1,30 @@
-﻿using System.Buffers;
+﻿using LiveStreamingServerNet.Utilities.Configurations;
+using LiveStreamingServerNet.Utilities.Contracts;
+using Microsoft.Extensions.Options;
+using System.Buffers;
 using System.Runtime.CompilerServices;
 
 namespace LiveStreamingServerNet.Utilities
 {
-    public static class BufferPool
+    public class BufferPool : IBufferPool
     {
-        private const int _maxBufferLength = 16 * 1024 * 1024;
-        private const int _maxNumberOfBuffersPerBucket = 50;
+        private readonly BufferPoolConfiguration _config;
+        private readonly ArrayPool<byte> _pool;
 
-        private static ArrayPool<byte> _pool;
-
-        static BufferPool()
+        public BufferPool(IOptions<BufferPoolConfiguration> config)
         {
-            _pool = ArrayPool<byte>.Create(
-                _maxBufferLength,
-                Math.Max(1, Environment.ProcessorCount) * _maxNumberOfBuffersPerBucket
-            );
+            _config = config.Value;
+            _pool = ArrayPool<byte>.Create(_config.MaxBufferSize, _config.MaxBuffersPerBucket);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static byte[] Rent(int minimumLength)
+        public byte[] Rent(int minimumLength)
         {
-            return _pool.Rent(minimumLength);
+            return _pool.Rent(Math.Max(_config.MinBufferSize, minimumLength));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Return(byte[] buffer)
+        public void Return(byte[] buffer)
         {
             _pool.Return(buffer);
         }

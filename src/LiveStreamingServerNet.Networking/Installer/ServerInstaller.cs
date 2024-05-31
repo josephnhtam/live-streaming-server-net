@@ -2,6 +2,8 @@
 using LiveStreamingServerNet.Networking.Installer.Contracts;
 using LiveStreamingServerNet.Networking.Internal;
 using LiveStreamingServerNet.Networking.Internal.Contracts;
+using LiveStreamingServerNet.Utilities;
+using LiveStreamingServerNet.Utilities.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
@@ -29,6 +31,7 @@ namespace LiveStreamingServerNet.Networking.Installer
             services.AddSingleton<IServerEventDispatcher, ServerEventDispatcher>();
 
             services.TryAddSingleton<INetBufferPool, NetBufferPool>();
+            services.TryAddSingleton<IBufferPool, BufferPool>();
 
             configure?.Invoke(new ServerConfigurator(services));
 
