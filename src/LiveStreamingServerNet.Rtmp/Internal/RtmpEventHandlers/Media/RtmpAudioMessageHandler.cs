@@ -53,7 +53,11 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
 
             if (!IsAudioCodecAllowed(clientContext, publishStreamContext, audioCodec)) return false;
 
-            await HandleAudioPacketCachingAsync(chunkStreamContext, publishStreamContext, aacPacketType, payloadBuffer);
+            await HandleAudioPacketCachingAsync(
+                chunkStreamContext,
+                publishStreamContext,
+                aacPacketType,
+                payloadBuffer.MoveTo(0));
 
             await BroadcastAudioMessageToSubscribersAsync(
                 chunkStreamContext,

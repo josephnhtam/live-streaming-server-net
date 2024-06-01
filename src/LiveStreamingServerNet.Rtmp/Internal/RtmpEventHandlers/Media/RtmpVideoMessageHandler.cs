@@ -58,7 +58,12 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
 
             if (!IsVideoCodecAllowed(clientContext, publishStreamContext, videoCodec)) return false;
 
-            await HandleVideoPacketCachingAsync(chunkStreamContext, publishStreamContext, frameType, avcPacketType, payloadBuffer);
+            await HandleVideoPacketCachingAsync(
+                chunkStreamContext,
+                publishStreamContext,
+                frameType,
+                avcPacketType,
+                payloadBuffer.MoveTo(0));
 
             await BroadcastVideoMessageToSubscribersAsync(
                 chunkStreamContext,
@@ -130,7 +135,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private bool IsSkippable(AVCPacketType? avcPacketType)
         {
-            return avcPacketType != AVCPacketType.SequenceHeader || avcPacketType != AVCPacketType.EndOfSequence;
+            return avcPacketType != AVCPacketType.SequenceHeader && avcPacketType != AVCPacketType.EndOfSequence;
         }
 
         private async ValueTask HandleVideoPacketCachingAsync(
