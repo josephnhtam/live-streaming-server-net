@@ -4,6 +4,7 @@
     {
         int BufferSize { get; }
         uint SequenceNumber { get; }
+        uint? SegmentTimestamp { get; }
 
         ValueTask<TsSegment?> FlushAsync(uint timestamp);
         void SetAACSequenceHeader(AACSequenceHeader aacSequenceHeader);

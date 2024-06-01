@@ -98,10 +98,9 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls
             if (tagHeader.VideoCodec != VideoCodec.AVC)
                 return;
 
-            var dataBuffer = new ArraySegment<byte>(rentedBuffer.Buffer, FlvVideoTagHeader.Size, rentedBuffer.Size - FlvVideoTagHeader.Size);
+            await TryToFlushAsync(tagHeader.FrameType == VideoFrameType.KeyFrame, timestamp);
 
-            if (tagHeader.FrameType == VideoFrameType.KeyFrame)
-                await TryToFlushAsync(timestamp);
+            var dataBuffer = new ArraySegment<byte>(rentedBuffer.Buffer, FlvVideoTagHeader.Size, rentedBuffer.Size - FlvVideoTagHeader.Size);
 
             if (tagHeader.FrameType == VideoFrameType.KeyFrame && tagHeader.AVCPacketType == AVCPacketType.SequenceHeader)
             {
@@ -118,12 +117,14 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls
             );
         }
 
-        private ValueTask ProcessAudioPacket(IRentedBuffer rentedBuffer, uint timestamp)
+        private async ValueTask ProcessAudioPacket(IRentedBuffer rentedBuffer, uint timestamp)
         {
             var tagHeader = FlvParser.ParseAudioTagHeader(rentedBuffer.Buffer);
 
             if (tagHeader.AudioCodec != AudioCodec.AAC)
-                return ValueTask.CompletedTask;
+                return;
+
+            await TryToFlushAsync(false, timestamp);
 
             var dataBuffer = new ArraySegment<byte>(rentedBuffer.Buffer, FlvAudioTagHeader.Size, rentedBuffer.Size - FlvAudioTagHeader.Size);
 
@@ -131,22 +132,37 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls
             {
                 var sequenceHeader = AACParser.ParseSequenceHeader(dataBuffer);
                 _tsMuxer.SetAACSequenceHeader(sequenceHeader);
-                return ValueTask.CompletedTask;
+                return;
             }
 
             _hasAudio |= _tsMuxer.WriteAudioPacket(dataBuffer, timestamp);
-            return ValueTask.CompletedTask;
         }
 
-        private async Task TryToFlushAsync(uint timestamp)
+        private async ValueTask TryToFlushAsync(bool isKeyFrame, uint timestamp)
         {
-            if (!_hasVideo)
+            if (!ShouldFlush(isKeyFrame, timestamp))
                 return;
 
             _hasVideo = _hasAudio = false;
 
             var tsSegment = await FlushTsMuxer(timestamp);
             if (tsSegment != null) await RefreshHlsAsync(tsSegment.Value);
+
+            bool ShouldFlush(bool isKeyFrame, uint timestamp)
+            {
+                if (isKeyFrame && _hasVideo)
+                {
+                    return true;
+                }
+
+                if (!_hasVideo && _hasAudio && _tsMuxer.SegmentTimestamp.HasValue &&
+                    (timestamp - _tsMuxer.SegmentTimestamp.Value) >= _config.AudioOnlySegmentDuration)
+                {
+                    return true;
+                }
+
+                return false;
+            }
         }
 
         private async ValueTask<TsSegment?> FlushTsMuxer(uint timestamp)

@@ -24,10 +24,11 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Containers
         private uint _sequenceNumber;
         private byte[]? _patBuffer;
 
-        private uint? _timestampStart;
+        private uint? _segmentTimestamp;
 
         public uint SequenceNumber => _sequenceNumber;
         public int BufferSize => _payloadBuffer.Size;
+        public uint? SegmentTimestamp => _segmentTimestamp;
 
         public TsMuxer(string outputPath, IBufferPool? bufferPool = null)
         {
@@ -121,8 +122,8 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Containers
             if (_avcSequenceHeader == null)
                 return false;
 
-            if (_timestampStart == null)
-                _timestampStart = timestamp;
+            if (_segmentTimestamp == null)
+                _segmentTimestamp = timestamp;
 
             var decodingTimestamp = timestamp * AVCConstants.H264Frequency;
             var presentationTimestamp = decodingTimestamp + compositionTime * AVCConstants.H264Frequency;
@@ -181,8 +182,8 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Containers
             if (_aacSequenceHeader == null)
                 return false;
 
-            if (_timestampStart == null)
-                _timestampStart = timestamp;
+            if (_segmentTimestamp == null)
+                _segmentTimestamp = timestamp;
 
             var decodingTimestamp = timestamp * AVCConstants.H264Frequency;
             var presentationTimestamp = decodingTimestamp;
@@ -269,8 +270,8 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Containers
         {
             if (_payloadBuffer.Size > 0)
             {
-                Debug.Assert(_timestampStart.HasValue);
-                var duration = (int)(timestamp - _timestampStart);
+                Debug.Assert(_segmentTimestamp.HasValue);
+                var duration = (int)(timestamp - _segmentTimestamp);
 
                 WriteHeaderPackets(_headerBuffer);
 
@@ -285,7 +286,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Containers
                 _payloadBuffer.Reset();
 
                 _sequenceNumber++;
-                _timestampStart = null;
+                _segmentTimestamp = null;
 
                 return segment;
             }

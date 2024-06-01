@@ -8,6 +8,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Hls.Configurations
         public int SegmentListSize { get; set; } = 20;
         public bool DeleteOutdatedSegments { get; set; } = true;
         public int MaxSegmentBufferSize { get; set; } = 1024 * 1024 * 16;
+        public int AudioOnlySegmentDuration { get; set; } = 2000;
         public IHlsOutputPathResolver OutputPathResolver { get; set; } = new DefaultHlsOutputPathResolver();
     }
 }

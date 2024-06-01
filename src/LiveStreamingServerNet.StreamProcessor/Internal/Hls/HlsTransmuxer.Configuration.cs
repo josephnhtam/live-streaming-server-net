@@ -9,7 +9,8 @@
             string TsFileOutputPath,
             int SegmentListSize,
             bool DeleteOutdatedSegments,
-            int MaxSegmentBufferSize
+            int MaxSegmentBufferSize,
+            int AudioOnlySegmentDuration
         );
     }
 }

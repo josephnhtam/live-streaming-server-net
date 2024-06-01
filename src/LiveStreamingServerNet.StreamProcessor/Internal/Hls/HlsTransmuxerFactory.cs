@@ -47,7 +47,8 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls
                     outputPaths.TsFileOutputPath,
                     _config.SegmentListSize,
                     _config.DeleteOutdatedSegments,
-                    _config.MaxSegmentBufferSize
+                    _config.MaxSegmentBufferSize,
+                    _config.AudioOnlySegmentDuration
                 );
 
                 return new HlsTransmuxer(streamPath, client, _transmuxerManager, _manifestWriter, tsMuxer, config, _logger);
