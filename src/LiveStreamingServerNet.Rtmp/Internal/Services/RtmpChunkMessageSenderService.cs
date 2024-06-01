@@ -24,12 +24,19 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             Action<INetBuffer> payloadWriter,
             Action<bool>? callback) where TRtmpChunkMessageHeader : struct, IRtmpChunkMessageHeader
         {
-            using var payloadBuffer = CreatePayloadBuffer(ref messageHeader, payloadWriter);
+            var payloadBuffer = CreatePayloadBuffer(ref messageHeader, payloadWriter);
 
-            clientContext.Client.Send(targetBuffer =>
-                _writer.Write(targetBuffer, basicHeader, messageHeader, payloadBuffer, clientContext.OutChunkSize),
-                callback
-            );
+            try
+            {
+                clientContext.Client.Send(targetBuffer =>
+                    _writer.Write(targetBuffer, basicHeader, messageHeader, payloadBuffer, clientContext.OutChunkSize),
+                    callback
+                );
+            }
+            finally
+            {
+                _netBufferPool.Recycle(payloadBuffer);
+            }
         }
 
         public ValueTask SendAsync<TRtmpChunkMessageHeader>(IRtmpClientContext clientContext, RtmpChunkBasicHeader basicHeader, TRtmpChunkMessageHeader messageHeader, Action<INetBuffer> payloadWriter) where TRtmpChunkMessageHeader : struct, IRtmpChunkMessageHeader
