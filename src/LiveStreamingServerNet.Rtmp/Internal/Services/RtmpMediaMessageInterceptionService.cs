@@ -1,7 +1,6 @@
 ﻿using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.Rtmp.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.Services.Contracts;
-using LiveStreamingServerNet.Utilities;
 using LiveStreamingServerNet.Utilities.Contracts;
 
 namespace LiveStreamingServerNet.Rtmp.Internal.Services
@@ -9,12 +8,10 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
     internal class RtmpMediaMessageInterceptionService : IRtmpMediaMessageInterceptionService
     {
         private readonly IEnumerable<IRtmpMediaMessageInterceptor> _interceptors;
-        private readonly IBufferPool? _bufferPool;
 
-        public RtmpMediaMessageInterceptionService(IEnumerable<IRtmpMediaMessageInterceptor> interceptors, IBufferPool? bufferPool = null)
+        public RtmpMediaMessageInterceptionService(IEnumerable<IRtmpMediaMessageInterceptor> interceptors)
         {
             _interceptors = interceptors;
-            _bufferPool = bufferPool;
         }
 
         public async ValueTask CachePictureAsync(string streamPath, MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp)

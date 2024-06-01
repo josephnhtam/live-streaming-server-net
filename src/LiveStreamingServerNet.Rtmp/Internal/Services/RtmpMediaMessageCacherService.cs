@@ -6,8 +6,6 @@ using LiveStreamingServerNet.Rtmp.Internal.Logging;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpHeaders;
 using LiveStreamingServerNet.Rtmp.Internal.Services.Contracts;
-using LiveStreamingServerNet.Utilities;
-using LiveStreamingServerNet.Utilities.Contracts;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -19,20 +17,17 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
         private readonly IRtmpMediaMessageInterceptionService _interception;
         private readonly MediaMessageConfiguration _config;
         private readonly ILogger _logger;
-        private readonly IBufferPool? _bufferPool;
 
         public RtmpMediaMessageCacherService(
             IRtmpChunkMessageSenderService chunkMessageSender,
             IRtmpMediaMessageInterceptionService interception,
             IOptions<MediaMessageConfiguration> config,
-            ILogger<RtmpMediaMessageCacherService> logger,
-            IBufferPool? bufferPool = null)
+            ILogger<RtmpMediaMessageCacherService> logger)
         {
             _chunkMessageSender = chunkMessageSender;
             _interception = interception;
             _config = config.Value;
             _logger = logger;
-            _bufferPool = bufferPool;
         }
 
         public async ValueTask CacheSequenceHeaderAsync(

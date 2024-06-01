@@ -15,16 +15,14 @@ namespace LiveStreamingServerNet.Networking.Internal
         private readonly INetBufferPool _netBufferPool;
         private readonly Channel<PendingMessage> _pendingMessageChannel;
         private readonly ILogger _logger;
-        private readonly IBufferPool? _bufferPool;
 
         private Task? _task;
 
-        public NetBufferSender(uint clientId, INetBufferPool netBufferPool, ILogger<NetBufferSender> logger, IBufferPool? bufferPool = null)
+        public NetBufferSender(uint clientId, INetBufferPool netBufferPool, ILogger<NetBufferSender> logger)
         {
             _clientId = clientId;
             _netBufferPool = netBufferPool;
             _logger = logger;
-            _bufferPool = bufferPool;
 
             _pendingMessageChannel = Channel.CreateUnbounded<PendingMessage>(
                 new UnboundedChannelOptions { SingleReader = true, AllowSynchronousContinuations = true });

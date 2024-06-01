@@ -6,7 +6,6 @@ using LiveStreamingServerNet.Rtmp.Internal.MediaPackageDiscarding.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpHeaders;
 using LiveStreamingServerNet.Rtmp.Internal.Services.Contracts;
-using LiveStreamingServerNet.Utilities;
 using LiveStreamingServerNet.Utilities.Contracts;
 using Microsoft.Extensions.Logging;
 using System.Collections.Concurrent;
@@ -21,7 +20,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
         private readonly INetBufferPool _netBufferPool;
         private readonly IMediaPackageDiscarderFactory _mediaPackageDiscarderFactory;
         private readonly ILogger _logger;
-        private readonly IBufferPool? _bufferPool;
+
         private readonly ConcurrentDictionary<IRtmpClientContext, ClientMediaContext> _clientMediaContexts = new();
         private readonly ConcurrentDictionary<IRtmpClientContext, Task> _clientTasks = new();
 
@@ -30,15 +29,13 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             IRtmpMediaMessageInterceptionService interception,
             INetBufferPool netBufferPool,
             IMediaPackageDiscarderFactory mediaPackageDiscarderFactory,
-            ILogger<RtmpMediaMessageBroadcasterService> logger,
-            IBufferPool? bufferPool = null)
+            ILogger<RtmpMediaMessageBroadcasterService> logger)
         {
             _chunkMessageWriter = chunkMessageWriter;
             _interception = interception;
             _netBufferPool = netBufferPool;
             _mediaPackageDiscarderFactory = mediaPackageDiscarderFactory;
             _logger = logger;
-            _bufferPool = bufferPool;
         }
 
         private ClientMediaContext? GetMediaContext(IRtmpClientContext clientContext)
