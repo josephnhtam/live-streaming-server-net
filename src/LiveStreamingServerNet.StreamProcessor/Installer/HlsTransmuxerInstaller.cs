@@ -7,6 +7,7 @@ using LiveStreamingServerNet.StreamProcessor.Internal.Hls.M3u8.Marshal;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.M3u8.Marshal.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Services;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Services.Contracts;
+using LiveStreamingServerNet.Utilities.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
@@ -31,7 +32,8 @@ namespace LiveStreamingServerNet.StreamProcessor.Installer
                     svc.GetRequiredService<IHlsTransmuxerManager>(),
                     svc.GetRequiredService<IManifestWriter>(),
                     config,
-                    svc.GetRequiredService<ILogger<HlsTransmuxer>>()
+                    svc.GetRequiredService<ILogger<HlsTransmuxer>>(),
+                    svc.GetService<IBufferPool>()
                 )
             );
 

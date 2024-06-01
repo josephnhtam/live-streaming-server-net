@@ -159,9 +159,7 @@ namespace LiveStreamingServerNet.Networking
 
             try
             {
-                var rentedBuffer = _bufferPool != null ?
-                    new RentedBuffer(_bufferPool, size, initialClaim) :
-                    new RentedBuffer(size, initialClaim);
+                var rentedBuffer = new RentedBuffer(_bufferPool, size, initialClaim);
 
                 _position = offset;
                 ReadBytes(rentedBuffer.Buffer, offset, size);

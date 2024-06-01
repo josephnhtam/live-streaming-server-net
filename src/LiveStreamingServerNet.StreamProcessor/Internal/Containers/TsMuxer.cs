@@ -2,6 +2,7 @@
 using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Containers.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Utilities;
+using LiveStreamingServerNet.Utilities.Contracts;
 using System.Diagnostics;
 
 namespace LiveStreamingServerNet.StreamProcessor.Internal.Containers
@@ -28,11 +29,11 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Containers
         public uint SequenceNumber => _sequenceNumber;
         public int BufferSize => _payloadBuffer.Size;
 
-        public TsMuxer(string outputPath)
+        public TsMuxer(string outputPath, IBufferPool? bufferPool = null)
         {
             _outputPath = outputPath;
-            _headerBuffer = new NetBuffer(512);
-            _payloadBuffer = new NetBuffer(8192);
+            _headerBuffer = new NetBuffer(bufferPool, 512);
+            _payloadBuffer = new NetBuffer(bufferPool, 8192);
             _adtsBuffer = new byte[AudioDataTransportStreamHeader.Size];
         }
 
