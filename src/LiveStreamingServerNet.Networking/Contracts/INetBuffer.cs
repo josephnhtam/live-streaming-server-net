@@ -1,4 +1,6 @@
-﻿namespace LiveStreamingServerNet.Networking.Contracts
+﻿using LiveStreamingServerNet.Utilities.Contracts;
+
+namespace LiveStreamingServerNet.Networking.Contracts
 {
     public interface INetBuffer : IDisposable
     {
@@ -18,6 +20,8 @@
         ValueTask AppendStreamData(Stream stream, int bytesCount, CancellationToken cancellationToken = default);
         ValueTask FromStreamData(INetworkStreamReader streamReader, int bytesCount, CancellationToken cancellationToken = default);
         ValueTask AppendStreamData(INetworkStreamReader streamReader, int bytesCount, CancellationToken cancellationToken = default);
+        IRentedBuffer ToRentedBuffer(int offset, int size, int initialClaim = 1);
+        IRentedBuffer ToRentedBuffer(int initialClaim = 1);
 
         void WriteRandomBytes(int count);
         bool ReadBoolean();

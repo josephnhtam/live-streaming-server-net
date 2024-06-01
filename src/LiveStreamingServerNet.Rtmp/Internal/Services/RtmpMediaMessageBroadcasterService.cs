@@ -136,19 +136,25 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
                 var outChunkSize = subscribersGroup.Key;
                 var subscribers = subscribersGroup.ToList();
 
-                using var tempBuffer = _netBufferPool.Obtain();
-                _chunkMessageWriter.Write(tempBuffer, basicHeader, messageHeader, payloadBuffer.MoveTo(0), outChunkSize);
+                var tempBuffer = _netBufferPool.Obtain();
 
-                var rentedBuffer = new RentedBuffer(_bufferPool, tempBuffer.Size, subscribers.Count);
-                tempBuffer.MoveTo(0).ReadBytes(rentedBuffer.Buffer, 0, rentedBuffer.Size);
-
-                var mediaPackage = new ClientMediaPackage(rentedBuffer, isSkippable, timestamp, type);
-
-                foreach (var subscriber in subscribers)
+                try
                 {
-                    var mediaContext = GetMediaContext(subscriber);
-                    if (mediaContext == null || !mediaContext.AddPackage(ref mediaPackage))
-                        rentedBuffer.Unclaim();
+                    _chunkMessageWriter.Write(tempBuffer, basicHeader, messageHeader, payloadBuffer.MoveTo(0), outChunkSize);
+
+                    var rentedBuffer = tempBuffer.ToRentedBuffer(subscribers.Count);
+                    var mediaPackage = new ClientMediaPackage(rentedBuffer, isSkippable, timestamp, type);
+
+                    foreach (var subscriber in subscribers)
+                    {
+                        var mediaContext = GetMediaContext(subscriber);
+                        if (mediaContext == null || !mediaContext.AddPackage(ref mediaPackage))
+                            rentedBuffer.Unclaim();
+                    }
+                }
+                finally
+                {
+                    _netBufferPool.Recycle(tempBuffer);
                 }
             }
         }

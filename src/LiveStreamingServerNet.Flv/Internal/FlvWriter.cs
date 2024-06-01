@@ -51,22 +51,29 @@ namespace LiveStreamingServerNet.Flv.Internal
             {
                 using var _ = await _syncLock.LockAsync(cancellationToken);
 
-                using var netBuffer = _netBufferPool.Obtain();
+                var netBuffer = _netBufferPool.Obtain();
 
-                netBuffer.MoveTo(FlvTagHeader.Size);
-                payloadBufer.Invoke(netBuffer);
+                try
+                {
+                    netBuffer.MoveTo(FlvTagHeader.Size);
+                    payloadBufer.Invoke(netBuffer);
 
-                var payloadSize = (uint)(netBuffer.Size - FlvTagHeader.Size);
-                var packageSize = (uint)netBuffer.Size;
+                    var payloadSize = (uint)(netBuffer.Size - FlvTagHeader.Size);
+                    var packageSize = (uint)netBuffer.Size;
 
-                netBuffer.WriteUInt32BigEndian(packageSize);
+                    netBuffer.WriteUInt32BigEndian(packageSize);
 
-                var header = new FlvTagHeader(tagType, payloadSize, timestamp);
-                header.Write(netBuffer.MoveTo(0));
+                    var header = new FlvTagHeader(tagType, payloadSize, timestamp);
+                    header.Write(netBuffer.MoveTo(0));
 
-                await _streamWriter.WriteAsync(
-                    new ArraySegment<byte>(netBuffer.UnderlyingBuffer, 0, netBuffer.Size),
-                    cancellationToken);
+                    await _streamWriter.WriteAsync(
+                        new ArraySegment<byte>(netBuffer.UnderlyingBuffer, 0, netBuffer.Size),
+                        cancellationToken);
+                }
+                finally
+                {
+                    _netBufferPool.Recycle(netBuffer);
+                }
             }
             catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { }
         }

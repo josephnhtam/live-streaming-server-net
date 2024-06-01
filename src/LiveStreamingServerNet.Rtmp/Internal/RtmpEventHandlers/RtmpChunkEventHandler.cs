@@ -7,6 +7,7 @@ using LiveStreamingServerNet.Rtmp.Internal.RtmpHeaders;
 using LiveStreamingServerNet.Rtmp.Internal.Services.Contracts;
 using Mediator;
 using Microsoft.Extensions.Logging;
+using System.Diagnostics;
 
 namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
 {
@@ -31,18 +32,25 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
 
         public async ValueTask<RtmpEventConsumingResult> Handle(RtmpChunkEvent @event, CancellationToken cancellationToken)
         {
-            using var netBuffer = _netBufferPool.Obtain();
+            var netBuffer = _netBufferPool.Obtain();
 
-            var result = await HandleChunkEvent(@event, netBuffer, cancellationToken);
-            if (result.Succeeded)
+            try
             {
-                HandleAcknowlegement(@event, netBuffer.Size);
+                var result = await HandleChunkEvent(@event, netBuffer, cancellationToken);
+                if (result.Succeeded)
+                {
+                    HandleAcknowlegement(@event, netBuffer.Size);
+                    return result;
+                }
+
+                _logger.FailedToHandleChunkEvent(@event.ClientContext.Client.ClientId);
+
                 return result;
             }
-
-            _logger.FailedToHandleChunkEvent(@event.ClientContext.Client.ClientId);
-
-            return result;
+            finally
+            {
+                _netBufferPool.Recycle(netBuffer);
+            }
         }
 
         private async ValueTask<RtmpEventConsumingResult> HandleChunkEvent(RtmpChunkEvent @event, INetBuffer netBuffer, CancellationToken cancellationToken)
@@ -220,13 +228,15 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
 
         private async ValueTask<bool> DispatchRtmpMessageAsync(IRtmpChunkStreamContext chunkStreamContext, IRtmpClientContext clientContext, CancellationToken cancellationToken)
         {
+            Debug.Assert(chunkStreamContext.PayloadBuffer != null);
+
             try
             {
-                using var payloadBuffer = chunkStreamContext.PayloadBuffer ?? throw new InvalidOperationException();
                 return await _dispatcher.DispatchAsync(chunkStreamContext, clientContext, cancellationToken);
             }
             finally
             {
+                _netBufferPool.Recycle(chunkStreamContext.PayloadBuffer);
                 chunkStreamContext.PayloadBuffer = null;
             }
         }

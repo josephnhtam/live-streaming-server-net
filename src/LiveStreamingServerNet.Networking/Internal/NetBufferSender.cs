@@ -37,14 +37,10 @@ namespace LiveStreamingServerNet.Networking.Internal
 
         public void Send(INetBuffer netBuffer, Action<bool>? callback)
         {
-            var rentedBuffer = new RentedBuffer(_bufferPool, netBuffer.Size);
+            var rentedBuffer = netBuffer.ToRentedBuffer();
 
             try
             {
-                var originalPosition = netBuffer.Position;
-                netBuffer.MoveTo(0).ReadBytes(rentedBuffer.Buffer, 0, rentedBuffer.Size);
-                netBuffer.MoveTo(originalPosition);
-
                 if (!_pendingMessageChannel.Writer.TryWrite(new PendingMessage(rentedBuffer, callback)))
                 {
                     throw new Exception("Failed to write to the send channel");
@@ -77,24 +73,30 @@ namespace LiveStreamingServerNet.Networking.Internal
 
         public void Send(Action<INetBuffer> writer, Action<bool>? callback)
         {
-            using var netBuffer = ObtainNetBuffer();
-            writer.Invoke(netBuffer);
-
-            var rentedBuffer = new RentedBuffer(_bufferPool, netBuffer.Size);
+            var netBuffer = _netBufferPool.Obtain();
 
             try
             {
-                netBuffer.MoveTo(0).ReadBytes(rentedBuffer.Buffer, 0, rentedBuffer.Size);
+                writer.Invoke(netBuffer);
 
-                if (!_pendingMessageChannel.Writer.TryWrite(new PendingMessage(rentedBuffer, callback)))
+                var rentedBuffer = netBuffer.ToRentedBuffer();
+
+                try
                 {
-                    throw new Exception("Failed to write to the send channel");
+                    if (!_pendingMessageChannel.Writer.TryWrite(new PendingMessage(rentedBuffer, callback)))
+                    {
+                        throw new Exception("Failed to write to the send channel");
+                    }
+                }
+                catch (Exception)
+                {
+                    rentedBuffer.Unclaim();
+                    throw;
                 }
             }
-            catch (Exception)
+            finally
             {
-                rentedBuffer.Unclaim();
-                throw;
+                _netBufferPool.Recycle(netBuffer);
             }
         }
 
@@ -141,11 +143,6 @@ namespace LiveStreamingServerNet.Networking.Internal
                 else
                     tcs.SetException(new BufferSendingException());
             }
-        }
-
-        private INetBuffer ObtainNetBuffer()
-        {
-            return _netBufferPool.Obtain();
         }
 
         private async Task SendOutstandingBuffersAsync(INetworkStreamWriter networkStream, CancellationToken cancellationToken)

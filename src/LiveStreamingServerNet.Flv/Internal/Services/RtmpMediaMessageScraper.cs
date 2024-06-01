@@ -55,10 +55,17 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
             if (!subscribers.Any())
                 return;
 
-            var rentedBuffer = new RentedBuffer(_bufferPool, sequenceHeader.Length, subscribers.Count);
-            Array.Copy(sequenceHeader, rentedBuffer.Buffer, sequenceHeader.Length);
+            var rentedBuffer = new RentedBuffer(_bufferPool, sequenceHeader.Length);
 
-            await _mediaTagBroadcaster.BroadcastMediaTagAsync(streamContext, subscribers, mediaType, 0, false, rentedBuffer);
+            try
+            {
+                Array.Copy(sequenceHeader, rentedBuffer.Buffer, sequenceHeader.Length);
+                await _mediaTagBroadcaster.BroadcastMediaTagAsync(streamContext, subscribers, mediaType, 0, false, rentedBuffer);
+            }
+            finally
+            {
+                rentedBuffer.Unclaim();
+            }
         }
 
         public async ValueTask OnReceiveMediaMessage(string streamPath, MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp, bool isSkippable)

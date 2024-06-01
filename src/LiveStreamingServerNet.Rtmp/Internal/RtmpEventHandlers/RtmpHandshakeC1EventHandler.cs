@@ -22,23 +22,32 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
 
         public async ValueTask<RtmpEventConsumingResult> Handle(RtmpHandshakeC1Event @event, CancellationToken cancellationToken)
         {
-            using var incomingBuffer = _netBufferPool.Obtain();
-            await incomingBuffer.FromStreamData(@event.NetworkStream, HandshakeC1Size, cancellationToken);
+            var incomingBuffer = _netBufferPool.Obtain();
+            var outgoingBuffer = _netBufferPool.Obtain();
 
-            using var outgoingBuffer = _netBufferPool.Obtain();
-            if (HandleHandshake(@event, incomingBuffer, outgoingBuffer))
+            try
             {
-                @event.ClientContext.State = RtmpClientState.HandshakeC2;
-                @event.ClientContext.Client.Send(outgoingBuffer);
+                await incomingBuffer.FromStreamData(@event.NetworkStream, HandshakeC1Size, cancellationToken);
 
-                _logger.HandshakeC1Handled(@event.ClientContext.Client.ClientId);
+                if (HandleHandshake(@event, incomingBuffer, outgoingBuffer))
+                {
+                    @event.ClientContext.State = RtmpClientState.HandshakeC2;
+                    @event.ClientContext.Client.Send(outgoingBuffer);
 
-                return new RtmpEventConsumingResult(true, HandshakeC1Size);
+                    _logger.HandshakeC1Handled(@event.ClientContext.Client.ClientId);
+
+                    return new RtmpEventConsumingResult(true, HandshakeC1Size);
+                }
+
+                _logger.HandshakeC1HandlingFailed(@event.ClientContext.Client.ClientId);
+
+                return new RtmpEventConsumingResult(false, HandshakeC1Size);
             }
-
-            _logger.HandshakeC1HandlingFailed(@event.ClientContext.Client.ClientId);
-
-            return new RtmpEventConsumingResult(false, HandshakeC1Size);
+            finally
+            {
+                _netBufferPool.Recycle(incomingBuffer);
+                _netBufferPool.Recycle(outgoingBuffer);
+            }
         }
 
         private bool HandleHandshake(RtmpHandshakeC1Event @event, INetBuffer incomingBuffer, INetBuffer outgoingBuffer)

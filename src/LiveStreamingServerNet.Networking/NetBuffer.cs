@@ -1,6 +1,8 @@
 ﻿using LiveStreamingServerNet.Networking.Contracts;
+using LiveStreamingServerNet.Utilities;
 using LiveStreamingServerNet.Utilities.Contracts;
 using System.Buffers;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
 namespace LiveStreamingServerNet.Networking
@@ -147,6 +149,34 @@ namespace LiveStreamingServerNet.Networking
             var pos = _position;
             Advance(bytesCount);
             return streamReader.ReadExactlyAsync(_buffer, pos, bytesCount, cancellationToken);
+        }
+
+        public IRentedBuffer ToRentedBuffer(int offset, int size, int initialClaim = 1)
+        {
+            Debug.Assert(offset + size <= _size);
+
+            var originalPosition = _position;
+
+            try
+            {
+                var rentedBuffer = _bufferPool != null ?
+                    new RentedBuffer(_bufferPool, size, initialClaim) :
+                    new RentedBuffer(size, initialClaim);
+
+                _position = offset;
+                ReadBytes(rentedBuffer.Buffer, offset, size);
+
+                return rentedBuffer;
+            }
+            finally
+            {
+                _position = originalPosition;
+            }
+        }
+
+        public IRentedBuffer ToRentedBuffer(int initialClaim = 1)
+        {
+            return ToRentedBuffer(0, _size, initialClaim);
         }
 
         public virtual void Dispose()

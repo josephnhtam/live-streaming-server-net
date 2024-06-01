@@ -68,9 +68,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
                 await ClearGroupOfPicturesCacheAsync(publishStreamContext);
             }
 
-            var rentedBuffer = new RentedBuffer(_bufferPool, payloadBuffer.Size);
-            payloadBuffer.MoveTo(0).ReadBytes(rentedBuffer.Buffer, 0, rentedBuffer.Size);
-            payloadBuffer.MoveTo(0);
+            var rentedBuffer = payloadBuffer.ToRentedBuffer();
 
             await _interception.CachePictureAsync(publishStreamContext.StreamPath, mediaType, rentedBuffer, timestamp);
             publishStreamContext.GroupOfPicturesCache.Add(new PictureCache(mediaType, timestamp, rentedBuffer));

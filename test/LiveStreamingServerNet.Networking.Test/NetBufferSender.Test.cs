@@ -42,7 +42,7 @@ namespace LiveStreamingServerNet.Networking.Test
 
             _sut.Start(networkStream, _cancellationToken);
 
-            using var netBuffer = _netBufferPool.Obtain();
+            using var netBuffer = new NetBuffer();
             netBuffer.Write(expectedBuffer);
 
             // Act
@@ -119,7 +119,7 @@ namespace LiveStreamingServerNet.Networking.Test
 
             _sut.Start(networkStream, _cancellationToken);
 
-            using var netBuffer = _netBufferPool.Obtain();
+            using var netBuffer = new NetBuffer();
             netBuffer.Write(expectedBuffer);
 
             // Act
@@ -248,7 +248,6 @@ namespace LiveStreamingServerNet.Networking.Test
         public void Dispose()
         {
             _cts.Cancel();
-            _netBufferPool.Dispose();
         }
     }
 }

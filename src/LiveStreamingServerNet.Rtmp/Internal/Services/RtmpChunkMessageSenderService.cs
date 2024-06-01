@@ -54,20 +54,35 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
                 return;
             }
 
-            using var payloadBuffer = CreatePayloadBuffer(ref messageHeader, payloadWriter);
+            var payloadBuffer = CreatePayloadBuffer(ref messageHeader, payloadWriter);
 
-            foreach (var clientsGroup in clientContexts.GroupBy(x => x.OutChunkSize))
+            try
             {
-                var outChunkSize = clientsGroup.Key;
-                var clients = clientsGroup.Select(x => x.Client).ToList();
-
-                using var targetBuffer = _netBufferPool.Obtain();
-                _writer.Write(targetBuffer, basicHeader, messageHeader, payloadBuffer.MoveTo(0), outChunkSize);
-
-                foreach (var client in clients)
+                foreach (var clientsGroup in clientContexts.GroupBy(x => x.OutChunkSize))
                 {
-                    client.Send(targetBuffer);
+                    var outChunkSize = clientsGroup.Key;
+                    var clients = clientsGroup.Select(x => x.Client).ToList();
+
+                    var targetBuffer = _netBufferPool.Obtain();
+
+                    try
+                    {
+                        _writer.Write(targetBuffer, basicHeader, messageHeader, payloadBuffer.MoveTo(0), outChunkSize);
+
+                        foreach (var client in clients)
+                        {
+                            client.Send(targetBuffer);
+                        }
+                    }
+                    finally
+                    {
+                        _netBufferPool.Recycle(targetBuffer);
+                    }
                 }
+            }
+            finally
+            {
+                _netBufferPool.Recycle(payloadBuffer);
             }
         }
 

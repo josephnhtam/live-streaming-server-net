@@ -28,16 +28,24 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
         // todo: add validation
         public async ValueTask<RtmpEventConsumingResult> Handle(RtmpHandshakeC2Event @event, CancellationToken cancellationToken)
         {
-            using var incomingBuffer = _netBufferPool.Obtain();
-            await incomingBuffer.FromStreamData(@event.NetworkStream, HandshakeC2Size, cancellationToken);
+            var incomingBuffer = _netBufferPool.Obtain();
 
-            @event.ClientContext.State = RtmpClientState.HandshakeDone;
+            try
+            {
+                await incomingBuffer.FromStreamData(@event.NetworkStream, HandshakeC2Size, cancellationToken);
 
-            _logger.HandshakeC2Handled(@event.ClientContext.Client.ClientId);
+                @event.ClientContext.State = RtmpClientState.HandshakeDone;
 
-            await _eventDispatcher.RtmpClientHandshakeCompleteAsync(@event.ClientContext);
+                _logger.HandshakeC2Handled(@event.ClientContext.Client.ClientId);
 
-            return new RtmpEventConsumingResult(true, HandshakeC2Size);
+                await _eventDispatcher.RtmpClientHandshakeCompleteAsync(@event.ClientContext);
+
+                return new RtmpEventConsumingResult(true, HandshakeC2Size);
+            }
+            finally
+            {
+                _netBufferPool.Recycle(incomingBuffer);
+            }
         }
     }
 }

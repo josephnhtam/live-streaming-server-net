@@ -40,13 +40,10 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             if (!_interceptors.Any())
                 return;
 
-            var rentedBuffer = new RentedBuffer(_bufferPool, payloadBuffer.Size);
+            var rentedBuffer = payloadBuffer.ToRentedBuffer();
 
             try
             {
-                payloadBuffer.MoveTo(0).ReadBytes(rentedBuffer.Buffer, 0, rentedBuffer.Size);
-                payloadBuffer.MoveTo(0);
-
                 foreach (var interceptor in _interceptors)
                     await interceptor.OnReceiveMediaMessage(streamPath, mediaType, rentedBuffer, timestamp, isSkippable);
             }
