@@ -18,14 +18,5 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Services
         {
             return _transmuxerManager.OnReceiveMediaMessage(streamPath, mediaType, rentedBuffer, timestamp);
         }
-
-        public ValueTask OnCacheSequenceHeader(string streamPath, MediaType mediaType, byte[] sequenceHeader)
-            => ValueTask.CompletedTask;
-
-        public ValueTask OnCachePicture(string streamPath, MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp)
-            => ValueTask.CompletedTask;
-
-        public ValueTask OnClearGroupOfPicturesCache(string streamPath)
-            => ValueTask.CompletedTask;
     }
 }

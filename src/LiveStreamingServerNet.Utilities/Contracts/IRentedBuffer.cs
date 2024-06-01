@@ -8,5 +8,8 @@
 
         void Claim(int count = 1);
         void Unclaim(int count = 1);
+
+        ReadOnlySpan<byte> AsSpan();
+        IRentedBuffer Clone(int initialClaim = 1);
     }
 }

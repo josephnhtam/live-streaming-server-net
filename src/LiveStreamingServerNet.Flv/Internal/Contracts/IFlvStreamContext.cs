@@ -3,7 +3,7 @@ using LiveStreamingServerNet.Utilities.Contracts;
 
 namespace LiveStreamingServerNet.Flv.Internal.Contracts
 {
-    internal interface IFlvStreamContext
+    internal interface IFlvStreamContext : IDisposable
     {
         string StreamPath { get; }
         IReadOnlyDictionary<string, string> StreamArguments { get; }
@@ -14,20 +14,33 @@ namespace LiveStreamingServerNet.Flv.Internal.Contracts
         bool IsReady { get; }
     }
 
-    internal interface IGroupOfPicturesCache
+    internal interface IGroupOfPicturesCache : IDisposable
     {
-        void Add(PicturesCache cache);
-        void Clear(bool unclaim = true);
-        IList<PicturesCache> Get(bool claim = true);
+        long Size { get; }
+        void Add(PictureCacheInfo info, byte[] buffer, int start, int length);
+        void Clear();
+        IList<PictureCache> Get(int initialClaim = 1);
     }
 
-    internal readonly record struct PicturesCache
+    internal readonly record struct PictureCacheInfo
+    {
+        public MediaType Type { get; }
+        public uint Timestamp { get; }
+
+        public PictureCacheInfo(MediaType type, uint timestamp)
+        {
+            Type = type;
+            Timestamp = timestamp;
+        }
+    }
+
+    internal readonly record struct PictureCache
     {
         public MediaType Type { get; }
         public uint Timestamp { get; }
         public IRentedBuffer Payload { get; }
 
-        public PicturesCache(MediaType type, uint timestamp, IRentedBuffer payload)
+        public PictureCache(MediaType type, uint timestamp, IRentedBuffer payload)
         {
             Type = type;
             Timestamp = timestamp;

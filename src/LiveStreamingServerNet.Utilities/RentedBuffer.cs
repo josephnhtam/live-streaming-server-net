@@ -43,5 +43,17 @@ namespace LiveStreamingServerNet.Utilities
                     ArrayPool<byte>.Shared.Return(bytes);
             }
         }
+
+        public ReadOnlySpan<byte> AsSpan()
+        {
+            return _buffer.AsSpan(0, Size);
+        }
+
+        public IRentedBuffer Clone(int initialClaim = 1)
+        {
+            var clone = new RentedBuffer(_bufferPool, Size, initialClaim);
+            _buffer.AsSpan(0, Size).CopyTo(clone.Buffer);
+            return clone;
+        }
     }
 }

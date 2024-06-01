@@ -65,12 +65,24 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Contracts
         Task UntilInitializationComplete();
     }
 
-    internal interface IGroupOfPicturesCache
+    internal interface IGroupOfPicturesCache : IDisposable
     {
         long Size { get; }
-        void Add(PictureCache cache);
-        void Clear(bool unclaim = true);
-        IList<PictureCache> Get(bool claim = true);
+        void Add(PictureCacheInfo info, INetBuffer buffer);
+        void Clear();
+        IList<PictureCache> Get(int initialClaim = 1);
+    }
+
+    internal readonly record struct PictureCacheInfo
+    {
+        public MediaType Type { get; }
+        public uint Timestamp { get; }
+
+        public PictureCacheInfo(MediaType type, uint timestamp)
+        {
+            Type = type;
+            Timestamp = timestamp;
+        }
     }
 
     internal readonly record struct PictureCache

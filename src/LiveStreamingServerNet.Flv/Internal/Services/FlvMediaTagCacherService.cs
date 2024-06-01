@@ -31,8 +31,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
 
         public ValueTask CachePictureAsync(IFlvStreamContext streamContext, MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp)
         {
-            rentedBuffer.Claim();
-            streamContext.GroupOfPicturesCache.Add(new PicturesCache(mediaType, timestamp, rentedBuffer));
+            streamContext.GroupOfPicturesCache.Add(new PictureCacheInfo(mediaType, timestamp), rentedBuffer.Buffer, 0, rentedBuffer.Size);
             return ValueTask.CompletedTask;
         }
 

@@ -65,10 +65,8 @@ namespace LiveStreamingServerNet.Flv.Test.Services
             // Assert
             Received.InOrder(() =>
             {
-                rentedBuffer.Received(1).Claim(1);
-
-                _streamContext.Received(1).GroupOfPicturesCache.Add(Arg.Is<PicturesCache>(x =>
-                    x.Type == mediaType && x.Payload == rentedBuffer && x.Timestamp == timestamp));
+                _streamContext.Received(1).GroupOfPicturesCache.Add(Arg.Is<PictureCacheInfo>(x =>
+                    x.Type == mediaType && x.Timestamp == timestamp), rentedBuffer.Buffer, 0, rentedBuffer.Size);
             });
         }
 
@@ -86,11 +84,11 @@ namespace LiveStreamingServerNet.Flv.Test.Services
         public async Task SendCachedGroupOfPicturesTagsAsync_Should_SendMediaTagsForCachedPictures()
         {
             // Arrange
-            var pictures = new List<PicturesCache>()
+            var pictures = new List<PictureCache>()
             {
-                new PicturesCache(_fixture.Create<MediaType>(), 1, Substitute.For<IRentedBuffer>()),
-                new PicturesCache(_fixture.Create<MediaType>(), 2, Substitute.For<IRentedBuffer>()),
-                new PicturesCache(_fixture.Create<MediaType>(), 3, Substitute.For<IRentedBuffer>())
+                new PictureCache(_fixture.Create<MediaType>(), 1, Substitute.For<IRentedBuffer>()),
+                new PictureCache(_fixture.Create<MediaType>(), 2, Substitute.For<IRentedBuffer>()),
+                new PictureCache(_fixture.Create<MediaType>(), 3, Substitute.For<IRentedBuffer>())
             };
             _streamContext.GroupOfPicturesCache.Get().Returns(pictures);
 

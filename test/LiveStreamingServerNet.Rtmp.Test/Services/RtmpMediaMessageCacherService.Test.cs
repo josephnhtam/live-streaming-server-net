@@ -21,7 +21,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
     {
         private readonly IFixture _fixture;
         private readonly IRtmpChunkMessageSenderService _chunkMessageSender;
-        private readonly IRtmpMediaMessageInterceptionService _interception;
+        private readonly IRtmpMediaCachingInterceptionService _interception;
         private readonly MediaMessageConfiguration _config;
         private readonly ILogger<RtmpMediaMessageCacherService> _logger;
         private readonly IRtmpMediaMessageCacherService _sut;
@@ -30,7 +30,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
         {
             _fixture = new Fixture();
             _chunkMessageSender = Substitute.For<IRtmpChunkMessageSenderService>();
-            _interception = Substitute.For<IRtmpMediaMessageInterceptionService>();
+            _interception = Substitute.For<IRtmpMediaCachingInterceptionService>();
             _config = new MediaMessageConfiguration();
             _logger = Substitute.For<ILogger<RtmpMediaMessageCacherService>>();
 
@@ -98,9 +98,14 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
             payloadBuffer.Write(payload);
             payloadBuffer.MoveTo(0);
 
-            PictureCache? pictureCache = null;
-            publishStreamContext.GroupOfPicturesCache.When(x => x.Add(Arg.Any<PictureCache>()))
-                .Do(x => pictureCache = x.Arg<PictureCache>());
+            PictureCacheInfo? pictureCacheInfo = null;
+            byte[]? pictureCacheBuffer = null;
+            publishStreamContext.GroupOfPicturesCache.When(x => x.Add(Arg.Any<PictureCacheInfo>(), payloadBuffer))
+                .Do(x =>
+                {
+                    pictureCacheInfo = x.Arg<PictureCacheInfo>();
+                    pictureCacheBuffer = x.Arg<INetBuffer>().ReadBytes(x.Arg<INetBuffer>().Size);
+                });
 
             // Act
             await _sut.CachePictureAsync(publishStreamContext, mediaType, payloadBuffer, timestamp);
@@ -109,18 +114,18 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
             await _interception.Received(1).CachePictureAsync(
                 publishStreamContext.StreamPath,
                 mediaType,
-                Arg.Any<RentedBuffer>(),
+                Arg.Any<INetBuffer>(),
                 timestamp);
 
-            publishStreamContext.GroupOfPicturesCache.Received(1).Add(Arg.Any<PictureCache>());
+            publishStreamContext.GroupOfPicturesCache.Received(1).Add(Arg.Any<PictureCacheInfo>(), Arg.Any<INetBuffer>());
 
-            pictureCache.Should().NotBeNull();
+            pictureCacheInfo.Should().NotBeNull();
+            pictureCacheBuffer.Should().NotBeNull();
 
-            var cachedPayload = pictureCache!.Value.Payload;
-            cachedPayload.Buffer.Take(cachedPayload.Size).Should().BeEquivalentTo(payload);
+            pictureCacheBuffer!.Should().BeEquivalentTo(payload);
 
-            pictureCache!.Value.Type.Should().Be(mediaType);
-            pictureCache!.Value.Timestamp.Should().Be(timestamp);
+            pictureCacheInfo!.Value.Type.Should().Be(mediaType);
+            pictureCacheInfo!.Value.Timestamp.Should().Be(timestamp);
         }
 
         [Fact]
@@ -138,9 +143,14 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
             payloadBuffer.Write(payload);
             payloadBuffer.MoveTo(0);
 
-            PictureCache? pictureCache = null;
-            publishStreamContext.GroupOfPicturesCache.When(x => x.Add(Arg.Any<PictureCache>()))
-                .Do(x => pictureCache = x.Arg<PictureCache>());
+            PictureCacheInfo? pictureCacheInfo = null;
+            byte[]? pictureCacheBuffer = null;
+            publishStreamContext.GroupOfPicturesCache.When(x => x.Add(Arg.Any<PictureCacheInfo>(), Arg.Any<INetBuffer>()))
+                .Do(x =>
+                {
+                    pictureCacheInfo = x.Arg<PictureCacheInfo>();
+                    pictureCacheBuffer = x.Arg<INetBuffer>().ReadBytes(x.Arg<INetBuffer>().Size);
+                });
 
             // Act
             await _sut.CachePictureAsync(publishStreamContext, mediaType, payloadBuffer, timestamp);
@@ -149,17 +159,17 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
             publishStreamContext.GroupOfPicturesCache.Received(1).Clear();
 
             await _interception.Received(1).CachePictureAsync(
-                publishStreamContext.StreamPath, mediaType, Arg.Any<RentedBuffer>(), timestamp);
+                publishStreamContext.StreamPath, mediaType, Arg.Any<INetBuffer>(), timestamp);
 
-            publishStreamContext.GroupOfPicturesCache.Received(1).Add(Arg.Any<PictureCache>());
+            publishStreamContext.GroupOfPicturesCache.Received(1).Add(Arg.Any<PictureCacheInfo>(), Arg.Any<INetBuffer>());
 
-            pictureCache.Should().NotBeNull();
+            pictureCacheInfo.Should().NotBeNull();
+            pictureCacheBuffer.Should().NotBeNull();
 
-            var cachedPayload = pictureCache!.Value.Payload;
-            cachedPayload.Buffer.Take(cachedPayload.Size).Should().BeEquivalentTo(payload);
+            pictureCacheBuffer!.Should().BeEquivalentTo(payload);
 
-            pictureCache!.Value.Type.Should().Be(mediaType);
-            pictureCache!.Value.Timestamp.Should().Be(timestamp);
+            pictureCacheInfo!.Value.Type.Should().Be(mediaType);
+            pictureCacheInfo!.Value.Timestamp.Should().Be(timestamp);
         }
 
         [Fact]

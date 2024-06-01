@@ -1,6 +1,8 @@
 ﻿using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Handshakes;
+using LiveStreamingServerNet.Utilities;
+using LiveStreamingServerNet.Utilities.Contracts;
 
 namespace LiveStreamingServerNet.Rtmp.Internal
 {
@@ -35,16 +37,18 @@ namespace LiveStreamingServerNet.Rtmp.Internal
         private readonly object _videoTimestampSyncLock = new();
         private readonly object _audioTimestampSyncLock = new();
         private readonly Dictionary<uint, IRtmpChunkStreamContext> _chunkStreamContexts = new();
+        private readonly IBufferPool? _bufferPool;
 
-        public RtmpClientContext(IClientHandle client)
+        public RtmpClientContext(IClientHandle client, IBufferPool? bufferPool)
         {
             Client = client;
+            _bufferPool = bufferPool;
             State = RtmpClientState.HandshakeC0;
         }
 
         public IRtmpPublishStreamContext CreatePublishStreamContext(string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
-            var newContext = new RtmpPublishStreamContext(_streamId, streamPath, streamArguments);
+            var newContext = new RtmpPublishStreamContext(_streamId, streamPath, streamArguments, _bufferPool);
             PublishStreamContext = newContext;
             return newContext;
         }
@@ -132,61 +136,50 @@ namespace LiveStreamingServerNet.Rtmp.Internal
         public bool GroupOfPicturesCacheActivated { get; set; }
         public IGroupOfPicturesCache GroupOfPicturesCache { get; }
 
-        public RtmpPublishStreamContext(uint streamId, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
+        public RtmpPublishStreamContext(uint streamId, string streamPath, IReadOnlyDictionary<string, string> streamArguments, IBufferPool? bufferPool)
         {
             StreamId = streamId;
             StreamPath = streamPath;
             StreamArguments = new Dictionary<string, string>(streamArguments);
-            GroupOfPicturesCache = new GroupOfPicturesCache();
+            GroupOfPicturesCache = new GroupOfPicturesCache(bufferPool);
         }
 
         public ValueTask DisposeAsync()
         {
+            GroupOfPicturesCache.Dispose();
             return ValueTask.CompletedTask;
         }
     }
 
     internal class GroupOfPicturesCache : IGroupOfPicturesCache
     {
-        public long Size { get; private set; }
-        private readonly Queue<PictureCache> _groupOfPicturesCache = new();
+        private readonly IBufferCache<PictureCacheInfo> _cache;
+        public long Size => _cache.Size;
 
-        public void Add(PictureCache cache)
+        public GroupOfPicturesCache(IBufferPool? bufferPool)
         {
-            lock (_groupOfPicturesCache)
-            {
-                _groupOfPicturesCache.Enqueue(cache);
-                Size += cache.Payload.Size;
-            }
+            _cache = new BufferCache<PictureCacheInfo>(bufferPool, 4096);
         }
 
-        public void Clear(bool unclaim)
+        public void Add(PictureCacheInfo info, INetBuffer buffer)
         {
-            lock (_groupOfPicturesCache)
-            {
-                if (unclaim)
-                {
-                    foreach (var cache in _groupOfPicturesCache)
-                        cache.Payload.Unclaim();
-                }
-
-                _groupOfPicturesCache.Clear();
-                Size = 0;
-            }
+            _cache.Write(info, buffer.UnderlyingBuffer.AsSpan(0, buffer.Size));
         }
 
-        public IList<PictureCache> Get(bool claim)
+        public void Clear()
         {
-            lock (_groupOfPicturesCache)
-            {
-                if (claim)
-                {
-                    foreach (var cache in _groupOfPicturesCache)
-                        cache.Payload.Claim();
-                }
+            _cache.Reset();
+        }
 
-                return new List<PictureCache>(_groupOfPicturesCache);
-            }
+        public IList<PictureCache> Get(int initialClaim = 1)
+        {
+            var pictureCaches = _cache.GetBuffers(initialClaim);
+            return pictureCaches.Select(cache => new PictureCache(cache.Info.Type, cache.Info.Timestamp, cache.Buffer)).ToList();
+        }
+
+        public void Dispose()
+        {
+            _cache.Dispose();
         }
     }
 

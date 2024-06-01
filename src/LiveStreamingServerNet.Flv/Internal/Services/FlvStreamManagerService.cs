@@ -27,7 +27,10 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
                 var streamPath = streamContext.StreamPath;
 
                 if (_publishingStreamContexts.ContainsKey(streamPath))
+                {
+                    streamContext.Dispose();
                     return PublishingStreamResult.AlreadyExists;
+                }
 
                 _publishingStreamContexts.Add(streamPath, streamContext);
                 return PublishingStreamResult.Succeeded;
@@ -50,6 +53,8 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
 
                     foreach (var subscriber in existingSubscribers)
                         _subscribedStreamPaths.Remove(subscriber);
+
+                    streamContext.Dispose();
 
                     return true;
                 }

@@ -115,10 +115,10 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             bool isSkippable)
         {
             var basicHeader = new RtmpChunkBasicHeader(
-                    0,
-                    type == MediaType.Video ?
-                    RtmpConstants.VideoMessageChunkStreamId :
-                    RtmpConstants.AudioMessageChunkStreamId);
+                0,
+                type == MediaType.Video ?
+                RtmpConstants.VideoMessageChunkStreamId :
+                RtmpConstants.AudioMessageChunkStreamId);
 
             var messageHeader = new RtmpChunkMessageHeaderType0(
                 timestamp,

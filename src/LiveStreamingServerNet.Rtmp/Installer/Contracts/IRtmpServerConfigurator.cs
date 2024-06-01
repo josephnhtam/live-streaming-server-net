@@ -24,6 +24,10 @@ namespace LiveStreamingServerNet.Rtmp.Installer.Contracts
             where TMediaMessageInterceptor : class, IRtmpMediaMessageInterceptor;
         IRtmpServerConfigurator AddMediaMessageInterceptor(Func<IServiceProvider, IRtmpMediaMessageInterceptor> implementationFactory);
 
+        IRtmpServerConfigurator AddMediaCachingInterceptor<TMediaCachingInterceptor>()
+            where TMediaCachingInterceptor : class, IRtmpMediaCachingInterceptor;
+        IRtmpServerConfigurator AddMediaCachingInterceptor(Func<IServiceProvider, IRtmpMediaCachingInterceptor> implementationFactory);
+
         IRtmpServerConfigurator AddConnectionEventHandler<TConnectionEventHandler>()
             where TConnectionEventHandler : class, IRtmpServerConnectionEventHandler;
         IRtmpServerConfigurator AddConnectionEventHandler(Func<IServiceProvider, IRtmpServerConnectionEventHandler> implementationFactory);

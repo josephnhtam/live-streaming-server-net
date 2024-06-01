@@ -10,6 +10,7 @@ using LiveStreamingServerNet.Flv.Internal.WebSocketClients;
 using LiveStreamingServerNet.Flv.Internal.WebSocketClients.Contracts;
 using LiveStreamingServerNet.Flv.Middlewares;
 using LiveStreamingServerNet.Networking.Contracts;
+using LiveStreamingServerNet.Rtmp.Contracts;
 using LiveStreamingServerNet.Rtmp.Installer.Contracts;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,7 +24,8 @@ namespace LiveStreamingServerNet.Flv.Installer
             var services = configurator.Services;
 
             configurator.AddStreamEventHandler<RtmpServerStreamEventListener>()
-                        .AddMediaMessageInterceptor<RtmpMediaMessageScraper>();
+                        .AddMediaMessageInterceptor<RtmpMediaMessageScraper>()
+                        .AddMediaCachingInterceptor<RtmpMediaCacheScraper>();
 
             services.AddSingleton<IFlvWriterFactory, FlvWriterFactory>()
                     .AddSingleton<IFlvClientFactory, FlvClientFactory>()

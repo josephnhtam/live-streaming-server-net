@@ -7,15 +7,17 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
     internal class RtmpServerStreamEventListener : IRtmpServerStreamEventHandler
     {
         private readonly IFlvStreamManagerService _streamManager;
+        private readonly IBufferPool? _bufferPool;
 
-        public RtmpServerStreamEventListener(IFlvStreamManagerService streamManager)
+        public RtmpServerStreamEventListener(IFlvStreamManagerService streamManager, IBufferPool? bufferPool = null)
         {
             _streamManager = streamManager;
+            _bufferPool = bufferPool;
         }
 
         public ValueTask OnRtmpStreamPublishedAsync(IEventContext context, uint clientId, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
-            var streamContext = new FlvStreamContext(streamPath, streamArguments);
+            var streamContext = new FlvStreamContext(streamPath, streamArguments, _bufferPool);
             _streamManager.StartPublishingStream(streamContext);
             return ValueTask.CompletedTask;
         }

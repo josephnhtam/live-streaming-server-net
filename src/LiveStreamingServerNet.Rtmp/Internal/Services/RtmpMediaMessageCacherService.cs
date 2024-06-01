@@ -14,13 +14,13 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
     internal class RtmpMediaMessageCacherService : IRtmpMediaMessageCacherService
     {
         private readonly IRtmpChunkMessageSenderService _chunkMessageSender;
-        private readonly IRtmpMediaMessageInterceptionService _interception;
+        private readonly IRtmpMediaCachingInterceptionService _interception;
         private readonly MediaMessageConfiguration _config;
         private readonly ILogger _logger;
 
         public RtmpMediaMessageCacherService(
             IRtmpChunkMessageSenderService chunkMessageSender,
-            IRtmpMediaMessageInterceptionService interception,
+            IRtmpMediaCachingInterceptionService interception,
             IOptions<MediaMessageConfiguration> config,
             ILogger<RtmpMediaMessageCacherService> logger)
         {
@@ -63,10 +63,8 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
                 await ClearGroupOfPicturesCacheAsync(publishStreamContext);
             }
 
-            var rentedBuffer = payloadBuffer.ToRentedBuffer();
-
-            await _interception.CachePictureAsync(publishStreamContext.StreamPath, mediaType, rentedBuffer, timestamp);
-            publishStreamContext.GroupOfPicturesCache.Add(new PictureCache(mediaType, timestamp, rentedBuffer));
+            await _interception.CachePictureAsync(publishStreamContext.StreamPath, mediaType, payloadBuffer, timestamp);
+            publishStreamContext.GroupOfPicturesCache.Add(new PictureCacheInfo(mediaType, timestamp), payloadBuffer);
         }
 
         public async ValueTask ClearGroupOfPicturesCacheAsync(IRtmpPublishStreamContext publishStreamContext)

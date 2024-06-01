@@ -1,4 +1,6 @@
 ﻿using LiveStreamingServerNet.Flv.Internal.Contracts;
+using LiveStreamingServerNet.Utilities;
+using LiveStreamingServerNet.Utilities.Contracts;
 
 namespace LiveStreamingServerNet.Flv.Internal
 {
@@ -12,52 +14,48 @@ namespace LiveStreamingServerNet.Flv.Internal
         public IGroupOfPicturesCache GroupOfPicturesCache { get; }
         public bool IsReady => VideoSequenceHeader != null || AudioSequenceHeader != null;
 
-        public FlvStreamContext(string streamPath, IReadOnlyDictionary<string, string> streamArguments)
+        public FlvStreamContext(string streamPath, IReadOnlyDictionary<string, string> streamArguments, IBufferPool? bufferPool)
         {
             StreamPath = streamPath;
             StreamArguments = new Dictionary<string, string>(streamArguments);
-            GroupOfPicturesCache = new GroupOfPicturesCache();
+            GroupOfPicturesCache = new GroupOfPicturesCache(bufferPool);
+        }
+
+        public void Dispose()
+        {
+            GroupOfPicturesCache.Dispose();
         }
     }
 
     internal class GroupOfPicturesCache : IGroupOfPicturesCache
     {
-        private readonly Queue<PicturesCache> _groupOfPicturesCache = new();
+        private readonly IBufferCache<PictureCacheInfo> _cache;
+        public long Size => _cache.Size;
 
-        public void Add(PicturesCache cache)
+        public GroupOfPicturesCache(IBufferPool? bufferPool)
         {
-            lock (_groupOfPicturesCache)
-            {
-                _groupOfPicturesCache.Enqueue(cache);
-            }
+            _cache = new BufferCache<PictureCacheInfo>(bufferPool, 4096);
         }
 
-        public void Clear(bool unclaim)
+        public void Add(PictureCacheInfo info, byte[] buffer, int start, int length)
         {
-            lock (_groupOfPicturesCache)
-            {
-                if (unclaim)
-                {
-                    foreach (var cache in _groupOfPicturesCache)
-                        cache.Payload.Unclaim();
-                }
-
-                _groupOfPicturesCache.Clear();
-            }
+            _cache.Write(info, buffer.AsSpan(start, length));
         }
 
-        public IList<PicturesCache> Get(bool claim)
+        public void Clear()
         {
-            lock (_groupOfPicturesCache)
-            {
-                if (claim)
-                {
-                    foreach (var cache in _groupOfPicturesCache)
-                        cache.Payload.Claim();
-                }
+            _cache.Reset();
+        }
 
-                return new List<PicturesCache>(_groupOfPicturesCache);
-            }
+        public IList<PictureCache> Get(int initialClaim = 1)
+        {
+            var pictureCaches = _cache.GetBuffers(initialClaim);
+            return pictureCaches.Select(cache => new PictureCache(cache.Info.Type, cache.Info.Timestamp, cache.Buffer)).ToList();
+        }
+
+        public void Dispose()
+        {
+            _cache.Dispose();
         }
     }
 }

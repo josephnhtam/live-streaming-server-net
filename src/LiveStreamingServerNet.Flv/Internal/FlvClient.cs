@@ -22,7 +22,7 @@ namespace LiveStreamingServerNet.Flv.Internal
         private readonly Task _initializationTask;
         private readonly Task _completeTask;
 
-        private bool _isDiposed;
+        private bool _isDisposed;
 
         public FlvClient(
             string clientId,
@@ -78,10 +78,10 @@ namespace LiveStreamingServerNet.Flv.Internal
 
         public async ValueTask DisposeAsync()
         {
-            if (_isDiposed)
+            if (_isDisposed)
                 return;
 
-            _isDiposed = true;
+            _isDisposed = true;
 
             _mediaTagBroadcaster.UnregisterClient(this);
             _stoppingCts.Cancel();

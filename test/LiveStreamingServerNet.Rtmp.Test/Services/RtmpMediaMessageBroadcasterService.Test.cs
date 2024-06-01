@@ -56,7 +56,12 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
             clientContext.Client.Returns(client);
             clientContext.StreamSubscriptionContext.Returns(streamContext);
 
-            var publishStreamContext = _fixture.Create<RtmpPublishStreamContext>();
+            var publishStreamContext = new RtmpPublishStreamContext(
+                _fixture.Create<uint>(),
+                _fixture.Create<string>(),
+                _fixture.Create<Dictionary<string, string>>(),
+                null);
+
             var subscribers = new List<IRtmpClientContext> { clientContext };
             var mediaType = _fixture.Create<MediaType>();
             var timestamp = _fixture.Create<uint>();

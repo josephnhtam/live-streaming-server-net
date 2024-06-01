@@ -72,6 +72,19 @@ namespace LiveStreamingServerNet.Rtmp.Installer
             return this;
         }
 
+        public IRtmpServerConfigurator AddMediaCachingInterceptor<TMediaCachingInterceptor>()
+            where TMediaCachingInterceptor : class, IRtmpMediaCachingInterceptor
+        {
+            Services.AddSingleton<IRtmpMediaCachingInterceptor, TMediaCachingInterceptor>();
+            return this;
+        }
+
+        public IRtmpServerConfigurator AddMediaCachingInterceptor(Func<IServiceProvider, IRtmpMediaCachingInterceptor> implementationFactory)
+        {
+            Services.AddSingleton(implementationFactory);
+            return this;
+        }
+
         public IRtmpServerConfigurator AddConnectionEventHandler<TConnectionEventHandler>()
             where TConnectionEventHandler : class, IRtmpServerConnectionEventHandler
         {
