@@ -49,11 +49,18 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
                 return false;
             }
 
-            var audioCodec = ParseAudioMessageProperties(payloadBuffer);
+            var (audioCodec, aacPacketType) = ParseAudioMessageProperties(payloadBuffer);
+
             if (!IsAudioCodecAllowed(clientContext, publishStreamContext, audioCodec)) return false;
 
-            var hasHeader = await HandleAudioSequenceHeaderAsync(chunkStreamContext, publishStreamContext, audioCodec, payloadBuffer);
-            await BroadcastAudioMessageToSubscribersAsync(chunkStreamContext, clientContext, publishStreamContext, payloadBuffer.MoveTo(0), hasHeader);
+            await HandleAudioPacketCachingAsync(chunkStreamContext, publishStreamContext, aacPacketType, payloadBuffer);
+
+            await BroadcastAudioMessageToSubscribersAsync(
+                chunkStreamContext,
+                clientContext,
+                publishStreamContext,
+                payloadBuffer.MoveTo(0),
+                IsSkippable(aacPacketType));
 
             return true;
         }
@@ -63,10 +70,10 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
             IRtmpClientContext clientContext,
             IRtmpPublishStreamContext publishStreamContext,
             INetBuffer payloadBuffer,
-            bool hasSequenceHeader)
+            bool isSkippable)
         {
             var subscribers = _streamManager.GetSubscribers(publishStreamContext.StreamPath);
-            await BroadcastAudioMessageToSubscribersAsync(chunkStreamContext, clientContext, publishStreamContext, !hasSequenceHeader, payloadBuffer, subscribers);
+            await BroadcastAudioMessageToSubscribersAsync(chunkStreamContext, clientContext, publishStreamContext, isSkippable, payloadBuffer, subscribers);
         }
 
         private async ValueTask BroadcastAudioMessageToSubscribersAsync(
@@ -100,38 +107,43 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
             return true;
         }
 
-        private AudioCodec ParseAudioMessageProperties(INetBuffer payloadBuffer)
+        private (AudioCodec, AACPacketType?) ParseAudioMessageProperties(INetBuffer payloadBuffer)
         {
             var firstByte = payloadBuffer.ReadByte();
             var audioCodec = (AudioCodec)(firstByte >> 4);
 
-            if (_audioCodecFilter != null && !_audioCodecFilter.IsAllowed(audioCodec))
-                return audioCodec;
-
-            return audioCodec;
-        }
-
-        private async ValueTask<bool> HandleAudioSequenceHeaderAsync(
-            IRtmpChunkStreamContext chunkStreamContext,
-            IRtmpPublishStreamContext publishStreamContext,
-            AudioCodec audioCodec,
-            INetBuffer payloadBuffer)
-        {
             if (audioCodec is AudioCodec.AAC or AudioCodec.Opus)
             {
                 var aacPackageType = (AACPacketType)payloadBuffer.ReadByte();
-                if (aacPackageType == AACPacketType.SequenceHeader)
-                {
-                    await _mediaMessageCacher.CacheSequenceHeaderAsync(publishStreamContext, MediaType.Audio, payloadBuffer);
-                    return true;
-                }
-                else if (publishStreamContext.GroupOfPicturesCacheActivated)
-                {
-                    await _mediaMessageCacher.CachePictureAsync(publishStreamContext, MediaType.Audio, payloadBuffer, chunkStreamContext.MessageHeader.Timestamp);
-                }
+                return (audioCodec, aacPackageType);
             }
 
-            return false;
+            return (audioCodec, null);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private bool IsSkippable(AACPacketType? aacPacketType)
+        {
+            return aacPacketType != AACPacketType.SequenceHeader;
+        }
+
+        private async ValueTask HandleAudioPacketCachingAsync(
+            IRtmpChunkStreamContext chunkStreamContext,
+            IRtmpPublishStreamContext publishStreamContext,
+            AACPacketType? aacPacketType,
+            INetBuffer payloadBuffer)
+        {
+            if (!aacPacketType.HasValue)
+                return;
+
+            if (aacPacketType == AACPacketType.SequenceHeader)
+            {
+                await _mediaMessageCacher.CacheSequenceHeaderAsync(publishStreamContext, MediaType.Audio, payloadBuffer);
+            }
+            else if (publishStreamContext.GroupOfPicturesCacheActivated)
+            {
+                await _mediaMessageCacher.CachePictureAsync(publishStreamContext, MediaType.Audio, payloadBuffer, chunkStreamContext.MessageHeader.Timestamp);
+            }
         }
     }
 }

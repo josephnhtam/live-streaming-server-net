@@ -54,11 +54,18 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
                 return false;
             }
 
-            var (frameType, videoCodec) = ParseVideoMessageProperties(payloadBuffer);
+            var (frameType, videoCodec, avcPacketType) = ParseVideoMessageProperties(payloadBuffer);
+
             if (!IsVideoCodecAllowed(clientContext, publishStreamContext, videoCodec)) return false;
 
-            var hasHeader = await HandleVideoSequenceHeaderAsync(chunkStreamContext, publishStreamContext, frameType, videoCodec, payloadBuffer);
-            await BroadcastVideoMessageToSubscribersAsync(chunkStreamContext, clientContext, publishStreamContext, payloadBuffer.MoveTo(0), hasHeader);
+            await HandleVideoPacketCachingAsync(chunkStreamContext, publishStreamContext, frameType, avcPacketType, payloadBuffer);
+
+            await BroadcastVideoMessageToSubscribersAsync(
+                chunkStreamContext,
+                clientContext,
+                publishStreamContext,
+                payloadBuffer.MoveTo(0),
+                IsSkippable(avcPacketType));
 
             return true;
         }
@@ -68,10 +75,10 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
             IRtmpClientContext clientContext,
             IRtmpPublishStreamContext publishStreamContext,
             INetBuffer payloadBuffer,
-            bool hasSequenceHeader)
+            bool isSkippable)
         {
             var subscribers = _streamManager.GetSubscribers(publishStreamContext.StreamPath);
-            await BroadcastVideoMessageToSubscribersAsync(chunkStreamContext, clientContext, publishStreamContext, !hasSequenceHeader, payloadBuffer, subscribers);
+            await BroadcastVideoMessageToSubscribersAsync(chunkStreamContext, clientContext, publishStreamContext, isSkippable, payloadBuffer, subscribers);
         }
 
         private async ValueTask BroadcastVideoMessageToSubscribersAsync(
@@ -105,39 +112,48 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
             return true;
         }
 
-        private (VideoFrameType, VideoCodec) ParseVideoMessageProperties(INetBuffer payloadBuffer)
+        private (VideoFrameType, VideoCodec, AVCPacketType?) ParseVideoMessageProperties(INetBuffer payloadBuffer)
         {
             var firstByte = payloadBuffer.ReadByte();
             var frameType = (VideoFrameType)(firstByte >> 4);
             var videoCodec = (VideoCodec)(firstByte & 0x0f);
 
-            return (frameType, videoCodec);
+            if (videoCodec is VideoCodec.AVC or VideoCodec.HVC or VideoCodec.Opus)
+            {
+                var avcPackageType = (AVCPacketType)payloadBuffer.ReadByte();
+                return (frameType, videoCodec, avcPackageType);
+            }
+
+            return (frameType, videoCodec, null);
         }
 
-        private async ValueTask<bool> HandleVideoSequenceHeaderAsync(
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private bool IsSkippable(AVCPacketType? avcPacketType)
+        {
+            return avcPacketType != AVCPacketType.SequenceHeader || avcPacketType != AVCPacketType.EndOfSequence;
+        }
+
+        private async ValueTask HandleVideoPacketCachingAsync(
             IRtmpChunkStreamContext chunkStreamContext,
             IRtmpPublishStreamContext publishStreamContext,
             VideoFrameType frameType,
-            VideoCodec videoCodec,
+            AVCPacketType? avcPacketType,
             INetBuffer payloadBuffer)
         {
-            if (videoCodec is VideoCodec.AVC or VideoCodec.HVC or VideoCodec.Opus)
+            if (avcPacketType.HasValue)
             {
                 publishStreamContext.GroupOfPicturesCacheActivated = _config.EnableGopCaching;
-                var avcPackageType = (AVCPacketType)payloadBuffer.ReadByte();
 
                 if (publishStreamContext.GroupOfPicturesCacheActivated && frameType == VideoFrameType.KeyFrame)
                 {
                     await _mediaMessageCacher.ClearGroupOfPicturesCacheAsync(publishStreamContext);
                 }
 
-                if (frameType == VideoFrameType.KeyFrame && avcPackageType == AVCPacketType.SequenceHeader)
+                if (frameType == VideoFrameType.KeyFrame && avcPacketType == AVCPacketType.SequenceHeader)
                 {
                     await _mediaMessageCacher.CacheSequenceHeaderAsync(publishStreamContext, MediaType.Video, payloadBuffer);
-                    return true;
                 }
-
-                if (publishStreamContext.GroupOfPicturesCacheActivated && avcPackageType == AVCPacketType.NALU)
+                else if (publishStreamContext.GroupOfPicturesCacheActivated && avcPacketType == AVCPacketType.NALU)
                 {
                     await _mediaMessageCacher.CachePictureAsync(publishStreamContext, MediaType.Video, payloadBuffer, chunkStreamContext.MessageHeader.Timestamp);
                 }
@@ -147,8 +163,6 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
                 publishStreamContext.GroupOfPicturesCacheActivated = false;
                 await _mediaMessageCacher.ClearGroupOfPicturesCacheAsync(publishStreamContext);
             }
-
-            return false;
         }
     }
 }
