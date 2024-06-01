@@ -20,6 +20,7 @@ namespace LiveStreamingServerNet.Utilities
             if (initialClaim <= 0)
                 throw new ArgumentOutOfRangeException(nameof(initialClaim));
 
+            _bufferPool = bufferPool;
             _buffer = _bufferPool?.Rent(size) ?? ArrayPool<byte>.Shared.Rent(size);
             _claimed = initialClaim;
             Size = size;
