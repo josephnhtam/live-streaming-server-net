@@ -39,7 +39,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
                 var result = await HandleChunkEvent(@event, netBuffer, cancellationToken);
                 if (result.Succeeded)
                 {
-                    HandleAcknowlegement(@event, netBuffer.Size);
+                    HandleAcknowledgement(@event, netBuffer.Size);
                     return result;
                 }
 
@@ -73,7 +73,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
             return new RtmpEventConsumingResult(success, (int)@event.ClientContext.InChunkSize);
         }
 
-        private void HandleAcknowlegement(RtmpChunkEvent @event, int bufferSize)
+        private void HandleAcknowledgement(RtmpChunkEvent @event, int bufferSize)
         {
             var clientContext = @event.ClientContext;
 
