@@ -9,6 +9,7 @@
             string TsFileOutputPath,
             int SegmentListSize,
             bool DeleteOutdatedSegments,
+            int MaxSegmentSize,
             int MaxSegmentBufferSize,
             int AudioOnlySegmentDuration
         );

@@ -46,8 +46,11 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Logging
         [LoggerMessage(LogLevel.Error, "An error occurred while processing HLS transmuxing | Transmuxer: {Transmuxer} | Identifier: {Identifier} | OutputPath: {OutputPath} | StreamPath: {StreamPath}")]
         public static partial void ProcessingHlsTransmuxingError(this ILogger logger, string transmuxer, Guid identifier, string outputPath, string streamPath, Exception ex);
 
-        [LoggerMessage(LogLevel.Trace, "A ts segment is created | Transmuxer: {Transmuxer} | Identifier: {Identifier} | StreamPath: {StreamPath} | Path: {Path} | SequenceNumber: {SequenceNumber} | Duration: {Duration}")]
-        public static partial void TsSegmentCreated(this ILogger logger, string transmuxer, Guid identifier, string streamPath, string path, uint sequenceNumber, int duration);
+        [LoggerMessage(LogLevel.Trace, "Ts segment is flushed partially | Transmuxer: {Transmuxer} | Identifier: {Identifier} | StreamPath: {StreamPath} | Path: {Path} | SequenceNumber: {SequenceNumber}")]
+        public static partial void TsSegmentFlushedPartially(this ILogger logger, string transmuxer, Guid identifier, string streamPath, string path, uint sequenceNumber);
+
+        [LoggerMessage(LogLevel.Trace, "Ts segment is flushed | Transmuxer: {Transmuxer} | Identifier: {Identifier} | StreamPath: {StreamPath} | Path: {Path} | SequenceNumber: {SequenceNumber} | Duration: {Duration}")]
+        public static partial void TsSegmentFlushed(this ILogger logger, string transmuxer, Guid identifier, string streamPath, string path, uint sequenceNumber, int duration);
 
         [LoggerMessage(LogLevel.Trace, "An outdated ts segment is deleted | Transmuxer: {Transmuxer} | Identifier: {Identifier} | StreamPath: {StreamPath} | Path: {Path}")]
         public static partial void OutdatedTsSegmentDeleted(this ILogger logger, string transmuxer, Guid identifier, string streamPath, string path);

@@ -9,7 +9,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.M3u8.Marshal
         public async Task WriteAsync(string manifestOutputPath, IEnumerable<TsSegment> segments, CancellationToken cancellationToken)
         {
             var dirPath = Path.GetDirectoryName(manifestOutputPath) ?? string.Empty;
-            var tempManifestOutputPath = Path.Combine(dirPath, $"tmp_{Path.GetFileName(manifestOutputPath)}");
+            var tempManifestOutputPath = Path.Combine(dirPath, $"{Path.GetFileName(manifestOutputPath)}.tmp");
 
             var sb = new StringBuilder();
 

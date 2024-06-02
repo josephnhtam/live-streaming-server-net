@@ -26,9 +26,12 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Containers
         private byte[]? _patBuffer;
 
         private uint? _segmentTimestamp;
+        private int _payloadSize;
+        private int _flushedCount;
 
         public uint SequenceNumber => _sequenceNumber;
         public int BufferSize => _payloadBuffer.Size;
+        public int PayloadSize => _payloadSize;
         public uint? SegmentTimestamp => _segmentTimestamp;
 
         public TsMuxer(string outputPath, IBufferPool? bufferPool = null)
@@ -132,6 +135,8 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Containers
             var rawNALUs = GetRawNALUs(dataBuffer, isKeyFrame);
             var nalus = ConvertToAnnexB(rawNALUs);
 
+            var bufferPos = _payloadBuffer.Position;
+
             WritePESPacket(
                 _payloadBuffer,
                 new BytesSegments(nalus),
@@ -143,6 +148,8 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Containers
                 presentationTimestamp,
                 ref _videoContinuityCounter
             );
+
+            _payloadSize += _payloadBuffer.Position - bufferPos;
 
             return true;
         }
@@ -194,6 +201,8 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Containers
 
             var dataBuffer = new BytesSegments(new List<ArraySegment<byte>> { _adtsBuffer, buffer });
 
+            var bufferPos = _payloadBuffer.Position;
+
             WritePESPacket(
                 _payloadBuffer,
                 dataBuffer,
@@ -205,6 +214,8 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Containers
                 presentationTimestamp,
                 ref _audioContinuityCounter
             );
+
+            _payloadSize += _payloadBuffer.Position - bufferPos;
 
             return true;
         }
@@ -267,19 +278,37 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Containers
             WritePMTPacket(tsBuffer);
         }
 
+        public async ValueTask<TsSegmentPartial?> FlushPartialAsync()
+        {
+            if (_payloadBuffer.Size == 0)
+                return null;
+
+            var path = GetOutputPath();
+            await FlushAsyncCore(path);
+
+            return new TsSegmentPartial(path, SequenceNumber);
+        }
+
         public async ValueTask<TsSegment?> FlushAsync(uint timestamp)
         {
-            if (_payloadBuffer.Size > 0)
-            {
-                var path = GetOutputPath();
+            if (_payloadBuffer.Size == 0 && _flushedCount == 0)
+                return null;
 
+            var path = GetOutputPath();
+            await FlushAsyncCore(path);
+
+            return CompleteFlushing(timestamp, path);
+        }
+
+        private async Task FlushAsyncCore(string path)
+        {
+            if (_payloadBuffer.Size == 0)
+                return;
+
+            if (_flushedCount == 0)
                 WriteHeaderPackets(_headerBuffer);
 
-                await FlushBuffersAsync(path);
-                return CompleteFlushing(timestamp, path);
-            }
-
-            return null;
+            await FlushBuffersAsync(path);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -290,10 +319,18 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Containers
 
         private async ValueTask FlushBuffersAsync(string path)
         {
-            using var fileStream = new FileStream(path, FileMode.OpenOrCreate);
+            using var fileStream = new FileStream(path, _flushedCount == 0 ? FileMode.Create : FileMode.Append);
 
-            await fileStream.WriteAsync(_headerBuffer.UnderlyingBuffer.AsMemory(0, _headerBuffer.Size));
+            if (_flushedCount == 0)
+            {
+                await fileStream.WriteAsync(_headerBuffer.UnderlyingBuffer.AsMemory(0, _headerBuffer.Size));
+                _headerBuffer.Reset();
+            }
+
             await fileStream.WriteAsync(_payloadBuffer.UnderlyingBuffer.AsMemory(0, _payloadBuffer.Size));
+            _payloadBuffer.Reset();
+
+            _flushedCount++;
         }
 
         private TsSegment CompleteFlushing(uint timestamp, string path)
@@ -303,11 +340,11 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Containers
             var duration = (int)(timestamp - _segmentTimestamp);
             var segment = new TsSegment(path, _sequenceNumber, duration);
 
-            _headerBuffer.Reset();
-            _payloadBuffer.Reset();
-
             _sequenceNumber++;
             _segmentTimestamp = null;
+
+            _flushedCount = 0;
+            _payloadSize = 0;
 
             return segment;
         }

@@ -47,6 +47,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls
                     outputPaths.TsFileOutputPath,
                     _config.SegmentListSize,
                     _config.DeleteOutdatedSegments,
+                    _config.MaxSegmentSize,
                     _config.MaxSegmentBufferSize,
                     _config.AudioOnlySegmentDuration
                 );

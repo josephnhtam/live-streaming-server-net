@@ -87,8 +87,11 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls
                     break;
             }
 
+            if (_tsMuxer.PayloadSize > _config.MaxSegmentSize)
+                throw new ArgumentOutOfRangeException("Segment size exceeded the maximum allowed size");
+
             if (_tsMuxer.BufferSize > _config.MaxSegmentBufferSize)
-                throw new OutOfMemoryException("Segment buffer size exceeded the maximum allowed size");
+                await FlushTsMuxerPartially();
         }
 
         private async ValueTask ProcessVideoPacket(IRentedBuffer rentedBuffer, uint timestamp)
@@ -140,13 +143,13 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls
 
         private async ValueTask TryToFlushAsync(bool isKeyFrame, uint timestamp)
         {
-            if (!ShouldFlush(isKeyFrame, timestamp))
-                return;
+            if (ShouldFlush(isKeyFrame, timestamp))
+            {
+                _hasVideo = _hasAudio = false;
 
-            _hasVideo = _hasAudio = false;
-
-            var tsSegment = await FlushTsMuxer(timestamp);
-            if (tsSegment != null) await RefreshHlsAsync(tsSegment.Value);
+                var tsSegment = await FlushTsMuxer(timestamp);
+                if (tsSegment != null) await RefreshHlsAsync(tsSegment.Value);
+            }
 
             bool ShouldFlush(bool isKeyFrame, uint timestamp)
             {
@@ -165,12 +168,20 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls
             }
         }
 
+        private async ValueTask FlushTsMuxerPartially()
+        {
+            var tsSegmentPartial = await _tsMuxer.FlushPartialAsync();
+
+            if (tsSegmentPartial.HasValue)
+                _logger.TsSegmentFlushedPartially(Name, ContextIdentifier, _streamPath, tsSegmentPartial.Value.FilePath, tsSegmentPartial.Value.SequenceNumber);
+        }
+
         private async ValueTask<TsSegment?> FlushTsMuxer(uint timestamp)
         {
             var tsSegment = await _tsMuxer.FlushAsync(timestamp);
 
             if (tsSegment.HasValue)
-                _logger.TsSegmentCreated(Name, ContextIdentifier, _streamPath, tsSegment.Value.FilePath, tsSegment.Value.SequenceNumber, tsSegment.Value.Duration);
+                _logger.TsSegmentFlushed(Name, ContextIdentifier, _streamPath, tsSegment.Value.FilePath, tsSegment.Value.SequenceNumber, tsSegment.Value.Duration);
 
             return tsSegment;
         }

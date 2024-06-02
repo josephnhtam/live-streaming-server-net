@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 
 namespace LiveStreamingServerNet.StreamProcessor.Internal.Containers
 {
+    internal record struct TsSegmentPartial(string FilePath, uint SequenceNumber);
     internal record struct TsSegment(string FilePath, uint SequenceNumber, int Duration);
 
     internal partial class TsMuxer
