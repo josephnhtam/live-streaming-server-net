@@ -4,6 +4,7 @@ using LiveStreamingServerNet.StreamProcessor.Internal.Containers.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Utilities;
 using LiveStreamingServerNet.Utilities.Contracts;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 
 namespace LiveStreamingServerNet.StreamProcessor.Internal.Containers
 {
@@ -270,28 +271,45 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Containers
         {
             if (_payloadBuffer.Size > 0)
             {
-                Debug.Assert(_segmentTimestamp.HasValue);
-                var duration = (int)(timestamp - _segmentTimestamp);
+                var path = GetOutputPath();
 
                 WriteHeaderPackets(_headerBuffer);
 
-                var path = _outputPath.Replace("{seqNum}", _sequenceNumber.ToString());
-                using var fileStream = new FileStream(path, FileMode.OpenOrCreate);
-                await fileStream.WriteAsync(_headerBuffer.UnderlyingBuffer.AsMemory(0, _headerBuffer.Size));
-                await fileStream.WriteAsync(_payloadBuffer.UnderlyingBuffer.AsMemory(0, _payloadBuffer.Size));
-
-                var segment = new TsSegment(path, _sequenceNumber, duration);
-
-                _headerBuffer.Reset();
-                _payloadBuffer.Reset();
-
-                _sequenceNumber++;
-                _segmentTimestamp = null;
-
-                return segment;
+                await FlushBuffersAsync(path);
+                return CompleteFlushing(timestamp, path);
             }
 
             return null;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private string GetOutputPath()
+        {
+            return _outputPath.Replace("{seqNum}", _sequenceNumber.ToString());
+        }
+
+        private async ValueTask FlushBuffersAsync(string path)
+        {
+            using var fileStream = new FileStream(path, FileMode.OpenOrCreate);
+
+            await fileStream.WriteAsync(_headerBuffer.UnderlyingBuffer.AsMemory(0, _headerBuffer.Size));
+            await fileStream.WriteAsync(_payloadBuffer.UnderlyingBuffer.AsMemory(0, _payloadBuffer.Size));
+        }
+
+        private TsSegment CompleteFlushing(uint timestamp, string path)
+        {
+            Debug.Assert(_segmentTimestamp.HasValue);
+
+            var duration = (int)(timestamp - _segmentTimestamp);
+            var segment = new TsSegment(path, _sequenceNumber, duration);
+
+            _headerBuffer.Reset();
+            _payloadBuffer.Reset();
+
+            _sequenceNumber++;
+            _segmentTimestamp = null;
+
+            return segment;
         }
 
         public void Dispose()
