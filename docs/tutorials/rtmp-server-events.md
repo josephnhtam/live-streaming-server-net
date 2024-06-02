@@ -6,7 +6,7 @@ There are multiple event handlers available, including `IRtmpServerConnectionEve
 
 Below are the interfaces for these event handlers:
 
-```cs
+```cs linenums="1"
 public interface IRtmpServerConnectionEventHandler
 {
     int GetOrder() => 0;
@@ -40,7 +40,7 @@ For instance, if you want to limit the publishing time of every stream to a maxi
 
 ### Implement IRtmpServerStreamEventHandler
 
-```cs
+```cs linenums="1"
 public class PublishingTimeLimiterConfig
 {
     public int PublishingTimeLimitSeconds { get; set; }
@@ -105,7 +105,7 @@ The PublishingTimeLimiter, which implements `IRtmpServerStreamEventHandler`, wil
 
 ### Register the Event Handler
 
-```cs
+```cs linenums="1"
 using var liveStreamingServer = LiveStreamingServerBuilder.Create()
     .ConfigureRtmpServer(options =>
     {

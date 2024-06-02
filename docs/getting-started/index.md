@@ -36,7 +36,7 @@ These commands will install the LiveStreamingServerNet package, which is the cor
 
 Edit `Program.cs` file to set up LiveStreamingServerNet:
 
-```
+```cs linenums="1"
 using LiveStreamingServerNet;
 using Microsoft.Extensions.Logging;
 using System.Net;

@@ -11,7 +11,7 @@ dotnet add package LiveStreamingServerNet.StreamProcessor
 
 ### Configure Your Live Streaming Server
 
-```cs
+```cs linenums="1"
 using LiveStreamingServerNet;
 using LiveStreamingServerNet.Networking;
 using LiveStreamingServerNet.StreamProcessor.Installer;

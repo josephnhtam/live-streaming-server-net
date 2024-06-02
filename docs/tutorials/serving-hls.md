@@ -22,7 +22,7 @@ In this guide, we will use an ASP.NET Core Web app as the foundation to facilita
 
 Edit `Program.cs` file:
 
-```cs
+```cs linenums="1"
 using LiveStreamingServerNet;
 using LiveStreamingServerNet.Networking.Helpers;
 using LiveStreamingServerNet.StreamProcessor.Contracts;
@@ -108,7 +108,7 @@ An output HLS stream can be viewed with a VLC player.
 
 To serve the output HLS streams with static file middleware, you can add the snippet under `var app = builder.Build()`:
 
-```cs
+```cs linenums="1"
 app.UseStaticFiles(new StaticFileOptions
 {
     RequestPath = "/hls",
@@ -138,7 +138,7 @@ dotnet add package LiveStreamingServerNet.StreamProcessor.AzureBlobStorage
 
 Modify `Program.cs` file:
 
-```cs
+```cs linenums="1"
 using Azure.Storage.Blobs;
 using LiveStreamingServerNet;
 using LiveStreamingServerNet.Networking.Helpers;

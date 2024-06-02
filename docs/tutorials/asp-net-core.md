@@ -15,7 +15,7 @@ dotnet add package LiveStreamingServerNet
 
 Edit `Program.cs` file:
 
-```cs
+```cs linenums="1"
 using System.Net;
 using LiveStreamingServerNet;
 using LiveStreamingServerNet.Networking.Helpers;
