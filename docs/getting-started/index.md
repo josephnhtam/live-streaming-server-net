@@ -1,3 +1,8 @@
+---
+hide:
+  - navigation
+---
+
 # Getting Started
 
 LiveStreamingServerNet is a RTMP server framework that allows you to create your own live streaming server using .NET 7 or newer versions. It supports multiple platforms including Windows, Linux, and MacOS, and can be easily integrated into your projects as NuGet packages.
@@ -54,6 +59,8 @@ dotnet run
 ```
 
 Now, your live streaming server should be running and ready to accept RTMP stream via 1935 port.
+
+---
 
 ## Interacting with your Live Streaming Server
 

@@ -1,3 +1,10 @@
+---
+title: Overview
+
+hide:
+  - navigation
+---
+
 # Live-Streaming-Server-Net
 
 ![build and test](https://github.com/josephnhtam/live-streaming-server-net/actions/workflows/build_and_test.yaml/badge.svg)
@@ -37,47 +44,47 @@ Live-Streaming-Server-Net is a high-performance and flexible toolset which allow
   </thead>
   <tbody>
     <tr>
-      <th>LiveStreamingServerNet</th>
+      <td><b>LiveStreamingServerNet</b></td>
       <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.svg?logo=nuget"></a></td>
     </tr>
     <tr>
-      <th>LiveStreamingServerNet.Standalone</th>
+      <td><b>LiveStreamingServerNet.Standalone</b></td>
       <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet.Standalone"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.Standalone.svg?logo=nuget"></a></td>
     </tr>
     <tr>
-      <th>LiveStreamingServerNet.AdminPanelUI</th>
+      <td><b>LiveStreamingServerNet.AdminPanelUI</b></td>
       <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet.AdminPanelUI"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.AdminPanelUI.svg?logo=nuget"></a></td>
     </tr>
     <tr>
-      <th>LiveStreamingServerNet.Flv</th>
+      <td><b>LiveStreamingServerNet.Flv</b></td>
       <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet.Flv"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.Flv.svg?logo=nuget"></a></td>
     </tr>
     <tr>
-      <th>LiveStreamingServerNet.Networking</th>
+      <td><b>LiveStreamingServerNet.Networking</b></td>
       <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet.Networking"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.Networking.svg?logo=nuget"></a></td>
     </tr>
     <tr>
-      <th>LiveStreamingServerNet.Rtmp</th>
+      <td><b>LiveStreamingServerNet.Rtmp</b></td>
       <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet.Rtmp"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.Rtmp.svg?logo=nuget"></a></td>
     </tr>
     <tr>
-      <th>LiveStreamingServerNet.StreamProcessor</th>
+      <td><b>LiveStreamingServerNet.StreamProcessor</b></td>
       <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet.StreamProcessor"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.StreamProcessor.svg?logo=nuget"></a></td>
     </tr>
     <tr>
-      <th>LiveStreamingServerNet.StreamProcessor.AmazonS3</th>
+      <td><b>LiveStreamingServerNet.StreamProcessor.AmazonS3</b></td>
       <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet.StreamProcessor.AmazonS3"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.StreamProcessor.AmazonS3.svg?logo=nuget"></a></td>
     </tr>
     <tr>
-      <th>LiveStreamingServerNet.StreamProcessor.AzureBlobStorage</th>
+      <td><b>LiveStreamingServerNet.StreamProcessor.AzureBlobStorage</b></td>
       <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet.StreamProcessor.AzureBlobStorage"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.StreamProcessor.AzureBlobStorage.svg?logo=nuget"></a></td>
     </tr>
     <tr>
-      <th>LiveStreamingServerNet.StreamProcessor.GoogleCloudStorage</th>
+      <td><b>LiveStreamingServerNet.StreamProcessor.GoogleCloudStorage</b></td>
       <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet.StreamProcessor.GoogleCloudStorage"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.StreamProcessor.GoogleCloudStorage.svg?logo=nuget"></a></td>
     </tr>
     <tr>
-      <th>LiveStreamingServerNet.Utilities</th>
+      <td><b>LiveStreamingServerNet.Utilities</b></td>
       <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet.Utilities"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.Utilities?logo=nuget"></a></td>
     </tr>
   </tbody>

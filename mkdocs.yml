@@ -1,0 +1,82 @@
+site_name: Live-Streaming-Server-Net
+site_url: https://josephnhtam.github.io/live-streaming-server-net/
+
+repo_name: live-streaming-server-net
+repo_url: https://github.com/josephnhtam/live-streaming-server-net
+
+theme:
+  name: material
+  icon:
+    logo: material/video-box
+    repo: fontawesome/brands/github
+  features:
+    - navigation.tabs
+    - navigation.path
+    - navigation.sections
+    - navigation.tabs
+    - navigation.footer
+    - navigation.indexes
+    - navigation.top
+    - navigation.tracking
+    - announce.dismiss
+    - content.action.edit
+    - content.action.view
+    - content.tooltips
+    - content.code.annotate
+    - content.code.copy
+    - search.highlight
+    - search.share
+    - search.suggest
+    - toc.follow
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: blue grey
+      accent: indigo
+      toggle:
+        icon: material/lightbulb
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: black
+      accent: indigo
+      toggle:
+        icon: material/lightbulb-outline
+        name: Switch to light mode
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/josephnhtam/live-streaming-server-net
+
+copyright: Copyright &copy; 2024 Joseph NH Tam
+
+plugins:
+  - search:
+      separator: '[\s\u200b\-_,:!=\[\]()"`/]+|\.(?!\d)|&[lg]t;|(?!\b)(?=[A-Z][a-z])'
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  
+extra_css:
+  - stylesheets/extra.css
+  
+nav:
+  - Overview: index.md
+  - Getting Started: getting-started/index.md
+  - Tutorials:
+    - Running with ASP.NET Core: tutorials/asp-net-core.md
+    - Serving FLV Live Streams: tutorials/serving-flv.md
+    - Serving HLS Live Streams: tutorials/serving-hls.md
+    - Adding an Admin Panel: tutorials/admin-panel.md
+    - Securing Streams with RTMPS: tutorials/rtmps.md
+    - RTMP Server Events: tutorials/rtmp-server-events.md
+    - Custom Authorization: tutorials/custom-authorization.md
+    - Custom FFmpeg Process: tutorials/custom-ffmpeg-process.md
+  - Kubernetes Integration:
+    - Introduction: kubernetes-integration/introduction.md
+    - Kubernetes Operator: kubernetes-integration/operator.md
+    - Kubernetes Pod: kubernetes-integration/pod.md
+    - Live Streaming Server Fleet: kubernetes-integration/fleet.md

@@ -60,6 +60,6 @@ Now, your live streaming server should be running and ready to accept RTMP strea
 
 ### Preview of the Admin Panel
 
-![Admin Panel](../../images/admin-panel.jpeg)
+![Admin Panel](../../assets/images/admin-panel.jpeg)
 
-![HTTP-FLV Preview](../../images/http-flv-preview.jpeg)
+![HTTP-FLV Preview](../../assets/images/http-flv-preview.jpeg)

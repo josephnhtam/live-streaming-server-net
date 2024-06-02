@@ -45,5 +45,6 @@ Execute your live streaming server by running the following command:
 dotnet run
 ```
 
-> [!NOTE]
-> The live streaming server created with LiveStreamingServerBuilder is self-contained and has its own IoC container, i.e. IServiceProvider.
+!!! note
+
+    The live streaming server created with LiveStreamingServerBuilder is self-contained and has its own IoC container, i.e. IServiceProvider.
