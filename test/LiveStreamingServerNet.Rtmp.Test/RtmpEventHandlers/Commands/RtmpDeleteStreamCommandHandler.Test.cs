@@ -42,7 +42,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Commands
             // Assert
             result.Should().BeTrue();
 
-            _streamDeletionService.Received(1).DeleteStream(_clientContext);
+            _ = _streamDeletionService.Received(1).DeleteStreamAsync(_clientContext);
         }
 
         [Fact]
@@ -64,7 +64,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Commands
 
             _clientContext.DidNotReceive().CreateNewStream();
 
-            _streamDeletionService.DidNotReceive().DeleteStream(_clientContext);
+            _ = _streamDeletionService.DidNotReceive().DeleteStreamAsync(_clientContext);
         }
     }
 }

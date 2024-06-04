@@ -24,30 +24,31 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             _eventDispatcher = eventDispatcher;
         }
 
-        public void DeleteStream(IRtmpClientContext clientContext)
+        public async ValueTask DeleteStreamAsync(IRtmpClientContext clientContext)
         {
-            StopPublishingStreamIfNeeded(clientContext);
-            StopSubscribingStreamIfNeeded(clientContext);
+            await StopPublishingStreamIfNeededAsync(clientContext);
+            await StopSubscribingStreamIfNeededAsync(clientContext);
+
             clientContext.DeleteStream();
         }
 
-        private void StopPublishingStreamIfNeeded(IRtmpClientContext clientContext)
+        private async ValueTask StopPublishingStreamIfNeededAsync(IRtmpClientContext clientContext)
         {
             if (!_rtmpStreamManager.StopPublishingStream(clientContext, out var existingSubscriber))
                 return;
 
             _userControlMessageSender.SendStreamEofMessage(existingSubscriber.AsReadOnly());
             SendStreamUnpublishNotify(existingSubscriber.AsReadOnly());
-            _eventDispatcher.RtmpStreamUnpublishedAsync(clientContext, clientContext.PublishStreamContext!.StreamPath);
+            await _eventDispatcher.RtmpStreamUnpublishedAsync(clientContext, clientContext.PublishStreamContext!.StreamPath);
         }
 
-        private void StopSubscribingStreamIfNeeded(IRtmpClientContext clientContext)
+        private async ValueTask StopSubscribingStreamIfNeededAsync(IRtmpClientContext clientContext)
         {
             if (!_rtmpStreamManager.StopSubscribingStream(clientContext))
                 return;
 
             SendSubscriptionStoppedMessage(clientContext);
-            _eventDispatcher.RtmpStreamUnsubscribedAsync(clientContext, clientContext.StreamSubscriptionContext!.StreamPath);
+            await _eventDispatcher.RtmpStreamUnsubscribedAsync(clientContext, clientContext.StreamSubscriptionContext!.StreamPath);
         }
 
         private void SendStreamUnpublishNotify(

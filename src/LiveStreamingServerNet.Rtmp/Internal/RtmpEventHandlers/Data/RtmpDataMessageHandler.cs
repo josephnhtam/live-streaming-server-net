@@ -65,7 +65,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Data
             }
         }
 
-        private ValueTask<bool> HandleOnMetaDataAsync(
+        private async ValueTask<bool> HandleOnMetaDataAsync(
             IRtmpClientContext clientContext,
             IRtmpChunkStreamContext chunkStreamContext,
             IReadOnlyDictionary<string, object> metaData)
@@ -75,16 +75,16 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Data
             if (publishStreamContext == null)
             {
                 _logger.StreamNotYetCreated(clientContext.Client.ClientId);
-                return ValueTask.FromResult(false);
+                return false;
             }
 
             CacheStreamMetaData(metaData, publishStreamContext);
 
             BroadcastMetaDataToSubscribers(clientContext, chunkStreamContext, publishStreamContext);
 
-            _eventDispatcher.RtmpStreamMetaDataReceivedAsync(clientContext, clientContext.PublishStreamContext!.StreamPath, metaData);
+            await _eventDispatcher.RtmpStreamMetaDataReceivedAsync(clientContext, clientContext.PublishStreamContext!.StreamPath, metaData);
 
-            return ValueTask.FromResult(true);
+            return true;
         }
 
         private static void CacheStreamMetaData(IReadOnlyDictionary<string, object> metaData, IRtmpPublishStreamContext publishStreamContext)

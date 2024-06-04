@@ -63,7 +63,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
             streamPath = authorizationResult.StreamPathOverride ?? streamPath;
             streamArguments = authorizationResult.StreamArgumentsOverride ?? streamArguments;
 
-            StartSubscribing(clientContext, command, chunkStreamContext, streamPath, streamArguments);
+            await StartSubscribingAsync(clientContext, command, chunkStreamContext, streamPath, streamArguments);
             return true;
         }
 
@@ -93,7 +93,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
             return result;
         }
 
-        private bool StartSubscribing(
+        private async ValueTask<bool> StartSubscribingAsync(
             IRtmpClientContext clientContext,
             RtmpPlayCommand command,
             IRtmpChunkStreamContext chunkStreamContext,
@@ -108,7 +108,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
                     _logger.SubscriptionStarted(clientContext.Client.ClientId, streamPath);
                     SendSubscriptionStartedMessage(clientContext, chunkStreamContext);
                     SendCachedStreamMessages(clientContext, chunkStreamContext);
-                    CompleteSubscriptionInitialization(clientContext);
+                    await CompleteSubscriptionInitializationAsync(clientContext);
                     return true;
 
                 case SubscribingStreamResult.AlreadySubscribing:
@@ -150,14 +150,14 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
             }
         }
 
-        private void CompleteSubscriptionInitialization(IRtmpClientContext clientContext)
+        private async ValueTask CompleteSubscriptionInitializationAsync(IRtmpClientContext clientContext)
         {
             clientContext.StreamSubscriptionContext!.CompleteInitialization();
 
-            _eventDispatcher.RtmpStreamSubscribedAsync(
-                clientContext,
-                clientContext.StreamSubscriptionContext.StreamPath,
-                clientContext.StreamSubscriptionContext.StreamArguments);
+            await _eventDispatcher.RtmpStreamSubscribedAsync(
+                 clientContext,
+                 clientContext.StreamSubscriptionContext.StreamPath,
+                 clientContext.StreamSubscriptionContext.StreamArguments);
         }
 
         private async ValueTask SendAuthorizationFailedCommandMessageAsync(IRtmpClientContext clientContext, IRtmpChunkStreamContext chunkStreamContext, string reason)

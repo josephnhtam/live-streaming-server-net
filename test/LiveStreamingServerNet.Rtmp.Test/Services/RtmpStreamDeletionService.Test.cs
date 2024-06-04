@@ -33,7 +33,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
         }
 
         [Fact]
-        public void DeleteStream_Should_StopClientPublishingStream_When_StreamIsBeingPublishedByTheClient()
+        public async Task DeleteStream_Should_StopClientPublishingStream_When_StreamIsBeingPublishedByTheClient()
         {
             // Arrange
             var clientContext = Substitute.For<IRtmpClientContext>();
@@ -50,7 +50,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
             });
 
             // Act
-            _rtmpStreamDeletionService.DeleteStream(clientContext);
+            await _rtmpStreamDeletionService.DeleteStreamAsync(clientContext);
 
             // Assert
             _userControlMessageSender.Received(1).SendStreamEofMessage(
@@ -70,13 +70,13 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
                 Arg.Any<AmfEncodingType>()
             );
 
-            _eventDispatcher.Received(1).RtmpStreamUnpublishedAsync(clientContext, streamPath);
+            _ = _eventDispatcher.Received(1).RtmpStreamUnpublishedAsync(clientContext, streamPath);
 
             clientContext.Received(1).DeleteStream();
         }
 
         [Fact]
-        public void DeleteStream_Should_StopClientSubscribingStream_When_StreamIsBeingSubscribedByTheClient()
+        public async Task DeleteStream_Should_StopClientSubscribingStream_When_StreamIsBeingSubscribedByTheClient()
         {
             // Arrange
             var clientContext = Substitute.For<IRtmpClientContext>();
@@ -89,7 +89,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
             _rtmpStreamManager.StopSubscribingStream(clientContext).Returns(true);
 
             // Act
-            _rtmpStreamDeletionService.DeleteStream(clientContext);
+            await _rtmpStreamDeletionService.DeleteStreamAsync(clientContext);
 
             // Assert
             _commandMessageSender.Received(1).SendCommandMessage(

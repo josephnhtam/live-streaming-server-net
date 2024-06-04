@@ -34,7 +34,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
             _logger = logger;
         }
 
-        public override ValueTask<bool> HandleAsync(
+        public override async ValueTask<bool> HandleAsync(
             IRtmpChunkStreamContext chunkStreamContext,
             IRtmpClientContext clientContext,
             RtmpConnectCommand command,
@@ -45,7 +45,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
             if (!string.IsNullOrEmpty(clientContext.AppName))
             {
                 _logger.ClientAlreadyConnected(clientContext.Client.ClientId);
-                return ValueTask.FromResult(false);
+                return false;
             }
 
             var appName = (string)command.CommandObject["app"];
@@ -53,7 +53,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
             if (string.IsNullOrWhiteSpace(appName))
             {
                 _logger.InvalidAppName(clientContext.Client.ClientId);
-                return ValueTask.FromResult(false);
+                return false;
             }
 
             clientContext.AppName = appName;
@@ -64,9 +64,9 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
 
             RespondToClient(clientContext, command);
 
-            _eventDispatcher.RtmpClientConnectedAsync(clientContext, command.CommandObject.AsReadOnly(), command.Arguments?.AsReadOnly());
+            await _eventDispatcher.RtmpClientConnectedAsync(clientContext, command.CommandObject.AsReadOnly(), command.Arguments?.AsReadOnly());
 
-            return ValueTask.FromResult(true);
+            return true;
         }
 
         private void RespondToClient(IRtmpClientContext clientContext, RtmpConnectCommand command)

@@ -60,7 +60,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
             streamPath = authorizationResult.StreamPathOverride ?? streamPath;
             streamArguments = authorizationResult.StreamArgumentsOverride ?? streamArguments;
 
-            StartPublishing(clientContext, command, chunkStreamContext, streamPath, streamArguments);
+            await StartPublishingAsync(clientContext, command, chunkStreamContext, streamPath, streamArguments);
             return true;
         }
 
@@ -91,7 +91,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
             return result;
         }
 
-        private bool StartPublishing(
+        private async ValueTask<bool> StartPublishingAsync(
             IRtmpClientContext clientContext,
             RtmpPublishCommand command,
             IRtmpChunkStreamContext chunkStreamContext,
@@ -105,7 +105,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
                 case PublishingStreamResult.Succeeded:
                     _logger.PublishingStarted(clientContext.Client.ClientId, streamPath, command.PublishingType);
                     SendPublishingStartedMessage(clientContext, chunkStreamContext);
-                    _eventDispatcher.RtmpStreamPublishedAsync(clientContext, streamPath, streamArguments);
+                    await _eventDispatcher.RtmpStreamPublishedAsync(clientContext, streamPath, streamArguments);
                     return true;
 
                 case PublishingStreamResult.AlreadySubscribing:

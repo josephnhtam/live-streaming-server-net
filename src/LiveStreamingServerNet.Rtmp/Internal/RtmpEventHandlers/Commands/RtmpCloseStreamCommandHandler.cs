@@ -17,16 +17,16 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
             _streamDeletionService = streamDeletionService;
         }
 
-        public override ValueTask<bool> HandleAsync(
+        public override async ValueTask<bool> HandleAsync(
             IRtmpChunkStreamContext chunkStreamContext,
             IRtmpClientContext clientContext,
             RtmpCloseStreamCommand command,
             CancellationToken cancellationToken)
         {
             if (clientContext.StreamId.HasValue)
-                _streamDeletionService.DeleteStream(clientContext);
+                await _streamDeletionService.DeleteStreamAsync(clientContext);
 
-            return ValueTask.FromResult(true);
+            return true;
         }
     }
 }
