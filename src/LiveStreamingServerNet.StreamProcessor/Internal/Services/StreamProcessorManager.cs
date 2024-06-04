@@ -44,10 +44,21 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Services
             if (!streamProcessors.Any())
                 return;
 
+            await CancelAndAwaitExistingStreamProcessorsAsync(streamPath);
+
             var task = RunStreamProcessors(streamProcessors, client, streamPath, streamArguments, cts);
 
             _processorTasks[streamPath] = new StreamProcessorTask(task, cts);
-            _ = task.ContinueWith(_ => _processorTasks.TryRemove(streamPath, out var task));
+            _ = task.ContinueWith(_ => _processorTasks.TryRemove(streamPath, out var task), TaskContinuationOptions.ExecuteSynchronously);
+
+            async ValueTask CancelAndAwaitExistingStreamProcessorsAsync(string streamPath)
+            {
+                if (!_processorTasks.TryGetValue(streamPath, out var existingTask))
+                    return;
+
+                existingTask.Cts.Cancel();
+                await existingTask.Task;
+            }
         }
 
         private async Task<IList<IStreamProcessor>> CreateStreamProcessors(IClientHandle client, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
