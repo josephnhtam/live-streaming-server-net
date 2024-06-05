@@ -11,7 +11,8 @@
             bool DeleteOutdatedSegments,
             int MaxSegmentSize,
             int MaxSegmentBufferSize,
-            int AudioOnlySegmentDuration
+            TimeSpan AudioOnlySegmentLength,
+            TimeSpan? CleanupDelay
         );
     }
 }

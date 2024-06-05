@@ -12,6 +12,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls
     internal class HlsTransmuxerFactory : IStreamProcessorFactory
     {
         private readonly IHlsTransmuxerManager _transmuxerManager;
+        private readonly IHlsCleanupManager _cleanupManager;
         private readonly IManifestWriter _manifestWriter;
         private readonly HlsTransmuxerConfiguration _config;
         private readonly ILogger<HlsTransmuxer> _logger;
@@ -19,12 +20,14 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls
 
         public HlsTransmuxerFactory(
             IHlsTransmuxerManager transmuxerManager,
+            IHlsCleanupManager cleanupManager,
             IManifestWriter manifestWriter,
             HlsTransmuxerConfiguration config,
             ILogger<HlsTransmuxer> logger,
             IBufferPool? bufferPool)
         {
             _transmuxerManager = transmuxerManager;
+            _cleanupManager = cleanupManager;
             _manifestWriter = manifestWriter;
             _config = config;
             _logger = logger;
@@ -49,10 +52,11 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls
                     _config.DeleteOutdatedSegments,
                     _config.MaxSegmentSize,
                     _config.MaxSegmentBufferSize,
-                    _config.AudioOnlySegmentDuration
+                    _config.AudioOnlySegmentLength,
+                    _config.EnableCleanup ? _config.CleanupDelay : null
                 );
 
-                return new HlsTransmuxer(streamPath, client, _transmuxerManager, _manifestWriter, tsMuxer, config, _logger);
+                return new HlsTransmuxer(streamPath, client, _transmuxerManager, _cleanupManager, _manifestWriter, tsMuxer, config, _logger);
             }
             catch
             {

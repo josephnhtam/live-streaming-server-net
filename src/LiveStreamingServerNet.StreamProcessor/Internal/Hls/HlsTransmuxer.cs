@@ -18,6 +18,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls
     {
         private readonly IClientHandle _client;
         private readonly IHlsTransmuxerManager _transmuxerManager;
+        private readonly IHlsCleanupManager _cleanupManager;
         private readonly IManifestWriter _manifestWriter;
         private readonly ITsMuxer _tsMuxer;
 
@@ -39,6 +40,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls
             string streamPath,
             IClientHandle client,
             IHlsTransmuxerManager transmuxerManager,
+            IHlsCleanupManager cleanupManager,
             IManifestWriter manifestWriter,
             ITsMuxer tsMuxer,
             Configuration config,
@@ -52,6 +54,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls
 
             _client = client;
             _transmuxerManager = transmuxerManager;
+            _cleanupManager = cleanupManager;
             _manifestWriter = manifestWriter;
             _tsMuxer = tsMuxer;
 
@@ -159,7 +162,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls
                 }
 
                 if (!_hasVideo && _hasAudio && _tsMuxer.SegmentTimestamp.HasValue &&
-                    (timestamp - _tsMuxer.SegmentTimestamp.Value) >= _config.AudioOnlySegmentDuration)
+                    (timestamp - _tsMuxer.SegmentTimestamp.Value) >= _config.AudioOnlySegmentLength.TotalMilliseconds)
                 {
                     return true;
                 }
@@ -231,6 +234,8 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls
 
             try
             {
+                await PreRunAsync();
+
                 _logger.HlsTransmuxerStarted(Name, ContextIdentifier, _config.ManifestOutputPath, streamPath);
 
                 onStarted?.Invoke(_config.ManifestOutputPath);
@@ -257,6 +262,8 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls
             }
             finally
             {
+                await PostRunAsync();
+
                 _transmuxerManager.UnregisterTransmuxer(streamPath);
                 onEnded?.Invoke(_config.ManifestOutputPath);
                 _tsMuxer?.Dispose();
@@ -268,6 +275,18 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls
             {
                 package.RentedBuffer.Unclaim();
             }
+        }
+
+        private async ValueTask PreRunAsync()
+        {
+            if (_config.CleanupDelay.HasValue)
+                await _cleanupManager.ExecuteCleanupAsync(_config.ManifestOutputPath);
+        }
+
+        private async ValueTask PostRunAsync()
+        {
+            if (_config.CleanupDelay.HasValue)
+                await _cleanupManager.ScheduleCleanupAsync(_config.ManifestOutputPath, _segments.ToList(), _config.CleanupDelay.Value);
         }
 
         private record struct PendingMediaPacket(MediaType MediaType, IRentedBuffer RentedBuffer, uint Timestamp);

@@ -57,5 +57,11 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Logging
 
         [LoggerMessage(LogLevel.Trace, "HLS manifest is updated | Transmuxer: {Transmuxer} | Identifier: {Identifier} | StreamPath: {StreamPath} | Path: {Path}")]
         public static partial void HlsManifestUpdated(this ILogger logger, string transmuxer, Guid identifier, string streamPath, string path);
+
+        [LoggerMessage(LogLevel.Information, "HLS files are cleaned up | ManifestPath: {ManifestPath}")]
+        public static partial void HlsCleanedUp(this ILogger logger, string manifestPath);
+
+        [LoggerMessage(LogLevel.Error, "An error occurred while cleaning up HLS | ManifestPath: {ManifestPath}")]
+        public static partial void CleaningUpHlsError(this ILogger logger, string manifestPath, Exception ex);
     }
 }
