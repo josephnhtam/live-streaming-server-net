@@ -1,8 +1,8 @@
 ﻿using LiveStreamingServerNet.StreamProcessor.Installer.Contracts;
-using LiveStreamingServerNet.StreamProcessor.Internal.Hls;
-using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Contracts;
-using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Services;
-using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Services.Contracts;
+using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Uploading;
+using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Uploading.Contracts;
+using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Uploading.Services;
+using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Uploading.Services.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LiveStreamingServerNet.StreamProcessor.Installer
@@ -18,7 +18,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Installer
                     .AddSingleton<IHlsUploadingManager, HlsUploadingManager>()
                     .AddSingleton<IHlsStorageEventDispatcher, HlsStorageEventDispatcher>();
 
-            configurator.AddStreamProcessorEventHandler<HlsTransmuxerEventListener>();
+            configurator.AddStreamProcessorEventHandler<HlsStreamProcessorEventListener>();
 
             configure(new HlsUploaderConfigurator(services));
 
