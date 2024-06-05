@@ -62,6 +62,6 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Logging
         public static partial void HlsCleanedUp(this ILogger logger, string manifestPath);
 
         [LoggerMessage(LogLevel.Error, "An error occurred while cleaning up HLS | ManifestPath: {ManifestPath}")]
-        public static partial void CleaningUpHlsError(this ILogger logger, string manifestPath, Exception ex);
+        public static partial void HlsCleanupError(this ILogger logger, string manifestPath, Exception ex);
     }
 }

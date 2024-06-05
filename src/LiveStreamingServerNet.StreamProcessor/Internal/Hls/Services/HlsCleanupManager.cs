@@ -102,7 +102,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Services
             }
             catch (Exception ex)
             {
-                _logger.CleaningUpHlsError(manifestPath, ex);
+                _logger.HlsCleanupError(manifestPath, ex);
             }
         }
 
