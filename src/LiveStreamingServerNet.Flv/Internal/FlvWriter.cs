@@ -45,7 +45,7 @@ namespace LiveStreamingServerNet.Flv.Internal
             }
         }
 
-        public async ValueTask WriteTagAsync(FlvTagType tagType, uint timestamp, Action<INetBuffer> payloadBufer, CancellationToken cancellationToken)
+        public async ValueTask WriteTagAsync(FlvTagType tagType, uint timestamp, Action<INetBuffer> payloadBuffer, CancellationToken cancellationToken)
         {
             try
             {
@@ -56,7 +56,7 @@ namespace LiveStreamingServerNet.Flv.Internal
                 try
                 {
                     netBuffer.MoveTo(FlvTagHeader.Size);
-                    payloadBufer.Invoke(netBuffer);
+                    payloadBuffer.Invoke(netBuffer);
 
                     var payloadSize = (uint)(netBuffer.Size - FlvTagHeader.Size);
                     var packageSize = (uint)netBuffer.Size;

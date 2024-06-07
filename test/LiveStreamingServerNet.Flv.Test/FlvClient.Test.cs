@@ -147,13 +147,13 @@ namespace LiveStreamingServerNet.Flv.Test
             // Arrange
             var tagType = _fixture.Create<FlvTagType>();
             var timestamp = _fixture.Create<uint>();
-            var payloadBufer = Substitute.For<Action<INetBuffer>>();
+            var payloadBuffer = Substitute.For<Action<INetBuffer>>();
 
             // Act
-            await _sut.WriteTagAsync(tagType, timestamp, payloadBufer, default);
+            await _sut.WriteTagAsync(tagType, timestamp, payloadBuffer, default);
 
             // Assert
-            await _flvWriter.Received(1).WriteTagAsync(tagType, timestamp, payloadBufer, Arg.Any<CancellationToken>());
+            await _flvWriter.Received(1).WriteTagAsync(tagType, timestamp, payloadBuffer, Arg.Any<CancellationToken>());
         }
 
         [Fact]
@@ -162,11 +162,11 @@ namespace LiveStreamingServerNet.Flv.Test
             // Arrange
             var tagType = _fixture.Create<FlvTagType>();
             var timestamp = _fixture.Create<uint>();
-            var payloadBufer = Substitute.For<Action<INetBuffer>>();
-            _flvWriter.WriteTagAsync(tagType, timestamp, payloadBufer, Arg.Any<CancellationToken>()).Throws(new Exception());
+            var payloadBuffer = Substitute.For<Action<INetBuffer>>();
+            _flvWriter.WriteTagAsync(tagType, timestamp, payloadBuffer, Arg.Any<CancellationToken>()).Throws(new Exception());
 
             // Act
-            await _sut.WriteTagAsync(tagType, timestamp, payloadBufer, default);
+            await _sut.WriteTagAsync(tagType, timestamp, payloadBuffer, default);
 
             // Assert
             _sut.UntilComplete().IsCompleted.Should().BeTrue();
