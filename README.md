@@ -15,6 +15,7 @@ Please check the [documentation](https://josephnhtam.github.io/live-streaming-se
 - **RTMP/RTMPS protocol**: Supports the RTMP and RTMPS protocols for streaming audio, video, and data.
 - **HTTP-FLV/WebSocket-FLV with ASP.NET CORE**: Provides support for serving FLV live streams using HTTP-FLV and WebSocket-FLV protocols within an ASP.NET Core application.
 - **Transmuxing RTMP streams into HLS streams**: Allows you to transmux RTMP streams into HLS (HTTP Live Streaming) streams using the built-in HLS transmuxer.
+- **Transcoding RTMP streams into Adaptive HLS streams**: Integrates with FFmpeg to transcode the RTMP streams into multiple-bitrate Adaptive HLS streams.
 - **Integration with FFmpeg**: Provides support for processing the incoming RTMP stream with FFmpeg, for example, to create an MP4 archive.
 - **GOP caching**: Supports caching the Group of Pictures (GOP) to ensure immediate availability of live streaming content.
 - **Custom authorization**: Enables you to implement custom authorization mechanisms for accessing live streams.
@@ -234,6 +235,6 @@ This project is licensed under the terms of the [MIT license](https://github.com
 
 ## Acknowledgments
 
-[![JetBrains](https://avatars.githubusercontent.com/u/878437?s=100&v=4)](https://www.jetbrains.com/)
+[![JetBrains](https://avatars.githubusercontent.com/u/878437?s=150&v=4)](https://www.jetbrains.com/)
 
 Special thanks to [JetBrains](https://www.jetbrains.com/) for providing the open-source software license that supports the development of this project.
