@@ -59,12 +59,14 @@ public class HlsTransmuxerOutputPathResolver : IHlsOutputPathResolver
         _outputDir = outputDir;
     }
 
-    public Task<HlsOutputPath> ResolveOutputPath(Guid contextIdentifier, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
+    public ValueTask<HlsOutputPath> ResolveOutputPath(IServiceProvider services, Guid contextIdentifier, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
     {
-        return Task.FromResult(new HlsOutputPath
+        var basePath = Path.Combine(_outputDir, streamPath.Trim('/'));
+
+        return ValueTask.FromResult(new HlsOutputPath
         {
-            ManifestOutputPath = Path.Combine(_outputDir, streamPath.Trim('/'), "output.m3u8"),
-            TsFileOutputPath = Path.Combine(_outputDir, streamPath.Trim('/'), "output{seqNum}.ts")
+            ManifestOutputPath = Path.Combine(basePath, "output.m3u8"),
+            TsFileOutputPath = Path.Combine(basePath, "output{seqNum}.ts")
         });
     }
 }

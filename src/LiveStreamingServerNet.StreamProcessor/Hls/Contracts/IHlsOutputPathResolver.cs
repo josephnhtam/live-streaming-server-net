@@ -2,7 +2,7 @@
 {
     public interface IHlsOutputPathResolver
     {
-        Task<HlsOutputPath> ResolveOutputPath(Guid contextIdentifier, string streamPath, IReadOnlyDictionary<string, string> streamArguments);
+        ValueTask<HlsOutputPath> ResolveOutputPath(IServiceProvider services, Guid contextIdentifier, string streamPath, IReadOnlyDictionary<string, string> streamArguments);
     }
 
     public record struct HlsOutputPath

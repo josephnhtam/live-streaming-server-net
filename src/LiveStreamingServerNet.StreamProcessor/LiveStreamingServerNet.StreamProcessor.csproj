@@ -25,4 +25,8 @@
     <ProjectReference Include="..\LiveStreamingServerNet.Rtmp\LiveStreamingServerNet.Rtmp.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Internal\Hls\AdaptiveTranscoding\Contracts\" />
+  </ItemGroup>
+
 </Project>

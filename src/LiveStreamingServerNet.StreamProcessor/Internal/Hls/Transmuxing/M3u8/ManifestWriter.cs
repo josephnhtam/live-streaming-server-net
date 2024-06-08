@@ -16,6 +16,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing.M3u8
             sb.AppendLine("#EXTM3U");
             sb.AppendLine("#EXT-X-VERSION:3");
             sb.AppendLine("#EXT-X-ALLOW-CACHE:NO");
+            sb.AppendLine("#EXT-X-INDEPENDENT-SEGMENTS");
             sb.AppendLine($"#EXT-X-TARGETDURATION:{CalculateTargetDuration(segments)}");
             sb.AppendLine($"#EXT-X-MEDIA-SEQUENCE:{segments.First().SequenceNumber}");
 

@@ -15,16 +15,17 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Uploading.Services
             _uploaderFactory = uploaderFactory;
         }
 
-        public Task StartUploading(StreamProcessingContext context)
+        public async Task StartUploading(StreamProcessingContext context)
         {
             var cts = new CancellationTokenSource();
-            var uploader = _uploaderFactory.Create(context);
+            var uploader = await _uploaderFactory.CreateAsync(context);
 
-            var uploaderTask = uploader.RunAsync(cts.Token);
-            _uploaderTasks[context.OutputPath] = new UploaderTask(uploaderTask, cts);
-            _ = uploaderTask.ContinueWith(_ => _uploaderTasks.TryRemove(context.OutputPath, out var _));
-
-            return Task.CompletedTask;
+            if (uploader != null)
+            {
+                var uploaderTask = uploader.RunAsync(cts.Token);
+                _uploaderTasks[context.OutputPath] = new UploaderTask(uploaderTask, cts);
+                _ = uploaderTask.ContinueWith(_ => _uploaderTasks.TryRemove(context.OutputPath, out var _));
+            }
         }
 
         public Task StopUploading(StreamProcessingContext context)

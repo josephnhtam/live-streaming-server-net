@@ -1,4 +1,5 @@
 using LiveStreamingServerNet.Networking.Helpers;
+using LiveStreamingServerNet.Rtmp;
 using LiveStreamingServerNet.StreamProcessor.Contracts;
 using LiveStreamingServerNet.StreamProcessor.FFmpeg.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Installer;
@@ -8,7 +9,7 @@ using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.FileProviders;
 using System.Net;
 
-namespace LiveStreamingServerNet.HlsDemoWithFFmpeg
+namespace LiveStreamingServerNet.AdaptiveHlsDemo
 {
     public static class Program
     {
@@ -45,9 +46,9 @@ namespace LiveStreamingServerNet.HlsDemoWithFFmpeg
             await app.RunAsync();
         }
 
-        private static (PhysicalFileProvider, FileExtensionContentTypeProvider) CreateProviders(string transmuxerOutputPath)
+        private static (PhysicalFileProvider, FileExtensionContentTypeProvider) CreateProviders(string outputDir)
         {
-            var fileProvider = new PhysicalFileProvider(transmuxerOutputPath);
+            var fileProvider = new PhysicalFileProvider(outputDir);
 
             var contentTypeProvider = new FileExtensionContentTypeProvider();
             contentTypeProvider.Mappings[".m3u8"] = "application/x-mpegURL";
@@ -55,31 +56,28 @@ namespace LiveStreamingServerNet.HlsDemoWithFFmpeg
             return (fileProvider, contentTypeProvider);
         }
 
-        private static ILiveStreamingServer CreateLiveStreamingServer(string outputDir)
+        private static ILiveStreamingServer CreateLiveStreamingServer(string transmuxerOutputPath)
         {
             return LiveStreamingServerBuilder.Create()
-                .ConfigureServer(options => options
-                    .ConfigureNetwork(options =>
-                    {
-                        options.NoDelay = true;
-                        options.FlushingInterval = TimeSpan.FromMilliseconds(300);
-                    }))
                 .ConfigureRtmpServer(options => options
                     .Configure(options => options.EnableGopCaching = false)
+                    .AddVideoCodecFilter(builder => builder.Include(VideoCodec.AVC))
+                    .AddAudioCodecFilter(builder => builder.Include(AudioCodec.AAC))
                     .AddStreamProcessor(options =>
                     {
                         options.AddStreamProcessorEventHandler(svc =>
-                                new StreamProcessorEventListener(outputDir, svc.GetRequiredService<ILogger<StreamProcessorEventListener>>()));
+                                new StreamProcessorEventListener(transmuxerOutputPath, svc.GetRequiredService<ILogger<StreamProcessorEventListener>>()));
                     })
-                    .AddFFmpeg(options =>
+                    .AddAdaptiveHlsTranscoder(options =>
                     {
-                        options.FFmpegArguments =
-                                    "-i {inputPath} -c:v copy -c:a copy " +
-                                    "-preset ultrafast -tune zerolatency -hls_time 1 " +
-                                    "-hls_flags delete_segments -hls_list_size 20 -f hls {outputPath}";
-
                         options.FFmpegPath = ExecutableFinder.FindExecutableFromPATH("ffmpeg")!;
-                        options.OutputPathResolver = new HlsOutputPathResolver(outputDir);
+                        options.FFprobePath = ExecutableFinder.FindExecutableFromPATH("ffprobe")!;
+
+                        // Hardware acceleration 
+                        // options.VideoDecodingArguments = "-hwaccel auto -c:v h264_cuvid";
+                        // options.VideoEncodingArguments = "-c:v h264_nvenc -preset fast -crf 23 -g 30";
+
+                        options.OutputPathResolver = new HlsOutputPathResolver(transmuxerOutputPath);
                     })
                 )
                 .ConfigureLogging(options => options.AddConsole())
@@ -88,16 +86,16 @@ namespace LiveStreamingServerNet.HlsDemoWithFFmpeg
 
         private class HlsOutputPathResolver : IFFmpegOutputPathResolver
         {
-            private readonly string _outputDir;
+            private readonly string _outputPath;
 
-            public HlsOutputPathResolver(string outputDir)
+            public HlsOutputPathResolver(string outputPath)
             {
-                _outputDir = outputDir;
+                _outputPath = outputPath;
             }
 
             public ValueTask<string> ResolveOutputPath(IServiceProvider services, Guid contextIdentifier, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
             {
-                return ValueTask.FromResult(Path.Combine(_outputDir, streamPath.Trim('/'), "output.m3u8"));
+                return ValueTask.FromResult(Path.Combine(_outputPath, streamPath.Trim('/'), "output.m3u8"));
             }
         }
 

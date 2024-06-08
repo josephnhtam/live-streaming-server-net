@@ -2,6 +2,6 @@
 {
     internal interface IHlsUploaderFactory
     {
-        IHlsUploader Create(StreamProcessingContext context);
+        Task<IHlsUploader?> CreateAsync(StreamProcessingContext context);
     }
 }

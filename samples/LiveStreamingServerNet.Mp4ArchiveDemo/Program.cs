@@ -1,4 +1,5 @@
 ﻿using LiveStreamingServerNet.Networking;
+using LiveStreamingServerNet.StreamProcessor.FFmpeg.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Installer;
 using LiveStreamingServerNet.StreamProcessor.Utilities;
 using Microsoft.Extensions.Logging;
@@ -34,14 +35,27 @@ namespace LiveStreamingServerNet.Mp4ArchiveDemo
                         options.Name = "mp4-archive";
                         options.FFmpegPath = ExecutableFinder.FindExecutableFromPATH("ffmpeg")!;
                         options.FFmpegArguments = "-i {inputPath} -c:v libx264 -c:a aac -preset ultrafast -f mp4 {outputPath}";
-                        options.OutputPathResolver = (contextIdentifier, streamPath, streamArguments) =>
-                        {
-                            return Task.FromResult(Path.Combine(Directory.GetCurrentDirectory(), "mp4-archive", streamPath.Trim('/'), "output.mp4"));
-                        };
+                        options.OutputPathResolver = new Mp4OutputPathResolver(Path.Combine(Directory.GetCurrentDirectory(), "mp4-archive"));
                     })
                 )
                 .ConfigureLogging(options => options.AddConsole().SetMinimumLevel(LogLevel.Debug))
                 .Build();
         }
+
+        private class Mp4OutputPathResolver : IFFmpegOutputPathResolver
+        {
+            private readonly string _outputDir;
+
+            public Mp4OutputPathResolver(string outputDir)
+            {
+                _outputDir = outputDir;
+            }
+
+            public ValueTask<string> ResolveOutputPath(IServiceProvider services, Guid contextIdentifier, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
+            {
+                return ValueTask.FromResult(Path.Combine(_outputDir, streamPath.Trim('/'), "output.mp4"));
+            }
+        }
     }
 }
+

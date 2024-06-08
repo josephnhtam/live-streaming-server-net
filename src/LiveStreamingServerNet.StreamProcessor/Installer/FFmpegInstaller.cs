@@ -13,7 +13,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Installer
             var config = new FFmpegProcessConfiguration();
             configure?.Invoke(config);
 
-            builder.Services.AddSingleton<IStreamProcessorFactory>(_ => new FFmpegProcessFactory(config));
+            builder.Services.AddSingleton<IStreamProcessorFactory>(svc => new FFmpegProcessFactory(svc, config));
 
             return builder;
         }

@@ -10,25 +10,42 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Uploading
     internal class HlsUploaderFactory : IHlsUploaderFactory
     {
         private readonly IHlsStorageEventDispatcher _eventDispatcher;
+        private readonly IEnumerable<IHlsUploaderCondition> _conditions;
         private readonly IEnumerable<IHlsStorageAdapter> _storageAdapters;
         private readonly ILogger<HlsUploader> _logger;
         private readonly IOptions<HlsUploaderConfiguration> _config;
 
         public HlsUploaderFactory(
             IHlsStorageEventDispatcher eventDispatcher,
+            IEnumerable<IHlsUploaderCondition> conditions,
             IEnumerable<IHlsStorageAdapter> storageAdapters,
             ILogger<HlsUploader> logger,
             IOptions<HlsUploaderConfiguration> config)
         {
             _eventDispatcher = eventDispatcher;
+            _conditions = conditions;
             _storageAdapters = storageAdapters;
             _logger = logger;
             _config = config;
         }
 
-        public IHlsUploader Create(StreamProcessingContext context)
+        public async Task<IHlsUploader?> CreateAsync(StreamProcessingContext context)
         {
+            if (!await ShouldUploadAsync(context))
+                return null;
+
             return new HlsUploader(context, _eventDispatcher, _storageAdapters, _logger, _config);
+        }
+
+        private async Task<bool> ShouldUploadAsync(StreamProcessingContext context)
+        {
+            foreach (var condition in _conditions)
+            {
+                if (!await condition.ShouldUploadAsync(context))
+                    return false;
+            }
+
+            return true;
         }
     }
 }

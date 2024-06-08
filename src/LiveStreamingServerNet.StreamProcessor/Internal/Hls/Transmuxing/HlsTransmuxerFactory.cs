@@ -11,6 +11,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
 {
     internal class HlsTransmuxerFactory : IStreamProcessorFactory
     {
+        private readonly IServiceProvider _services;
         private readonly IHlsTransmuxerManager _transmuxerManager;
         private readonly IHlsCleanupManager _cleanupManager;
         private readonly IManifestWriter _manifestWriter;
@@ -19,6 +20,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
         private readonly IBufferPool? _bufferPool;
 
         public HlsTransmuxerFactory(
+            IServiceProvider services,
             IHlsTransmuxerManager transmuxerManager,
             IHlsCleanupManager cleanupManager,
             IManifestWriter manifestWriter,
@@ -26,6 +28,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
             ILogger<HlsTransmuxer> logger,
             IBufferPool? bufferPool)
         {
+            _services = services;
             _transmuxerManager = transmuxerManager;
             _cleanupManager = cleanupManager;
             _manifestWriter = manifestWriter;
@@ -39,7 +42,10 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
         {
             try
             {
-                var outputPaths = await _config.OutputPathResolver.ResolveOutputPath(contextIdentifier, streamPath, streamArguments);
+                if (!await _config.Condition.IsEnabled(_services, streamPath, streamArguments))
+                    return null;
+
+                var outputPaths = await _config.OutputPathResolver.ResolveOutputPath(_services, contextIdentifier, streamPath, streamArguments);
 
                 var tsMuxer = new TsMuxer(outputPaths.TsFileOutputPath, _bufferPool);
 

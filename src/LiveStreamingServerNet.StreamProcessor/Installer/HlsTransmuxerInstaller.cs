@@ -30,6 +30,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Installer
 
             services.AddSingleton<IStreamProcessorFactory>(svc =>
                 new HlsTransmuxerFactory(
+                    svc,
                     svc.GetRequiredService<IHlsTransmuxerManager>(),
                     svc.GetRequiredService<IHlsCleanupManager>(),
                     svc.GetRequiredService<IManifestWriter>(),

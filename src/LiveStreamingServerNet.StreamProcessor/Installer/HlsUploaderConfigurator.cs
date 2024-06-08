@@ -25,5 +25,18 @@ namespace LiveStreamingServerNet.StreamProcessor.Installer
             Services.AddSingleton(implementationFactory);
             return this;
         }
+
+        public IHlsUploaderConfigurator AddHlsUploaderCondition<THlsUploaderCondition>()
+            where THlsUploaderCondition : class, IHlsUploaderCondition
+        {
+            Services.AddSingleton<IHlsUploaderCondition, THlsUploaderCondition>();
+            return this;
+        }
+
+        public IHlsUploaderConfigurator AddHlsUploaderCondition(Func<IServiceProvider, IHlsUploaderCondition> implementationFactory)
+        {
+            Services.AddSingleton(implementationFactory);
+            return this;
+        }
     }
 }

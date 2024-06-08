@@ -41,7 +41,8 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.FFmpeg
 
             try
             {
-                File.Delete(outputPath);
+                if (!string.IsNullOrWhiteSpace(outputPath))
+                    File.Delete(outputPath);
 
                 process.StartInfo = new ProcessStartInfo
                 {

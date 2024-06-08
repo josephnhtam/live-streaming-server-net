@@ -67,14 +67,16 @@ nav:
   - Overview: index.md
   - Getting Started: getting-started/index.md
   - Tutorials:
-    - Running with ASP.NET Core: tutorials/asp-net-core.md
-    - Serving FLV Live Streams: tutorials/serving-flv.md
-    - Serving HLS Live Streams: tutorials/serving-hls.md
-    - Adding an Admin Panel: tutorials/admin-panel.md
-    - Securing Streams with RTMPS: tutorials/rtmps.md
-    - RTMP Server Events: tutorials/rtmp-server-events.md
-    - Custom Authorization: tutorials/custom-authorization.md
-    - Custom FFmpeg Process: tutorials/custom-ffmpeg-process.md
+    - Essentials:
+      - Running with ASP.NET Core: tutorials/asp-net-core.md
+      - Serving FLV Live Streams: tutorials/serving-flv.md
+      - Adding an Admin Panel: tutorials/admin-panel.md
+      - Securing Streams with RTMPS: tutorials/rtmps.md
+      - RTMP Server Events: tutorials/rtmp-server-events.md
+      - Custom Authorization: tutorials/custom-authorization.md
+    - Stream Processing:
+      - Serving HLS Live Streams: tutorials/serving-hls.md
+      - Custom FFmpeg Process: tutorials/custom-ffmpeg-process.md
   - Kubernetes Integration:
     - Introduction: kubernetes-integration/introduction.md
     - Kubernetes Operator: kubernetes-integration/operator.md

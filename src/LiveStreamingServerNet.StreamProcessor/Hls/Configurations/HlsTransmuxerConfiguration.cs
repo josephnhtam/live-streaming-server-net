@@ -1,4 +1,5 @@
-﻿using LiveStreamingServerNet.StreamProcessor.Hls.Contracts;
+﻿using LiveStreamingServerNet.StreamProcessor.Contracts;
+using LiveStreamingServerNet.StreamProcessor.Hls.Contracts;
 
 namespace LiveStreamingServerNet.StreamProcessor.Hls.Configurations
 {
@@ -13,5 +14,6 @@ namespace LiveStreamingServerNet.StreamProcessor.Hls.Configurations
         public bool EnableCleanup { get; set; } = true;
         public TimeSpan CleanupDelay { get; set; } = TimeSpan.FromSeconds(30);
         public IHlsOutputPathResolver OutputPathResolver { get; set; } = new DefaultHlsOutputPathResolver();
+        public IStreamProcessorCondition Condition { get; set; } = new DefaultStreamProcessorCondition();
     }
 }
