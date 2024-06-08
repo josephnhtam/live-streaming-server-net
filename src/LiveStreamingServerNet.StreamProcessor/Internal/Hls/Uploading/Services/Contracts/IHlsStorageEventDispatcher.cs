@@ -4,7 +4,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Uploading.Services
 {
     internal interface IHlsStorageEventDispatcher
     {
-        Task HlsFilesStoredAsync(StreamProcessingContext context, bool initial, IReadOnlyList<StoredManifest> storedManifests, IReadOnlyList<StoredTsFile> storedTsFiles);
+        Task HlsFilesStoredAsync(StreamProcessingContext context, bool initial, IReadOnlyList<StoredManifest> storedManifests, IReadOnlyList<StoredTsSegment> storedTsSegments);
         Task HlsFilesStoringCompleteAsync(StreamProcessingContext context);
     }
 }

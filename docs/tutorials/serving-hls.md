@@ -66,7 +66,7 @@ public class HlsTransmuxerOutputPathResolver : IHlsOutputPathResolver
         return ValueTask.FromResult(new HlsOutputPath
         {
             ManifestOutputPath = Path.Combine(basePath, "output.m3u8"),
-            TsFileOutputPath = Path.Combine(basePath, "output{seqNum}.ts")
+            TsSegmentOutputPath = Path.Combine(basePath, "output{seqNum}.ts")
         });
     }
 }
@@ -196,7 +196,7 @@ public class HlsStorageEventListener : IHlsStorageEventHandler
         StreamProcessingContext context,
         bool initial,
         IReadOnlyList<StoredManifest> storedManifests,
-        IReadOnlyList<StoredTsFile> storedTsFiles)
+        IReadOnlyList<StoredTsSegment> storedTsSegments)
     {
         if (!initial)
             return Task.CompletedTask;

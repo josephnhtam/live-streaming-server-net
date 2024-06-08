@@ -8,6 +8,6 @@
     public record struct HlsOutputPath
     {
         public string ManifestOutputPath { get; init; }
-        public string TsFileOutputPath { get; init; }
+        public string TsSegmentOutputPath { get; init; }
     }
 }

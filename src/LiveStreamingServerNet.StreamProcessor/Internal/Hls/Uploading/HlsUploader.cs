@@ -46,7 +46,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Uploading
             _uploadedOnce.Clear();
 
             var lastPollingTime = DateTime.UtcNow;
-            var lastTsFiles = new List<TsFile>();
+            var lastTsSegments = new List<ManifestTsSegment>();
 
             try
             {
@@ -58,7 +58,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Uploading
                         continue;
 
                     var playlist = ManifestParser.Parse(_context.OutputPath);
-                    lastTsFiles = await PerformDeltaUploadAsync(playlist, lastTsFiles, cancellationToken);
+                    lastTsSegments = await PerformDeltaUploadAsync(playlist, lastTsSegments, cancellationToken);
                 }
             }
             catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { }
@@ -83,29 +83,29 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Uploading
             }
         }
 
-        private async Task<List<TsFile>> PerformDeltaUploadAsync(
+        private async Task<List<ManifestTsSegment>> PerformDeltaUploadAsync(
             IPlaylist playlist,
-            List<TsFile> lastTsFiles,
+            List<ManifestTsSegment> lastTsSegments,
             CancellationToken cancellationToken)
         {
             var manifests = playlist.Manifests;
-            var tsFiles = playlist.TsFiles;
+            var tsSegments = playlist.TsSegments;
 
-            var addedTsFiles = tsFiles.Except(lastTsFiles).ToList();
-            var updatedManifests = addedTsFiles.Select(x => x.ManifestName).Distinct().Select(x => manifests[x]).ToList();
+            var addedTsSegments = tsSegments.Except(lastTsSegments).ToList();
+            var updatedManifests = addedTsSegments.Select(x => x.ManifestName).Distinct().Select(x => manifests[x]).ToList();
 
-            await Task.WhenAll(_storageAdapters.Select(adapter => StoreAsync(adapter, updatedManifests, addedTsFiles)));
+            await Task.WhenAll(_storageAdapters.Select(adapter => StoreAsync(adapter, updatedManifests, addedTsSegments)));
 
-            if (_config.DeleteOutdatedTsFiles)
+            if (_config.DeleteOutdatedTsSegments)
             {
-                var removedTsFiles = lastTsFiles.Except(tsFiles).ToList();
-                await Task.WhenAll(_storageAdapters.Select(adapter => DeleteOutdatedAsync(adapter, removedTsFiles)));
+                var removedTsSegments = lastTsSegments.Except(tsSegments).ToList();
+                await Task.WhenAll(_storageAdapters.Select(adapter => DeleteOutdatedAsync(adapter, removedTsSegments)));
             }
 
-            return new List<TsFile>(tsFiles);
+            return new List<ManifestTsSegment>(tsSegments);
 
             async Task StoreAsync(IHlsStorageAdapter adapter, IReadOnlyList<Manifest> updatedManifests,
-                IReadOnlyList<TsFile> addedTsFiles)
+                IReadOnlyList<ManifestTsSegment> addedTsSegments)
             {
                 try
                 {
@@ -120,12 +120,12 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Uploading
                         manifestsToUpload = includeMasterManifest;
                     }
 
-                    var (storedManifests, storedTsFiles) =
-                        await adapter.StoreAsync(_context, manifestsToUpload, addedTsFiles, cancellationToken);
+                    var (storedManifests, storedTsSegments) =
+                        await adapter.StoreAsync(_context, manifestsToUpload, addedTsSegments, cancellationToken);
 
                     _uploadedOnce[adapter] = true;
 
-                    await _eventDispatcher.HlsFilesStoredAsync(_context, isInitial, storedManifests, storedTsFiles);
+                    await _eventDispatcher.HlsFilesStoredAsync(_context, isInitial, storedManifests, storedTsSegments);
                 }
                 catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { }
                 catch (Exception ex)
@@ -135,16 +135,16 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Uploading
                 }
             }
 
-            async Task DeleteOutdatedAsync(IHlsStorageAdapter adapter, IReadOnlyList<TsFile> removedTsFiles)
+            async Task DeleteOutdatedAsync(IHlsStorageAdapter adapter, IReadOnlyList<ManifestTsSegment> removedTsSegments)
             {
                 try
                 {
-                    await adapter.DeleteAsync(_context, removedTsFiles, cancellationToken);
+                    await adapter.DeleteAsync(_context, removedTsSegments, cancellationToken);
                 }
                 catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { }
                 catch (Exception ex)
                 {
-                    _logger.DeletingOutdatedTsFilesError(
+                    _logger.DeletingOutdatedTsSegmentsError(
                         _context.Processor, _context.Identifier, _context.InputPath, _context.OutputPath, _context.StreamPath, ex);
                 }
             }

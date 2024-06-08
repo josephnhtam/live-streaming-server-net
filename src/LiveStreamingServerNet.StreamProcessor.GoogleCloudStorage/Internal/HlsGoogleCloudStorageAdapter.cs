@@ -30,51 +30,51 @@ namespace LiveStreamingServerNet.StreamProcessor.GoogleCloudStorage.Internal
         public async Task<StoringResult> StoreAsync(
             StreamProcessingContext context,
             IReadOnlyList<Manifest> manifests,
-            IReadOnlyList<TsFile> tsFiles,
+            IReadOnlyList<ManifestTsSegment> tsSegments,
             CancellationToken cancellationToken)
         {
-            var storedTsFiles = await UploadTsFilesAsync(context, tsFiles, cancellationToken);
+            var storedTsSegments = await UploadTsSegmentsAsync(context, tsSegments, cancellationToken);
             var storedManifestFiles = await UploadManifestFilesAsync(context, manifests, cancellationToken);
-            return new StoringResult(storedManifestFiles, storedTsFiles);
+            return new StoringResult(storedManifestFiles, storedTsSegments);
         }
 
-        private async Task<IReadOnlyList<StoredTsFile>> UploadTsFilesAsync(
+        private async Task<IReadOnlyList<StoredTsSegment>> UploadTsSegmentsAsync(
             StreamProcessingContext context,
-            IReadOnlyList<TsFile> tsFiles,
+            IReadOnlyList<ManifestTsSegment> tsSegments,
             CancellationToken cancellationToken)
         {
             var dirPath = Path.GetDirectoryName(context.OutputPath) ?? string.Empty;
 
-            var tasks = new List<Task<StoredTsFile>>();
+            var tasks = new List<Task<StoredTsSegment>>();
 
-            foreach (var tsFile in tsFiles)
+            foreach (var tsSegment in tsSegments)
             {
-                var tsFilePath = Path.Combine(dirPath, tsFile.FileName);
-                tasks.Add(UploadTsFileAsync(tsFile.FileName, tsFilePath, cancellationToken));
+                var tsSegmentPath = Path.Combine(dirPath, tsSegment.FileName);
+                tasks.Add(UploadTsSegmentAsync(tsSegment.FileName, tsSegmentPath, cancellationToken));
             }
 
             return await Task.WhenAll(tasks);
 
-            async Task<StoredTsFile> UploadTsFileAsync
-                (string tsFileName, string tsFilePath, CancellationToken cancellationToken)
+            async Task<StoredTsSegment> UploadTsSegmentAsync
+                (string tsSegmentName, string tsSegmentPath, CancellationToken cancellationToken)
             {
                 try
                 {
-                    using var fileStream = File.OpenRead(tsFilePath);
+                    using var fileStream = File.OpenRead(tsSegmentPath);
 
                     var @object = new Google.Apis.Storage.v1.Data.Object
                     {
                         Bucket = _bucket,
-                        Name = _config.ObjectPathResolver.ResolveObjectPath(context, tsFileName),
-                        CacheControl = _config.TsFilesCacheControl
+                        Name = _config.ObjectPathResolver.ResolveObjectPath(context, tsSegmentName),
+                        CacheControl = _config.TsSegmentsCacheControl
                     };
 
                     var result = await _storageClient.UploadObjectAsync(
                         @object, fileStream,
-                        options: _config.TsFilesUploadObjectOptions,
+                        options: _config.TsSegmentsUploadObjectOptions,
                         cancellationToken: cancellationToken);
 
-                    return new StoredTsFile(tsFileName, _config.ObjectUriResolver.ResolveObjectUri(result));
+                    return new StoredTsSegment(tsSegmentName, _config.ObjectUriResolver.ResolveObjectUri(result));
                 }
                 catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
                 {
@@ -82,10 +82,10 @@ namespace LiveStreamingServerNet.StreamProcessor.GoogleCloudStorage.Internal
                 }
                 catch (Exception ex)
                 {
-                    _logger.UploadingTsFileError(
-                        context.Processor, context.Identifier, context.InputPath, context.OutputPath, context.StreamPath, tsFilePath, ex);
+                    _logger.UploadingTsSegmentError(
+                        context.Processor, context.Identifier, context.InputPath, context.OutputPath, context.StreamPath, tsSegmentPath, ex);
 
-                    return new StoredTsFile(tsFileName, null);
+                    return new StoredTsSegment(tsSegmentName, null);
                 }
             }
         }
@@ -139,23 +139,23 @@ namespace LiveStreamingServerNet.StreamProcessor.GoogleCloudStorage.Internal
             }
         }
 
-        public async Task DeleteAsync(StreamProcessingContext context, IReadOnlyList<TsFile> tsFiles, CancellationToken cancellationToken)
+        public async Task DeleteAsync(StreamProcessingContext context, IReadOnlyList<ManifestTsSegment> tsSegments, CancellationToken cancellationToken)
         {
             var tasks = new List<Task>();
 
-            foreach (var tsFile in tsFiles)
+            foreach (var tsSegment in tsSegments)
             {
-                tasks.Add(DeleteTsFileAsync(tsFile.FileName, cancellationToken));
+                tasks.Add(DeleteTsSegmentAsync(tsSegment.FileName, cancellationToken));
             }
 
             await Task.WhenAll(tasks);
 
-            async Task DeleteTsFileAsync
-                (string tsFileName, CancellationToken cancellationToken)
+            async Task DeleteTsSegmentAsync
+                (string tsSegmentName, CancellationToken cancellationToken)
             {
                 try
                 {
-                    var objectPath = _config.ObjectPathResolver.ResolveObjectPath(context, tsFileName);
+                    var objectPath = _config.ObjectPathResolver.ResolveObjectPath(context, tsSegmentName);
 
                     await _storageClient.DeleteObjectAsync(_bucket, objectPath, cancellationToken: cancellationToken);
                 }
@@ -165,7 +165,7 @@ namespace LiveStreamingServerNet.StreamProcessor.GoogleCloudStorage.Internal
                 }
                 catch (Exception ex)
                 {
-                    _logger.DeletingTsFileError(
+                    _logger.DeletingTsSegmentError(
                         context.Processor, context.Identifier, context.InputPath, context.OutputPath, context.StreamPath, ex);
                 }
             }

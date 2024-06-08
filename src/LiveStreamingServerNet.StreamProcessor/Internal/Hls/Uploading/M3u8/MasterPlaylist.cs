@@ -8,7 +8,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Uploading.M3u8
         public bool IsMaster => true;
         public Manifest Manifest { get; }
         public IReadOnlyList<MediaPlaylist> MediaPlaylists { get; }
-        public IReadOnlyList<TsFile> TsFiles { get; }
+        public IReadOnlyList<ManifestTsSegment> TsSegments { get; }
 
         private Dictionary<string, Manifest>? _manifests;
         public IReadOnlyDictionary<string, Manifest> Manifests
@@ -26,7 +26,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Uploading.M3u8
         {
             Manifest = content;
             MediaPlaylists = mediaPlaylists;
-            TsFiles = mediaPlaylists.SelectMany(x => x.TsFiles).Distinct().ToList();
+            TsSegments = mediaPlaylists.SelectMany(x => x.TsSegments).Distinct().ToList();
         }
 
         public static MasterPlaylist Parse(Manifest content, string filePath)

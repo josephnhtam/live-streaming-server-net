@@ -89,7 +89,7 @@ namespace LiveStreamingServerNet.HlsDemo
                 return ValueTask.FromResult(new HlsOutputPath
                 {
                     ManifestOutputPath = Path.Combine(basePath, "output.m3u8"),
-                    TsFileOutputPath = Path.Combine(basePath, "output{seqNum}.ts")
+                    TsSegmentOutputPath = Path.Combine(basePath, "output{seqNum}.ts")
                 });
             }
         }

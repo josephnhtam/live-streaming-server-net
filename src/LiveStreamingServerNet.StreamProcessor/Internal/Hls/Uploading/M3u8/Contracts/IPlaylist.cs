@@ -2,7 +2,7 @@
 
 namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Uploading.M3u8.Contracts
 {
-    internal interface IPlaylist : IManifestContainer, ITsFilesContainer
+    internal interface IPlaylist : IManifestContainer, ITsSegmentsContainer
     {
         bool IsMaster { get; }
         Manifest Manifest { get; }
@@ -13,8 +13,8 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Uploading.M3u8.Con
         IReadOnlyDictionary<string, Manifest> Manifests { get; }
     }
 
-    internal interface ITsFilesContainer
+    internal interface ITsSegmentsContainer
     {
-        IReadOnlyList<TsFile> TsFiles { get; }
+        IReadOnlyList<ManifestTsSegment> TsSegments { get; }
     }
 }

@@ -47,13 +47,13 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
 
                 var outputPaths = await _config.OutputPathResolver.ResolveOutputPath(_services, contextIdentifier, streamPath, streamArguments);
 
-                var tsMuxer = new TsMuxer(outputPaths.TsFileOutputPath, _bufferPool);
+                var tsMuxer = new TsMuxer(outputPaths.TsSegmentOutputPath, _bufferPool);
 
                 var config = new HlsTransmuxer.Configuration(
                     contextIdentifier,
                     _config.Name,
                     outputPaths.ManifestOutputPath,
-                    outputPaths.TsFileOutputPath,
+                    outputPaths.TsSegmentOutputPath,
                     _config.SegmentListSize,
                     _config.DeleteOutdatedSegments,
                     _config.MaxSegmentSize,

@@ -12,7 +12,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Hls
             return ValueTask.FromResult(new HlsOutputPath
             {
                 ManifestOutputPath = Path.Combine(directory, "output.m3u8"),
-                TsFileOutputPath = Path.Combine(directory, "output{seqNum}.ts")
+                TsSegmentOutputPath = Path.Combine(directory, "output{seqNum}.ts")
             });
         }
     }

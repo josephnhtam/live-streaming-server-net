@@ -25,8 +25,8 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Logging
         [LoggerMessage(LogLevel.Error, "An error occurred while uploading HLS to store | StreamProcessor: {StreamProcessor} | Identifier: {Identifier} | InputPath: {InputPath} | OutputPath: {OutputPath} | StreamPath: {StreamPath}")]
         public static partial void UploadingHlsToStoreError(this ILogger logger, string streamProcessor, Guid identifier, string inputPath, string outputPath, string streamPath, Exception ex);
 
-        [LoggerMessage(LogLevel.Error, "An error occurred while delete outdated TS files | StreamProcessor: {StreamProcessor} | Identifier: {Identifier} | InputPath: {InputPath} | OutputPath: {OutputPath} | StreamPath: {StreamPath}")]
-        public static partial void DeletingOutdatedTsFilesError(this ILogger logger, string streamProcessor, Guid identifier, string inputPath, string outputPath, string streamPath, Exception ex);
+        [LoggerMessage(LogLevel.Error, "An error occurred while delete outdated TS segments | StreamProcessor: {StreamProcessor} | Identifier: {Identifier} | InputPath: {InputPath} | OutputPath: {OutputPath} | StreamPath: {StreamPath}")]
+        public static partial void DeletingOutdatedTsSegmentsError(this ILogger logger, string streamProcessor, Guid identifier, string inputPath, string outputPath, string streamPath, Exception ex);
 
         [LoggerMessage(LogLevel.Error, "An error occurred while dispatching HLS files stored event | StreamProcessor: {StreamProcessor} | Identifier: {Identifier} | InputPath: {InputPath} | OutputPath: {OutputPath} | StreamPath: {StreamPath}")]
         public static partial void DispatchingHlsFilesStoredEventError(this ILogger logger, string streamProcessor, Guid identifier, string inputPath, string outputPath, string streamPath, Exception ex);

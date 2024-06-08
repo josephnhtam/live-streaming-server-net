@@ -7,7 +7,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Uploading.M3u8
     {
         public bool IsMaster => false;
         public Manifest Manifest { get; }
-        public IReadOnlyList<TsFile> TsFiles { get; }
+        public IReadOnlyList<ManifestTsSegment> TsSegments { get; }
 
         private Dictionary<string, Manifest>? _manifests;
         public IReadOnlyDictionary<string, Manifest> Manifests
@@ -21,15 +21,15 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Uploading.M3u8
             }
         }
 
-        private MediaPlaylist(Manifest content, List<TsFile> tsFiles)
+        private MediaPlaylist(Manifest content, List<ManifestTsSegment> tsSegments)
         {
             Manifest = content;
-            TsFiles = tsFiles;
+            TsSegments = tsSegments;
         }
 
         public static MediaPlaylist Parse(Manifest content)
         {
-            List<TsFile> tsFiles = new List<TsFile>();
+            List<ManifestTsSegment> tsSegments = new List<ManifestTsSegment>();
 
             using var stringReader = new StringReader(content.Content);
 
@@ -39,9 +39,9 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Uploading.M3u8
 
             while ((line = stringReader.ReadLine()) != null)
                 if (line.StartsWith("#EXTINF") && (line = stringReader.ReadLine()) != null)
-                    tsFiles.Add(new TsFile(content.Name, line));
+                    tsSegments.Add(new ManifestTsSegment(content.Name, line));
 
-            return new MediaPlaylist(content, new List<TsFile>(tsFiles));
+            return new MediaPlaylist(content, new List<ManifestTsSegment>(tsSegments));
         }
     }
 }

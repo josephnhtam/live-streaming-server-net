@@ -6,7 +6,7 @@
             Guid ContextIdentifier,
             string TransmuxerName,
             string ManifestOutputPath,
-            string TsFileOutputPath,
+            string TsSegmentOutputPath,
             int SegmentListSize,
             bool DeleteOutdatedSegments,
             int MaxSegmentSize,
