@@ -2,7 +2,7 @@
 using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.Rtmp.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Contracts;
-using Microsoft.AspNetCore.WebUtilities;
+using System.Web;
 
 namespace LiveStreamingServerNet.StreamProcessor
 {
@@ -25,8 +25,7 @@ namespace LiveStreamingServerNet.StreamProcessor
 
         private string AddAuthCode(Uri inputUri)
         {
-            var code = _serverContext.AuthCode;
-            return QueryHelpers.AddQueryString(inputUri.ToString(), "code", code);
+            return $"{inputUri}?code={HttpUtility.UrlEncode(_serverContext.AuthCode)}";
         }
 
         private Uri GetLocalServerBaseUri()
