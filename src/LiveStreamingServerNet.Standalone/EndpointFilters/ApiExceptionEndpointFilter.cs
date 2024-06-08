@@ -1,7 +1,7 @@
-﻿using LiveStreamingServerNet.Common.Exceptions;
+﻿using LiveStreamingServerNet.Standalone.Exceptions;
 using Microsoft.AspNetCore.Http;
 
-namespace LiveStreamingServerNet.Common.EndpointMiddlewares
+namespace LiveStreamingServerNet.Standalone.EndpointFilters
 {
     public class ApiExceptionEndpointFilter : IEndpointFilter
     {

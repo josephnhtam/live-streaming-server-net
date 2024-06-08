@@ -1,4 +1,4 @@
-﻿using LiveStreamingServerNet.Common.Dtos;
+﻿using LiveStreamingServerNet.AdminPanelUI.Dtos;
 
 namespace LiveStreamingServerNet.Standalone.Services.Contracts
 {

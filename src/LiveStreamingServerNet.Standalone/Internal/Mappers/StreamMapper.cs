@@ -1,4 +1,4 @@
-﻿using LiveStreamingServerNet.Common.Dtos;
+﻿using LiveStreamingServerNet.AdminPanelUI.Dtos;
 using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.Standalone.Internal.Contracts;
 using Riok.Mapperly.Abstractions;

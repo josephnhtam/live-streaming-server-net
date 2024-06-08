@@ -23,6 +23,7 @@
   </ItemGroup>
   
   <ItemGroup>
+    <ProjectReference Include="..\LiveStreamingServerNet.AdminPanelUI\LiveStreamingServerNet.AdminPanelUI.csproj" />
     <ProjectReference Include="..\LiveStreamingServerNet\LiveStreamingServerNet.csproj" />
   </ItemGroup>
 

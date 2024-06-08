@@ -1,7 +1,7 @@
-﻿using LiveStreamingServerNet.Common.Dtos;
+﻿using LiveStreamingServerNet.AdminPanelUI.Dtos;
 using Microsoft.AspNetCore.Http;
 
-namespace LiveStreamingServerNet.Common.Exceptions
+namespace LiveStreamingServerNet.Standalone.Exceptions
 {
     public class ApiException : Exception
     {

@@ -1,4 +1,4 @@
-﻿namespace LiveStreamingServerNet.Common.Dtos
+﻿namespace LiveStreamingServerNet.AdminPanelUI.Dtos
 {
     public class ErrorResponse
     {
