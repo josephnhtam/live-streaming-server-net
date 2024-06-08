@@ -1,4 +1,5 @@
-﻿using LiveStreamingServerNet.StreamProcessor.Configurations;
+﻿using LiveStreamingServerNet.Networking.Contracts;
+using LiveStreamingServerNet.StreamProcessor.Configurations;
 using LiveStreamingServerNet.StreamProcessor.Hls.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Uploading.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Uploading.Services.Contracts;
@@ -9,6 +10,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Uploading
 {
     internal class HlsUploaderFactory : IHlsUploaderFactory
     {
+        private readonly IServer _server;
         private readonly IHlsStorageEventDispatcher _eventDispatcher;
         private readonly IEnumerable<IHlsUploaderCondition> _conditions;
         private readonly IEnumerable<IHlsStorageAdapter> _storageAdapters;
@@ -16,12 +18,14 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Uploading
         private readonly IOptions<HlsUploaderConfiguration> _config;
 
         public HlsUploaderFactory(
+            IServer server,
             IHlsStorageEventDispatcher eventDispatcher,
             IEnumerable<IHlsUploaderCondition> conditions,
             IEnumerable<IHlsStorageAdapter> storageAdapters,
             ILogger<HlsUploader> logger,
             IOptions<HlsUploaderConfiguration> config)
         {
+            _server = server;
             _eventDispatcher = eventDispatcher;
             _conditions = conditions;
             _storageAdapters = storageAdapters;
@@ -34,7 +38,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Uploading
             if (!await ShouldUploadAsync(context))
                 return null;
 
-            return new HlsUploader(context, _eventDispatcher, _storageAdapters, _logger, _config);
+            return new HlsUploader(context, _server, _eventDispatcher, _storageAdapters, _logger, _config);
         }
 
         private async Task<bool> ShouldUploadAsync(StreamProcessingContext context)

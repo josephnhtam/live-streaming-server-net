@@ -1,4 +1,5 @@
-﻿using LiveStreamingServerNet.StreamProcessor.Configurations;
+﻿using LiveStreamingServerNet.Networking.Contracts;
+using LiveStreamingServerNet.StreamProcessor.Configurations;
 using LiveStreamingServerNet.StreamProcessor.Hls;
 using LiveStreamingServerNet.StreamProcessor.Hls.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Uploading.Contracts;
@@ -14,6 +15,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Uploading
 {
     internal class HlsUploader : IHlsUploader
     {
+        private readonly IServer _server;
         private readonly StreamProcessingContext _context;
         private readonly IHlsStorageEventDispatcher _eventDispatcher;
         private readonly IEnumerable<IHlsStorageAdapter> _storageAdapters;
@@ -24,12 +26,14 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Uploading
 
         public HlsUploader(
             StreamProcessingContext context,
+            IServer server,
             IHlsStorageEventDispatcher eventDispatcher,
             IEnumerable<IHlsStorageAdapter> storageAdapters,
             ILogger<HlsUploader> logger,
             IOptions<HlsUploaderConfiguration> config)
         {
             _context = context;
+            _server = server;
             _eventDispatcher = eventDispatcher;
             _storageAdapters = storageAdapters;
             _logger = logger;
@@ -62,6 +66,8 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Uploading
             {
                 _logger.RunningHlsUploaderError(
                     _context.Processor, _context.Identifier, _context.InputPath, _context.OutputPath, _context.StreamPath, ex);
+
+                _server.GetClient(_context.ClientId)?.Disconnect();
             }
             finally
             {
@@ -103,10 +109,20 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Uploading
             {
                 try
                 {
-                    var (storedManifests, storedTsFiles) =
-                        await adapter.StoreAsync(_context, updatedManifests, addedTsFiles, cancellationToken);
-
                     bool isInitial = !_uploadedOnce.ContainsKey(adapter);
+
+                    var manifestsToUpload = updatedManifests;
+
+                    if (isInitial && playlist.IsMaster)
+                    {
+                        var includeMasterManifest = new List<Manifest> { playlist.Manifest };
+                        includeMasterManifest.AddRange(updatedManifests);
+                        manifestsToUpload = includeMasterManifest;
+                    }
+
+                    var (storedManifests, storedTsFiles) =
+                        await adapter.StoreAsync(_context, manifestsToUpload, addedTsFiles, cancellationToken);
+
                     _uploadedOnce[adapter] = true;
 
                     await _eventDispatcher.HlsFilesStoredAsync(_context, isInitial, storedManifests, storedTsFiles);

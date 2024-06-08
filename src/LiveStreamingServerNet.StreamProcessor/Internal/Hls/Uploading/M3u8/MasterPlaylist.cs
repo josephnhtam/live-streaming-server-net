@@ -5,6 +5,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Uploading.M3u8
 {
     internal class MasterPlaylist : IPlaylist
     {
+        public bool IsMaster => true;
         public Manifest Manifest { get; }
         public IReadOnlyList<MediaPlaylist> MediaPlaylists { get; }
         public IReadOnlyList<TsFile> TsFiles { get; }
@@ -28,9 +29,10 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Uploading.M3u8
             TsFiles = mediaPlaylists.SelectMany(x => x.TsFiles).Distinct().ToList();
         }
 
-        public static MasterPlaylist Parse(Manifest content)
+        public static MasterPlaylist Parse(Manifest content, string filePath)
         {
-            List<MediaPlaylist> mediaPlaylists = new List<MediaPlaylist>();
+            var dirPath = Path.GetDirectoryName(filePath) ?? string.Empty;
+            var mediaPlaylists = new List<MediaPlaylist>();
 
             using var stringReader = new StringReader(content.Content);
 
@@ -42,7 +44,8 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Uploading.M3u8
             {
                 if (line.StartsWith("#EXT-X-STREAM-INF") && (line = stringReader.ReadLine()) != null)
                 {
-                    var mediaPlaylistContent = File.ReadAllText(line);
+                    var subManifestPath = Path.Combine(dirPath, line);
+                    var mediaPlaylistContent = File.ReadAllText(subManifestPath);
                     mediaPlaylists.Add(MediaPlaylist.Parse(new(line, mediaPlaylistContent)));
                 }
             }

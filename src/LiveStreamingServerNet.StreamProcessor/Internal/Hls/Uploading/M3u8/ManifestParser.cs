@@ -10,7 +10,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Uploading.M3u8
             var content = File.ReadAllText(filePath);
 
             return IsMasterPlaylist(content)
-                ? MasterPlaylist.Parse(new(name, content))
+                ? MasterPlaylist.Parse(new(name, content), filePath)
                 : MediaPlaylist.Parse(new(name, content));
         }
 

@@ -4,6 +4,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Uploading.M3u8.Con
 {
     internal interface IPlaylist : IManifestContainer, ITsFilesContainer
     {
+        bool IsMaster { get; }
         Manifest Manifest { get; }
     }
 

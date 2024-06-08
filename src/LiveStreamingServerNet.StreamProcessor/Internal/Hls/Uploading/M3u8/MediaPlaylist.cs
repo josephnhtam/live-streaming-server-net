@@ -5,6 +5,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Uploading.M3u8
 {
     internal class MediaPlaylist : IPlaylist
     {
+        public bool IsMaster => false;
         public Manifest Manifest { get; }
         public IReadOnlyList<TsFile> TsFiles { get; }
 
