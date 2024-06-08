@@ -59,6 +59,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
                     _config.DeleteOutdatedSegments,
                     _config.MaxSegmentSize,
                     _config.MaxSegmentBufferSize,
+                    _config.MinSegmentLength,
                     _config.AudioOnlySegmentLength,
                     _config.CleanupDelay
                 );

@@ -11,6 +11,7 @@
             bool DeleteOutdatedSegments,
             int MaxSegmentSize,
             int MaxSegmentBufferSize,
+            TimeSpan MinSegmentLength,
             TimeSpan AudioOnlySegmentLength,
             TimeSpan? CleanupDelay
         );

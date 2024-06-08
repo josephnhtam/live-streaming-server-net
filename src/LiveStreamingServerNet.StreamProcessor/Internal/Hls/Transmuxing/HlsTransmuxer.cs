@@ -157,7 +157,8 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
 
             bool ShouldFlush(bool isKeyFrame, uint timestamp)
             {
-                if (isKeyFrame && _hasVideo)
+                if (isKeyFrame && _hasVideo && _tsMuxer.SegmentTimestamp.HasValue &&
+                    (timestamp - _tsMuxer.SegmentTimestamp.Value) >= _config.MinSegmentLength.TotalMilliseconds)
                 {
                     return true;
                 }
