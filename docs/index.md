@@ -89,3 +89,13 @@ Live-Streaming-Server-Net is a high-performance and flexible toolset which allow
     </tr>
   </tbody>
 </table>
+
+## License
+
+This project is licensed under the terms of the [MIT license](https://github.com/josephnhtam/live-streaming-server-net/blob/master/LICENSE).
+
+## Acknowledgments
+
+[![JetBrains](https://avatars.githubusercontent.com/u/878437?s=100&v=4)](https://www.jetbrains.com/)
+
+Special thanks to [JetBrains](https://www.jetbrains.com/) for providing the open-source software license that supports the development of this project.
