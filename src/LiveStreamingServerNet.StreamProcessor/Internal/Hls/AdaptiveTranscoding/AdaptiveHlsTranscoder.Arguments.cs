@@ -31,7 +31,8 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.AdaptiveTranscodin
             arguments.Add($"-hls_time {_config.HlsOptions.SegmentLength.TotalSeconds}");
 
             var hlsFlags = CreateHlsFlags(_config.HlsOptions);
-            if (hlsFlags.Any()) arguments.Append($"-hls_flags {string.Join('+', hlsFlags)}");
+            if (hlsFlags.Any()) arguments.Add($"-hls_flags {string.Join('+', hlsFlags)}");
+
             AddOptionalArgument(arguments, _config.HlsOptions.ExtraArguments);
 
             arguments.Add($"-var_stream_map \"{string.Join(' ', CreateStreamMap(downsamplingFilters))}\"");
