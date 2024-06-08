@@ -61,7 +61,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
                     _config.MaxSegmentBufferSize,
                     _config.MinSegmentLength,
                     _config.AudioOnlySegmentLength,
-                    _config.CleanupDelay
+                    _config.DeleteOutdatedSegments ? _config.CleanupDelay : null
                 );
 
                 return new HlsTransmuxer(streamPath, client, _transmuxerManager, _cleanupManager, _manifestWriter, tsMuxer, config, _logger);

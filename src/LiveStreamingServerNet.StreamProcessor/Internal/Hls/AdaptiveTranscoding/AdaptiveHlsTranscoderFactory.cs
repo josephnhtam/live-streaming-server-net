@@ -57,7 +57,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.AdaptiveTranscodin
                     _config.VideoDecodingArguments,
                     _config.AudioDecodingArguments,
 
-                    _config.CleanupDelay
+                    _config.HlsOptions.DeleteOutdatedSegments ? _config.CleanupDelay : null
                 );
 
                 return new AdaptiveHlsTranscoder(_cleanupManager, config, _logger);
