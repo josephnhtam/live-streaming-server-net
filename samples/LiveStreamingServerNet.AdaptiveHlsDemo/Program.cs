@@ -61,8 +61,6 @@ namespace LiveStreamingServerNet.AdaptiveHlsDemo
             return LiveStreamingServerBuilder.Create()
                 .ConfigureRtmpServer(options => options
                     .Configure(options => options.EnableGopCaching = false)
-                    .AddVideoCodecFilter(builder => builder.Include(VideoCodec.AVC))
-                    .AddAudioCodecFilter(builder => builder.Include(AudioCodec.AAC))
                     .AddStreamProcessor(options =>
                     {
                         options.AddStreamProcessorEventHandler(svc =>
