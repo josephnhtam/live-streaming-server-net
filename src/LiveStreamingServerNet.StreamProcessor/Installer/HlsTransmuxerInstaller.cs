@@ -2,6 +2,8 @@
 using LiveStreamingServerNet.StreamProcessor.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Hls.Configurations;
 using LiveStreamingServerNet.StreamProcessor.Installer.Contracts;
+using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Services;
+using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Services.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing.M3u8;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing.M3u8.Contracts;

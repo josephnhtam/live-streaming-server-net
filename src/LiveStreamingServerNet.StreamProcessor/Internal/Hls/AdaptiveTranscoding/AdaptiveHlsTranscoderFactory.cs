@@ -1,6 +1,7 @@
 ﻿using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Hls.Configurations;
+using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Services.Contracts;
 using Microsoft.Extensions.Logging;
 
 namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.AdaptiveTranscoding
@@ -8,15 +9,18 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.AdaptiveTranscodin
     internal class AdaptiveHlsTranscoderFactory : IStreamProcessorFactory
     {
         private readonly IServiceProvider _services;
+        private readonly IHlsCleanupManager _cleanupManager;
         private readonly AdaptiveHlsTranscoderConfiguration _config;
         private readonly ILogger<AdaptiveHlsTranscoder> _logger;
 
         public AdaptiveHlsTranscoderFactory(
             IServiceProvider services,
+            IHlsCleanupManager cleanupManager,
             AdaptiveHlsTranscoderConfiguration config,
             ILogger<AdaptiveHlsTranscoder> logger)
         {
             _services = services;
+            _cleanupManager = cleanupManager;
             _config = config;
             _logger = logger;
         }
@@ -51,10 +55,12 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.AdaptiveTranscodin
                     _config.AudioEncodingArguments,
 
                     _config.VideoDecodingArguments,
-                    _config.AudioDecodingArguments
+                    _config.AudioDecodingArguments,
+
+                    _config.CleanupDelay
                 );
 
-                return new AdaptiveHlsTranscoder(config, _logger);
+                return new AdaptiveHlsTranscoder(_cleanupManager, config, _logger);
             }
             catch
             {

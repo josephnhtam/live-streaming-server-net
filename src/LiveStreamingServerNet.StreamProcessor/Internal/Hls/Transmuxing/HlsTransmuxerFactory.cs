@@ -2,6 +2,7 @@
 using LiveStreamingServerNet.StreamProcessor.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Hls.Configurations;
 using LiveStreamingServerNet.StreamProcessor.Internal.Containers;
+using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Services.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing.M3u8.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing.Services.Contracts;
 using LiveStreamingServerNet.Utilities.Contracts;
@@ -59,7 +60,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
                     _config.MaxSegmentSize,
                     _config.MaxSegmentBufferSize,
                     _config.AudioOnlySegmentLength,
-                    _config.EnableCleanup ? _config.CleanupDelay : null
+                    _config.CleanupDelay
                 );
 
                 return new HlsTransmuxer(streamPath, client, _transmuxerManager, _cleanupManager, _manifestWriter, tsMuxer, config, _logger);

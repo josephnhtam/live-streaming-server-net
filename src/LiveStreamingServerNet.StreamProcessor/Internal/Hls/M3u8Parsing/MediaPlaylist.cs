@@ -1,7 +1,7 @@
 ﻿using LiveStreamingServerNet.StreamProcessor.Hls;
-using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Uploading.M3u8.Contracts;
+using LiveStreamingServerNet.StreamProcessor.Internal.Hls.M3u8Parsing.Contracts;
 
-namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Uploading.M3u8
+namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.M3u8Parsing
 {
     internal class MediaPlaylist : IPlaylist
     {
@@ -38,10 +38,28 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Uploading.M3u8
                 throw new InvalidOperationException("Invalid M3U8 file format");
 
             while ((line = stringReader.ReadLine()) != null)
-                if (line.StartsWith("#EXTINF") && (line = stringReader.ReadLine()) != null)
-                    tsSegments.Add(new ManifestTsSegment(content.Name, line));
+            {
+                if (line.StartsWith("#EXTINF:"))
+                {
+                    var duration = GetDuration(line);
+
+                    if ((line = stringReader.ReadLine()) != null)
+                        tsSegments.Add(new ManifestTsSegment(content.Name, line, duration));
+                }
+            }
 
             return new MediaPlaylist(content, new List<ManifestTsSegment>(tsSegments));
+
+            static float GetDuration(string line)
+            {
+                var endPos = line.IndexOf(',');
+                if (endPos < 0) endPos = line.Length;
+
+                if (float.TryParse(line.AsSpan(8, endPos - 8), out var duration))
+                    return duration;
+
+                return 0;
+            }
         }
     }
 }

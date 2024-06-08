@@ -2,9 +2,9 @@
 using LiveStreamingServerNet.StreamProcessor.Configurations;
 using LiveStreamingServerNet.StreamProcessor.Hls;
 using LiveStreamingServerNet.StreamProcessor.Hls.Contracts;
+using LiveStreamingServerNet.StreamProcessor.Internal.Hls.M3u8Parsing;
+using LiveStreamingServerNet.StreamProcessor.Internal.Hls.M3u8Parsing.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Uploading.Contracts;
-using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Uploading.M3u8;
-using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Uploading.M3u8.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Uploading.Services.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Logging;
 using Microsoft.Extensions.Logging;

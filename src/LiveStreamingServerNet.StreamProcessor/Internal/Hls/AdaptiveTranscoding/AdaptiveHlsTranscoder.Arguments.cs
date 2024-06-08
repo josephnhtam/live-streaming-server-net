@@ -8,7 +8,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.AdaptiveTranscodin
     {
         private string BuildFFmpegArguments(JsonDocument streamInfo)
         {
-            GetManifestPath(_config.OutputPath, out var masterManifestName, out var manifestPath);
+            GetManifestPath(_config.ManifestOutputPath, out var masterManifestName, out var manifestPath);
             var downsamplingFilters = GetDownsamplingFilters(streamInfo, _config.DownsamplingFilters);
 
             var arguments = new List<string>();

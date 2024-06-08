@@ -3,6 +3,7 @@ using LiveStreamingServerNet.Rtmp;
 using LiveStreamingServerNet.StreamProcessor.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Containers;
 using LiveStreamingServerNet.StreamProcessor.Internal.Containers.Contracts;
+using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Services.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing.M3u8.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing.Services.Contracts;
@@ -279,14 +280,49 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
 
         private async ValueTask PreRunAsync()
         {
-            if (_config.CleanupDelay.HasValue)
-                await _cleanupManager.ExecuteCleanupAsync(_config.ManifestOutputPath);
+            await ExecuteCleanupAsync();
         }
 
         private async ValueTask PostRunAsync()
         {
-            if (_config.CleanupDelay.HasValue)
-                await _cleanupManager.ScheduleCleanupAsync(_config.ManifestOutputPath, _segments.ToList(), _config.CleanupDelay.Value);
+            await ScheduleCleanupAsync();
+        }
+
+        private async Task ExecuteCleanupAsync()
+        {
+            if (!_config.CleanupDelay.HasValue)
+                return;
+
+            await _cleanupManager.ExecuteCleanupAsync(_config.ManifestOutputPath);
+        }
+
+        private async ValueTask ScheduleCleanupAsync()
+        {
+            if (!_config.CleanupDelay.HasValue)
+                return;
+
+            try
+            {
+                var segments = _segments.ToList();
+                var cleanupDelay = CalculateCleanupDelay(segments, _config.CleanupDelay.Value);
+
+                var files = new List<string> { _config.ManifestOutputPath };
+                files.AddRange(segments.Select(x => x.FilePath));
+
+                await _cleanupManager.ScheduleCleanupAsync(_config.ManifestOutputPath, files, cleanupDelay);
+            }
+            catch (Exception ex)
+            {
+                _logger.SchedulingHlsCleanupError(_config.ManifestOutputPath, ex);
+            }
+        }
+
+        private static TimeSpan CalculateCleanupDelay(IList<TsSegment> tsSegments, TimeSpan cleanupDelay)
+        {
+            if (!tsSegments.Any())
+                return TimeSpan.Zero;
+
+            return TimeSpan.FromMilliseconds(tsSegments.Count * tsSegments.Max(x => x.Duration)) + cleanupDelay;
         }
 
         private record struct PendingMediaPacket(MediaType MediaType, IRentedBuffer RentedBuffer, uint Timestamp);

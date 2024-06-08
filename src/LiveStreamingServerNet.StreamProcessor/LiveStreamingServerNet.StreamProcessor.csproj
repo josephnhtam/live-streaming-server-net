@@ -25,6 +25,7 @@
 
   <ItemGroup>
     <Folder Include="Internal\Hls\AdaptiveTranscoding\Contracts\" />
+    <Folder Include="Internal\Hls\Services\Contracts\" />
   </ItemGroup>
 
 </Project>

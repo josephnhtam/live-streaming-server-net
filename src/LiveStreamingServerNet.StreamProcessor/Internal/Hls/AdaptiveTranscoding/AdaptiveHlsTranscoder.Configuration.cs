@@ -7,7 +7,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.AdaptiveTranscodin
         public record struct Configuration(
             Guid ContextIdentifier,
             string Name,
-            string OutputPath,
+            string ManifestOutputPath,
 
             string FFmpegPath,
             int FFmpegGracefulTerminationSeconds,
@@ -23,7 +23,9 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.AdaptiveTranscodin
             string AudioEncodingArguments,
 
             string? VideoDecodingArguments = null,
-            string? AudioDecodingArguments = null
+            string? AudioDecodingArguments = null,
+
+            TimeSpan? CleanupDelay = null
         );
     }
 }

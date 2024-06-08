@@ -1,6 +1,9 @@
 ﻿using LiveStreamingServerNet.StreamProcessor.Contracts;
+using LiveStreamingServerNet.StreamProcessor.Hls;
 using LiveStreamingServerNet.StreamProcessor.Internal.FFmpeg;
 using LiveStreamingServerNet.StreamProcessor.Internal.FFprobe;
+using LiveStreamingServerNet.StreamProcessor.Internal.Hls.M3u8Parsing;
+using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Services.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Logging;
 using LiveStreamingServerNet.Utilities;
 using Microsoft.Extensions.Logging;
@@ -10,19 +13,24 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.AdaptiveTranscodin
 {
     internal partial class AdaptiveHlsTranscoder : IStreamProcessor
     {
+        private readonly IHlsCleanupManager _cleanupManager;
         private readonly Configuration _config;
         private readonly ILogger _logger;
 
         public string Name { get; }
         public Guid ContextIdentifier { get; }
 
-        public AdaptiveHlsTranscoder(Configuration config, ILogger<AdaptiveHlsTranscoder> logger)
+        public AdaptiveHlsTranscoder(
+            IHlsCleanupManager cleanupManager,
+            Configuration config,
+            ILogger<AdaptiveHlsTranscoder> logger)
         {
-            DirectoryUtility.CreateDirectoryIfNotExists(Path.GetDirectoryName(config.OutputPath));
+            DirectoryUtility.CreateDirectoryIfNotExists(Path.GetDirectoryName(config.ManifestOutputPath));
 
             Name = config.Name;
             ContextIdentifier = config.ContextIdentifier;
 
+            _cleanupManager = cleanupManager;
             _config = config;
             _logger = logger;
         }
@@ -70,20 +78,85 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.AdaptiveTranscodin
             OnStreamProcessorEnded? onEnded,
             CancellationToken cancellation)
         {
-            var arguments = BuildFFmpegArguments(streamInfo);
-
-            var ffmpegConfig = new FFmpegProcess.Configuration
+            try
             {
-                ContextIdentifier = ContextIdentifier,
-                Name = Name,
-                Arguments = arguments,
-                FFmpegPath = _config.FFmpegPath,
-                OutputPath = _config.OutputPath,
-                GracefulTerminationSeconds = _config.FFmpegGracefulTerminationSeconds
-            };
+                await PreRunAsync();
 
-            var ffmpegProcess = new FFmpegProcess(ffmpegConfig);
-            await ffmpegProcess.RunAsync(inputPath, streamPath, streamArguments, onStarted, onEnded, cancellation);
+                var arguments = BuildFFmpegArguments(streamInfo);
+
+                var ffmpegConfig = new FFmpegProcess.Configuration
+                {
+                    ContextIdentifier = ContextIdentifier,
+                    Name = Name,
+                    Arguments = arguments,
+                    FFmpegPath = _config.FFmpegPath,
+                    OutputPath = _config.ManifestOutputPath,
+                    GracefulTerminationSeconds = _config.FFmpegGracefulTerminationSeconds
+                };
+
+                var ffmpegProcess = new FFmpegProcess(ffmpegConfig);
+                await ffmpegProcess.RunAsync(inputPath, streamPath, streamArguments, onStarted, onEnded, cancellation);
+            }
+            finally
+            {
+                await PostRunAsync();
+            }
+        }
+
+        private async ValueTask PreRunAsync()
+        {
+            await ExecuteCleanupAsync();
+        }
+
+        private async ValueTask PostRunAsync()
+        {
+            await ScheduleCleanupAsync();
+        }
+
+        private async Task ExecuteCleanupAsync()
+        {
+            if (!_config.CleanupDelay.HasValue)
+                return;
+
+            await _cleanupManager.ExecuteCleanupAsync(_config.ManifestOutputPath);
+        }
+
+        private async ValueTask ScheduleCleanupAsync()
+        {
+            if (!_config.CleanupDelay.HasValue)
+                return;
+
+            try
+            {
+                var manifestOutputPath = _config.ManifestOutputPath;
+                var dirPath = Path.GetDirectoryName(manifestOutputPath) ?? string.Empty;
+
+                var playlist = ManifestParser.Parse(manifestOutputPath);
+                var cleanupDelay = CalculateCleanupDelay(playlist.TsSegments.ToList(), _config.CleanupDelay.Value);
+
+                var files = new List<string> { manifestOutputPath };
+                files.AddRange(playlist.Manifests.Values.Select(x => Path.Combine(dirPath, x.Name)));
+                files.AddRange(playlist.TsSegments.Select(x => Path.Combine(dirPath, x.FileName)));
+
+                await _cleanupManager.ScheduleCleanupAsync(manifestOutputPath, files, cleanupDelay);
+            }
+            catch (Exception ex)
+            {
+                _logger.SchedulingHlsCleanupError(_config.ManifestOutputPath, ex);
+            }
+        }
+
+        private static TimeSpan CalculateCleanupDelay(IList<ManifestTsSegment> tsSegments, TimeSpan cleanupDelay)
+        {
+            if (!tsSegments.Any())
+                return TimeSpan.Zero;
+
+            var (count, maxDuration) = tsSegments
+                .GroupBy(x => x.ManifestName)
+                .Select(x => (Count: x.Count(), MaxDuration: x.ToList().Max(x => x.Duration)))
+                .MaxBy(x => x.MaxDuration);
+
+            return TimeSpan.FromSeconds(count * maxDuration) + cleanupDelay;
         }
     }
 }

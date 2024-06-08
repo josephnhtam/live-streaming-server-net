@@ -1,12 +1,11 @@
-﻿using LiveStreamingServerNet.StreamProcessor.Internal.Containers;
-using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing.Services.Contracts;
+﻿using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Services.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Logging;
 using LiveStreamingServerNet.Utilities;
 using LiveStreamingServerNet.Utilities.Contracts;
 using Microsoft.Extensions.Logging;
 using System.Collections.Concurrent;
 
-namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing.Services
+namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Services
 {
     internal class HlsCleanupManager : IHlsCleanupManager
     {
@@ -52,7 +51,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing.Servic
             await cleanupTask.task;
         }
 
-        public async ValueTask ScheduleCleanupAsync(string manifestPath, IList<TsSegment> tsSegments, TimeSpan cleanupDelay)
+        public async ValueTask ScheduleCleanupAsync(string manifestPath, IList<string> files, TimeSpan cleanupDelay)
         {
             var syncLock = _syncLocks.Get(manifestPath);
 
@@ -63,10 +62,9 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing.Servic
                 await ExecuteCleanupAsyncCore(manifestPath);
 
                 var delayCts = new CancellationTokenSource();
-                var delay = CalculateCleanupDelay(tsSegments, cleanupDelay);
-                var cleanupTask = CleanupAsync(manifestPath, tsSegments, delay, delayCts.Token);
+                var cleanupTask = CleanupAsync(manifestPath, files, cleanupDelay, delayCts.Token);
 
-                _pendingCleanups[manifestPath] = new PendingCleanup(manifestPath, tsSegments, cleanupTask, delayCts);
+                _pendingCleanups[manifestPath] = new PendingCleanup(manifestPath, files, cleanupTask, delayCts);
                 _ = cleanupTask.ContinueWith(_ => _pendingCleanups.TryRemove(manifestPath, out var _), TaskContinuationOptions.ExecuteSynchronously);
             }
             finally
@@ -75,15 +73,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing.Servic
             }
         }
 
-        private static TimeSpan CalculateCleanupDelay(IList<TsSegment> tsSegments, TimeSpan cleanupDelay)
-        {
-            if (!tsSegments.Any())
-                return TimeSpan.Zero;
-
-            return TimeSpan.FromMilliseconds(tsSegments.Count * tsSegments.Max(x => x.Duration)) + cleanupDelay;
-        }
-
-        private async Task CleanupAsync(string manifestPath, IList<TsSegment> tsSegments, TimeSpan delay, CancellationToken delayCancellation)
+        private async Task CleanupAsync(string manifestPath, IList<string> files, TimeSpan delay, CancellationToken delayCancellation)
         {
             try
             {
@@ -93,10 +83,8 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing.Servic
 
             try
             {
-                File.Delete(manifestPath);
-
-                foreach (var tsSegment in tsSegments)
-                    File.Delete(tsSegment.FilePath);
+                foreach (var file in files)
+                    File.Delete(file);
 
                 _logger.HlsCleanedUp(manifestPath);
             }
@@ -106,6 +94,6 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing.Servic
             }
         }
 
-        private record PendingCleanup(string ManifestPath, IList<TsSegment> TsSegments, Task task, CancellationTokenSource delayCts);
+        private record PendingCleanup(string ManifestPath, IList<string> Files, Task task, CancellationTokenSource delayCts);
     }
 }

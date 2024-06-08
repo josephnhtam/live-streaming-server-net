@@ -1,6 +1,6 @@
 ﻿using LiveStreamingServerNet.StreamProcessor.Hls;
 
-namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Uploading.M3u8.Contracts
+namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.M3u8Parsing.Contracts
 {
     internal interface IPlaylist : IManifestContainer, ITsSegmentsContainer
     {

@@ -66,5 +66,8 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Logging
 
         [LoggerMessage(LogLevel.Error, "An error occurred while obtaining stream information | InputPath: {InputPath}")]
         public static partial void ObtainingStreamInformationError(this ILogger logger, string inputPath, Exception ex);
+
+        [LoggerMessage(LogLevel.Error, "An error occurred while scheduling HLS cleanup | ManifestPath: {ManifestPath}")]
+        public static partial void SchedulingHlsCleanupError(this ILogger logger, string manifestPath, Exception ex);
     }
 }

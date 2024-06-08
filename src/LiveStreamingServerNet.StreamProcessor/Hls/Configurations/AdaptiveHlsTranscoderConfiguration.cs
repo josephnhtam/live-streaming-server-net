@@ -37,6 +37,8 @@ namespace LiveStreamingServerNet.StreamProcessor.Hls.Configurations
         public string? VideoDecodingArguments { get; set; }
         public string? AudioDecodingArguments { get; set; }
 
+        public TimeSpan? CleanupDelay { get; set; } = TimeSpan.FromSeconds(30);
+
         public static Task<string> DefaultOutputPathResolver(Guid contextIdentifier, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
             return Task.FromResult(Path.Combine(Directory.GetCurrentDirectory(), "output", contextIdentifier.ToString(), "output.m3u8"));
