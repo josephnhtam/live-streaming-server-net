@@ -23,7 +23,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Installer
 
             rtmpServerConfigurator.AddStreamEventHandler<RtmpServerStreamEventListener>();
 
-            configure?.Invoke(new StreamProcessorConfigurator(services));
+            configure?.Invoke(new StreamProcessingConfigurator(services));
 
             services.TryAddSingleton<IInputPathResolver, DefaultInputPathResolver>();
 
