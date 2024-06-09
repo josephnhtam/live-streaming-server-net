@@ -53,6 +53,8 @@ namespace LiveStreamingServerNet
             Services.AddSingleton<ILiveStreamingServerService, LiveStreamingServerService>();
             Services.AddHostedService(svc => svc.GetRequiredService<ILiveStreamingServerService>());
 
+            Services.Configure<ConsoleLifetimeOptions>(options => options.SuppressStatusMessages = true);
+
             return new LiveStreamingServer(_builder.Build());
         }
     }
