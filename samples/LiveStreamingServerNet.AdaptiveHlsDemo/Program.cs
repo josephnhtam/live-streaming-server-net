@@ -73,7 +73,7 @@ namespace LiveStreamingServerNet.AdaptiveHlsDemo
 
                         // Hardware acceleration 
                         // options.VideoDecodingArguments = "-hwaccel auto -c:v h264_cuvid";
-                        // options.VideoEncodingArguments = "-c:v h264_nvenc -preset fast -crf 23 -g 30";
+                        // options.VideoEncodingArguments = "-c:v h264_nvenc -g 30";
 
                         options.OutputPathResolver = new HlsOutputPathResolver(outputDir);
                     })
