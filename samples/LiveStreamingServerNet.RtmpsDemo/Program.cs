@@ -15,15 +15,7 @@ namespace LiveStreamingServerNet.RtmpsDemo
                 [new ServerEndPoint(new IPEndPoint(IPAddress.Any, 1935), false),
                     new ServerEndPoint(new IPEndPoint(IPAddress.Any, 443), true)];
 
-            using var cts = new CancellationTokenSource();
-
-            Console.CancelKeyPress += (s, e) =>
-            {
-                cts.Cancel();
-                e.Cancel = true;
-            };
-
-            await liveStreamingServer.RunAsync(endPoints, cts.Token);
+            await liveStreamingServer.RunAsync(endPoints);
         }
 
         private static ILiveStreamingServer CreateLiveStreamingServer()

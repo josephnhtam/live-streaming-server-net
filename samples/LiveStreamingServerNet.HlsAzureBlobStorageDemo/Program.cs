@@ -18,16 +18,7 @@ namespace LiveStreamingServerNet.HlsAzureBlobStorageDemo
         {
             using var liveStreamingServer = CreateLiveStreamingServer();
 
-            using var cts = new CancellationTokenSource();
-
-            Console.CancelKeyPress += (s, e) =>
-            {
-                cts.Cancel();
-                e.Cancel = true;
-            };
-
-            await liveStreamingServer.RunAsync(
-                new ServerEndPoint(new IPEndPoint(IPAddress.Any, 1935), false), cts.Token);
+            await liveStreamingServer.RunAsync(new ServerEndPoint(new IPEndPoint(IPAddress.Any, 1935), false));
         }
 
         private static ILiveStreamingServer CreateLiveStreamingServer()
