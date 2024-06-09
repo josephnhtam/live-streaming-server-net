@@ -4,11 +4,11 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace LiveStreamingServerNet.StreamProcessor.Installer
 {
-    internal class StreamProcessorConfigurator : IStreamProcessingConfigurator
+    internal class StreamProcessingConfigurator : IStreamProcessingConfigurator
     {
         public IServiceCollection Services { get; }
 
-        public StreamProcessorConfigurator(IServiceCollection services)
+        public StreamProcessingConfigurator(IServiceCollection services)
         {
             Services = services;
         }
