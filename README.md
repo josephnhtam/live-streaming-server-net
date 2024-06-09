@@ -8,8 +8,6 @@ Live-Streaming-Server-Net is a high-performance and flexible toolset that allows
 
 Please check the [documentation](https://josephnhtam.github.io/live-streaming-server-net/) for more details.
 
-> The first stable release will be v1.0.0
-
 ## Features
 
 - **RTMP/RTMPS protocol**: Supports the RTMP and RTMPS protocols for streaming audio, video, and data.
@@ -234,7 +232,5 @@ Please refer to the [LiveStreamServerNet.StandaloneDemo](https://github.com/jose
 This project is licensed under the terms of the [MIT license](https://github.com/josephnhtam/live-streaming-server-net/blob/master/LICENSE).
 
 ## Acknowledgments
-
-[![JetBrains](https://avatars.githubusercontent.com/u/878437?s=150&v=4)](https://www.jetbrains.com/)
 
 Special thanks to [JetBrains](https://www.jetbrains.com/) for providing the open-source software license that supports the development of this project.

@@ -1,22 +1,20 @@
 # Serving HLS Live Streams
 
-LiveStreamingServerNet supports the transmuxing of the RTMP stream to an HLS stream via the built-in HLS transmuxer without the need for [FFmpeg](https://ffmpeg.org/).
+LiveStreamingServerNet provides a seamless way to the transmux RTMP streams into HLS streams using the built-in HLS transmuxer, without the need for external tools like [FFmpeg](https://ffmpeg.org/).
 
-## Setting Up Your Live Streaming Server
+## Quick Setup Guide for Your Live Streaming Server
 
-First, this section will guide you through adding a transmuxer to convert the RTMP stream into an HLS stream.
+This section will guide you through adding a HLS transmuxer to convert RTMP streams into HLS streams.
 
 ### Step 1: Initialize a New Project and Add Required Packages
 
-Create an empty ASP.NET Core Web application and add the necessary packages using the following commands:
+To serve HLS live streams with ASP.NET Core's static file middleware, create an empty ASP.NET Core Web application and add the necessary packages using the following commands:
 
 ```
 dotnet new web
 dotnet add package LiveStreamingServerNet
 dotnet add package LiveStreamingServerNet.StreamProcessor
 ```
-
-In this guide, we will use an ASP.NET Core Web app as the foundation to facilitate the serving of HLS streams as static files.
 
 ### Step 2: Configure Your Live Streaming Server
 
@@ -29,7 +27,10 @@ using LiveStreamingServerNet.StreamProcessor.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Hls.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Installer;
 using LiveStreamingServerNet.Utilities.Contracts;
+using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.Extensions.FileProviders;
 using System.Net;
+
 
 var outputDir = Path.Combine(Directory.GetCurrentDirectory(), "output");
 new DirectoryInfo(outputDir).Create();
@@ -47,6 +48,16 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddBackgroundServer(liveStreamingServer, new IPEndPoint(IPAddress.Any, 1935));
 
 var app = builder.Build();
+
+app.UseStaticFiles(new StaticFileOptions
+{
+    RequestPath = "/hls",
+    FileProvider = new PhysicalFileProvider(outputDir),
+    ContentTypeProvider = new FileExtensionContentTypeProvider
+    {
+        Mappings = { [".m3u8"] = "application/x-mpegURL" }
+    }
+});
 
 app.Run();
 
@@ -94,7 +105,7 @@ public class HlsTransmuxerEventListener : IStreamProcessorEventHandler
 }
 ```
 
-This code sets up the server using LiveStreamingServerNet to listen on port 1935 for RTMP streams. Whenever an RTMP stream is published to the server, a HLS transmuxer will be created to convert the RTMP stream into an HLS stream, and its manifest will be stored as `/output/{streamPath}/output.m3u8`. Additionally, the `HlsTransmuxerEventListener` is added to log out the transmuxer events.
+This code sets up the server using LiveStreamingServerNet to listen on port 1935 for RTMP streams. Whenever an RTMP stream is published to the server, a HLS transmuxer will be created to convert the RTMP stream into an HLS stream, and its manifest will be stored as `/output/{streamPath}/output.m3u8`. Additionally, the `HlsTransmuxerEventListener` is added to log out the transmuxer events. And finally, a static files middleware is added to serve the generated HLS live streams at `/hls/**`.
 
 ### Step 3: Launch Your Live Streaming Server
 
@@ -104,127 +115,53 @@ Execute your live streaming server by running the following command:
 dotnet run --urls="https://+:8080"
 ```
 
-An output HLS stream can be viewed with a VLC player.
+Now, when you publish a live stream to `rtmp://localhost:1935/live/demo`, the HLS transmuxer will automatically convert it into HLS format. You can access the HLS stream by visiting `https://localhost:8080/hls/live/demo/output.m3u8`. If you need to play the HLS stream in a browser, you generally need a JavaScript library such as [hls.js](https://github.com/video-dev/hls.js) or [video.js](https://github.com/videojs/video.js).
 
-## Serving HLS Stream via ASP.NET Core
+## Filtering Video and Audio Codecs
 
-To serve the output HLS streams with static file middleware, you can add the snippet under `var app = builder.Build()`:
+The HLS transmuxer doesn't transcode the RTMP streams but only changes the container format from RTMP to HLS, which uses the MPEG-TS format for its media segments. This process doesn't alter the actual video or audio data and is significantly less resource-intensive compared to transcoding.
 
-```cs linenums="1"
-app.UseStaticFiles(new StaticFileOptions
-{
-    RequestPath = "/hls",
-    FileProvider = new PhysicalFileProvider(outputDir),
-    ContentTypeProvider = new FileExtensionContentTypeProvider
-    {
-        Mappings = { [".m3u8"] = "application/x-mpegURL" }
-    }
-});
-```
+Therefore, to ensure that transmuxing works as expected, it’s necessary to verify that the incoming RTMP stream contains elementary streams with the **H.264** and **AAC** codecs.
 
-Once a live stream is published to `rtmp://localhost:1935/live/demo`, you can visit the HLS stream at `https://localhost:8080/hls/live/demo/output.m3u8`
-
-## Serving HLS Stream via Cloud Storage Service
-
-The following will use Azure Blob Storage as an example.
-
-### Step 1: Add the Required Package
-
-Add the necessary package using the following commands:
-
-```
-dotnet add package LiveStreamingServerNet.StreamProcessor.AzureBlobStorage
-```
-
-### Step 2: Configure Your Live Streaming Server
-
-Modify `Program.cs` file:
+You can add the video and codec filters like this:
 
 ```cs linenums="1"
-using Azure.Storage.Blobs;
-using LiveStreamingServerNet;
-using LiveStreamingServerNet.Networking.Helpers;
-using LiveStreamingServerNet.StreamProcessor;
-using LiveStreamingServerNet.StreamProcessor.AzureBlobStorage.Installer;
-using LiveStreamingServerNet.StreamProcessor.Hls;
-using LiveStreamingServerNet.StreamProcessor.Hls.Contracts;
-using LiveStreamingServerNet.StreamProcessor.Installer;
-using LiveStreamingServerNet.Utilities.Contracts;
-using System.Net;
-
-var outputDir = Path.Combine(Directory.GetCurrentDirectory(), "output");
-new DirectoryInfo(outputDir).Create();
-
-var blobContainerClient = new BlobContainerClient(
-    Environment.GetEnvironmentVariable("AZURE_BLOB_STORAGE_CONNECTION_STRING"),
-    Environment.GetEnvironmentVariable("AZURE_BLOB_CONTAINER"));
-
 var liveStreamingServer = LiveStreamingServerBuilder.Create()
     .ConfigureRtmpServer(options => options
-        .AddStreamProcessor(options =>
-        {
-            options.AddHlsUploader(uploaderOptions =>
-            {
-                uploaderOptions.AddHlsStorageEventHandler<HlsStorageEventListener>();
-                uploaderOptions.AddAzureBlobStorage(blobContainerClient);
-            });
-        })
+        .AddVideoCodecFilter(builder => builder.Include(VideoCodec.AVC))
+        .AddAudioCodecFilter(builder => builder.Include(AudioCodec.AAC))
+        .AddStreamProcessor()
         .AddHlsTransmuxer()
     )
-    .ConfigureLogging(options => options.AddConsole())
     .Build();
+```
 
-var builder = WebApplication.CreateBuilder(args);
+## Enabling HLS Transmuxer Conditionally
 
-builder.Services.AddBackgroundServer(liveStreamingServer, new IPEndPoint(IPAddress.Any, 1935));
+Sometimes, not all the RTMP streams require transmuxing into HLS streams. In such cases, you can provide an `IStreamProcessorCondition` to the `HlsTransmuxerConfiguration` in order to selectively enable the HLS Transmuxer.
 
-var app = builder.Build();
+For Example, you can implement an `IStreamProcessorCondition` like this:
 
-app.Run();
-
-public class HlsStorageEventListener : IHlsStorageEventHandler
+```cs linenums="1"
+public class HlsTransmuxingCondition : IStreamProcessorCondition
 {
-    private readonly ILogger _logger;
-
-    public HlsStorageEventListener(ILogger<HlsStorageEventListener> logger)
+    public ValueTask<bool> IsEnabled(IServiceProvider services, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
     {
-        _logger = logger;
-    }
-
-    public Task OnHlsFilesStoredAsync(
-        IEventContext eventContext,
-        StreamProcessingContext context,
-        bool initial,
-        IReadOnlyList<StoredManifest> storedManifests,
-        IReadOnlyList<StoredTsSegment> storedTsSegments)
-    {
-        if (!initial)
-            return Task.CompletedTask;
-
-        var mainManifestName = Path.GetFileName(context.OutputPath);
-        var mainManifest = storedManifests.FirstOrDefault(x => x.Name.Equals(mainManifestName));
-
-        if (mainManifest != default)
-            _logger.LogInformation($"[{context.Identifier}] Main manifest {mainManifestName} stored at {mainManifest.Uri}");
-
-        return Task.CompletedTask;
-    }
-
-    public Task OnHlsFilesStoringCompleteAsync(IEventContext eventContext, StreamProcessingContext context)
-    {
-        return Task.CompletedTask;
+        return ValueTask.FromResult(streamArguments.GetValueOrDefault("hls", "false") == "true");
     }
 }
 ```
 
-This setup allows the server to receive RTMP streams, transmux them to HLS formats, and then upload the HLS files to Azure Blob Storage. Besides, the HlsStorageEventListener will log information about the stored files for monitoring purposes.
+And add it to the `HlsTransmuxerConfiguration`:
 
-### Step 3: Launch Your Live Streaming Server
-
-To execute your live streaming server, run the following command:
-
+```cs linenums="1"
+var liveStreamingServer = LiveStreamingServerBuilder.Create()
+    .ConfigureRtmpServer(options => options
+        .AddStreamProcessor()
+        .AddHlsTransmuxer(hlsTransmuxerConfig =>
+            hlsTransmuxerConfig.Condition = new HlsTransmuxingCondition())
+    )
+    .Build();
 ```
-dotnet run
-```
 
-Once a live stream is published to the live streaming server, the corresponding stream will be automatically uploaded to the Azure Blob Storage container.
+Now, only RTMP streams published with argument `hls=true` (e.g. `rtmp://localhost:1935/live/demo?hls=true`) will be transmuxed into HLS streams.

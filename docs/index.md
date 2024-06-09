@@ -97,6 +97,4 @@ This project is licensed under the terms of the [MIT license](https://github.com
 
 ## Acknowledgments
 
-[![JetBrains](https://avatars.githubusercontent.com/u/878437?s=150&v=4)](https://www.jetbrains.com/)
-
 Special thanks to [JetBrains](https://www.jetbrains.com/) for providing the open-source software license that supports the development of this project.
