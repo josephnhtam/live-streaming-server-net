@@ -56,7 +56,7 @@ namespace LiveStreamingServerNet.AdaptiveHlsDemo
             return (fileProvider, contentTypeProvider);
         }
 
-        private static ILiveStreamingServer CreateLiveStreamingServer(string transmuxerOutputPath)
+        private static ILiveStreamingServer CreateLiveStreamingServer(string outputDir)
         {
             return LiveStreamingServerBuilder.Create()
                 .ConfigureRtmpServer(options => options
@@ -64,7 +64,7 @@ namespace LiveStreamingServerNet.AdaptiveHlsDemo
                     .AddStreamProcessor(options =>
                     {
                         options.AddStreamProcessorEventHandler(svc =>
-                                new StreamProcessorEventListener(transmuxerOutputPath, svc.GetRequiredService<ILogger<StreamProcessorEventListener>>()));
+                                new StreamProcessorEventListener(outputDir, svc.GetRequiredService<ILogger<StreamProcessorEventListener>>()));
                     })
                     .AddAdaptiveHlsTranscoder(options =>
                     {
@@ -75,7 +75,7 @@ namespace LiveStreamingServerNet.AdaptiveHlsDemo
                         // options.VideoDecodingArguments = "-hwaccel auto -c:v h264_cuvid";
                         // options.VideoEncodingArguments = "-c:v h264_nvenc -preset fast -crf 23 -g 30";
 
-                        options.OutputPathResolver = new HlsOutputPathResolver(transmuxerOutputPath);
+                        options.OutputPathResolver = new HlsOutputPathResolver(outputDir);
                     })
                 )
                 .ConfigureLogging(options => options.AddConsole())
