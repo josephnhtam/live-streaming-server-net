@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -9,7 +9,7 @@
     <UserSecretsId>6f914df4-156f-4eba-b3e1-103c8c05e472</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>..\..</DockerfileContext>
-    <DockerfileRunArguments>-p 1935:1935 -p 8080:80</DockerfileRunArguments>
+    <DockerfileRunArguments>-p 1935:1935 -p 8080:8080</DockerfileRunArguments>
   </PropertyGroup>
 
   <ItemGroup>

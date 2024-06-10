@@ -2,7 +2,8 @@ FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 RUN apt-get update && apt-get install -y ffmpeg
 USER app
 WORKDIR /app
-EXPOSE 80
+EXPOSE 8080
+EXPOSE 8081
 EXPOSE 1935
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
@@ -28,5 +29,4 @@ RUN dotnet publish "./LiveStreamingServerNet.StandaloneDemo.csproj" -c $BUILD_CO
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENV ASPNETCORE_URLS=http://+:80
 ENTRYPOINT ["dotnet", "LiveStreamingServerNet.StandaloneDemo.dll"]

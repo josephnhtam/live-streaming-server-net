@@ -8,4 +8,4 @@ build:
 
 .PHONY: run
 run:
-	docker run -p $(PORT):80 -p $(RTMP_PORT):1935 -d $(IMG)
+	docker run -p $(PORT):8080 -p $(RTMP_PORT):1935 -d $(IMG)

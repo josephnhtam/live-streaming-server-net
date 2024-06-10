@@ -1,7 +1,8 @@
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 USER app
 WORKDIR /app
-EXPOSE 80
+EXPOSE 8080
+EXPOSE 8081
 EXPOSE 1935
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
@@ -25,5 +26,4 @@ RUN dotnet publish "./LiveStreamingServerNet.HlsDemo.csproj" -c $BUILD_CONFIGURA
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENV ASPNETCORE_URLS=http://+:80
 ENTRYPOINT ["dotnet", "LiveStreamingServerNet.HlsDemo.dll"]

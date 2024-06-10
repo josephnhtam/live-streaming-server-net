@@ -10,7 +10,7 @@
     <UserSecretsId>280e8dcf-1156-4046-ad81-2938621cd0ff</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>..\..</DockerfileContext>
-    <DockerfileRunArguments>-p 1935:1935 -p 8080:80</DockerfileRunArguments>
+    <DockerfileRunArguments>-p 1935:1935 -p 8080:8080</DockerfileRunArguments>
   </PropertyGroup>
 
   <ItemGroup>
