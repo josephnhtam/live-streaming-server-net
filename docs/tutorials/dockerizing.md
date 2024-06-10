@@ -25,6 +25,7 @@ The FFmpeg binary can then be found with `ExecutableFinder.FindExecutableFromPAT
 ```dockerfile
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 RUN apt-get update && apt-get install -y ffmpeg
+EXPOSE 8080
 EXPOSE 1935
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
