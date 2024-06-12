@@ -10,7 +10,7 @@
     <PackageTags>live-streaming;rtmp;transmuxer;transcoder;hls;dash</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <Version>0.12.0</Version>
+    <Version>0.12.1</Version>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
