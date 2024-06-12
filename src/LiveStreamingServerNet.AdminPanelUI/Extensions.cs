@@ -6,7 +6,7 @@ namespace LiveStreamingServerNet.AdminPanelUI
     {
         public static WebApplication UseAdminPanelUI(this WebApplication app, AdminPanelUIOptions? options = null)
         {
-            app.UseMiddleware<AdminPanelUIMiddleware>(options);
+            app.UseMiddleware<AdminPanelUIMiddleware>(options ?? new AdminPanelUIOptions());
             return app;
         }
     }
