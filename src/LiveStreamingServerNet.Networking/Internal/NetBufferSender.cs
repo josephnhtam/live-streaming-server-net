@@ -173,11 +173,13 @@ namespace LiveStreamingServerNet.Networking.Internal
                 }
             }
             catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { }
-
-            while (_pendingMessageChannel.Reader.TryRead(out var pendingMessage))
+            finally
             {
-                InvokeCallback(pendingMessage.Callback, false);
-                pendingMessage.RentedBuffer.Unclaim();
+                while (_pendingMessageChannel.Reader.TryRead(out var pendingMessage))
+                {
+                    InvokeCallback(pendingMessage.Callback, false);
+                    pendingMessage.RentedBuffer.Unclaim();
+                }
             }
 
             void InvokeCallback(Action<bool>? callback, bool successful)
