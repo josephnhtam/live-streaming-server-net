@@ -250,7 +250,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
                         var bufferSize = package.RentedPayload.Size;
 
                         buffer.AsSpan(0, bufferSize).CopyTo(tempBuffer.Buffer.AsSpan(offset, bufferSize));
-                        offset += package.RentedPayload.Size;
+                        offset += bufferSize;
                     }
 
                     await clientContext.Client.SendAsync(tempBuffer);
