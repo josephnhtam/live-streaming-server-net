@@ -187,7 +187,15 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
 
             public bool ReadPackage(out ClientMediaPackage package)
             {
-                return _packageChannel.Reader.TryRead(out package);
+                var result = _packageChannel.Reader.TryRead(out package);
+
+                if (result)
+                {
+                    Interlocked.Add(ref _outstandingPackagesSize, -package.RentedPayload.Size);
+                    Interlocked.Decrement(ref _outstandingPackageCount);
+                }
+
+                return result;
             }
 
             private bool ShouldSkipPackage(ClientMediaContext context, ref ClientMediaPackage package)

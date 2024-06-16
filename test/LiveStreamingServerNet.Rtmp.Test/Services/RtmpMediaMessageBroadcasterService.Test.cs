@@ -2,6 +2,7 @@
 using LiveStreamingServerNet.Networking;
 using LiveStreamingServerNet.Networking.Configurations;
 using LiveStreamingServerNet.Networking.Contracts;
+using LiveStreamingServerNet.Rtmp.Configurations;
 using LiveStreamingServerNet.Rtmp.Internal;
 using LiveStreamingServerNet.Rtmp.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.MediaPackageDiscarding.Contracts;
@@ -22,6 +23,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
         private readonly INetBufferPool _netBufferPool;
         private readonly IMediaPackageDiscarder _mediaPackageDiscarder;
         private readonly IMediaPackageDiscarderFactory _mediaPackageDiscarderFactory;
+        private readonly RtmpServerConfiguration _config;
         private readonly ILogger<RtmpMediaMessageBroadcasterService> _logger;
         private readonly IRtmpMediaMessageBroadcasterService _sut;
 
@@ -33,13 +35,20 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
             _netBufferPool = new NetBufferPool(Options.Create(new NetBufferPoolConfiguration()));
             _mediaPackageDiscarder = Substitute.For<IMediaPackageDiscarder>();
             _mediaPackageDiscarderFactory = Substitute.For<IMediaPackageDiscarderFactory>();
+            _config = new RtmpServerConfiguration();
             _logger = Substitute.For<ILogger<RtmpMediaMessageBroadcasterService>>();
 
             _mediaPackageDiscarderFactory.Create(Arg.Any<uint>()).Returns(_mediaPackageDiscarder);
             _mediaPackageDiscarder.ShouldDiscardMediaPackage(Arg.Any<bool>(), Arg.Any<long>(), Arg.Any<long>())
                 .Returns(false);
 
-            _sut = new RtmpMediaMessageBroadcasterService(_chunkMessageWriter, _interception, _netBufferPool, _mediaPackageDiscarderFactory, _logger);
+            _sut = new RtmpMediaMessageBroadcasterService(
+                _chunkMessageWriter,
+                _interception,
+                _netBufferPool,
+                _mediaPackageDiscarderFactory,
+                Options.Create(_config),
+                _logger);
         }
 
         [Fact]

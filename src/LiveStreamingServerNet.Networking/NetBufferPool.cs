@@ -15,6 +15,8 @@ namespace LiveStreamingServerNet.Networking
         private readonly int _maxPoolSize;
         private int _poolSize;
 
+        public IBufferPool? BufferPool => _bufferPool;
+
         public NetBufferPool(IOptions<NetBufferPoolConfiguration> config, IBufferPool? bufferPool = null)
         {
             _pool = new Pool<INetBuffer>(CreateNetBuffer);
