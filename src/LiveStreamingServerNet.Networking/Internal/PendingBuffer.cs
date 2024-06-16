@@ -2,5 +2,5 @@
 
 namespace LiveStreamingServerNet.Networking.Internal
 {
-    internal record struct PendingMessage(IRentedBuffer RentedBuffer, Action<bool>? Callback);
+    internal record struct PendingBuffer(IRentedBuffer RentedBuffer, Action<bool>? Callback);
 }

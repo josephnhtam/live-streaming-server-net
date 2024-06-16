@@ -13,7 +13,7 @@ namespace LiveStreamingServerNet.Networking.Internal
     {
         private readonly uint _clientId;
         private readonly INetBufferPool _netBufferPool;
-        private readonly Channel<PendingMessage> _pendingMessageChannel;
+        private readonly Channel<PendingBuffer> _pendingBufferChannel;
         private readonly ILogger _logger;
 
         private Task? _task;
@@ -24,7 +24,7 @@ namespace LiveStreamingServerNet.Networking.Internal
             _netBufferPool = netBufferPool;
             _logger = logger;
 
-            _pendingMessageChannel = Channel.CreateUnbounded<PendingMessage>(
+            _pendingBufferChannel = Channel.CreateUnbounded<PendingBuffer>(
                 new UnboundedChannelOptions { SingleReader = true, AllowSynchronousContinuations = true });
         }
 
@@ -39,7 +39,7 @@ namespace LiveStreamingServerNet.Networking.Internal
 
             try
             {
-                if (!_pendingMessageChannel.Writer.TryWrite(new PendingMessage(rentedBuffer, callback)))
+                if (!_pendingBufferChannel.Writer.TryWrite(new PendingBuffer(rentedBuffer, callback)))
                 {
                     throw new Exception("Failed to write to the send channel");
                 }
@@ -57,7 +57,7 @@ namespace LiveStreamingServerNet.Networking.Internal
 
             try
             {
-                if (!_pendingMessageChannel.Writer.TryWrite(new PendingMessage(rentedBuffer, callback)))
+                if (!_pendingBufferChannel.Writer.TryWrite(new PendingBuffer(rentedBuffer, callback)))
                 {
                     throw new Exception("Failed to write to the send channel");
                 }
@@ -81,7 +81,7 @@ namespace LiveStreamingServerNet.Networking.Internal
 
                 try
                 {
-                    if (!_pendingMessageChannel.Writer.TryWrite(new PendingMessage(rentedBuffer, callback)))
+                    if (!_pendingBufferChannel.Writer.TryWrite(new PendingBuffer(rentedBuffer, callback)))
                     {
                         throw new Exception("Failed to write to the send channel");
                     }
@@ -149,7 +149,7 @@ namespace LiveStreamingServerNet.Networking.Internal
             {
                 while (!cancellationToken.IsCancellationRequested)
                 {
-                    var (rentedBuffer, callback) = await _pendingMessageChannel.Reader.ReadAsync(cancellationToken);
+                    var (rentedBuffer, callback) = await _pendingBufferChannel.Reader.ReadAsync(cancellationToken);
 
                     try
                     {
@@ -175,7 +175,7 @@ namespace LiveStreamingServerNet.Networking.Internal
             catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { }
             finally
             {
-                while (_pendingMessageChannel.Reader.TryRead(out var pendingMessage))
+                while (_pendingBufferChannel.Reader.TryRead(out var pendingMessage))
                 {
                     InvokeCallback(pendingMessage.Callback, false);
                     pendingMessage.RentedBuffer.Unclaim();

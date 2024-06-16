@@ -58,12 +58,6 @@ namespace LiveStreamingServerNet.HlsDemoWithFFmpeg
         private static ILiveStreamingServer CreateLiveStreamingServer(string outputDir)
         {
             return LiveStreamingServerBuilder.Create()
-                .ConfigureServer(options => options
-                    .ConfigureNetwork(options =>
-                    {
-                        options.NoDelay = true;
-                        options.FlushingInterval = TimeSpan.FromMilliseconds(300);
-                    }))
                 .ConfigureRtmpServer(options => options
                     .Configure(options => options.EnableGopCaching = false)
                     .AddStreamProcessor(options =>

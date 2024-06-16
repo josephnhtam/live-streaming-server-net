@@ -34,7 +34,7 @@ namespace LiveStreamingServerNet.Networking.Test
         {
             // Arrange
             var serverEndPoint = new ServerEndPoint(new IPEndPoint(IPAddress.Any, 433), true);
-            var sut = new NetworkStreamFactory(_sslStreamFactory, Options.Create(new NetworkConfiguration()));
+            var sut = new NetworkStreamFactory(_sslStreamFactory);
 
             // Act
             var result = await sut.CreateNetworkStreamAsync(_tcpClient, serverEndPoint, default);
@@ -49,7 +49,7 @@ namespace LiveStreamingServerNet.Networking.Test
         {
             // Arrange
             var serverEndPoint = new ServerEndPoint(new IPEndPoint(IPAddress.Any, 1935), false);
-            var sut = new NetworkStreamFactory(_sslStreamFactory, Options.Create(new NetworkConfiguration()));
+            var sut = new NetworkStreamFactory(_sslStreamFactory);
 
             // Act
             await sut.CreateNetworkStreamAsync(_tcpClient, serverEndPoint, default);
