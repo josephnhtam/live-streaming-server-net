@@ -9,7 +9,7 @@ hide:
 
 To conduct the performance benchmarking, all the applications are packaged as Docker images and deployed to [Azure Container Instances](https://azure.microsoft.com/en-us/products/container-instances) with the configuration of `1 vCPU, 2 GiB memory, 0 GPUs`, running on Linux OS.
 
-To facilitate large-scale stream publishing and subscription, the [srs-bench](https://github.com/ossrs/srs-bench/tree/master) benchmarking tool is employed. Besides, all benchmarking tests were performed with the same set of videos at different resolutions and bitrates, including `320P at 200 kbps`, `480P at 500 kbps`, and `720P at 1500 kbps`.
+To facilitate large-scale stream publishing and subscription, the [srs-bench](https://github.com/ossrs/srs-bench/tree/master) benchmarking tool is employed. Besides, all benchmarking tests were performed with the same set of videos at different resolutions and bitrates, including `240P at 200 kbps`, `480P at 500 kbps`, and `720P at 1500 kbps`.
 
 ## Code
 
