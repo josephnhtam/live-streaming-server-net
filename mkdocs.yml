@@ -59,6 +59,8 @@ markdown_extensions:
   - admonition
   - pymdownx.details
   - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
   
 extra_css:
   - stylesheets/extra.css
@@ -86,3 +88,4 @@ nav:
     - Kubernetes Operator: kubernetes-integration/operator.md
     - Kubernetes Pod: kubernetes-integration/pod.md
     - Live Streaming Server Fleet: kubernetes-integration/fleet.md
+  - Performance Benchmark: performance-benchmark/index.md
