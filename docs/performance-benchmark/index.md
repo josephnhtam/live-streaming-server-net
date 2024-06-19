@@ -9,14 +9,14 @@ hide:
 
 To conduct the performance benchmarking, all the applications are packaged as Docker images and deployed to [Azure Container Instances](https://azure.microsoft.com/en-us/products/container-instances) with the configuration of `1 vCPU, 2 GiB memory, 0 GPUs`, running on Linux OS.
 
-To facilitate large-scale stream publishing and subscription, the [srs-bench](https://github.com/ossrs/srs-bench/tree/master) benchmarking tool is employed. Besides, all benchmarking tests were performed with the same set of videos at different resolutions and bitrates, including `240P at 200 kbps`, `480P at 500 kbps`, and `720P at 1500 kbps`.
+To facilitate large-scale stream publishing and subscription, the [srs-bench](https://github.com/ossrs/srs-bench/tree/master) benchmarking tool is employed. Besides, all benchmark tests were performed with the same set of videos at different resolutions and bitrates, including `240P at 200 kbps`, `480P at 500 kbps`, and `720P at 1500 kbps`.
 
 ## Code
 
 The following code sets up a live streaming server capable of:
 
 1. Accepting and broadcasting AVC/AAC RTMP streams.
-2. Transmuxing all the incoming RTMP stream into an HLS stream with the built-in HLS transmuxer.
+2. Transmuxing all the incoming RTMP streams into HLS streams with the built-in HLS transmuxer.
 3. Serving HLS streams via ASP.NET Core’s static file middleware.
 4. Enabling GOP caching based on the `RTMP_ENABLE_GOP_CACHING` environment variable.
 5. Batching media packages within a `350ms` window to optimize performance for large-scale RTMP broadcasting.
