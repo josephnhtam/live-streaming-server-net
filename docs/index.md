@@ -27,7 +27,7 @@ Live-Streaming-Server-Net is a high-performance and flexible toolset which allow
 
 ## In-Progress
 
-- **Custom Kubernetes Operator and Kubernetes Integration**: The objective is to achieve automatic horizontal autoscaling by scaling out the pods when more streams are published, and scaling in the pods when streams are deleted, all without affecting the existing connections.
+- **Custom Kubernetes Operator and Kubernetes Integration**: The objective is to achieve horizontal autoscaling by scaling out the pods when more streams are published, and scaling in the pods when streams are deleted, all without affecting the existing connections.
 - **Redis Integration**: Integrate with Redis to share stream information among pods in the fleet.
 
 ## Roadmap
