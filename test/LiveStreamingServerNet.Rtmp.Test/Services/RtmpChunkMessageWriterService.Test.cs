@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
-using LiveStreamingServerNet.Networking;
 using LiveStreamingServerNet.Networking.Contracts;
+using LiveStreamingServerNet.Networking.Internal;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpHeaders;
 using LiveStreamingServerNet.Rtmp.Internal.Services;
 using LiveStreamingServerNet.Rtmp.Test.Utilities;

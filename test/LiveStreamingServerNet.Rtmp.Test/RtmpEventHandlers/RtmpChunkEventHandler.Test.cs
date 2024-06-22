@@ -1,6 +1,6 @@
 ﻿using AutoFixture;
 using FluentAssertions;
-using LiveStreamingServerNet.Networking;
+using LiveStreamingServerNet.Networking.Internal;
 using LiveStreamingServerNet.Rtmp.Internal;
 using LiveStreamingServerNet.Rtmp.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers;

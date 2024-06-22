@@ -1,9 +1,9 @@
 ﻿using LiveStreamingServerNet.Networking.Contracts;
 using System.Runtime.CompilerServices;
 
-namespace LiveStreamingServerNet.Networking
+namespace LiveStreamingServerNet.Networking.Internal
 {
-    public class NetworkStream : INetworkStream
+    internal class NetworkStream : INetworkStream
     {
         public Stream InnerStream { get; }
 
