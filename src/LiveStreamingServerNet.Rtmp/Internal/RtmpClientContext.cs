@@ -161,7 +161,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal
             _cache = new BufferCache<PictureCacheInfo>(bufferPool, 4096);
         }
 
-        public void Add(PictureCacheInfo info, INetBuffer buffer)
+        public void Add(PictureCacheInfo info, IDataBuffer buffer)
         {
             _cache.Write(info, buffer.UnderlyingBuffer.AsSpan(0, buffer.Size));
         }

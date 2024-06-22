@@ -5,12 +5,12 @@ namespace LiveStreamingServerNet.Networking.Internal
 {
     internal class ClientFactory : IClientFactory
     {
-        private readonly INetBufferSenderFactory _senderFactory;
+        private readonly IClientBufferSenderFactory _senderFactory;
         private readonly INetworkStreamFactory _networkStreamFactory;
         private readonly ILogger<Client> _logger;
 
         public ClientFactory(
-            INetBufferSenderFactory senderFactory,
+            IClientBufferSenderFactory senderFactory,
             INetworkStreamFactory networkStreamFactory,
             ILogger<Client> logger)
         {

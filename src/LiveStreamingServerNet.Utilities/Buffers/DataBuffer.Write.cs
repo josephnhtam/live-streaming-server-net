@@ -5,7 +5,7 @@ using System.Security.Cryptography;
 
 namespace LiveStreamingServerNet.Utilities.Buffers
 {
-    public partial class NetBuffer
+    public partial class DataBuffer
     {
         public void WriteRandomBytes(int count)
         {

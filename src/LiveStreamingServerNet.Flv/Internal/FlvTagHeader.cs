@@ -6,12 +6,12 @@ namespace LiveStreamingServerNet.Flv.Internal
     {
         public const int Size = 11;
 
-        public void Write(INetBuffer netBuffer)
+        public void Write(IDataBuffer dataBuffer)
         {
-            netBuffer.Write((byte)tagType);
-            netBuffer.WriteUInt24BigEndian(dataSize);
-            netBuffer.WriteUInt24BigEndian(timestamp);
-            netBuffer.WriteUInt32BigEndian(0);
+            dataBuffer.Write((byte)tagType);
+            dataBuffer.WriteUInt24BigEndian(dataSize);
+            dataBuffer.WriteUInt24BigEndian(timestamp);
+            dataBuffer.WriteUInt32BigEndian(0);
         }
     }
 

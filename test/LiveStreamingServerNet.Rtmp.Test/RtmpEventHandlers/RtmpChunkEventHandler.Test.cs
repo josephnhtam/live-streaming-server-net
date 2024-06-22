@@ -33,12 +33,12 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers
             where TRtmpChunkMessageHeader : struct, IRtmpChunkMessageHeader
         {
             // Arrange
-            var netBufferPool = new NetBufferPool(Options.Create(new NetBufferPoolConfiguration()));
+            var dataBufferPool = new DataBufferPool(Options.Create(new DataBufferPoolConfiguration()));
             var dispatcher = Substitute.For<IRtmpMessageDispatcher>();
             var protocolControlMessageSender = Substitute.For<IRtmpProtocolControlMessageSenderService>();
             var logger = Substitute.For<ILogger<RtmpChunkEventHandler>>();
 
-            using INetBuffer resultPayloadBuffer = new NetBuffer();
+            using IDataBuffer resultPayloadBuffer = new DataBuffer();
 
             var tcs = new TaskCompletionSource();
             dispatcher.DispatchAsync(streamContext, clientContext, Arg.Any<CancellationToken>())
@@ -51,7 +51,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers
                 });
 
             var networkStream = new NetworkStream(stream);
-            var sut = new RtmpChunkEventHandler(netBufferPool, dispatcher, protocolControlMessageSender, logger);
+            var sut = new RtmpChunkEventHandler(dataBufferPool, dispatcher, protocolControlMessageSender, logger);
 
             while (!tcs.Task.IsCompleted)
             {
@@ -206,11 +206,11 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers
         {
             var writer = new RtmpChunkMessageWriterService();
 
-            using var payloadBuffer = new NetBuffer();
+            using var payloadBuffer = new DataBuffer();
             payloadBuffer.Write(payload);
             payloadBuffer.MoveTo(0);
 
-            using var tempBuffer = new NetBuffer();
+            using var tempBuffer = new DataBuffer();
             writer.Write(tempBuffer, basicHeader, messageHeader, payloadBuffer, chunkSize);
             return new MemoryStream(tempBuffer.UnderlyingBuffer.Take(tempBuffer.Size).ToArray());
         }

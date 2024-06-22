@@ -8,12 +8,12 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
 {
     internal class RtmpChunkMessageSenderService : IRtmpChunkMessageSenderService
     {
-        private readonly INetBufferPool _netBufferPool;
+        private readonly IDataBufferPool _dataBufferPool;
         private readonly IRtmpChunkMessageWriterService _writer;
 
-        public RtmpChunkMessageSenderService(INetBufferPool netBufferPool, IRtmpChunkMessageWriterService writer)
+        public RtmpChunkMessageSenderService(IDataBufferPool dataBufferPool, IRtmpChunkMessageWriterService writer)
         {
-            _netBufferPool = netBufferPool;
+            _dataBufferPool = dataBufferPool;
             _writer = writer;
         }
 
@@ -21,7 +21,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             IRtmpClientContext clientContext,
             RtmpChunkBasicHeader basicHeader,
             TRtmpChunkMessageHeader messageHeader,
-            Action<INetBuffer> payloadWriter,
+            Action<IDataBuffer> payloadWriter,
             Action<bool>? callback) where TRtmpChunkMessageHeader : struct, IRtmpChunkMessageHeader
         {
             var payloadBuffer = CreatePayloadBuffer(ref messageHeader, payloadWriter);
@@ -35,11 +35,11 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             }
             finally
             {
-                _netBufferPool.Recycle(payloadBuffer);
+                _dataBufferPool.Recycle(payloadBuffer);
             }
         }
 
-        public ValueTask SendAsync<TRtmpChunkMessageHeader>(IRtmpClientContext clientContext, RtmpChunkBasicHeader basicHeader, TRtmpChunkMessageHeader messageHeader, Action<INetBuffer> payloadWriter) where TRtmpChunkMessageHeader : struct, IRtmpChunkMessageHeader
+        public ValueTask SendAsync<TRtmpChunkMessageHeader>(IRtmpClientContext clientContext, RtmpChunkBasicHeader basicHeader, TRtmpChunkMessageHeader messageHeader, Action<IDataBuffer> payloadWriter) where TRtmpChunkMessageHeader : struct, IRtmpChunkMessageHeader
         {
             var tcs = new ValueTaskCompletionSource();
             Send(clientContext, basicHeader, messageHeader, payloadWriter, _ => tcs.SetResult());
@@ -50,7 +50,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             IReadOnlyList<IRtmpClientContext> clientContexts,
             RtmpChunkBasicHeader basicHeader,
             TRtmpChunkMessageHeader messageHeader,
-            Action<INetBuffer> payloadWriter) where TRtmpChunkMessageHeader : struct, IRtmpChunkMessageHeader
+            Action<IDataBuffer> payloadWriter) where TRtmpChunkMessageHeader : struct, IRtmpChunkMessageHeader
         {
             if (!clientContexts.Any())
                 return;
@@ -70,7 +70,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
                     var outChunkSize = clientsGroup.Key;
                     var clients = clientsGroup.Select(x => x.Client).ToList();
 
-                    var targetBuffer = _netBufferPool.Obtain();
+                    var targetBuffer = _dataBufferPool.Obtain();
 
                     try
                     {
@@ -83,19 +83,19 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
                     }
                     finally
                     {
-                        _netBufferPool.Recycle(targetBuffer);
+                        _dataBufferPool.Recycle(targetBuffer);
                     }
                 }
             }
             finally
             {
-                _netBufferPool.Recycle(payloadBuffer);
+                _dataBufferPool.Recycle(payloadBuffer);
             }
         }
 
-        private INetBuffer CreatePayloadBuffer<TRtmpChunkMessageHeader>(ref TRtmpChunkMessageHeader messageHeader, Action<INetBuffer> payloadWriter) where TRtmpChunkMessageHeader : struct, IRtmpChunkMessageHeader
+        private IDataBuffer CreatePayloadBuffer<TRtmpChunkMessageHeader>(ref TRtmpChunkMessageHeader messageHeader, Action<IDataBuffer> payloadWriter) where TRtmpChunkMessageHeader : struct, IRtmpChunkMessageHeader
         {
-            var payloadBuffer = _netBufferPool.Obtain();
+            var payloadBuffer = _dataBufferPool.Obtain();
             payloadWriter.Invoke(payloadBuffer);
             payloadBuffer.MoveTo(0);
             messageHeader.SetMessageLength(payloadBuffer.Size);

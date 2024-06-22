@@ -23,7 +23,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Media
         private readonly IRtmpMediaMessageBroadcasterService _mediaMessageBroadcaster;
         private readonly RtmpServerConfiguration _config;
         private readonly ILogger<RtmpVideoMessageHandler> _logger;
-        private readonly INetBuffer _netBuffer;
+        private readonly IDataBuffer _dataBuffer;
         private readonly RtmpVideoMessageHandler _sut;
 
         public RtmpVideoMessageHandlerTest()
@@ -37,7 +37,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Media
             _config = new RtmpServerConfiguration();
             _logger = Substitute.For<ILogger<RtmpVideoMessageHandler>>();
 
-            _netBuffer = new NetBuffer();
+            _dataBuffer = new DataBuffer();
 
             _sut = new RtmpVideoMessageHandler(
                 _streamManager,
@@ -49,7 +49,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Media
 
         public void Dispose()
         {
-            _netBuffer.Dispose();
+            _dataBuffer.Dispose();
         }
 
         [Fact]
@@ -59,7 +59,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Media
             _clientContext.PublishStreamContext.Returns((IRtmpPublishStreamContext?)null);
 
             // Act
-            var result = await _sut.HandleAsync(_chunkStreamContext, _clientContext, _netBuffer, default);
+            var result = await _sut.HandleAsync(_chunkStreamContext, _clientContext, _dataBuffer, default);
 
             // Assert
             result.Should().BeFalse();
@@ -96,10 +96,10 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Media
             _streamManager.GetSubscribers(stremaPath).Returns(subscribers);
 
             var firstByte = (byte)((byte)frameType << 4 | (byte)videoCodec);
-            _netBuffer.Write(firstByte);
-            _netBuffer.Write((byte)avcPacketType);
-            _netBuffer.Write(_fixture.Create<byte[]>());
-            _netBuffer.MoveTo(0);
+            _dataBuffer.Write(firstByte);
+            _dataBuffer.Write((byte)avcPacketType);
+            _dataBuffer.Write(_fixture.Create<byte[]>());
+            _dataBuffer.MoveTo(0);
 
             var hasHeader =
                 (videoCodec is VideoCodec.AVC or VideoCodec.HVC or VideoCodec.Opus) &&
@@ -113,7 +113,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Media
             var isSkippable = !hasHeader;
 
             // Act
-            var result = await _sut.HandleAsync(_chunkStreamContext, _clientContext, _netBuffer, default);
+            var result = await _sut.HandleAsync(_chunkStreamContext, _clientContext, _dataBuffer, default);
 
             // Assert
             result.Should().BeTrue();
@@ -122,10 +122,10 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Media
                 _ = _mediaMessageCacher.Received(1).ClearGroupOfPicturesCacheAsync(publishStreamContext);
 
             _ = _mediaMessageCacher.Received(hasHeader ? 1 : 0)
-                .CacheSequenceHeaderAsync(publishStreamContext, MediaType.Video, _netBuffer);
+                .CacheSequenceHeaderAsync(publishStreamContext, MediaType.Video, _dataBuffer);
 
             _ = _mediaMessageCacher.Received(gopCacheActivated && isPictureCachable ? 1 : 0)
-                .CachePictureAsync(publishStreamContext, MediaType.Video, _netBuffer, _chunkStreamContext.MessageHeader.Timestamp);
+                .CachePictureAsync(publishStreamContext, MediaType.Video, _dataBuffer, _chunkStreamContext.MessageHeader.Timestamp);
 
             _clientContext.Received(1).UpdateTimestamp(_chunkStreamContext.MessageHeader.Timestamp, MediaType.Video);
 
@@ -135,7 +135,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Media
                 MediaType.Video,
                 _chunkStreamContext.MessageHeader.Timestamp,
                 isSkippable,
-                _netBuffer
+                _dataBuffer
             );
         }
     }

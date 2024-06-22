@@ -23,14 +23,14 @@ namespace LiveStreamingServerNet.Networking.Installer
 
             services.AddSingleton<IClientManager, ClientManager>()
                     .AddSingleton<IClientFactory, ClientFactory>()
-                    .AddSingleton<INetBufferSenderFactory, NetBufferSenderFactory>()
+                    .AddSingleton<IClientBufferSenderFactory, ClientBufferSenderFactory>()
                     .AddSingleton<INetworkStreamFactory, NetworkStreamFactory>()
                     .AddSingleton<IClientHandlerFactory, TClientHandlerFactory>()
                     .AddSingleton<ISslStreamFactory, SslStreamFactory>();
 
             services.AddSingleton<IServerEventDispatcher, ServerEventDispatcher>();
 
-            services.TryAddSingleton<INetBufferPool, NetBufferPool>();
+            services.TryAddSingleton<IDataBufferPool, DataBufferPool>();
             services.TryAddSingleton<IBufferPool, BufferPool>();
 
             configure?.Invoke(new ServerConfigurator(services));

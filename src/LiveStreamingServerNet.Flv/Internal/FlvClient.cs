@@ -104,7 +104,7 @@ namespace LiveStreamingServerNet.Flv.Internal
             }
         }
 
-        public async ValueTask WriteTagAsync(FlvTagType tagType, uint timestamp, Action<INetBuffer> payloadBuffer, CancellationToken cancellationToken)
+        public async ValueTask WriteTagAsync(FlvTagType tagType, uint timestamp, Action<IDataBuffer> payloadBuffer, CancellationToken cancellationToken)
         {
             try
             {

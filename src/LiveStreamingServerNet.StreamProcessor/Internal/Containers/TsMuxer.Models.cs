@@ -16,40 +16,40 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Containers
             public bool HasAdaptionField { get; set; }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public void Write(INetBuffer netBuffer)
+            public void Write(IDataBuffer dataBuffer)
             {
-                WriteSyncByte(netBuffer);
-                WriteUnitStartIndicatorAndPacketId(netBuffer);
-                WriteContinuityCounterAndAdaptationFieldControl(netBuffer);
+                WriteSyncByte(dataBuffer);
+                WriteUnitStartIndicatorAndPacketId(dataBuffer);
+                WriteContinuityCounterAndAdaptationFieldControl(dataBuffer);
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            private static void WriteSyncByte(INetBuffer netBuffer)
+            private static void WriteSyncByte(IDataBuffer dataBuffer)
             {
-                netBuffer.Write(TsConstants.SyncByte);
+                dataBuffer.Write(TsConstants.SyncByte);
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            private void WriteUnitStartIndicatorAndPacketId(INetBuffer netBuffer)
+            private void WriteUnitStartIndicatorAndPacketId(IDataBuffer dataBuffer)
             {
                 var firstByte = (byte)(PacketId >> 8);
                 var secondByte = (byte)(PacketId & 0xff);
 
                 if (IsFirst) firstByte |= 0x40;
 
-                netBuffer.Write(firstByte);
-                netBuffer.Write(secondByte);
+                dataBuffer.Write(firstByte);
+                dataBuffer.Write(secondByte);
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             private void WriteContinuityCounterAndAdaptationFieldControl(
-                INetBuffer netBuffer)
+                IDataBuffer dataBuffer)
             {
                 var @byte = (byte)(ContinuityCounter & 0xf);
                 if (HasPayload) @byte |= 0x10;
                 if (HasAdaptionField) @byte |= 0x20;
 
-                netBuffer.Write(@byte);
+                dataBuffer.Write(@byte);
             }
         }
 
@@ -61,17 +61,17 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Containers
             public bool Present => AllowRandomAccess || DecodingTimestamp.HasValue || StuffingSize.HasValue;
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public void Write(INetBuffer netBuffer)
+            public void Write(IDataBuffer dataBuffer)
             {
                 if (!Present) return;
 
-                WriteSizeAndFlags(netBuffer);
-                WritePCR(netBuffer);
-                WriteStuffing(netBuffer);
+                WriteSizeAndFlags(dataBuffer);
+                WritePCR(dataBuffer);
+                WriteStuffing(dataBuffer);
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            private void WriteSizeAndFlags(INetBuffer netBuffer)
+            private void WriteSizeAndFlags(IDataBuffer dataBuffer)
             {
                 var size = (byte)(Size - 1);
 
@@ -79,28 +79,28 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Containers
                 if (DecodingTimestamp.HasValue) flags |= 0x10;
                 if (AllowRandomAccess) flags |= 0x40;
 
-                netBuffer.Write(size);
-                netBuffer.Write(flags);
+                dataBuffer.Write(size);
+                dataBuffer.Write(flags);
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            private void WritePCR(INetBuffer netBuffer)
+            private void WritePCR(IDataBuffer dataBuffer)
             {
                 if (!DecodingTimestamp.HasValue) return;
 
-                netBuffer.Write((byte)(DecodingTimestamp.Value >> 25));
-                netBuffer.Write((byte)(DecodingTimestamp.Value >> 17));
-                netBuffer.Write((byte)(DecodingTimestamp.Value >> 9));
-                netBuffer.Write((byte)(DecodingTimestamp.Value >> 1));
-                netBuffer.Write((byte)(((DecodingTimestamp.Value & 0x1) << 7) | 0x7e));
-                netBuffer.Write((byte)0x00);
+                dataBuffer.Write((byte)(DecodingTimestamp.Value >> 25));
+                dataBuffer.Write((byte)(DecodingTimestamp.Value >> 17));
+                dataBuffer.Write((byte)(DecodingTimestamp.Value >> 9));
+                dataBuffer.Write((byte)(DecodingTimestamp.Value >> 1));
+                dataBuffer.Write((byte)(((DecodingTimestamp.Value & 0x1) << 7) | 0x7e));
+                dataBuffer.Write((byte)0x00);
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            private void WriteStuffing(INetBuffer netBuffer)
+            private void WriteStuffing(IDataBuffer dataBuffer)
             {
                 for (var i = 0; i < StuffingSize; i++)
-                    netBuffer.Write(TsConstants.StuffingByte);
+                    dataBuffer.Write(TsConstants.StuffingByte);
             }
         }
 
@@ -108,29 +108,29 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Containers
         {
             public int Size => 14 + (DecodingTimestamp != PresentationTimestamp ? 5 : 0);
 
-            public void Write(INetBuffer netBuffer)
+            public void Write(IDataBuffer dataBuffer)
             {
-                WritePrefix(netBuffer);
-                WriteStreamId(netBuffer);
-                WritePacketSizeAndFlagsAndTimestamps(netBuffer);
+                WritePrefix(dataBuffer);
+                WriteStreamId(dataBuffer);
+                WritePacketSizeAndFlagsAndTimestamps(dataBuffer);
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            private static void WritePrefix(INetBuffer netBuffer)
+            private static void WritePrefix(IDataBuffer dataBuffer)
             {
-                netBuffer.Write((byte)0x00);
-                netBuffer.Write((byte)0x00);
-                netBuffer.Write((byte)0x01);
+                dataBuffer.Write((byte)0x00);
+                dataBuffer.Write((byte)0x00);
+                dataBuffer.Write((byte)0x01);
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            private void WriteStreamId(INetBuffer netBuffer)
+            private void WriteStreamId(IDataBuffer dataBuffer)
             {
-                netBuffer.Write(StreamId);
+                dataBuffer.Write(StreamId);
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            private void WritePacketSizeAndFlagsAndTimestamps(INetBuffer netBuffer)
+            private void WritePacketSizeAndFlagsAndTimestamps(IDataBuffer dataBuffer)
             {
                 var headerSize = 5;
                 var flags = 0x80;
@@ -147,32 +147,32 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Containers
                 if (packetSize > 0xffff)
                     packetSize = 0;
 
-                netBuffer.Write((byte)(packetSize >> 8));
-                netBuffer.Write((byte)packetSize);
+                dataBuffer.Write((byte)(packetSize >> 8));
+                dataBuffer.Write((byte)packetSize);
 
-                netBuffer.Write((byte)0x80);
-                netBuffer.Write((byte)flags);
-                netBuffer.Write((byte)headerSize);
+                dataBuffer.Write((byte)0x80);
+                dataBuffer.Write((byte)flags);
+                dataBuffer.Write((byte)headerSize);
 
-                WriteTimestamp(netBuffer, (byte)(flags >> 6), PresentationTimestamp);
-                if (writeDts) WriteTimestamp(netBuffer, 1, DecodingTimestamp);
+                WriteTimestamp(dataBuffer, (byte)(flags >> 6), PresentationTimestamp);
+                if (writeDts) WriteTimestamp(dataBuffer, 1, DecodingTimestamp);
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            private void WriteTimestamp(INetBuffer netBuffer, byte flags, uint timestamp)
+            private void WriteTimestamp(IDataBuffer dataBuffer, byte flags, uint timestamp)
             {
                 uint val;
 
                 val = (uint)(flags << 4) | ((timestamp >> 30) & 0x07) << 1 | 1;
-                netBuffer.Write((byte)val);
+                dataBuffer.Write((byte)val);
 
                 val = (((timestamp >> 15) & 0x7fff) << 1) | 1;
-                netBuffer.Write((byte)(val >> 8));
-                netBuffer.Write((byte)val);
+                dataBuffer.Write((byte)(val >> 8));
+                dataBuffer.Write((byte)val);
 
                 val = ((timestamp & 0x7fff) << 1) | 1;
-                netBuffer.Write((byte)(val >> 8));
-                netBuffer.Write((byte)val);
+                dataBuffer.Write((byte)(val >> 8));
+                dataBuffer.Write((byte)val);
             }
         }
 
@@ -201,56 +201,56 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Containers
             public int Size => 4;
             public int ChecksumOffset => 1;
 
-            public void Write(INetBuffer netBuffer)
+            public void Write(IDataBuffer dataBuffer)
             {
-                WritePointerField(netBuffer);
-                WriteTableHeader(netBuffer);
+                WritePointerField(dataBuffer);
+                WriteTableHeader(dataBuffer);
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            private void WritePointerField(INetBuffer netBuffer)
+            private void WritePointerField(IDataBuffer dataBuffer)
             {
-                netBuffer.Write((byte)0);
+                dataBuffer.Write((byte)0);
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            private void WriteTableHeader(INetBuffer netBuffer)
+            private void WriteTableHeader(IDataBuffer dataBuffer)
             {
-                netBuffer.Write(TableId);
-                netBuffer.WriteUint16BigEndian((ushort)(0x1 << 15 | 0x3 << 12 | (DataSize + TableChecksum.Size)));
+                dataBuffer.Write(TableId);
+                dataBuffer.WriteUint16BigEndian((ushort)(0x1 << 15 | 0x3 << 12 | (DataSize + TableChecksum.Size)));
             }
         }
 
         private interface IPSITable
         {
             int Size { get; }
-            void Write(INetBuffer netBuffer);
+            void Write(IDataBuffer dataBuffer);
         }
 
         private record struct ProgramAssociationTable(ushort TransportStreamIdentifier, ushort ProgramNumber, ushort ProgramMapPID) : IPSITable
         {
             public int Size => 5 + 4;
 
-            public void Write(INetBuffer netBuffer)
+            public void Write(IDataBuffer dataBuffer)
             {
-                WriteTablePrefix(netBuffer);
-                WriteTable(netBuffer);
+                WriteTablePrefix(dataBuffer);
+                WriteTable(dataBuffer);
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            private void WriteTablePrefix(INetBuffer netBuffer)
+            private void WriteTablePrefix(IDataBuffer dataBuffer)
             {
-                netBuffer.WriteUint16BigEndian(TransportStreamIdentifier);
-                netBuffer.Write((byte)((0x3 << 6) | 1));
-                netBuffer.Write((byte)0x00);
-                netBuffer.Write((byte)0x00);
+                dataBuffer.WriteUint16BigEndian(TransportStreamIdentifier);
+                dataBuffer.Write((byte)((0x3 << 6) | 1));
+                dataBuffer.Write((byte)0x00);
+                dataBuffer.Write((byte)0x00);
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            private void WriteTable(INetBuffer netBuffer)
+            private void WriteTable(IDataBuffer dataBuffer)
             {
-                netBuffer.WriteUint16BigEndian(ProgramNumber);
-                netBuffer.WriteUint16BigEndian((ushort)(0xe000 | ProgramMapPID));
+                dataBuffer.WriteUint16BigEndian(ProgramNumber);
+                dataBuffer.WriteUint16BigEndian((ushort)(0xe000 | ProgramMapPID));
             }
         }
 
@@ -258,11 +258,11 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Containers
         {
             public int Size => 5;
 
-            public void Write(INetBuffer netBuffer)
+            public void Write(IDataBuffer dataBuffer)
             {
-                netBuffer.Write(StreamType);
-                netBuffer.WriteUint16BigEndian((ushort)(0x07 << 13 | ElementaryPID));
-                netBuffer.WriteUint16BigEndian(0x0f << 12);
+                dataBuffer.Write(StreamType);
+                dataBuffer.WriteUint16BigEndian((ushort)(0x07 << 13 | ElementaryPID));
+                dataBuffer.WriteUint16BigEndian(0x0f << 12);
             }
         }
 
@@ -270,29 +270,29 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Containers
         {
             public int Size => 5 + 4 + ElementaryStreamInfos.Sum(x => x.Size);
 
-            public void Write(INetBuffer netBuffer)
+            public void Write(IDataBuffer dataBuffer)
             {
-                WriteTablePrefix(netBuffer);
-                WriteTable(netBuffer);
+                WriteTablePrefix(dataBuffer);
+                WriteTable(dataBuffer);
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            private void WriteTablePrefix(INetBuffer netBuffer)
+            private void WriteTablePrefix(IDataBuffer dataBuffer)
             {
-                netBuffer.WriteUint16BigEndian(ProgramNumber);
-                netBuffer.Write((byte)((0x3 << 6) | 1));
-                netBuffer.Write((byte)0x00);
-                netBuffer.Write((byte)0x00);
+                dataBuffer.WriteUint16BigEndian(ProgramNumber);
+                dataBuffer.Write((byte)((0x3 << 6) | 1));
+                dataBuffer.Write((byte)0x00);
+                dataBuffer.Write((byte)0x00);
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            private void WriteTable(INetBuffer netBuffer)
+            private void WriteTable(IDataBuffer dataBuffer)
             {
-                netBuffer.WriteUint16BigEndian((ushort)(0x07 << 13 | PCRPID));
-                netBuffer.WriteUint16BigEndian(0x0f << 12);
+                dataBuffer.WriteUint16BigEndian((ushort)(0x07 << 13 | PCRPID));
+                dataBuffer.WriteUint16BigEndian(0x0f << 12);
 
                 foreach (var info in ElementaryStreamInfos)
-                    info.Write(netBuffer);
+                    info.Write(dataBuffer);
             }
         }
 
@@ -300,10 +300,10 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Containers
         {
             public const int Size = 4;
 
-            public void Write(INetBuffer netBuffer)
+            public void Write(IDataBuffer dataBuffer)
             {
                 var checksum = CRC32.Generate(Buffer, Start, Length);
-                netBuffer.WriteUInt32BigEndian(checksum);
+                dataBuffer.WriteUInt32BigEndian(checksum);
             }
         }
     }

@@ -9,19 +9,19 @@ using System.Threading.Channels;
 
 namespace LiveStreamingServerNet.Networking.Internal
 {
-    internal class NetBufferSender : INetBufferSender
+    internal class ClientBufferSender : IClientBufferSender
     {
         private readonly uint _clientId;
-        private readonly INetBufferPool _netBufferPool;
+        private readonly IDataBufferPool _dataBufferPool;
         private readonly Channel<PendingBuffer> _pendingBufferChannel;
         private readonly ILogger _logger;
 
         private Task? _task;
 
-        public NetBufferSender(uint clientId, INetBufferPool netBufferPool, ILogger<NetBufferSender> logger)
+        public ClientBufferSender(uint clientId, IDataBufferPool dataBufferPool, ILogger<ClientBufferSender> logger)
         {
             _clientId = clientId;
-            _netBufferPool = netBufferPool;
+            _dataBufferPool = dataBufferPool;
             _logger = logger;
 
             _pendingBufferChannel = Channel.CreateUnbounded<PendingBuffer>(
@@ -33,9 +33,9 @@ namespace LiveStreamingServerNet.Networking.Internal
             _task = Task.Run(() => SendOutstandingBuffersAsync(networkStream, cancellationToken), cancellationToken);
         }
 
-        public void Send(INetBuffer netBuffer, Action<bool>? callback)
+        public void Send(IDataBuffer dataBuffer, Action<bool>? callback)
         {
-            var rentedBuffer = netBuffer.ToRentedBuffer();
+            var rentedBuffer = dataBuffer.ToRentedBuffer();
 
             try
             {
@@ -69,15 +69,15 @@ namespace LiveStreamingServerNet.Networking.Internal
             }
         }
 
-        public void Send(Action<INetBuffer> writer, Action<bool>? callback)
+        public void Send(Action<IDataBuffer> writer, Action<bool>? callback)
         {
-            var netBuffer = _netBufferPool.Obtain();
+            var dataBuffer = _dataBufferPool.Obtain();
 
             try
             {
-                writer.Invoke(netBuffer);
+                writer.Invoke(dataBuffer);
 
-                var rentedBuffer = netBuffer.ToRentedBuffer();
+                var rentedBuffer = dataBuffer.ToRentedBuffer();
 
                 try
                 {
@@ -94,14 +94,14 @@ namespace LiveStreamingServerNet.Networking.Internal
             }
             finally
             {
-                _netBufferPool.Recycle(netBuffer);
+                _dataBufferPool.Recycle(dataBuffer);
             }
         }
 
-        public ValueTask SendAsync(INetBuffer netBuffer)
+        public ValueTask SendAsync(IDataBuffer dataBuffer)
         {
             var tcs = new ValueTaskCompletionSource();
-            Send(netBuffer, SetResult);
+            Send(dataBuffer, SetResult);
             return tcs.Task;
 
             void SetResult(bool successful)
@@ -128,7 +128,7 @@ namespace LiveStreamingServerNet.Networking.Internal
             }
         }
 
-        public ValueTask SendAsync(Action<INetBuffer> writer)
+        public ValueTask SendAsync(Action<IDataBuffer> writer)
         {
             var tcs = new ValueTaskCompletionSource();
             Send(writer, SetResult);

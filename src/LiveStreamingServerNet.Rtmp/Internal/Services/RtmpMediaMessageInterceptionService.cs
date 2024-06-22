@@ -13,7 +13,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             _interceptors = interceptors;
         }
 
-        public async ValueTask ReceiveMediaMessageAsync(string streamPath, MediaType mediaType, INetBuffer payloadBuffer, uint timestamp, bool isSkippable)
+        public async ValueTask ReceiveMediaMessageAsync(string streamPath, MediaType mediaType, IDataBuffer payloadBuffer, uint timestamp, bool isSkippable)
         {
             if (!_interceptors.Any())
                 return;

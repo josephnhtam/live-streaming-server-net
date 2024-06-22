@@ -9,8 +9,8 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Containers
 {
     internal partial class TsMuxer : ITsMuxer
     {
-        private readonly INetBuffer _headerBuffer;
-        private readonly INetBuffer _payloadBuffer;
+        private readonly IDataBuffer _headerBuffer;
+        private readonly IDataBuffer _payloadBuffer;
         private readonly byte[] _adtsBuffer;
         private readonly string _outputPath;
 
@@ -36,8 +36,8 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Containers
         public TsMuxer(string outputPath, IBufferPool? bufferPool = null)
         {
             _outputPath = outputPath;
-            _headerBuffer = new NetBuffer(bufferPool, 512);
-            _payloadBuffer = new NetBuffer(bufferPool, 8192);
+            _headerBuffer = new DataBuffer(bufferPool, 512);
+            _payloadBuffer = new DataBuffer(bufferPool, 8192);
             _adtsBuffer = new byte[AudioDataTransportStreamHeader.Size];
         }
 
@@ -51,7 +51,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Containers
             _aacSequenceHeader = aacSequenceHeader;
         }
 
-        private void WritePATPacket(INetBuffer tsBuffer)
+        private void WritePATPacket(IDataBuffer tsBuffer)
         {
             var pat = new ProgramAssociationTable(
                 TsConstants.TransportStreamIdentifier,
@@ -68,7 +68,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Containers
             );
         }
 
-        private void WritePMTPacket(INetBuffer tsBuffer)
+        private void WritePMTPacket(IDataBuffer tsBuffer)
         {
             var elementaryStreamInfos = new List<ElementaryStreamInfo>();
 
@@ -93,7 +93,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Containers
             );
         }
 
-        private void WritePSIPacket(INetBuffer tsBuffer, ushort packetID, byte tableID, IPSITable psiTable, ref byte continuityCounter)
+        private void WritePSIPacket(IDataBuffer tsBuffer, ushort packetID, byte tableID, IPSITable psiTable, ref byte continuityCounter)
         {
             var startPosition = tsBuffer.Position;
 
@@ -219,7 +219,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Containers
             return true;
         }
 
-        private void WritePESPacket(INetBuffer tsBuffer, BytesSegments dataBuffer, bool writeRAI, bool writePCR, ushort packetId, byte streamId, uint decodingTimestamp, uint presentationTimestamp, ref byte continuityCounter)
+        private void WritePESPacket(IDataBuffer tsBuffer, BytesSegments dataBuffer, bool writeRAI, bool writePCR, ushort packetId, byte streamId, uint decodingTimestamp, uint presentationTimestamp, ref byte continuityCounter)
         {
             var position = 0;
             var bufferSize = dataBuffer.Length;
@@ -271,7 +271,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Containers
             continuityCounter = (byte)((continuityCounter + 1) & 0xf);
         }
 
-        private void WriteHeaderPackets(INetBuffer tsBuffer)
+        private void WriteHeaderPackets(IDataBuffer tsBuffer)
         {
             WritePATPacket(tsBuffer);
             WritePMTPacket(tsBuffer);

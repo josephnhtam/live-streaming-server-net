@@ -8,12 +8,12 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services.Contracts
         ValueTask CacheSequenceHeaderAsync(
             IRtmpPublishStreamContext publishStreamContext,
             MediaType mediaType,
-            INetBuffer payloadBuffer);
+            IDataBuffer payloadBuffer);
 
         ValueTask CachePictureAsync(
             IRtmpPublishStreamContext publishStreamContext,
             MediaType mediaType,
-            INetBuffer payloadBuffer,
+            IDataBuffer payloadBuffer,
             uint timestamp);
 
         ValueTask ClearGroupOfPicturesCacheAsync(IRtmpPublishStreamContext publishStreamContext);

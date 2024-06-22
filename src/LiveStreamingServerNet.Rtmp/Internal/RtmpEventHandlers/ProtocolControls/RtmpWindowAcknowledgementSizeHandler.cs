@@ -20,7 +20,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.ProtocolControl
         public ValueTask<bool> HandleAsync(
             IRtmpChunkStreamContext chunkStreamContext,
             IRtmpClientContext clientContext,
-            INetBuffer payloadBuffer,
+            IDataBuffer payloadBuffer,
             CancellationToken cancellationToken)
         {
             clientContext.InWindowAcknowledgementSize = payloadBuffer.ReadUInt32BigEndian();

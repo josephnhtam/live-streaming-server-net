@@ -4,9 +4,9 @@ using mtanksl.ActionMessageFormat;
 
 namespace LiveStreamingServerNet.Rtmp.Internal.Extensions
 {
-    internal static class NetBufferExtensions
+    internal static class DataBufferExtensions
     {
-        public static void WriteAmf(this INetBuffer buffer, IReadOnlyList<object?> values, AmfEncodingType type)
+        public static void WriteAmf(this IDataBuffer buffer, IReadOnlyList<object?> values, AmfEncodingType type)
         {
             var writer = new AmfWriter();
 
@@ -41,7 +41,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Extensions
             buffer.Write(writer.Data);
         }
 
-        public static object[] ReadAmf(this INetBuffer buffer, int bytesCount, int valuesCount, AmfEncodingType type)
+        public static object[] ReadAmf(this IDataBuffer buffer, int bytesCount, int valuesCount, AmfEncodingType type)
         {
             var data = buffer.ReadBytes(bytesCount);
             var reader = new AmfReader(data);
@@ -64,7 +64,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Extensions
             return results;
         }
 
-        public static IList<object> ReadAmf(this INetBuffer buffer, int bytesCount, AmfEncodingType type)
+        public static IList<object> ReadAmf(this IDataBuffer buffer, int bytesCount, AmfEncodingType type)
         {
             var data = buffer.ReadBytes(bytesCount);
             var reader = new AmfReader(data);

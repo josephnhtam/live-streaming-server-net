@@ -46,7 +46,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
             // Arrange
             var publishStreamContext = Substitute.For<IRtmpPublishStreamContext>();
             var mediaType = MediaType.Video;
-            var payloadBuffer = Substitute.For<INetBuffer>();
+            var payloadBuffer = Substitute.For<IDataBuffer>();
             var sequenceHeader = _fixture.Create<byte[]>();
 
             payloadBuffer.MoveTo(0).Returns(payloadBuffer);
@@ -67,7 +67,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
             // Arrange
             var publishStreamContext = Substitute.For<IRtmpPublishStreamContext>();
             var mediaType = MediaType.Audio;
-            var payloadBuffer = Substitute.For<INetBuffer>();
+            var payloadBuffer = Substitute.For<IDataBuffer>();
             var sequenceHeader = _fixture.Create<byte[]>();
 
             payloadBuffer.MoveTo(0).Returns(payloadBuffer);
@@ -93,7 +93,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
             var mediaType = _fixture.Create<MediaType>();
             var timestamp = _fixture.Create<uint>();
 
-            var payloadBuffer = new NetBuffer();
+            var payloadBuffer = new DataBuffer();
             payloadBuffer.Write(payload);
             payloadBuffer.MoveTo(0);
 
@@ -103,7 +103,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
                 .Do(x =>
                 {
                     pictureCacheInfo = x.Arg<PictureCacheInfo>();
-                    pictureCacheBuffer = x.Arg<INetBuffer>().ReadBytes(x.Arg<INetBuffer>().Size);
+                    pictureCacheBuffer = x.Arg<IDataBuffer>().ReadBytes(x.Arg<IDataBuffer>().Size);
                 });
 
             // Act
@@ -113,10 +113,10 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
             await _interception.Received(1).CachePictureAsync(
                 publishStreamContext.StreamPath,
                 mediaType,
-                Arg.Any<INetBuffer>(),
+                Arg.Any<IDataBuffer>(),
                 timestamp);
 
-            publishStreamContext.GroupOfPicturesCache.Received(1).Add(Arg.Any<PictureCacheInfo>(), Arg.Any<INetBuffer>());
+            publishStreamContext.GroupOfPicturesCache.Received(1).Add(Arg.Any<PictureCacheInfo>(), Arg.Any<IDataBuffer>());
 
             pictureCacheInfo.Should().NotBeNull();
             pictureCacheBuffer.Should().NotBeNull();
@@ -138,17 +138,17 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
             var mediaType = _fixture.Create<MediaType>();
             var timestamp = _fixture.Create<uint>();
 
-            var payloadBuffer = new NetBuffer();
+            var payloadBuffer = new DataBuffer();
             payloadBuffer.Write(payload);
             payloadBuffer.MoveTo(0);
 
             PictureCacheInfo? pictureCacheInfo = null;
             byte[]? pictureCacheBuffer = null;
-            publishStreamContext.GroupOfPicturesCache.When(x => x.Add(Arg.Any<PictureCacheInfo>(), Arg.Any<INetBuffer>()))
+            publishStreamContext.GroupOfPicturesCache.When(x => x.Add(Arg.Any<PictureCacheInfo>(), Arg.Any<IDataBuffer>()))
                 .Do(x =>
                 {
                     pictureCacheInfo = x.Arg<PictureCacheInfo>();
-                    pictureCacheBuffer = x.Arg<INetBuffer>().ReadBytes(x.Arg<INetBuffer>().Size);
+                    pictureCacheBuffer = x.Arg<IDataBuffer>().ReadBytes(x.Arg<IDataBuffer>().Size);
                 });
 
             // Act
@@ -158,9 +158,9 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
             publishStreamContext.GroupOfPicturesCache.Received(1).Clear();
 
             await _interception.Received(1).CachePictureAsync(
-                publishStreamContext.StreamPath, mediaType, Arg.Any<INetBuffer>(), timestamp);
+                publishStreamContext.StreamPath, mediaType, Arg.Any<IDataBuffer>(), timestamp);
 
-            publishStreamContext.GroupOfPicturesCache.Received(1).Add(Arg.Any<PictureCacheInfo>(), Arg.Any<INetBuffer>());
+            publishStreamContext.GroupOfPicturesCache.Received(1).Add(Arg.Any<PictureCacheInfo>(), Arg.Any<IDataBuffer>());
 
             pictureCacheInfo.Should().NotBeNull();
             pictureCacheBuffer.Should().NotBeNull();
@@ -197,15 +197,15 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
             publishStreamContext.AudioSequenceHeader.Returns(audioSequenceHeader);
             clientContext.UpdateTimestamp(Arg.Any<uint>(), Arg.Any<MediaType>()).Returns(true);
 
-            using var audioBuffer = new NetBuffer();
+            using var audioBuffer = new DataBuffer();
             _chunkMessageSender.When(
                 x => x.Send(
                     clientContext,
                     Arg.Is<RtmpChunkBasicHeader>(x => x.ChunkType == 0 && x.ChunkStreamId == RtmpConstants.AudioMessageChunkStreamId),
                     Arg.Is<RtmpChunkMessageHeaderType0>(x => x.MessageTypeId == RtmpMessageType.AudioMessage),
-                    Arg.Any<Action<INetBuffer>>()
+                    Arg.Any<Action<IDataBuffer>>()
                 )
-            ).Do(x => x.Arg<Action<INetBuffer>>().Invoke(audioBuffer));
+            ).Do(x => x.Arg<Action<IDataBuffer>>().Invoke(audioBuffer));
 
             // Act
             _sut.SendCachedHeaderMessages(clientContext, publishStreamContext, streamId);
@@ -215,7 +215,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
                 clientContext,
                 Arg.Is<RtmpChunkBasicHeader>(x => x.ChunkType == 0 && x.ChunkStreamId == RtmpConstants.AudioMessageChunkStreamId),
                 Arg.Is<RtmpChunkMessageHeaderType0>(x => x.MessageTypeId == RtmpMessageType.AudioMessage),
-                Arg.Any<Action<INetBuffer>>());
+                Arg.Any<Action<IDataBuffer>>());
 
             audioBuffer.UnderlyingBuffer.Take(audioBuffer.Size).Should().BeEquivalentTo(audioSequenceHeader);
         }
@@ -232,15 +232,15 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
             publishStreamContext.VideoSequenceHeader.Returns(videoSequenceHeader);
             clientContext.UpdateTimestamp(Arg.Any<uint>(), Arg.Any<MediaType>()).Returns(true);
 
-            using var videoBuffer = new NetBuffer();
+            using var videoBuffer = new DataBuffer();
             _chunkMessageSender.When(
                 x => x.Send(
                     clientContext,
                     Arg.Is<RtmpChunkBasicHeader>(x => x.ChunkType == 0 && x.ChunkStreamId == RtmpConstants.VideoMessageChunkStreamId),
                     Arg.Is<RtmpChunkMessageHeaderType0>(x => x.MessageTypeId == RtmpMessageType.VideoMessage),
-                    Arg.Any<Action<INetBuffer>>()
+                    Arg.Any<Action<IDataBuffer>>()
                 )
-            ).Do(x => x.Arg<Action<INetBuffer>>().Invoke(videoBuffer));
+            ).Do(x => x.Arg<Action<IDataBuffer>>().Invoke(videoBuffer));
 
             // Act
             _sut.SendCachedHeaderMessages(clientContext, publishStreamContext, streamId);
@@ -250,7 +250,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
                clientContext,
                Arg.Is<RtmpChunkBasicHeader>(x => x.ChunkType == 0 && x.ChunkStreamId == RtmpConstants.VideoMessageChunkStreamId),
                Arg.Is<RtmpChunkMessageHeaderType0>(x => x.MessageTypeId == RtmpMessageType.VideoMessage),
-               Arg.Any<Action<INetBuffer>>());
+               Arg.Any<Action<IDataBuffer>>());
 
             videoBuffer.UnderlyingBuffer.Take(videoBuffer.Size).Should().BeEquivalentTo(videoSequenceHeader);
         }
@@ -267,15 +267,15 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
 
             publishStreamContext.StreamMetaData.Returns(streamMetaData);
 
-            using var metaDataBuffer = new NetBuffer();
+            using var metaDataBuffer = new DataBuffer();
             _chunkMessageSender.When(
                 x => x.Send(
                     clientContext,
                     Arg.Is<RtmpChunkBasicHeader>(x => x.ChunkType == 0 && x.ChunkStreamId == RtmpConstants.DataMessageChunkStreamId),
                     Arg.Is<RtmpChunkMessageHeaderType0>(x => x.MessageTypeId == RtmpMessageType.DataMessageAmf0),
-                    Arg.Any<Action<INetBuffer>>()
+                    Arg.Any<Action<IDataBuffer>>()
                 )
-            ).Do(x => x.Arg<Action<INetBuffer>>().Invoke(metaDataBuffer));
+            ).Do(x => x.Arg<Action<IDataBuffer>>().Invoke(metaDataBuffer));
 
             // Act
             _sut.SendCachedStreamMetaDataMessage(clientContext, publishStreamContext, timestamp, streamId);
@@ -285,7 +285,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
                 clientContext,
                 Arg.Is<RtmpChunkBasicHeader>(x => x.ChunkType == 0 && x.ChunkStreamId == RtmpConstants.DataMessageChunkStreamId),
                 Arg.Is<RtmpChunkMessageHeaderType0>(x => x.MessageTypeId == RtmpMessageType.DataMessageAmf0),
-                Arg.Any<Action<INetBuffer>>());
+                Arg.Any<Action<IDataBuffer>>());
 
             var amf = metaDataBuffer.MoveTo(0).ReadAmf(metaDataBuffer.Size, AmfEncodingType.Amf0);
             amf[0].Should().Be(RtmpDataMessageConstants.OnMetaData);
@@ -307,15 +307,15 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
 
             publishStreamContext.StreamMetaData.Returns(streamMetaData);
 
-            using var metaDataBuffer = new NetBuffer();
+            using var metaDataBuffer = new DataBuffer();
             _chunkMessageSender.When(
                 x => x.Send(
                     clientContexts,
                     Arg.Is<RtmpChunkBasicHeader>(x => x.ChunkType == 0 && x.ChunkStreamId == RtmpConstants.DataMessageChunkStreamId),
                     Arg.Is<RtmpChunkMessageHeaderType0>(x => x.MessageTypeId == RtmpMessageType.DataMessageAmf0),
-                    Arg.Any<Action<INetBuffer>>()
+                    Arg.Any<Action<IDataBuffer>>()
                 )
-            ).Do(x => x.Arg<Action<INetBuffer>>().Invoke(metaDataBuffer));
+            ).Do(x => x.Arg<Action<IDataBuffer>>().Invoke(metaDataBuffer));
 
             // Act
             _sut.SendCachedStreamMetaDataMessage(clientContexts, publishStreamContext, timestamp, streamId);
@@ -325,7 +325,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
                 clientContexts,
                 Arg.Is<RtmpChunkBasicHeader>(x => x.ChunkType == 0 && x.ChunkStreamId == RtmpConstants.DataMessageChunkStreamId),
                 Arg.Is<RtmpChunkMessageHeaderType0>(x => x.MessageTypeId == RtmpMessageType.DataMessageAmf0),
-                Arg.Any<Action<INetBuffer>>());
+                Arg.Any<Action<IDataBuffer>>());
 
             var amf = metaDataBuffer.MoveTo(0).ReadAmf(metaDataBuffer.Size, AmfEncodingType.Amf0);
             amf[0].Should().Be(RtmpDataMessageConstants.OnMetaData);
@@ -360,15 +360,15 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
 
             publishStreamContext.GroupOfPicturesCache.Get().Returns(groupOfPictures);
 
-            using var payloadsBuffer = new NetBuffer();
+            using var payloadsBuffer = new DataBuffer();
             _chunkMessageSender.When(
                 x => x.Send(
                     clientContext,
                     Arg.Any<RtmpChunkBasicHeader>(),
                     Arg.Any<RtmpChunkMessageHeaderType0>(),
-                    Arg.Any<Action<INetBuffer>>()
+                    Arg.Any<Action<IDataBuffer>>()
                 )
-            ).Do(x => x.Arg<Action<INetBuffer>>().Invoke(payloadsBuffer));
+            ).Do(x => x.Arg<Action<IDataBuffer>>().Invoke(payloadsBuffer));
 
             var expectedPayloadsBufffer =
                 pictureCache1.Payload.Buffer.Take(pictureCache1.Payload.Size)
@@ -383,7 +383,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
                 clientContext,
                 Arg.Any<RtmpChunkBasicHeader>(),
                 Arg.Any<RtmpChunkMessageHeaderType0>(),
-                Arg.Any<Action<INetBuffer>>());
+                Arg.Any<Action<IDataBuffer>>());
 
             payloadsBuffer.UnderlyingBuffer.Take(payloadsBuffer.Size).Should().BeEquivalentTo(expectedPayloadsBufffer);
         }

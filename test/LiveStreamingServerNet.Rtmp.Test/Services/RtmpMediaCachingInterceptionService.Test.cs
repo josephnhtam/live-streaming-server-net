@@ -20,7 +20,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
         public async Task CachePictureAsync_Should_InvokeOnCachePictureForEachInterceptor()
         {
             // Arrange
-            using var payloadBuffer = new NetBuffer();
+            using var payloadBuffer = new DataBuffer();
             var streamPath = _fixture.Create<string>();
             var mediaType = _fixture.Create<MediaType>();
             var timestamp = _fixture.Create<uint>();

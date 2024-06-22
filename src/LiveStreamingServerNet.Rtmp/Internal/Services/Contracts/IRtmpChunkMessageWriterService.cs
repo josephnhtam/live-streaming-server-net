@@ -6,10 +6,10 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services.Contracts
     internal interface IRtmpChunkMessageWriterService
     {
         void Write<TRtmpChunkMessageHeader>(
-            INetBuffer targetBuffer,
+            IDataBuffer targetBuffer,
             RtmpChunkBasicHeader basicHeader,
             TRtmpChunkMessageHeader messageHeader,
-            INetBuffer payloadBuffer,
+            IDataBuffer payloadBuffer,
             uint outChunkSize) where TRtmpChunkMessageHeader : struct, IRtmpChunkMessageHeader;
     }
 }

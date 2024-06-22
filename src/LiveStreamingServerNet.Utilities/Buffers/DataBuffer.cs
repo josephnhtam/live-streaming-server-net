@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 
 namespace LiveStreamingServerNet.Utilities.Buffers
 {
-    public partial class NetBuffer : INetBuffer
+    public partial class DataBuffer : IDataBuffer
     {
         private readonly IBufferPool? _bufferPool;
         private byte[] _buffer;
@@ -37,11 +37,11 @@ namespace LiveStreamingServerNet.Utilities.Buffers
 
         public byte[] UnderlyingBuffer => _buffer;
 
-        public NetBuffer() : this(1024) { }
+        public DataBuffer() : this(1024) { }
 
-        public NetBuffer(int initialCapacity) : this(null, initialCapacity) { }
+        public DataBuffer(int initialCapacity) : this(null, initialCapacity) { }
 
-        public NetBuffer(IBufferPool? bufferPool, int initialCapacity)
+        public DataBuffer(IBufferPool? bufferPool, int initialCapacity)
         {
             _bufferPool = bufferPool;
             _buffer = _bufferPool?.Rent(initialCapacity) ?? ArrayPool<byte>.Shared.Rent(initialCapacity);
@@ -71,7 +71,7 @@ namespace LiveStreamingServerNet.Utilities.Buffers
             _buffer = buffer;
         }
 
-        public INetBuffer MoveTo(int position)
+        public IDataBuffer MoveTo(int position)
         {
             Position = position;
             return this;
@@ -95,7 +95,7 @@ namespace LiveStreamingServerNet.Utilities.Buffers
             Reset();
         }
 
-        public void Flush(INetBuffer output)
+        public void Flush(IDataBuffer output)
         {
             output.Write(_buffer, 0, Size);
             Reset();
@@ -107,12 +107,12 @@ namespace LiveStreamingServerNet.Utilities.Buffers
             Reset();
         }
 
-        public void CopyAllTo(INetBuffer targetBuffer)
+        public void CopyAllTo(IDataBuffer targetBuffer)
         {
             targetBuffer.Write(_buffer, 0, Size);
         }
 
-        public void ReadAndWriteTo(INetBuffer targetBuffer, int bytesCount)
+        public void ReadAndWriteTo(IDataBuffer targetBuffer, int bytesCount)
         {
             if (_position + bytesCount > _size)
                 throw new ArgumentOutOfRangeException(nameof(bytesCount));

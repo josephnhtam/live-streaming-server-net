@@ -11,22 +11,22 @@ using NSubstitute;
 
 namespace LiveStreamingServerNet.Networking.Test
 {
-    public class NetBufferSenderTest : IDisposable
+    public class ClientBufferSenderTest : IDisposable
     {
         private readonly IFixture _fixture;
-        private readonly INetBufferPool _netBufferPool;
-        private readonly ILogger<NetBufferSender> _logger;
-        private readonly INetBufferSender _sut;
+        private readonly IDataBufferPool _dataBufferPool;
+        private readonly ILogger<ClientBufferSender> _logger;
+        private readonly IClientBufferSender _sut;
         private readonly CancellationTokenSource _cts;
         private readonly CancellationToken _cancellationToken;
 
-        public NetBufferSenderTest()
+        public ClientBufferSenderTest()
         {
             _fixture = new Fixture();
-            _netBufferPool = new NetBufferPool(Options.Create(new NetBufferPoolConfiguration()));
-            _logger = Substitute.For<ILogger<NetBufferSender>>();
+            _dataBufferPool = new DataBufferPool(Options.Create(new DataBufferPoolConfiguration()));
+            _logger = Substitute.For<ILogger<ClientBufferSender>>();
 
-            _sut = new NetBufferSender(1, _netBufferPool, _logger);
+            _sut = new ClientBufferSender(1, _dataBufferPool, _logger);
 
             _cts = new CancellationTokenSource();
             _cancellationToken = _cts.Token;
@@ -42,11 +42,11 @@ namespace LiveStreamingServerNet.Networking.Test
 
             _sut.Start(networkStream, _cancellationToken);
 
-            using var netBuffer = new NetBuffer();
-            netBuffer.Write(expectedBuffer);
+            using var dataBuffer = new DataBuffer();
+            dataBuffer.Write(expectedBuffer);
 
             // Act
-            await _sut.SendAsync(netBuffer);
+            await _sut.SendAsync(dataBuffer);
 
             // Assert
             innerStream.Should().HaveLength(expectedBuffer.Length);
@@ -97,7 +97,7 @@ namespace LiveStreamingServerNet.Networking.Test
             _sut.Start(networkStream, _cancellationToken);
 
             // Act
-            await _sut.SendAsync(netBuffer => netBuffer.Write(expectedBuffer));
+            await _sut.SendAsync(dataBuffer => dataBuffer.Write(expectedBuffer));
 
             // Assert
             innerStream.Should().HaveLength(expectedBuffer.Length);
@@ -119,12 +119,12 @@ namespace LiveStreamingServerNet.Networking.Test
 
             _sut.Start(networkStream, _cancellationToken);
 
-            using var netBuffer = new NetBuffer();
-            netBuffer.Write(expectedBuffer);
+            using var dataBuffer = new DataBuffer();
+            dataBuffer.Write(expectedBuffer);
 
             // Act
             var tcs = new TaskCompletionSource();
-            _sut.Send(netBuffer, _ => tcs.SetResult());
+            _sut.Send(dataBuffer, _ => tcs.SetResult());
             await tcs.Task;
 
             // Assert
@@ -179,7 +179,7 @@ namespace LiveStreamingServerNet.Networking.Test
 
             // Act
             var tcs = new TaskCompletionSource();
-            _sut.Send(netBuffer => netBuffer.Write(expectedBuffer), _ => tcs.SetResult());
+            _sut.Send(dataBuffer => dataBuffer.Write(expectedBuffer), _ => tcs.SetResult());
             await tcs.Task;
 
             // Assert
@@ -193,7 +193,7 @@ namespace LiveStreamingServerNet.Networking.Test
         }
 
         [Fact]
-        public async Task NetBufferSender_Should_BeCancellable()
+        public async Task DataBufferSender_Should_BeCancellable()
         {
             // Arrange
             using var innerStream = new MemoryStream();
@@ -227,7 +227,7 @@ namespace LiveStreamingServerNet.Networking.Test
             {
                 var idx = i;
 
-                _sut.Send(netBuffer => netBuffer.Write(expectedBuffer[idx]), _ =>
+                _sut.Send(dataBuffer => dataBuffer.Write(expectedBuffer[idx]), _ =>
                 {
                     if (idx == expectedBuffer.Length - 1) tcs.SetResult();
                 });

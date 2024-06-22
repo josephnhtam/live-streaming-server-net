@@ -1,6 +1,6 @@
 ﻿namespace LiveStreamingServerNet.Utilities.Buffers.Contracts
 {
-    public interface INetBuffer : IDisposable
+    public interface IDataBuffer : IDisposable
     {
         int Position { get; set; }
         int Size { get; set; }
@@ -8,13 +8,13 @@
         byte[] UnderlyingBuffer { get; }
 
         void Advance(int count);
-        INetBuffer MoveTo(int position);
+        IDataBuffer MoveTo(int position);
         void Reset();
         Task FlushAsync(Stream output);
         void Flush(Stream output);
-        void Flush(INetBuffer output);
-        void CopyAllTo(INetBuffer targetBuffer);
-        void ReadAndWriteTo(INetBuffer targetBuffer, int bytesCount);
+        void Flush(IDataBuffer output);
+        void CopyAllTo(IDataBuffer targetBuffer);
+        void ReadAndWriteTo(IDataBuffer targetBuffer, int bytesCount);
         ValueTask FromStreamData(Stream stream, int bytesCount, CancellationToken cancellationToken = default);
         ValueTask AppendStreamData(Stream stream, int bytesCount, CancellationToken cancellationToken = default);
         ValueTask FromStreamData(IStreamReader stream, int bytesCount, CancellationToken cancellationToken = default);

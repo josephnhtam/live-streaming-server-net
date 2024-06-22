@@ -30,7 +30,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Data
         public async ValueTask<bool> HandleAsync(
             IRtmpChunkStreamContext chunkStreamContext,
             IRtmpClientContext clientContext,
-            INetBuffer payloadBuffer,
+            IDataBuffer payloadBuffer,
             CancellationToken cancellationToken)
         {
             var amfData = chunkStreamContext.MessageHeader.MessageTypeId switch

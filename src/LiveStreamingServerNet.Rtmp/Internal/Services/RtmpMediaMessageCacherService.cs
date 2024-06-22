@@ -33,7 +33,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
         public async ValueTask CacheSequenceHeaderAsync(
             IRtmpPublishStreamContext publishStreamContext,
             MediaType mediaType,
-            INetBuffer payloadBuffer)
+            IDataBuffer payloadBuffer)
         {
             var sequenceHeader = payloadBuffer.MoveTo(0).ReadBytes(payloadBuffer.Size);
             payloadBuffer.MoveTo(0);
@@ -54,7 +54,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
         public async ValueTask CachePictureAsync(
             IRtmpPublishStreamContext publishStreamContext,
             MediaType mediaType,
-            INetBuffer payloadBuffer,
+            IDataBuffer payloadBuffer,
             uint timestamp)
         {
             if (publishStreamContext.GroupOfPicturesCache.Size >= _config.MaxGroupOfPicturesCacheSize)
@@ -103,8 +103,8 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             var basicHeader = new RtmpChunkBasicHeader(0, RtmpConstants.DataMessageChunkStreamId);
             var messageHeader = new RtmpChunkMessageHeaderType0(timestamp, RtmpMessageType.DataMessageAmf0, messageStreamId);
 
-            _chunkMessageSender.Send(clientContext, basicHeader, messageHeader, (netBuffer) =>
-                netBuffer.WriteAmf(new List<object?>
+            _chunkMessageSender.Send(clientContext, basicHeader, messageHeader, (dataBuffer) =>
+                dataBuffer.WriteAmf(new List<object?>
                 {
                     RtmpDataMessageConstants.OnMetaData,
                     publishStreamContext.StreamMetaData
@@ -124,8 +124,8 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             var basicHeader = new RtmpChunkBasicHeader(0, RtmpConstants.DataMessageChunkStreamId);
             var messageHeader = new RtmpChunkMessageHeaderType0(timestamp, RtmpMessageType.DataMessageAmf0, messageStreamId);
 
-            _chunkMessageSender.Send(clientContexts, basicHeader, messageHeader, (netBuffer) =>
-                netBuffer.WriteAmf(new List<object?>
+            _chunkMessageSender.Send(clientContexts, basicHeader, messageHeader, (dataBuffer) =>
+                dataBuffer.WriteAmf(new List<object?>
                 {
                     RtmpDataMessageConstants.OnMetaData,
                     publishStreamContext.StreamMetaData
@@ -170,7 +170,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
                 RtmpMessageType.AudioMessage,
                 messageStreamId);
 
-            _chunkMessageSender.Send(clientContext, basicHeader, messageHeader, (netBuffer) => netBuffer.Write(payloadBuffer, 0, payloadSize));
+            _chunkMessageSender.Send(clientContext, basicHeader, messageHeader, (dataBuffer) => dataBuffer.Write(payloadBuffer, 0, payloadSize));
         }
 
         public ValueTask DisposeAsync()

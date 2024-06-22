@@ -14,10 +14,10 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Handshakes
     {
         private const byte _clientType = 3;
 
-        private readonly INetBuffer _incomingBuffer;
+        private readonly IDataBuffer _incomingBuffer;
         private readonly ComplexHandshakeType _type;
 
-        public ComplexHandshake(INetBuffer incomingBuffer, ComplexHandshakeType type)
+        public ComplexHandshake(IDataBuffer incomingBuffer, ComplexHandshakeType type)
         {
             _incomingBuffer = incomingBuffer;
             _type = type;
@@ -32,19 +32,19 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Handshakes
             return providedDigestData.SequenceEqual(computedDigestData);
         }
 
-        public void WriteS0S1S2(INetBuffer outgoingBuffer)
+        public void WriteS0S1S2(IDataBuffer outgoingBuffer)
         {
             WriteS0(outgoingBuffer);
             WriteS1(outgoingBuffer);
             WriteS2(outgoingBuffer);
         }
 
-        public void WriteS0(INetBuffer outgoingBuffer)
+        public void WriteS0(IDataBuffer outgoingBuffer)
         {
             outgoingBuffer.Write(_clientType);
         }
 
-        public void WriteS1(INetBuffer outgoingBuffer)
+        public void WriteS1(IDataBuffer outgoingBuffer)
         {
             int initialPosition = outgoingBuffer.Position;
 
@@ -66,7 +66,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Handshakes
             outgoingBuffer.MoveTo(initialPosition + 1536);
         }
 
-        public void WriteS2(INetBuffer outgoingBuffer)
+        public void WriteS2(IDataBuffer outgoingBuffer)
         {
             outgoingBuffer.WriteRandomBytes(1536 - 32);
 
@@ -89,79 +89,79 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Handshakes
 
         internal static class DigestBlock
         {
-            public static byte[] GetDigestData(INetBuffer netBuffer, int digestDataIndex)
+            public static byte[] GetDigestData(IDataBuffer dataBuffer, int digestDataIndex)
             {
-                return netBuffer.MoveTo(digestDataIndex).ReadBytes(32);
+                return dataBuffer.MoveTo(digestDataIndex).ReadBytes(32);
             }
 
-            public static byte[] ComputeDigestData(INetBuffer netBuffer, int digestDataIndex)
+            public static byte[] ComputeDigestData(IDataBuffer dataBuffer, int digestDataIndex)
             {
-                var joinedBytes = GetJoinedBytes(netBuffer, digestDataIndex);
+                var joinedBytes = GetJoinedBytes(dataBuffer, digestDataIndex);
                 return joinedBytes.CalculateHmacSha256(HandshakeConstants.FPKey);
             }
 
-            public static byte[] GetJoinedBytes(INetBuffer netBuffer, int digestDataIndex)
+            public static byte[] GetJoinedBytes(IDataBuffer dataBuffer, int digestDataIndex)
             {
                 byte[] joinedBytes = new byte[1536 - 32];
-                netBuffer.MoveTo(0).ReadBytes(joinedBytes, 0, digestDataIndex);
-                netBuffer.MoveTo(digestDataIndex + 32).ReadBytes(joinedBytes, digestDataIndex, 1536 - 32 - digestDataIndex);
+                dataBuffer.MoveTo(0).ReadBytes(joinedBytes, 0, digestDataIndex);
+                dataBuffer.MoveTo(digestDataIndex + 32).ReadBytes(joinedBytes, digestDataIndex, 1536 - 32 - digestDataIndex);
                 return joinedBytes;
             }
 
-            public static int GetDigestDataIndex(INetBuffer netBuffer, ComplexHandshakeType type)
+            public static int GetDigestDataIndex(IDataBuffer dataBuffer, ComplexHandshakeType type)
             {
                 return type switch
                 {
-                    ComplexHandshakeType.Schema0 => GetDigestOffset(netBuffer, type) + 8 + 764 + 4,
-                    ComplexHandshakeType.Schema1 => GetDigestOffset(netBuffer, type) + 8 + 4,
+                    ComplexHandshakeType.Schema0 => GetDigestOffset(dataBuffer, type) + 8 + 764 + 4,
+                    ComplexHandshakeType.Schema1 => GetDigestOffset(dataBuffer, type) + 8 + 4,
                     _ => throw new ArgumentOutOfRangeException(nameof(type))
                 };
             }
 
-            public static int GetDigestOffset(INetBuffer netBuffer, ComplexHandshakeType type)
+            public static int GetDigestOffset(IDataBuffer dataBuffer, ComplexHandshakeType type)
             {
                 const int MaxKeyOffset = 764 - 32 - 4;
 
-                netBuffer.Position = type switch
+                dataBuffer.Position = type switch
                 {
                     ComplexHandshakeType.Schema0 => 8 + 764,
                     ComplexHandshakeType.Schema1 => 8,
                     _ => throw new ArgumentOutOfRangeException(nameof(type))
                 };
 
-                return (netBuffer.ReadByte() + netBuffer.ReadByte() + netBuffer.ReadByte() + netBuffer.ReadByte()) % MaxKeyOffset;
+                return (dataBuffer.ReadByte() + dataBuffer.ReadByte() + dataBuffer.ReadByte() + dataBuffer.ReadByte()) % MaxKeyOffset;
             }
         }
 
         internal static class KeyBlock
         {
-            public static byte[] GetProvidedKeyData(INetBuffer netBuffer, int keyDataIndex)
+            public static byte[] GetProvidedKeyData(IDataBuffer dataBuffer, int keyDataIndex)
             {
-                return netBuffer.MoveTo(keyDataIndex).ReadBytes(128);
+                return dataBuffer.MoveTo(keyDataIndex).ReadBytes(128);
             }
 
-            public static int GetKeyIndex(INetBuffer netBuffer, ComplexHandshakeType type)
+            public static int GetKeyIndex(IDataBuffer dataBuffer, ComplexHandshakeType type)
             {
                 return type switch
                 {
-                    ComplexHandshakeType.Schema0 => GetKeyOffset(netBuffer, type) + 8,
-                    ComplexHandshakeType.Schema1 => GetKeyOffset(netBuffer, type) + 8 + 764,
+                    ComplexHandshakeType.Schema0 => GetKeyOffset(dataBuffer, type) + 8,
+                    ComplexHandshakeType.Schema1 => GetKeyOffset(dataBuffer, type) + 8 + 764,
                     _ => throw new ArgumentOutOfRangeException(nameof(type))
                 };
             }
 
-            public static int GetKeyOffset(INetBuffer netBuffer, ComplexHandshakeType type)
+            public static int GetKeyOffset(IDataBuffer dataBuffer, ComplexHandshakeType type)
             {
                 const int MaxKeyOffset = 764 - 128 - 4;
 
-                netBuffer.Position = type switch
+                dataBuffer.Position = type switch
                 {
                     ComplexHandshakeType.Schema0 => 8 + 764 - 4,
                     ComplexHandshakeType.Schema1 => 1536 - 4,
                     _ => throw new ArgumentOutOfRangeException(nameof(type))
                 };
 
-                return (netBuffer.ReadByte() + netBuffer.ReadByte() + netBuffer.ReadByte() + netBuffer.ReadByte()) % MaxKeyOffset;
+                return (dataBuffer.ReadByte() + dataBuffer.ReadByte() + dataBuffer.ReadByte() + dataBuffer.ReadByte()) % MaxKeyOffset;
             }
         }
     }

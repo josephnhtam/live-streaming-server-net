@@ -17,7 +17,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.ProtocolControls
             var logger = Substitute.For<ILogger<RtmpSetChunkSizeHandler>>();
             var chunkStreamContext = Substitute.For<IRtmpChunkStreamContext>();
             var clientContext = Substitute.For<IRtmpClientContext>();
-            var payloadBuffer = Substitute.For<INetBuffer>();
+            var payloadBuffer = Substitute.For<IDataBuffer>();
 
             var fixture = new Fixture();
             var inChunkSize = fixture.Create<uint>();

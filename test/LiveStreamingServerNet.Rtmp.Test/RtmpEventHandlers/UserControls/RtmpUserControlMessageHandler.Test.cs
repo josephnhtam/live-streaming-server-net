@@ -14,7 +14,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.UserControls
             // Arrange
             var chunkStreamContext = Substitute.For<IRtmpChunkStreamContext>();
             var clientContext = Substitute.For<IRtmpClientContext>();
-            var payloadBuffer = Substitute.For<INetBuffer>();
+            var payloadBuffer = Substitute.For<IDataBuffer>();
             var sut = new RtmpUserControlMessageHandler();
 
             // Act

@@ -17,7 +17,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Dispatcher
         private readonly TestHandler _testHandler;
         private readonly Test2Handler _test2Handler;
         private readonly IRtmpClientContext _clientContext;
-        private readonly NetBuffer _payloadBuffer;
+        private readonly DataBuffer _payloadBuffer;
         private readonly IRtmpMessageDispatcher _sut;
         private IRtmpChunkStreamContext _chunkStreamContext;
 
@@ -29,7 +29,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Dispatcher
 
             _clientContext = Substitute.For<IRtmpClientContext>();
 
-            _payloadBuffer = new NetBuffer();
+            _payloadBuffer = new DataBuffer();
             _payloadBuffer.Write(_fixture.Create<byte[]>());
             _payloadBuffer.MoveTo(0);
 
@@ -114,13 +114,13 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Dispatcher
         [RtmpMessageType(1)]
         internal abstract class TestHandler : IRtmpMessageHandler
         {
-            public abstract ValueTask<bool> HandleAsync(IRtmpChunkStreamContext chunkStreamContext, IRtmpClientContext clientContext, INetBuffer payloadBuffer, CancellationToken cancellationToken);
+            public abstract ValueTask<bool> HandleAsync(IRtmpChunkStreamContext chunkStreamContext, IRtmpClientContext clientContext, IDataBuffer payloadBuffer, CancellationToken cancellationToken);
         }
 
         [RtmpMessageType(2)]
         internal abstract class Test2Handler : IRtmpMessageHandler
         {
-            public abstract ValueTask<bool> HandleAsync(IRtmpChunkStreamContext chunkStreamContext, IRtmpClientContext clientContext, INetBuffer payloadBuffer, CancellationToken cancellationToken);
+            public abstract ValueTask<bool> HandleAsync(IRtmpChunkStreamContext chunkStreamContext, IRtmpClientContext clientContext, IDataBuffer payloadBuffer, CancellationToken cancellationToken);
         }
     }
 }

@@ -16,7 +16,7 @@ namespace LiveStreamingServerNet.Networking.Installer.Contracts
 
         IServerConfigurator ConfigureSecurity(Action<SecurityConfiguration>? configure);
 
-        IServerConfigurator ConfigureNetBufferPool(Action<NetBufferPoolConfiguration>? configure);
+        IServerConfigurator ConfigureDataBufferPool(Action<DataBufferPoolConfiguration>? configure);
 
         IServerConfigurator ConfigureBufferPool(Action<BufferPoolConfiguration>? configure);
     }

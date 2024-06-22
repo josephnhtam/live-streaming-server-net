@@ -18,7 +18,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Data
         private readonly IRtmpClientContext _clientContext;
         private readonly IRtmpChunkStreamContext _chunkStreamContext;
         private readonly IRtmpPublishStreamContext _publishStreamContext;
-        private readonly NetBuffer _payloadBuffer;
+        private readonly DataBuffer _payloadBuffer;
         private readonly IRtmpMediaMessageCacherService _mediaMessageCacher;
         private readonly IRtmpServerStreamEventDispatcher _eventDispatcher;
         private readonly ILogger<RtmpDataMessageHandler> _logger;
@@ -30,7 +30,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Data
             _clientContext = Substitute.For<IRtmpClientContext>();
             _chunkStreamContext = Substitute.For<IRtmpChunkStreamContext>();
             _publishStreamContext = Substitute.For<IRtmpPublishStreamContext>();
-            _payloadBuffer = new NetBuffer();
+            _payloadBuffer = new DataBuffer();
             _mediaMessageCacher = Substitute.For<IRtmpMediaMessageCacherService>();
             _eventDispatcher = Substitute.For<IRtmpServerStreamEventDispatcher>();
             _logger = Substitute.For<ILogger<RtmpDataMessageHandler>>();

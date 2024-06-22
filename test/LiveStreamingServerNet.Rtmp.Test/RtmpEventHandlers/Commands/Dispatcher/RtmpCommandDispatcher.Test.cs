@@ -58,7 +58,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Commands.Dispatcher
             var commandObject = new Dictionary<string, object> { { "key1", 1.0 }, { "key2", "value2" }, { "key3", true } };
             var publishingName = _fixture.Create<string>();
 
-            var payloadBuffer = new NetBuffer();
+            var payloadBuffer = new DataBuffer();
             payloadBuffer.WriteAmf(new List<object?>
             {
                commandName, transactionId, new AmfArray(commandObject), publishingName
@@ -101,7 +101,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Commands.Dispatcher
             var commandObject = new Dictionary<string, object> { { "key1", 1.0 }, { "key2", "value2" }, { "key3", true } };
 
 
-            var payloadBuffer = new NetBuffer();
+            var payloadBuffer = new DataBuffer();
             payloadBuffer.WriteAmf(new List<object?>
             {
                commandName, transactionId, flag, publishingName, new AmfArray(commandObject)
@@ -141,7 +141,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Commands.Dispatcher
             // Arrange
             var commandName = "test3";
 
-            var payloadBuffer = new NetBuffer();
+            var payloadBuffer = new DataBuffer();
             payloadBuffer.WriteAmf(new List<object?> { commandName },
                 messageTypeId == RtmpMessageType.CommandMessageAmf3 ? AmfEncodingType.Amf3 : AmfEncodingType.Amf0);
             payloadBuffer.MoveTo(0);

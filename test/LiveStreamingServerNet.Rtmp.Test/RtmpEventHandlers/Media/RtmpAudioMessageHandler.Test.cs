@@ -20,7 +20,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Media
         private readonly IRtmpMediaMessageCacherService _mediaMessageCacher;
         private readonly IRtmpMediaMessageBroadcasterService _mediaMessageBroadcaster;
         private readonly ILogger<RtmpAudioMessageHandler> _logger;
-        private readonly INetBuffer _netBuffer;
+        private readonly IDataBuffer _dataBuffer;
         private readonly RtmpAudioMessageHandler _sut;
 
         public RtmpAudioMessageHandlerTest()
@@ -33,7 +33,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Media
             _mediaMessageBroadcaster = Substitute.For<IRtmpMediaMessageBroadcasterService>();
             _logger = Substitute.For<ILogger<RtmpAudioMessageHandler>>();
 
-            _netBuffer = new NetBuffer();
+            _dataBuffer = new DataBuffer();
 
             _sut = new RtmpAudioMessageHandler(
                 _streamManager,
@@ -44,7 +44,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Media
 
         public void Dispose()
         {
-            _netBuffer.Dispose();
+            _dataBuffer.Dispose();
         }
 
         [Fact]
@@ -54,7 +54,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Media
             _clientContext.PublishStreamContext.Returns((IRtmpPublishStreamContext?)null);
 
             // Act
-            var result = await _sut.HandleAsync(_chunkStreamContext, _clientContext, _netBuffer, default);
+            var result = await _sut.HandleAsync(_chunkStreamContext, _clientContext, _dataBuffer, default);
 
             // Assert
             result.Should().BeFalse();
@@ -86,10 +86,10 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Media
             _streamManager.GetSubscribers(stremaPath).Returns(subscribers);
 
             var firstByte = (byte)((byte)audioCodec << 4);
-            _netBuffer.Write(firstByte);
-            _netBuffer.Write((byte)aacPacketType);
-            _netBuffer.Write(_fixture.Create<byte[]>());
-            _netBuffer.MoveTo(0);
+            _dataBuffer.Write(firstByte);
+            _dataBuffer.Write((byte)aacPacketType);
+            _dataBuffer.Write(_fixture.Create<byte[]>());
+            _dataBuffer.MoveTo(0);
 
             var hasHeader =
                 (audioCodec is AudioCodec.AAC or AudioCodec.Opus) &&
@@ -100,16 +100,16 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Media
             var isSkippable = !hasHeader;
 
             // Act
-            var result = await _sut.HandleAsync(_chunkStreamContext, _clientContext, _netBuffer, default);
+            var result = await _sut.HandleAsync(_chunkStreamContext, _clientContext, _dataBuffer, default);
 
             // Assert
             result.Should().BeTrue();
 
             _ = _mediaMessageCacher.Received(hasHeader ? 1 : 0)
-                .CacheSequenceHeaderAsync(publishStreamContext, MediaType.Audio, _netBuffer);
+                .CacheSequenceHeaderAsync(publishStreamContext, MediaType.Audio, _dataBuffer);
 
             _ = _mediaMessageCacher.Received(gopCacheActivated && isPictureCachable ? 1 : 0)
-                .CachePictureAsync(publishStreamContext, MediaType.Audio, _netBuffer, _chunkStreamContext.MessageHeader.Timestamp);
+                .CachePictureAsync(publishStreamContext, MediaType.Audio, _dataBuffer, _chunkStreamContext.MessageHeader.Timestamp);
 
             _clientContext.Received(1).UpdateTimestamp(_chunkStreamContext.MessageHeader.Timestamp, MediaType.Audio);
 
@@ -119,7 +119,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Media
                 MediaType.Audio,
                 _chunkStreamContext.MessageHeader.Timestamp,
                 isSkippable,
-                _netBuffer
+                _dataBuffer
             );
         }
     }

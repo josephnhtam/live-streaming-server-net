@@ -68,7 +68,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Contracts
     internal interface IGroupOfPicturesCache : IDisposable
     {
         long Size { get; }
-        void Add(PictureCacheInfo info, INetBuffer buffer);
+        void Add(PictureCacheInfo info, IDataBuffer buffer);
         void Clear();
         IList<PictureCache> Get(int initialClaim = 1);
     }

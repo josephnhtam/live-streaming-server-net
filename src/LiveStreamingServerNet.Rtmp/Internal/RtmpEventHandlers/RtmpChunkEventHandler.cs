@@ -13,18 +13,18 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
 {
     internal class RtmpChunkEventHandler : IRequestHandler<RtmpChunkEvent, RtmpEventConsumingResult>
     {
-        private readonly INetBufferPool _netBufferPool;
+        private readonly IDataBufferPool _dataBufferPool;
         private readonly IRtmpMessageDispatcher _dispatcher;
         private readonly IRtmpProtocolControlMessageSenderService _protocolControlMessageSender;
         private readonly ILogger _logger;
 
         public RtmpChunkEventHandler(
-            INetBufferPool netBufferPool,
+            IDataBufferPool dataBufferPool,
             IRtmpMessageDispatcher dispatcher,
             IRtmpProtocolControlMessageSenderService protocolControlMessageSender,
             ILogger<RtmpChunkEventHandler> logger)
         {
-            _netBufferPool = netBufferPool;
+            _dataBufferPool = dataBufferPool;
             _dispatcher = dispatcher;
             _protocolControlMessageSender = protocolControlMessageSender;
             _logger = logger;
@@ -32,14 +32,14 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
 
         public async ValueTask<RtmpEventConsumingResult> Handle(RtmpChunkEvent @event, CancellationToken cancellationToken)
         {
-            var netBuffer = _netBufferPool.Obtain();
+            var dataBuffer = _dataBufferPool.Obtain();
 
             try
             {
-                var result = await HandleChunkEvent(@event, netBuffer, cancellationToken);
+                var result = await HandleChunkEvent(@event, dataBuffer, cancellationToken);
                 if (result.Succeeded)
                 {
-                    HandleAcknowledgement(@event, netBuffer.Size);
+                    HandleAcknowledgement(@event, dataBuffer.Size);
                     return result;
                 }
 
@@ -49,22 +49,22 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
             }
             finally
             {
-                _netBufferPool.Recycle(netBuffer);
+                _dataBufferPool.Recycle(dataBuffer);
             }
         }
 
-        private async ValueTask<RtmpEventConsumingResult> HandleChunkEvent(RtmpChunkEvent @event, INetBuffer netBuffer, CancellationToken cancellationToken)
+        private async ValueTask<RtmpEventConsumingResult> HandleChunkEvent(RtmpChunkEvent @event, IDataBuffer dataBuffer, CancellationToken cancellationToken)
         {
-            var basicHeader = await RtmpChunkBasicHeader.ReadAsync(netBuffer, @event.NetworkStream, cancellationToken);
+            var basicHeader = await RtmpChunkBasicHeader.ReadAsync(dataBuffer, @event.NetworkStream, cancellationToken);
 
             var chunkStreamContext = @event.ClientContext.GetChunkStreamContext(basicHeader.ChunkStreamId);
 
             var success = basicHeader.ChunkType switch
             {
-                0 => await HandleChunkMessageHeaderType0Async(chunkStreamContext, @event, netBuffer, cancellationToken),
-                1 => await HandleChunkMessageHeaderType1Async(chunkStreamContext, @event, netBuffer, cancellationToken),
-                2 => await HandleChunkMessageHeaderType2Async(chunkStreamContext, @event, netBuffer, cancellationToken),
-                3 => await HandleChunkMessageHeaderType3Async(chunkStreamContext, @event, netBuffer, cancellationToken),
+                0 => await HandleChunkMessageHeaderType0Async(chunkStreamContext, @event, dataBuffer, cancellationToken),
+                1 => await HandleChunkMessageHeaderType1Async(chunkStreamContext, @event, dataBuffer, cancellationToken),
+                2 => await HandleChunkMessageHeaderType2Async(chunkStreamContext, @event, dataBuffer, cancellationToken),
+                3 => await HandleChunkMessageHeaderType3Async(chunkStreamContext, @event, dataBuffer, cancellationToken),
                 _ => throw new ArgumentOutOfRangeException(nameof(basicHeader.ChunkType))
             };
 
@@ -98,10 +98,10 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
         private async ValueTask<bool> HandleChunkMessageHeaderType0Async(
             IRtmpChunkStreamContext chunkStreamContext,
             RtmpChunkEvent @event,
-            INetBuffer netBuffer,
+            IDataBuffer dataBuffer,
             CancellationToken cancellationToken)
         {
-            var messageHeader = await RtmpChunkMessageHeaderType0.ReadAsync(netBuffer, @event.NetworkStream, cancellationToken);
+            var messageHeader = await RtmpChunkMessageHeaderType0.ReadAsync(dataBuffer, @event.NetworkStream, cancellationToken);
 
             chunkStreamContext.ChunkType = 0;
             chunkStreamContext.MessageHeader.MessageLength = messageHeader.MessageLength;
@@ -112,7 +112,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
             chunkStreamContext.MessageHeader.HasExtendedTimestamp = messageHeader.HasExtendedTimestamp();
             if (chunkStreamContext.MessageHeader.HasExtendedTimestamp)
             {
-                var extendedTimestampHeader = await RtmpChunkExtendedTimestampHeader.ReadAsync(netBuffer, @event.NetworkStream, cancellationToken);
+                var extendedTimestampHeader = await RtmpChunkExtendedTimestampHeader.ReadAsync(dataBuffer, @event.NetworkStream, cancellationToken);
                 chunkStreamContext.MessageHeader.Timestamp = extendedTimestampHeader.ExtendedTimestamp;
             }
             else
@@ -126,10 +126,10 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
         private async ValueTask<bool> HandleChunkMessageHeaderType1Async(
             IRtmpChunkStreamContext chunkStreamContext,
             RtmpChunkEvent @event,
-            INetBuffer netBuffer,
+            IDataBuffer dataBuffer,
             CancellationToken cancellationToken)
         {
-            var messageHeader = await RtmpChunkMessageHeaderType1.ReadAsync(netBuffer, @event.NetworkStream, cancellationToken);
+            var messageHeader = await RtmpChunkMessageHeaderType1.ReadAsync(dataBuffer, @event.NetworkStream, cancellationToken);
 
             chunkStreamContext.ChunkType = 1;
             chunkStreamContext.MessageHeader.MessageLength = messageHeader.MessageLength;
@@ -138,7 +138,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
             chunkStreamContext.MessageHeader.HasExtendedTimestamp = messageHeader.HasExtendedTimestamp();
             if (chunkStreamContext.MessageHeader.HasExtendedTimestamp)
             {
-                var extendedTimestampHeader = await RtmpChunkExtendedTimestampHeader.ReadAsync(netBuffer, @event.NetworkStream, cancellationToken);
+                var extendedTimestampHeader = await RtmpChunkExtendedTimestampHeader.ReadAsync(dataBuffer, @event.NetworkStream, cancellationToken);
                 chunkStreamContext.MessageHeader.TimestampDelta = extendedTimestampHeader.ExtendedTimestamp;
             }
             else
@@ -153,17 +153,17 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
         private async ValueTask<bool> HandleChunkMessageHeaderType2Async(
             IRtmpChunkStreamContext chunkStreamContext,
             RtmpChunkEvent @event,
-            INetBuffer netBuffer,
+            IDataBuffer dataBuffer,
             CancellationToken cancellationToken)
         {
-            var messageHeader = await RtmpChunkMessageHeaderType2.ReadAsync(netBuffer, @event.NetworkStream, cancellationToken);
+            var messageHeader = await RtmpChunkMessageHeaderType2.ReadAsync(dataBuffer, @event.NetworkStream, cancellationToken);
 
             chunkStreamContext.ChunkType = 2;
 
             chunkStreamContext.MessageHeader.HasExtendedTimestamp = messageHeader.HasExtendedTimestamp();
             if (chunkStreamContext.MessageHeader.HasExtendedTimestamp)
             {
-                var extendedTimestampHeader = await RtmpChunkExtendedTimestampHeader.ReadAsync(netBuffer, @event.NetworkStream, cancellationToken);
+                var extendedTimestampHeader = await RtmpChunkExtendedTimestampHeader.ReadAsync(dataBuffer, @event.NetworkStream, cancellationToken);
                 chunkStreamContext.MessageHeader.TimestampDelta = extendedTimestampHeader.ExtendedTimestamp;
             }
             else
@@ -178,13 +178,13 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
         private async ValueTask<bool> HandleChunkMessageHeaderType3Async(
             IRtmpChunkStreamContext chunkStreamContext,
             RtmpChunkEvent @event,
-            INetBuffer netBuffer,
+            IDataBuffer dataBuffer,
             CancellationToken cancellationToken)
         {
             chunkStreamContext.ChunkType = 3;
 
             var timestampDelta = chunkStreamContext.MessageHeader.HasExtendedTimestamp ?
-                (await RtmpChunkExtendedTimestampHeader.ReadAsync(netBuffer, @event.NetworkStream, cancellationToken)).ExtendedTimestamp :
+                (await RtmpChunkExtendedTimestampHeader.ReadAsync(dataBuffer, @event.NetworkStream, cancellationToken)).ExtendedTimestamp :
                 chunkStreamContext.MessageHeader.TimestampDelta;
 
             if (chunkStreamContext.IsFirstChunkOfMessage)
@@ -200,7 +200,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
         {
             if (chunkStreamContext.IsFirstChunkOfMessage)
             {
-                chunkStreamContext.PayloadBuffer = _netBufferPool.Obtain();
+                chunkStreamContext.PayloadBuffer = _dataBufferPool.Obtain();
             }
 
             var clientContext = @event.ClientContext;
@@ -236,7 +236,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
             }
             finally
             {
-                _netBufferPool.Recycle(chunkStreamContext.PayloadBuffer);
+                _dataBufferPool.Recycle(chunkStreamContext.PayloadBuffer);
                 chunkStreamContext.PayloadBuffer = null;
             }
         }

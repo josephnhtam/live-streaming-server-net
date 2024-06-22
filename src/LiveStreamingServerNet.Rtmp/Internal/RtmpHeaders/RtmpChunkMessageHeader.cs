@@ -6,7 +6,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpHeaders
     internal interface IRtmpChunkMessageHeader
     {
         int Size { get; }
-        void Write(INetBuffer netBuffer);
+        void Write(IDataBuffer dataBuffer);
         void UseExtendedTimestamp();
         bool HasExtendedTimestamp();
         uint GetTimestamp();
@@ -39,13 +39,13 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpHeaders
             MessageStreamId = messageStreamId;
         }
 
-        public static async ValueTask<RtmpChunkMessageHeaderType0> ReadAsync(INetBuffer netBuffer, INetworkStreamReader networkStream, CancellationToken cancellationToken)
+        public static async ValueTask<RtmpChunkMessageHeaderType0> ReadAsync(IDataBuffer dataBuffer, INetworkStreamReader networkStream, CancellationToken cancellationToken)
         {
-            await netBuffer.FromStreamData(networkStream, kSize, cancellationToken);
-            var timestampDelta = netBuffer.ReadUInt24BigEndian();
-            var messageLength = (int)netBuffer.ReadUInt24BigEndian();
-            var messageTypeId = netBuffer.ReadByte();
-            var messageStreamId = netBuffer.ReadUInt32();
+            await dataBuffer.FromStreamData(networkStream, kSize, cancellationToken);
+            var timestampDelta = dataBuffer.ReadUInt24BigEndian();
+            var messageLength = (int)dataBuffer.ReadUInt24BigEndian();
+            var messageTypeId = dataBuffer.ReadByte();
+            var messageStreamId = dataBuffer.ReadUInt32();
 
             return new RtmpChunkMessageHeaderType0(timestampDelta, messageLength, messageTypeId, messageStreamId);
         }
@@ -70,12 +70,12 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpHeaders
             return Timestamp;
         }
 
-        public void Write(INetBuffer netBuffer)
+        public void Write(IDataBuffer dataBuffer)
         {
-            netBuffer.WriteUInt24BigEndian(Timestamp);
-            netBuffer.WriteUInt24BigEndian((uint)MessageLength);
-            netBuffer.Write(MessageTypeId);
-            netBuffer.Write(MessageStreamId);
+            dataBuffer.WriteUInt24BigEndian(Timestamp);
+            dataBuffer.WriteUInt24BigEndian((uint)MessageLength);
+            dataBuffer.Write(MessageTypeId);
+            dataBuffer.Write(MessageStreamId);
         }
     }
 
@@ -102,13 +102,13 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpHeaders
             MessageTypeId = messageTypeId;
         }
 
-        public static async ValueTask<RtmpChunkMessageHeaderType1> ReadAsync(INetBuffer netBuffer, INetworkStreamReader networkStream, CancellationToken cancellationToken)
+        public static async ValueTask<RtmpChunkMessageHeaderType1> ReadAsync(IDataBuffer dataBuffer, INetworkStreamReader networkStream, CancellationToken cancellationToken)
         {
-            await netBuffer.FromStreamData(networkStream, kSize, cancellationToken);
+            await dataBuffer.FromStreamData(networkStream, kSize, cancellationToken);
 
-            var timestampDelta = netBuffer.ReadUInt24BigEndian();
-            var messageLength = (int)netBuffer.ReadUInt24BigEndian();
-            var messageTypeId = netBuffer.ReadByte();
+            var timestampDelta = dataBuffer.ReadUInt24BigEndian();
+            var messageLength = (int)dataBuffer.ReadUInt24BigEndian();
+            var messageTypeId = dataBuffer.ReadByte();
 
             return new RtmpChunkMessageHeaderType1(timestampDelta, messageLength, messageTypeId);
         }
@@ -133,11 +133,11 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpHeaders
             return TimestampDelta;
         }
 
-        public void Write(INetBuffer netBuffer)
+        public void Write(IDataBuffer dataBuffer)
         {
-            netBuffer.WriteUInt24BigEndian(TimestampDelta);
-            netBuffer.WriteUInt24BigEndian((uint)MessageLength);
-            netBuffer.Write(MessageTypeId);
+            dataBuffer.WriteUInt24BigEndian(TimestampDelta);
+            dataBuffer.WriteUInt24BigEndian((uint)MessageLength);
+            dataBuffer.Write(MessageTypeId);
         }
     }
 
@@ -153,11 +153,11 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpHeaders
             this.TimestampDelta = TimestampDelta;
         }
 
-        public static async ValueTask<RtmpChunkMessageHeaderType2> ReadAsync(INetBuffer netBuffer, INetworkStreamReader networkStream, CancellationToken cancellationToken)
+        public static async ValueTask<RtmpChunkMessageHeaderType2> ReadAsync(IDataBuffer dataBuffer, INetworkStreamReader networkStream, CancellationToken cancellationToken)
         {
-            await netBuffer.FromStreamData(networkStream, kSize, cancellationToken);
+            await dataBuffer.FromStreamData(networkStream, kSize, cancellationToken);
 
-            var timestampDelta = netBuffer.ReadUInt24BigEndian();
+            var timestampDelta = dataBuffer.ReadUInt24BigEndian();
 
             return new RtmpChunkMessageHeaderType2(timestampDelta);
         }
@@ -179,9 +179,9 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpHeaders
             return TimestampDelta;
         }
 
-        public void Write(INetBuffer netBuffer)
+        public void Write(IDataBuffer dataBuffer)
         {
-            netBuffer.WriteUInt24BigEndian(TimestampDelta);
+            dataBuffer.WriteUInt24BigEndian(TimestampDelta);
         }
     }
 }

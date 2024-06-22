@@ -28,7 +28,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Utilities
             _length = pos;
         }
 
-        public void WriteTo(INetBuffer netBuffer, int offset, int length)
+        public void WriteTo(IDataBuffer dataBuffer, int offset, int length)
         {
             if (offset < 0 || offset >= _length)
                 throw new ArgumentOutOfRangeException(nameof(offset));
@@ -46,7 +46,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Utilities
                 var bytesSegment = _bytes[index];
                 var localPos = pos - _positions[index];
                 var count = Math.Min(bytesSegment.Count - localPos, remaining);
-                netBuffer.Write(bytesSegment.Array!, bytesSegment.Offset + localPos, count);
+                dataBuffer.Write(bytesSegment.Array!, bytesSegment.Offset + localPos, count);
 
                 pos += count;
                 remaining -= count;

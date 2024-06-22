@@ -10,7 +10,7 @@ namespace LiveStreamingServerNet.Networking.Internal
 {
     internal sealed class Client : IClient
     {
-        private readonly INetBufferSender _bufferSender;
+        private readonly IClientBufferSender _bufferSender;
         private readonly INetworkStreamFactory _networkStreamFactory;
         private readonly ILogger _logger;
 
@@ -23,7 +23,7 @@ namespace LiveStreamingServerNet.Networking.Internal
         public Client(
             uint clientId,
             ITcpClientInternal tcpClient,
-            INetBufferSender bufferSender,
+            IClientBufferSender bufferSender,
             INetworkStreamFactory networkStreamFactory,
             ILogger<Client> logger)
         {
@@ -80,9 +80,9 @@ namespace LiveStreamingServerNet.Networking.Internal
             _logger.ClientDisconnected(ClientId);
         }
 
-        public void Send(INetBuffer netBuffer, Action<bool>? callback)
+        public void Send(IDataBuffer dataBuffer, Action<bool>? callback)
         {
-            _bufferSender.Send(netBuffer, callback);
+            _bufferSender.Send(dataBuffer, callback);
         }
 
         public void Send(IRentedBuffer rentedBuffer, Action<bool>? callback)
@@ -90,14 +90,14 @@ namespace LiveStreamingServerNet.Networking.Internal
             _bufferSender.Send(rentedBuffer, callback);
         }
 
-        public void Send(Action<INetBuffer> writer, Action<bool>? callback)
+        public void Send(Action<IDataBuffer> writer, Action<bool>? callback)
         {
             _bufferSender.Send(writer, callback);
         }
 
-        public ValueTask SendAsync(INetBuffer netBuffer)
+        public ValueTask SendAsync(IDataBuffer dataBuffer)
         {
-            return _bufferSender.SendAsync(netBuffer);
+            return _bufferSender.SendAsync(dataBuffer);
         }
 
         public ValueTask SendAsync(IRentedBuffer rentedBuffer)
@@ -105,7 +105,7 @@ namespace LiveStreamingServerNet.Networking.Internal
             return _bufferSender.SendAsync(rentedBuffer);
         }
 
-        public ValueTask SendAsync(Action<INetBuffer> writer)
+        public ValueTask SendAsync(Action<IDataBuffer> writer)
         {
             return _bufferSender.SendAsync(writer);
         }

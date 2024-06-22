@@ -9,7 +9,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal
         public int ChunkType { get; set; }
         public bool IsFirstChunkOfMessage => PayloadBuffer == null;
         public IRtmpChunkMessageHeaderContext MessageHeader { get; }
-        public INetBuffer? PayloadBuffer { get; set; }
+        public IDataBuffer? PayloadBuffer { get; set; }
 
         public RtmpChunkStreamContext(uint chunkStreamId)
         {

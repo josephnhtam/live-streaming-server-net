@@ -39,11 +39,11 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
             var amfEncodingType = _fixture.Create<AmfEncodingType>();
             var callback = _fixture.Create<Action<bool>>();
 
-            using var expectedBuffer = new NetBuffer();
+            using var expectedBuffer = new DataBuffer();
             var expectedParameter = GetParameters(commandName, transactionId, commandObject, parameters);
             expectedBuffer.WriteAmf(expectedParameter, amfEncodingType);
 
-            using var netBuffer = new NetBuffer();
+            using var dataBuffer = new DataBuffer();
 
             _chunkMessageSender.When(x => x.Send(
                 clientContext,
@@ -58,11 +58,11 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
                         RtmpMessageType.CommandMessageAmf0 : RtmpMessageType.CommandMessageAmf3) &&
                     x.MessageStreamId == 0
                 ),
-                Arg.Any<Action<INetBuffer>>(),
+                Arg.Any<Action<IDataBuffer>>(),
                 callback
             )).Do(x =>
             {
-                x.Arg<Action<INetBuffer>>().Invoke(netBuffer);
+                x.Arg<Action<IDataBuffer>>().Invoke(dataBuffer);
                 callback.Invoke(true);
             });
 
@@ -91,10 +91,10 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
                         RtmpMessageType.CommandMessageAmf0 : RtmpMessageType.CommandMessageAmf3) &&
                     x.MessageStreamId == 0
                 ),
-                Arg.Any<Action<INetBuffer>>(),
+                Arg.Any<Action<IDataBuffer>>(),
                 callback);
 
-            netBuffer.UnderlyingBuffer.Take(netBuffer.Size).Should().BeEquivalentTo(expectedBuffer.UnderlyingBuffer.Take(expectedBuffer.Size));
+            dataBuffer.UnderlyingBuffer.Take(dataBuffer.Size).Should().BeEquivalentTo(expectedBuffer.UnderlyingBuffer.Take(expectedBuffer.Size));
         }
 
         [Fact]
@@ -109,11 +109,11 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
             var parameters = _fixture.Create<List<object?>>();
             var amfEncodingType = _fixture.Create<AmfEncodingType>();
 
-            using var expectedBuffer = new NetBuffer();
+            using var expectedBuffer = new DataBuffer();
             var expectedParameter = GetParameters(commandName, transactionId, commandObject, parameters);
             expectedBuffer.WriteAmf(expectedParameter, amfEncodingType);
 
-            using var netBuffer = new NetBuffer();
+            using var dataBuffer = new DataBuffer();
 
             _chunkMessageSender.When(x => x.Send(
                 clientContext,
@@ -128,11 +128,11 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
                         RtmpMessageType.CommandMessageAmf0 : RtmpMessageType.CommandMessageAmf3) &&
                     x.MessageStreamId == 0
                 ),
-                Arg.Any<Action<INetBuffer>>(),
+                Arg.Any<Action<IDataBuffer>>(),
                 Arg.Any<Action<bool>>()
             )).Do(x =>
             {
-                x.Arg<Action<INetBuffer>>().Invoke(netBuffer);
+                x.Arg<Action<IDataBuffer>>().Invoke(dataBuffer);
                 x.Arg<Action<bool>>().Invoke(true);
             });
 
@@ -161,10 +161,10 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
                         RtmpMessageType.CommandMessageAmf0 : RtmpMessageType.CommandMessageAmf3) &&
                     x.MessageStreamId == 0
                 ),
-                Arg.Any<Action<INetBuffer>>(),
+                Arg.Any<Action<IDataBuffer>>(),
                 Arg.Any<Action<bool>>());
 
-            netBuffer.UnderlyingBuffer.Take(netBuffer.Size).Should().BeEquivalentTo(expectedBuffer.UnderlyingBuffer.Take(expectedBuffer.Size));
+            dataBuffer.UnderlyingBuffer.Take(dataBuffer.Size).Should().BeEquivalentTo(expectedBuffer.UnderlyingBuffer.Take(expectedBuffer.Size));
         }
 
         [Fact]
@@ -179,11 +179,11 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
             var parameters = _fixture.Create<List<object?>>();
             var amfEncodingType = _fixture.Create<AmfEncodingType>();
 
-            using var expectedBuffer = new NetBuffer();
+            using var expectedBuffer = new DataBuffer();
             var expectedParameter = GetParameters(commandName, transactionId, commandObject, parameters);
             expectedBuffer.WriteAmf(expectedParameter, amfEncodingType);
 
-            using var netBuffer = new NetBuffer();
+            using var dataBuffer = new DataBuffer();
 
             _chunkMessageSender.When(x => x.Send(
                 Arg.Is<IReadOnlyList<IRtmpClientContext>>(x => x.SequenceEqual(clientContexts)),
@@ -198,10 +198,10 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
                         RtmpMessageType.CommandMessageAmf0 : RtmpMessageType.CommandMessageAmf3) &&
                     x.MessageStreamId == 0
                 ),
-                Arg.Any<Action<INetBuffer>>()
+                Arg.Any<Action<IDataBuffer>>()
             )).Do(x =>
             {
-                x.Arg<Action<INetBuffer>>().Invoke(netBuffer);
+                x.Arg<Action<IDataBuffer>>().Invoke(dataBuffer);
             });
 
             // Act
@@ -229,9 +229,9 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
                         RtmpMessageType.CommandMessageAmf0 : RtmpMessageType.CommandMessageAmf3) &&
                     x.MessageStreamId == 0
                 ),
-                Arg.Any<Action<INetBuffer>>());
+                Arg.Any<Action<IDataBuffer>>());
 
-            netBuffer.UnderlyingBuffer.Take(netBuffer.Size).Should().BeEquivalentTo(expectedBuffer.UnderlyingBuffer.Take(expectedBuffer.Size));
+            dataBuffer.UnderlyingBuffer.Take(dataBuffer.Size).Should().BeEquivalentTo(expectedBuffer.UnderlyingBuffer.Take(expectedBuffer.Size));
         }
 
         private static List<object?> GetParameters(string commandName, double transactionId,

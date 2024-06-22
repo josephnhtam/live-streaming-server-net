@@ -22,7 +22,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
             };
 
             await client.WriteTagAsync(flvTagType, timestamp,
-                (netBuffer) => netBuffer.Write(payloadBuffer, 0, payloadSize), cancellation);
+                (dataBuffer) => dataBuffer.Write(payloadBuffer, 0, payloadSize), cancellation);
         }
     }
 }

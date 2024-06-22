@@ -22,10 +22,10 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             var basicHeader = new RtmpChunkBasicHeader(0, RtmpConstants.UserControlMessageChunkStreamId);
             var messageHeader = new RtmpChunkMessageHeaderType0(0, RtmpMessageType.UserControlMessage, RtmpConstants.UserControlMessageStreamId);
 
-            _chunkMessageSenderService.Send(clientContext, basicHeader, messageHeader, netBuffer =>
+            _chunkMessageSenderService.Send(clientContext, basicHeader, messageHeader, dataBuffer =>
             {
-                netBuffer.WriteUint16BigEndian(RtmpUserControlMessageTypes.StreamBegin);
-                netBuffer.WriteUInt32BigEndian(clientContext.StreamSubscriptionContext!.StreamId);
+                dataBuffer.WriteUint16BigEndian(RtmpUserControlMessageTypes.StreamBegin);
+                dataBuffer.WriteUInt32BigEndian(clientContext.StreamSubscriptionContext!.StreamId);
             });
         }
 
@@ -36,10 +36,10 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
                 var basicHeader = new RtmpChunkBasicHeader(0, RtmpConstants.UserControlMessageChunkStreamId);
                 var messageHeader = new RtmpChunkMessageHeaderType0(0, RtmpMessageType.UserControlMessage, RtmpConstants.UserControlMessageStreamId);
 
-                _chunkMessageSenderService.Send(clientContextGroup.ToList(), basicHeader, messageHeader, netBuffer =>
+                _chunkMessageSenderService.Send(clientContextGroup.ToList(), basicHeader, messageHeader, dataBuffer =>
                 {
-                    netBuffer.WriteUint16BigEndian(RtmpUserControlMessageTypes.StreamBegin);
-                    netBuffer.WriteUInt32BigEndian(clientContextGroup.Key);
+                    dataBuffer.WriteUint16BigEndian(RtmpUserControlMessageTypes.StreamBegin);
+                    dataBuffer.WriteUInt32BigEndian(clientContextGroup.Key);
                 });
             }
         }
@@ -52,10 +52,10 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             var basicHeader = new RtmpChunkBasicHeader(0, RtmpConstants.UserControlMessageChunkStreamId);
             var messageHeader = new RtmpChunkMessageHeaderType0(0, RtmpMessageType.UserControlMessage, RtmpConstants.UserControlMessageStreamId);
 
-            _chunkMessageSenderService.Send(clientContext, basicHeader, messageHeader, netBuffer =>
+            _chunkMessageSenderService.Send(clientContext, basicHeader, messageHeader, dataBuffer =>
             {
-                netBuffer.WriteUint16BigEndian(RtmpUserControlMessageTypes.StreamEof);
-                netBuffer.WriteUInt32BigEndian(clientContext.StreamSubscriptionContext!.StreamId);
+                dataBuffer.WriteUint16BigEndian(RtmpUserControlMessageTypes.StreamEof);
+                dataBuffer.WriteUInt32BigEndian(clientContext.StreamSubscriptionContext!.StreamId);
             });
         }
 
@@ -66,10 +66,10 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
                 var basicHeader = new RtmpChunkBasicHeader(0, RtmpConstants.UserControlMessageChunkStreamId);
                 var messageHeader = new RtmpChunkMessageHeaderType0(0, RtmpMessageType.UserControlMessage, RtmpConstants.UserControlMessageStreamId);
 
-                _chunkMessageSenderService.Send(clientContextGroup.ToList(), basicHeader, messageHeader, netBuffer =>
+                _chunkMessageSenderService.Send(clientContextGroup.ToList(), basicHeader, messageHeader, dataBuffer =>
                 {
-                    netBuffer.WriteUint16BigEndian(RtmpUserControlMessageTypes.StreamEof);
-                    netBuffer.WriteUInt32BigEndian(clientContextGroup.Key);
+                    dataBuffer.WriteUint16BigEndian(RtmpUserControlMessageTypes.StreamEof);
+                    dataBuffer.WriteUInt32BigEndian(clientContextGroup.Key);
                 });
             }
         }

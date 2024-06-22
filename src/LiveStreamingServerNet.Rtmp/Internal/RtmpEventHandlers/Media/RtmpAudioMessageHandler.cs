@@ -38,7 +38,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
         public async ValueTask<bool> HandleAsync(
             IRtmpChunkStreamContext chunkStreamContext,
             IRtmpClientContext clientContext,
-            INetBuffer payloadBuffer,
+            IDataBuffer payloadBuffer,
             CancellationToken cancellationToken)
         {
             var publishStreamContext = clientContext.PublishStreamContext;
@@ -73,7 +73,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
             IRtmpChunkStreamContext chunkStreamContext,
             IRtmpClientContext clientContext,
             IRtmpPublishStreamContext publishStreamContext,
-            INetBuffer payloadBuffer,
+            IDataBuffer payloadBuffer,
             bool isSkippable)
         {
             var subscribers = _streamManager.GetSubscribers(publishStreamContext.StreamPath);
@@ -85,7 +85,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
             IRtmpClientContext clientContext,
             IRtmpPublishStreamContext publishStreamContext,
             bool isSkippable,
-            INetBuffer payloadBuffer,
+            IDataBuffer payloadBuffer,
             IReadOnlyList<IRtmpClientContext> subscribers)
         {
             clientContext.UpdateTimestamp(chunkStreamContext.MessageHeader.Timestamp, MediaType.Audio);
@@ -111,7 +111,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
             return true;
         }
 
-        private (AudioCodec, AACPacketType?) ParseAudioMessageProperties(INetBuffer payloadBuffer)
+        private (AudioCodec, AACPacketType?) ParseAudioMessageProperties(IDataBuffer payloadBuffer)
         {
             var firstByte = payloadBuffer.ReadByte();
             var audioCodec = (AudioCodec)(firstByte >> 4);
@@ -135,7 +135,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
             IRtmpChunkStreamContext chunkStreamContext,
             IRtmpPublishStreamContext publishStreamContext,
             AACPacketType? aacPacketType,
-            INetBuffer payloadBuffer)
+            IDataBuffer payloadBuffer)
         {
             if (!aacPacketType.HasValue)
                 return;

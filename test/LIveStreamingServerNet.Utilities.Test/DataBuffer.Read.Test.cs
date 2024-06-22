@@ -4,11 +4,11 @@ using LiveStreamingServerNet.Utilities.Buffers;
 
 namespace LIveStreamingServerNet.Utilities.Test
 {
-    public class NetBufferReadTest
+    public class DataBufferReadTest
     {
         private readonly IFixture _fixture;
 
-        public NetBufferReadTest()
+        public DataBufferReadTest()
         {
             _fixture = new Fixture();
         }
@@ -20,7 +20,7 @@ namespace LIveStreamingServerNet.Utilities.Test
             var startPos = _fixture.Create<int>();
             var expected = _fixture.Create<byte[]>();
 
-            using var buffer = new NetBuffer();
+            using var buffer = new DataBuffer();
             buffer.MoveTo(startPos).Write(expected, 0, expected.Length);
 
             // Act
@@ -41,7 +41,7 @@ namespace LIveStreamingServerNet.Utilities.Test
             var expected = _fixture.CreateMany<byte>(100).ToArray();
             var slice = new byte[25 + expected.Length];
 
-            using var buffer = new NetBuffer();
+            using var buffer = new DataBuffer();
             buffer.MoveTo(startPos).Write(expected, 0, expected.Length);
 
             // Act
@@ -61,7 +61,7 @@ namespace LIveStreamingServerNet.Utilities.Test
             var startPos = _fixture.Create<int>();
             var expected = _fixture.Create<byte>();
 
-            using var buffer = new NetBuffer();
+            using var buffer = new DataBuffer();
             buffer.MoveTo(startPos).Write(expected);
 
             // Act
@@ -82,7 +82,7 @@ namespace LIveStreamingServerNet.Utilities.Test
             var expected = _fixture.Create<short>();
             var expectedBytes = BitConverter.GetBytes(expected);
 
-            using var buffer = new NetBuffer();
+            using var buffer = new DataBuffer();
             buffer.MoveTo(startPos).Write(expectedBytes);
 
             // Act
@@ -103,7 +103,7 @@ namespace LIveStreamingServerNet.Utilities.Test
             var expected = _fixture.Create<int>();
             var expectedBytes = BitConverter.GetBytes(expected);
 
-            using var buffer = new NetBuffer();
+            using var buffer = new DataBuffer();
             buffer.MoveTo(startPos).Write(expectedBytes);
 
             // Act
@@ -124,7 +124,7 @@ namespace LIveStreamingServerNet.Utilities.Test
             var expected = _fixture.Create<long>();
             var expectedBytes = BitConverter.GetBytes(expected);
 
-            using var buffer = new NetBuffer();
+            using var buffer = new DataBuffer();
             buffer.MoveTo(startPos).Write(expectedBytes);
 
             // Act
@@ -145,7 +145,7 @@ namespace LIveStreamingServerNet.Utilities.Test
             var expected = _fixture.Create<float>();
             var expectedBytes = BitConverter.GetBytes(expected);
 
-            using var buffer = new NetBuffer();
+            using var buffer = new DataBuffer();
             buffer.MoveTo(startPos).Write(expectedBytes);
 
             // Act
@@ -166,7 +166,7 @@ namespace LIveStreamingServerNet.Utilities.Test
             var expected = _fixture.Create<double>();
             var expectedBytes = BitConverter.GetBytes(expected);
 
-            using var buffer = new NetBuffer();
+            using var buffer = new DataBuffer();
             buffer.MoveTo(startPos).Write(expectedBytes);
 
             // Act
@@ -187,7 +187,7 @@ namespace LIveStreamingServerNet.Utilities.Test
             var expected = _fixture.Create<bool>();
             var expectedBytes = BitConverter.GetBytes(expected);
 
-            using var buffer = new NetBuffer();
+            using var buffer = new DataBuffer();
             buffer.MoveTo(startPos).Write(expectedBytes);
 
             // Act
@@ -208,7 +208,7 @@ namespace LIveStreamingServerNet.Utilities.Test
             var expected = _fixture.Create<char>();
             var expectedBytes = BitConverter.GetBytes(expected);
 
-            using var buffer = new NetBuffer();
+            using var buffer = new DataBuffer();
             buffer.MoveTo(startPos).Write(expectedBytes);
 
             // Act
@@ -229,7 +229,7 @@ namespace LIveStreamingServerNet.Utilities.Test
             var expected = _fixture.Create<ushort>();
             var expectedBytes = BitConverter.GetBytes(expected);
 
-            using var buffer = new NetBuffer();
+            using var buffer = new DataBuffer();
             buffer.MoveTo(startPos).Write(expectedBytes);
 
             // Act
@@ -250,7 +250,7 @@ namespace LIveStreamingServerNet.Utilities.Test
             var expected = _fixture.Create<uint>();
             var expectedBytes = BitConverter.GetBytes(expected);
 
-            using var buffer = new NetBuffer();
+            using var buffer = new DataBuffer();
             buffer.MoveTo(startPos).Write(expectedBytes);
 
             // Act
@@ -271,7 +271,7 @@ namespace LIveStreamingServerNet.Utilities.Test
             var expected = _fixture.Create<ulong>();
             var expectedBytes = BitConverter.GetBytes(expected);
 
-            using var buffer = new NetBuffer();
+            using var buffer = new DataBuffer();
             buffer.MoveTo(startPos).Write(expectedBytes);
 
             // Act
@@ -292,7 +292,7 @@ namespace LIveStreamingServerNet.Utilities.Test
             var expected = _fixture.Create<ushort>();
             var expectedBytes = BitConverter.GetBytes(expected).Reverse().ToArray();
 
-            using var buffer = new NetBuffer();
+            using var buffer = new DataBuffer();
             buffer.MoveTo(startPos).Write(expectedBytes);
 
             // Act
@@ -313,7 +313,7 @@ namespace LIveStreamingServerNet.Utilities.Test
             var expected = _fixture.Create<uint>();
             var expectedBytes = BitConverter.GetBytes(expected).Take(3).Reverse().ToArray();
 
-            using var buffer = new NetBuffer();
+            using var buffer = new DataBuffer();
             buffer.MoveTo(startPos).Write(expectedBytes);
 
             // Act
@@ -334,7 +334,7 @@ namespace LIveStreamingServerNet.Utilities.Test
             var expected = _fixture.Create<uint>();
             var expectedBytes = BitConverter.GetBytes(expected).Reverse().ToArray();
 
-            using var buffer = new NetBuffer();
+            using var buffer = new DataBuffer();
             buffer.MoveTo(startPos).Write(expectedBytes);
 
             // Act
@@ -355,7 +355,7 @@ namespace LIveStreamingServerNet.Utilities.Test
             var expected = _fixture.Create<short>();
             var expectedBytes = BitConverter.GetBytes(expected).Reverse().ToArray();
 
-            using var buffer = new NetBuffer();
+            using var buffer = new DataBuffer();
             buffer.MoveTo(startPos).Write(expectedBytes);
 
             // Act
@@ -376,7 +376,7 @@ namespace LIveStreamingServerNet.Utilities.Test
             var expected = _fixture.Create<int>();
             var expectedBytes = BitConverter.GetBytes(expected).Take(3).Reverse().ToArray();
 
-            using var buffer = new NetBuffer();
+            using var buffer = new DataBuffer();
             buffer.MoveTo(startPos).Write(expectedBytes);
 
             // Act
@@ -397,7 +397,7 @@ namespace LIveStreamingServerNet.Utilities.Test
             var expected = _fixture.Create<int>();
             var expectedBytes = BitConverter.GetBytes(expected).Reverse().ToArray();
 
-            using var buffer = new NetBuffer();
+            using var buffer = new DataBuffer();
             buffer.MoveTo(startPos).Write(expectedBytes);
 
             // Act

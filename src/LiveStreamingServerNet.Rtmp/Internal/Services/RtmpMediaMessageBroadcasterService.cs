@@ -19,7 +19,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
     {
         private readonly IRtmpChunkMessageWriterService _chunkMessageWriter;
         private readonly IRtmpMediaMessageInterceptionService _interception;
-        private readonly INetBufferPool _netBufferPool;
+        private readonly IDataBufferPool _dataBufferPool;
         private readonly IMediaPackageDiscarderFactory _mediaPackageDiscarderFactory;
         private readonly RtmpServerConfiguration _config;
         private readonly ILogger _logger;
@@ -30,14 +30,14 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
         public RtmpMediaMessageBroadcasterService(
             IRtmpChunkMessageWriterService chunkMessageWriter,
             IRtmpMediaMessageInterceptionService interception,
-            INetBufferPool netBufferPool,
+            IDataBufferPool dataBufferPool,
             IMediaPackageDiscarderFactory mediaPackageDiscarderFactory,
             IOptions<RtmpServerConfiguration> config,
             ILogger<RtmpMediaMessageBroadcasterService> logger)
         {
             _chunkMessageWriter = chunkMessageWriter;
             _interception = interception;
-            _netBufferPool = netBufferPool;
+            _dataBufferPool = dataBufferPool;
             _mediaPackageDiscarderFactory = mediaPackageDiscarderFactory;
             _config = config.Value;
             _logger = logger;
@@ -76,7 +76,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             MediaType mediaType,
             uint timestamp,
             bool isSkippable,
-            INetBuffer payloadBuffer)
+            IDataBuffer payloadBuffer)
         {
             await _interception.ReceiveMediaMessageAsync(publishStreamContext.StreamPath, mediaType, payloadBuffer, timestamp, isSkippable);
 
@@ -114,7 +114,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
         private void EnqueueMediaPackages(
             IReadOnlyList<IRtmpClientContext> subscribersList,
             MediaType type,
-            INetBuffer payloadBuffer,
+            IDataBuffer payloadBuffer,
             uint timestamp,
             uint streamId,
             bool isSkippable)
@@ -138,7 +138,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
                 var outChunkSize = subscribersGroup.Key;
                 var subscribers = subscribersGroup.ToList();
 
-                var tempBuffer = _netBufferPool.Obtain();
+                var tempBuffer = _dataBufferPool.Obtain();
 
                 try
                 {
@@ -156,7 +156,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
                 }
                 finally
                 {
-                    _netBufferPool.Recycle(tempBuffer);
+                    _dataBufferPool.Recycle(tempBuffer);
                 }
             }
         }
@@ -238,7 +238,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
 
             try
             {
-                var tempBuffer = new RentedBuffer(_netBufferPool.BufferPool, packages.Sum(x => x.RentedPayload.Size));
+                var tempBuffer = new RentedBuffer(_dataBufferPool.BufferPool, packages.Sum(x => x.RentedPayload.Size));
 
                 try
                 {

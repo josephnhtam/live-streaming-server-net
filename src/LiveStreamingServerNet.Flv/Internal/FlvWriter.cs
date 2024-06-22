@@ -7,16 +7,16 @@ namespace LiveStreamingServerNet.Flv.Internal
     internal class FlvWriter : IFlvWriter
     {
         private readonly IStreamWriter _streamWriter;
-        private readonly INetBufferPool _netBufferPool;
+        private readonly IDataBufferPool _dataBufferPool;
         private readonly SemaphoreSlim _syncLock = new SemaphoreSlim(1, 1);
 
         private bool _isDisposed;
 
-        public FlvWriter(IStreamWriter streamWriter, INetBufferPool netBufferPool)
+        public FlvWriter(IStreamWriter streamWriter, IDataBufferPool dataBufferPool)
         {
             _streamWriter = streamWriter;
 
-            _netBufferPool = netBufferPool;
+            _dataBufferPool = dataBufferPool;
         }
 
         public async ValueTask WriteHeaderAsync(bool allowAudioTags, bool allowVideoTags, CancellationToken cancellationToken)
@@ -45,34 +45,34 @@ namespace LiveStreamingServerNet.Flv.Internal
             }
         }
 
-        public async ValueTask WriteTagAsync(FlvTagType tagType, uint timestamp, Action<INetBuffer> payloadBuffer, CancellationToken cancellationToken)
+        public async ValueTask WriteTagAsync(FlvTagType tagType, uint timestamp, Action<IDataBuffer> payloadBuffer, CancellationToken cancellationToken)
         {
             try
             {
                 using var _ = await _syncLock.LockAsync(cancellationToken);
 
-                var netBuffer = _netBufferPool.Obtain();
+                var dataBuffer = _dataBufferPool.Obtain();
 
                 try
                 {
-                    netBuffer.MoveTo(FlvTagHeader.Size);
-                    payloadBuffer.Invoke(netBuffer);
+                    dataBuffer.MoveTo(FlvTagHeader.Size);
+                    payloadBuffer.Invoke(dataBuffer);
 
-                    var payloadSize = (uint)(netBuffer.Size - FlvTagHeader.Size);
-                    var packageSize = (uint)netBuffer.Size;
+                    var payloadSize = (uint)(dataBuffer.Size - FlvTagHeader.Size);
+                    var packageSize = (uint)dataBuffer.Size;
 
-                    netBuffer.WriteUInt32BigEndian(packageSize);
+                    dataBuffer.WriteUInt32BigEndian(packageSize);
 
                     var header = new FlvTagHeader(tagType, payloadSize, timestamp);
-                    header.Write(netBuffer.MoveTo(0));
+                    header.Write(dataBuffer.MoveTo(0));
 
                     await _streamWriter.WriteAsync(
-                        new ArraySegment<byte>(netBuffer.UnderlyingBuffer, 0, netBuffer.Size),
+                        new ArraySegment<byte>(dataBuffer.UnderlyingBuffer, 0, dataBuffer.Size),
                         cancellationToken);
                 }
                 finally
                 {
-                    _netBufferPool.Recycle(netBuffer);
+                    _dataBufferPool.Recycle(dataBuffer);
                 }
             }
             catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { }

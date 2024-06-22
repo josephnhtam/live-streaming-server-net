@@ -3,14 +3,14 @@ using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 
 namespace LiveStreamingServerNet.Networking.Internal.Contracts
 {
-    internal interface INetBufferSender : IAsyncDisposable
+    internal interface IClientBufferSender : IAsyncDisposable
     {
         void Start(INetworkStreamWriter networkStream, CancellationToken cancellationToken);
-        void Send(INetBuffer netBuffer, Action<bool>? callback);
+        void Send(IDataBuffer dataBuffer, Action<bool>? callback);
         void Send(IRentedBuffer rentedBuffer, Action<bool>? callback);
-        void Send(Action<INetBuffer> writer, Action<bool>? callback);
-        ValueTask SendAsync(INetBuffer netBuffer);
+        void Send(Action<IDataBuffer> writer, Action<bool>? callback);
+        ValueTask SendAsync(IDataBuffer dataBuffer);
         ValueTask SendAsync(IRentedBuffer rentedBuffer);
-        ValueTask SendAsync(Action<INetBuffer> writer);
+        ValueTask SendAsync(Action<IDataBuffer> writer);
     }
 }

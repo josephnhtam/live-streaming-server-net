@@ -20,7 +20,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
         private readonly IFixture _fixture;
         private readonly IRtmpChunkMessageWriterService _chunkMessageWriter;
         private readonly IRtmpMediaMessageInterceptionService _interception;
-        private readonly INetBufferPool _netBufferPool;
+        private readonly IDataBufferPool _dataBufferPool;
         private readonly IMediaPackageDiscarder _mediaPackageDiscarder;
         private readonly IMediaPackageDiscarderFactory _mediaPackageDiscarderFactory;
         private readonly RtmpServerConfiguration _config;
@@ -32,7 +32,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
             _fixture = new Fixture();
             _chunkMessageWriter = Substitute.For<IRtmpChunkMessageWriterService>();
             _interception = Substitute.For<IRtmpMediaMessageInterceptionService>();
-            _netBufferPool = new NetBufferPool(Options.Create(new NetBufferPoolConfiguration()));
+            _dataBufferPool = new DataBufferPool(Options.Create(new DataBufferPoolConfiguration()));
             _mediaPackageDiscarder = Substitute.For<IMediaPackageDiscarder>();
             _mediaPackageDiscarderFactory = Substitute.For<IMediaPackageDiscarderFactory>();
             _config = new RtmpServerConfiguration();
@@ -45,7 +45,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
             _sut = new RtmpMediaMessageBroadcasterService(
                 _chunkMessageWriter,
                 _interception,
-                _netBufferPool,
+                _dataBufferPool,
                 _mediaPackageDiscarderFactory,
                 Options.Create(_config),
                 _logger);
@@ -75,7 +75,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
             var mediaType = _fixture.Create<MediaType>();
             var timestamp = _fixture.Create<uint>();
             var isSkippable = false;
-            var payloadBuffer = _fixture.Create<NetBuffer>();
+            var payloadBuffer = _fixture.Create<DataBuffer>();
 
             var tcs = new TaskCompletionSource();
 

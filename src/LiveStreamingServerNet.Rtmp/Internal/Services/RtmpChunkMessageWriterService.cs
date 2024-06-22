@@ -7,10 +7,10 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
     internal class RtmpChunkMessageWriterService : IRtmpChunkMessageWriterService
     {
         public void Write<TRtmpChunkMessageHeader>(
-            INetBuffer targetBuffer,
+            IDataBuffer targetBuffer,
             RtmpChunkBasicHeader basicHeader,
             TRtmpChunkMessageHeader messageHeader,
-            INetBuffer payloadBuffer,
+            IDataBuffer payloadBuffer,
             uint outChunkSize) where TRtmpChunkMessageHeader : struct, IRtmpChunkMessageHeader
         {
             var extendedTimestampHeader = CreateExtendedTimestampHeader(messageHeader);
@@ -33,11 +33,11 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
         }
 
         private static void WriteFirstChunk<TRtmpChunkMessageHeader>(
-           INetBuffer targetBuffer,
+           IDataBuffer targetBuffer,
            RtmpChunkBasicHeader basicHeader,
            TRtmpChunkMessageHeader messageHeader,
            RtmpChunkExtendedTimestampHeader? extendedTimestampHeader,
-           INetBuffer payloadBuffer,
+           IDataBuffer payloadBuffer,
            uint outChunkSize) where TRtmpChunkMessageHeader : struct, IRtmpChunkMessageHeader
         {
             var remainingPayloadSize = payloadBuffer.Size - payloadBuffer.Position;
@@ -50,10 +50,10 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
         }
 
         private static void WriteRemainingChunks(
-            INetBuffer targetBuffer,
+            IDataBuffer targetBuffer,
             RtmpChunkBasicHeader basicHeader,
             RtmpChunkExtendedTimestampHeader? extendedTimestampHeader,
-            INetBuffer payloadBuffer,
+            IDataBuffer payloadBuffer,
             uint outChunkSize)
         {
             while (payloadBuffer.Position < payloadBuffer.Size)

@@ -31,7 +31,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands.Dispat
         public async ValueTask<bool> DispatchAsync(
             IRtmpChunkStreamContext chunkStreamContext,
             IRtmpClientContext clientContext,
-            INetBuffer payloadBuffer,
+            IDataBuffer payloadBuffer,
             CancellationToken cancellationToken)
         {
             var isUsingAmf3 = IsUsingAmf3(chunkStreamContext);

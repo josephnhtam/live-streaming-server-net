@@ -30,10 +30,10 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             var messageHeader = new RtmpChunkMessageHeaderType0(0,
                 amfEncodingType == AmfEncodingType.Amf0 ? RtmpMessageType.CommandMessageAmf0 : RtmpMessageType.CommandMessageAmf3, 0);
 
-            _chunkMessageSender.Send(clientContext, basicHeader, messageHeader, netBuffer =>
+            _chunkMessageSender.Send(clientContext, basicHeader, messageHeader, dataBuffer =>
             {
                 var values = GetParameters(commandName, transactionId, commandObject, parameters);
-                netBuffer.WriteAmf(values, amfEncodingType);
+                dataBuffer.WriteAmf(values, amfEncodingType);
             }, callback);
         }
 
@@ -57,10 +57,10 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             var messageHeader = new RtmpChunkMessageHeaderType0(0,
                 amfEncodingType == AmfEncodingType.Amf0 ? RtmpMessageType.CommandMessageAmf0 : RtmpMessageType.CommandMessageAmf3, 0);
 
-            _chunkMessageSender.Send(clientContexts, basicHeader, messageHeader, netBuffer =>
+            _chunkMessageSender.Send(clientContexts, basicHeader, messageHeader, dataBuffer =>
             {
                 var values = GetParameters(commandName, transactionId, commandObject, parameters);
-                netBuffer.WriteAmf(values, amfEncodingType);
+                dataBuffer.WriteAmf(values, amfEncodingType);
             });
         }
 

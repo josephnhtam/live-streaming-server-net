@@ -38,7 +38,7 @@ namespace LiveStreamingServerNet.Networking.Installer
             return this;
         }
 
-        public IServerConfigurator ConfigureNetBufferPool(Action<NetBufferPoolConfiguration>? configure)
+        public IServerConfigurator ConfigureDataBufferPool(Action<DataBufferPoolConfiguration>? configure)
         {
             if (configure != null)
                 Services.Configure(configure);

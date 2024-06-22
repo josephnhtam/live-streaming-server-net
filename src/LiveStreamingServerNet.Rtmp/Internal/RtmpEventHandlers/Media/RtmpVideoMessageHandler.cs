@@ -43,7 +43,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
         public async ValueTask<bool> HandleAsync(
             IRtmpChunkStreamContext chunkStreamContext,
             IRtmpClientContext clientContext,
-            INetBuffer payloadBuffer,
+            IDataBuffer payloadBuffer,
             CancellationToken cancellationToken)
         {
             var publishStreamContext = clientContext.PublishStreamContext;
@@ -79,7 +79,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
             IRtmpChunkStreamContext chunkStreamContext,
             IRtmpClientContext clientContext,
             IRtmpPublishStreamContext publishStreamContext,
-            INetBuffer payloadBuffer,
+            IDataBuffer payloadBuffer,
             bool isSkippable)
         {
             var subscribers = _streamManager.GetSubscribers(publishStreamContext.StreamPath);
@@ -91,7 +91,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
             IRtmpClientContext clientContext,
             IRtmpPublishStreamContext publishStreamContext,
             bool isSkippable,
-            INetBuffer payloadBuffer,
+            IDataBuffer payloadBuffer,
             IReadOnlyList<IRtmpClientContext> subscribers)
         {
             clientContext.UpdateTimestamp(chunkStreamContext.MessageHeader.Timestamp, MediaType.Video);
@@ -117,7 +117,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
             return true;
         }
 
-        private (VideoFrameType, VideoCodec, AVCPacketType?) ParseVideoMessageProperties(INetBuffer payloadBuffer)
+        private (VideoFrameType, VideoCodec, AVCPacketType?) ParseVideoMessageProperties(IDataBuffer payloadBuffer)
         {
             var firstByte = payloadBuffer.ReadByte();
             var frameType = (VideoFrameType)(firstByte >> 4);
@@ -143,7 +143,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
             IRtmpPublishStreamContext publishStreamContext,
             VideoFrameType frameType,
             AVCPacketType? avcPacketType,
-            INetBuffer payloadBuffer)
+            IDataBuffer payloadBuffer)
         {
             if (avcPacketType.HasValue)
             {

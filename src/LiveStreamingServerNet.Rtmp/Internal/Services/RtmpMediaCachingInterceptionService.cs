@@ -13,7 +13,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             _interceptors = interceptors;
         }
 
-        public async ValueTask CachePictureAsync(string streamPath, MediaType mediaType, INetBuffer payloadBuffer, uint timestamp)
+        public async ValueTask CachePictureAsync(string streamPath, MediaType mediaType, IDataBuffer payloadBuffer, uint timestamp)
         {
             if (!_interceptors.Any())
                 return;

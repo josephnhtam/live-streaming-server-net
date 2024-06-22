@@ -36,17 +36,17 @@ namespace LiveStreamingServerNet.Flv.Test.Services
 
             var expectedFlvType = mediaType == MediaType.Video ? FlvTagType.Video : FlvTagType.Audio;
 
-            using var netBuffer = new NetBuffer();
+            using var dataBuffer = new DataBuffer();
 
-            _flvClient.When(x => x.WriteTagAsync(expectedFlvType, timestamp, Arg.Any<Action<INetBuffer>>(), Arg.Any<CancellationToken>()))
-                .Do(x => x.Arg<Action<INetBuffer>>().Invoke(netBuffer));
+            _flvClient.When(x => x.WriteTagAsync(expectedFlvType, timestamp, Arg.Any<Action<IDataBuffer>>(), Arg.Any<CancellationToken>()))
+                .Do(x => x.Arg<Action<IDataBuffer>>().Invoke(dataBuffer));
 
             // Act
             await _sut.SendMediaTagAsync(_flvClient, mediaType, payloadBuffer, payloadSize, timestamp, default);
 
             // Assert
-            await _flvClient.Received(1).WriteTagAsync(expectedFlvType, timestamp, Arg.Any<Action<INetBuffer>>(), Arg.Any<CancellationToken>());
-            netBuffer.UnderlyingBuffer.Take(netBuffer.Size).ToArray().Should().BeEquivalentTo(payloadBuffer.Take(payloadSize).ToArray());
+            await _flvClient.Received(1).WriteTagAsync(expectedFlvType, timestamp, Arg.Any<Action<IDataBuffer>>(), Arg.Any<CancellationToken>());
+            dataBuffer.UnderlyingBuffer.Take(dataBuffer.Size).ToArray().Should().BeEquivalentTo(payloadBuffer.Take(payloadSize).ToArray());
         }
     }
 }

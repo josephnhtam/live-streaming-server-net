@@ -4,11 +4,11 @@ using LiveStreamingServerNet.Utilities.Buffers;
 
 namespace LIveStreamingServerNet.Utilities.Test
 {
-    public class NetBufferTest
+    public class DataBufferTest
     {
         private readonly IFixture _fixture;
 
-        public NetBufferTest()
+        public DataBufferTest()
         {
             _fixture = new Fixture();
         }
@@ -20,11 +20,11 @@ namespace LIveStreamingServerNet.Utilities.Test
             var expected = _fixture.Create<int>();
 
             // Act
-            using var netBuffer = new NetBuffer();
-            netBuffer.MoveTo(expected);
+            using var dataBuffer = new DataBuffer();
+            dataBuffer.MoveTo(expected);
 
             // Assert
-            var result = netBuffer.Position;
+            var result = dataBuffer.Position;
             result.Should().Be(expected);
         }
 
@@ -35,11 +35,11 @@ namespace LIveStreamingServerNet.Utilities.Test
             var expected = _fixture.Create<int>();
 
             // Act
-            using var netBuffer = new NetBuffer();
-            netBuffer.Position = expected;
+            using var dataBuffer = new DataBuffer();
+            dataBuffer.Position = expected;
 
             // Assert
-            var result = netBuffer.Position;
+            var result = dataBuffer.Position;
             result.Should().Be(expected);
         }
 
@@ -50,11 +50,11 @@ namespace LIveStreamingServerNet.Utilities.Test
             var expected = _fixture.Create<int>();
 
             // Act
-            using var netBuffer = new NetBuffer();
-            netBuffer.Size = expected;
+            using var dataBuffer = new DataBuffer();
+            dataBuffer.Size = expected;
 
             // Assert
-            var result = netBuffer.Size;
+            var result = dataBuffer.Size;
             result.Should().Be(expected);
         }
 
@@ -62,38 +62,38 @@ namespace LIveStreamingServerNet.Utilities.Test
         public void Reset()
         {
             // Arange
-            using var netBuffer = new NetBuffer();
-            netBuffer.Size = _fixture.Create<int>();
-            netBuffer.Position = _fixture.Create<int>();
+            using var dataBuffer = new DataBuffer();
+            dataBuffer.Size = _fixture.Create<int>();
+            dataBuffer.Position = _fixture.Create<int>();
 
             // Act
-            netBuffer.Reset();
+            dataBuffer.Reset();
 
             // Assert
-            var pos = netBuffer.Position;
+            var pos = dataBuffer.Position;
             pos.Should().Be(0);
 
-            var size = netBuffer.Size;
+            var size = dataBuffer.Size;
             size.Should().Be(0);
         }
 
         [Fact]
-        public void FlushToNetBuffer()
+        public void FlushToDataBuffer()
         {
             // Arange
             var expected = _fixture.Create<byte[]>();
 
-            using var srcNetBuffer = new NetBuffer();
-            srcNetBuffer.Write(expected);
+            using var srcDataBuffer = new DataBuffer();
+            srcDataBuffer.Write(expected);
 
             // Act
-            using var dstNetBuffer = new NetBuffer();
-            srcNetBuffer.Flush(dstNetBuffer);
+            using var dstDataBuffer = new DataBuffer();
+            srcDataBuffer.Flush(dstDataBuffer);
 
             // Assert
-            srcNetBuffer.Position.Should().Be(0);
+            srcDataBuffer.Position.Should().Be(0);
 
-            var result = dstNetBuffer.UnderlyingBuffer.Take(expected.Length);
+            var result = dstDataBuffer.UnderlyingBuffer.Take(expected.Length);
             result.Should().BeEquivalentTo(expected);
         }
 
@@ -103,16 +103,16 @@ namespace LIveStreamingServerNet.Utilities.Test
             // Arange
             var expected = _fixture.Create<byte[]>();
 
-            using var srcNetBuffer = new NetBuffer();
-            srcNetBuffer.Write(expected);
+            using var srcDataBuffer = new DataBuffer();
+            srcDataBuffer.Write(expected);
 
             using var stream = new MemoryStream();
 
             // Act
-            srcNetBuffer.Flush(stream);
+            srcDataBuffer.Flush(stream);
 
             // Assert
-            srcNetBuffer.Position.Should().Be(0);
+            srcDataBuffer.Position.Should().Be(0);
 
             var result = stream.ToArray();
             result.Should().BeEquivalentTo(expected);
@@ -124,16 +124,16 @@ namespace LIveStreamingServerNet.Utilities.Test
             // Arange
             var expected = _fixture.Create<byte[]>();
 
-            using var srcNetBuffer = new NetBuffer();
-            srcNetBuffer.Write(expected);
+            using var srcDataBuffer = new DataBuffer();
+            srcDataBuffer.Write(expected);
 
             using var stream = new MemoryStream();
 
             // Act
-            await srcNetBuffer.FlushAsync(stream);
+            await srcDataBuffer.FlushAsync(stream);
 
             // Assert
-            srcNetBuffer.Position.Should().Be(0);
+            srcDataBuffer.Position.Should().Be(0);
 
             var result = stream.ToArray();
             result.Should().BeEquivalentTo(expected);
@@ -145,19 +145,19 @@ namespace LIveStreamingServerNet.Utilities.Test
             // Arange
             var expected = _fixture.Create<byte[]>();
 
-            using var srcNetBuffer = new NetBuffer();
-            srcNetBuffer.Write(expected);
+            using var srcDataBuffer = new DataBuffer();
+            srcDataBuffer.Write(expected);
 
-            var expectedPos = srcNetBuffer.Position;
+            var expectedPos = srcDataBuffer.Position;
 
             // Act
-            using var dstNetBuffer = new NetBuffer();
-            srcNetBuffer.CopyAllTo(dstNetBuffer);
+            using var dstDataBuffer = new DataBuffer();
+            srcDataBuffer.CopyAllTo(dstDataBuffer);
 
             // Assert
-            srcNetBuffer.Position.Should().Be(expectedPos);
+            srcDataBuffer.Position.Should().Be(expectedPos);
 
-            var result = dstNetBuffer.UnderlyingBuffer.Take(expected.Length);
+            var result = dstDataBuffer.UnderlyingBuffer.Take(expected.Length);
             result.Should().BeEquivalentTo(expected);
         }
 
@@ -168,20 +168,20 @@ namespace LIveStreamingServerNet.Utilities.Test
             var startPos = _fixture.Create<int>();
             var expected = _fixture.Create<byte[]>();
 
-            using var srcNetBuffer = new NetBuffer();
-            srcNetBuffer.MoveTo(startPos).Write(expected);
-            srcNetBuffer.MoveTo(startPos);
+            using var srcDataBuffer = new DataBuffer();
+            srcDataBuffer.MoveTo(startPos).Write(expected);
+            srcDataBuffer.MoveTo(startPos);
 
             var expectedEndPos = startPos + expected.Length;
 
             // Act
-            using var dstNetBuffer = new NetBuffer();
-            srcNetBuffer.ReadAndWriteTo(dstNetBuffer, expected.Length);
+            using var dstDataBuffer = new DataBuffer();
+            srcDataBuffer.ReadAndWriteTo(dstDataBuffer, expected.Length);
 
             // Assert
-            srcNetBuffer.Position.Should().Be(expectedEndPos);
+            srcDataBuffer.Position.Should().Be(expectedEndPos);
 
-            var result = dstNetBuffer.UnderlyingBuffer.Take(expected.Length);
+            var result = dstDataBuffer.UnderlyingBuffer.Take(expected.Length);
             result.Should().BeEquivalentTo(expected);
         }
 
@@ -193,16 +193,16 @@ namespace LIveStreamingServerNet.Utilities.Test
             var expected = _fixture.Create<byte[]>();
 
             // Act
-            using var netBuffer = new NetBuffer();
+            using var dataBuffer = new DataBuffer();
             using var stream = new MemoryStream(expected);
-            netBuffer.MoveTo(startPos);
-            await netBuffer.FromStreamData(stream, expected.Length);
+            dataBuffer.MoveTo(startPos);
+            await dataBuffer.FromStreamData(stream, expected.Length);
 
             // Assert
-            var size = netBuffer.Size;
+            var size = dataBuffer.Size;
             size.Should().Be(expected.Length);
 
-            var result = netBuffer.UnderlyingBuffer.Take(expected.Length);
+            var result = dataBuffer.UnderlyingBuffer.Take(expected.Length);
             result.Should().BeEquivalentTo(expected);
         }
 
@@ -214,16 +214,16 @@ namespace LIveStreamingServerNet.Utilities.Test
             var expected = _fixture.Create<byte[]>();
 
             // Act
-            using var netBuffer = new NetBuffer();
+            using var dataBuffer = new DataBuffer();
             using var stream = new MemoryStream(expected);
-            netBuffer.MoveTo(startPos);
-            await netBuffer.AppendStreamData(stream, expected.Length);
+            dataBuffer.MoveTo(startPos);
+            await dataBuffer.AppendStreamData(stream, expected.Length);
 
             // Assert
-            var size = netBuffer.Size;
+            var size = dataBuffer.Size;
             size.Should().Be(startPos + expected.Length);
 
-            var result = netBuffer.UnderlyingBuffer.Skip(startPos).Take(expected.Length);
+            var result = dataBuffer.UnderlyingBuffer.Skip(startPos).Take(expected.Length);
             result.Should().BeEquivalentTo(expected);
         }
     }

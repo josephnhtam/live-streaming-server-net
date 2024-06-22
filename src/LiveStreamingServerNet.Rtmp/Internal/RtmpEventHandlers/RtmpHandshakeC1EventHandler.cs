@@ -9,21 +9,21 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
 {
     internal class RtmpHandshakeC1EventHandler : IRequestHandler<RtmpHandshakeC1Event, RtmpEventConsumingResult>
     {
-        private readonly INetBufferPool _netBufferPool;
+        private readonly IDataBufferPool _dataBufferPool;
         private readonly ILogger _logger;
 
         private const int HandshakeC1Size = 1536;
 
-        public RtmpHandshakeC1EventHandler(INetBufferPool netBufferPool, ILogger<RtmpHandshakeC1EventHandler> logger)
+        public RtmpHandshakeC1EventHandler(IDataBufferPool dataBufferPool, ILogger<RtmpHandshakeC1EventHandler> logger)
         {
-            _netBufferPool = netBufferPool;
+            _dataBufferPool = dataBufferPool;
             _logger = logger;
         }
 
         public async ValueTask<RtmpEventConsumingResult> Handle(RtmpHandshakeC1Event @event, CancellationToken cancellationToken)
         {
-            var incomingBuffer = _netBufferPool.Obtain();
-            var outgoingBuffer = _netBufferPool.Obtain();
+            var incomingBuffer = _dataBufferPool.Obtain();
+            var outgoingBuffer = _dataBufferPool.Obtain();
 
             try
             {
@@ -45,12 +45,12 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
             }
             finally
             {
-                _netBufferPool.Recycle(incomingBuffer);
-                _netBufferPool.Recycle(outgoingBuffer);
+                _dataBufferPool.Recycle(incomingBuffer);
+                _dataBufferPool.Recycle(outgoingBuffer);
             }
         }
 
-        private bool HandleHandshake(RtmpHandshakeC1Event @event, INetBuffer incomingBuffer, INetBuffer outgoingBuffer)
+        private bool HandleHandshake(RtmpHandshakeC1Event @event, IDataBuffer incomingBuffer, IDataBuffer outgoingBuffer)
         {
             var clientContext = @event.ClientContext;
             var client = clientContext.Client;

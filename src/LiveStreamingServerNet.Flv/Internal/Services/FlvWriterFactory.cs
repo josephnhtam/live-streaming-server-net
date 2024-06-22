@@ -6,16 +6,16 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
 {
     internal class FlvWriterFactory : IFlvWriterFactory
     {
-        private readonly INetBufferPool _netBufferPool;
+        private readonly IDataBufferPool _dataBufferPool;
 
-        public FlvWriterFactory(INetBufferPool netBufferPool)
+        public FlvWriterFactory(IDataBufferPool dataBufferPool)
         {
-            _netBufferPool = netBufferPool;
+            _dataBufferPool = dataBufferPool;
         }
 
         public IFlvWriter Create(IStreamWriter streamWriter)
         {
-            return new FlvWriter(streamWriter, _netBufferPool);
+            return new FlvWriter(streamWriter, _dataBufferPool);
         }
     }
 }

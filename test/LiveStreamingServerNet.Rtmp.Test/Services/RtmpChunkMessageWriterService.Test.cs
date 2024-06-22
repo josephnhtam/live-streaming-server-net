@@ -28,13 +28,13 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
             var expectedPayload = RandomNumberGenerator.GetBytes(payloadSize);
             var expectedChunkSize = chunkSize;
 
-            using var payloadBuffer = new NetBuffer();
+            using var payloadBuffer = new DataBuffer();
             payloadBuffer.Write(expectedPayload, 0, expectedPayload.Length);
 
             var basicHeader = new RtmpChunkBasicHeader(0, expectedChunkStreamId);
             var messageHeader = new RtmpChunkMessageHeaderType0(expectedTimestamp, expectedPayload.Length, expectedMessageTypeId, expectedMessageStreamId);
 
-            using var streamBuffer = new NetBuffer();
+            using var streamBuffer = new DataBuffer();
             var service = new RtmpChunkMessageWriterService();
 
             // Act
@@ -42,7 +42,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
 
             // Assert
             using var stream = new NetworkStream(new MemoryStream(streamBuffer.UnderlyingBuffer));
-            using var targetBuffer = new NetBuffer();
+            using var targetBuffer = new DataBuffer();
 
             var remainingPayloadSize = expectedPayload.Length;
 
@@ -56,7 +56,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
 
             async Task AssertFirstChunk(INetworkStreamReader stream)
             {
-                using var readerBuffer = new NetBuffer(expectedPayload.Length);
+                using var readerBuffer = new DataBuffer(expectedPayload.Length);
 
                 var chunkBasicHeader = await RtmpChunkBasicHeader.ReadAsync(readerBuffer, stream, default);
                 chunkBasicHeader.ChunkType.Should().Be(0);
@@ -80,7 +80,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
                     chunkMessageHeader.HasExtendedTimestamp().Should().BeFalse();
                 }
 
-                using var tempBuffer = new NetBuffer();
+                using var tempBuffer = new DataBuffer();
                 await tempBuffer.FromStreamData(stream, Math.Min(expectedChunkSize, remainingPayloadSize));
                 targetBuffer.Write(tempBuffer.UnderlyingBuffer, 0, tempBuffer.Size);
 
@@ -89,7 +89,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
 
             async Task AssertRemainingChunk(INetworkStreamReader stream)
             {
-                using var readerBuffer = new NetBuffer(expectedPayload.Length);
+                using var readerBuffer = new DataBuffer(expectedPayload.Length);
 
                 var chunkBasicHeader = await RtmpChunkBasicHeader.ReadAsync(readerBuffer, stream, default);
                 chunkBasicHeader.ChunkType.Should().Be(3);
@@ -101,7 +101,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
                     extendedTimestampHeader.ExtendedTimestamp.Should().Be(expectedTimestamp);
                 }
 
-                using var tempBuffer = new NetBuffer();
+                using var tempBuffer = new DataBuffer();
                 await tempBuffer.FromStreamData(stream, Math.Min(expectedChunkSize, remainingPayloadSize));
                 targetBuffer.Write(tempBuffer.UnderlyingBuffer, 0, tempBuffer.Size);
 

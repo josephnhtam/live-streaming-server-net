@@ -147,7 +147,7 @@ namespace LiveStreamingServerNet.Flv.Test
             // Arrange
             var tagType = _fixture.Create<FlvTagType>();
             var timestamp = _fixture.Create<uint>();
-            var payloadBuffer = Substitute.For<Action<INetBuffer>>();
+            var payloadBuffer = Substitute.For<Action<IDataBuffer>>();
 
             // Act
             await _sut.WriteTagAsync(tagType, timestamp, payloadBuffer, default);
@@ -162,7 +162,7 @@ namespace LiveStreamingServerNet.Flv.Test
             // Arrange
             var tagType = _fixture.Create<FlvTagType>();
             var timestamp = _fixture.Create<uint>();
-            var payloadBuffer = Substitute.For<Action<INetBuffer>>();
+            var payloadBuffer = Substitute.For<Action<IDataBuffer>>();
             _flvWriter.WriteTagAsync(tagType, timestamp, payloadBuffer, Arg.Any<CancellationToken>()).Throws(new Exception());
 
             // Act

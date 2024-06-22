@@ -1,9 +1,9 @@
 ﻿namespace LiveStreamingServerNet.Utilities.Buffers.Contracts
 {
-    public interface INetBufferPool
+    public interface IDataBufferPool
     {
         IBufferPool? BufferPool { get; }
-        INetBuffer Obtain();
-        void Recycle(INetBuffer netBuffer);
+        IDataBuffer Obtain();
+        void Recycle(IDataBuffer dataBuffer);
     }
 }

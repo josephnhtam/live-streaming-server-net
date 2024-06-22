@@ -8,18 +8,18 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpHeaders
         public const int kSize = 4;
         public int Size => kSize;
 
-        public static async ValueTask<RtmpChunkExtendedTimestampHeader> ReadAsync(INetBuffer netBuffer, INetworkStreamReader networkStream, CancellationToken cancellationToken)
+        public static async ValueTask<RtmpChunkExtendedTimestampHeader> ReadAsync(IDataBuffer dataBuffer, INetworkStreamReader networkStream, CancellationToken cancellationToken)
         {
-            await netBuffer.FromStreamData(networkStream, kSize, cancellationToken);
+            await dataBuffer.FromStreamData(networkStream, kSize, cancellationToken);
 
-            var extendedTimestamp = netBuffer.ReadUInt32BigEndian();
+            var extendedTimestamp = dataBuffer.ReadUInt32BigEndian();
 
             return new RtmpChunkExtendedTimestampHeader(extendedTimestamp);
         }
 
-        public void Write(INetBuffer netBuffer)
+        public void Write(IDataBuffer dataBuffer)
         {
-            netBuffer.WriteUInt32BigEndian(ExtendedTimestamp);
+            dataBuffer.WriteUInt32BigEndian(ExtendedTimestamp);
         }
     }
 }

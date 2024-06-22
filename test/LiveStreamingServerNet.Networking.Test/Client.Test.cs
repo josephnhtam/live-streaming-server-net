@@ -12,7 +12,7 @@ namespace LiveStreamingServerNet.Networking.Test
         private readonly ServerEndPoint _serverEndPoint;
         private readonly IClientHandler _clientHandler;
         private readonly ITcpClientInternal _tcpClient;
-        private readonly INetBufferSender _bufferSender;
+        private readonly IClientBufferSender _bufferSender;
         private readonly INetworkStream _networkStream;
         private readonly INetworkStreamFactory _networkStreamFactory;
         private readonly ILogger<Client> _logger;
@@ -26,7 +26,7 @@ namespace LiveStreamingServerNet.Networking.Test
 
             _clientHandler = Substitute.For<IClientHandler>();
             _tcpClient = Substitute.For<ITcpClientInternal>();
-            _bufferSender = Substitute.For<INetBufferSender>();
+            _bufferSender = Substitute.For<IClientBufferSender>();
             _logger = Substitute.For<ILogger<Client>>();
 
             _tcpClient.Connected.Returns(true, false);

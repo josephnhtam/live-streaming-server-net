@@ -11,18 +11,18 @@ namespace LiveStreamingServerNet.Flv.Test
     {
         private readonly IFixture _fixture;
         private readonly IStreamWriter _streamWriter;
-        private readonly INetBufferPool _netBufferPool;
-        private readonly INetBuffer _netBuffer;
+        private readonly IDataBufferPool _dataBufferPool;
+        private readonly IDataBuffer _dataBuffer;
         private readonly FlvWriter _sut;
 
         public FlvWriterTest()
         {
             _fixture = new Fixture();
             _streamWriter = Substitute.For<IStreamWriter>();
-            _netBufferPool = Substitute.For<INetBufferPool>();
-            _netBuffer = new NetBuffer();
-            _netBufferPool.Obtain().Returns(_netBuffer);
-            _sut = new FlvWriter(_streamWriter, _netBufferPool);
+            _dataBufferPool = Substitute.For<IDataBufferPool>();
+            _dataBuffer = new DataBuffer();
+            _dataBufferPool.Obtain().Returns(_dataBuffer);
+            _sut = new FlvWriter(_streamWriter, _dataBufferPool);
         }
 
         [Theory]
@@ -64,7 +64,7 @@ namespace LiveStreamingServerNet.Flv.Test
             var payload = _fixture.Create<byte[]>();
 
             // Act
-            await _sut.WriteTagAsync(tagType, timestamp, netBuffer => netBuffer.Write(payload), default);
+            await _sut.WriteTagAsync(tagType, timestamp, dataBuffer => dataBuffer.Write(payload), default);
 
             // Assert
             await _streamWriter.Received(1).WriteAsync(
@@ -74,14 +74,14 @@ namespace LiveStreamingServerNet.Flv.Test
 
         private static bool VerifyTagBytes(ReadOnlyMemory<byte> bytes, FlvTagType tagType, uint timestamp, byte[] payload)
         {
-            using var netBuffer = new NetBuffer();
+            using var dataBuffer = new DataBuffer();
 
             var header = new FlvTagHeader(tagType, (uint)payload.Length, timestamp);
-            header.Write(netBuffer);
-            netBuffer.Write(payload);
-            netBuffer.WriteUInt32BigEndian((uint)netBuffer.Size);
+            header.Write(dataBuffer);
+            dataBuffer.Write(payload);
+            dataBuffer.WriteUInt32BigEndian((uint)dataBuffer.Size);
 
-            return bytes.ToArray().SequenceEqual(netBuffer.UnderlyingBuffer.Take(netBuffer.Size).ToArray());
+            return bytes.ToArray().SequenceEqual(dataBuffer.UnderlyingBuffer.Take(dataBuffer.Size).ToArray());
         }
     }
 }

@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace LiveStreamingServerNet.Utilities.Buffers
 {
-    public partial class NetBuffer
+    public partial class DataBuffer
     {
         public void ReadBytes(byte[] buffer, int index, int count)
         {

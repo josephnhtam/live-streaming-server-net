@@ -18,7 +18,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
         private readonly IRtmpChunkMessageSenderService _chunkMessageSender;
         private readonly IRtmpUserControlMessageSenderService _sut;
         private readonly IRtmpClientContext _clientContext;
-        private readonly NetBuffer _payloadBuffer;
+        private readonly DataBuffer _payloadBuffer;
 
         public RtmpUserControlMessageSenderServiceTest()
         {
@@ -27,17 +27,17 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
             _sut = new RtmpUserControlMessageSenderService(_chunkMessageSender);
 
             _clientContext = Substitute.For<IRtmpClientContext>();
-            _payloadBuffer = new NetBuffer();
+            _payloadBuffer = new DataBuffer();
 
             _chunkMessageSender.When(x => x.Send(
                 _clientContext,
                 Arg.Any<RtmpChunkBasicHeader>(),
                 Arg.Any<RtmpChunkMessageHeaderType0>(),
-                Arg.Any<Action<INetBuffer>>(),
+                Arg.Any<Action<IDataBuffer>>(),
                 Arg.Any<Action<bool>>()
             )).Do(x =>
             {
-                x.Arg<Action<INetBuffer>>().Invoke(_payloadBuffer);
+                x.Arg<Action<IDataBuffer>>().Invoke(_payloadBuffer);
                 x.Arg<Action<bool>>()?.Invoke(true);
             });
 
@@ -45,10 +45,10 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
                 Arg.Any<IReadOnlyList<IRtmpClientContext>>(),
                 Arg.Any<RtmpChunkBasicHeader>(),
                 Arg.Any<RtmpChunkMessageHeaderType0>(),
-                Arg.Any<Action<INetBuffer>>()
+                Arg.Any<Action<IDataBuffer>>()
             )).Do(x =>
             {
-                x.Arg<Action<INetBuffer>>().Invoke(_payloadBuffer);
+                x.Arg<Action<IDataBuffer>>().Invoke(_payloadBuffer);
             });
         }
 
@@ -59,7 +59,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
             var streamId = _fixture.Create<uint>();
             _clientContext.StreamSubscriptionContext!.StreamId.Returns(streamId);
 
-            using var expectedBuffer = new NetBuffer();
+            using var expectedBuffer = new DataBuffer();
             expectedBuffer.WriteUint16BigEndian(RtmpUserControlMessageTypes.StreamBegin);
             expectedBuffer.WriteUInt32BigEndian(streamId);
 
@@ -78,7 +78,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
                     x.MessageStreamId == RtmpConstants.UserControlMessageStreamId &&
                     x.MessageTypeId == RtmpMessageType.UserControlMessage
                 ),
-                Arg.Any<Action<INetBuffer>>(),
+                Arg.Any<Action<IDataBuffer>>(),
                 Arg.Any<Action<bool>>()
             );
 
@@ -94,7 +94,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
             _clientContext.StreamSubscriptionContext!.StreamId.Returns(0u);
             var clientContexts = new List<IRtmpClientContext> { _clientContext };
 
-            using var expectedBuffer = new NetBuffer();
+            using var expectedBuffer = new DataBuffer();
             expectedBuffer.WriteUint16BigEndian(RtmpUserControlMessageTypes.StreamBegin);
             expectedBuffer.WriteUInt32BigEndian(0u);
 
@@ -113,7 +113,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
                     x.MessageStreamId == RtmpConstants.UserControlMessageStreamId &&
                     x.MessageTypeId == RtmpMessageType.UserControlMessage
                 ),
-                Arg.Any<Action<INetBuffer>>()
+                Arg.Any<Action<IDataBuffer>>()
             );
 
             _payloadBuffer.UnderlyingBuffer.Take(_payloadBuffer.Size)
@@ -127,7 +127,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
             var streamId = _fixture.Create<uint>();
             _clientContext.StreamSubscriptionContext!.StreamId.Returns(streamId);
 
-            using var expectedBuffer = new NetBuffer();
+            using var expectedBuffer = new DataBuffer();
             expectedBuffer.WriteUint16BigEndian(RtmpUserControlMessageTypes.StreamEof);
             expectedBuffer.WriteUInt32BigEndian(streamId);
 
@@ -146,7 +146,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
                     x.MessageStreamId == RtmpConstants.UserControlMessageStreamId &&
                     x.MessageTypeId == RtmpMessageType.UserControlMessage
                 ),
-                Arg.Any<Action<INetBuffer>>(),
+                Arg.Any<Action<IDataBuffer>>(),
                 Arg.Any<Action<bool>>()
             );
 
@@ -161,7 +161,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
             _clientContext.StreamSubscriptionContext!.StreamId.Returns(0u);
             var clientContexts = new List<IRtmpClientContext> { _clientContext };
 
-            using var expectedBuffer = new NetBuffer();
+            using var expectedBuffer = new DataBuffer();
             expectedBuffer.WriteUint16BigEndian(RtmpUserControlMessageTypes.StreamEof);
             expectedBuffer.WriteUInt32BigEndian(0u);
 
@@ -180,7 +180,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
                     x.MessageStreamId == RtmpConstants.UserControlMessageStreamId &&
                     x.MessageTypeId == RtmpMessageType.UserControlMessage
                 ),
-                Arg.Any<Action<INetBuffer>>()
+                Arg.Any<Action<IDataBuffer>>()
             );
 
             _payloadBuffer.UnderlyingBuffer.Take(_payloadBuffer.Size)

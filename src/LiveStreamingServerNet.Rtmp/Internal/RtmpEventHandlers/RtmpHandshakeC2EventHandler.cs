@@ -9,18 +9,18 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
 {
     internal class RtmpHandshakeC2EventHandler : IRequestHandler<RtmpHandshakeC2Event, RtmpEventConsumingResult>
     {
-        private readonly INetBufferPool _netBufferPool;
+        private readonly IDataBufferPool _dataBufferPool;
         private readonly IRtmpServerConnectionEventDispatcher _eventDispatcher;
         private readonly ILogger _logger;
 
         private const int HandshakeC2Size = 1536;
 
         public RtmpHandshakeC2EventHandler(
-            INetBufferPool netBufferPool,
+            IDataBufferPool dataBufferPool,
             IRtmpServerConnectionEventDispatcher eventDispatcher,
             ILogger<RtmpHandshakeC2EventHandler> logger)
         {
-            _netBufferPool = netBufferPool;
+            _dataBufferPool = dataBufferPool;
             _eventDispatcher = eventDispatcher;
             _logger = logger;
         }
@@ -28,7 +28,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
         // todo: add validation
         public async ValueTask<RtmpEventConsumingResult> Handle(RtmpHandshakeC2Event @event, CancellationToken cancellationToken)
         {
-            var incomingBuffer = _netBufferPool.Obtain();
+            var incomingBuffer = _dataBufferPool.Obtain();
 
             try
             {
@@ -44,7 +44,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
             }
             finally
             {
-                _netBufferPool.Recycle(incomingBuffer);
+                _dataBufferPool.Recycle(incomingBuffer);
             }
         }
     }

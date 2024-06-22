@@ -10,20 +10,20 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services.Contracts
             IRtmpClientContext clientContext,
             RtmpChunkBasicHeader basicHeader,
             TRtmpChunkMessageHeader messageHeader,
-            Action<INetBuffer> payloadWriter,
+            Action<IDataBuffer> payloadWriter,
             Action<bool>? callback = null) where TRtmpChunkMessageHeader : struct, IRtmpChunkMessageHeader;
 
         void Send<TRtmpChunkMessageHeader>(
             IReadOnlyList<IRtmpClientContext> clientContexts,
             RtmpChunkBasicHeader basicHeader,
             TRtmpChunkMessageHeader messageHeader,
-            Action<INetBuffer> payloadWriter) where TRtmpChunkMessageHeader : struct, IRtmpChunkMessageHeader;
+            Action<IDataBuffer> payloadWriter) where TRtmpChunkMessageHeader : struct, IRtmpChunkMessageHeader;
 
         ValueTask SendAsync<TRtmpChunkMessageHeader>(
             IRtmpClientContext clientContext,
             RtmpChunkBasicHeader basicHeader,
             TRtmpChunkMessageHeader messageHeader,
-            Action<INetBuffer> payloadWriter)
+            Action<IDataBuffer> payloadWriter)
             where TRtmpChunkMessageHeader : struct, IRtmpChunkMessageHeader;
     }
 }
