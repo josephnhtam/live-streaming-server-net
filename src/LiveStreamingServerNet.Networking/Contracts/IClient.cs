@@ -1,4 +1,4 @@
-﻿using LiveStreamingServerNet.Utilities.Contracts;
+﻿using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using System.Net;
 
 namespace LiveStreamingServerNet.Networking.Contracts

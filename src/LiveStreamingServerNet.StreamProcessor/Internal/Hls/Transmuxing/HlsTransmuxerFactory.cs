@@ -5,7 +5,7 @@ using LiveStreamingServerNet.StreamProcessor.Internal.Containers;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Services.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing.M3u8.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing.Services.Contracts;
-using LiveStreamingServerNet.Utilities.Contracts;
+using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using Microsoft.Extensions.Logging;
 
 namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing

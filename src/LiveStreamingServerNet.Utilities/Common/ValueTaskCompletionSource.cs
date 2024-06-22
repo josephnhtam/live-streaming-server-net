@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks.Sources;
 
-namespace LiveStreamingServerNet.Utilities
+namespace LiveStreamingServerNet.Utilities.Common
 {
     public class ValueTaskCompletionSource : IValueTaskSource
     {

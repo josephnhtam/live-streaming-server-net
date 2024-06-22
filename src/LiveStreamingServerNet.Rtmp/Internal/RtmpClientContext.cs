@@ -1,8 +1,8 @@
 ﻿using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Handshakes;
-using LiveStreamingServerNet.Utilities;
-using LiveStreamingServerNet.Utilities.Contracts;
+using LiveStreamingServerNet.Utilities.Buffers;
+using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 
 namespace LiveStreamingServerNet.Rtmp.Internal
 {

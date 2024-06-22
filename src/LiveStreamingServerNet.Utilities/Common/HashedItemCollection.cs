@@ -1,6 +1,6 @@
-﻿using LiveStreamingServerNet.Utilities.Contracts;
+﻿using LiveStreamingServerNet.Utilities.Common.Contracts;
 
-namespace LiveStreamingServerNet.Utilities
+namespace LiveStreamingServerNet.Utilities.Common
 {
     public class HashedItemCollection<TItem> : IItemCollection<TItem>
     {

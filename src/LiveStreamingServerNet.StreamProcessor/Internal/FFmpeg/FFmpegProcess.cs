@@ -1,6 +1,6 @@
 ﻿using LiveStreamingServerNet.StreamProcessor.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Exceptions;
-using LiveStreamingServerNet.Utilities;
+using LiveStreamingServerNet.Utilities.Common;
 using System.Diagnostics;
 
 namespace LiveStreamingServerNet.StreamProcessor.Internal.FFmpeg

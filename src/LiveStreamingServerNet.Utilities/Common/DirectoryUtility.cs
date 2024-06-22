@@ -1,4 +1,4 @@
-﻿namespace LiveStreamingServerNet.Utilities
+﻿namespace LiveStreamingServerNet.Utilities.Common
 {
     public static class DirectoryUtility
     {

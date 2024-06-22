@@ -1,7 +1,7 @@
 ﻿using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.Networking.Internal.Contracts;
 using LiveStreamingServerNet.Networking.Internal.Logging;
-using LiveStreamingServerNet.Utilities.Contracts;
+using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using LiveStreamingServerNet.Utilities.Extensions;
 using Microsoft.Extensions.Logging;
 using System.Net;

@@ -9,7 +9,7 @@ using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing.M3u8;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing.M3u8.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing.Services;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing.Services.Contracts;
-using LiveStreamingServerNet.Utilities.Contracts;
+using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;

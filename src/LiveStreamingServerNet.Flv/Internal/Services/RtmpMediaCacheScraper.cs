@@ -1,8 +1,8 @@
 ﻿using LiveStreamingServerNet.Flv.Internal.Services.Contracts;
 using LiveStreamingServerNet.Rtmp;
 using LiveStreamingServerNet.Rtmp.Contracts;
-using LiveStreamingServerNet.Utilities;
-using LiveStreamingServerNet.Utilities.Contracts;
+using LiveStreamingServerNet.Utilities.Buffers;
+using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 
 namespace LiveStreamingServerNet.Flv.Internal.Services
 {

@@ -1,4 +1,4 @@
-﻿using LiveStreamingServerNet.Utilities.Contracts;
+﻿using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 
 namespace LiveStreamingServerNet.Rtmp.Contracts
 {

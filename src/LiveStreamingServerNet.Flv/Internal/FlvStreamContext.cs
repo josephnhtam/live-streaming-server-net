@@ -1,6 +1,6 @@
 ﻿using LiveStreamingServerNet.Flv.Internal.Contracts;
-using LiveStreamingServerNet.Utilities;
-using LiveStreamingServerNet.Utilities.Contracts;
+using LiveStreamingServerNet.Utilities.Buffers;
+using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 
 namespace LiveStreamingServerNet.Flv.Internal
 {

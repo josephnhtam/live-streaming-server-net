@@ -3,7 +3,7 @@ using LiveStreamingServerNet.Flv.Internal.Logging;
 using LiveStreamingServerNet.Flv.Internal.MediaPackageDiscarding.Contracts;
 using LiveStreamingServerNet.Flv.Internal.Services.Contracts;
 using LiveStreamingServerNet.Rtmp;
-using LiveStreamingServerNet.Utilities.Contracts;
+using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using Microsoft.Extensions.Logging;
 using System.Collections.Concurrent;
 using System.Threading.Channels;

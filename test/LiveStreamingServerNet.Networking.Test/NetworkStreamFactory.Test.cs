@@ -1,7 +1,5 @@
-﻿using LiveStreamingServerNet.Networking.Configurations;
-using LiveStreamingServerNet.Networking.Internal;
+﻿using LiveStreamingServerNet.Networking.Internal;
 using LiveStreamingServerNet.Networking.Internal.Contracts;
-using Microsoft.Extensions.Options;
 using NSubstitute;
 using System.Net;
 using System.Net.Security;

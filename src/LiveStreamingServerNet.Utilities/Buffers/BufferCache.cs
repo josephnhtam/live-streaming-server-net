@@ -1,7 +1,7 @@
-﻿using LiveStreamingServerNet.Utilities.Contracts;
+﻿using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using System.Buffers;
 
-namespace LiveStreamingServerNet.Utilities
+namespace LiveStreamingServerNet.Utilities.Buffers
 {
     public sealed class BufferCache<TBufferInfo> : IBufferCache<TBufferInfo>
     {

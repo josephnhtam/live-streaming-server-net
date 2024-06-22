@@ -2,8 +2,8 @@
 using LiveStreamingServerNet.Networking.Exceptions;
 using LiveStreamingServerNet.Networking.Internal.Contracts;
 using LiveStreamingServerNet.Networking.Internal.Logging;
-using LiveStreamingServerNet.Utilities;
-using LiveStreamingServerNet.Utilities.Contracts;
+using LiveStreamingServerNet.Utilities.Buffers.Contracts;
+using LiveStreamingServerNet.Utilities.Common;
 using Microsoft.Extensions.Logging;
 using System.Threading.Channels;
 

@@ -1,4 +1,4 @@
-namespace LiveStreamingServerNet.Utilities.Contracts
+namespace LiveStreamingServerNet.Utilities.Common.Contracts
 {
     public interface IPool<TObject> where TObject : class
     {

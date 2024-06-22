@@ -2,8 +2,8 @@
 using LiveStreamingServerNet.Networking.Installer.Contracts;
 using LiveStreamingServerNet.Networking.Internal;
 using LiveStreamingServerNet.Networking.Internal.Contracts;
-using LiveStreamingServerNet.Utilities;
-using LiveStreamingServerNet.Utilities.Contracts;
+using LiveStreamingServerNet.Utilities.Buffers;
+using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 

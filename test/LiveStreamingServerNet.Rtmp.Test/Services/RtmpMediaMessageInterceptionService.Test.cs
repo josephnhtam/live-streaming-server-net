@@ -2,7 +2,7 @@
 using LiveStreamingServerNet.Networking;
 using LiveStreamingServerNet.Rtmp.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.Services;
-using LiveStreamingServerNet.Utilities.Contracts;
+using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using NSubstitute;
 
 namespace LiveStreamingServerNet.Rtmp.Test.Services

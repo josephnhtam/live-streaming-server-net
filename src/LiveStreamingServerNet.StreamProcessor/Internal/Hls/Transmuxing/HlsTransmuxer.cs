@@ -8,8 +8,8 @@ using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing.M3u8.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing.Services.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Logging;
-using LiveStreamingServerNet.Utilities;
-using LiveStreamingServerNet.Utilities.Contracts;
+using LiveStreamingServerNet.Utilities.Buffers.Contracts;
+using LiveStreamingServerNet.Utilities.Common;
 using Microsoft.Extensions.Logging;
 using System.Threading.Channels;
 

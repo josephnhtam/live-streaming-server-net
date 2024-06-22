@@ -1,4 +1,4 @@
-﻿namespace LiveStreamingServerNet.Utilities.Contracts
+﻿namespace LiveStreamingServerNet.Utilities.Buffers.Contracts
 {
     public interface IBufferPool
     {

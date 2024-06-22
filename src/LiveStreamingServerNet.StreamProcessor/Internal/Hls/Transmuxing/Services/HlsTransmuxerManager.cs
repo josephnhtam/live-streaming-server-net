@@ -1,7 +1,7 @@
 ﻿using LiveStreamingServerNet.Rtmp;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing.Services.Contracts;
-using LiveStreamingServerNet.Utilities.Contracts;
+using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using System.Collections.Concurrent;
 
 namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing.Services

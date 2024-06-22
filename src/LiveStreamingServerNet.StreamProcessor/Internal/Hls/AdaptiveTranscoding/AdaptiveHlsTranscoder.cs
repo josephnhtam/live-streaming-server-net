@@ -5,7 +5,7 @@ using LiveStreamingServerNet.StreamProcessor.Internal.FFprobe;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.M3u8Parsing;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Services.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Logging;
-using LiveStreamingServerNet.Utilities;
+using LiveStreamingServerNet.Utilities.Common;
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
 

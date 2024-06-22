@@ -1,5 +1,5 @@
 ﻿using LiveStreamingServerNet.Networking.Contracts;
-using LiveStreamingServerNet.Utilities.Contracts;
+using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 
 namespace LiveStreamingServerNet.Networking.Internal.Contracts
 {

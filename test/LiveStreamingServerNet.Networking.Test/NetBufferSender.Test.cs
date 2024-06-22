@@ -4,7 +4,7 @@ using LiveStreamingServerNet.Networking.Configurations;
 using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.Networking.Internal;
 using LiveStreamingServerNet.Networking.Internal.Contracts;
-using LiveStreamingServerNet.Utilities;
+using LiveStreamingServerNet.Utilities.Buffers;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using NSubstitute;

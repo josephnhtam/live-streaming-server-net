@@ -1,7 +1,7 @@
-﻿using LiveStreamingServerNet.Utilities.Contracts;
+﻿using LiveStreamingServerNet.Utilities.Common.Contracts;
 using System.Collections.Concurrent;
 
-namespace LiveStreamingServerNet.Utilities
+namespace LiveStreamingServerNet.Utilities.Common
 {
     public sealed class Pool<TObject> : IPool<TObject> where TObject : class
     {

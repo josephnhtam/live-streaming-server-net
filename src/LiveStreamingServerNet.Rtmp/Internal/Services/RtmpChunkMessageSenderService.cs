@@ -2,7 +2,7 @@
 using LiveStreamingServerNet.Rtmp.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpHeaders;
 using LiveStreamingServerNet.Rtmp.Internal.Services.Contracts;
-using LiveStreamingServerNet.Utilities;
+using LiveStreamingServerNet.Utilities.Common;
 
 namespace LiveStreamingServerNet.Rtmp.Internal.Services
 {

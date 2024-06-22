@@ -1,6 +1,6 @@
 ﻿using LiveStreamingServerNet.Networking.Contracts;
-using LiveStreamingServerNet.Utilities;
-using LiveStreamingServerNet.Utilities.Contracts;
+using LiveStreamingServerNet.Utilities.Buffers;
+using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using System.Buffers;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;

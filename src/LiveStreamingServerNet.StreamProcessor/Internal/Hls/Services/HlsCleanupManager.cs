@@ -1,7 +1,7 @@
 ﻿using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Services.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Logging;
-using LiveStreamingServerNet.Utilities;
-using LiveStreamingServerNet.Utilities.Contracts;
+using LiveStreamingServerNet.Utilities.Common;
+using LiveStreamingServerNet.Utilities.Common.Contracts;
 using Microsoft.Extensions.Logging;
 using System.Collections.Concurrent;
 

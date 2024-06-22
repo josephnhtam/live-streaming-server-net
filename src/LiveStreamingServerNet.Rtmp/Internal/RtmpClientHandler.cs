@@ -3,8 +3,8 @@ using LiveStreamingServerNet.Rtmp.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.Logging;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEvents;
 using LiveStreamingServerNet.Rtmp.RateLimiting.Contracts;
-using LiveStreamingServerNet.Utilities;
-using LiveStreamingServerNet.Utilities.Contracts;
+using LiveStreamingServerNet.Utilities.Common;
+using LiveStreamingServerNet.Utilities.Common.Contracts;
 using Mediator;
 using Microsoft.Extensions.Logging;
 

@@ -1,10 +1,10 @@
-﻿using LiveStreamingServerNet.Utilities.Configurations;
-using LiveStreamingServerNet.Utilities.Contracts;
+﻿using LiveStreamingServerNet.Utilities.Buffers.Configurations;
+using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using Microsoft.Extensions.Options;
 using System.Buffers;
 using System.Runtime.CompilerServices;
 
-namespace LiveStreamingServerNet.Utilities
+namespace LiveStreamingServerNet.Utilities.Buffers
 {
     public class BufferPool : IBufferPool
     {
