@@ -27,5 +27,9 @@
   <ItemGroup>
     <ProjectReference Include="..\LiveStreamingServerNet.Utilities\LiveStreamingServerNet.Utilities.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Extensions\" />
+  </ItemGroup>
   
 </Project>

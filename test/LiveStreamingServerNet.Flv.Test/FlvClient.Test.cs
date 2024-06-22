@@ -3,7 +3,7 @@ using FluentAssertions;
 using LiveStreamingServerNet.Flv.Internal;
 using LiveStreamingServerNet.Flv.Internal.Contracts;
 using LiveStreamingServerNet.Flv.Internal.Services.Contracts;
-using LiveStreamingServerNet.Networking.Contracts;
+using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;

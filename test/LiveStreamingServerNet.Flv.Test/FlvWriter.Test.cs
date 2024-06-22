@@ -1,8 +1,8 @@
 ﻿using AutoFixture;
 using LiveStreamingServerNet.Flv.Internal;
 using LiveStreamingServerNet.Flv.Internal.Contracts;
-using LiveStreamingServerNet.Networking;
-using LiveStreamingServerNet.Networking.Contracts;
+using LiveStreamingServerNet.Utilities.Buffers;
+using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using NSubstitute;
 
 namespace LiveStreamingServerNet.Flv.Test

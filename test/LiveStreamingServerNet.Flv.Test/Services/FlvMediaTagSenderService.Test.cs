@@ -4,9 +4,9 @@ using LiveStreamingServerNet.Flv.Internal;
 using LiveStreamingServerNet.Flv.Internal.Contracts;
 using LiveStreamingServerNet.Flv.Internal.Services;
 using LiveStreamingServerNet.Flv.Internal.Services.Contracts;
-using LiveStreamingServerNet.Networking;
-using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.Rtmp;
+using LiveStreamingServerNet.Utilities.Buffers;
+using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using NSubstitute;
 
 namespace LiveStreamingServerNet.Flv.Test.Services

@@ -1,5 +1,5 @@
-﻿using LiveStreamingServerNet.Networking.Contracts;
-using LiveStreamingServerNet.Rtmp.Internal.Utilities;
+﻿using LiveStreamingServerNet.Rtmp.Internal.Utilities;
+using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using mtanksl.ActionMessageFormat;
 
 namespace LiveStreamingServerNet.Rtmp.Internal.Extensions

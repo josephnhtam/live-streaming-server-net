@@ -1,10 +1,10 @@
 ﻿using AutoFixture;
 using FluentAssertions;
-using LiveStreamingServerNet.Networking.Configurations;
-using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.Networking.Internal;
 using LiveStreamingServerNet.Networking.Internal.Contracts;
 using LiveStreamingServerNet.Utilities.Buffers;
+using LiveStreamingServerNet.Utilities.Buffers.Configurations;
+using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using NSubstitute;

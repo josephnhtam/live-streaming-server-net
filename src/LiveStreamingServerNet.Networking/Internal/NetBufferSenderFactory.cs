@@ -1,5 +1,5 @@
-﻿using LiveStreamingServerNet.Networking.Contracts;
-using LiveStreamingServerNet.Networking.Internal.Contracts;
+﻿using LiveStreamingServerNet.Networking.Internal.Contracts;
+using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using Microsoft.Extensions.Logging;
 
 namespace LiveStreamingServerNet.Networking.Internal

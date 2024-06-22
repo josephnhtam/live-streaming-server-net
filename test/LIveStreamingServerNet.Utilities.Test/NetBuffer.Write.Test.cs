@@ -1,7 +1,8 @@
 ﻿using AutoFixture;
 using FluentAssertions;
+using LiveStreamingServerNet.Utilities.Buffers;
 
-namespace LiveStreamingServerNet.Networking.Test
+namespace LIveStreamingServerNet.Utilities.Test
 {
     public class NetBufferWriteTest
     {
@@ -327,7 +328,7 @@ namespace LiveStreamingServerNet.Networking.Test
 
             // Assert
             var buffer = netBuffer.UnderlyingBuffer.AsSpan(startPos, 3);
-            var result = (buffer[0] << 16 | buffer[1] << 8 | buffer[2]);
+            var result = buffer[0] << 16 | buffer[1] << 8 | buffer[2];
             result.Should().Be(expected);
         }
 

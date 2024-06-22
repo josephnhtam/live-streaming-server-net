@@ -1,4 +1,4 @@
-﻿using LiveStreamingServerNet.Networking.Contracts;
+﻿using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 
 namespace LiveStreamingServerNet.Flv.Internal.Contracts
 {

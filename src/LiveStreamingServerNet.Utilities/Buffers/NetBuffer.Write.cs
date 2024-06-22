@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 
-namespace LiveStreamingServerNet.Networking
+namespace LiveStreamingServerNet.Utilities.Buffers
 {
     public partial class NetBuffer
     {

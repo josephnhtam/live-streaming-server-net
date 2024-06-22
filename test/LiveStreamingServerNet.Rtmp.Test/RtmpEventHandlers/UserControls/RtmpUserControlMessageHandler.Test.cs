@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
-using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.UserControls;
+using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using NSubstitute;
 
 namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.UserControls

@@ -1,10 +1,10 @@
 ﻿using AutoFixture;
-using LiveStreamingServerNet.Networking;
-using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpHeaders;
 using LiveStreamingServerNet.Rtmp.Internal.Services;
 using LiveStreamingServerNet.Rtmp.Internal.Services.Contracts;
+using LiveStreamingServerNet.Utilities.Buffers;
+using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using NSubstitute;
 
 namespace LiveStreamingServerNet.Rtmp.Test.Services

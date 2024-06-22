@@ -1,7 +1,7 @@
 ﻿using System.Buffers.Binary;
 using System.Runtime.CompilerServices;
 
-namespace LiveStreamingServerNet.Networking
+namespace LiveStreamingServerNet.Utilities.Buffers
 {
     public partial class NetBuffer
     {

@@ -1,6 +1,4 @@
-﻿using LiveStreamingServerNet.Utilities.Buffers.Contracts;
-
-namespace LiveStreamingServerNet.Networking.Contracts
+﻿namespace LiveStreamingServerNet.Utilities.Buffers.Contracts
 {
     public interface INetBufferPool
     {

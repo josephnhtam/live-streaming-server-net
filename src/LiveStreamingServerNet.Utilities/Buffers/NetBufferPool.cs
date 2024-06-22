@@ -1,11 +1,10 @@
-﻿using LiveStreamingServerNet.Networking.Configurations;
-using LiveStreamingServerNet.Networking.Contracts;
+﻿using LiveStreamingServerNet.Utilities.Buffers.Configurations;
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using LiveStreamingServerNet.Utilities.Common;
 using Microsoft.Extensions.Options;
 using System.Diagnostics;
 
-namespace LiveStreamingServerNet.Networking
+namespace LiveStreamingServerNet.Utilities.Buffers
 {
     public sealed class NetBufferPool : INetBufferPool
     {

@@ -1,11 +1,9 @@
-﻿using LiveStreamingServerNet.Networking.Contracts;
-using LiveStreamingServerNet.Utilities.Buffers;
-using LiveStreamingServerNet.Utilities.Buffers.Contracts;
+﻿using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using System.Buffers;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
-namespace LiveStreamingServerNet.Networking
+namespace LiveStreamingServerNet.Utilities.Buffers
 {
     public partial class NetBuffer : INetBuffer
     {
@@ -79,7 +77,7 @@ namespace LiveStreamingServerNet.Networking
             return this;
         }
 
-        private void Advance(int count)
+        public void Advance(int count)
         {
             Position += count;
             _size = Math.Max(_size, Position);
@@ -137,14 +135,14 @@ namespace LiveStreamingServerNet.Networking
             return stream.ReadExactlyAsync(_buffer, pos, bytesCount, cancellationToken);
         }
 
-        public ValueTask FromStreamData(INetworkStreamReader streamReader, int bytesCount, CancellationToken cancellationToken = default)
+        public ValueTask FromStreamData(IStreamReader streamReader, int bytesCount, CancellationToken cancellationToken = default)
         {
             _position = 0;
             Size = bytesCount;
             return streamReader.ReadExactlyAsync(_buffer, 0, bytesCount, cancellationToken);
         }
 
-        public ValueTask AppendStreamData(INetworkStreamReader streamReader, int bytesCount, CancellationToken cancellationToken = default)
+        public ValueTask AppendStreamData(IStreamReader streamReader, int bytesCount, CancellationToken cancellationToken = default)
         {
             var pos = _position;
             Advance(bytesCount);

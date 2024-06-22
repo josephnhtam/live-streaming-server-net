@@ -1,7 +1,8 @@
 ﻿using AutoFixture;
 using FluentAssertions;
+using LiveStreamingServerNet.Utilities.Buffers;
 
-namespace LiveStreamingServerNet.Networking.Test
+namespace LIveStreamingServerNet.Utilities.Test
 {
     public class NetBufferReadTest
     {

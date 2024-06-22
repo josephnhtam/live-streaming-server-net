@@ -1,6 +1,4 @@
-﻿using LiveStreamingServerNet.Utilities.Buffers.Contracts;
-
-namespace LiveStreamingServerNet.Networking.Contracts
+﻿namespace LiveStreamingServerNet.Utilities.Buffers.Contracts
 {
     public interface INetBuffer : IDisposable
     {
@@ -9,6 +7,7 @@ namespace LiveStreamingServerNet.Networking.Contracts
 
         byte[] UnderlyingBuffer { get; }
 
+        void Advance(int count);
         INetBuffer MoveTo(int position);
         void Reset();
         Task FlushAsync(Stream output);
@@ -18,8 +17,8 @@ namespace LiveStreamingServerNet.Networking.Contracts
         void ReadAndWriteTo(INetBuffer targetBuffer, int bytesCount);
         ValueTask FromStreamData(Stream stream, int bytesCount, CancellationToken cancellationToken = default);
         ValueTask AppendStreamData(Stream stream, int bytesCount, CancellationToken cancellationToken = default);
-        ValueTask FromStreamData(INetworkStreamReader streamReader, int bytesCount, CancellationToken cancellationToken = default);
-        ValueTask AppendStreamData(INetworkStreamReader streamReader, int bytesCount, CancellationToken cancellationToken = default);
+        ValueTask FromStreamData(IStreamReader stream, int bytesCount, CancellationToken cancellationToken = default);
+        ValueTask AppendStreamData(IStreamReader stream, int bytesCount, CancellationToken cancellationToken = default);
         IRentedBuffer ToRentedBuffer(int offset, int size, int initialClaim = 1);
         IRentedBuffer ToRentedBuffer(int initialClaim = 1);
 

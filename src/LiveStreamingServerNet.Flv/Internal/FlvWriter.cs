@@ -1,5 +1,5 @@
 ﻿using LiveStreamingServerNet.Flv.Internal.Contracts;
-using LiveStreamingServerNet.Networking.Contracts;
+using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using Nito.AsyncEx;
 
 namespace LiveStreamingServerNet.Flv.Internal
