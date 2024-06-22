@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using System.Net.Sockets;
 
-namespace LiveStreamingServerNet.Networking.Logging
+namespace LiveStreamingServerNet.Networking.Internal.Logging
 {
     internal static partial class LoggerExtensions
     {
