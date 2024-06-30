@@ -9,6 +9,6 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing.Servic
         bool RegisterTransmuxer(string streamPath, IHlsTransmuxer transmuxer);
         void UnregisterTransmuxer(string streamPath);
 
-        ValueTask OnReceiveMediaMessage(string streamPath, MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp);
+        ValueTask OnReceiveMediaMessageAsync(string streamPath, MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp);
     }
 }

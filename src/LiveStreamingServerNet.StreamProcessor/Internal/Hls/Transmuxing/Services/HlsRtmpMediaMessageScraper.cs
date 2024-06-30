@@ -16,7 +16,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing.Servic
 
         public ValueTask OnReceiveMediaMessage(string streamPath, MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp, bool isSkippable)
         {
-            return _transmuxerManager.OnReceiveMediaMessage(streamPath, mediaType, rentedBuffer, timestamp);
+            return _transmuxerManager.OnReceiveMediaMessageAsync(streamPath, mediaType, rentedBuffer, timestamp);
         }
     }
 }

@@ -15,10 +15,10 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing.Servic
             _transmuxers = new ConcurrentDictionary<string, IHlsTransmuxer>();
         }
 
-        public ValueTask OnReceiveMediaMessage(string streamPath, MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp)
+        public ValueTask OnReceiveMediaMessageAsync(string streamPath, MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp)
         {
             if (_transmuxers.TryGetValue(streamPath, out var transmuxer))
-                return transmuxer.AddMediaPacket(mediaType, rentedBuffer, timestamp);
+                return transmuxer.AddMediaPacketAsync(mediaType, rentedBuffer, timestamp);
 
             return ValueTask.CompletedTask;
         }

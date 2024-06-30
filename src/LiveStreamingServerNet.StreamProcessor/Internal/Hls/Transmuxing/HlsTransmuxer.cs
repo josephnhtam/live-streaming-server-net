@@ -72,22 +72,22 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
             }
         }
 
-        public ValueTask AddMediaPacket(MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp)
+        public ValueTask AddMediaPacketAsync(MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp)
         {
             rentedBuffer.Claim();
             return _channel.Writer.WriteAsync(new PendingMediaPacket(mediaType, rentedBuffer, timestamp));
         }
 
-        private async ValueTask ProcessMediaPacket(MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp)
+        private async ValueTask ProcessMediaPacketAsync(MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp)
         {
             switch (mediaType)
             {
                 case MediaType.Video:
-                    await ProcessVideoPacket(rentedBuffer, timestamp);
+                    await ProcessVideoPacketAsync(rentedBuffer, timestamp);
                     break;
 
                 case MediaType.Audio:
-                    await ProcessAudioPacket(rentedBuffer, timestamp);
+                    await ProcessAudioPacketAsync(rentedBuffer, timestamp);
                     break;
             }
 
@@ -95,10 +95,10 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
                 throw new ArgumentOutOfRangeException("Segment size exceeded the maximum allowed size");
 
             if (_tsMuxer.BufferSize > _config.MaxSegmentBufferSize)
-                await FlushTsMuxerPartially();
+                await FlushTsMuxerPartiallyAsync();
         }
 
-        private async ValueTask ProcessVideoPacket(IRentedBuffer rentedBuffer, uint timestamp)
+        private async ValueTask ProcessVideoPacketAsync(IRentedBuffer rentedBuffer, uint timestamp)
         {
             var tagHeader = FlvParser.ParseVideoTagHeader(rentedBuffer.Buffer);
 
@@ -124,7 +124,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
             );
         }
 
-        private async ValueTask ProcessAudioPacket(IRentedBuffer rentedBuffer, uint timestamp)
+        private async ValueTask ProcessAudioPacketAsync(IRentedBuffer rentedBuffer, uint timestamp)
         {
             var tagHeader = FlvParser.ParseAudioTagHeader(rentedBuffer.Buffer);
 
@@ -145,15 +145,24 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
             _hasAudio |= _tsMuxer.WriteAudioPacket(dataBuffer, timestamp);
         }
 
-        private async ValueTask TryToFlushAsync(bool isKeyFrame, uint timestamp)
+        private async ValueTask<bool> TryToFlushAsync(bool isKeyFrame, uint timestamp)
         {
             if (ShouldFlush(isKeyFrame, timestamp))
             {
                 _hasVideo = _hasAudio = false;
 
-                var tsSegment = await FlushTsMuxer(timestamp);
-                if (tsSegment != null) await RefreshHlsAsync(tsSegment.Value);
+                var tsSegment = await FlushTsMuxerAsync(timestamp);
+
+                if (tsSegment.HasValue)
+                {
+                    await AddSegmentsAsync(tsSegment.Value);
+                    await WriteManifestAsync();
+                }
+
+                return true;
             }
+
+            return false;
 
             bool ShouldFlush(bool isKeyFrame, uint timestamp)
             {
@@ -173,7 +182,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
             }
         }
 
-        private async ValueTask FlushTsMuxerPartially()
+        private async ValueTask FlushTsMuxerPartiallyAsync()
         {
             var tsSegmentPartial = await _tsMuxer.FlushPartialAsync();
 
@@ -181,7 +190,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
                 _logger.TsSegmentFlushedPartially(Name, ContextIdentifier, _streamPath, tsSegmentPartial.Value.FilePath, tsSegmentPartial.Value.SequenceNumber);
         }
 
-        private async ValueTask<TsSegment?> FlushTsMuxer(uint timestamp)
+        private async ValueTask<TsSegment?> FlushTsMuxerAsync(uint timestamp)
         {
             var tsSegment = await _tsMuxer.FlushAsync(timestamp);
 
@@ -189,12 +198,6 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
                 _logger.TsSegmentFlushed(Name, ContextIdentifier, _streamPath, tsSegment.Value.FilePath, tsSegment.Value.SequenceNumber, tsSegment.Value.Duration);
 
             return tsSegment;
-        }
-
-        private async ValueTask RefreshHlsAsync(TsSegment newSegment)
-        {
-            await AddSegmentsAsync(newSegment);
-            await WriteManifestAsync();
         }
 
         private ValueTask AddSegmentsAsync(TsSegment newSegment)
@@ -248,7 +251,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
 
                     try
                     {
-                        await ProcessMediaPacket(message.MediaType, message.RentedBuffer, message.Timestamp);
+                        await ProcessMediaPacketAsync(message.MediaType, message.RentedBuffer, message.Timestamp);
                     }
                     finally
                     {

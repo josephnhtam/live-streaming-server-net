@@ -6,6 +6,6 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing.Contra
 {
     internal interface IHlsTransmuxer : IStreamProcessor
     {
-        ValueTask AddMediaPacket(MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp);
+        ValueTask AddMediaPacketAsync(MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp);
     }
 }
