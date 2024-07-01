@@ -13,6 +13,7 @@ using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.Rtmp.Installer.Contracts;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace LiveStreamingServerNet.Flv.Installer
 {
@@ -45,14 +46,24 @@ namespace LiveStreamingServerNet.Flv.Installer
             return configurator;
         }
 
-        public static void UseHttpFlv(this WebApplication webApplication, IServer liveStreamingServer, HttpFlvOptions? options = null)
+        public static IApplicationBuilder UseHttpFlv(this IApplicationBuilder app, IServer liveStreamingServer, HttpFlvOptions? options = null)
         {
-            webApplication.UseMiddleware<HttpFlvMiddleware>(liveStreamingServer, options ?? new HttpFlvOptions());
+            if (options == null)
+                app.UseMiddleware<HttpFlvMiddleware>(liveStreamingServer);
+            else
+                app.UseMiddleware<HttpFlvMiddleware>(liveStreamingServer, Options.Create(options));
+
+            return app;
         }
 
-        public static void UseWebSocketFlv(this WebApplication webApplication, IServer liveStreamingServer, WebSocketFlvOptions? options = null)
+        public static IApplicationBuilder UseWebSocketFlv(this IApplicationBuilder app, IServer liveStreamingServer, WebSocketFlvOptions? options = null)
         {
-            webApplication.UseMiddleware<WebSocketFlvMiddleware>(liveStreamingServer, options ?? new WebSocketFlvOptions());
+            if (options == null)
+                app.UseMiddleware<WebSocketFlvMiddleware>(liveStreamingServer);
+            else
+                app.UseMiddleware<WebSocketFlvMiddleware>(liveStreamingServer, Options.Create(options));
+
+            return app;
         }
     }
 }

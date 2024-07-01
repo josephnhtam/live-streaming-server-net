@@ -7,6 +7,7 @@ using LiveStreamingServerNet.Flv.Internal.Services.Contracts;
 using LiveStreamingServerNet.Networking.Contracts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace LiveStreamingServerNet.Flv.Middlewares
 {
@@ -21,13 +22,13 @@ namespace LiveStreamingServerNet.Flv.Middlewares
 
         private readonly RequestDelegate _next;
 
-        public HttpFlvMiddleware(IServer server, HttpFlvOptions options, RequestDelegate next)
+        public HttpFlvMiddleware(IServer server, IOptions<HttpFlvOptions> options, RequestDelegate next)
         {
             _clientFactory = server.Services.GetRequiredService<IHttpFlvClientFactory>();
             _streamManager = server.Services.GetRequiredService<IFlvStreamManagerService>();
             _clientHandler = server.Services.GetRequiredService<IFlvClientHandler>();
-            _streamPathResolver = options.StreamPathResolver ?? new DefaultStreamPathResolver();
-            _onPrepareResponse = options.OnPrepareResponse;
+            _streamPathResolver = options.Value.StreamPathResolver ?? new DefaultStreamPathResolver();
+            _onPrepareResponse = options.Value.OnPrepareResponse;
             _next = next;
         }
 

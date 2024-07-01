@@ -7,6 +7,7 @@ using LiveStreamingServerNet.Flv.Internal.WebSocketClients.Contracts;
 using LiveStreamingServerNet.Networking.Contracts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using System.Net.WebSockets;
 
 namespace LiveStreamingServerNet.Flv.Middlewares
@@ -23,16 +24,16 @@ namespace LiveStreamingServerNet.Flv.Middlewares
 
         private readonly RequestDelegate _next;
 
-        public WebSocketFlvMiddleware(IServer server, WebSocketFlvOptions options, RequestDelegate next)
+        public WebSocketFlvMiddleware(IServer server, IOptions<WebSocketFlvOptions> options, RequestDelegate next)
         {
             _clientFactory = server.Services.GetRequiredService<IWebSocketFlvClientFactory>();
             _streamManager = server.Services.GetRequiredService<IFlvStreamManagerService>();
             _clientHandler = server.Services.GetRequiredService<IFlvClientHandler>();
 
-            _streamPathResolver = options.StreamPathResolver ?? new DefaultStreamPathResolver();
-            _webSocketAcceptContext = options.WebSocketAcceptContext ?? new WebSocketAcceptContext();
+            _streamPathResolver = options.Value.StreamPathResolver ?? new DefaultStreamPathResolver();
+            _webSocketAcceptContext = options.Value.WebSocketAcceptContext ?? new WebSocketAcceptContext();
 
-            _onPrepareResponse = options.OnPrepareResponse;
+            _onPrepareResponse = options.Value.OnPrepareResponse;
 
             _next = next;
         }
