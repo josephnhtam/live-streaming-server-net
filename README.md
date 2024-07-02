@@ -212,6 +212,10 @@ Please refer to the [LiveStreamServerNet.StandaloneDemo](https://github.com/jose
       <th>LiveStreamingServerNet.StreamProcessor.AmazonS3</th>
       <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet.StreamProcessor.AmazonS3"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.StreamProcessor.AmazonS3.svg?logo=nuget"></a></td>
     </tr>
+	<tr>
+      <th>LiveStreamingServerNet.StreamProcessor.AspNetCore</th>
+      <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet.StreamProcessor.AspNetCore"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.StreamProcessor.AspNetCore.svg?logo=nuget"></a></td>
+    </tr>
     <tr>
       <th>LiveStreamingServerNet.StreamProcessor.AzureBlobStorage</th>
       <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet.StreamProcessor.AzureBlobStorage"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.StreamProcessor.AzureBlobStorage.svg?logo=nuget"></a></td>
