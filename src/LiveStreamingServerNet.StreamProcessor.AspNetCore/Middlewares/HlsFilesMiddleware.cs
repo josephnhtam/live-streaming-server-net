@@ -1,6 +1,7 @@
 ﻿using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.StreamProcessor.AspNetCore.Configurations;
 using LiveStreamingServerNet.StreamProcessor.Hls.Contracts;
+using LiveStreamingServerNet.Utilities.Common;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -33,6 +34,7 @@ namespace LiveStreamingServerNet.StreamProcessor.AspNetCore.Middlewares
             _pathMapper = server.Services.GetRequiredService<IHlsPathMapper>();
             _options = options.Value;
 
+            DirectoryUtility.CreateDirectoryIfNotExists(_options.Root);
             _fileProvider = new PhysicalFileProvider(_options.Root);
 
             var staticFileOptions = new StaticFileOptions
