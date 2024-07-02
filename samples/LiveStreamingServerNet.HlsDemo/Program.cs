@@ -82,15 +82,9 @@ namespace LiveStreamingServerNet.HlsDemo
                 _outputDir = outputDir;
             }
 
-            public ValueTask<HlsOutputPath> ResolveOutputPath(IServiceProvider services, Guid contextIdentifier, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
+            public ValueTask<string> ResolveOutputPath(IServiceProvider services, Guid contextIdentifier, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
             {
-                var basePath = Path.Combine(_outputDir, streamPath.Trim('/'));
-
-                return ValueTask.FromResult(new HlsOutputPath
-                {
-                    ManifestOutputPath = Path.Combine(basePath, "output.m3u8"),
-                    TsSegmentOutputPath = Path.Combine(basePath, "output{seqNum}.ts")
-                });
+                return ValueTask.FromResult(Path.Combine(_outputDir, contextIdentifier.ToString(), "output.m3u8"));
             }
         }
 

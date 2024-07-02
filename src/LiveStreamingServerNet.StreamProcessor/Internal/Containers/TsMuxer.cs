@@ -2,6 +2,7 @@
 using LiveStreamingServerNet.StreamProcessor.Internal.Utilities;
 using LiveStreamingServerNet.Utilities.Buffers;
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
+using LiveStreamingServerNet.Utilities.Common;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
@@ -39,6 +40,8 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Containers
             _headerBuffer = new DataBuffer(bufferPool, 512);
             _payloadBuffer = new DataBuffer(bufferPool, 8192);
             _adtsBuffer = new byte[AudioDataTransportStreamHeader.Size];
+
+            DirectoryUtility.CreateDirectoryIfNotExists(Path.GetDirectoryName(_outputPath));
         }
 
         public void SetAVCSequenceHeader(AVCSequenceHeader avcSequenceHeader)

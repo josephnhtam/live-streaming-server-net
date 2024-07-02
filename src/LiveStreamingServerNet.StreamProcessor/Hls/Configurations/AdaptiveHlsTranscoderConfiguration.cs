@@ -1,6 +1,5 @@
 ﻿using LiveStreamingServerNet.StreamProcessor.Contracts;
-using LiveStreamingServerNet.StreamProcessor.FFmpeg;
-using LiveStreamingServerNet.StreamProcessor.FFmpeg.Contracts;
+using LiveStreamingServerNet.StreamProcessor.Hls.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Utilities;
 
 namespace LiveStreamingServerNet.StreamProcessor.Hls.Configurations
@@ -9,7 +8,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Hls.Configurations
     {
         public string Name { get; set; } = "adaptive-hls-transcoder";
         public IStreamProcessorCondition Condition { get; set; } = new DefaultStreamProcessorCondition();
-        public IFFmpegOutputPathResolver OutputPathResolver { get; set; } = new DefaultFFmpegOutputPathResolver();
+        public IHlsOutputPathResolver OutputPathResolver { get; set; } = new DefaultHlsOutputPathResolver();
 
         public string FFmpegPath { get; set; } = ExecutableFinder.FindExecutableFromPATH("ffmpeg") ?? string.Empty;
         public int FFmpegGracefulShutdownTimeoutSeconds { get; set; } = 5;

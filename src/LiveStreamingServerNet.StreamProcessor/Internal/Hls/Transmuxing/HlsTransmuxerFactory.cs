@@ -46,15 +46,19 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
                 if (!await _config.Condition.IsEnabled(_services, streamPath, streamArguments))
                     return null;
 
-                var outputPaths = await _config.OutputPathResolver.ResolveOutputPath(_services, contextIdentifier, streamPath, streamArguments);
+                var manifestOutputPath = await _config.OutputPathResolver.ResolveOutputPath(_services, contextIdentifier, streamPath, streamArguments);
+                var tsSegmentOutputPath = GetTsSegmentOutputPath(manifestOutputPath);
 
-                var tsMuxer = new TsMuxer(outputPaths.TsSegmentOutputPath, _bufferPool);
+                if (string.IsNullOrEmpty(tsSegmentOutputPath))
+                    return null;
+
+                var tsMuxer = new TsMuxer(tsSegmentOutputPath, _bufferPool);
 
                 var config = new HlsTransmuxer.Configuration(
                     contextIdentifier,
                     _config.Name,
-                    outputPaths.ManifestOutputPath,
-                    outputPaths.TsSegmentOutputPath,
+                    manifestOutputPath,
+                    tsSegmentOutputPath,
                     _config.SegmentListSize,
                     _config.DeleteOutdatedSegments,
                     _config.MaxSegmentSize,
@@ -70,6 +74,17 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
             {
                 return null;
             }
+        }
+
+        private static string? GetTsSegmentOutputPath(string manifestOutputPath)
+        {
+            var directory = Path.GetDirectoryName(manifestOutputPath);
+            var fileName = Path.GetFileNameWithoutExtension(manifestOutputPath);
+
+            if (string.IsNullOrEmpty(directory) || string.IsNullOrEmpty(fileName))
+                return null;
+
+            return Path.Combine(directory, fileName + "{seqNum}.ts");
         }
     }
 }

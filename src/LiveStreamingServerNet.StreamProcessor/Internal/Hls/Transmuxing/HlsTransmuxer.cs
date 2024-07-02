@@ -48,7 +48,6 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
             ILogger<HlsTransmuxer> logger)
         {
             DirectoryUtility.CreateDirectoryIfNotExists(Path.GetDirectoryName(config.ManifestOutputPath));
-            DirectoryUtility.CreateDirectoryIfNotExists(Path.GetDirectoryName(config.TsSegmentOutputPath));
 
             Name = config.TransmuxerName;
             ContextIdentifier = config.ContextIdentifier;

@@ -81,18 +81,18 @@ namespace LiveStreamingServerNet.AdaptiveHlsDemo
                 .Build();
         }
 
-        private class HlsOutputPathResolver : IFFmpegOutputPathResolver
+        private class HlsOutputPathResolver : IHlsOutputPathResolver
         {
-            private readonly string _outputPath;
+            private readonly string _outputDir;
 
-            public HlsOutputPathResolver(string outputPath)
+            public HlsOutputPathResolver(string outputDir)
             {
-                _outputPath = outputPath;
+                _outputDir = outputDir;
             }
 
             public ValueTask<string> ResolveOutputPath(IServiceProvider services, Guid contextIdentifier, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
             {
-                return ValueTask.FromResult(Path.Combine(_outputPath, streamPath.Trim('/'), "output.m3u8"));
+                return ValueTask.FromResult(Path.Combine(_outputDir, contextIdentifier.ToString(), "output.m3u8"));
             }
         }
 
