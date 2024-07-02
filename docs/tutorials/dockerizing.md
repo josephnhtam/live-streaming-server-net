@@ -7,6 +7,7 @@ Some of the packages have dependencies on the ASP.NET Core framework, including:
 - LiveStreamingServerNet.Standalone
 - LiveStreamingServerNet.AdminPanelUI
 - LiveStreamingServerNet.Flv
+- LiveStreamingServerNet.StreamProcessor.AspNetCore
 
 Therefore when these packages are included in your application, or if your application depends on ASP.NET Core, please ensure that you use `mcr.microsoft.com/dotnet/aspnet:8.0` as the runtime image. Otherwise, you may choose to use `mcr.microsoft.com/dotnet/runtime:8.0` instead.
 
