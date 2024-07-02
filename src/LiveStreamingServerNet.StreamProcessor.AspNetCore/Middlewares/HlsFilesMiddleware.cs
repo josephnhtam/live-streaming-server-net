@@ -21,7 +21,7 @@ namespace LiveStreamingServerNet.StreamProcessor.AspNetCore.Middlewares
         private readonly PhysicalFileProvider _fileProvider;
         private readonly StaticFileMiddleware _staticFile;
 
-        private static readonly PathString _hlsServingPath = $"/{Guid.NewGuid}";
+        private static readonly PathString _hlsServingPath = $"/hls-serving/{Guid.NewGuid()}";
 
         public HlsFilesMiddleware(
             RequestDelegate next,
@@ -72,15 +72,7 @@ namespace LiveStreamingServerNet.StreamProcessor.AspNetCore.Middlewares
 
         public async Task InvokeAsync(HttpContext context)
         {
-            if (!ValidateNoEndpoint(context) || !ValidateMethod(context) || !ValidatePath(context, _options.RequestPath, out var subPath))
-            {
-                await _next.Invoke(context);
-                return;
-            }
-
-            var fileSubPath = GetFileSubPath(subPath);
-
-            if (!fileSubPath.HasValue)
+            if (!ValidateNoEndpoint(context) || !ValidateMethod(context) || !ValidatePath(context, _options.RequestPath, out var fileSubPath))
             {
                 await _next.Invoke(context);
                 return;
@@ -111,15 +103,16 @@ namespace LiveStreamingServerNet.StreamProcessor.AspNetCore.Middlewares
             }
         }
 
-        private static bool ValidatePath(HttpContext context, PathString matchUrl, out PathString subPath)
+        private bool ValidatePath(HttpContext context, PathString matchUrl, out PathString fileSubPath)
         {
-            if (context.Request.Path.StartsWithSegments(_hlsServingPath))
+            if (!context.Request.Path.StartsWithSegments(matchUrl, out var subPath))
             {
-                subPath = PathString.Empty;
+                fileSubPath = PathString.Empty;
                 return false;
             }
 
-            return context.Request.Path.StartsWithSegments(matchUrl, out subPath);
+            fileSubPath = GetFileSubPath(subPath);
+            return fileSubPath.HasValue;
         }
 
         private static bool ValidateNoEndpoint(HttpContext httpContext)
