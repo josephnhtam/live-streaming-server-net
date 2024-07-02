@@ -21,7 +21,7 @@ namespace LiveStreamingServerNet.StreamProcessor.AspNetCore.Middlewares
         private readonly PhysicalFileProvider _fileProvider;
         private readonly StaticFileMiddleware _staticFile;
 
-        private static readonly PathString _hlsServingPath = "/hls-serving";
+        private static readonly PathString _hlsServingPath = $"/{Guid.NewGuid}";
 
         public HlsFilesMiddleware(
             RequestDelegate next,
@@ -42,7 +42,11 @@ namespace LiveStreamingServerNet.StreamProcessor.AspNetCore.Middlewares
                 FileProvider = _fileProvider,
                 ContentTypeProvider = CreateContentTypeProvider(),
                 HttpsCompression = _options.HttpsCompression,
-                RequestPath = _hlsServingPath
+                RequestPath = _hlsServingPath,
+                OnPrepareResponse = _options.OnPrepareResponse,
+#if NET8_0_OR_GREATER
+                OnPrepareResponseAsync = _options.OnPrepareResponseAsync
+#endif
             };
 
             _staticFile = new StaticFileMiddleware(Next, hostingEnv, Options.Create(staticFileOptions), loggerFactory);
@@ -109,6 +113,12 @@ namespace LiveStreamingServerNet.StreamProcessor.AspNetCore.Middlewares
 
         private static bool ValidatePath(HttpContext context, PathString matchUrl, out PathString subPath)
         {
+            if (context.Request.Path.StartsWithSegments(_hlsServingPath))
+            {
+                subPath = PathString.Empty;
+                return false;
+            }
+
             return context.Request.Path.StartsWithSegments(matchUrl, out subPath);
         }
 
