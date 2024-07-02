@@ -1,11 +1,11 @@
 using LiveStreamingServerNet.Networking.Helpers;
 using LiveStreamingServerNet.Rtmp;
+using LiveStreamingServerNet.StreamProcessor.AspNetCore.Configurations;
+using LiveStreamingServerNet.StreamProcessor.AspNetCore.Installer;
 using LiveStreamingServerNet.StreamProcessor.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Hls.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Installer;
 using LiveStreamingServerNet.Utilities.Contracts;
-using Microsoft.AspNetCore.StaticFiles;
-using Microsoft.Extensions.FileProviders;
 using System.Net;
 
 namespace LiveStreamingServerNet.HlsDemo
@@ -14,7 +14,7 @@ namespace LiveStreamingServerNet.HlsDemo
     {
         public static async Task Main(string[] args)
         {
-            var outputDir = Path.Combine(Directory.GetCurrentDirectory(), "Output");
+            var outputDir = Path.Combine(Directory.GetCurrentDirectory(), "hls-output");
             new DirectoryInfo(outputDir).Create();
 
             using var liveStreamingServer = CreateLiveStreamingServer(outputDir);
@@ -35,24 +35,15 @@ namespace LiveStreamingServerNet.HlsDemo
 
             app.UseCors();
 
-            var (fileProvider, contentTypeProvider) = CreateProviders(outputDir);
-            app.UseStaticFiles(new StaticFileOptions
+            // Given that the scheme is https, the port is 7138, and the stream path is live/demo,
+            // the HLS stream will be available at https://localhost:7138/hls/live/demo/output.m3u8
+            app.UseHlsFiles(liveStreamingServer, new HlsServingOptions
             {
-                FileProvider = fileProvider,
-                ContentTypeProvider = contentTypeProvider
+                Root = outputDir,
+                RequestPath = "/hls"
             });
 
             await app.RunAsync();
-        }
-
-        private static (PhysicalFileProvider, FileExtensionContentTypeProvider) CreateProviders(string outputDir)
-        {
-            var fileProvider = new PhysicalFileProvider(outputDir);
-
-            var contentTypeProvider = new FileExtensionContentTypeProvider();
-            contentTypeProvider.Mappings[".m3u8"] = "application/x-mpegURL";
-
-            return (fileProvider, contentTypeProvider);
         }
 
         private static ILiveStreamingServer CreateLiveStreamingServer(string outputDir)

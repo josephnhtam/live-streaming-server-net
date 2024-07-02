@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\LiveStreamingServerNet.StreamProcessor.AspNetCore\LiveStreamingServerNet.StreamProcessor.AspNetCore.csproj" />
     <ProjectReference Include="..\..\src\LiveStreamingServerNet.StreamProcessor\LiveStreamingServerNet.StreamProcessor.csproj" />
     <ProjectReference Include="..\..\src\LiveStreamingServerNet\LiveStreamingServerNet.csproj" />
   </ItemGroup>
