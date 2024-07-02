@@ -3,6 +3,7 @@ using LiveStreamingServerNet.Rtmp;
 using LiveStreamingServerNet.StreamProcessor.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Containers;
 using LiveStreamingServerNet.StreamProcessor.Internal.Containers.Contracts;
+using LiveStreamingServerNet.StreamProcessor.Internal.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Services.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing.M3u8.Contracts;
@@ -21,6 +22,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
         private readonly IHlsTransmuxerManager _transmuxerManager;
         private readonly IHlsCleanupManager _cleanupManager;
         private readonly IManifestWriter _manifestWriter;
+        private readonly IHlsPathRegistry _pathRegistry;
         private readonly ITsMuxer _tsMuxer;
 
         private readonly Configuration _config;
@@ -33,6 +35,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
         private bool _hasAudio;
 
         private string _streamPath = string.Empty;
+        private bool _registeredHlsOutputPath;
 
         public string Name { get; }
         public Guid ContextIdentifier { get; }
@@ -43,6 +46,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
             IHlsTransmuxerManager transmuxerManager,
             IHlsCleanupManager cleanupManager,
             IManifestWriter manifestWriter,
+            IHlsPathRegistry pathRegistry,
             ITsMuxer tsMuxer,
             Configuration config,
             ILogger<HlsTransmuxer> logger)
@@ -56,6 +60,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
             _transmuxerManager = transmuxerManager;
             _cleanupManager = cleanupManager;
             _manifestWriter = manifestWriter;
+            _pathRegistry = pathRegistry;
             _tsMuxer = tsMuxer;
 
             _config = config;
@@ -283,12 +288,33 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
 
         private async ValueTask PreRunAsync()
         {
+            RegisterHlsOutputPath();
             await ExecuteCleanupAsync();
         }
 
         private async ValueTask PostRunAsync()
         {
+            UnregisterHlsOutputPath();
             await ScheduleCleanupAsync();
+        }
+
+        private void RegisterHlsOutputPath()
+        {
+            var outputPath = Path.GetDirectoryName(_config.ManifestOutputPath) ?? string.Empty;
+
+            if (!_pathRegistry.RegisterHlsOutputPath(_streamPath, outputPath))
+                throw new InvalidOperationException("A HLS output path of the same stream path is already registered");
+
+            _registeredHlsOutputPath = true;
+        }
+
+        private void UnregisterHlsOutputPath()
+        {
+            if (!_registeredHlsOutputPath)
+                return;
+
+            _pathRegistry.UnregisterHlsOutputPath(_streamPath);
+            _registeredHlsOutputPath = false;
         }
 
         private async Task ExecuteCleanupAsync()

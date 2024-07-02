@@ -1,6 +1,7 @@
 ﻿using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Hls.Configurations;
+using LiveStreamingServerNet.StreamProcessor.Internal.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Services.Contracts;
 using Microsoft.Extensions.Logging;
 
@@ -10,17 +11,20 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.AdaptiveTranscodin
     {
         private readonly IServiceProvider _services;
         private readonly IHlsCleanupManager _cleanupManager;
+        private readonly IHlsPathRegistry _pathRegistry;
         private readonly AdaptiveHlsTranscoderConfiguration _config;
         private readonly ILogger<AdaptiveHlsTranscoder> _logger;
 
         public AdaptiveHlsTranscoderFactory(
             IServiceProvider services,
             IHlsCleanupManager cleanupManager,
+            IHlsPathRegistry pathRegistry,
             AdaptiveHlsTranscoderConfiguration config,
             ILogger<AdaptiveHlsTranscoder> logger)
         {
             _services = services;
             _cleanupManager = cleanupManager;
+            _pathRegistry = pathRegistry;
             _config = config;
             _logger = logger;
         }
@@ -60,7 +64,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.AdaptiveTranscodin
                     _config.HlsOptions.DeleteOutdatedSegments ? _config.CleanupDelay : null
                 );
 
-                return new AdaptiveHlsTranscoder(_cleanupManager, config, _logger);
+                return new AdaptiveHlsTranscoder(_cleanupManager, _pathRegistry, config, _logger);
             }
             catch
             {

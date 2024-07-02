@@ -1,7 +1,9 @@
 ﻿using LiveStreamingServerNet.Rtmp.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Hls.Configurations;
+using LiveStreamingServerNet.StreamProcessor.Hls.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Installer.Contracts;
+using LiveStreamingServerNet.StreamProcessor.Internal.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Services;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Services.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing;
@@ -25,6 +27,9 @@ namespace LiveStreamingServerNet.StreamProcessor.Installer
             var config = new HlsTransmuxerConfiguration();
             configure?.Invoke(config);
 
+            services.TryAddSingleton<IHlsPathRegistry, HlsPathRegistry>();
+            services.TryAddSingleton<IHlsPathMapper>(svc => svc.GetRequiredService<IHlsPathRegistry>());
+
             services.TryAddSingleton<IManifestWriter, ManifestWriter>();
             services.TryAddSingleton<IHlsTransmuxerManager, HlsTransmuxerManager>();
             services.TryAddSingleton<IHlsCleanupManager, HlsCleanupManager>();
@@ -36,6 +41,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Installer
                     svc.GetRequiredService<IHlsTransmuxerManager>(),
                     svc.GetRequiredService<IHlsCleanupManager>(),
                     svc.GetRequiredService<IManifestWriter>(),
+                    svc.GetRequiredService<IHlsPathRegistry>(),
                     config,
                     svc.GetRequiredService<ILogger<HlsTransmuxer>>(),
                     svc.GetService<IBufferPool>()

@@ -1,5 +1,6 @@
 ﻿using LiveStreamingServerNet.StreamProcessor.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Hls;
+using LiveStreamingServerNet.StreamProcessor.Internal.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.FFmpeg;
 using LiveStreamingServerNet.StreamProcessor.Internal.FFprobe;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.M3u8Parsing;
@@ -14,14 +15,19 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.AdaptiveTranscodin
     internal partial class AdaptiveHlsTranscoder : IStreamProcessor
     {
         private readonly IHlsCleanupManager _cleanupManager;
+        private readonly IHlsPathRegistry _pathRegistry;
         private readonly Configuration _config;
         private readonly ILogger _logger;
+
+        private string _streamPath = string.Empty;
+        private bool _registeredHlsOutputPath;
 
         public string Name { get; }
         public Guid ContextIdentifier { get; }
 
         public AdaptiveHlsTranscoder(
             IHlsCleanupManager cleanupManager,
+            IHlsPathRegistry pathRegistry,
             Configuration config,
             ILogger<AdaptiveHlsTranscoder> logger)
         {
@@ -31,6 +37,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.AdaptiveTranscodin
             ContextIdentifier = config.ContextIdentifier;
 
             _cleanupManager = cleanupManager;
+            _pathRegistry = pathRegistry;
             _config = config;
             _logger = logger;
         }
@@ -78,6 +85,8 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.AdaptiveTranscodin
             OnStreamProcessorEnded? onEnded,
             CancellationToken cancellation)
         {
+            _streamPath = streamPath;
+
             try
             {
                 await PreRunAsync();
@@ -105,12 +114,33 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.AdaptiveTranscodin
 
         private async ValueTask PreRunAsync()
         {
+            RegisterHlsOutputPath();
             await ExecuteCleanupAsync();
         }
 
         private async ValueTask PostRunAsync()
         {
+            UnregisterHlsOutputPath();
             await ScheduleCleanupAsync();
+        }
+
+        private void RegisterHlsOutputPath()
+        {
+            var outputPath = Path.GetDirectoryName(_config.ManifestOutputPath) ?? string.Empty;
+
+            if (!_pathRegistry.RegisterHlsOutputPath(_streamPath, outputPath))
+                throw new InvalidOperationException("A HLS output path of the same stream path is already registered");
+
+            _registeredHlsOutputPath = true;
+        }
+
+        private void UnregisterHlsOutputPath()
+        {
+            if (!_registeredHlsOutputPath)
+                return;
+
+            _pathRegistry.UnregisterHlsOutputPath(_streamPath);
+            _registeredHlsOutputPath = false;
         }
 
         private async Task ExecuteCleanupAsync()

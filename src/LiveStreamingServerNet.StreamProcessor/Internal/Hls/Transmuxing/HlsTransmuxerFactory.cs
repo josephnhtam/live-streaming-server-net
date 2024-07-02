@@ -2,6 +2,7 @@
 using LiveStreamingServerNet.StreamProcessor.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Hls.Configurations;
 using LiveStreamingServerNet.StreamProcessor.Internal.Containers;
+using LiveStreamingServerNet.StreamProcessor.Internal.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Services.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing.M3u8.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing.Services.Contracts;
@@ -16,6 +17,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
         private readonly IHlsTransmuxerManager _transmuxerManager;
         private readonly IHlsCleanupManager _cleanupManager;
         private readonly IManifestWriter _manifestWriter;
+        private readonly IHlsPathRegistry _pathRegistry;
         private readonly HlsTransmuxerConfiguration _config;
         private readonly ILogger<HlsTransmuxer> _logger;
         private readonly IBufferPool? _bufferPool;
@@ -25,6 +27,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
             IHlsTransmuxerManager transmuxerManager,
             IHlsCleanupManager cleanupManager,
             IManifestWriter manifestWriter,
+            IHlsPathRegistry pathRegistry,
             HlsTransmuxerConfiguration config,
             ILogger<HlsTransmuxer> logger,
             IBufferPool? bufferPool)
@@ -33,6 +36,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
             _transmuxerManager = transmuxerManager;
             _cleanupManager = cleanupManager;
             _manifestWriter = manifestWriter;
+            _pathRegistry = pathRegistry;
             _config = config;
             _logger = logger;
             _bufferPool = bufferPool;
@@ -68,7 +72,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
                     _config.DeleteOutdatedSegments ? _config.CleanupDelay : null
                 );
 
-                return new HlsTransmuxer(streamPath, client, _transmuxerManager, _cleanupManager, _manifestWriter, tsMuxer, config, _logger);
+                return new HlsTransmuxer(streamPath, client, _transmuxerManager, _cleanupManager, _manifestWriter, _pathRegistry, tsMuxer, config, _logger);
             }
             catch
             {
