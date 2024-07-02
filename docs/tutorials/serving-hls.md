@@ -4,7 +4,7 @@ LiveStreamingServerNet provides a seamless way to the transmux RTMP streams into
 
 ## Quick Setup Guide for Your Live Streaming Server
 
-This section will guide you through adding a HLS transmuxer to convert RTMP streams into HLS streams and serve the HLS live streams with ASP.NET Core.
+This section will guide you through adding a HLS transmuxer to convert RTMP streams into HLS streams and serving the HLS live streams with ASP.NET Core.
 
 ### Step 1: Initialize a New Project and Add Required Packages
 
