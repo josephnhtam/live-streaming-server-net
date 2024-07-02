@@ -77,6 +77,10 @@ Live-Streaming-Server-Net is a high-performance and flexible toolset which allow
       <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet.StreamProcessor.AmazonS3"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.StreamProcessor.AmazonS3.svg?logo=nuget"></a></td>
     </tr>
     <tr>
+      <td><b>LiveStreamingServerNet.StreamProcessor.AspNetCore</b></td>
+      <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet.StreamProcessor.AspNetCore"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.StreamProcessor.AspNetCore.svg?logo=nuget"></a></td>
+    </tr>
+    <tr>
       <td><b>LiveStreamingServerNet.StreamProcessor.AzureBlobStorage</b></td>
       <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet.StreamProcessor.AzureBlobStorage"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.StreamProcessor.AzureBlobStorage.svg?logo=nuget"></a></td>
     </tr>
