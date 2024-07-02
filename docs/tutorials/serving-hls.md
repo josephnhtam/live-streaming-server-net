@@ -4,16 +4,17 @@ LiveStreamingServerNet provides a seamless way to the transmux RTMP streams into
 
 ## Quick Setup Guide for Your Live Streaming Server
 
-This section will guide you through adding a HLS transmuxer to convert RTMP streams into HLS streams.
+This section will guide you through adding a HLS transmuxer to convert RTMP streams into HLS streams and serve the HLS live streams with ASP.NET Core.
 
 ### Step 1: Initialize a New Project and Add Required Packages
 
-To serve HLS live streams with ASP.NET Core's static file middleware, create an empty ASP.NET Core Web application and add the necessary packages using the following commands:
+Create an empty ASP.NET Core Web application and add the necessary packages using the following commands:
 
 ```
 dotnet new web
 dotnet add package LiveStreamingServerNet
 dotnet add package LiveStreamingServerNet.StreamProcessor
+dotnet add package LiveStreamingServerNet.StreamProcessor.AspNetCore
 ```
 
 ### Step 2: Configure Your Live Streaming Server
@@ -23,16 +24,15 @@ Edit `Program.cs` file:
 ```cs linenums="1"
 using LiveStreamingServerNet;
 using LiveStreamingServerNet.Networking.Helpers;
+using LiveStreamingServerNet.StreamProcessor.AspNetCore.Configurations;
+using LiveStreamingServerNet.StreamProcessor.AspNetCore.Installer;
 using LiveStreamingServerNet.StreamProcessor.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Hls.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Installer;
 using LiveStreamingServerNet.Utilities.Contracts;
-using Microsoft.AspNetCore.StaticFiles;
-using Microsoft.Extensions.FileProviders;
 using System.Net;
 
-
-var outputDir = Path.Combine(Directory.GetCurrentDirectory(), "output");
+var outputDir = Path.Combine(Directory.GetCurrentDirectory(), "hls-output");
 new DirectoryInfo(outputDir).Create();
 
 var liveStreamingServer = LiveStreamingServerBuilder.Create()
@@ -49,14 +49,10 @@ builder.Services.AddBackgroundServer(liveStreamingServer, new IPEndPoint(IPAddre
 
 var app = builder.Build();
 
-app.UseStaticFiles(new StaticFileOptions
+app.UseHlsFiles(liveStreamingServer, new HlsServingOptions
 {
-    RequestPath = "/hls",
-    FileProvider = new PhysicalFileProvider(outputDir),
-    ContentTypeProvider = new FileExtensionContentTypeProvider
-    {
-        Mappings = { [".m3u8"] = "application/x-mpegURL" }
-    }
+    Root = outputDir,
+    RequestPath = "/hls"
 });
 
 app.Run();
@@ -70,15 +66,9 @@ public class HlsTransmuxerOutputPathResolver : IHlsOutputPathResolver
         _outputDir = outputDir;
     }
 
-    public ValueTask<HlsOutputPath> ResolveOutputPath(IServiceProvider services, Guid contextIdentifier, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
+    public ValueTask<string> ResolveOutputPath(IServiceProvider services, Guid contextIdentifier, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
     {
-        var basePath = Path.Combine(_outputDir, streamPath.Trim('/'));
-
-        return ValueTask.FromResult(new HlsOutputPath
-        {
-            ManifestOutputPath = Path.Combine(basePath, "output.m3u8"),
-            TsSegmentOutputPath = Path.Combine(basePath, "output{seqNum}.ts")
-        });
+        return ValueTask.FromResult(Path.Combine(_outputDir, contextIdentifier.ToString(), "output.m3u8"));
     }
 }
 
@@ -105,7 +95,7 @@ public class HlsTransmuxerEventListener : IStreamProcessorEventHandler
 }
 ```
 
-This code sets up the server using LiveStreamingServerNet to listen on port 1935 for RTMP streams. Whenever an RTMP stream is published to the server, a HLS transmuxer will be created to convert the RTMP stream into an HLS stream, and its manifest will be stored as `/output/{streamPath}/output.m3u8`. Additionally, the `HlsTransmuxerEventListener` is added to log out the transmuxer events. And finally, a static files middleware is added to serve the generated HLS live streams at `/hls/**`.
+This code sets up the server using LiveStreamingServerNet to listen on port 1935 for RTMP streams. Whenever an RTMP stream is published to the server, a HLS transmuxer will be created to convert the RTMP stream into an HLS stream, and its manifest will be stored as `/hls-output/{streamPath}/output.m3u8`. Additionally, the `HlsTransmuxerEventListener` is added to log out the transmuxer events. And finally, the `HlsFilesMiddleware` is added to serve the generated HLS live streams at `/hls/**`.
 
 ### Step 3: Launch Your Live Streaming Server
 
