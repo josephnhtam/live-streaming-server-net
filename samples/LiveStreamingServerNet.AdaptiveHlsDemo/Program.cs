@@ -1,6 +1,6 @@
 using LiveStreamingServerNet.Networking.Helpers;
 using LiveStreamingServerNet.StreamProcessor.Contracts;
-using LiveStreamingServerNet.StreamProcessor.FFmpeg.Contracts;
+using LiveStreamingServerNet.StreamProcessor.Hls.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Installer;
 using LiveStreamingServerNet.StreamProcessor.Utilities;
 using LiveStreamingServerNet.Utilities.Contracts;
