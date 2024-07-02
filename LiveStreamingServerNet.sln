@@ -65,7 +65,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.Stre
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.AdaptiveHlsDemo", "samples\LiveStreamingServerNet.AdaptiveHlsDemo\LiveStreamingServerNet.AdaptiveHlsDemo.csproj", "{581B51B6-83A5-48D7-A655-D52737EFC66E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LIveStreamingServerNet.Utilities.Test", "test\LIveStreamingServerNet.Utilities.Test\LIveStreamingServerNet.Utilities.Test.csproj", "{7246C890-7231-4E08-9482-97AAAE4E9CD7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LIveStreamingServerNet.Utilities.Test", "test\LIveStreamingServerNet.Utilities.Test\LIveStreamingServerNet.Utilities.Test.csproj", "{7246C890-7231-4E08-9482-97AAAE4E9CD7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveStreamingServerNet.StreamProcessor.AspNetCore", "src\LiveStreamingServerNet.StreamProcessor.AspNetCore\LiveStreamingServerNet.StreamProcessor.AspNetCore.csproj", "{74112E94-0B2B-46B8-8759-C038A9975347}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -193,6 +195,10 @@ Global
 		{7246C890-7231-4E08-9482-97AAAE4E9CD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7246C890-7231-4E08-9482-97AAAE4E9CD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7246C890-7231-4E08-9482-97AAAE4E9CD7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{74112E94-0B2B-46B8-8759-C038A9975347}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{74112E94-0B2B-46B8-8759-C038A9975347}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{74112E94-0B2B-46B8-8759-C038A9975347}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{74112E94-0B2B-46B8-8759-C038A9975347}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
