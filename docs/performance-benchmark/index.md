@@ -29,18 +29,13 @@ using LiveStreamingServerNet.Networking.Helpers;
 using LiveStreamingServerNet.Rtmp;
 using LiveStreamingServerNet.Standalone;
 using LiveStreamingServerNet.Standalone.Insatller;
-using LiveStreamingServerNet.StreamProcessor.Hls.Contracts;
+using LiveStreamingServerNet.StreamProcessor.AspNetCore.Installer;
 using LiveStreamingServerNet.StreamProcessor.Installer;
-using Microsoft.AspNetCore.StaticFiles;
-using Microsoft.Extensions.FileProviders;
 using System.Net;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var hlsOutputDir = Path.Combine(Directory.GetCurrentDirectory(), "output");
-var hlsOutputPathResolver = new HlsOutputPathResolver(hlsOutputDir);
-
-var liveStreamingServer = CreateLiveStreamingServer(hlsOutputPathResolver);
+var liveStreamingServer = CreateLiveStreamingServer();
 builder.Services.AddBackgroundServer(liveStreamingServer, new IPEndPoint(IPAddress.Any, 1935));
 
 builder.Services.AddCors(options =>
@@ -55,19 +50,15 @@ var app = builder.Build();
 
 app.UseCors();
 
-var (fileProvider, contentTypeProvider) = CreateProviders(hlsOutputDir);
-app.UseStaticFiles(new StaticFileOptions
-{
-    FileProvider = fileProvider,
-    ContentTypeProvider = contentTypeProvider
-});
+app.UseHlsFiles(liveStreamingServer);
 
 app.MapStandaloneServerApiEndPoints(liveStreamingServer);
+
 app.UseAdminPanelUI();
 
 await app.RunAsync();
 
-static ILiveStreamingServer CreateLiveStreamingServer(HlsOutputPathResolver hlsOutputPathResolver)
+static ILiveStreamingServer CreateLiveStreamingServer()
 {
     var builder = LiveStreamingServerBuilder.Create();
     var configuration = new ConfigurationBuilder().AddEnvironmentVariables().Build();
@@ -88,46 +79,10 @@ static ILiveStreamingServer CreateLiveStreamingServer(HlsOutputPathResolver hlsO
         serverConfig.AddStandaloneServices();
 
         serverConfig.AddStreamProcessor()
-            .AddHlsTransmuxer(options =>
-                options.OutputPathResolver = hlsOutputPathResolver
-            );
+                    .AddHlsTransmuxer();
     });
 
     return builder.Build();
-}
-
-static (PhysicalFileProvider, FileExtensionContentTypeProvider) CreateProviders(string outputDir)
-{
-    new DirectoryInfo(outputDir).Create();
-    var fileProvider = new PhysicalFileProvider(outputDir);
-
-    var contentTypeProvider = new FileExtensionContentTypeProvider();
-    contentTypeProvider.Mappings[".m3u8"] = "application/x-mpegURL";
-
-    return (fileProvider, contentTypeProvider);
-}
-
-public class HlsOutputPathResolver : IHlsOutputPathResolver
-{
-    private readonly string _outputDir;
-
-    public HlsOutputPathResolver(string outputDir)
-    {
-        _outputDir = outputDir;
-    }
-
-    public ValueTask<HlsOutputPath> ResolveOutputPath(
-        IServiceProvider services, Guid contextIdentifier,
-        string streamPath, IReadOnlyDictionary<string, string> streamArguments)
-    {
-        var basePath = Path.Combine(_outputDir, streamPath.Trim('/'));
-
-        return ValueTask.FromResult(new HlsOutputPath
-        {
-            ManifestOutputPath = Path.Combine(basePath, "output.m3u8"),
-            TsSegmentOutputPath = Path.Combine(basePath, "output{seqNum}.ts")
-        });
-    }
 }
 ```
 
