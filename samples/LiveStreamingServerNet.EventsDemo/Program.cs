@@ -21,7 +21,7 @@ namespace LiveStreamingServerNet.EventsDemo
                         config.IdlePublishingTimeLimitSeconds = 60
                     );
 
-                    options.AddStreamEventHandler<PublishingTimeLimiter>();
+                    options.AddStreamEventHandler<IdlePublishingTimeLimiter>();
                 })
                 .ConfigureLogging(options => options.AddConsole())
                 .Build();
@@ -35,14 +35,14 @@ namespace LiveStreamingServerNet.EventsDemo
         public int IdlePublishingTimeLimitSeconds { get; set; }
     }
 
-    public class PublishingTimeLimiter : IRtmpServerStreamEventHandler, IDisposable
+    public class IdlePublishingTimeLimiter : IRtmpServerStreamEventHandler, IDisposable
     {
         private readonly ConcurrentDictionary<uint, ITimer> _clientTimers = new();
         private readonly IServer _server;
         private readonly IRtmpStreamManager _streamManager;
         private readonly IdlePublishingTimeLimiterConfig _config;
 
-        public PublishingTimeLimiter(IServer server, IRtmpStreamManager streamManager, IOptions<IdlePublishingTimeLimiterConfig> config)
+        public IdlePublishingTimeLimiter(IServer server, IRtmpStreamManager streamManager, IOptions<IdlePublishingTimeLimiterConfig> config)
         {
             _server = server;
             _streamManager = streamManager;
