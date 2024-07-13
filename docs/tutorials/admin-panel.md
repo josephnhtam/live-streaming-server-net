@@ -8,6 +8,7 @@ An admin panel is served by a middleware of ASP.NET Core. Create an empty ASP.NE
 
 ```
 dotnet new web
+dotnet add package LiveStreamingServerNet
 dotnet add package LiveStreamingServerNet.AdminPanelUI
 dotnet add package LiveStreamingServerNet.Standalone
 dotnet add package LiveStreamingServerNet.Flv
