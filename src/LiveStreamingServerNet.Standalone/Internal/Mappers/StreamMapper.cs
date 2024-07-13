@@ -1,6 +1,6 @@
 ﻿using LiveStreamingServerNet.AdminPanelUI.Dtos;
 using LiveStreamingServerNet.Networking.Contracts;
-using LiveStreamingServerNet.Standalone.Internal.Contracts;
+using LiveStreamingServerNet.Rtmp.Contracts;
 using Riok.Mapperly.Abstractions;
 
 namespace LiveStreamingServerNet.Standalone.Internal.Mappers
@@ -8,7 +8,7 @@ namespace LiveStreamingServerNet.Standalone.Internal.Mappers
     [Mapper]
     internal static partial class StreamMapper
     {
-        public static StreamDto ToDto(this IRtmpPublishStream stream)
+        public static StreamDto ToDto(this IRtmpStream stream)
         {
             var dto = ConvertToDto(stream);
 
@@ -41,7 +41,11 @@ namespace LiveStreamingServerNet.Standalone.Internal.Mappers
             return defaultValue;
         }
 
-        [MapProperty($"{nameof(IRtmpPublishStream.Client)}.{nameof(IClientControl.ClientId)}", nameof(StreamDto.ClientId))]
-        public static partial StreamDto ConvertToDto(IRtmpPublishStream stream);
+        [MapPropertyFromSource(nameof(StreamDto.Id), Use = nameof(MapId))]
+        [MapProperty($"{nameof(IRtmpStream.Publisher)}.{nameof(IClientControl.ClientId)}", nameof(StreamDto.ClientId))]
+        public static partial StreamDto ConvertToDto(IRtmpStream stream);
+
+        private static string MapId(IRtmpStream stream)
+            => $"{stream.Publisher.ClientId}@{stream.StreamPath}";
     }
 }

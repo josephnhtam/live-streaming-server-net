@@ -49,6 +49,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Contracts
         byte[]? AudioSequenceHeader { get; set; }
         bool GroupOfPicturesCacheActivated { get; set; }
         IGroupOfPicturesCache GroupOfPicturesCache { get; }
+        DateTime StartTime { get; }
     }
 
     internal interface IRtmpStreamSubscriptionContext : IAsyncDisposable

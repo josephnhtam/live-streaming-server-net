@@ -1,7 +1,7 @@
 ﻿using LiveStreamingServerNet.AdminPanelUI.Dtos;
+using LiveStreamingServerNet.Rtmp.Contracts;
 using LiveStreamingServerNet.Standalone.Exceptions;
 using LiveStreamingServerNet.Standalone.Internal.Mappers;
-using LiveStreamingServerNet.Standalone.Internal.Services.Contracts;
 using LiveStreamingServerNet.Standalone.Services.Contracts;
 using Microsoft.AspNetCore.Http;
 
@@ -9,21 +9,21 @@ namespace LiveStreamingServerNet.Standalone.Internal.Services
 {
     internal class RtmpStreamManagerApiService : IRtmpStreamManagerApiService
     {
-        private readonly IRtmpStreamManagerService _streamManagerService;
+        private readonly IRtmpStreamManager _streamManager;
 
-        public RtmpStreamManagerApiService(IRtmpStreamManagerService streamManagerService)
+        public RtmpStreamManagerApiService(IRtmpStreamManager streamManager)
         {
-            _streamManagerService = streamManagerService;
+            _streamManager = streamManager;
         }
 
         public Task<GetStreamsResponse> GetStreamsAsync(GetStreamsRequest request)
         {
             var (page, pageSize, filter) = request;
 
-            var streams = _streamManagerService.GetStreams().AsEnumerable();
+            var streams = _streamManager.GetStreams();
 
             if (!string.IsNullOrWhiteSpace(filter))
-                streams = streams.Where(x => x.StreamPath.Contains(filter, StringComparison.OrdinalIgnoreCase));
+                streams = streams.Where(x => x.StreamPath.Contains(filter, StringComparison.OrdinalIgnoreCase)).ToList();
 
             var totalCount = streams.Count();
 
@@ -39,12 +39,18 @@ namespace LiveStreamingServerNet.Standalone.Internal.Services
 
         public async Task DeleteStreamAsync(string streamId, CancellationToken cancellation)
         {
-            var stream = _streamManagerService.GetStream(streamId);
+            var splitIndex = streamId.IndexOf('@');
 
-            if (stream == null)
+            if (splitIndex == -1 || !uint.TryParse(streamId.Substring(0, splitIndex), out var clientId))
+                throw new ApiException(StatusCodes.Status400BadRequest, "Invalid stream id format.");
+
+            var streamPath = streamId.Substring(splitIndex + 1);
+            var stream = _streamManager.GetStream(streamPath);
+
+            if (stream == null || stream.Publisher.ClientId != clientId)
                 throw new ApiException(StatusCodes.Status404NotFound, $"Stream ({streamId}) not found.");
 
-            await stream.Client.DisconnectAsync(cancellation);
+            await stream.Publisher.DisconnectAsync(cancellation);
         }
     }
 }

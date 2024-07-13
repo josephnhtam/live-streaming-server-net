@@ -19,6 +19,10 @@ namespace LiveStreamingServerNet.Networking.Internal
         private TaskCompletionSource _stoppedTcs = new();
 
         public uint ClientId { get; }
+        public DateTime StartTime { get; }
+        public bool IsConnected => _tcpClient?.Connected ?? false;
+        public EndPoint LocalEndPoint => _tcpClient.Client.LocalEndPoint!;
+        public EndPoint RemoteEndPoint => _tcpClient.Client.RemoteEndPoint!;
 
         public Client(
             uint clientId,
@@ -28,16 +32,12 @@ namespace LiveStreamingServerNet.Networking.Internal
             ILogger<Client> logger)
         {
             ClientId = clientId;
+            StartTime = DateTime.UtcNow;
             _tcpClient = tcpClient;
             _bufferSender = bufferSender;
             _networkStreamFactory = networkStreamFactory;
             _logger = logger;
         }
-
-        public bool IsConnected => _tcpClient?.Connected ?? false;
-
-        public EndPoint LocalEndPoint => _tcpClient.Client.LocalEndPoint!;
-        public EndPoint RemoteEndPoint => _tcpClient.Client.RemoteEndPoint!;
 
         public async Task RunAsync(IClientHandler handler, ServerEndPoint serverEndPoint, CancellationToken stoppingToken)
         {

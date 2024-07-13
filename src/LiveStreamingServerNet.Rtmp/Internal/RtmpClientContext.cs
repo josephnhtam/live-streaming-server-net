@@ -135,6 +135,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal
         public byte[]? AudioSequenceHeader { get; set; }
         public bool GroupOfPicturesCacheActivated { get; set; }
         public IGroupOfPicturesCache GroupOfPicturesCache { get; }
+        public DateTime StartTime { get; }
 
         public RtmpPublishStreamContext(uint streamId, string streamPath, IReadOnlyDictionary<string, string> streamArguments, IBufferPool? bufferPool)
         {
@@ -142,6 +143,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal
             StreamPath = streamPath;
             StreamArguments = new Dictionary<string, string>(streamArguments);
             GroupOfPicturesCache = new GroupOfPicturesCache(bufferPool);
+            StartTime = DateTime.UtcNow;
         }
 
         public ValueTask DisposeAsync()

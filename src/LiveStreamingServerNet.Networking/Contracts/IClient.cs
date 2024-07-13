@@ -7,6 +7,7 @@ namespace LiveStreamingServerNet.Networking.Contracts
     {
         uint ClientId { get; }
         bool IsConnected { get; }
+        DateTime StartTime { get; }
         EndPoint LocalEndPoint { get; }
         EndPoint RemoteEndPoint { get; }
     }

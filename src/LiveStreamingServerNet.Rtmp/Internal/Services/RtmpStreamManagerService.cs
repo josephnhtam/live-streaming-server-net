@@ -1,9 +1,11 @@
-﻿using LiveStreamingServerNet.Rtmp.Internal.Contracts;
+﻿using LiveStreamingServerNet.Networking.Contracts;
+using LiveStreamingServerNet.Rtmp.Contracts;
+using LiveStreamingServerNet.Rtmp.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.Services.Contracts;
 
 namespace LiveStreamingServerNet.Rtmp.Internal.Services
 {
-    internal class RtmpStreamManagerService : IRtmpStreamManagerService
+    internal class RtmpStreamManagerService : IRtmpStreamManagerService, IRtmpStreamManager
     {
         private readonly object _publishingSyncLock = new();
         private readonly Dictionary<IRtmpClientContext, string> _publishStreamPaths = new();
@@ -138,6 +140,53 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             lock (_subscribingSyncLock)
             {
                 return _subscribingClientContexts.GetValueOrDefault(streamPath)?.ToList() ?? new List<IRtmpClientContext>();
+            }
+        }
+
+        public IRtmpStream? GetStream(string streamPath)
+        {
+            lock (_publishingSyncLock)
+            {
+                if (_publishingClientContexts.TryGetValue(streamPath, out var publisherContext))
+                    return CreateRtmpStream(publisherContext);
+            }
+
+            return null;
+        }
+
+        public IList<string> GetStreamPaths()
+        {
+            lock (_publishingSyncLock)
+            {
+                return _publishingClientContexts.Keys.ToList();
+            }
+        }
+
+        public IList<IRtmpStream> GetStreams()
+        {
+            lock (_publishingSyncLock)
+            {
+                return _publishingClientContexts.Values.Select(CreateRtmpStream).Where(x => x != null).Cast<IRtmpStream>().ToList();
+            }
+        }
+
+        private IRtmpStream? CreateRtmpStream(IRtmpClientContext publisherContext)
+        {
+            var publishStreamContext = publisherContext.PublishStreamContext;
+
+            if (publishStreamContext == null)
+                return null;
+
+            lock (_subscribingSyncLock)
+            {
+                var subscriberContexts = _subscribingClientContexts.GetValueOrDefault(
+                    publishStreamContext.StreamPath,
+                    new List<IRtmpClientContext>());
+
+                return new RtmpStream(
+                    publisherContext.Client,
+                    subscriberContexts.Select(x => x.Client).OfType<IClientControl>().ToList(),
+                    publishStreamContext);
             }
         }
     }
