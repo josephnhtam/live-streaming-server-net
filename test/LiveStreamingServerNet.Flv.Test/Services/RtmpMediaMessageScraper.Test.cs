@@ -43,7 +43,7 @@ namespace LiveStreamingServerNet.Flv.Test.Services
             _streamManager.GetSubscribers(streamPath).Returns(subscribers);
 
             // Act
-            await _sut.OnReceiveMediaMessage(streamPath, mediaType, rentedBuffer, timestamp, isSkippable);
+            await _sut.OnReceiveMediaMessageAsync(streamPath, mediaType, rentedBuffer, timestamp, isSkippable);
 
             // Assert
             await _mediaTagBroadcaster.BroadcastMediaTagAsync(streamContext, subscribers, mediaType, timestamp, isSkippable, rentedBuffer);

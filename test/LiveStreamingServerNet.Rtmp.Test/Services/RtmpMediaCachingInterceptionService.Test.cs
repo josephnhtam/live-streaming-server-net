@@ -36,8 +36,8 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
             await sut.CachePictureAsync(streamPath, mediaType, payloadBuffer, timestamp);
 
             // Assert
-            await interceptor1.Received(1).OnCachePicture(streamPath, mediaType, Arg.Any<IRentedBuffer>(), timestamp);
-            await interceptor2.Received(1).OnCachePicture(streamPath, mediaType, Arg.Any<IRentedBuffer>(), timestamp);
+            await interceptor1.Received(1).OnCachePictureAsync(streamPath, mediaType, Arg.Any<IRentedBuffer>(), timestamp);
+            await interceptor2.Received(1).OnCachePictureAsync(streamPath, mediaType, Arg.Any<IRentedBuffer>(), timestamp);
         }
 
         [Fact]
@@ -59,8 +59,8 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
             await sut.CacheSequenceHeaderAsync(streamPath, mediaType, sequenceHeader);
 
             // Assert
-            await interceptor1.Received(1).OnCacheSequenceHeader(streamPath, mediaType, sequenceHeader);
-            await interceptor2.Received(1).OnCacheSequenceHeader(streamPath, mediaType, sequenceHeader);
+            await interceptor1.Received(1).OnCacheSequenceHeaderAsync(streamPath, mediaType, sequenceHeader);
+            await interceptor2.Received(1).OnCacheSequenceHeaderAsync(streamPath, mediaType, sequenceHeader);
         }
 
         [Fact]
@@ -80,8 +80,8 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
             await sut.ClearGroupOfPicturesCacheAsync(streamPath);
 
             // Assert
-            await interceptor1.Received(1).OnClearGroupOfPicturesCache(streamPath);
-            await interceptor2.Received(1).OnClearGroupOfPicturesCache(streamPath);
+            await interceptor1.Received(1).OnClearGroupOfPicturesCacheAsync(streamPath);
+            await interceptor2.Received(1).OnClearGroupOfPicturesCacheAsync(streamPath);
         }
     }
 }

@@ -23,7 +23,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             try
             {
                 foreach (var interceptor in _interceptors)
-                    await interceptor.OnCachePicture(streamPath, mediaType, rentedBuffer, timestamp);
+                    await interceptor.OnCachePictureAsync(streamPath, mediaType, rentedBuffer, timestamp);
             }
             finally
             {
@@ -34,13 +34,13 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
         public async ValueTask CacheSequenceHeaderAsync(string streamPath, MediaType mediaType, byte[] sequenceHeader)
         {
             foreach (var interceptor in _interceptors)
-                await interceptor.OnCacheSequenceHeader(streamPath, mediaType, sequenceHeader);
+                await interceptor.OnCacheSequenceHeaderAsync(streamPath, mediaType, sequenceHeader);
         }
 
         public async ValueTask ClearGroupOfPicturesCacheAsync(string streamPath)
         {
             foreach (var interceptor in _interceptors)
-                await interceptor.OnClearGroupOfPicturesCache(streamPath);
+                await interceptor.OnClearGroupOfPicturesCacheAsync(streamPath);
         }
     }
 }

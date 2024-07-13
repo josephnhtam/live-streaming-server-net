@@ -1,6 +1,6 @@
 # RTMP Server Events
 
-There are multiple event handlers available, including `IRtmpServerConnectionEventHandler`, `IRtmpServerStreamEventHandler` and `IRtmpMediaMessageInterceptor`, which are useful for extending the behavior of LiveStreamingServerNet.
+There are multiple event handlers available, including `IRtmpServerConnectionEventHandler`, `IRtmpServerStreamEventHandler`, `IRtmpMediaMessageInterceptor` and `IRtmpMediaCachingInterceptor`, which are useful for extending the behavior of LiveStreamingServerNet.
 
 ## Interfaces
 
@@ -27,10 +27,14 @@ public interface IRtmpServerStreamEventHandler
 
 public interface IRtmpMediaMessageInterceptor
 {
-    ValueTask OnCacheSequenceHeader(string streamPath, MediaType mediaType, byte[] sequenceHeader);
-    ValueTask OnCachePicture(string streamPath, MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp);
-    ValueTask OnClearGroupOfPicturesCache(string streamPath);
-    ValueTask OnReceiveMediaMessage(string streamPath, MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp, bool isSkippable);
+    ValueTask OnReceiveMediaMessageAsync(string streamPath, MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp, bool isSkippable);
+}
+
+public interface IRtmpMediaCachingInterceptor
+{
+    ValueTask OnCacheSequenceHeaderAsync(string streamPath, MediaType mediaType, byte[] sequenceHeader);
+    ValueTask OnCachePictureAsync(string streamPath, MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp);
+    ValueTask OnClearGroupOfPicturesCacheAsync(string streamPath);
 }
 ```
 

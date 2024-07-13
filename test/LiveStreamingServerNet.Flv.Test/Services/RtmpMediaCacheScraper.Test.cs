@@ -42,7 +42,7 @@ namespace LiveStreamingServerNet.Flv.Test.Services
             _streamManager.GetFlvStreamContext(streamPath).Returns(streamContext);
 
             // Act
-            await _sut.OnCachePicture(streamPath, mediaType, rentedBuffer, timestamp);
+            await _sut.OnCachePictureAsync(streamPath, mediaType, rentedBuffer, timestamp);
 
             // Assert
             await _mediaTagCacher.Received(1).CachePictureAsync(streamContext, mediaType, rentedBuffer, timestamp);
@@ -58,7 +58,7 @@ namespace LiveStreamingServerNet.Flv.Test.Services
             _streamManager.GetFlvStreamContext(streamPath).Returns(streamContext);
 
             // Act
-            await _sut.OnClearGroupOfPicturesCache(streamPath);
+            await _sut.OnClearGroupOfPicturesCacheAsync(streamPath);
 
             // Assert
             await _mediaTagCacher.Received(1).ClearGroupOfPicturesCacheAsync(streamContext);
@@ -79,7 +79,7 @@ namespace LiveStreamingServerNet.Flv.Test.Services
             _streamManager.GetSubscribers(streamPath).Returns(subscribers);
 
             // Act
-            await _sut.OnCacheSequenceHeader(streamPath, mediaType, sequenceHeader);
+            await _sut.OnCacheSequenceHeaderAsync(streamPath, mediaType, sequenceHeader);
 
             // Assert
             await _mediaTagBroadcaster.BroadcastMediaTagAsync(streamContext, subscribers, mediaType, 0, false,

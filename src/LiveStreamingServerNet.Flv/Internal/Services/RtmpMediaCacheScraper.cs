@@ -25,7 +25,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
             _bufferPool = bufferPool;
         }
 
-        public async ValueTask OnCachePicture(string streamPath, MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp)
+        public async ValueTask OnCachePictureAsync(string streamPath, MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp)
         {
             var streamContext = _streamManager.GetFlvStreamContext(streamPath);
             if (streamContext == null)
@@ -34,7 +34,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
             await _mediaTagCacher.CachePictureAsync(streamContext, mediaType, rentedBuffer, timestamp);
         }
 
-        public async ValueTask OnClearGroupOfPicturesCache(string streamPath)
+        public async ValueTask OnClearGroupOfPicturesCacheAsync(string streamPath)
         {
             var streamContext = _streamManager.GetFlvStreamContext(streamPath);
             if (streamContext == null)
@@ -43,7 +43,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
             await _mediaTagCacher.ClearGroupOfPicturesCacheAsync(streamContext);
         }
 
-        public async ValueTask OnCacheSequenceHeader(string streamPath, MediaType mediaType, byte[] sequenceHeader)
+        public async ValueTask OnCacheSequenceHeaderAsync(string streamPath, MediaType mediaType, byte[] sequenceHeader)
         {
             var streamContext = _streamManager.GetFlvStreamContext(streamPath);
             if (streamContext == null)

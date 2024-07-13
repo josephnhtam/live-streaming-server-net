@@ -37,8 +37,8 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
             await service.ReceiveMediaMessageAsync(streamPath, mediaType, payloadBuffer, timestamp, isSkippable);
 
             // Assert
-            await interceptor1.Received(1).OnReceiveMediaMessage(streamPath, mediaType, Arg.Any<IRentedBuffer>(), timestamp, isSkippable);
-            await interceptor2.Received(1).OnReceiveMediaMessage(streamPath, mediaType, Arg.Any<IRentedBuffer>(), timestamp, isSkippable);
+            await interceptor1.Received(1).OnReceiveMediaMessageAsync(streamPath, mediaType, Arg.Any<IRentedBuffer>(), timestamp, isSkippable);
+            await interceptor2.Received(1).OnReceiveMediaMessageAsync(streamPath, mediaType, Arg.Any<IRentedBuffer>(), timestamp, isSkippable);
         }
     }
 }

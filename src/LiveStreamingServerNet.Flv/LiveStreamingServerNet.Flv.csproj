@@ -10,7 +10,7 @@
     <PackageTags>live-streaming;rtmp;flv;http-flv;websocket-flv</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <Version>0.14.0</Version>
+    <Version>0.14.1</Version>
   </PropertyGroup>
 
   <ItemGroup>

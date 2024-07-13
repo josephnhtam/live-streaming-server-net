@@ -4,8 +4,8 @@ namespace LiveStreamingServerNet.Rtmp.Contracts
 {
     public interface IRtmpMediaCachingInterceptor
     {
-        ValueTask OnCacheSequenceHeader(string streamPath, MediaType mediaType, byte[] sequenceHeader);
-        ValueTask OnCachePicture(string streamPath, MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp);
-        ValueTask OnClearGroupOfPicturesCache(string streamPath);
+        ValueTask OnCacheSequenceHeaderAsync(string streamPath, MediaType mediaType, byte[] sequenceHeader);
+        ValueTask OnCachePictureAsync(string streamPath, MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp);
+        ValueTask OnClearGroupOfPicturesCacheAsync(string streamPath);
     }
 }

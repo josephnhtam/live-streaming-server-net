@@ -18,7 +18,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
             _mediaTagBroadcaster = mediaMessageManager;
         }
 
-        public async ValueTask OnReceiveMediaMessage(string streamPath, MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp, bool isSkippable)
+        public async ValueTask OnReceiveMediaMessageAsync(string streamPath, MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp, bool isSkippable)
         {
             var streamContext = _streamManager.GetFlvStreamContext(streamPath);
             if (streamContext == null)
