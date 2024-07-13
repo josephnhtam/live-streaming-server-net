@@ -28,7 +28,7 @@ using LiveStreamingServerNet.AdminPanelUI;
 using LiveStreamingServerNet.Networking.Helpers;
 using LiveStreamingServerNet.Rtmp;
 using LiveStreamingServerNet.Standalone;
-using LiveStreamingServerNet.Standalone.Insatller;
+using LiveStreamingServerNet.Standalone.Installer;
 using LiveStreamingServerNet.StreamProcessor.AspNetCore.Installer;
 using LiveStreamingServerNet.StreamProcessor.Installer;
 using System.Net;

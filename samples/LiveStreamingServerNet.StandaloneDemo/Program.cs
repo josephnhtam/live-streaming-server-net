@@ -2,7 +2,7 @@ using LiveStreamingServerNet.AdminPanelUI;
 using LiveStreamingServerNet.Flv.Installer;
 using LiveStreamingServerNet.Networking.Helpers;
 using LiveStreamingServerNet.Standalone;
-using LiveStreamingServerNet.Standalone.Insatller;
+using LiveStreamingServerNet.Standalone.Installer;
 using System.Net;
 
 namespace LiveStreamingServerNet.StandaloneDemo

@@ -5,7 +5,7 @@ using LiveStreamingServerNet.Standalone.Internal.Services.Contracts;
 using LiveStreamingServerNet.Standalone.Services.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace LiveStreamingServerNet.Standalone.Insatller
+namespace LiveStreamingServerNet.Standalone.Installer
 {
     public static class StandaloneServicesInstaller
     {
