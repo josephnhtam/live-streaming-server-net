@@ -15,6 +15,7 @@ public interface IRtmpServerConnectionEventHandler
     ValueTask OnRtmpClientHandshakeCompleteAsync(IEventContext context, uint clientId);
     ValueTask OnRtmpClientConnectedAsync(IEventContext context, uint clientId, IReadOnlyDictionary<string, object> commandObject, IReadOnlyDictionary<string, object>? arguments);
 }
+
 public interface IRtmpServerStreamEventHandler
 {
     int GetOrder() => 0;
