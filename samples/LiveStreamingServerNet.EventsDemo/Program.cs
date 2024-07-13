@@ -17,8 +17,8 @@ namespace LiveStreamingServerNet.EventsDemo
             using var liveStreamingServer = LiveStreamingServerBuilder.Create()
                 .ConfigureRtmpServer(options =>
                 {
-                    options.Services.Configure<PublishingTimeLimiterConfig>(config =>
-                        config.PublishingTimeLimitSeconds = 60
+                    options.Services.Configure<IdlePublishingTimeLimiterConfig>(config =>
+                        config.IdlePublishingTimeLimitSeconds = 60
                     );
 
                     options.AddStreamEventHandler<PublishingTimeLimiter>();
@@ -30,20 +30,22 @@ namespace LiveStreamingServerNet.EventsDemo
         }
     }
 
-    public class PublishingTimeLimiterConfig
+    public class IdlePublishingTimeLimiterConfig
     {
-        public int PublishingTimeLimitSeconds { get; set; }
+        public int IdlePublishingTimeLimitSeconds { get; set; }
     }
 
     public class PublishingTimeLimiter : IRtmpServerStreamEventHandler, IDisposable
     {
         private readonly ConcurrentDictionary<uint, ITimer> _clientTimers = new();
         private readonly IServer _server;
-        private readonly PublishingTimeLimiterConfig _config;
+        private readonly IRtmpStreamManager _streamManager;
+        private readonly IdlePublishingTimeLimiterConfig _config;
 
-        public PublishingTimeLimiter(IServer server, IOptions<PublishingTimeLimiterConfig> config)
+        public PublishingTimeLimiter(IServer server, IRtmpStreamManager streamManager, IOptions<IdlePublishingTimeLimiterConfig> config)
         {
             _server = server;
+            _streamManager = streamManager;
             _config = config.Value;
         }
 
@@ -60,11 +62,12 @@ namespace LiveStreamingServerNet.EventsDemo
         {
             _clientTimers[clientId] = new Timer(async _ =>
             {
-                var client = _server.GetClient(clientId);
+                var stream = _streamManager.GetStream(streamPath);
 
-                if (client != null)
-                    await client.DisconnectAsync();
-            }, null, TimeSpan.FromSeconds(_config.PublishingTimeLimitSeconds), Timeout.InfiniteTimeSpan);
+                if (stream != null && stream.Publisher.ClientId == clientId && stream.Subscribers.Count == 0)
+                    await stream.Publisher.DisconnectAsync();
+
+            }, null, TimeSpan.FromSeconds(_config.IdlePublishingTimeLimitSeconds), Timeout.InfiniteTimeSpan);
 
             return ValueTask.CompletedTask;
         }
