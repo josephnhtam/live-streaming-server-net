@@ -38,13 +38,11 @@ namespace LiveStreamingServerNet.EventsDemo
     public class IdlePublishingTimeLimiter : IRtmpServerStreamEventHandler, IDisposable
     {
         private readonly ConcurrentDictionary<uint, ITimer> _clientTimers = new();
-        private readonly IServer _server;
         private readonly IRtmpStreamManager _streamManager;
         private readonly IdlePublishingTimeLimiterConfig _config;
 
-        public IdlePublishingTimeLimiter(IServer server, IRtmpStreamManager streamManager, IOptions<IdlePublishingTimeLimiterConfig> config)
+        public IdlePublishingTimeLimiter(IRtmpStreamManager streamManager, IOptions<IdlePublishingTimeLimiterConfig> config)
         {
-            _server = server;
             _streamManager = streamManager;
             _config = config.Value;
         }
