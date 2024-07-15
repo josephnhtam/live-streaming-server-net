@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="KubernetesClient" Version="13.0.26" />
+    <PackageReference Include="KubernetesClient" Version="14.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.JsonPatch" Version="8.0.3" />
   </ItemGroup>
 
