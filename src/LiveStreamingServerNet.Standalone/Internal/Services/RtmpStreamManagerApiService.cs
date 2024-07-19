@@ -9,18 +9,18 @@ namespace LiveStreamingServerNet.Standalone.Internal.Services
 {
     internal class RtmpStreamManagerApiService : IRtmpStreamManagerApiService
     {
-        private readonly IRtmpStreamManager _streamManager;
+        private readonly IRtmpStreamInfoManager _streamInfoManager;
 
-        public RtmpStreamManagerApiService(IRtmpStreamManager streamManager)
+        public RtmpStreamManagerApiService(IRtmpStreamInfoManager streamInfoManager)
         {
-            _streamManager = streamManager;
+            _streamInfoManager = streamInfoManager;
         }
 
         public Task<GetStreamsResponse> GetStreamsAsync(GetStreamsRequest request)
         {
             var (page, pageSize, filter) = request;
 
-            var streams = _streamManager.GetStreams();
+            var streams = _streamInfoManager.GetStreamInfos();
 
             if (!string.IsNullOrWhiteSpace(filter))
                 streams = streams.Where(x => x.StreamPath.Contains(filter, StringComparison.OrdinalIgnoreCase)).ToList();
@@ -45,7 +45,7 @@ namespace LiveStreamingServerNet.Standalone.Internal.Services
                 throw new ApiException(StatusCodes.Status400BadRequest, "Invalid stream id format.");
 
             var streamPath = streamId.Substring(splitIndex + 1);
-            var stream = _streamManager.GetStream(streamPath);
+            var stream = _streamInfoManager.GetStreamInfo(streamPath);
 
             if (stream == null || stream.Publisher.ClientId != clientId)
                 throw new ApiException(StatusCodes.Status404NotFound, $"Stream ({streamId}) not found.");

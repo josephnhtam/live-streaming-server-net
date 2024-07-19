@@ -1,5 +1,4 @@
 ﻿using LiveStreamingServerNet.Networking;
-using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.Rtmp.Contracts;
 using LiveStreamingServerNet.Utilities.Contracts;
 using Microsoft.Extensions.DependencyInjection;
@@ -38,12 +37,12 @@ namespace LiveStreamingServerNet.EventsDemo
     public class IdlePublishingTimeLimiter : IRtmpServerStreamEventHandler, IDisposable
     {
         private readonly ConcurrentDictionary<uint, ITimer> _clientTimers = new();
-        private readonly IRtmpStreamManager _streamManager;
+        private readonly IRtmpStreamInfoManager _streamInfoManager;
         private readonly IdlePublishingTimeLimiterConfig _config;
 
-        public IdlePublishingTimeLimiter(IRtmpStreamManager streamManager, IOptions<IdlePublishingTimeLimiterConfig> config)
+        public IdlePublishingTimeLimiter(IRtmpStreamInfoManager streamInfoManager, IOptions<IdlePublishingTimeLimiterConfig> config)
         {
-            _streamManager = streamManager;
+            _streamInfoManager = streamInfoManager;
             _config = config.Value;
         }
 
@@ -60,7 +59,7 @@ namespace LiveStreamingServerNet.EventsDemo
         {
             _clientTimers[clientId] = new Timer(async _ =>
             {
-                var stream = _streamManager.GetStream(streamPath);
+                var stream = _streamInfoManager.GetStreamInfo(streamPath);
 
                 if (stream != null && stream.Publisher.ClientId == clientId && stream.Subscribers.Count == 0)
                     await stream.Publisher.DisconnectAsync();

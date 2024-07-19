@@ -15,6 +15,8 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services.Contracts
         SubscribingStreamResult StartSubscribingStream(IRtmpClientContext subscriberClientContext, uint chunkStreamId, string streamPath, IReadOnlyDictionary<string, string> streamArguments);
         bool StopSubscribingStream(IRtmpClientContext subscriberClientContext);
 
+        IReadOnlyList<string> GetStreamPaths();
+        IRtmpClientContext? GetPublisher(string streamPath);
         IReadOnlyList<IRtmpClientContext> GetSubscribers(string streamPath);
     }
 
