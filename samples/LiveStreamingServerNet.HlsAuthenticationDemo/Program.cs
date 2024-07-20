@@ -27,7 +27,6 @@ namespace LiveStreamingServerNet.HlsAuthenticationDemo
                 )
             );
 
-            //
             builder.Services.AddAuthentication()
                 .AddJwtBearer(options =>
                 {
