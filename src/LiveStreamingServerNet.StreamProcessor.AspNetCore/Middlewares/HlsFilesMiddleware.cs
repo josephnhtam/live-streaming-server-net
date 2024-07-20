@@ -62,7 +62,7 @@ namespace LiveStreamingServerNet.StreamProcessor.AspNetCore.Middlewares
 
         private Task Next(HttpContext context)
         {
-            if (context.Items.TryGetValue("originalPath", out var path) && path is PathString originalPath)
+            if (context.Items.Remove("OriginalPath", out var path) && path is PathString originalPath)
             {
                 context.Request.Path = originalPath;
             }
@@ -72,46 +72,58 @@ namespace LiveStreamingServerNet.StreamProcessor.AspNetCore.Middlewares
 
         public async Task InvokeAsync(HttpContext context)
         {
-            if (!ValidateNoEndpoint(context) || !ValidateMethod(context) || !ValidatePath(context, _options.RequestPath, out var fileSubPath))
+            if (!ValidateNoEndpoint(context) ||
+                !ValidateMethod(context) ||
+                !ValidatePath(context, _options.RequestPath, out var streamPath, out var fileSubPath))
             {
                 await _next.Invoke(context);
                 return;
             }
 
-            context.Items["originalPath"] = context.Request.Path;
+            await _options.OnProcessRequestAsync.Invoke(new HlsFileRequestContext(context, streamPath, fileSubPath));
+
+            if (context.Response.HasStarted)
+                return;
+
+            context.Items["StreamPath"] = streamPath;
+            context.Items["OriginalPath"] = context.Request.Path;
             context.Request.Path = _hlsServingPath.Add(fileSubPath);
 
             await _staticFile.Invoke(context);
         }
 
-        private PathString GetFileSubPath(PathString subPath)
+        private (string StreamPath, PathString FileSubPath) ResolvePaths(PathString subPath)
         {
-            var streamPath = Path.GetDirectoryName(subPath.Value) ?? string.Empty;
+            var streamPath = NormalizePath(Path.GetDirectoryName(subPath.Value)) ?? string.Empty;
             var outputPath = _pathMapper.GetHlsOutputPath(streamPath);
 
             if (string.IsNullOrEmpty(outputPath))
-                return PathString.Empty;
+                return (streamPath, PathString.Empty);
 
             try
             {
                 var filePath = Path.Combine(outputPath, Path.GetFileName(subPath.Value) ?? string.Empty);
-                return new PathString($"/{Path.GetRelativePath(_options.Root, filePath).Replace('\\', '/').Trim('/')}");
+                return (streamPath, new PathString($"/{NormalizePath(Path.GetRelativePath(_options.Root, filePath))}"));
             }
             catch
             {
-                return PathString.Empty;
+                return (streamPath, PathString.Empty);
             }
         }
 
-        private bool ValidatePath(HttpContext context, PathString matchUrl, out PathString fileSubPath)
+        private bool ValidatePath(HttpContext context, PathString matchUrl, out string streamPath, out PathString fileSubPath)
         {
             if (!context.Request.Path.StartsWithSegments(matchUrl, out var subPath))
             {
+                streamPath = string.Empty;
                 fileSubPath = PathString.Empty;
                 return false;
             }
 
-            fileSubPath = GetFileSubPath(subPath);
+            var paths = ResolvePaths(subPath);
+            streamPath = paths.StreamPath;
+            fileSubPath = paths.FileSubPath;
+
             return fileSubPath.HasValue;
         }
 
@@ -129,6 +141,11 @@ namespace LiveStreamingServerNet.StreamProcessor.AspNetCore.Middlewares
         public void Dispose()
         {
             _fileProvider.Dispose();
+        }
+
+        private static string? NormalizePath(string? path)
+        {
+            return path?.Replace('\\', '/').TrimEnd('/');
         }
     }
 }

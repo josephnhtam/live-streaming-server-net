@@ -67,7 +67,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.Adap
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LIveStreamingServerNet.Utilities.Test", "test\LIveStreamingServerNet.Utilities.Test\LIveStreamingServerNet.Utilities.Test.csproj", "{7246C890-7231-4E08-9482-97AAAE4E9CD7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveStreamingServerNet.StreamProcessor.AspNetCore", "src\LiveStreamingServerNet.StreamProcessor.AspNetCore\LiveStreamingServerNet.StreamProcessor.AspNetCore.csproj", "{74112E94-0B2B-46B8-8759-C038A9975347}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.StreamProcessor.AspNetCore", "src\LiveStreamingServerNet.StreamProcessor.AspNetCore\LiveStreamingServerNet.StreamProcessor.AspNetCore.csproj", "{74112E94-0B2B-46B8-8759-C038A9975347}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.HlsAuthenticationDemo", "samples\LiveStreamingServerNet.HlsAuthenticationDemo\LiveStreamingServerNet.HlsAuthenticationDemo.csproj", "{71895ADC-8ED6-478A-9CCC-372C0E88D57D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -199,6 +201,10 @@ Global
 		{74112E94-0B2B-46B8-8759-C038A9975347}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{74112E94-0B2B-46B8-8759-C038A9975347}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{74112E94-0B2B-46B8-8759-C038A9975347}.Release|Any CPU.Build.0 = Release|Any CPU
+		{71895ADC-8ED6-478A-9CCC-372C0E88D57D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{71895ADC-8ED6-478A-9CCC-372C0E88D57D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{71895ADC-8ED6-478A-9CCC-372C0E88D57D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{71895ADC-8ED6-478A-9CCC-372C0E88D57D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -220,6 +226,7 @@ Global
 		{37264685-FFD1-4938-BB86-FB64526A5A8E} = {45761E33-F086-403D-BB6E-8059F8CC6BA8}
 		{581B51B6-83A5-48D7-A655-D52737EFC66E} = {45761E33-F086-403D-BB6E-8059F8CC6BA8}
 		{7246C890-7231-4E08-9482-97AAAE4E9CD7} = {C85AC04A-5060-4C4B-830A-D7F51F602749}
+		{71895ADC-8ED6-478A-9CCC-372C0E88D57D} = {45761E33-F086-403D-BB6E-8059F8CC6BA8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0A9A3928-2852-49B9-85EF-F00480E9FE7F}

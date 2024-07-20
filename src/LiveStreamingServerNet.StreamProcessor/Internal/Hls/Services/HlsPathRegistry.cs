@@ -27,7 +27,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Services
             return _hlsManifestPaths.TryGetValue(NormalizePath(streamPath), out var manifestPath) ? manifestPath : null;
         }
 
-        private string NormalizePath(string path)
+        private static string NormalizePath(string path)
         {
             return path.Replace('\\', '/').TrimEnd('/');
         }
