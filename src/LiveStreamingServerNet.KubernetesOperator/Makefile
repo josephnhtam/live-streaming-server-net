@@ -20,12 +20,14 @@ build:
 	
 .PHONY: deploy_docker_desktop
 deploy_docker_desktop:
-	CD ./Manifests/overlays/docker_desktop && kustomize edit set image operator=$(IMG)
-	CD ./Manifests/overlays/docker_desktop && kustomize edit set namespace $(NAMESPACE)
+	CD ./Manifests/overlays/docker_desktop && \
+	kustomize edit set image operator=$(IMG) && \
+	kustomize edit set namespace $(NAMESPACE)
 	kustomize build ./Manifests/overlays/docker_desktop | kubectl apply -f -
 	
 .PHONY: undeploy_docker_desktop
 undeploy_docker_desktop:
-	CD ./Manifests/overlays/docker_desktop && kustomize edit set image operator=$(IMG)
-	CD ./Manifests/overlays/docker_desktop && kustomize edit set namespace $(NAMESPACE)
+	CD ./Manifests/overlays/docker_desktop && \
+	kustomize edit set image operator=$(IMG) && \
+	kustomize edit set namespace $(NAMESPACE)
 	kustomize build ./Manifests/overlays/docker_desktop | kubectl delete -f -
