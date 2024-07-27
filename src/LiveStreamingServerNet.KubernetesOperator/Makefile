@@ -1,8 +1,8 @@
 NAMESPACE ?= live-streaming-server-net
 IMG ?= live-streaming-server-net-operator
 
-.PHONY: install-kubops-cli
-install-kubops-cli:
+.PHONY: install_kubeops_cli
+install_kubeops_cli:
 	dotnet tool install KubeOps.Cli
 
 .PHONY: manifest
