@@ -119,7 +119,7 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
                     catch (Exception ex)
                     {
                         await OnPodWatchErrorAsync(ex, retryDelay.Value, cancellationToken);
-                        continue;
+                        break;
                     }
 
                     lastEventReceivedTime = DateTime.UtcNow;
