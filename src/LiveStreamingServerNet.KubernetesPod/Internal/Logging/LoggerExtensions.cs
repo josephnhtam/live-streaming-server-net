@@ -4,8 +4,14 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Logging
 {
     internal static partial class LoggerExtensions
     {
+        [LoggerMessage(LogLevel.Information, "Starting the pod watcher")]
+        public static partial void StartingWatcher(this ILogger logger);
+
         [LoggerMessage(LogLevel.Error, "An error occurred when watching the pod")]
         public static partial void WatchingPodError(this ILogger logger, Exception exception);
+
+        [LoggerMessage(LogLevel.Error, "An error occurred when watching the pod | RetryDelay: {RetryDelay}")]
+        public static partial void WatchingPodError(this ILogger logger, Exception exception, TimeSpan retryDelay);
 
         [LoggerMessage(LogLevel.Information, "Stopping the pod gracefully")]
         public static partial void StoppingPodGracefully(this ILogger logger);

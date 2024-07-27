@@ -11,6 +11,6 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Services.Contracts
         string PodName { get; }
         Task<V1Pod> GetPodAsync(CancellationToken cancellationToken);
         Task PatchPodAsync(Action<IPodPatcherBuilder> configureBuilder);
-        IAsyncEnumerable<(WatchEventType, V1Pod)> WatchPodAsync(CancellationToken cancellationToken = default, TimeSpan? reconnectCheck = null);
+        IAsyncEnumerable<(WatchEventType, V1Pod)> WatchPodAsync(CancellationToken cancellationToken = default, TimeSpan? reconnectCheck = null, TimeSpan? retryDelay = null);
     }
 }

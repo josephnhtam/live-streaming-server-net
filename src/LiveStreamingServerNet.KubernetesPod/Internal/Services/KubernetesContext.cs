@@ -57,9 +57,11 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
 
         public async IAsyncEnumerable<(WatchEventType, V1Pod)> WatchPodAsync(
             [EnumeratorCancellation] CancellationToken stoppingToken = default,
-            TimeSpan? reconnectCheck = null)
+            TimeSpan? reconnectCheck = null,
+            TimeSpan? retryDelay = null)
         {
             reconnectCheck ??= TimeSpan.FromMinutes(5);
+            retryDelay ??= TimeSpan.FromSeconds(5);
 
             while (true)
             {
@@ -90,10 +92,16 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
 
                 try
                 {
+                    _logger.StartingWatcher();
                     watcher = WatchPodAsyncCore(cancellationToken);
                 }
                 catch (OperationCanceledException)
                 {
+                    continue;
+                }
+                catch (Exception ex)
+                {
+                    await OnPodWatchErrorAsync(ex, retryDelay.Value, cancellationToken);
                     continue;
                 }
 
@@ -108,10 +116,32 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
                     {
                         break;
                     }
+                    catch (Exception ex)
+                    {
+                        await OnPodWatchErrorAsync(ex, retryDelay.Value, cancellationToken);
+                        continue;
+                    }
 
                     lastEventReceivedTime = DateTime.UtcNow;
                     yield return watcher.Current;
                 }
+            }
+        }
+
+        private async ValueTask OnPodWatchErrorAsync(Exception ex, TimeSpan retryDelay, CancellationToken cancellation)
+        {
+            if (cancellation.IsCancellationRequested)
+                return;
+
+            _logger.WatchingPodError(ex, retryDelay);
+
+            try
+            {
+                await Task.Delay(retryDelay, cancellation);
+            }
+            catch (OperationCanceledException)
+            {
+                return;
             }
         }
 
