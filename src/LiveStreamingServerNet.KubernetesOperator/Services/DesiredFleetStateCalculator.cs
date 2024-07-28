@@ -26,17 +26,19 @@ namespace LiveStreamingServerNet.KubernetesOperator.Services
             {
                 var predictedUtilization = PredictUtilization(entity, currentState, desiredStateChanges);
 
-                if (!AreStateChangesValid(entity, currentUtilization, predictedUtilization))
+                if (!ValudateStateChanges(entity, currentUtilization, predictedUtilization))
                     desiredStateChanges = new DesiredFleetStateChange(0, new List<PodStateChange>());
             }
 
             return ValueTask.FromResult(desiredStateChanges);
         }
 
-        private static bool AreStateChangesValid(V1LiveStreamingServerFleet entity, float currentUtilization, float predictedUtilization)
+        private static bool ValudateStateChanges(V1LiveStreamingServerFleet entity, float currentUtilization, float predictedUtilization)
         {
-            if (currentUtilization < entity.Spec.TargetUtilization)
-                return predictedUtilization >= currentUtilization && predictedUtilization <= entity.Spec.TargetUtilization;
+            var targetUtilization = entity.Spec.TargetUtilization / 100f;
+
+            if (currentUtilization < targetUtilization)
+                return predictedUtilization >= currentUtilization && predictedUtilization <= targetUtilization;
 
             return predictedUtilization < currentUtilization;
         }
@@ -111,7 +113,8 @@ namespace LiveStreamingServerNet.KubernetesOperator.Services
 
         private int CalculateDesiredPodsCount(V1LiveStreamingServerFleet entity, FleetState currentState, float currentUtilization)
         {
-            var desiredPodsCount = (int)Math.Ceiling(currentState.ActivePods.Count * (currentUtilization / entity.Spec.TargetUtilization));
+            var targetUtilization = entity.Spec.TargetUtilization / 100f;
+            var desiredPodsCount = (int)Math.Ceiling(currentState.ActivePods.Count * (currentUtilization / targetUtilization));
 
             desiredPodsCount = _targetReplicasStabilizer.StabilizeTargetReplicas(entity, currentState.ActivePods.Count, desiredPodsCount);
 

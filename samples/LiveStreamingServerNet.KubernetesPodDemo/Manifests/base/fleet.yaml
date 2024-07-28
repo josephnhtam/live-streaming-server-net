@@ -8,7 +8,7 @@ spec:
   maxReplicas: 10
 
   podStreamsLimit: 2
-  targetUtilization: 0.5
+  targetUtilization: 50
   
   syncPeriodSeconds: 5
   scaleUpStabilizationWindowSeconds: 0

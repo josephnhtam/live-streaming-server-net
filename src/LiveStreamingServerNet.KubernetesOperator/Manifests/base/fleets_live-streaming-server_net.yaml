@@ -57,13 +57,13 @@ spec:
                 type: integer
               targetUtilization:
                 description: The target utilization rate for the pod.
-                exclusiveMaximum: true
+                exclusiveMaximum: false
                 exclusiveMinimum: false
-                format: float
-                maximum: 1.0
-                minimum: 0.0
+                format: int32
+                maximum: 99.0
+                minimum: 1.0
                 nullable: false
-                type: number
+                type: integer
               syncPeriodSeconds:
                 description: The time interval of resource audits to maintain the desired state across the fleet of pods.
                 exclusiveMinimum: false

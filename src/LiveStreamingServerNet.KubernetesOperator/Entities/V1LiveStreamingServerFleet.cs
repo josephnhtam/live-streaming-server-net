@@ -16,8 +16,8 @@ namespace LiveStreamingServerNet.KubernetesOperator.Entities
 
             [RangeMinimum(1), Description("The maximum number of streams that a single pod can publish.")]
             public int PodStreamsLimit { get; set; } = 4;
-            [RangeMinimum(0), RangeMaximum(1, true), Description("The target utilization rate for the pod.")]
-            public float TargetUtilization { get; set; } = 0.75f;
+            [RangeMinimum(1), RangeMaximum(99), Description("The target utilization rate for the pod.")]
+            public int TargetUtilization { get; set; } = 75;
 
             [RangeMinimum(1), Description("The time interval of resource audits to maintain the desired state across the fleet of pods.")]
             public int SyncPeriodSeconds { get; set; } = 5;
