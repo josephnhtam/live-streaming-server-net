@@ -1,11 +1,15 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using k8s;
+using Microsoft.Extensions.Logging;
 
 namespace LiveStreamingServerNet.KubernetesPod.Internal.Logging
 {
     internal static partial class LoggerExtensions
     {
         [LoggerMessage(LogLevel.Information, "Starting the pod watcher")]
-        public static partial void StartingWatcher(this ILogger logger);
+        public static partial void StartingPodWatcher(this ILogger logger);
+
+        [LoggerMessage(LogLevel.Information, "Pod event received | EventType: {EventType}")]
+        public static partial void PodEventReceived(this ILogger logger, WatchEventType eventType);
 
         [LoggerMessage(LogLevel.Error, "An error occurred when watching the pod")]
         public static partial void WatchingPodError(this ILogger logger, Exception exception);
@@ -19,8 +23,8 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Logging
         [LoggerMessage(LogLevel.Error, "An error occurred when patching the pod | JsonPatch: {JsonPatch}")]
         public static partial void PatchingPodError(this ILogger logger, string jsonPatch, Exception exception);
 
-        [LoggerMessage(LogLevel.Information, "Restarting watcher as no event is received since {LastEventTime}")]
-        public static partial void RestartingWatcher(this ILogger logger, DateTimeOffset lastEventTime);
+        [LoggerMessage(LogLevel.Information, "Restarting the pod watcher as no event is received since {LastEventTime}")]
+        public static partial void RestartingPodWatcher(this ILogger logger, DateTimeOffset lastEventTime);
 
         [LoggerMessage(LogLevel.Information, "Ignoring error occurred when watching the pod")]
         public static partial void IgnoringWatchingPodError(this ILogger logger, Exception exception);

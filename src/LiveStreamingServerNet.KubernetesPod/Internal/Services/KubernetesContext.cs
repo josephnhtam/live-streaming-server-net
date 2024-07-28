@@ -5,7 +5,6 @@ using LiveStreamingServerNet.KubernetesPod.Internal.Services.Contracts;
 using LiveStreamingServerNet.KubernetesPod.Utilities;
 using LiveStreamingServerNet.KubernetesPod.Utilities.Contracts;
 using Microsoft.Extensions.Logging;
-using System.Runtime.CompilerServices;
 using System.Text.Json;
 
 namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
@@ -55,45 +54,56 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
                 throw new InvalidOperationException($"Failed to get the pod '{PodName} in {PodNamespace}");
         }
 
-        public async IAsyncEnumerable<(WatchEventType, V1Pod)> WatchPodAsync(
-            [EnumeratorCancellation] CancellationToken stoppingToken = default,
-            TimeSpan? reconnectCheck = null,
-            TimeSpan? retryDelay = null)
+        public async Task WatchPodAsync(Action<WatchEventType, V1Pod> onPodEvent, WatchPodOptions? options = null, CancellationToken stoppingToken = default)
         {
-            reconnectCheck ??= TimeSpan.FromMinutes(5);
-            retryDelay ??= TimeSpan.FromSeconds(5);
+            var reconnectCheck = options?.ReconnectCheck ?? TimeSpan.FromMinutes(5);
+            var retryDelay = options?.ReconnectCheck ?? TimeSpan.FromSeconds(5);
 
             while (true)
             {
                 stoppingToken.ThrowIfCancellationRequested();
 
-                var lastEventReceivedTime = DateTime.UtcNow;
-
-                using var cts = CancellationTokenSource.CreateLinkedTokenSource(stoppingToken);
-                var cancellationToken = cts.Token;
-
-                using var timer = new Timer(_ =>
-                {
-                    if (cts.IsCancellationRequested)
-                        return;
-
-                    var timeSinceLastEvent = DateTime.UtcNow - lastEventReceivedTime;
-                    if (timeSinceLastEvent > reconnectCheck.Value)
-                    {
-                        _logger.RestartingWatcher(lastEventReceivedTime);
-                        cts.Cancel();
-                    }
-                },
-                state: null,
-                dueTime: reconnectCheck.Value / 2,
-                period: reconnectCheck.Value / 2);
-
-                IAsyncEnumerator<(WatchEventType, V1Pod)> watcher;
-
                 try
                 {
-                    _logger.StartingWatcher();
-                    watcher = WatchPodAsyncCore(cancellationToken);
+                    var lastEventReceivedTime = DateTime.UtcNow;
+
+                    using var watcherCts = CancellationTokenSource.CreateLinkedTokenSource(stoppingToken);
+                    var watcherCancellation = watcherCts.Token;
+
+                    var watcherCompletionSource = new TaskCompletionSource();
+
+                    _logger.StartingPodWatcher();
+
+                    using var watcher = CreatePodWatcher(
+                        (eventType, pod) =>
+                        {
+                            _logger.PodEventReceived(eventType);
+
+                            lastEventReceivedTime = DateTime.UtcNow;
+                            onPodEvent(eventType, pod);
+                        },
+                        watcherCompletionSource.SetException,
+                        watcherCompletionSource.SetResult,
+                        watcherCancellation);
+
+                    using var timer = new Timer(_ =>
+                    {
+                        if (watcherCts.IsCancellationRequested)
+                            return;
+
+                        var timeSinceLastEvent = DateTime.UtcNow - lastEventReceivedTime;
+                        if (timeSinceLastEvent > reconnectCheck)
+                        {
+                            _logger.RestartingPodWatcher(lastEventReceivedTime);
+                            watcherCts.Cancel();
+                            watcher.Dispose();
+                        }
+                    },
+                    state: null,
+                    dueTime: reconnectCheck / 2,
+                    period: reconnectCheck / 2);
+
+                    await watcherCompletionSource.Task;
                 }
                 catch (OperationCanceledException)
                 {
@@ -101,72 +111,34 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
                 }
                 catch (Exception ex)
                 {
-                    await OnPodWatchErrorAsync(ex, retryDelay.Value, cancellationToken);
-                    continue;
-                }
-
-                while (true)
-                {
-                    try
-                    {
-                        if (!await watcher.MoveNextAsync())
-                            break;
-                    }
-                    catch (OperationCanceledException)
-                    {
-                        break;
-                    }
-                    catch (Exception ex)
-                    {
-                        await OnPodWatchErrorAsync(ex, retryDelay.Value, cancellationToken);
-                        break;
-                    }
-
-                    lastEventReceivedTime = DateTime.UtcNow;
-                    yield return watcher.Current;
+                    _logger.WatchingPodError(ex, retryDelay);
+                    await Task.Delay(retryDelay, stoppingToken);
                 }
             }
         }
 
-        private async ValueTask OnPodWatchErrorAsync(Exception ex, TimeSpan retryDelay, CancellationToken cancellation)
+        private Watcher<V1Pod> CreatePodWatcher(Action<WatchEventType, V1Pod> onPodEvent, Action<Exception> onError, Action onClosed, CancellationToken cancellationToken)
         {
-            if (cancellation.IsCancellationRequested)
-                return;
-
-            _logger.WatchingPodError(ex, retryDelay);
-
-            try
-            {
-                await Task.Delay(retryDelay, cancellation);
-            }
-            catch (OperationCanceledException)
-            {
-                return;
-            }
-        }
-
-        private IAsyncEnumerator<(WatchEventType, V1Pod)> WatchPodAsyncCore(CancellationToken cancellationToken)
-        {
-            var watcher = KubernetesClient.CoreV1.ListNamespacedPodWithHttpMessagesAsync(
+            return KubernetesClient.CoreV1.ListNamespacedPodWithHttpMessagesAsync(
                 namespaceParameter: PodNamespace,
                 fieldSelector: $"metadata.name={PodName}",
                 watch: true,
                 cancellationToken: cancellationToken
-            ).WatchAsync<V1Pod, V1PodList>(
+            ).Watch(
+                onEvent: onPodEvent,
                 onError: ex =>
                 {
                     if (ex is KubernetesException kubernetesError &&
-                        string.Equals(kubernetesError.Status.Reason, "Expired", StringComparison.Ordinal))
+                        string.Equals(kubernetesError.Status.Reason, "Expired", StringComparison.OrdinalIgnoreCase))
                     {
+                        onError(ex);
                         throw ex;
                     }
 
                     _logger.IgnoringWatchingPodError(ex);
                 },
-                cancellationToken: cancellationToken
+                onClosed: onClosed
             );
-
-            return watcher.GetAsyncEnumerator(cancellationToken);
         }
 
         public async Task PatchPodAsync(Action<IPodPatcherBuilder> configureBuilder)

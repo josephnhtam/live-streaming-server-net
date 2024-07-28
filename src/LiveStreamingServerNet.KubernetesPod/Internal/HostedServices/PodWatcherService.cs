@@ -13,6 +13,9 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.HostedServices
         private readonly IPodLifetimeManager _lifetimeManager;
         private readonly ILogger _logger;
 
+        private readonly object syncLock = new();
+        private Task? reconilationTask;
+
         public PodWatcherService(IKubernetesContext context, IPodLifetimeManager lifetimeManager, ILogger<PodWatcherService> logger)
         {
             _context = context;
@@ -36,18 +39,34 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.HostedServices
 
         private async Task WatchPod(CancellationToken stoppingToken)
         {
-            var watcher = _context.WatchPodAsync(stoppingToken);
+            await _context.WatchPodAsync(
+                (eventType, pod) =>
+                {
+                    if (eventType != WatchEventType.Added && eventType != WatchEventType.Modified)
+                        return;
 
-            await foreach (var (eventType, pod) in watcher)
-            {
-                if (eventType != WatchEventType.Added && eventType != WatchEventType.Modified)
-                    continue;
+                    var labels = pod.Labels() ?? new Dictionary<string, string>();
+                    var annotataions = pod.Annotations() ?? new Dictionary<string, string>();
 
-                var labels = pod.Labels() ?? new Dictionary<string, string>();
-                var annotataions = pod.Annotations() ?? new Dictionary<string, string>();
+                    lock (syncLock)
+                    {
+                        if (reconilationTask == null || reconilationTask.IsCompleted)
+                        {
+                            reconilationTask = _lifetimeManager.ReconcileAsync(labels.AsReadOnly(), annotataions.AsReadOnly(), stoppingToken).AsTask();
+                        }
+                        else
+                        {
+                            reconilationTask = reconilationTask.ContinueWith(async _ =>
+                                await _lifetimeManager.ReconcileAsync(labels.AsReadOnly(), annotataions.AsReadOnly(), stoppingToken)
+                            );
+                        }
+                    }
+                },
+                stoppingToken: stoppingToken
+            );
 
-                await _lifetimeManager.ReconcileAsync(labels.AsReadOnly(), annotataions.AsReadOnly());
-            }
+            if (reconilationTask != null && !reconilationTask.IsCompleted)
+                await reconilationTask;
         }
     }
 }

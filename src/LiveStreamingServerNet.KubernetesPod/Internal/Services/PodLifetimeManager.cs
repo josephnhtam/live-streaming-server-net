@@ -33,7 +33,7 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
                 _streamsLimit = int.MaxValue;
         }
 
-        public async ValueTask ReconcileAsync(IReadOnlyDictionary<string, string> labels, IReadOnlyDictionary<string, string> annotations)
+        public async ValueTask ReconcileAsync(IReadOnlyDictionary<string, string> labels, IReadOnlyDictionary<string, string> annotations, CancellationToken cancellation)
         {
             if (!labels.TryGetValue(PodConstants.PendingStopLabel, out var isPendingStopStr))
             {
