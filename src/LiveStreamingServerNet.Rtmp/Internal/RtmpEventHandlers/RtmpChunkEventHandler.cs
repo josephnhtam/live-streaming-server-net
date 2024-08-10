@@ -32,14 +32,14 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
 
         public async ValueTask<RtmpEventConsumingResult> Handle(RtmpChunkEvent @event, CancellationToken cancellationToken)
         {
-            var dataBuffer = _dataBufferPool.Obtain();
+            var headerBuffer = _dataBufferPool.Obtain();
 
             try
             {
-                var result = await HandleChunkEvent(@event, dataBuffer, cancellationToken);
+                var result = await HandleChunkEvent(@event, headerBuffer, cancellationToken);
                 if (result.Succeeded)
                 {
-                    HandleAcknowledgement(@event, dataBuffer.Size);
+                    HandleAcknowledgement(@event, result.ConsumedBytes);
                     return result;
                 }
 
@@ -49,41 +49,41 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
             }
             finally
             {
-                _dataBufferPool.Recycle(dataBuffer);
+                _dataBufferPool.Recycle(headerBuffer);
             }
         }
 
-        private async ValueTask<RtmpEventConsumingResult> HandleChunkEvent(RtmpChunkEvent @event, IDataBuffer dataBuffer, CancellationToken cancellationToken)
+        private async ValueTask<RtmpEventConsumingResult> HandleChunkEvent(RtmpChunkEvent @event, IDataBuffer headerBuffer, CancellationToken cancellationToken)
         {
-            var basicHeader = await RtmpChunkBasicHeader.ReadAsync(dataBuffer, @event.NetworkStream, cancellationToken);
+            var basicHeader = await RtmpChunkBasicHeader.ReadAsync(headerBuffer, @event.NetworkStream, cancellationToken);
 
             var chunkStreamContext = @event.ClientContext.GetChunkStreamContext(basicHeader.ChunkStreamId);
 
             var success = basicHeader.ChunkType switch
             {
-                0 => await HandleChunkMessageHeaderType0Async(chunkStreamContext, @event, dataBuffer, cancellationToken),
-                1 => await HandleChunkMessageHeaderType1Async(chunkStreamContext, @event, dataBuffer, cancellationToken),
-                2 => await HandleChunkMessageHeaderType2Async(chunkStreamContext, @event, dataBuffer, cancellationToken),
-                3 => await HandleChunkMessageHeaderType3Async(chunkStreamContext, @event, dataBuffer, cancellationToken),
+                0 => await HandleChunkMessageHeaderType0Async(chunkStreamContext, @event, headerBuffer, cancellationToken),
+                1 => await HandleChunkMessageHeaderType1Async(chunkStreamContext, @event, headerBuffer, cancellationToken),
+                2 => await HandleChunkMessageHeaderType2Async(chunkStreamContext, @event, headerBuffer, cancellationToken),
+                3 => await HandleChunkMessageHeaderType3Async(chunkStreamContext, @event, headerBuffer, cancellationToken),
                 _ => throw new ArgumentOutOfRangeException(nameof(basicHeader.ChunkType))
             };
 
-            success &= await HandleChunkEventPayloadAsync(chunkStreamContext, @event, cancellationToken);
+            if (!success)
+                return new RtmpEventConsumingResult(false, 0);
 
-            return new RtmpEventConsumingResult(success, (int)@event.ClientContext.InChunkSize);
+            return await HandleChunkEventPayloadAsync(chunkStreamContext, @event, headerBuffer.Size, cancellationToken);
         }
 
-        private void HandleAcknowledgement(RtmpChunkEvent @event, int bufferSize)
+        private void HandleAcknowledgement(RtmpChunkEvent @event, int consumedBytes)
         {
             var clientContext = @event.ClientContext;
 
             if (clientContext.OutWindowAcknowledgementSize == 0)
                 return;
 
-            clientContext.SequenceNumber += (uint)bufferSize;
+            clientContext.SequenceNumber += (uint)consumedBytes;
             if (clientContext.SequenceNumber - clientContext.LastAcknowledgedSequenceNumber >= clientContext.OutWindowAcknowledgementSize)
             {
-                clientContext.LastAcknowledgedSequenceNumber = clientContext.SequenceNumber;
                 _protocolControlMessageSender.Acknowledgement(clientContext, clientContext.SequenceNumber);
 
                 const uint overflow = 0xf0000000;
@@ -92,6 +92,8 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
                     clientContext.SequenceNumber -= overflow;
                     clientContext.LastAcknowledgedSequenceNumber -= overflow;
                 }
+
+                clientContext.LastAcknowledgedSequenceNumber = clientContext.SequenceNumber;
             }
         }
 
@@ -196,7 +198,11 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
             return true;
         }
 
-        private async ValueTask<bool> HandleChunkEventPayloadAsync(IRtmpChunkStreamContext chunkStreamContext, RtmpChunkEvent @event, CancellationToken cancellationToken)
+        private async ValueTask<RtmpEventConsumingResult> HandleChunkEventPayloadAsync(
+            IRtmpChunkStreamContext chunkStreamContext,
+            RtmpChunkEvent @event,
+            int headerSize,
+            CancellationToken cancellationToken)
         {
             if (chunkStreamContext.IsFirstChunkOfMessage)
             {
@@ -205,11 +211,12 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
 
             var clientContext = @event.ClientContext;
             var payloadBuffer = chunkStreamContext.PayloadBuffer!;
-            int messageLength = chunkStreamContext.MessageHeader.MessageLength;
+            var messageLength = chunkStreamContext.MessageHeader.MessageLength;
+            var chunkedPayloadLength = 0;
 
             if (payloadBuffer.Size < messageLength)
             {
-                var chunkedPayloadLength = (int)Math.Min(
+                chunkedPayloadLength = (int)Math.Min(
                     messageLength - payloadBuffer.Size,
                     clientContext.InChunkSize - payloadBuffer.Size % clientContext.InChunkSize
                 );
@@ -220,10 +227,11 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
             if (payloadBuffer.Size == messageLength)
             {
                 payloadBuffer.Position = 0;
-                return await DispatchRtmpMessageAsync(chunkStreamContext, @event.ClientContext, cancellationToken);
+                var succeeded = await DispatchRtmpMessageAsync(chunkStreamContext, @event.ClientContext, cancellationToken);
+                return new RtmpEventConsumingResult(succeeded, headerSize + chunkedPayloadLength);
             }
 
-            return true;
+            return new RtmpEventConsumingResult(true, headerSize + chunkedPayloadLength);
         }
 
         private async ValueTask<bool> DispatchRtmpMessageAsync(IRtmpChunkStreamContext chunkStreamContext, IRtmpClientContext clientContext, CancellationToken cancellationToken)
