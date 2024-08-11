@@ -5,7 +5,7 @@ VisualStudioVersion = 17.8.34309.116
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet", "src\LiveStreamingServerNet\LiveStreamingServerNet.csproj", "{8559A0E8-9315-4728-8BD8-B3C49E14DFB7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.Networking", "src\LiveStreamingServerNet.Networking\LiveStreamingServerNet.Networking.csproj", "{15449DED-702C-4A69-BB75-CAFC7613565C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.Networking.Server", "src\LiveStreamingServerNet.Networking.Server\LiveStreamingServerNet.Networking.Server.csproj", "{15449DED-702C-4A69-BB75-CAFC7613565C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.Utilities", "src\LiveStreamingServerNet.Utilities\LiveStreamingServerNet.Utilities.csproj", "{CFCD9768-1EA2-4565-A6A7-30750D3D8F40}"
 EndProject
@@ -70,6 +70,12 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.StreamProcessor.AspNetCore", "src\LiveStreamingServerNet.StreamProcessor.AspNetCore\LiveStreamingServerNet.StreamProcessor.AspNetCore.csproj", "{74112E94-0B2B-46B8-8759-C038A9975347}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.HlsAuthenticationDemo", "samples\LiveStreamingServerNet.HlsAuthenticationDemo\LiveStreamingServerNet.HlsAuthenticationDemo.csproj", "{71895ADC-8ED6-478A-9CCC-372C0E88D57D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.Networking.Client", "src\LiveStreamingServerNet.Networking.Client\LiveStreamingServerNet.Networking.Client.csproj", "{35B4DDF7-E6FE-412D-B101-BD5BFE192A06}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.Networking", "src\LiveStreamingServerNet.Networking\LiveStreamingServerNet.Networking.csproj", "{E6F733DA-3F22-4C2E-8389-35651E0ADE36}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveStreamingServerNet.Networking.Server.Test", "test\LiveStreamingServerNet.Networking.Server.Test\LiveStreamingServerNet.Networking.Server.Test.csproj", "{6584699E-532D-49EC-B521-B2151587588F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -205,6 +211,18 @@ Global
 		{71895ADC-8ED6-478A-9CCC-372C0E88D57D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{71895ADC-8ED6-478A-9CCC-372C0E88D57D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{71895ADC-8ED6-478A-9CCC-372C0E88D57D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35B4DDF7-E6FE-412D-B101-BD5BFE192A06}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35B4DDF7-E6FE-412D-B101-BD5BFE192A06}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35B4DDF7-E6FE-412D-B101-BD5BFE192A06}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35B4DDF7-E6FE-412D-B101-BD5BFE192A06}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E6F733DA-3F22-4C2E-8389-35651E0ADE36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E6F733DA-3F22-4C2E-8389-35651E0ADE36}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E6F733DA-3F22-4C2E-8389-35651E0ADE36}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E6F733DA-3F22-4C2E-8389-35651E0ADE36}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6584699E-532D-49EC-B521-B2151587588F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6584699E-532D-49EC-B521-B2151587588F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6584699E-532D-49EC-B521-B2151587588F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6584699E-532D-49EC-B521-B2151587588F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -227,6 +245,7 @@ Global
 		{581B51B6-83A5-48D7-A655-D52737EFC66E} = {45761E33-F086-403D-BB6E-8059F8CC6BA8}
 		{7246C890-7231-4E08-9482-97AAAE4E9CD7} = {C85AC04A-5060-4C4B-830A-D7F51F602749}
 		{71895ADC-8ED6-478A-9CCC-372C0E88D57D} = {45761E33-F086-403D-BB6E-8059F8CC6BA8}
+		{6584699E-532D-49EC-B521-B2151587588F} = {C85AC04A-5060-4C4B-830A-D7F51F602749}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0A9A3928-2852-49B9-85EF-F00480E9FE7F}

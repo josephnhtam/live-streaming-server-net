@@ -24,7 +24,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             _eventDispatcher = eventDispatcher;
         }
 
-        public async ValueTask DeleteStreamAsync(IRtmpClientContext clientContext)
+        public async ValueTask DeleteStreamAsync(IRtmpClientSessionContext clientContext)
         {
             await StopPublishingStreamIfNeededAsync(clientContext);
             await StopSubscribingStreamIfNeededAsync(clientContext);
@@ -32,7 +32,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             clientContext.DeleteStream();
         }
 
-        private async ValueTask StopPublishingStreamIfNeededAsync(IRtmpClientContext clientContext)
+        private async ValueTask StopPublishingStreamIfNeededAsync(IRtmpClientSessionContext clientContext)
         {
             if (!_rtmpStreamManager.StopPublishingStream(clientContext, out var existingSubscriber))
                 return;
@@ -42,7 +42,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             await _eventDispatcher.RtmpStreamUnpublishedAsync(clientContext, clientContext.PublishStreamContext!.StreamPath);
         }
 
-        private async ValueTask StopSubscribingStreamIfNeededAsync(IRtmpClientContext clientContext)
+        private async ValueTask StopSubscribingStreamIfNeededAsync(IRtmpClientSessionContext clientContext)
         {
             if (!_rtmpStreamManager.StopSubscribingStream(clientContext))
                 return;
@@ -52,7 +52,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
         }
 
         private void SendStreamUnpublishNotify(
-            IReadOnlyList<IRtmpClientContext> subscribers,
+            IReadOnlyList<IRtmpClientSessionContext> subscribers,
             AmfEncodingType amfEncodingType = AmfEncodingType.Amf0)
         {
             foreach (var subscriberGroup in
@@ -70,7 +70,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
         }
 
         private void SendSubscriptionStoppedMessage(
-            IRtmpClientContext subscriber,
+            IRtmpClientSessionContext subscriber,
             AmfEncodingType amfEncodingType = AmfEncodingType.Amf0)
         {
             _commandMessageSender.SendOnStatusCommandMessage(

@@ -14,7 +14,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Media
     public class RtmpAudioMessageHandlerTest : IDisposable
     {
         private readonly IFixture _fixture;
-        private readonly IRtmpClientContext _clientContext;
+        private readonly IRtmpClientSessionContext _clientContext;
         private readonly IRtmpChunkStreamContext _chunkStreamContext;
         private readonly IRtmpStreamManagerService _streamManager;
         private readonly IRtmpMediaMessageCacherService _mediaMessageCacher;
@@ -26,7 +26,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Media
         public RtmpAudioMessageHandlerTest()
         {
             _fixture = new Fixture();
-            _clientContext = Substitute.For<IRtmpClientContext>();
+            _clientContext = Substitute.For<IRtmpClientSessionContext>();
             _chunkStreamContext = Substitute.For<IRtmpChunkStreamContext>();
             _streamManager = Substitute.For<IRtmpStreamManagerService>();
             _mediaMessageCacher = Substitute.For<IRtmpMediaMessageCacherService>();
@@ -75,8 +75,8 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Media
             // Arrange
             var stremaPath = _fixture.Create<string>();
 
-            var subscriber = Substitute.For<IRtmpClientContext>();
-            var subscribers = new List<IRtmpClientContext>() { subscriber };
+            var subscriber = Substitute.For<IRtmpClientSessionContext>();
+            var subscribers = new List<IRtmpClientSessionContext>() { subscriber };
 
             var publishStreamContext = Substitute.For<IRtmpPublishStreamContext>();
             publishStreamContext.StreamPath.Returns(stremaPath);

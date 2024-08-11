@@ -61,7 +61,7 @@ namespace LiveStreamingServerNet.EventsDemo
             {
                 var stream = _streamInfoManager.GetStreamInfo(streamPath);
 
-                if (stream != null && stream.Publisher.ClientId == clientId && stream.Subscribers.Count == 0)
+                if (stream != null && stream.Publisher.Id == clientId && stream.Subscribers.Count == 0)
                     await stream.Publisher.DisconnectAsync();
 
             }, null, TimeSpan.FromSeconds(_config.IdlePublishingTimeLimitSeconds), Timeout.InfiniteTimeSpan);

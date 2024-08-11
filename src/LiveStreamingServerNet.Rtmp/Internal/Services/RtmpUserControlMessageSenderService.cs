@@ -14,7 +14,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             _chunkMessageSenderService = chunkMessageSenderService;
         }
 
-        public void SendStreamBeginMessage(IRtmpClientContext clientContext)
+        public void SendStreamBeginMessage(IRtmpClientSessionContext clientContext)
         {
             if (clientContext.StreamSubscriptionContext == null)
                 return;
@@ -29,7 +29,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             });
         }
 
-        public void SendStreamBeginMessage(IReadOnlyList<IRtmpClientContext> clientContexts)
+        public void SendStreamBeginMessage(IReadOnlyList<IRtmpClientSessionContext> clientContexts)
         {
             foreach (var clientContextGroup in clientContexts.Where(x => x.StreamSubscriptionContext != null).GroupBy(x => x.StreamSubscriptionContext!.StreamId))
             {
@@ -44,7 +44,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             }
         }
 
-        public void SendStreamEofMessage(IRtmpClientContext clientContext)
+        public void SendStreamEofMessage(IRtmpClientSessionContext clientContext)
         {
             if (clientContext.StreamSubscriptionContext == null)
                 return;
@@ -59,7 +59,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             });
         }
 
-        public void SendStreamEofMessage(IReadOnlyList<IRtmpClientContext> clientContexts)
+        public void SendStreamEofMessage(IReadOnlyList<IRtmpClientSessionContext> clientContexts)
         {
             foreach (var clientContextGroup in clientContexts.Where(x => x.StreamSubscriptionContext != null).GroupBy(x => x.StreamSubscriptionContext!.StreamId))
             {

@@ -14,7 +14,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             _chunkMessageSenderService = chunkMessageSenderService;
         }
 
-        public void SetChunkSize(IRtmpClientContext clientContext, uint chunkSize)
+        public void SetChunkSize(IRtmpClientSessionContext clientContext, uint chunkSize)
         {
             var basicHeader = new RtmpChunkBasicHeader(0, RtmpConstants.ProtocolControlMessageChunkStreamId);
             var messageHeader = new RtmpChunkMessageHeaderType0(0, RtmpMessageType.SetChunkSize, RtmpConstants.ProtocolControlMessageStreamId);
@@ -25,7 +25,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             clientContext.OutChunkSize = chunkSize;
         }
 
-        public void AbortMessage(IRtmpClientContext clientContext, uint streamId)
+        public void AbortMessage(IRtmpClientSessionContext clientContext, uint streamId)
         {
             var basicHeader = new RtmpChunkBasicHeader(0, RtmpConstants.ProtocolControlMessageChunkStreamId);
             var messageHeader = new RtmpChunkMessageHeaderType0(0, RtmpMessageType.AbortMessage, RtmpConstants.ProtocolControlMessageStreamId);
@@ -34,7 +34,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
                 dataBuffer.WriteUInt32BigEndian(streamId));
         }
 
-        public void Acknowledgement(IRtmpClientContext clientContext, uint sequenceNumber)
+        public void Acknowledgement(IRtmpClientSessionContext clientContext, uint sequenceNumber)
         {
             var basicHeader = new RtmpChunkBasicHeader(0, RtmpConstants.ProtocolControlMessageChunkStreamId);
             var messageHeader = new RtmpChunkMessageHeaderType0(0, RtmpMessageType.Acknowledgement, RtmpConstants.ProtocolControlMessageStreamId);
@@ -43,7 +43,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
                 dataBuffer.WriteUInt32BigEndian(sequenceNumber));
         }
 
-        public void WindowAcknowledgementSize(IRtmpClientContext clientContext, uint windowAcknowledgementSize)
+        public void WindowAcknowledgementSize(IRtmpClientSessionContext clientContext, uint windowAcknowledgementSize)
         {
             var basicHeader = new RtmpChunkBasicHeader(0, RtmpConstants.ProtocolControlMessageChunkStreamId);
             var messageHeader = new RtmpChunkMessageHeaderType0(0, RtmpMessageType.WindowAcknowledgementSize, RtmpConstants.ProtocolControlMessageStreamId);
@@ -56,7 +56,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             clientContext.OutWindowAcknowledgementSize = windowAcknowledgementSize;
         }
 
-        public void SetClientBandwidth(IRtmpClientContext clientContext, uint clientBandwidth, RtmpClientBandwidthLimitType limitType)
+        public void SetClientBandwidth(IRtmpClientSessionContext clientContext, uint clientBandwidth, RtmpClientBandwidthLimitType limitType)
         {
             var basicHeader = new RtmpChunkBasicHeader(0, RtmpConstants.ProtocolControlMessageChunkStreamId);
             var messageHeader = new RtmpChunkMessageHeaderType0(0, RtmpMessageType.SetClientBandwidth, RtmpConstants.ProtocolControlMessageStreamId);

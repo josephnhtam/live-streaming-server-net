@@ -17,7 +17,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands.Dispat
         private readonly IRtmpCommandHanlderMap _handlerMap;
         private readonly ILogger _logger;
         private readonly ConcurrentDictionary<Type, (Type, ParameterInfo[])> _commandParametersMap;
-        private readonly ConcurrentDictionary<Type, RtmpCommandHandler> _clientHandlerCache;
+        private readonly ConcurrentDictionary<Type, RtmpCommandHandler> _commandHandlerCache;
 
         public RtmpCommandDispatcher(IServiceProvider services, IRtmpCommandHanlderMap handlerMap, ILogger<RtmpCommandDispatcher> logger)
         {
@@ -25,12 +25,12 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands.Dispat
             _handlerMap = handlerMap;
             _logger = logger;
             _commandParametersMap = new ConcurrentDictionary<Type, (Type, ParameterInfo[])>();
-            _clientHandlerCache = new ConcurrentDictionary<Type, RtmpCommandHandler>();
+            _commandHandlerCache = new ConcurrentDictionary<Type, RtmpCommandHandler>();
         }
 
         public async ValueTask<bool> DispatchAsync(
             IRtmpChunkStreamContext chunkStreamContext,
-            IRtmpClientContext clientContext,
+            IRtmpClientSessionContext clientContext,
             IDataBuffer payloadBuffer,
             CancellationToken cancellationToken)
         {
@@ -40,7 +40,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands.Dispat
 
             var commandName = (string)(isUsingAmf3 ? reader.ReadAmf3() : reader.ReadAmf0());
 
-            _logger.CommandReceived(clientContext.Client.ClientId, commandName);
+            _logger.CommandReceived(clientContext.Client.Id, commandName);
 
             var commandHandlerType = _handlerMap.GetHandlerType(commandName);
 
@@ -92,7 +92,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands.Dispat
 
         private RtmpCommandHandler GetCommandHandler(Type commandHandlerType)
         {
-            return _clientHandlerCache.GetOrAdd(commandHandlerType, (commandHandlerType) =>
+            return _commandHandlerCache.GetOrAdd(commandHandlerType, (commandHandlerType) =>
                 (_services.GetRequiredService(commandHandlerType) as RtmpCommandHandler)!
             );
         }

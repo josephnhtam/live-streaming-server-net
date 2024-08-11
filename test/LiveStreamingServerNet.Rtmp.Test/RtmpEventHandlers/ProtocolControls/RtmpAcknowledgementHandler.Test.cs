@@ -15,7 +15,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.ProtocolControls
             // Arrange
             var logger = Substitute.For<ILogger<RtmpAcknowledgementHandler>>();
             var chunkStreamContext = Substitute.For<IRtmpChunkStreamContext>();
-            var clientContext = Substitute.For<IRtmpClientContext>();
+            var clientContext = Substitute.For<IRtmpClientSessionContext>();
             var payloadBuffer = Substitute.For<IDataBuffer>();
             var sut = new RtmpAcknowledgementHandler(logger);
 

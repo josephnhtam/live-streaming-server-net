@@ -37,7 +37,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
 
         public async ValueTask<bool> HandleAsync(
             IRtmpChunkStreamContext chunkStreamContext,
-            IRtmpClientContext clientContext,
+            IRtmpClientSessionContext clientContext,
             IDataBuffer payloadBuffer,
             CancellationToken cancellationToken)
         {
@@ -45,7 +45,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
 
             if (publishStreamContext == null)
             {
-                _logger.StreamNotYetCreated(clientContext.Client.ClientId);
+                _logger.StreamNotYetCreated(clientContext.Client.Id);
                 return false;
             }
 
@@ -71,7 +71,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
 
         private async ValueTask BroadcastAudioMessageToSubscribersAsync(
             IRtmpChunkStreamContext chunkStreamContext,
-            IRtmpClientContext clientContext,
+            IRtmpClientSessionContext clientContext,
             IRtmpPublishStreamContext publishStreamContext,
             IDataBuffer payloadBuffer,
             bool isSkippable)
@@ -82,11 +82,11 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
 
         private async ValueTask BroadcastAudioMessageToSubscribersAsync(
             IRtmpChunkStreamContext chunkStreamContext,
-            IRtmpClientContext clientContext,
+            IRtmpClientSessionContext clientContext,
             IRtmpPublishStreamContext publishStreamContext,
             bool isSkippable,
             IDataBuffer payloadBuffer,
-            IReadOnlyList<IRtmpClientContext> subscribers)
+            IReadOnlyList<IRtmpClientSessionContext> subscribers)
         {
             clientContext.UpdateTimestamp(chunkStreamContext.MessageHeader.Timestamp, MediaType.Audio);
 
@@ -100,11 +100,11 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private bool IsAudioCodecAllowed(IRtmpClientContext clientContext, IRtmpPublishStreamContext publishStreamContext, AudioCodec audioCodec)
+        private bool IsAudioCodecAllowed(IRtmpClientSessionContext clientContext, IRtmpPublishStreamContext publishStreamContext, AudioCodec audioCodec)
         {
             if (_audioCodecFilter != null && !_audioCodecFilter.IsAllowed(audioCodec))
             {
-                _logger.AudioCodecNotAllowed(clientContext.Client.ClientId, publishStreamContext.StreamPath, audioCodec);
+                _logger.AudioCodecNotAllowed(clientContext.Client.Id, publishStreamContext.StreamPath, audioCodec);
                 return false;
             }
 

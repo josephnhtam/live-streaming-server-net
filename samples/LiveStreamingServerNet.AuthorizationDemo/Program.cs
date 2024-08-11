@@ -53,7 +53,7 @@ namespace LiveStreamingServerNet.AuthorizationDemo
         }
 
         public Task<AuthorizationResult> AuthorizePublishingAsync(
-            IClientInfo client,
+            ISessionInfo client,
             string streamPath,
             IReadOnlyDictionary<string, string> streamArguments,
             string publishingType)
@@ -67,7 +67,7 @@ namespace LiveStreamingServerNet.AuthorizationDemo
         }
 
         public Task<AuthorizationResult> AuthorizeSubscribingAsync(
-            IClientInfo client,
+            ISessionInfo client,
             string streamPath,
             IReadOnlyDictionary<string, string> streamArguments)
         {

@@ -28,7 +28,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
         public void Send_Should_SendMessageChunksToClient()
         {
             // Arrange
-            var clientContext = Substitute.For<IRtmpClientContext>();
+            var clientContext = Substitute.For<IRtmpClientSessionContext>();
             var basicHeader = _fixture.Create<RtmpChunkBasicHeader>();
             var messageHeader = _fixture.Create<RtmpChunkMessageHeaderType0>();
             var payloadWriter = _fixture.Create<Action<IDataBuffer>>();
@@ -60,7 +60,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
         public async Task SendAsync_Should_SendMessageChunksToClient()
         {
             // Arrange
-            var clientContext = Substitute.For<IRtmpClientContext>();
+            var clientContext = Substitute.For<IRtmpClientSessionContext>();
             var basicHeader = _fixture.Create<RtmpChunkBasicHeader>();
             var messageHeader = _fixture.Create<RtmpChunkMessageHeaderType0>();
             var payloadWriter = _fixture.Create<Action<IDataBuffer>>();
@@ -89,15 +89,15 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
         public void Send_Should_SendMessageChunksToClients()
         {
             // Arrange
-            var clientContext1 = Substitute.For<IRtmpClientContext>();
-            var clientContext2 = Substitute.For<IRtmpClientContext>();
+            var clientContext1 = Substitute.For<IRtmpClientSessionContext>();
+            var clientContext2 = Substitute.For<IRtmpClientSessionContext>();
 
             var basicHeader = _fixture.Create<RtmpChunkBasicHeader>();
             var messageHeader = _fixture.Create<RtmpChunkMessageHeaderType0>();
             var payloadWriter = _fixture.Create<Action<IDataBuffer>>();
 
             // Act
-            _sut.Send(new List<IRtmpClientContext> { clientContext1, clientContext2 }, basicHeader, messageHeader, payloadWriter);
+            _sut.Send(new List<IRtmpClientSessionContext> { clientContext1, clientContext2 }, basicHeader, messageHeader, payloadWriter);
 
             // Assert
             _dataBufferPool.Received().Obtain();

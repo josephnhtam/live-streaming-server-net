@@ -4,7 +4,7 @@ using LiveStreamingServerNet.Flv.Internal.Contracts;
 using LiveStreamingServerNet.Flv.Internal.Extensions;
 using LiveStreamingServerNet.Flv.Internal.Services.Contracts;
 using LiveStreamingServerNet.Flv.Internal.WebSocketClients.Contracts;
-using LiveStreamingServerNet.Networking.Contracts;
+using LiveStreamingServerNet.Networking.Server.Contracts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;

@@ -12,7 +12,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Commands
         private readonly IFixture _fixture;
         private readonly IRtmpCommandMessageSenderService _commandMessageSender;
         private readonly IRtmpChunkStreamContext _chunkStreamContext;
-        private readonly IRtmpClientContext _clientContext;
+        private readonly IRtmpClientSessionContext _clientContext;
         private readonly RtmpCreateStreamCommandHandler _sut;
 
         public RtmpCreateStreamCommandHandlerTest()
@@ -20,7 +20,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Commands
             _fixture = new Fixture();
             _commandMessageSender = Substitute.For<IRtmpCommandMessageSenderService>();
             _chunkStreamContext = Substitute.For<IRtmpChunkStreamContext>();
-            _clientContext = Substitute.For<IRtmpClientContext>();
+            _clientContext = Substitute.For<IRtmpClientSessionContext>();
 
             _sut = new RtmpCreateStreamCommandHandler(_commandMessageSender);
         }

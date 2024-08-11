@@ -6,7 +6,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services.Contracts
     internal interface IRtmpCommandMessageSenderService
     {
         void SendCommandMessage(
-            IRtmpClientContext clientContext,
+            IRtmpClientSessionContext clientContext,
             uint chunkStreamId,
             string commandName,
             double transactionId,
@@ -16,7 +16,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services.Contracts
             Action<bool>? callback = null);
 
         ValueTask SendCommandMessageAsync(
-            IRtmpClientContext clientContext,
+            IRtmpClientSessionContext clientContext,
             uint chunkStreamId,
             string commandName,
             double transactionId,
@@ -25,7 +25,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services.Contracts
             AmfEncodingType amfEncodingType = AmfEncodingType.Amf0);
 
         void SendCommandMessage(
-           IReadOnlyList<IRtmpClientContext> clientContexts,
+           IReadOnlyList<IRtmpClientSessionContext> clientContexts,
            uint chunkStreamId,
            string commandName,
            double transactionId,

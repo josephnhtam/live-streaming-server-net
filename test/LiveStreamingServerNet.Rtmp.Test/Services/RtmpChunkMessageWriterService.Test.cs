@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 using LiveStreamingServerNet.Networking.Contracts;
-using LiveStreamingServerNet.Networking.Internal;
+using LiveStreamingServerNet.Networking.Server.Internal;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpHeaders;
 using LiveStreamingServerNet.Rtmp.Internal.Services;
 using LiveStreamingServerNet.Rtmp.Test.Utilities;
@@ -42,7 +42,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
             service.Write(streamBuffer, basicHeader, messageHeader, payloadBuffer.MoveTo(0), (uint)expectedChunkSize);
 
             // Assert
-            await using var stream = new NetworkStream(new MemoryStream(streamBuffer.UnderlyingBuffer));
+            await using var stream = new ClientNetworkStream(1, new MemoryStream(streamBuffer.UnderlyingBuffer));
             using var targetBuffer = new DataBuffer();
 
             var remainingPayloadSize = expectedPayload.Length;

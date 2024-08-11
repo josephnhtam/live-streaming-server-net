@@ -36,15 +36,15 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
 
         public override async ValueTask<bool> HandleAsync(
             IRtmpChunkStreamContext chunkStreamContext,
-            IRtmpClientContext clientContext,
+            IRtmpClientSessionContext clientContext,
             RtmpConnectCommand command,
             CancellationToken cancellationToken)
         {
-            _logger.Connect(clientContext.Client.ClientId, command.CommandObject);
+            _logger.Connect(clientContext.Client.Id, command.CommandObject);
 
             if (!string.IsNullOrEmpty(clientContext.AppName))
             {
-                _logger.ClientAlreadyConnected(clientContext.Client.ClientId);
+                _logger.ClientAlreadyConnected(clientContext.Client.Id);
                 return false;
             }
 
@@ -52,7 +52,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
 
             if (string.IsNullOrWhiteSpace(appName))
             {
-                _logger.InvalidAppName(clientContext.Client.ClientId);
+                _logger.InvalidAppName(clientContext.Client.Id);
                 return false;
             }
 
@@ -69,7 +69,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
             return true;
         }
 
-        private void RespondToClient(IRtmpClientContext clientContext, RtmpConnectCommand command)
+        private void RespondToClient(IRtmpClientSessionContext clientContext, RtmpConnectCommand command)
         {
             _commandMessageSender.SendCommandMessage(
                 clientContext: clientContext,

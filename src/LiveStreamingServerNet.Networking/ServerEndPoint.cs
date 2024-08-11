@@ -2,8 +2,8 @@
 
 namespace LiveStreamingServerNet.Networking
 {
-    public record ServerEndPoint(IPEndPoint LocalEndPoint, bool IsSecure)
+    public record ServerEndPoint(IPEndPoint IPEndPoint, bool IsSecure)
     {
-        public static implicit operator ServerEndPoint(IPEndPoint localEndPoint) => new(localEndPoint, false);
+        public static implicit operator ServerEndPoint(IPEndPoint ipEndPoint) => new(ipEndPoint, false);
     }
 }

@@ -20,7 +20,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Authorization
             _serverContext = serverContext;
         }
 
-        public async ValueTask<AuthorizationResult> AuthorizePublishingAsync(IRtmpClientContext clientContext, string streamPath, string publishingType, IReadOnlyDictionary<string, string> streamArguments)
+        public async ValueTask<AuthorizationResult> AuthorizePublishingAsync(IRtmpClientSessionContext clientContext, string streamPath, string publishingType, IReadOnlyDictionary<string, string> streamArguments)
         {
             if (IsAuthorizedByCode(streamArguments))
                 return AuthorizationResult.Authorized();
@@ -40,7 +40,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Authorization
             return AuthorizationResult.Authorized(streamPath, streamArguments);
         }
 
-        public async ValueTask<AuthorizationResult> AuthorizeSubscribingAsync(IRtmpClientContext clientContext, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
+        public async ValueTask<AuthorizationResult> AuthorizeSubscribingAsync(IRtmpClientSessionContext clientContext, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
             if (IsAuthorizedByCode(streamArguments))
                 return AuthorizationResult.Authorized();

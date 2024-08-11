@@ -18,7 +18,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
         }
 
         public void Send<TRtmpChunkMessageHeader>(
-            IRtmpClientContext clientContext,
+            IRtmpClientSessionContext clientContext,
             RtmpChunkBasicHeader basicHeader,
             TRtmpChunkMessageHeader messageHeader,
             Action<IDataBuffer> payloadWriter,
@@ -39,7 +39,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             }
         }
 
-        public ValueTask SendAsync<TRtmpChunkMessageHeader>(IRtmpClientContext clientContext, RtmpChunkBasicHeader basicHeader, TRtmpChunkMessageHeader messageHeader, Action<IDataBuffer> payloadWriter) where TRtmpChunkMessageHeader : struct, IRtmpChunkMessageHeader
+        public ValueTask SendAsync<TRtmpChunkMessageHeader>(IRtmpClientSessionContext clientContext, RtmpChunkBasicHeader basicHeader, TRtmpChunkMessageHeader messageHeader, Action<IDataBuffer> payloadWriter) where TRtmpChunkMessageHeader : struct, IRtmpChunkMessageHeader
         {
             var tcs = new ValueTaskCompletionSource();
             Send(clientContext, basicHeader, messageHeader, payloadWriter, _ => tcs.SetResult());
@@ -47,7 +47,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
         }
 
         public void Send<TRtmpChunkMessageHeader>(
-            IReadOnlyList<IRtmpClientContext> clientContexts,
+            IReadOnlyList<IRtmpClientSessionContext> clientContexts,
             RtmpChunkBasicHeader basicHeader,
             TRtmpChunkMessageHeader messageHeader,
             Action<IDataBuffer> payloadWriter) where TRtmpChunkMessageHeader : struct, IRtmpChunkMessageHeader

@@ -3,6 +3,14 @@ using LiveStreamingServerNet.KubernetesPod.Redis.Internal.Logging;
 using LiveStreamingServerNet.KubernetesPod.Redis.Internal.Services.Contracts;
 using LiveStreamingServerNet.KubernetesPod.StreamRegistration;
 using LiveStreamingServerNet.KubernetesPod.StreamRegistration.Contracts;
+
+/* Unmerged change from project 'LiveStreamingServerNet.KubernetesPod.Redis (net8.0)'
+Before:
+using LiveStreamingServerNet.Networking.Server.Contracts;
+After:
+using LiveStreamingServerNet.Networking.Contracts;
+using LiveStreamingServerNet.Networking.Server.Contracts;
+*/
 using LiveStreamingServerNet.Networking.Contracts;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -42,7 +50,7 @@ namespace LiveStreamingServerNet.KubernetesPod.Redis.Internal.Services
         }
 
         public async Task<StreamRegistrationResult> RegisterStreamAsync(
-            IClientInfo client,
+            ISessionInfo client,
             string podNamespace,
             string podName,
             string streamPath,
@@ -54,7 +62,7 @@ namespace LiveStreamingServerNet.KubernetesPod.Redis.Internal.Services
                 var key = ResolveStreamKey(streamPath);
 
                 var streamInfo = new StreamInfo(
-                    client.ClientId,
+                    client.Id,
                     client.LocalEndPoint.ToString() ?? "Unknown",
                     client.RemoteEndPoint.ToString() ?? "Unknown",
                     podNamespace,

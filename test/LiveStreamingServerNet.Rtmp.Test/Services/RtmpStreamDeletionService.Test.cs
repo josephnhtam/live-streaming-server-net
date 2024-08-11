@@ -36,14 +36,14 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
         public async Task DeleteStream_Should_StopClientPublishingStream_When_StreamIsBeingPublishedByTheClient()
         {
             // Arrange
-            var clientContext = Substitute.For<IRtmpClientContext>();
-            var existingSubscriber = Substitute.For<IRtmpClientContext>();
-            var existingSubscribers = new List<IRtmpClientContext> { existingSubscriber };
+            var clientContext = Substitute.For<IRtmpClientSessionContext>();
+            var existingSubscriber = Substitute.For<IRtmpClientSessionContext>();
+            var existingSubscribers = new List<IRtmpClientSessionContext> { existingSubscriber };
 
             var streamPath = _fixture.Create<string>();
             clientContext.PublishStreamContext!.StreamPath.Returns(streamPath);
 
-            _rtmpStreamManager.StopPublishingStream(clientContext, out Arg.Any<IList<IRtmpClientContext>>()).Returns(x =>
+            _rtmpStreamManager.StopPublishingStream(clientContext, out Arg.Any<IList<IRtmpClientSessionContext>>()).Returns(x =>
             {
                 x[1] = existingSubscribers;
                 return true;
@@ -54,10 +54,10 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
 
             // Assert
             _userControlMessageSender.Received(1).SendStreamEofMessage(
-                Arg.Is<IReadOnlyList<IRtmpClientContext>>(x => x.Contains(existingSubscriber)));
+                Arg.Is<IReadOnlyList<IRtmpClientSessionContext>>(x => x.Contains(existingSubscriber)));
 
             _commandMessageSender.Received(1).SendCommandMessage(
-                Arg.Is<IReadOnlyList<IRtmpClientContext>>(x => x.Contains(existingSubscriber)),
+                Arg.Is<IReadOnlyList<IRtmpClientSessionContext>>(x => x.Contains(existingSubscriber)),
                 Arg.Any<uint>(),
                 "onStatus",
                 0,
@@ -79,9 +79,9 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
         public async Task DeleteStream_Should_StopClientSubscribingStream_When_StreamIsBeingSubscribedByTheClient()
         {
             // Arrange
-            var clientContext = Substitute.For<IRtmpClientContext>();
-            var existingSubscriber = Substitute.For<IRtmpClientContext>();
-            var existingSubscribers = new List<IRtmpClientContext> { existingSubscriber };
+            var clientContext = Substitute.For<IRtmpClientSessionContext>();
+            var existingSubscriber = Substitute.For<IRtmpClientSessionContext>();
+            var existingSubscribers = new List<IRtmpClientSessionContext> { existingSubscriber };
 
             var streamPath = _fixture.Create<string>();
             clientContext.StreamSubscriptionContext!.StreamPath.Returns(streamPath);

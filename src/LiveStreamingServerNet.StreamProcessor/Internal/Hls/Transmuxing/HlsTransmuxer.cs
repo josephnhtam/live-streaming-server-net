@@ -1,4 +1,12 @@
-﻿using LiveStreamingServerNet.Networking.Contracts;
+﻿
+/* Unmerged change from project 'LiveStreamingServerNet.StreamProcessor (net7.0)'
+Before:
+using LiveStreamingServerNet.Networking.Server.Contracts;
+After:
+using LiveStreamingServerNet.Networking.Contracts;
+using LiveStreamingServerNet.Networking.Server.Contracts;
+*/
+using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.Rtmp;
 using LiveStreamingServerNet.StreamProcessor.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Containers;
@@ -18,7 +26,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
 {
     internal partial class HlsTransmuxer : IHlsTransmuxer
     {
-        private readonly IClientHandle _client;
+        private readonly ISessionHandle _client;
         private readonly IHlsTransmuxerManager _transmuxerManager;
         private readonly IHlsCleanupManager _cleanupManager;
         private readonly IManifestWriter _manifestWriter;
@@ -42,7 +50,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
 
         public HlsTransmuxer(
             string streamPath,
-            IClientHandle client,
+            ISessionHandle client,
             IHlsTransmuxerManager transmuxerManager,
             IHlsCleanupManager cleanupManager,
             IManifestWriter manifestWriter,

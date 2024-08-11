@@ -1,5 +1,5 @@
 ﻿using LiveStreamingServerNet.AdminPanelUI.Dtos;
-using LiveStreamingServerNet.Networking.Contracts;
+using LiveStreamingServerNet.Networking.Server.Contracts;
 using LiveStreamingServerNet.Standalone.EndpointFilters;
 using LiveStreamingServerNet.Standalone.Services.Contracts;
 using Microsoft.AspNetCore.Builder;

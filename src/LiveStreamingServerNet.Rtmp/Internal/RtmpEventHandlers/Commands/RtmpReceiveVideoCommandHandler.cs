@@ -11,7 +11,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
     {
         public override ValueTask<bool> HandleAsync(
             IRtmpChunkStreamContext chunkStreamContext,
-            IRtmpClientContext clientContext,
+            IRtmpClientSessionContext clientContext,
             RtmpReceiveVideoCommand command,
             CancellationToken cancellationToken)
         {

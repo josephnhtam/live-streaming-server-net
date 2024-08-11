@@ -40,7 +40,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
                 return result;
             }
 
-            _logger.FailedToHandleChunkEvent(@event.ClientContext.Client.ClientId);
+            _logger.FailedToHandleChunkEvent(@event.ClientContext.Client.Id);
             return result;
         }
 
@@ -234,7 +234,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
             return new RtmpEventConsumingResult(true, headerSize + chunkedPayloadLength);
         }
 
-        private async ValueTask<bool> DispatchRtmpMessageAsync(IRtmpChunkStreamContext chunkStreamContext, IRtmpClientContext clientContext, CancellationToken cancellationToken)
+        private async ValueTask<bool> DispatchRtmpMessageAsync(IRtmpChunkStreamContext chunkStreamContext, IRtmpClientSessionContext clientContext, CancellationToken cancellationToken)
         {
             Debug.Assert(chunkStreamContext.PayloadBuffer != null);
 

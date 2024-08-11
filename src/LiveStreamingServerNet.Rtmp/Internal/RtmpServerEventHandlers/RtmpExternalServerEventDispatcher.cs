@@ -26,20 +26,20 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpServerEventHandlers
             return _eventHandlers;
         }
 
-        public async ValueTask OnRtmpClientConnectedAsync(IEventContext context, IRtmpClientContext clientContext, IReadOnlyDictionary<string, object> commandObject, IReadOnlyDictionary<string, object>? arguments)
+        public async ValueTask OnRtmpClientConnectedAsync(IEventContext context, IRtmpClientSessionContext clientContext, IReadOnlyDictionary<string, object> commandObject, IReadOnlyDictionary<string, object>? arguments)
         {
             try
             {
                 foreach (var eventHandler in GetEventHandlers())
-                    await eventHandler.OnRtmpClientConnectedAsync(context, clientContext.Client.ClientId, commandObject, arguments);
+                    await eventHandler.OnRtmpClientConnectedAsync(context, clientContext.Client.Id, commandObject, arguments);
             }
             catch (Exception ex)
             {
-                _logger.DispatchingRtmpClientConnectedEventError(clientContext.Client.ClientId, ex);
+                _logger.DispatchingRtmpClientConnectedEventError(clientContext.Client.Id, ex);
             }
         }
 
-        public async ValueTask OnRtmpClientCreatedAsync(IEventContext context, IRtmpClientContext clientContext)
+        public async ValueTask OnRtmpClientCreatedAsync(IEventContext context, IRtmpClientSessionContext clientContext)
         {
             try
             {
@@ -48,33 +48,33 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpServerEventHandlers
             }
             catch (Exception ex)
             {
-                _logger.DispatchingRtmpClientCreatedEventError(clientContext.Client.ClientId, ex);
+                _logger.DispatchingRtmpClientCreatedEventError(clientContext.Client.Id, ex);
             }
         }
 
-        public async ValueTask OnRtmpClientDisposedAsync(IEventContext context, IRtmpClientContext clientContext)
+        public async ValueTask OnRtmpClientDisposedAsync(IEventContext context, IRtmpClientSessionContext clientContext)
         {
             try
             {
                 foreach (var eventHandler in GetEventHandlers())
-                    await eventHandler.OnRtmpClientDisposedAsync(context, clientContext.Client.ClientId);
+                    await eventHandler.OnRtmpClientDisposedAsync(context, clientContext.Client.Id);
             }
             catch (Exception ex)
             {
-                _logger.DispatchingRtmpClientDisposedEventError(clientContext.Client.ClientId, ex);
+                _logger.DispatchingRtmpClientDisposedEventError(clientContext.Client.Id, ex);
             }
         }
 
-        public async ValueTask OnRtmpClientHandshakeCompleteAsync(IEventContext context, IRtmpClientContext clientContext)
+        public async ValueTask OnRtmpClientHandshakeCompleteAsync(IEventContext context, IRtmpClientSessionContext clientContext)
         {
             try
             {
                 foreach (var eventHandler in GetEventHandlers())
-                    await eventHandler.OnRtmpClientHandshakeCompleteAsync(context, clientContext.Client.ClientId);
+                    await eventHandler.OnRtmpClientHandshakeCompleteAsync(context, clientContext.Client.Id);
             }
             catch (Exception ex)
             {
-                _logger.DispatchingRtmpClientHandshakeCompleteEventError(clientContext.Client.ClientId, ex);
+                _logger.DispatchingRtmpClientHandshakeCompleteEventError(clientContext.Client.Id, ex);
             }
         }
     }
@@ -97,68 +97,68 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpServerEventHandlers
             return _eventHandlers;
         }
 
-        public async ValueTask OnRtmpStreamMetaDataReceivedAsync(IEventContext context, IRtmpClientContext clientContext, string streamPath, IReadOnlyDictionary<string, object> metaData)
+        public async ValueTask OnRtmpStreamMetaDataReceivedAsync(IEventContext context, IRtmpClientSessionContext clientContext, string streamPath, IReadOnlyDictionary<string, object> metaData)
         {
             try
             {
                 foreach (var eventHandler in GetEventHandlers())
-                    await eventHandler.OnRtmpStreamMetaDataReceivedAsync(context, clientContext.Client.ClientId, streamPath, metaData);
+                    await eventHandler.OnRtmpStreamMetaDataReceivedAsync(context, clientContext.Client.Id, streamPath, metaData);
             }
             catch (Exception ex)
             {
-                _logger.DispatchingRtmpStreamMetaDataReceivedEventError(clientContext.Client.ClientId, ex);
+                _logger.DispatchingRtmpStreamMetaDataReceivedEventError(clientContext.Client.Id, ex);
             }
         }
 
-        public async ValueTask OnRtmpStreamPublishedAsync(IEventContext context, IRtmpClientContext clientContext, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
+        public async ValueTask OnRtmpStreamPublishedAsync(IEventContext context, IRtmpClientSessionContext clientContext, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
             try
             {
                 foreach (var eventHandler in GetEventHandlers())
-                    await eventHandler.OnRtmpStreamPublishedAsync(context, clientContext.Client.ClientId, streamPath, streamArguments);
+                    await eventHandler.OnRtmpStreamPublishedAsync(context, clientContext.Client.Id, streamPath, streamArguments);
             }
             catch (Exception ex)
             {
-                _logger.DispatchingRtmpStreamPublishedEventError(clientContext.Client.ClientId, ex);
+                _logger.DispatchingRtmpStreamPublishedEventError(clientContext.Client.Id, ex);
             }
         }
 
-        public async ValueTask OnRtmpStreamSubscribedAsync(IEventContext context, IRtmpClientContext clientContext, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
+        public async ValueTask OnRtmpStreamSubscribedAsync(IEventContext context, IRtmpClientSessionContext clientContext, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
             try
             {
                 foreach (var eventHandler in GetEventHandlers())
-                    await eventHandler.OnRtmpStreamSubscribedAsync(context, clientContext.Client.ClientId, streamPath, streamArguments);
+                    await eventHandler.OnRtmpStreamSubscribedAsync(context, clientContext.Client.Id, streamPath, streamArguments);
             }
             catch (Exception ex)
             {
-                _logger.DispatchingRtmpStreamSubscribedEventError(clientContext.Client.ClientId, ex);
+                _logger.DispatchingRtmpStreamSubscribedEventError(clientContext.Client.Id, ex);
             }
         }
 
-        public async ValueTask OnRtmpStreamUnpublishedAsync(IEventContext context, IRtmpClientContext clientContext, string streamPath)
+        public async ValueTask OnRtmpStreamUnpublishedAsync(IEventContext context, IRtmpClientSessionContext clientContext, string streamPath)
         {
             try
             {
                 foreach (var eventHandler in GetEventHandlers())
-                    await eventHandler.OnRtmpStreamUnpublishedAsync(context, clientContext.Client.ClientId, streamPath);
+                    await eventHandler.OnRtmpStreamUnpublishedAsync(context, clientContext.Client.Id, streamPath);
             }
             catch (Exception ex)
             {
-                _logger.DispatchingRtmpStreamUnpublishedEventError(clientContext.Client.ClientId, ex);
+                _logger.DispatchingRtmpStreamUnpublishedEventError(clientContext.Client.Id, ex);
             }
         }
 
-        public async ValueTask OnRtmpStreamUnsubscribedAsync(IEventContext context, IRtmpClientContext clientContext, string streamPath)
+        public async ValueTask OnRtmpStreamUnsubscribedAsync(IEventContext context, IRtmpClientSessionContext clientContext, string streamPath)
         {
             try
             {
                 foreach (var eventHandler in GetEventHandlers())
-                    await eventHandler.OnRtmpStreamUnsubscribedAsync(context, clientContext.Client.ClientId, streamPath);
+                    await eventHandler.OnRtmpStreamUnsubscribedAsync(context, clientContext.Client.Id, streamPath);
             }
             catch (Exception ex)
             {
-                _logger.DispatchingRtmpStreamUnsubscribedEventError(clientContext.Client.ClientId, ex);
+                _logger.DispatchingRtmpStreamUnsubscribedEventError(clientContext.Client.Id, ex);
             }
         }
     }

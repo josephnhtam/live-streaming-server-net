@@ -12,7 +12,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Commands
         private readonly IFixture _fixture;
         private readonly IRtmpStreamDeletionService _streamDeletionService;
         private readonly IRtmpChunkStreamContext _chunkStreamContext;
-        private readonly IRtmpClientContext _clientContext;
+        private readonly IRtmpClientSessionContext _clientContext;
         private readonly RtmpDeleteStreamCommandHandler _sut;
 
         public RtmpDeleteStreamCommandHandlerTest()
@@ -20,7 +20,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Commands
             _fixture = new Fixture();
             _streamDeletionService = Substitute.For<IRtmpStreamDeletionService>();
             _chunkStreamContext = Substitute.For<IRtmpChunkStreamContext>();
-            _clientContext = Substitute.For<IRtmpClientContext>();
+            _clientContext = Substitute.For<IRtmpClientSessionContext>();
 
             _sut = new RtmpDeleteStreamCommandHandler(_streamDeletionService);
         }

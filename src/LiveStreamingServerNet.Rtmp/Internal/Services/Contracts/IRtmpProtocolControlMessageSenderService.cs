@@ -4,10 +4,10 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services.Contracts
 {
     internal interface IRtmpProtocolControlMessageSenderService
     {
-        void AbortMessage(IRtmpClientContext clientContext, uint streamId);
-        void Acknowledgement(IRtmpClientContext clientContext, uint sequenceNumber);
-        void SetChunkSize(IRtmpClientContext clientContext, uint chunkSize);
-        void SetClientBandwidth(IRtmpClientContext clientContext, uint clientBandwidth, RtmpClientBandwidthLimitType limitType);
-        void WindowAcknowledgementSize(IRtmpClientContext clientContext, uint windowAcknowledgementSize);
+        void AbortMessage(IRtmpClientSessionContext clientContext, uint streamId);
+        void Acknowledgement(IRtmpClientSessionContext clientContext, uint sequenceNumber);
+        void SetChunkSize(IRtmpClientSessionContext clientContext, uint chunkSize);
+        void SetClientBandwidth(IRtmpClientSessionContext clientContext, uint clientBandwidth, RtmpClientBandwidthLimitType limitType);
+        void WindowAcknowledgementSize(IRtmpClientSessionContext clientContext, uint windowAcknowledgementSize);
     }
 }

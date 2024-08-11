@@ -20,7 +20,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Commands
         private readonly RtmpServerConfiguration _config;
         private readonly ILogger<RtmpConnectCommandHandler> _logger;
         private readonly IRtmpChunkStreamContext _chunkStreamContext;
-        private readonly IRtmpClientContext _clientContext;
+        private readonly IRtmpClientSessionContext _clientContext;
         private readonly RtmpConnectCommandHandler _sut;
 
         public RtmpConnectCommandHandlerTest()
@@ -32,7 +32,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Commands
             _config = _fixture.Create<RtmpServerConfiguration>();
             _logger = Substitute.For<ILogger<RtmpConnectCommandHandler>>();
             _chunkStreamContext = Substitute.For<IRtmpChunkStreamContext>();
-            _clientContext = Substitute.For<IRtmpClientContext>();
+            _clientContext = Substitute.For<IRtmpClientSessionContext>();
 
             _sut = new RtmpConnectCommandHandler(
                 _protocolControlMessageSender, _commandMessageSender, _eventDispatcher,
@@ -89,13 +89,13 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Commands
             result.Should().BeFalse();
 
             _clientContext.DidNotReceive().AppName = Arg.Any<string>();
-            _protocolControlMessageSender.DidNotReceive().SetChunkSize(Arg.Any<IRtmpClientContext>(), Arg.Any<uint>());
-            _protocolControlMessageSender.DidNotReceive().WindowAcknowledgementSize(Arg.Any<IRtmpClientContext>(), Arg.Any<uint>());
+            _protocolControlMessageSender.DidNotReceive().SetChunkSize(Arg.Any<IRtmpClientSessionContext>(), Arg.Any<uint>());
+            _protocolControlMessageSender.DidNotReceive().WindowAcknowledgementSize(Arg.Any<IRtmpClientSessionContext>(), Arg.Any<uint>());
             _protocolControlMessageSender.DidNotReceive().SetClientBandwidth(
-                Arg.Any<IRtmpClientContext>(), Arg.Any<uint>(), Arg.Any<RtmpClientBandwidthLimitType>());
+                Arg.Any<IRtmpClientSessionContext>(), Arg.Any<uint>(), Arg.Any<RtmpClientBandwidthLimitType>());
 
             _commandMessageSender.DidNotReceive().SendCommandMessage(
-                Arg.Any<IRtmpClientContext>(), Arg.Any<uint>(), Arg.Any<string>(), Arg.Any<double>(),
+                Arg.Any<IRtmpClientSessionContext>(), Arg.Any<uint>(), Arg.Any<string>(), Arg.Any<double>(),
                 Arg.Any<IReadOnlyDictionary<string, object>>(), Arg.Any<IReadOnlyList<object?>>());
 
             _ = _eventDispatcher.DidNotReceive().RtmpClientConnectedAsync(
@@ -122,13 +122,13 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Commands
             result.Should().BeFalse();
 
             _clientContext.DidNotReceive().AppName = Arg.Any<string>();
-            _protocolControlMessageSender.DidNotReceive().SetChunkSize(Arg.Any<IRtmpClientContext>(), Arg.Any<uint>());
-            _protocolControlMessageSender.DidNotReceive().WindowAcknowledgementSize(Arg.Any<IRtmpClientContext>(), Arg.Any<uint>());
+            _protocolControlMessageSender.DidNotReceive().SetChunkSize(Arg.Any<IRtmpClientSessionContext>(), Arg.Any<uint>());
+            _protocolControlMessageSender.DidNotReceive().WindowAcknowledgementSize(Arg.Any<IRtmpClientSessionContext>(), Arg.Any<uint>());
             _protocolControlMessageSender.DidNotReceive().SetClientBandwidth(
-                Arg.Any<IRtmpClientContext>(), Arg.Any<uint>(), Arg.Any<RtmpClientBandwidthLimitType>());
+                Arg.Any<IRtmpClientSessionContext>(), Arg.Any<uint>(), Arg.Any<RtmpClientBandwidthLimitType>());
 
             _commandMessageSender.DidNotReceive().SendCommandMessage(
-                Arg.Any<IRtmpClientContext>(), Arg.Any<uint>(), Arg.Any<string>(), Arg.Any<double>(),
+                Arg.Any<IRtmpClientSessionContext>(), Arg.Any<uint>(), Arg.Any<string>(), Arg.Any<double>(),
                 Arg.Any<IReadOnlyDictionary<string, object>>(), Arg.Any<IReadOnlyList<object?>>());
 
             _ = _eventDispatcher.DidNotReceive().RtmpClientConnectedAsync(

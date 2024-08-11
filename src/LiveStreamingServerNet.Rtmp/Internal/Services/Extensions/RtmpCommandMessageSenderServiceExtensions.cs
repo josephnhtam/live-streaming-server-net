@@ -9,7 +9,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services.Extensions
     {
         public static void SendOnStatusCommandMessage(
             this IRtmpCommandMessageSenderService sender,
-            IRtmpClientContext clientContext,
+            IRtmpClientSessionContext clientContext,
             uint publishStreamId,
             string level,
             string code,
@@ -29,7 +29,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services.Extensions
 
         public static void SendOnStatusCommandMessage(
             this IRtmpCommandMessageSenderService sender,
-            IReadOnlyList<IRtmpClientContext> clientContexts,
+            IReadOnlyList<IRtmpClientSessionContext> clientContexts,
             uint publishStreamId,
             string level,
             string code,
@@ -48,7 +48,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services.Extensions
 
         public static ValueTask SendOnStatusCommandMessageAsync(
             this IRtmpCommandMessageSenderService sender,
-            IRtmpClientContext clientContext,
+            IRtmpClientSessionContext clientContext,
             uint publishStreamId,
             string level,
             string code,

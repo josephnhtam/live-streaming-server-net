@@ -1,4 +1,4 @@
-﻿using LiveStreamingServerNet.Networking.Contracts;
+﻿using LiveStreamingServerNet.Networking.Server.Contracts;
 using LiveStreamingServerNet.StreamProcessor.AspNetCore.Configurations;
 using LiveStreamingServerNet.StreamProcessor.Hls.Contracts;
 using LiveStreamingServerNet.Utilities.Common;

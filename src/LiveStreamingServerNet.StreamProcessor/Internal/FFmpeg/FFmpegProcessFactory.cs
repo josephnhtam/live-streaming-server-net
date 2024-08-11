@@ -15,7 +15,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.FFmpeg
             _config = config;
         }
 
-        public async Task<IStreamProcessor?> CreateAsync(IClientHandle client, Guid contextIdentifier, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
+        public async Task<IStreamProcessor?> CreateAsync(ISessionHandle client, Guid contextIdentifier, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
             if (!await _config.Condition.IsEnabled(_services, streamPath, streamArguments))
                 return null;

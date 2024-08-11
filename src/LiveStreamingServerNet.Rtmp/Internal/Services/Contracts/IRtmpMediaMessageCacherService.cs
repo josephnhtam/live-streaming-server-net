@@ -19,24 +19,24 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services.Contracts
         ValueTask ClearGroupOfPicturesCacheAsync(IRtmpPublishStreamContext publishStreamContext);
 
         void SendCachedHeaderMessages(
-            IRtmpClientContext clientContext,
+            IRtmpClientSessionContext clientContext,
             IRtmpPublishStreamContext publishStreamContext,
             uint messageStreamId);
 
         void SendCachedStreamMetaDataMessage(
-            IRtmpClientContext clientContext,
+            IRtmpClientSessionContext clientContext,
             IRtmpPublishStreamContext publishStreamContext,
             uint timestamp,
             uint messageStreamId);
 
         void SendCachedStreamMetaDataMessage(
-            IReadOnlyList<IRtmpClientContext> clientContexts,
+            IReadOnlyList<IRtmpClientSessionContext> clientContexts,
             IRtmpPublishStreamContext publishStreamContext,
             uint timestamp,
             uint messageStreamId);
 
         void SendCachedGroupOfPictures(
-            IRtmpClientContext clientContext,
+            IRtmpClientSessionContext clientContext,
             IRtmpPublishStreamContext publishStreamContext,
             uint messageStreamId);
     }

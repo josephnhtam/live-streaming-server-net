@@ -5,19 +5,19 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services.Contracts
     internal interface IRtmpStreamManagerService
     {
         bool IsStreamPathPublishing(string streamPath);
-        string? GetPublishStreamPath(IRtmpClientContext publisherClientContext);
-        IRtmpClientContext? GetPublishingClientContext(string streamPath);
+        string? GetPublishStreamPath(IRtmpClientSessionContext publisherClientContext);
+        IRtmpClientSessionContext? GetPublishingClientContext(string streamPath);
         IRtmpPublishStreamContext? GetPublishStreamContext(string streamPath);
 
-        PublishingStreamResult StartPublishingStream(IRtmpClientContext publisherClientContext, string streamPath, IReadOnlyDictionary<string, string> streamArguments, out IList<IRtmpClientContext> existingSubscribers);
-        bool StopPublishingStream(IRtmpClientContext publisherClientContext, out IList<IRtmpClientContext> existingSubscribers);
+        PublishingStreamResult StartPublishingStream(IRtmpClientSessionContext publisherClientContext, string streamPath, IReadOnlyDictionary<string, string> streamArguments, out IList<IRtmpClientSessionContext> existingSubscribers);
+        bool StopPublishingStream(IRtmpClientSessionContext publisherClientContext, out IList<IRtmpClientSessionContext> existingSubscribers);
 
-        SubscribingStreamResult StartSubscribingStream(IRtmpClientContext subscriberClientContext, uint chunkStreamId, string streamPath, IReadOnlyDictionary<string, string> streamArguments);
-        bool StopSubscribingStream(IRtmpClientContext subscriberClientContext);
+        SubscribingStreamResult StartSubscribingStream(IRtmpClientSessionContext subscriberClientContext, uint chunkStreamId, string streamPath, IReadOnlyDictionary<string, string> streamArguments);
+        bool StopSubscribingStream(IRtmpClientSessionContext subscriberClientContext);
 
         IReadOnlyList<string> GetStreamPaths();
-        IRtmpClientContext? GetPublisher(string streamPath);
-        IReadOnlyList<IRtmpClientContext> GetSubscribers(string streamPath);
+        IRtmpClientSessionContext? GetPublisher(string streamPath);
+        IReadOnlyList<IRtmpClientSessionContext> GetSubscribers(string streamPath);
     }
 
     internal enum PublishingStreamResult

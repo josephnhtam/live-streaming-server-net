@@ -34,9 +34,9 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
             {
                 await incomingBuffer.FromStreamData(@event.NetworkStream, HandshakeC2Size, cancellationToken);
 
-                @event.ClientContext.State = RtmpClientState.HandshakeDone;
+                @event.ClientContext.State = RtmpSessionState.HandshakeDone;
 
-                _logger.HandshakeC2Handled(@event.ClientContext.Client.ClientId);
+                _logger.HandshakeC2Handled(@event.ClientContext.Client.Id);
 
                 await _eventDispatcher.RtmpClientHandshakeCompleteAsync(@event.ClientContext);
 

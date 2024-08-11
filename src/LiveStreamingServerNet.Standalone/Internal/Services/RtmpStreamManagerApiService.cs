@@ -47,7 +47,7 @@ namespace LiveStreamingServerNet.Standalone.Internal.Services
             var streamPath = streamId.Substring(splitIndex + 1);
             var stream = _streamInfoManager.GetStreamInfo(streamPath);
 
-            if (stream == null || stream.Publisher.ClientId != clientId)
+            if (stream == null || stream.Publisher.Id != clientId)
                 throw new ApiException(StatusCodes.Status404NotFound, $"Stream ({streamId}) not found.");
 
             await stream.Publisher.DisconnectAsync(cancellation);

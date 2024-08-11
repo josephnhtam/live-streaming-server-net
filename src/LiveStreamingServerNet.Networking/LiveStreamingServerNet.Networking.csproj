@@ -4,35 +4,25 @@
     <TargetFrameworks>net8.0;net7.0</TargetFrameworks>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <IsPackable>true</IsPackable>
+    <IsPackable>false</IsPackable>
     <Authors>Joseph NH Tam</Authors>
-    <Description>This package implements the TCP server.</Description>
+    <Description>This package provides shared components for LiveStreamingServerNet.Networking.Server and LiveStreamingServerNet.Networking.Client implementations.</Description>
     <PackageTags>live-streaming;tcp</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <Version>0.14.1</Version>
+    <Version>0.15.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Extensions\**" />
-    <EmbeddedResource Remove="Extensions\**" />
-    <None Remove="Extensions\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
     <InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
+    <InternalsVisibleTo Include="LiveStreamingServerNet.Networking.Server" />
+    <InternalsVisibleTo Include="LiveStreamingServerNet.Networking.Client" />
     <InternalsVisibleTo Include="LiveStreamingServerNet.Networking.Test" />
-    <InternalsVisibleTo Include="LiveStreamingServerNet.Rtmp.Test" />
+    <InternalsVisibleTo Include="LiveStreamingServerNet.Networking.Server.Test" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\LiveStreamingServerNet.Utilities\LiveStreamingServerNet.Utilities.csproj" />
   </ItemGroup>
-  
+
 </Project>

@@ -42,7 +42,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
 
         public async ValueTask<bool> HandleAsync(
             IRtmpChunkStreamContext chunkStreamContext,
-            IRtmpClientContext clientContext,
+            IRtmpClientSessionContext clientContext,
             IDataBuffer payloadBuffer,
             CancellationToken cancellationToken)
         {
@@ -50,7 +50,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
 
             if (publishStreamContext == null)
             {
-                _logger.StreamNotYetCreated(clientContext.Client.ClientId);
+                _logger.StreamNotYetCreated(clientContext.Client.Id);
                 return false;
             }
 
@@ -77,7 +77,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
 
         private async ValueTask BroadcastVideoMessageToSubscribersAsync(
             IRtmpChunkStreamContext chunkStreamContext,
-            IRtmpClientContext clientContext,
+            IRtmpClientSessionContext clientContext,
             IRtmpPublishStreamContext publishStreamContext,
             IDataBuffer payloadBuffer,
             bool isSkippable)
@@ -88,11 +88,11 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
 
         private async ValueTask BroadcastVideoMessageToSubscribersAsync(
             IRtmpChunkStreamContext chunkStreamContext,
-            IRtmpClientContext clientContext,
+            IRtmpClientSessionContext clientContext,
             IRtmpPublishStreamContext publishStreamContext,
             bool isSkippable,
             IDataBuffer payloadBuffer,
-            IReadOnlyList<IRtmpClientContext> subscribers)
+            IReadOnlyList<IRtmpClientSessionContext> subscribers)
         {
             clientContext.UpdateTimestamp(chunkStreamContext.MessageHeader.Timestamp, MediaType.Video);
 
@@ -106,11 +106,11 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Media
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private bool IsVideoCodecAllowed(IRtmpClientContext clientContext, IRtmpPublishStreamContext publishStreamContext, VideoCodec videoCodec)
+        private bool IsVideoCodecAllowed(IRtmpClientSessionContext clientContext, IRtmpPublishStreamContext publishStreamContext, VideoCodec videoCodec)
         {
             if (_videoCodecFilter != null && !_videoCodecFilter.IsAllowed(videoCodec))
             {
-                _logger.VideoCodecNotAllowed(clientContext.Client.ClientId, publishStreamContext.StreamPath, videoCodec);
+                _logger.VideoCodecNotAllowed(clientContext.Client.Id, publishStreamContext.StreamPath, videoCodec);
                 return false;
             }
 

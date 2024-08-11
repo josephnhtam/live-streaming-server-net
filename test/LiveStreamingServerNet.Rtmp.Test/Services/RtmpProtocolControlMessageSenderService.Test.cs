@@ -17,7 +17,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
         private readonly IFixture _fixture;
         private readonly IRtmpChunkMessageSenderService _chunkMessageSender;
         private readonly IRtmpProtocolControlMessageSenderService _sut;
-        private readonly IRtmpClientContext _clientContext;
+        private readonly IRtmpClientSessionContext _clientContext;
         private readonly IDataBuffer _payloadBuffer;
 
         public RtmpProtocolControlMessageSenderServiceTest()
@@ -26,7 +26,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
             _chunkMessageSender = Substitute.For<IRtmpChunkMessageSenderService>();
             _sut = new RtmpProtocolControlMessageSenderService(_chunkMessageSender);
 
-            _clientContext = Substitute.For<IRtmpClientContext>();
+            _clientContext = Substitute.For<IRtmpClientSessionContext>();
             _payloadBuffer = new DataBuffer();
 
             _chunkMessageSender.When(x => x.Send(

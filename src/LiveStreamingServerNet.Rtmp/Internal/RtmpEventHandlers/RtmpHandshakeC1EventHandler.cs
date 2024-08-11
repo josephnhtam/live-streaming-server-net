@@ -31,15 +31,15 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
 
                 if (HandleHandshake(@event, incomingBuffer, outgoingBuffer))
                 {
-                    @event.ClientContext.State = RtmpClientState.HandshakeC2;
+                    @event.ClientContext.State = RtmpSessionState.HandshakeC2;
                     @event.ClientContext.Client.Send(outgoingBuffer);
 
-                    _logger.HandshakeC1Handled(@event.ClientContext.Client.ClientId);
+                    _logger.HandshakeC1Handled(@event.ClientContext.Client.Id);
 
                     return new RtmpEventConsumingResult(true, HandshakeC1Size);
                 }
 
-                _logger.HandshakeC1HandlingFailed(@event.ClientContext.Client.ClientId);
+                _logger.HandshakeC1HandlingFailed(@event.ClientContext.Client.Id);
 
                 return new RtmpEventConsumingResult(false, HandshakeC1Size);
             }
@@ -60,7 +60,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
             {
                 clientContext.HandshakeType = HandshakeType.ComplexHandshake0;
                 complexHandshake0.WriteS0S1S2(outgoingBuffer);
-                _logger.HandshakeType(client.ClientId, nameof(HandshakeType.ComplexHandshake0));
+                _logger.HandshakeType(client.Id, nameof(HandshakeType.ComplexHandshake0));
                 return true;
             }
 
@@ -69,7 +69,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
             {
                 clientContext.HandshakeType = HandshakeType.ComplexHandshake1;
                 complexHandshake1.WriteS0S1S2(outgoingBuffer);
-                _logger.HandshakeType(client.ClientId, nameof(HandshakeType.ComplexHandshake1));
+                _logger.HandshakeType(client.Id, nameof(HandshakeType.ComplexHandshake1));
                 return true;
             }
 
@@ -78,7 +78,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
             {
                 clientContext.HandshakeType = HandshakeType.SimpleHandshake;
                 simpleHandshake.WriteS0S1S2(outgoingBuffer);
-                _logger.HandshakeType(client.ClientId, nameof(HandshakeType.SimpleHandshake));
+                _logger.HandshakeType(client.Id, nameof(HandshakeType.SimpleHandshake));
                 return true;
             }
 
