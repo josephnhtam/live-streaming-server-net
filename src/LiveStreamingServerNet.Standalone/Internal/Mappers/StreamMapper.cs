@@ -42,10 +42,10 @@ namespace LiveStreamingServerNet.Standalone.Internal.Mappers
         }
 
         [MapPropertyFromSource(nameof(StreamDto.Id), Use = nameof(MapId))]
-        [MapProperty($"{nameof(IRtmpStreamInfo.Publisher)}.{nameof(IClientControl.ClientId)}", nameof(StreamDto.ClientId))]
+        [MapProperty($"{nameof(IRtmpStreamInfo.Publisher)}.{nameof(ISessionControl.Id)}", nameof(StreamDto.ClientId))]
         public static partial StreamDto ConvertToDto(IRtmpStreamInfo stream);
 
         private static string MapId(IRtmpStreamInfo stream)
-            => $"{stream.Publisher.ClientId}@{stream.StreamPath}";
+            => $"{stream.Publisher.Id}@{stream.StreamPath}";
     }
 }

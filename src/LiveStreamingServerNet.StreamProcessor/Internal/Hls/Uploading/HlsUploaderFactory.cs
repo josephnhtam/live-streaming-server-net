@@ -1,5 +1,5 @@
-﻿using LiveStreamingServerNet.Networking.Contracts;
-using LiveStreamingServerNet.StreamProcessor.Configurations;
+﻿using LiveStreamingServerNet.Networking.Server.Contracts;
+using LiveStreamingServerNet.StreamProcessor.Hls.Configurations;
 using LiveStreamingServerNet.StreamProcessor.Hls.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Uploading.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Uploading.Services.Contracts;

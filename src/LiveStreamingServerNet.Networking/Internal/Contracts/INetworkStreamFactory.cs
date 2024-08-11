@@ -4,6 +4,6 @@ namespace LiveStreamingServerNet.Networking.Internal.Contracts
 {
     internal interface INetworkStreamFactory
     {
-        Task<INetworkStream> CreateNetworkStreamAsync(ITcpClientInternal tcpClient, ServerEndPoint serverEndPoint, CancellationToken cancellationToken);
+        Task<INetworkStream> CreateNetworkStreamAsync(uint id, ITcpClientInternal tcpClient, ServerEndPoint serverEndPoint, CancellationToken cancellationToken);
     }
 }

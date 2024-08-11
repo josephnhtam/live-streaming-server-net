@@ -18,7 +18,7 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
         }
 
         public async Task<AuthorizationResult> AuthorizePublishingAsync(
-            IClientInfo client,
+            ISessionInfo client,
             string streamPath,
             IReadOnlyDictionary<string, string> streamArguments,
             string publishingType)
@@ -32,7 +32,7 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
         }
 
         public async Task<AuthorizationResult> AuthorizeSubscribingAsync(
-            IClientInfo client,
+            ISessionInfo client,
             string streamPath,
             IReadOnlyDictionary<string, string> streamArguments)
         {

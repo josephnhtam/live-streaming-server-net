@@ -189,7 +189,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
         public void SendCachedHeaderMessages_Should_SendAudioSequenceHeader_When_AudioSequenceHeaderIsNotNull()
         {
             // Arrange
-            var clientContext = Substitute.For<IRtmpClientContext>();
+            var clientContext = Substitute.For<IRtmpClientSessionContext>();
             var publishStreamContext = Substitute.For<IRtmpPublishStreamContext>();
             var audioSequenceHeader = _fixture.Create<byte[]>();
             var streamId = _fixture.Create<uint>();
@@ -224,7 +224,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
         public void SendCachedHeaderMessages_Should_SendVideoSequenceHeader_When_VideoSequenceHeaderIsNotNull()
         {
             // Arrange
-            var clientContext = Substitute.For<IRtmpClientContext>();
+            var clientContext = Substitute.For<IRtmpClientSessionContext>();
             var publishStreamContext = Substitute.For<IRtmpPublishStreamContext>();
             var videoSequenceHeader = _fixture.Create<byte[]>();
             var streamId = _fixture.Create<uint>();
@@ -259,7 +259,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
         public void SendCachedStreamMetaDataMessage_Should_SendStreamMetaDataMessage()
         {
             // Arrange
-            var clientContext = Substitute.For<IRtmpClientContext>();
+            var clientContext = Substitute.For<IRtmpClientSessionContext>();
             var publishStreamContext = Substitute.For<IRtmpPublishStreamContext>();
             var streamMetaData = _fixture.Create<Dictionary<string, object>>();
             var timestamp = _fixture.Create<uint>();
@@ -296,14 +296,14 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
         public void SendCachedStreamMetaDataMessage_Should_BroadcastStreamMetaDataMessage()
         {
             // Arrange
-            var clientContexts = new List<IRtmpClientContext>();
+            var clientContexts = new List<IRtmpClientSessionContext>();
             var publishStreamContext = Substitute.For<IRtmpPublishStreamContext>();
             var streamMetaData = _fixture.Create<Dictionary<string, object>>();
             var timestamp = _fixture.Create<uint>();
             var streamId = _fixture.Create<uint>();
 
-            clientContexts.Add(Substitute.For<IRtmpClientContext>());
-            clientContexts.Add(Substitute.For<IRtmpClientContext>());
+            clientContexts.Add(Substitute.For<IRtmpClientSessionContext>());
+            clientContexts.Add(Substitute.For<IRtmpClientSessionContext>());
 
             publishStreamContext.StreamMetaData.Returns(streamMetaData);
 
@@ -336,7 +336,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
         public void SendCachedGroupOfPictures_Should_SendGroupOfPictures()
         {
             // Arrange
-            var clientContext = Substitute.For<IRtmpClientContext>();
+            var clientContext = Substitute.For<IRtmpClientSessionContext>();
             var publishStreamContext = Substitute.For<IRtmpPublishStreamContext>();
             var streamId = _fixture.Create<uint>();
             var outChunkSize = _fixture.Create<uint>();

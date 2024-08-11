@@ -26,7 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\LiveStreamingServerNet.Networking\LiveStreamingServerNet.Networking.csproj" />
+    <ProjectReference Include="..\..\src\LiveStreamingServerNet.Networking.Server\LiveStreamingServerNet.Networking.Server.csproj" />
   </ItemGroup>
 
 </Project>

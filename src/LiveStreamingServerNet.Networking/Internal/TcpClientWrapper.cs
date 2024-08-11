@@ -22,6 +22,7 @@ namespace LiveStreamingServerNet.Networking.Internal
         public int SendTimeout { get => _tcpClient.SendTimeout; set => _tcpClient.SendTimeout = value; }
         public bool NoDelay { get => _tcpClient.NoDelay; set => _tcpClient.NoDelay = value; }
         [DisallowNull] public LingerOption? LingerState { get => _tcpClient.LingerState; set => _tcpClient.LingerState = value; }
+
         public void Close() => _tcpClient.Close();
         public void Dispose() => _tcpClient.Dispose();
         public Stream GetStream() => _tcpClient.GetStream();

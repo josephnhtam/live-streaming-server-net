@@ -19,7 +19,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.ProtocolControls
 
             var logger = Substitute.For<ILogger<RtmpWindowAcknowledgementSizeHandler>>();
             var chunkStreamContext = Substitute.For<IRtmpChunkStreamContext>();
-            var clientContext = Substitute.For<IRtmpClientContext>();
+            var clientContext = Substitute.For<IRtmpClientSessionContext>();
 
             var payloadBuffer = Substitute.For<IDataBuffer>();
             payloadBuffer.ReadUInt32BigEndian().Returns(windowAcknowledgementSize);

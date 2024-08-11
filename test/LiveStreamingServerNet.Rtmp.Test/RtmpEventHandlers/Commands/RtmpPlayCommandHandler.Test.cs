@@ -17,7 +17,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Commands
     {
         private readonly IFixture _fixture;
         private readonly IRtmpChunkStreamContext _chunkStreamContext;
-        private readonly IRtmpClientContext _clientContext;
+        private readonly IRtmpClientSessionContext _clientContext;
         private readonly IRtmpStreamManagerService _streamManager;
         private readonly IRtmpCommandMessageSenderService _commandMessageSender;
         private readonly IRtmpMediaMessageCacherService _mediaMessageCacher;
@@ -31,7 +31,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Commands
         {
             _fixture = new Fixture();
             _chunkStreamContext = Substitute.For<IRtmpChunkStreamContext>();
-            _clientContext = Substitute.For<IRtmpClientContext>();
+            _clientContext = Substitute.For<IRtmpClientSessionContext>();
             _streamManager = Substitute.For<IRtmpStreamManagerService>();
             _commandMessageSender = Substitute.For<IRtmpCommandMessageSenderService>();
             _mediaMessageCacher = Substitute.For<IRtmpMediaMessageCacherService>();
@@ -41,7 +41,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Commands
             _logger = Substitute.For<ILogger<RtmpPlayCommandHandler>>();
 
             _commandMessageSender.When(x =>
-                x.SendCommandMessage(Arg.Any<IRtmpClientContext>(), Arg.Any<uint>(), Arg.Any<string>(), Arg.Any<double>(),
+                x.SendCommandMessage(Arg.Any<IRtmpClientSessionContext>(), Arg.Any<uint>(), Arg.Any<string>(), Arg.Any<double>(),
                     Arg.Any<IReadOnlyDictionary<string, object>>(), Arg.Any<IReadOnlyList<object?>>(),
                     Arg.Any<AmfEncodingType>(), Arg.Any<Action<bool>>()))
                 .Do(x => x.Arg<Action<bool>>()?.Invoke(true));

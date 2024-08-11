@@ -30,7 +30,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
         public void SendCommandMessage_Should_SendCommandMessage()
         {
             // Arrange
-            var clientContext = Substitute.For<IRtmpClientContext>();
+            var clientContext = Substitute.For<IRtmpClientSessionContext>();
             var chunkStreamId = Helpers.CreateRandomChunkStreamId();
             var commandName = _fixture.Create<string>();
             var transactionId = _fixture.Create<double>();
@@ -101,7 +101,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
         public async Task SendCommandMessageAsync_Should_SendCommandMessage()
         {
             // Arrange
-            var clientContext = Substitute.For<IRtmpClientContext>();
+            var clientContext = Substitute.For<IRtmpClientSessionContext>();
             var chunkStreamId = Helpers.CreateRandomChunkStreamId();
             var commandName = _fixture.Create<string>();
             var transactionId = _fixture.Create<double>();
@@ -171,7 +171,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
         public void SendCommandMessageAsync_Should_BroadcastCommandMessages()
         {
             // Arrange
-            var clientContexts = new List<IRtmpClientContext> { Substitute.For<IRtmpClientContext>(), Substitute.For<IRtmpClientContext>() };
+            var clientContexts = new List<IRtmpClientSessionContext> { Substitute.For<IRtmpClientSessionContext>(), Substitute.For<IRtmpClientSessionContext>() };
             var chunkStreamId = Helpers.CreateRandomChunkStreamId();
             var commandName = _fixture.Create<string>();
             var transactionId = _fixture.Create<double>();
@@ -186,7 +186,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
             using var dataBuffer = new DataBuffer();
 
             _chunkMessageSender.When(x => x.Send(
-                Arg.Is<IReadOnlyList<IRtmpClientContext>>(x => x.SequenceEqual(clientContexts)),
+                Arg.Is<IReadOnlyList<IRtmpClientSessionContext>>(x => x.SequenceEqual(clientContexts)),
                 Arg.Is<RtmpChunkBasicHeader>(x =>
                     x.ChunkType == 0 &&
                     x.ChunkStreamId == chunkStreamId
@@ -217,7 +217,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
 
             // Assert
             _chunkMessageSender.Received(1).Send(
-                Arg.Is<IReadOnlyList<IRtmpClientContext>>(x => x.SequenceEqual(clientContexts)),
+                Arg.Is<IReadOnlyList<IRtmpClientSessionContext>>(x => x.SequenceEqual(clientContexts)),
                 Arg.Is<RtmpChunkBasicHeader>(x =>
                     x.ChunkType == 0 &&
                     x.ChunkStreamId == chunkStreamId

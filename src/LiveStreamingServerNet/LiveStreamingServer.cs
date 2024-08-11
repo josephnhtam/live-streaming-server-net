@@ -1,6 +1,7 @@
 ﻿using LiveStreamingServerNet.Internal.HostedServices.Contracts;
 using LiveStreamingServerNet.Networking;
 using LiveStreamingServerNet.Networking.Contracts;
+using LiveStreamingServerNet.Networking.Server.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -15,7 +16,7 @@ namespace LiveStreamingServerNet
         public IServiceProvider Services => _server.Services;
         public bool IsStarted => _server.IsStarted;
         public IReadOnlyList<ServerEndPoint>? EndPoints => _server.EndPoints;
-        public IReadOnlyList<IClientHandle> Clients => _server.Clients;
+        public IReadOnlyList<ISessionHandle> Clients => _server.Clients;
 
         public LiveStreamingServer(IHost host)
         {
@@ -24,7 +25,7 @@ namespace LiveStreamingServerNet
             _serverService = _host.Services.GetRequiredService<IConfigurableLiveStreamingServerService>();
         }
 
-        public IClientHandle? GetClient(uint clientId) => _server.GetClient(clientId);
+        public ISessionHandle? GetClient(uint clientId) => _server.GetClient(clientId);
 
         public Task RunAsync(ServerEndPoint serverEndPoint, CancellationToken cancellationToken = default)
             => RunAsync(new List<ServerEndPoint> { serverEndPoint }, cancellationToken);

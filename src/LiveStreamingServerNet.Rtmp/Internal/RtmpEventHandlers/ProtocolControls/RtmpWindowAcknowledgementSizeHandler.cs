@@ -19,12 +19,12 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.ProtocolControl
 
         public ValueTask<bool> HandleAsync(
             IRtmpChunkStreamContext chunkStreamContext,
-            IRtmpClientContext clientContext,
+            IRtmpClientSessionContext clientContext,
             IDataBuffer payloadBuffer,
             CancellationToken cancellationToken)
         {
             clientContext.InWindowAcknowledgementSize = payloadBuffer.ReadUInt32BigEndian();
-            _logger.WindowAcknowledgementSize(clientContext.Client.ClientId, clientContext.InWindowAcknowledgementSize);
+            _logger.WindowAcknowledgementSize(clientContext.Client.Id, clientContext.InWindowAcknowledgementSize);
             return ValueTask.FromResult(true);
         }
     }

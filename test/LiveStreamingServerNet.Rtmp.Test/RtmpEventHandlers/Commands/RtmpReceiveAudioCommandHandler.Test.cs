@@ -7,13 +7,13 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Commands
 {
     public class RtmpReceiveAudioCommandHandlerTest
     {
-        private readonly IRtmpClientContext _clientContext;
+        private readonly IRtmpClientSessionContext _clientContext;
         private readonly IRtmpChunkStreamContext _chunkStreamContext;
         private readonly RtmpReceiveAudioCommandHandler _sut;
 
         public RtmpReceiveAudioCommandHandlerTest()
         {
-            _clientContext = Substitute.For<IRtmpClientContext>();
+            _clientContext = Substitute.For<IRtmpClientSessionContext>();
             _chunkStreamContext = Substitute.For<IRtmpChunkStreamContext>();
             _sut = new RtmpReceiveAudioCommandHandler();
         }

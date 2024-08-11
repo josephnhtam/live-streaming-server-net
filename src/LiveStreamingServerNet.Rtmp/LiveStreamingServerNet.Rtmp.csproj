@@ -10,7 +10,7 @@
     <PackageTags>live-streaming;rtmp;flv</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <Version>0.14.5</Version>
+    <Version>0.15.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -28,7 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\LiveStreamingServerNet.Networking\LiveStreamingServerNet.Networking.csproj" />
+    <ProjectReference Include="..\LiveStreamingServerNet.Networking.Server\LiveStreamingServerNet.Networking.Server.csproj" />
   </ItemGroup>
 
 </Project>

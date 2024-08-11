@@ -6,19 +6,19 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
     internal class RtmpStreamManagerService : IRtmpStreamManagerService
     {
         private readonly object _publishingSyncLock = new();
-        private readonly Dictionary<IRtmpClientContext, string> _publishStreamPaths = new();
-        private readonly Dictionary<string, IRtmpClientContext> _publishingClientContexts = new();
+        private readonly Dictionary<IRtmpClientSessionContext, string> _publishStreamPaths = new();
+        private readonly Dictionary<string, IRtmpClientSessionContext> _publishingClientContexts = new();
 
         private readonly object _subscribingSyncLock = new();
-        private readonly Dictionary<string, List<IRtmpClientContext>> _subscribingClientContexts = new();
-        private readonly Dictionary<IRtmpClientContext, string> _subscribedStreamPaths = new();
+        private readonly Dictionary<string, List<IRtmpClientSessionContext>> _subscribingClientContexts = new();
+        private readonly Dictionary<IRtmpClientSessionContext, string> _subscribedStreamPaths = new();
 
-        public string? GetPublishStreamPath(IRtmpClientContext publisherClientContext)
+        public string? GetPublishStreamPath(IRtmpClientSessionContext publisherClientContext)
         {
             return _publishStreamPaths.GetValueOrDefault(publisherClientContext);
         }
 
-        public IRtmpClientContext? GetPublishingClientContext(string streamPath)
+        public IRtmpClientSessionContext? GetPublishingClientContext(string streamPath)
         {
             lock (_publishingSyncLock)
             {
@@ -32,7 +32,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             return publishingClientContext?.PublishStreamContext;
         }
 
-        public PublishingStreamResult StartPublishingStream(IRtmpClientContext publisherClientContext, string streamPath, IReadOnlyDictionary<string, string> streamArguments, out IList<IRtmpClientContext> existingSubscribers)
+        public PublishingStreamResult StartPublishingStream(IRtmpClientSessionContext publisherClientContext, string streamPath, IReadOnlyDictionary<string, string> streamArguments, out IList<IRtmpClientSessionContext> existingSubscribers)
         {
             lock (_publishingSyncLock)
             {
@@ -54,14 +54,14 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
                     _publishStreamPaths.Add(publisherClientContext, streamPath);
                     _publishingClientContexts.Add(streamPath, publisherClientContext);
 
-                    existingSubscribers = _subscribingClientContexts.GetValueOrDefault(streamPath)?.ToList() ?? new List<IRtmpClientContext>();
+                    existingSubscribers = _subscribingClientContexts.GetValueOrDefault(streamPath)?.ToList() ?? new List<IRtmpClientSessionContext>();
 
                     return PublishingStreamResult.Succeeded;
                 }
             }
         }
 
-        public bool StopPublishingStream(IRtmpClientContext publisherClientContext, out IList<IRtmpClientContext> existingSubscribers)
+        public bool StopPublishingStream(IRtmpClientSessionContext publisherClientContext, out IList<IRtmpClientSessionContext> existingSubscribers)
         {
             lock (_publishingSyncLock)
             {
@@ -75,7 +75,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
                     _publishingClientContexts.Remove(streamPath);
                     _publishStreamPaths.Remove(publisherClientContext);
 
-                    existingSubscribers = _subscribingClientContexts.GetValueOrDefault(streamPath)?.ToList() ?? new List<IRtmpClientContext>();
+                    existingSubscribers = _subscribingClientContexts.GetValueOrDefault(streamPath)?.ToList() ?? new List<IRtmpClientSessionContext>();
 
                     return true;
                 }
@@ -90,7 +90,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             }
         }
 
-        public SubscribingStreamResult StartSubscribingStream(IRtmpClientContext subscriberClientContext, uint chunkStreamId, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
+        public SubscribingStreamResult StartSubscribingStream(IRtmpClientSessionContext subscriberClientContext, uint chunkStreamId, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
             lock (_publishingSyncLock)
             {
@@ -104,7 +104,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
 
                     if (!_subscribingClientContexts.TryGetValue(streamPath, out var subscribers))
                     {
-                        subscribers = new List<IRtmpClientContext>();
+                        subscribers = new List<IRtmpClientSessionContext>();
                         _subscribingClientContexts[streamPath] = subscribers;
                     }
 
@@ -118,7 +118,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             }
         }
 
-        public bool StopSubscribingStream(IRtmpClientContext subscriberClientContext)
+        public bool StopSubscribingStream(IRtmpClientSessionContext subscriberClientContext)
         {
             lock (_subscribingSyncLock)
             {
@@ -141,7 +141,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             }
         }
 
-        public IRtmpClientContext? GetPublisher(string streamPath)
+        public IRtmpClientSessionContext? GetPublisher(string streamPath)
         {
             lock (_publishingSyncLock)
             {
@@ -149,11 +149,11 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             }
         }
 
-        public IReadOnlyList<IRtmpClientContext> GetSubscribers(string streamPath)
+        public IReadOnlyList<IRtmpClientSessionContext> GetSubscribers(string streamPath)
         {
             lock (_subscribingSyncLock)
             {
-                return _subscribingClientContexts.GetValueOrDefault(streamPath)?.ToList() ?? new List<IRtmpClientContext>();
+                return _subscribingClientContexts.GetValueOrDefault(streamPath)?.ToList() ?? new List<IRtmpClientSessionContext>();
             }
         }
     }

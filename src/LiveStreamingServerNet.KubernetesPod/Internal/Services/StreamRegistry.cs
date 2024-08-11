@@ -4,6 +4,7 @@ using LiveStreamingServerNet.KubernetesPod.Internal.Services.Contracts;
 using LiveStreamingServerNet.KubernetesPod.StreamRegistration;
 using LiveStreamingServerNet.KubernetesPod.StreamRegistration.Contracts;
 using LiveStreamingServerNet.Networking.Contracts;
+using LiveStreamingServerNet.Networking.Server.Contracts;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Collections.Concurrent;
@@ -39,7 +40,7 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
         }
 
         public async Task<StreamRegistrationResult> RegisterStreamAsync(
-            IClientInfo client, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
+            ISessionInfo client, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
             var context = new StreamContext(client, streamPath, streamArguments);
 
@@ -57,19 +58,19 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
 
                 if (!result.Successful)
                 {
-                    _logger.StreamRegistrationFailed(client.ClientId, streamPath, result.Reason ?? "Unknown");
+                    _logger.StreamRegistrationFailed(client.Id, streamPath, result.Reason ?? "Unknown");
                     _streamContexts.TryRemove(streamPath, out var _);
                     return result;
                 }
 
-                _logger.StreamRegistered(client.ClientId, streamPath);
+                _logger.StreamRegistered(client.Id, streamPath);
                 CreateKeepaliveTask(context);
 
                 return result;
             }
             catch (Exception ex)
             {
-                _logger.RegisteringStreamError(client.ClientId, streamPath, ex);
+                _logger.RegisteringStreamError(client.Id, streamPath, ex);
                 _streamContexts.TryRemove(streamPath, out var _);
                 return StreamRegistrationResult.Failure("An error occurred during registering the stream.");
             }
@@ -85,11 +86,11 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
             try
             {
                 await _streamStore.UnregsiterStreamAsync(streamPath);
-                _logger.StreamUnregistered(context.Client.ClientId, streamPath);
+                _logger.StreamUnregistered(context.Client.Id, streamPath);
             }
             catch (Exception ex)
             {
-                _logger.StreamUnregistrationFailed(context.Client.ClientId, streamPath, ex);
+                _logger.StreamUnregistrationFailed(context.Client.Id, streamPath, ex);
             }
             finally
             {
@@ -119,7 +120,7 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
 
         private async Task StreamKeepaliveTask(StreamContext context)
         {
-            _logger.KeepaliveTaskStarted(context.Client.ClientId, context.StreamPath);
+            _logger.KeepaliveTaskStarted(context.Client.Id, context.StreamPath);
 
             var cancellationToken = context.KeepaliveCancellationToken;
             var lastRevalidationTime = DateTime.UtcNow;
@@ -131,7 +132,7 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
 
                 if (DateTime.UtcNow + delay > lastRevalidationTime + _config.KeepaliveTimeout)
                 {
-                    _logger.RevalidatingStreamTimedOut(context.Client.ClientId, context.StreamPath);
+                    _logger.RevalidatingStreamTimedOut(context.Client.Id, context.StreamPath);
                     break;
                 }
 
@@ -144,13 +145,13 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
 
                     if (result.Successful)
                     {
-                        _logger.StreamRevalidated(context.Client.ClientId, context.StreamPath, revlidationTime);
+                        _logger.StreamRevalidated(context.Client.Id, context.StreamPath, revlidationTime);
                         isRetrying = false;
                         lastRevalidationTime = revlidationTime;
                     }
                     else
                     {
-                        _logger.RevalidatingStreamFailed(context.Client.ClientId, context.StreamPath, result.Retryable, result.Reason ?? "Unknown");
+                        _logger.RevalidatingStreamFailed(context.Client.Id, context.StreamPath, result.Retryable, result.Reason ?? "Unknown");
                         isRetrying = result.Retryable;
 
                         if (!isRetrying)
@@ -163,18 +164,18 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
                 }
                 catch (Exception ex)
                 {
-                    _logger.RevalidatingStreamError(context.Client.ClientId, context.StreamPath, ex);
+                    _logger.RevalidatingStreamError(context.Client.Id, context.StreamPath, ex);
                     isRetrying = true;
                 }
             }
 
             if (!cancellationToken.IsCancellationRequested)
             {
-                _logger.DisconnectingClientDueToKeepaliveFailure(context.Client.ClientId, context.StreamPath);
-                _server.GetClient(context.Client.ClientId)?.Disconnect();
+                _logger.DisconnectingClientDueToKeepaliveFailure(context.Client.Id, context.StreamPath);
+                _server.GetClient(context.Client.Id)?.Disconnect();
             }
 
-            _logger.KeepaliveTaskStopped(context.Client.ClientId, context.StreamPath);
+            _logger.KeepaliveTaskStopped(context.Client.Id, context.StreamPath);
         }
 
         public async ValueTask DisposeAsync()
@@ -184,14 +185,14 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
 
         private class StreamContext
         {
-            public IClientInfo Client { get; }
+            public ISessionInfo Client { get; }
             public string StreamPath { get; }
             public IReadOnlyDictionary<string, string> StreamArguments { get; }
             public CancellationToken KeepaliveCancellationToken { get; }
 
             private readonly CancellationTokenSource _keepaliveCts;
 
-            public StreamContext(IClientInfo client, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
+            public StreamContext(ISessionInfo client, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
             {
                 Client = client;
                 StreamPath = streamPath;

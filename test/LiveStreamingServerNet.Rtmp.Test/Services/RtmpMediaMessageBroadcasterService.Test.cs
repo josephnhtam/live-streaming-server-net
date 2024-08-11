@@ -55,13 +55,13 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
         public async Task BroadcastMediaMessageAsync_Should_SendMediaMessageToClient_After_ClientSubscriptionIsInitialized()
         {
             // Arrange
-            var client = Substitute.For<IClientHandle>();
+            var client = Substitute.For<ISessionHandle>();
 
             var streamContext = Substitute.For<IRtmpStreamSubscriptionContext>();
             streamContext.IsReceivingVideo.Returns(true);
             streamContext.IsReceivingAudio.Returns(true);
 
-            var clientContext = Substitute.For<IRtmpClientContext>();
+            var clientContext = Substitute.For<IRtmpClientSessionContext>();
             clientContext.Client.Returns(client);
             clientContext.StreamSubscriptionContext.Returns(streamContext);
 
@@ -71,7 +71,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
                 _fixture.Create<Dictionary<string, string>>(),
                 null);
 
-            var subscribers = new List<IRtmpClientContext> { clientContext };
+            var subscribers = new List<IRtmpClientSessionContext> { clientContext };
             var mediaType = _fixture.Create<MediaType>();
             var timestamp = _fixture.Create<uint>();
             var isSkippable = false;

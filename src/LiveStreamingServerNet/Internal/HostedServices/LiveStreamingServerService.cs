@@ -1,5 +1,5 @@
 ﻿using LiveStreamingServerNet.Networking;
-using LiveStreamingServerNet.Networking.Contracts;
+using LiveStreamingServerNet.Networking.Server.Contracts;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 

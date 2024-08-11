@@ -9,8 +9,8 @@ namespace LiveStreamingServerNet.Rtmp.Contracts
         IReadOnlyDictionary<string, object>? MetaData { get; }
 
         DateTime StartTime { get; }
-        IClientControl Publisher { get; }
-        IReadOnlyList<IClientControl> Subscribers { get; }
+        ISessionControl Publisher { get; }
+        IReadOnlyList<ISessionControl> Subscribers { get; }
     }
 
     [Obsolete("Use IRtmpStreamInfo instead.")]
@@ -21,7 +21,7 @@ namespace LiveStreamingServerNet.Rtmp.Contracts
         IReadOnlyDictionary<string, object>? MetaData { get; }
 
         DateTime StartTime { get; }
-        IClientControl Publisher { get; }
-        IReadOnlyList<IClientControl> Subscribers { get; }
+        ISessionControl Publisher { get; }
+        IReadOnlyList<ISessionControl> Subscribers { get; }
     }
 }

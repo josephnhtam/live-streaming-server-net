@@ -19,7 +19,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
 
         public override ValueTask<bool> HandleAsync(
             IRtmpChunkStreamContext chunkStreamContext,
-            IRtmpClientContext clientContext,
+            IRtmpClientSessionContext clientContext,
             RtmpCreateStreamCommand command,
             CancellationToken cancellationToken)
         {
@@ -31,7 +31,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
             return ValueTask.FromResult(true);
         }
 
-        public void RespondToClient(IRtmpClientContext clientContext, RtmpCreateStreamCommand command, uint streamId)
+        public void RespondToClient(IRtmpClientSessionContext clientContext, RtmpCreateStreamCommand command, uint streamId)
         {
             _commandMessageSender.SendCommandMessage(
                 clientContext: clientContext,

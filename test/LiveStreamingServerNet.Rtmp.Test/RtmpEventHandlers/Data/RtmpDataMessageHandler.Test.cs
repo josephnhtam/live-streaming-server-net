@@ -15,7 +15,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Data
 {
     public class RtmpDataMessageHandlerTest
     {
-        private readonly IRtmpClientContext _clientContext;
+        private readonly IRtmpClientSessionContext _clientContext;
         private readonly IRtmpChunkStreamContext _chunkStreamContext;
         private readonly IRtmpPublishStreamContext _publishStreamContext;
         private readonly DataBuffer _payloadBuffer;
@@ -27,7 +27,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Data
 
         public RtmpDataMessageHandlerTest()
         {
-            _clientContext = Substitute.For<IRtmpClientContext>();
+            _clientContext = Substitute.For<IRtmpClientSessionContext>();
             _chunkStreamContext = Substitute.For<IRtmpChunkStreamContext>();
             _publishStreamContext = Substitute.For<IRtmpPublishStreamContext>();
             _payloadBuffer = new DataBuffer();

@@ -29,7 +29,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Data
 
         public async ValueTask<bool> HandleAsync(
             IRtmpChunkStreamContext chunkStreamContext,
-            IRtmpClientContext clientContext,
+            IRtmpClientSessionContext clientContext,
             IDataBuffer payloadBuffer,
             CancellationToken cancellationToken)
         {
@@ -50,7 +50,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Data
         }
 
         private async ValueTask<bool> HandleSetDataFrameAsync(
-            IRtmpClientContext clientContext,
+            IRtmpClientSessionContext clientContext,
             IRtmpChunkStreamContext chunkStreamContext,
             object[] amfData)
         {
@@ -66,7 +66,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Data
         }
 
         private async ValueTask<bool> HandleOnMetaDataAsync(
-            IRtmpClientContext clientContext,
+            IRtmpClientSessionContext clientContext,
             IRtmpChunkStreamContext chunkStreamContext,
             IReadOnlyDictionary<string, object> metaData)
         {
@@ -74,7 +74,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Data
 
             if (publishStreamContext == null)
             {
-                _logger.StreamNotYetCreated(clientContext.Client.ClientId);
+                _logger.StreamNotYetCreated(clientContext.Client.Id);
                 return false;
             }
 
@@ -93,7 +93,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Data
         }
 
         private void BroadcastMetaDataToSubscribers(
-            IRtmpClientContext clientContext,
+            IRtmpClientSessionContext clientContext,
             IRtmpChunkStreamContext chunkStreamContext,
             IRtmpPublishStreamContext publishStreamContext)
         {

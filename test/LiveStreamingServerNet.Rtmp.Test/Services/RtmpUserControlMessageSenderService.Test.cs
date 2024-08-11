@@ -17,7 +17,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
         private readonly IFixture _fixture;
         private readonly IRtmpChunkMessageSenderService _chunkMessageSender;
         private readonly IRtmpUserControlMessageSenderService _sut;
-        private readonly IRtmpClientContext _clientContext;
+        private readonly IRtmpClientSessionContext _clientContext;
         private readonly DataBuffer _payloadBuffer;
 
         public RtmpUserControlMessageSenderServiceTest()
@@ -26,7 +26,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
             _chunkMessageSender = Substitute.For<IRtmpChunkMessageSenderService>();
             _sut = new RtmpUserControlMessageSenderService(_chunkMessageSender);
 
-            _clientContext = Substitute.For<IRtmpClientContext>();
+            _clientContext = Substitute.For<IRtmpClientSessionContext>();
             _payloadBuffer = new DataBuffer();
 
             _chunkMessageSender.When(x => x.Send(
@@ -42,7 +42,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
             });
 
             _chunkMessageSender.When(x => x.Send(
-                Arg.Any<IReadOnlyList<IRtmpClientContext>>(),
+                Arg.Any<IReadOnlyList<IRtmpClientSessionContext>>(),
                 Arg.Any<RtmpChunkBasicHeader>(),
                 Arg.Any<RtmpChunkMessageHeaderType0>(),
                 Arg.Any<Action<IDataBuffer>>()
@@ -92,7 +92,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
         {
             // Arrange
             _clientContext.StreamSubscriptionContext!.StreamId.Returns(0u);
-            var clientContexts = new List<IRtmpClientContext> { _clientContext };
+            var clientContexts = new List<IRtmpClientSessionContext> { _clientContext };
 
             using var expectedBuffer = new DataBuffer();
             expectedBuffer.WriteUint16BigEndian(RtmpUserControlMessageTypes.StreamBegin);
@@ -103,7 +103,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
 
             // Assert
             _chunkMessageSender.Received(1).Send(
-                Arg.Is<IReadOnlyList<IRtmpClientContext>>(x => x.Contains(_clientContext)),
+                Arg.Is<IReadOnlyList<IRtmpClientSessionContext>>(x => x.Contains(_clientContext)),
                 Arg.Is<RtmpChunkBasicHeader>(x =>
                     x.ChunkType == 0 &&
                     x.ChunkStreamId == RtmpConstants.UserControlMessageChunkStreamId
@@ -159,7 +159,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
         {
             // Arrange
             _clientContext.StreamSubscriptionContext!.StreamId.Returns(0u);
-            var clientContexts = new List<IRtmpClientContext> { _clientContext };
+            var clientContexts = new List<IRtmpClientSessionContext> { _clientContext };
 
             using var expectedBuffer = new DataBuffer();
             expectedBuffer.WriteUint16BigEndian(RtmpUserControlMessageTypes.StreamEof);
@@ -170,7 +170,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
 
             // Assert
             _chunkMessageSender.Received(1).Send(
-                Arg.Is<IReadOnlyList<IRtmpClientContext>>(x => x.Contains(_clientContext)),
+                Arg.Is<IReadOnlyList<IRtmpClientSessionContext>>(x => x.Contains(_clientContext)),
                 Arg.Is<RtmpChunkBasicHeader>(x =>
                     x.ChunkType == 0 &&
                     x.ChunkStreamId == RtmpConstants.UserControlMessageChunkStreamId

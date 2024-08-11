@@ -24,7 +24,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal
             return _eventHandlers;
         }
 
-        public async ValueTask RtmpClientConnectedAsync(IRtmpClientContext clientContext, IReadOnlyDictionary<string, object> commandObject, IReadOnlyDictionary<string, object>? arguments)
+        public async ValueTask RtmpClientConnectedAsync(IRtmpClientSessionContext clientContext, IReadOnlyDictionary<string, object> commandObject, IReadOnlyDictionary<string, object>? arguments)
         {
             try
             {
@@ -35,11 +35,11 @@ namespace LiveStreamingServerNet.Rtmp.Internal
             }
             catch (Exception ex)
             {
-                _logger.DispatchingRtmpClientConnectedEventError(clientContext.Client.ClientId, ex);
+                _logger.DispatchingRtmpClientConnectedEventError(clientContext.Client.Id, ex);
             }
         }
 
-        public async ValueTask RtmpClientCreatedAsync(IRtmpClientContext clientContext)
+        public async ValueTask RtmpClientCreatedAsync(IRtmpClientSessionContext clientContext)
         {
             try
             {
@@ -50,11 +50,11 @@ namespace LiveStreamingServerNet.Rtmp.Internal
             }
             catch (Exception ex)
             {
-                _logger.DispatchingRtmpClientCreatedEventError(clientContext.Client.ClientId, ex);
+                _logger.DispatchingRtmpClientCreatedEventError(clientContext.Client.Id, ex);
             }
         }
 
-        public async ValueTask RtmpClientDisposedAsync(IRtmpClientContext clientContext)
+        public async ValueTask RtmpClientDisposedAsync(IRtmpClientSessionContext clientContext)
         {
             try
             {
@@ -65,11 +65,11 @@ namespace LiveStreamingServerNet.Rtmp.Internal
             }
             catch (Exception ex)
             {
-                _logger.DispatchingRtmpClientDisposedEventError(clientContext.Client.ClientId, ex);
+                _logger.DispatchingRtmpClientDisposedEventError(clientContext.Client.Id, ex);
             }
         }
 
-        public async ValueTask RtmpClientHandshakeCompleteAsync(IRtmpClientContext clientContext)
+        public async ValueTask RtmpClientHandshakeCompleteAsync(IRtmpClientSessionContext clientContext)
         {
             try
             {
@@ -80,7 +80,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal
             }
             catch (Exception ex)
             {
-                _logger.DispatchingRtmpClientHandshakeCompleteEventError(clientContext.Client.ClientId, ex);
+                _logger.DispatchingRtmpClientHandshakeCompleteEventError(clientContext.Client.Id, ex);
             }
         }
     }
@@ -103,7 +103,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal
             return _eventHandlers;
         }
 
-        public async ValueTask RtmpStreamMetaDataReceivedAsync(IRtmpClientContext clientContext, string streamPath, IReadOnlyDictionary<string, object> metaData)
+        public async ValueTask RtmpStreamMetaDataReceivedAsync(IRtmpClientSessionContext clientContext, string streamPath, IReadOnlyDictionary<string, object> metaData)
         {
             try
             {
@@ -114,11 +114,11 @@ namespace LiveStreamingServerNet.Rtmp.Internal
             }
             catch (Exception ex)
             {
-                _logger.DispatchingRtmpStreamMetaDataReceivedEventError(clientContext.Client.ClientId, ex);
+                _logger.DispatchingRtmpStreamMetaDataReceivedEventError(clientContext.Client.Id, ex);
             }
         }
 
-        public async ValueTask RtmpStreamPublishedAsync(IRtmpClientContext clientContext, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
+        public async ValueTask RtmpStreamPublishedAsync(IRtmpClientSessionContext clientContext, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
             try
             {
@@ -129,11 +129,11 @@ namespace LiveStreamingServerNet.Rtmp.Internal
             }
             catch (Exception ex)
             {
-                _logger.DispatchingRtmpStreamPublishedEventError(clientContext.Client.ClientId, ex);
+                _logger.DispatchingRtmpStreamPublishedEventError(clientContext.Client.Id, ex);
             }
         }
 
-        public async ValueTask RtmpStreamSubscribedAsync(IRtmpClientContext clientContext, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
+        public async ValueTask RtmpStreamSubscribedAsync(IRtmpClientSessionContext clientContext, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
             try
             {
@@ -144,11 +144,11 @@ namespace LiveStreamingServerNet.Rtmp.Internal
             }
             catch (Exception ex)
             {
-                _logger.DispatchingRtmpStreamSubscribedEventError(clientContext.Client.ClientId, ex);
+                _logger.DispatchingRtmpStreamSubscribedEventError(clientContext.Client.Id, ex);
             }
         }
 
-        public async ValueTask RtmpStreamUnpublishedAsync(IRtmpClientContext clientContext, string streamPath)
+        public async ValueTask RtmpStreamUnpublishedAsync(IRtmpClientSessionContext clientContext, string streamPath)
         {
             try
             {
@@ -159,11 +159,11 @@ namespace LiveStreamingServerNet.Rtmp.Internal
             }
             catch (Exception ex)
             {
-                _logger.DispatchingRtmpStreamUnpublishedEventError(clientContext.Client.ClientId, ex);
+                _logger.DispatchingRtmpStreamUnpublishedEventError(clientContext.Client.Id, ex);
             }
         }
 
-        public async ValueTask RtmpStreamUnsubscribedAsync(IRtmpClientContext clientContext, string streamPath)
+        public async ValueTask RtmpStreamUnsubscribedAsync(IRtmpClientSessionContext clientContext, string streamPath)
         {
             try
             {
@@ -174,7 +174,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal
             }
             catch (Exception ex)
             {
-                _logger.DispatchingRtmpStreamUnsubscribedEventError(clientContext.Client.ClientId, ex);
+                _logger.DispatchingRtmpStreamUnsubscribedEventError(clientContext.Client.Id, ex);
             }
         }
     }

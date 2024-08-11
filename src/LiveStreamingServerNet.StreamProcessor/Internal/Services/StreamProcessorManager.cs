@@ -1,4 +1,5 @@
 ﻿using LiveStreamingServerNet.Networking.Contracts;
+using LiveStreamingServerNet.Networking.Server.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Logging;
@@ -61,7 +62,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Services
             }
         }
 
-        private async Task<IList<IStreamProcessor>> CreateStreamProcessors(IClientHandle client, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
+        private async Task<IList<IStreamProcessor>> CreateStreamProcessors(ISessionHandle client, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
             var streamProcessors = new List<IStreamProcessor>();
 
@@ -79,7 +80,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Services
 
         private async Task RunStreamProcessors(
             IList<IStreamProcessor> streamProcessors,
-            IClientHandle client,
+            ISessionHandle client,
             string streamPath,
             IReadOnlyDictionary<string, string> streamArguments,
             CancellationTokenSource cts)
@@ -94,7 +95,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Services
 
         private async Task RunStreamProcessor(
             IStreamProcessor streamProcessor,
-            IClientHandle client,
+            ISessionHandle client,
             string streamPath,
             IReadOnlyDictionary<string, string> streamArguments,
             CancellationTokenSource cts)
@@ -117,13 +118,13 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Services
             async Task StreamProcessorStarted(string outputPath)
             {
                 _logger.StreamProcessorStarted(streamProcessorName, contextIdentifier, inputPath, outputPath, streamPath);
-                await _eventDispatcher.StreamProcssorStartedAsync(streamProcessorName, contextIdentifier, client.ClientId, inputPath, outputPath, streamPath, streamArguments);
+                await _eventDispatcher.StreamProcssorStartedAsync(streamProcessorName, contextIdentifier, client.Id, inputPath, outputPath, streamPath, streamArguments);
             }
 
             async Task StreamProcessorStopped(string outputPath)
             {
                 _logger.StreamProcessorStopped(streamProcessorName, contextIdentifier, inputPath, outputPath, streamPath);
-                await _eventDispatcher.StreamProcessorStoppedAsync(streamProcessorName, contextIdentifier, client.ClientId, inputPath, outputPath, streamPath, streamArguments);
+                await _eventDispatcher.StreamProcessorStoppedAsync(streamProcessorName, contextIdentifier, client.Id, inputPath, outputPath, streamPath, streamArguments);
             }
         }
 

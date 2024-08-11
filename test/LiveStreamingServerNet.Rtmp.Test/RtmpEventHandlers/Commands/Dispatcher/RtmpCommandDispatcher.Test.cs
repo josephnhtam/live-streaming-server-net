@@ -20,7 +20,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Commands.Dispatcher
         private readonly IFixture _fixture;
         private readonly TestHandler _testHandler;
         private readonly Test2Handler _test2Handler;
-        private readonly IRtmpClientContext _clientContext;
+        private readonly IRtmpClientSessionContext _clientContext;
         private readonly IRtmpChunkStreamContext _chunkStreamContext;
         private readonly IRtmpCommandDispatcher _sut;
 
@@ -30,7 +30,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Commands.Dispatcher
             _testHandler = Substitute.For<TestHandler>();
             _test2Handler = Substitute.For<Test2Handler>();
 
-            _clientContext = Substitute.For<IRtmpClientContext>();
+            _clientContext = Substitute.For<IRtmpClientSessionContext>();
             _chunkStreamContext = Substitute.For<IRtmpChunkStreamContext>();
 
             var map = new RtmpCommandHandlerMap(new Dictionary<string, Type> {

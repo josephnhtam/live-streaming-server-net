@@ -74,7 +74,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
         }
 
         public void SendCachedHeaderMessages(
-            IRtmpClientContext clientContext,
+            IRtmpClientSessionContext clientContext,
             IRtmpPublishStreamContext publishStreamContext,
             uint messageStreamId)
         {
@@ -92,7 +92,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
         }
 
         public void SendCachedStreamMetaDataMessage(
-            IRtmpClientContext clientContext,
+            IRtmpClientSessionContext clientContext,
             IRtmpPublishStreamContext publishStreamContext,
             uint timestamp,
             uint messageStreamId)
@@ -113,7 +113,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
         }
 
         public void SendCachedStreamMetaDataMessage(
-            IReadOnlyList<IRtmpClientContext> clientContexts,
+            IReadOnlyList<IRtmpClientSessionContext> clientContexts,
             IRtmpPublishStreamContext publishStreamContext,
             uint timestamp,
             uint messageStreamId)
@@ -134,7 +134,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
         }
 
         public void SendCachedGroupOfPictures(
-            IRtmpClientContext clientContext,
+            IRtmpClientSessionContext clientContext,
             IRtmpPublishStreamContext publishStreamContext,
             uint messageStreamId)
         {
@@ -146,7 +146,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
         }
 
         private void SendMediaPackage(
-            IRtmpClientContext clientContext,
+            IRtmpClientSessionContext clientContext,
             MediaType type,
             byte[] payloadBuffer,
             int payloadSize,

@@ -16,14 +16,14 @@ namespace LiveStreamingServerNet.Rtmp.Test.Authorization
     {
         private readonly IFixture _fixture;
         private readonly string _authCode;
-        private readonly IRtmpClientContext _clientContext;
+        private readonly IRtmpClientSessionContext _clientContext;
         private readonly IRtmpServerContext _serverContext;
         private readonly ServiceCollection _services;
 
         public StreamAuthorizationTest()
         {
             _fixture = new Fixture();
-            _clientContext = Substitute.For<IRtmpClientContext>();
+            _clientContext = Substitute.For<IRtmpClientSessionContext>();
 
             _authCode = _fixture.Create<string>();
             _serverContext = Substitute.For<IRtmpServerContext>();
@@ -263,12 +263,12 @@ namespace LiveStreamingServerNet.Rtmp.Test.Authorization
         {
             public int GetOrder() => 0;
 
-            public Task<AuthorizationResult> AuthorizePublishingAsync(IClientInfo client, string streamPath, IReadOnlyDictionary<string, string> streamArguments, string publishingType)
+            public Task<AuthorizationResult> AuthorizePublishingAsync(ISessionInfo client, string streamPath, IReadOnlyDictionary<string, string> streamArguments, string publishingType)
             {
                 return Task.FromResult(AuthorizationResult.Authorized());
             }
 
-            public Task<AuthorizationResult> AuthorizeSubscribingAsync(IClientInfo client, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
+            public Task<AuthorizationResult> AuthorizeSubscribingAsync(ISessionInfo client, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
             {
                 return Task.FromResult(AuthorizationResult.Authorized());
             }
@@ -278,12 +278,12 @@ namespace LiveStreamingServerNet.Rtmp.Test.Authorization
         {
             public int GetOrder() => 10;
 
-            public Task<AuthorizationResult> AuthorizePublishingAsync(IClientInfo client, string streamPath, IReadOnlyDictionary<string, string> streamArguments, string publishingType)
+            public Task<AuthorizationResult> AuthorizePublishingAsync(ISessionInfo client, string streamPath, IReadOnlyDictionary<string, string> streamArguments, string publishingType)
             {
                 return Task.FromResult(AuthorizationResult.Unauthorized("test"));
             }
 
-            public Task<AuthorizationResult> AuthorizeSubscribingAsync(IClientInfo client, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
+            public Task<AuthorizationResult> AuthorizeSubscribingAsync(ISessionInfo client, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
             {
                 return Task.FromResult(AuthorizationResult.Unauthorized("test"));
             }

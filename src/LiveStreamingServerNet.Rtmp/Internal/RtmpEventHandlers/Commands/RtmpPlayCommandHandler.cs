@@ -41,15 +41,15 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
 
         public override async ValueTask<bool> HandleAsync(
             IRtmpChunkStreamContext chunkStreamContext,
-            IRtmpClientContext clientContext,
+            IRtmpClientSessionContext clientContext,
             RtmpPlayCommand command,
             CancellationToken cancellationToken)
         {
-            _logger.Play(clientContext.Client.ClientId, command.StreamName);
+            _logger.Play(clientContext.Client.Id, command.StreamName);
 
             if (clientContext.StreamId == null)
             {
-                _logger.StreamNotYetCreated(clientContext.Client.ClientId);
+                _logger.StreamNotYetCreated(clientContext.Client.Id);
                 return false;
             }
 
@@ -68,7 +68,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
         }
 
         private static (string StreamPath, IReadOnlyDictionary<string, string> StreamArguments)
-            ParseSubscriptionContext(RtmpPlayCommand command, IRtmpClientContext clientContext)
+            ParseSubscriptionContext(RtmpPlayCommand command, IRtmpClientSessionContext clientContext)
         {
             var (streamName, arguments) = StreamUtilities.ParseStreamName(command.StreamName);
             var streamPath = StreamUtilities.ComposeStreamPath(clientContext.AppName, streamName);
@@ -76,7 +76,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
         }
 
         private async ValueTask<AuthorizationResult> AuthorizeAsync(
-            IRtmpClientContext clientContext,
+            IRtmpClientSessionContext clientContext,
             RtmpPlayCommand command,
             IRtmpChunkStreamContext chunkStreamContext,
             string streamPath,
@@ -86,7 +86,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
 
             if (!result.IsAuthorized)
             {
-                _logger.AuthorizationFailed(clientContext.Client.ClientId, streamPath, result.Reason ?? "Unknown");
+                _logger.AuthorizationFailed(clientContext.Client.Id, streamPath, result.Reason ?? "Unknown");
                 await SendAuthorizationFailedCommandMessageAsync(clientContext, chunkStreamContext, result.Reason ?? "Unknown");
             }
 
@@ -94,7 +94,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
         }
 
         private async ValueTask<bool> StartSubscribingAsync(
-            IRtmpClientContext clientContext,
+            IRtmpClientSessionContext clientContext,
             RtmpPlayCommand command,
             IRtmpChunkStreamContext chunkStreamContext,
             string streamPath,
@@ -105,19 +105,19 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
             switch (startSubscribingResult)
             {
                 case SubscribingStreamResult.Succeeded:
-                    _logger.SubscriptionStarted(clientContext.Client.ClientId, streamPath);
+                    _logger.SubscriptionStarted(clientContext.Client.Id, streamPath);
                     SendSubscriptionStartedMessage(clientContext, chunkStreamContext);
                     SendCachedStreamMessages(clientContext, chunkStreamContext);
                     await CompleteSubscriptionInitializationAsync(clientContext);
                     return true;
 
                 case SubscribingStreamResult.AlreadySubscribing:
-                    _logger.AlreadySubscribing(clientContext.Client.ClientId, streamPath);
+                    _logger.AlreadySubscribing(clientContext.Client.Id, streamPath);
                     SendBadConnectionCommandMessage(clientContext, chunkStreamContext, "Already subscribing.");
                     return false;
 
                 case SubscribingStreamResult.AlreadyPublishing:
-                    _logger.AlreadyPublishing(clientContext.Client.ClientId, streamPath);
+                    _logger.AlreadyPublishing(clientContext.Client.Id, streamPath);
                     SendBadConnectionCommandMessage(clientContext, chunkStreamContext, "Already publishing.");
                     return false;
 
@@ -126,7 +126,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
             }
         }
 
-        private void SendCachedStreamMessages(IRtmpClientContext clientContext, IRtmpChunkStreamContext chunkStreamContext)
+        private void SendCachedStreamMessages(IRtmpClientSessionContext clientContext, IRtmpChunkStreamContext chunkStreamContext)
         {
             var publishStreamContext = _streamManager.GetPublishStreamContext(clientContext.StreamSubscriptionContext!.StreamPath);
 
@@ -150,7 +150,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
             }
         }
 
-        private async ValueTask CompleteSubscriptionInitializationAsync(IRtmpClientContext clientContext)
+        private async ValueTask CompleteSubscriptionInitializationAsync(IRtmpClientSessionContext clientContext)
         {
             clientContext.StreamSubscriptionContext!.CompleteInitialization();
 
@@ -160,7 +160,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
                  clientContext.StreamSubscriptionContext.StreamArguments);
         }
 
-        private async ValueTask SendAuthorizationFailedCommandMessageAsync(IRtmpClientContext clientContext, IRtmpChunkStreamContext chunkStreamContext, string reason)
+        private async ValueTask SendAuthorizationFailedCommandMessageAsync(IRtmpClientSessionContext clientContext, IRtmpChunkStreamContext chunkStreamContext, string reason)
         {
             await _commandMessageSender.SendOnStatusCommandMessageAsync(
                 clientContext,
@@ -170,7 +170,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
                 reason);
         }
 
-        private void SendSubscriptionStartedMessage(IRtmpClientContext clientContext, IRtmpChunkStreamContext chunkStreamContext)
+        private void SendSubscriptionStartedMessage(IRtmpClientSessionContext clientContext, IRtmpChunkStreamContext chunkStreamContext)
         {
             _commandMessageSender.SendOnStatusCommandMessage(
                 clientContext,
@@ -180,7 +180,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
                 "Stream subscribed.");
         }
 
-        private void SendBadConnectionCommandMessage(IRtmpClientContext clientContext, IRtmpChunkStreamContext chunkStreamContext, string reason)
+        private void SendBadConnectionCommandMessage(IRtmpClientSessionContext clientContext, IRtmpChunkStreamContext chunkStreamContext, string reason)
         {
             _commandMessageSender.SendOnStatusCommandMessage(
                 clientContext,

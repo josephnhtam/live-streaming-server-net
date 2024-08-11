@@ -20,7 +20,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
         public void GetPublishStreamPath_Should_ReturnCorrectStreamPath()
         {
             // Arrange
-            var publisherClientContext = Substitute.For<IRtmpClientContext>();
+            var publisherClientContext = Substitute.For<IRtmpClientSessionContext>();
             var streamPath = _fixture.Create<string>();
             var streamArguments = _fixture.Create<Dictionary<string, string>>();
             var sut = new RtmpStreamManagerService();
@@ -37,7 +37,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
         public void GetPublishingClientContext_Should_ReturnCorrectClientContext()
         {
             // Arrange
-            var publisherClientContext = Substitute.For<IRtmpClientContext>();
+            var publisherClientContext = Substitute.For<IRtmpClientSessionContext>();
             var streamPath = _fixture.Create<string>();
             var streamArguments = _fixture.Create<Dictionary<string, string>>();
             var sut = new RtmpStreamManagerService();
@@ -54,7 +54,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
         public void GetPublishStreamContext_Should_ReturnCorrectStreamContext()
         {
             // Arrange
-            var publisherClientContext = Substitute.For<IRtmpClientContext>();
+            var publisherClientContext = Substitute.For<IRtmpClientSessionContext>();
             var streamPath = _fixture.Create<string>();
             var streamArguments = _fixture.Create<Dictionary<string, string>>();
             var sut = new RtmpStreamManagerService();
@@ -71,7 +71,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
         public void StartPublishingStream_Should_AddPublisherAndReturnSucceeded()
         {
             // Arrange
-            var publisherClientContext = Substitute.For<IRtmpClientContext>();
+            var publisherClientContext = Substitute.For<IRtmpClientSessionContext>();
             var streamPath = _fixture.Create<string>();
             var streamArguments = _fixture.Create<Dictionary<string, string>>();
             var sut = new RtmpStreamManagerService();
@@ -88,7 +88,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
         public void StartPublishingStream_Should_ReturnAlreadySubscribing_When_PublisherIsAlreadySubscribing()
         {
             // Arrange
-            var publisherClientContext = Substitute.For<IRtmpClientContext>();
+            var publisherClientContext = Substitute.For<IRtmpClientSessionContext>();
             var streamPath = _fixture.Create<string>();
             var streamArguments = _fixture.Create<Dictionary<string, string>>();
             var sut = new RtmpStreamManagerService();
@@ -105,7 +105,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
         public void StartPublishingStream_Should_ReturnAlreadyPublishing_When_PublisherIsAlreadyPublishing()
         {
             // Arrange
-            var publisherClientContext = Substitute.For<IRtmpClientContext>();
+            var publisherClientContext = Substitute.For<IRtmpClientSessionContext>();
             var streamPath = _fixture.Create<string>();
             var streamArguments = _fixture.Create<Dictionary<string, string>>();
             var sut = new RtmpStreamManagerService();
@@ -122,8 +122,8 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
         public void StartPublishingStream_Should_ReturnAlreadyExists_When_StreamPathAlreadyExists()
         {
             // Arrange
-            var publisherClientContext1 = Substitute.For<IRtmpClientContext>();
-            var publisherClientContext2 = Substitute.For<IRtmpClientContext>();
+            var publisherClientContext1 = Substitute.For<IRtmpClientSessionContext>();
+            var publisherClientContext2 = Substitute.For<IRtmpClientSessionContext>();
             var streamPath = _fixture.Create<string>();
             var streamArguments = _fixture.Create<Dictionary<string, string>>();
             var sut = new RtmpStreamManagerService();
@@ -140,7 +140,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
         public void StopPublishingStream_Should_RemovePublisherAndReturnTrue()
         {
             // Arrange
-            var publisherClientContext = Substitute.For<IRtmpClientContext>();
+            var publisherClientContext = Substitute.For<IRtmpClientSessionContext>();
             var streamPath = _fixture.Create<string>();
             var streamArguments = _fixture.Create<Dictionary<string, string>>();
             var sut = new RtmpStreamManagerService();
@@ -158,7 +158,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
         public void StopPublishingStream_Should_ReturnFalse_When_PublisherDoesNotExist()
         {
             // Arrange
-            var publisherClientContext = Substitute.For<IRtmpClientContext>();
+            var publisherClientContext = Substitute.For<IRtmpClientSessionContext>();
             var sut = new RtmpStreamManagerService();
 
             // Act
@@ -172,7 +172,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
         public void IsStreamPathPublishing_Should_ReturnTrue_When_StreamPathIsPublishing()
         {
             // Arrange
-            var publisherClientContext = Substitute.For<IRtmpClientContext>();
+            var publisherClientContext = Substitute.For<IRtmpClientSessionContext>();
             var streamPath = _fixture.Create<string>();
             var streamArguments = _fixture.Create<Dictionary<string, string>>();
             var sut = new RtmpStreamManagerService();
@@ -203,7 +203,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
         public void StartSubscribingStream_Should_AddSubscriberAndReturnSucceeded()
         {
             // Arrange
-            var subscriberClientContext = Substitute.For<IRtmpClientContext>();
+            var subscriberClientContext = Substitute.For<IRtmpClientSessionContext>();
             var streamPath = _fixture.Create<string>();
             var streamArguments = _fixture.Create<Dictionary<string, string>>();
             var sut = new RtmpStreamManagerService();
@@ -220,7 +220,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
         public void StartSubscribingStream_Should_ReturnAlreadyPublishing_When_SubscriberIsAlreadyPublishing()
         {
             // Arrange
-            var subscriberClientContext = Substitute.For<IRtmpClientContext>();
+            var subscriberClientContext = Substitute.For<IRtmpClientSessionContext>();
             var streamPath = _fixture.Create<string>();
             var streamArguments = _fixture.Create<Dictionary<string, string>>();
             var sut = new RtmpStreamManagerService();
@@ -237,7 +237,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
         public void StartSubscribingStream_Should_ReturnAlreadySubscribing_When_SubscriberIsAlreadySubscribing()
         {
             // Arrange
-            var subscriberClientContext = Substitute.For<IRtmpClientContext>();
+            var subscriberClientContext = Substitute.For<IRtmpClientSessionContext>();
             var streamPath = _fixture.Create<string>();
             var streamArguments = _fixture.Create<Dictionary<string, string>>();
             var sut = new RtmpStreamManagerService();
@@ -254,7 +254,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
         public void StopSubscribingStream_Should_RemoveSubscriberAndReturnTrue()
         {
             // Arrange
-            var subscriberClientContext = Substitute.For<IRtmpClientContext>();
+            var subscriberClientContext = Substitute.For<IRtmpClientSessionContext>();
             var streamPath = _fixture.Create<string>();
             var streamArguments = _fixture.Create<Dictionary<string, string>>();
             var sut = new RtmpStreamManagerService();
@@ -272,7 +272,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
         public void StopSubscribingStream_Should_ReturnFalse_When_SubscriberDoesNotExist()
         {
             // Arrange
-            var subscriberClientContext = Substitute.For<IRtmpClientContext>();
+            var subscriberClientContext = Substitute.For<IRtmpClientSessionContext>();
             var sut = new RtmpStreamManagerService();
 
             // Act
@@ -286,8 +286,8 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
         public void GetSubscribers_Should_ReturnCorrectSubscribers()
         {
             // Arrange
-            var subscriberClientContext1 = Substitute.For<IRtmpClientContext>();
-            var subscriberClientContext2 = Substitute.For<IRtmpClientContext>();
+            var subscriberClientContext1 = Substitute.For<IRtmpClientSessionContext>();
+            var subscriberClientContext2 = Substitute.For<IRtmpClientSessionContext>();
             var streamPath = _fixture.Create<string>();
             var streamArguments = _fixture.Create<Dictionary<string, string>>();
             var sut = new RtmpStreamManagerService();
@@ -307,9 +307,9 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
         public void StartPublishingStream_Should_ReturnCorrectSubscribers()
         {
             // Arrange
-            var publisherClientContext = Substitute.For<IRtmpClientContext>();
-            var subscriberClientContext1 = Substitute.For<IRtmpClientContext>();
-            var subscriberClientContext2 = Substitute.For<IRtmpClientContext>();
+            var publisherClientContext = Substitute.For<IRtmpClientSessionContext>();
+            var subscriberClientContext1 = Substitute.For<IRtmpClientSessionContext>();
+            var subscriberClientContext2 = Substitute.For<IRtmpClientSessionContext>();
             var streamPath = _fixture.Create<string>();
             var streamArguments = _fixture.Create<Dictionary<string, string>>();
             var sut = new RtmpStreamManagerService();

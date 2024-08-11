@@ -1,5 +1,5 @@
-﻿using LiveStreamingServerNet.Networking.Installer;
-using LiveStreamingServerNet.Networking.Installer.Contracts;
+﻿using LiveStreamingServerNet.Networking.Server.Installer;
+using LiveStreamingServerNet.Networking.Server.Installer.Contracts;
 using LiveStreamingServerNet.Rtmp.Auth;
 using LiveStreamingServerNet.Rtmp.Auth.Contracts;
 using LiveStreamingServerNet.Rtmp.Installer.Contracts;
@@ -49,12 +49,12 @@ namespace LiveStreamingServerNet.Rtmp.Installer
 
         private static IServiceCollection AddRtmpCore(this IServiceCollection services, Action<IServerConfigurator>? configureServer)
         {
-            services.AddServer<RtmpClientHandlerFactory>(options => configureServer?.Invoke(options));
+            services.AddServer<RtmpClientSessionHandlerFactory>(options => configureServer?.Invoke(options));
 
             services.AddMediator();
 
             services.AddSingleton<Rtmp.Contracts.IRtmpServerContext, RtmpServerContext>()
-                    .AddSingleton<IRtmpClientContextFactory, RtmpClientContextFactory>()
+                    .AddSingleton<IRtmpClientSessionContextFactory, RtmpClientSessionContextFactory>()
                     .AddSingleton<IMediaPackageDiscarderFactory, MediaPackageDiscarderFactory>()
                     .AddSingleton<IStreamAuthorization, StreamAuthorization>();
 
@@ -75,8 +75,7 @@ namespace LiveStreamingServerNet.Rtmp.Installer
                     .AddSingleton<IRtmpMediaMessageInterceptionService, RtmpMediaMessageInterceptionService>()
                     .AddSingleton<IRtmpMediaCachingInterceptionService, RtmpMediaCachingInterceptionService>();
 
-            services.AddSingleton<Rtmp.Contracts.IRtmpStreamInfoManager, RtmpStreamInfoManager>()
-                    .AddSingleton<Rtmp.Contracts.IRtmpStreamManager, RtmpStreamManager>();
+            services.AddSingleton<Rtmp.Contracts.IRtmpStreamInfoManager, RtmpStreamInfoManager>();
 
             return services;
         }

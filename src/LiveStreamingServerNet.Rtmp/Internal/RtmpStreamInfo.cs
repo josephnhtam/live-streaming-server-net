@@ -11,10 +11,10 @@ namespace LiveStreamingServerNet.Rtmp.Internal
         public IReadOnlyDictionary<string, object>? MetaData { get; }
 
         public DateTime StartTime { get; }
-        public IClientControl Publisher { get; }
-        public IReadOnlyList<IClientControl> Subscribers { get; }
+        public ISessionControl Publisher { get; }
+        public IReadOnlyList<ISessionControl> Subscribers { get; }
 
-        public RtmpStreamInfo(IClientControl publisher, IList<IClientControl> subscribers, IRtmpPublishStreamContext context)
+        public RtmpStreamInfo(ISessionControl publisher, IList<ISessionControl> subscribers, IRtmpPublishStreamContext context)
         {
             StreamPath = context.StreamPath;
             StartTime = context.StartTime;
@@ -33,10 +33,10 @@ namespace LiveStreamingServerNet.Rtmp.Internal
         public IReadOnlyDictionary<string, object>? MetaData { get; }
 
         public DateTime StartTime { get; }
-        public IClientControl Publisher { get; }
-        public IReadOnlyList<IClientControl> Subscribers { get; }
+        public ISessionControl Publisher { get; }
+        public IReadOnlyList<ISessionControl> Subscribers { get; }
 
-        public RtmpStream(IClientControl publisher, IList<IClientControl> subscribers, IRtmpPublishStreamContext context)
+        public RtmpStream(ISessionControl publisher, IList<ISessionControl> subscribers, IRtmpPublishStreamContext context)
         {
             StreamPath = context.StreamPath;
             StartTime = context.StartTime;

@@ -1,5 +1,5 @@
 ﻿using LiveStreamingServerNet.Networking;
-using LiveStreamingServerNet.Networking.Contracts;
+using LiveStreamingServerNet.Networking.Server.Contracts;
 using LiveStreamingServerNet.Rtmp.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Contracts;
 using System.Web;
@@ -32,7 +32,7 @@ namespace LiveStreamingServerNet.StreamProcessor
         {
             var localServerEndPoint = GetLocalServerEndPoint();
             var scheme = localServerEndPoint.IsSecure ? "rtmps" : "rtmp";
-            return new Uri($"{scheme}://localhost:{localServerEndPoint.LocalEndPoint.Port}");
+            return new Uri($"{scheme}://localhost:{localServerEndPoint.IPEndPoint.Port}");
         }
 
         private ServerEndPoint GetLocalServerEndPoint()

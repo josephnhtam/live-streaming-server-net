@@ -7,13 +7,13 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services.Contracts
     {
         ValueTask BroadcastMediaMessageAsync(
             IRtmpPublishStreamContext publishStreamContext,
-            IReadOnlyList<IRtmpClientContext> subscribers,
+            IReadOnlyList<IRtmpClientSessionContext> subscribers,
             MediaType mediaType,
             uint timestamp,
             bool isSkippable,
             IDataBuffer payloadBuffer);
 
-        void RegisterClient(IRtmpClientContext clientContext);
-        void UnregisterClient(IRtmpClientContext clientContext);
+        void RegisterClient(IRtmpClientSessionContext clientContext);
+        void UnregisterClient(IRtmpClientSessionContext clientContext);
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace LiveStreamingServerNet.StreamProcessor.Configurations
+﻿namespace LiveStreamingServerNet.StreamProcessor.Hls.Configurations
 {
     public class HlsUploaderConfiguration
     {
