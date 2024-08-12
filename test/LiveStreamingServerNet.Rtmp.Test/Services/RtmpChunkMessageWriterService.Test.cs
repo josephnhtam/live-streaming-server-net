@@ -17,7 +17,8 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
         [InlineData(0xf, 12345, 321)]
         [InlineData(0xfff, 128, 512)]
         [InlineData(0xffffff, 1024, 128)]
-        [InlineData(0xfffffff, 1024, 128)]
+        [InlineData(0x1000000, 1024, 128)]
+        [InlineData(0x1111111, 1024, 128)]
         public async Task Write_Should_SeparateChunkType0MessageIntoChunks(uint timestamp, int payloadSize, int chunkSize)
         {
             // Arrange

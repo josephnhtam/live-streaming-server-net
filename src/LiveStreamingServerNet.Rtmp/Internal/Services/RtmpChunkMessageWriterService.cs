@@ -13,23 +13,16 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             IDataBuffer payloadBuffer,
             uint outChunkSize) where TRtmpChunkMessageHeader : struct, IRtmpChunkMessageHeader
         {
-            var extendedTimestampHeader = CreateExtendedTimestampHeader(messageHeader);
+            var extendedTimestampHeader = CreateExtendedTimestampHeader(ref messageHeader);
 
             WriteFirstChunk(targetBuffer, basicHeader, messageHeader, extendedTimestampHeader, payloadBuffer, outChunkSize);
             WriteRemainingChunks(targetBuffer, basicHeader, extendedTimestampHeader, payloadBuffer, outChunkSize);
         }
 
         private static RtmpChunkExtendedTimestampHeader? CreateExtendedTimestampHeader<TRtmpChunkMessageHeader>
-            (TRtmpChunkMessageHeader messageHeader) where TRtmpChunkMessageHeader : struct, IRtmpChunkMessageHeader
+            (ref TRtmpChunkMessageHeader messageHeader) where TRtmpChunkMessageHeader : struct, IRtmpChunkMessageHeader
         {
-            if (messageHeader.HasExtendedTimestamp())
-            {
-                var extendedTimestampHeader = new RtmpChunkExtendedTimestampHeader(messageHeader.GetTimestamp());
-                messageHeader.UseExtendedTimestamp();
-                return extendedTimestampHeader;
-            }
-
-            return null;
+            return messageHeader.HasExtendedTimestamp() ? new RtmpChunkExtendedTimestampHeader(messageHeader.GetTimestamp()) : null;
         }
 
         private static void WriteFirstChunk<TRtmpChunkMessageHeader>(

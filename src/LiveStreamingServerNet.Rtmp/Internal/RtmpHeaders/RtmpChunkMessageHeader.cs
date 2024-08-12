@@ -7,7 +7,6 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpHeaders
     {
         int Size { get; }
         void Write(IDataBuffer dataBuffer);
-        void UseExtendedTimestamp();
         bool HasExtendedTimestamp();
         uint GetTimestamp();
         void SetMessageLength(int messageLength);
@@ -18,10 +17,13 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpHeaders
         public const int kSize = 11;
         public int Size => kSize;
 
-        public uint Timestamp { get; private set; }
+        private const int ExtendedTimestamp = 0xffffff;
+
+        public uint Timestamp { get; }
         public int MessageLength { get; private set; }
         public byte MessageTypeId { get; }
         public uint MessageStreamId { get; }
+
 
         public RtmpChunkMessageHeaderType0(uint timestamp, int messageLength, byte messageTypeId, uint messageStreamId)
         {
@@ -55,14 +57,9 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpHeaders
             MessageLength = messageLength;
         }
 
-        public void UseExtendedTimestamp()
-        {
-            Timestamp = 0xffffff;
-        }
-
         public bool HasExtendedTimestamp()
         {
-            return Timestamp >= 0xffffff;
+            return Timestamp >= ExtendedTimestamp;
         }
 
         public uint GetTimestamp()
@@ -72,7 +69,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpHeaders
 
         public void Write(IDataBuffer dataBuffer)
         {
-            dataBuffer.WriteUInt24BigEndian(Timestamp);
+            dataBuffer.WriteUInt24BigEndian(HasExtendedTimestamp() ? ExtendedTimestamp : Timestamp);
             dataBuffer.WriteUInt24BigEndian((uint)MessageLength);
             dataBuffer.Write(MessageTypeId);
             dataBuffer.Write(MessageStreamId);
@@ -84,9 +81,12 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpHeaders
         public const int kSize = 7;
         public int Size => kSize;
 
-        public uint TimestampDelta { get; private set; }
+        private const int ExtendedTimestamp = 0xffffff;
+
+        public uint TimestampDelta { get; }
         public int MessageLength { get; private set; }
         public byte MessageTypeId { get; }
+
 
         public RtmpChunkMessageHeaderType1(uint timestampDelta, int messageLength, byte messageTypeId)
         {
@@ -118,14 +118,9 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpHeaders
             MessageLength = messageLength;
         }
 
-        public void UseExtendedTimestamp()
-        {
-            TimestampDelta = 0xffffff;
-        }
-
         public bool HasExtendedTimestamp()
         {
-            return TimestampDelta >= 0xffffff;
+            return TimestampDelta >= ExtendedTimestamp;
         }
 
         public uint GetTimestamp()
@@ -135,7 +130,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpHeaders
 
         public void Write(IDataBuffer dataBuffer)
         {
-            dataBuffer.WriteUInt24BigEndian(TimestampDelta);
+            dataBuffer.WriteUInt24BigEndian(HasExtendedTimestamp() ? ExtendedTimestamp : TimestampDelta);
             dataBuffer.WriteUInt24BigEndian((uint)MessageLength);
             dataBuffer.Write(MessageTypeId);
         }
@@ -146,7 +141,9 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpHeaders
         public const int kSize = 3;
         public int Size => kSize;
 
-        public uint TimestampDelta { get; private set; }
+        private const int ExtendedTimestamp = 0xffffff;
+
+        public uint TimestampDelta { get; }
 
         public RtmpChunkMessageHeaderType2(uint TimestampDelta)
         {
@@ -164,14 +161,9 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpHeaders
 
         public void SetMessageLength(int messageLength) { }
 
-        public void UseExtendedTimestamp()
-        {
-            TimestampDelta = 0xffffff;
-        }
-
         public bool HasExtendedTimestamp()
         {
-            return TimestampDelta >= 0xffffff;
+            return TimestampDelta >= ExtendedTimestamp;
         }
 
         public uint GetTimestamp()
@@ -181,7 +173,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpHeaders
 
         public void Write(IDataBuffer dataBuffer)
         {
-            dataBuffer.WriteUInt24BigEndian(TimestampDelta);
+            dataBuffer.WriteUInt24BigEndian(HasExtendedTimestamp() ? ExtendedTimestamp : TimestampDelta);
         }
     }
 }
