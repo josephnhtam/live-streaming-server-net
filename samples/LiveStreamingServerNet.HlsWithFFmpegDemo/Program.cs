@@ -1,4 +1,3 @@
-using LiveStreamingServerNet.Networking.Helpers;
 using LiveStreamingServerNet.StreamProcessor.Contracts;
 using LiveStreamingServerNet.StreamProcessor.FFmpeg.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Installer;
@@ -17,11 +16,9 @@ namespace LiveStreamingServerNet.HlsDemoWithFFmpeg
             var outputDir = Path.Combine(Directory.GetCurrentDirectory(), "Output");
             new DirectoryInfo(outputDir).Create();
 
-            using var liveStreamingServer = CreateLiveStreamingServer(outputDir);
-
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddBackgroundServer(liveStreamingServer, new IPEndPoint(IPAddress.Any, 1935));
+            builder.Services.AddLiveStreamingServer(outputDir);
 
             builder.Services.AddCors(options =>
                 options.AddDefaultPolicy(policy =>
@@ -55,10 +52,11 @@ namespace LiveStreamingServerNet.HlsDemoWithFFmpeg
             return (fileProvider, contentTypeProvider);
         }
 
-        private static ILiveStreamingServer CreateLiveStreamingServer(string outputDir)
+        private static IServiceCollection AddLiveStreamingServer(this IServiceCollection services, string outputDir)
         {
-            return LiveStreamingServerBuilder.Create()
-                .ConfigureRtmpServer(options => options
+            return services.AddLiveStreamingServer(
+                [new IPEndPoint(IPAddress.Any, 1935)],
+                options => options
                     .Configure(options => options.EnableGopCaching = false)
                     .AddStreamProcessor(options =>
                     {
@@ -75,9 +73,7 @@ namespace LiveStreamingServerNet.HlsDemoWithFFmpeg
                         options.FFmpegPath = ExecutableFinder.FindExecutableFromPATH("ffmpeg")!;
                         options.OutputPathResolver = new HlsOutputPathResolver(outputDir);
                     })
-                )
-                .ConfigureLogging(options => options.AddConsole())
-                .Build();
+            );
         }
 
         private class HlsOutputPathResolver : IFFmpegOutputPathResolver

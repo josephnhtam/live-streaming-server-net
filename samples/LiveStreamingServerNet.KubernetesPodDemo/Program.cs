@@ -1,7 +1,6 @@
 using Azure.Storage.Blobs;
 using LiveStreamingServerNet.KubernetesPod.Installer;
 using LiveStreamingServerNet.KubernetesPod.Redis.Installer;
-using LiveStreamingServerNet.Networking.Helpers;
 using LiveStreamingServerNet.Rtmp;
 using LiveStreamingServerNet.StreamProcessor;
 using LiveStreamingServerNet.StreamProcessor.AzureBlobStorage.Installer;
@@ -20,9 +19,7 @@ namespace LiveStreamingServerNet.KubernetesPodDemo
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            using var liveStreamingServer = await CreateLiveStreamingServerAsync(builder.Configuration);
-
-            builder.Services.AddBackgroundServer(liveStreamingServer, new IPEndPoint(IPAddress.Any, 1935));
+            await builder.Services.AddLiveStreamingServerAsync(builder.Configuration);
 
             builder.Services.AddHealthChecks();
 
@@ -43,13 +40,14 @@ namespace LiveStreamingServerNet.KubernetesPodDemo
             await app.RunAsync();
         }
 
-        private static async Task<ILiveStreamingServer> CreateLiveStreamingServerAsync(IConfiguration configuration)
+        private static async Task<IServiceCollection> AddLiveStreamingServerAsync(this IServiceCollection services, IConfiguration configuration)
         {
             var redisConn = await CreateRedisConn(configuration);
             var blobContainerClient = CreateBlobContainerClient(configuration);
 
-            return LiveStreamingServerBuilder.Create()
-                .ConfigureRtmpServer(rtmpServerConfigurator =>
+            return services.AddLiveStreamingServer(
+                [new IPEndPoint(IPAddress.Any, 1935)],
+                rtmpServerConfigurator =>
                 {
                     if (blobContainerClient != null)
                     {
@@ -73,9 +71,8 @@ namespace LiveStreamingServerNet.KubernetesPodDemo
                             registryOptions.UseRedisStore(redisConn)
                         );
                     });
-                })
-                .ConfigureLogging(options => options.SetMinimumLevel(LogLevel.Trace).AddConsole())
-                .Build();
+                }
+            );
         }
 
         private static BlobContainerClient? CreateBlobContainerClient(IConfiguration configuration)

@@ -56,12 +56,32 @@ namespace LiveStreamingServerNet.Flv.Installer
             return app;
         }
 
+        public static IApplicationBuilder UseHttpFlv(this IApplicationBuilder app, HttpFlvOptions? options = null)
+        {
+            if (options == null)
+                app.UseMiddleware<HttpFlvMiddleware>();
+            else
+                app.UseMiddleware<HttpFlvMiddleware>(Options.Create(options));
+
+            return app;
+        }
+
         public static IApplicationBuilder UseWebSocketFlv(this IApplicationBuilder app, IServer liveStreamingServer, WebSocketFlvOptions? options = null)
         {
             if (options == null)
                 app.UseMiddleware<WebSocketFlvMiddleware>(liveStreamingServer);
             else
                 app.UseMiddleware<WebSocketFlvMiddleware>(liveStreamingServer, Options.Create(options));
+
+            return app;
+        }
+
+        public static IApplicationBuilder UseWebSocketFlv(this IApplicationBuilder app, WebSocketFlvOptions? options = null)
+        {
+            if (options == null)
+                app.UseMiddleware<WebSocketFlvMiddleware>();
+            else
+                app.UseMiddleware<WebSocketFlvMiddleware>(Options.Create(options));
 
             return app;
         }

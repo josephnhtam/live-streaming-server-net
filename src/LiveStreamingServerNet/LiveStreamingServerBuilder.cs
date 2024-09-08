@@ -1,6 +1,5 @@
 ﻿using LiveStreamingServerNet.Contracts;
 using LiveStreamingServerNet.Internal.HostedService;
-using LiveStreamingServerNet.Internal.HostedServices.Contracts;
 using LiveStreamingServerNet.Networking.Installer.Contracts;
 using LiveStreamingServerNet.Rtmp.Installer;
 using LiveStreamingServerNet.Rtmp.Installer.Contracts;
@@ -50,8 +49,7 @@ namespace LiveStreamingServerNet
         public ILiveStreamingServer Build()
         {
             Services.AddRtmpServer(_configureRtmpServer, _configureServer);
-            Services.AddSingleton<ILiveStreamingServerService, LiveStreamingServerService>();
-            Services.AddHostedService(svc => svc.GetRequiredService<ILiveStreamingServerService>());
+            Services.AddHostedService<ConfigurableLiveStreamingServerService>();
 
             Services.Configure<ConsoleLifetimeOptions>(options => options.SuppressStatusMessages = true);
 

@@ -1,4 +1,3 @@
-using LiveStreamingServerNet.Networking.Helpers;
 using LiveStreamingServerNet.Rtmp;
 using LiveStreamingServerNet.StreamProcessor.AspNetCore.Configurations;
 using LiveStreamingServerNet.StreamProcessor.AspNetCore.Installer;
@@ -17,11 +16,9 @@ namespace LiveStreamingServerNet.HlsDemo
             var outputDir = Path.Combine(Directory.GetCurrentDirectory(), "hls-output");
             new DirectoryInfo(outputDir).Create();
 
-            using var liveStreamingServer = CreateLiveStreamingServer(outputDir);
-
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddBackgroundServer(liveStreamingServer, new IPEndPoint(IPAddress.Any, 1935));
+            builder.Services.AddLiveStreamingServer(outputDir);
 
             builder.Services.AddCors(options =>
                 options.AddDefaultPolicy(policy =>
@@ -37,7 +34,7 @@ namespace LiveStreamingServerNet.HlsDemo
 
             // Given that the scheme is https, the port is 7138, and the stream path is live/demo,
             // the HLS stream will be available at https://localhost:7138/hls/live/demo/output.m3u8
-            app.UseHlsFiles(liveStreamingServer, new HlsServingOptions
+            app.UseHlsFiles(new HlsServingOptions
             {
                 Root = outputDir,
                 RequestPath = "/hls"
@@ -46,10 +43,11 @@ namespace LiveStreamingServerNet.HlsDemo
             await app.RunAsync();
         }
 
-        private static ILiveStreamingServer CreateLiveStreamingServer(string outputDir)
+        private static IServiceCollection AddLiveStreamingServer(this IServiceCollection services, string outputDir)
         {
-            return LiveStreamingServerBuilder.Create()
-                .ConfigureRtmpServer(options => options
+            return services.AddLiveStreamingServer(
+                [new IPEndPoint(IPAddress.Any, 1935)],
+                options => options
                     .Configure(options => options.EnableGopCaching = false)
                     .AddVideoCodecFilter(builder => builder.Include(VideoCodec.AVC))
                     .AddAudioCodecFilter(builder => builder.Include(AudioCodec.AAC))
@@ -59,9 +57,7 @@ namespace LiveStreamingServerNet.HlsDemo
                                 new StreamProcessorEventListener(outputDir, svc.GetRequiredService<ILogger<StreamProcessorEventListener>>()));
                     })
                     .AddHlsTransmuxer(options => options.OutputPathResolver = new HlsOutputPathResolver(outputDir))
-                )
-                .ConfigureLogging(options => options.AddConsole())
-                .Build();
+            );
         }
 
         private class HlsOutputPathResolver : IHlsOutputPathResolver

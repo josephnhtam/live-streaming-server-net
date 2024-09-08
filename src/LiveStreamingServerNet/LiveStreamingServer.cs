@@ -1,4 +1,4 @@
-﻿using LiveStreamingServerNet.Internal.HostedServices.Contracts;
+﻿using LiveStreamingServerNet.Internal.HostedService;
 using LiveStreamingServerNet.Networking;
 using LiveStreamingServerNet.Networking.Contracts;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,7 +10,7 @@ namespace LiveStreamingServerNet
     {
         private readonly IHost _host;
         private readonly IServer _server;
-        private readonly ILiveStreamingServerService _serverService;
+        private readonly ConfigurableLiveStreamingServerService _serverService;
 
         public IServiceProvider Services => _server.Services;
         public bool IsStarted => _server.IsStarted;
@@ -21,7 +21,7 @@ namespace LiveStreamingServerNet
         {
             _host = host;
             _server = _host.Services.GetRequiredService<IServer>();
-            _serverService = _host.Services.GetRequiredService<ILiveStreamingServerService>();
+            _serverService = _host.Services.GetRequiredService<ConfigurableLiveStreamingServerService>();
         }
 
         public IClientHandle? GetClient(uint clientId) => _server.GetClient(clientId);

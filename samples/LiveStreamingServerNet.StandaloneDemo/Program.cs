@@ -1,6 +1,5 @@
 using LiveStreamingServerNet.AdminPanelUI;
 using LiveStreamingServerNet.Flv.Installer;
-using LiveStreamingServerNet.Networking.Helpers;
 using LiveStreamingServerNet.Standalone;
 using LiveStreamingServerNet.Standalone.Installer;
 using System.Net;
@@ -11,31 +10,29 @@ namespace LiveStreamingServerNet.StandaloneDemo
     {
         public static async Task Main(string[] args)
         {
-            using var liveStreamingServer = CreateLiveStreamingServer();
-
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddBackgroundServer(liveStreamingServer, new IPEndPoint(IPAddress.Any, 1935));
+            builder.Services.AddLiveStreamingServer();
 
             var app = builder.Build();
 
-            app.UseHttpFlv(liveStreamingServer);
+            app.UseHttpFlv();
 
-            app.MapStandaloneServerApiEndPoints(liveStreamingServer);
+            app.MapStandaloneServerApiEndPoints();
             app.UseAdminPanelUI(new AdminPanelUIOptions { BasePath = "/ui", HasHttpFlvPreview = true });
 
             await app.RunAsync();
         }
 
-        private static ILiveStreamingServer CreateLiveStreamingServer()
+        private static IServiceCollection AddLiveStreamingServer(this IServiceCollection services)
         {
-            return LiveStreamingServerBuilder.Create()
-                .ConfigureRtmpServer(options => options
+            return services.AddLiveStreamingServer(
+                [new IPEndPoint(IPAddress.Any, 1935)],
+                options => options
                     .AddBandwidthLimiter(100_000_000)
                     .AddStandaloneServices()
-                    .AddFlv())
-                .ConfigureLogging(options => options.AddConsole())
-                .Build();
+                    .AddFlv()
+            );
         }
     }
 }

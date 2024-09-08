@@ -1,10 +1,9 @@
-using LiveStreamingServerNet.Networking.Helpers;
 using LiveStreamingServerNet.StreamProcessor.AspNetCore.Installer;
 using LiveStreamingServerNet.StreamProcessor.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Installer;
 using LiveStreamingServerNet.StreamProcessor.Utilities;
 using LiveStreamingServerNet.Utilities.Contracts;
-using System.Net; 
+using System.Net;
 
 namespace LiveStreamingServerNet.AdaptiveHlsDemo
 {
@@ -12,11 +11,9 @@ namespace LiveStreamingServerNet.AdaptiveHlsDemo
     {
         public static async Task Main(string[] args)
         {
-            using var liveStreamingServer = CreateLiveStreamingServer();
-
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddBackgroundServer(liveStreamingServer, new IPEndPoint(IPAddress.Any, 1935));
+            builder.Services.AddLiveStreamingServer();
 
             builder.Services.AddCors(options =>
                 options.AddDefaultPolicy(policy =>
@@ -32,20 +29,22 @@ namespace LiveStreamingServerNet.AdaptiveHlsDemo
 
             // Given that the scheme is https, the port is 7138, and the stream path is live/demo,
             // the HLS stream will be available at https://localhost:7138/live/demo/output.m3u8
-            app.UseHlsFiles(liveStreamingServer);
+            app.UseHlsFiles();
 
             await app.RunAsync();
         }
 
-        private static ILiveStreamingServer CreateLiveStreamingServer()
+        private static IServiceCollection AddLiveStreamingServer(this IServiceCollection services)
         {
-            return LiveStreamingServerBuilder.Create()
-                .ConfigureRtmpServer(options => options
+            return services.AddLiveStreamingServer(
+                [new IPEndPoint(IPAddress.Any, 1935)],
+                options => options
                     .Configure(options => options.EnableGopCaching = false)
                     .AddStreamProcessor(options =>
                     {
                         options.AddStreamProcessorEventHandler(svc =>
-                                new StreamProcessorEventListener(svc.GetRequiredService<ILogger<StreamProcessorEventListener>>()));
+                            new StreamProcessorEventListener(
+                                svc.GetRequiredService<ILogger<StreamProcessorEventListener>>()));
                     })
                     .AddAdaptiveHlsTranscoder(options =>
                     {
@@ -56,9 +55,7 @@ namespace LiveStreamingServerNet.AdaptiveHlsDemo
                         // options.VideoDecodingArguments = "-hwaccel auto -c:v h264_cuvid";
                         // options.VideoEncodingArguments = "-c:v h264_nvenc -g 30";
                     })
-                )
-                .ConfigureLogging(options => options.AddConsole())
-                .Build();
+            );
         }
 
         private class StreamProcessorEventListener : IStreamProcessorEventHandler

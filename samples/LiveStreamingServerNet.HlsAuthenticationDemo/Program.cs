@@ -1,4 +1,3 @@
-using LiveStreamingServerNet.Networking.Helpers;
 using LiveStreamingServerNet.Rtmp;
 using LiveStreamingServerNet.StreamProcessor.AspNetCore.Configurations;
 using LiveStreamingServerNet.StreamProcessor.AspNetCore.Installer;
@@ -13,11 +12,17 @@ namespace LiveStreamingServerNet.HlsAuthenticationDemo
     {
         public static async Task Main(string[] args)
         {
-            using var liveStreamingServer = CreateLiveStreamingServer();
-
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddBackgroundServer(liveStreamingServer, new IPEndPoint(IPAddress.Any, 1935));
+            builder.Services.AddLiveStreamingServer(
+                [new IPEndPoint(IPAddress.Any, 1935)],
+                options => options
+                    .Configure(options => options.EnableGopCaching = false)
+                    .AddVideoCodecFilter(builder => builder.Include(VideoCodec.AVC))
+                    .AddAudioCodecFilter(builder => builder.Include(AudioCodec.AAC))
+                    .AddStreamProcessor()
+                    .AddHlsTransmuxer()
+            );
 
             builder.Services.AddCors(options =>
                 options.AddDefaultPolicy(policy =>
@@ -54,7 +59,7 @@ namespace LiveStreamingServerNet.HlsAuthenticationDemo
 
             // Given that the scheme is https, the port is 7138, and the stream path is live/demo,
             // the HLS stream will be available at https://localhost:7138/hls/live/demo/output.m3u8
-            app.UseHlsFiles(liveStreamingServer, new HlsServingOptions
+            app.UseHlsFiles(new HlsServingOptions
             {
                 RequestPath = "/hls",
 
@@ -74,20 +79,6 @@ namespace LiveStreamingServerNet.HlsAuthenticationDemo
             });
 
             await app.RunAsync();
-        }
-
-        private static ILiveStreamingServer CreateLiveStreamingServer()
-        {
-            return LiveStreamingServerBuilder.Create()
-                .ConfigureRtmpServer(options => options
-                    .Configure(options => options.EnableGopCaching = false)
-                    .AddVideoCodecFilter(builder => builder.Include(VideoCodec.AVC))
-                    .AddAudioCodecFilter(builder => builder.Include(AudioCodec.AAC))
-                    .AddStreamProcessor()
-                    .AddHlsTransmuxer()
-                )
-                .ConfigureLogging(options => options.AddConsole())
-                .Build();
         }
     }
 }

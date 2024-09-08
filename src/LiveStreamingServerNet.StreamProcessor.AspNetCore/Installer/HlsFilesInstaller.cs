@@ -17,5 +17,15 @@ namespace LiveStreamingServerNet.StreamProcessor.AspNetCore.Installer
 
             return app;
         }
+
+        public static IApplicationBuilder UseHlsFiles(this IApplicationBuilder app, HlsServingOptions? options = null)
+        {
+            if (options == null)
+                app.UseMiddleware<HlsFilesMiddleware>();
+            else
+                app.UseMiddleware<HlsFilesMiddleware>(Options.Create(options));
+
+            return app;
+        }
     }
 }
