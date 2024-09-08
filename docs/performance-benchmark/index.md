@@ -25,7 +25,6 @@ The following code sets up a live streaming server capable of:
 ```cs linenums="1"
 using LiveStreamingServerNet;
 using LiveStreamingServerNet.AdminPanelUI;
-using LiveStreamingServerNet.Networking.Helpers;
 using LiveStreamingServerNet.Rtmp;
 using LiveStreamingServerNet.Standalone;
 using LiveStreamingServerNet.Standalone.Installer;
@@ -35,8 +34,25 @@ using System.Net;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var liveStreamingServer = CreateLiveStreamingServer();
-builder.Services.AddBackgroundServer(liveStreamingServer, new IPEndPoint(IPAddress.Any, 1935));
+builder.Services.AddLiveStreamingServer(
+    [new IPEndPoint(IPAddress.Any, 1935)],
+    serverConfig =>
+    {
+        serverConfig.Configure(options =>
+        {
+            options.EnableGopCaching = builder.Configuration.GetValue("RTMP_ENABLE_GOP_CACHING", true);
+            options.MediaPackageBatchWindow = TimeSpan.FromMilliseconds(350);
+        });
+
+        serverConfig.AddVideoCodecFilter(builder => builder.Include(VideoCodec.AVC))
+                    .AddAudioCodecFilter(builder => builder.Include(AudioCodec.AAC));
+
+        serverConfig.AddStandaloneServices();
+
+        serverConfig.AddStreamProcessor()
+                    .AddHlsTransmuxer();
+    }
+);
 
 builder.Services.AddCors(options =>
     options.AddDefaultPolicy(policy =>
@@ -50,40 +66,13 @@ var app = builder.Build();
 
 app.UseCors();
 
-app.UseHlsFiles(liveStreamingServer);
+app.UseHlsFiles();
 
-app.MapStandaloneServerApiEndPoints(liveStreamingServer);
+app.MapStandaloneServerApiEndPoints();
 
 app.UseAdminPanelUI();
 
 await app.RunAsync();
-
-static ILiveStreamingServer CreateLiveStreamingServer()
-{
-    var builder = LiveStreamingServerBuilder.Create();
-    var configuration = new ConfigurationBuilder().AddEnvironmentVariables().Build();
-
-    builder.ConfigureLogging(logging => logging.AddConsole());
-
-    builder.ConfigureRtmpServer(serverConfig =>
-    {
-        serverConfig.Configure(options =>
-        {
-            options.EnableGopCaching = configuration.GetValue<bool>("RTMP_ENABLE_GOP_CACHING", true);
-            options.MediaPackageBatchWindow = TimeSpan.FromMilliseconds(350);
-        });
-
-        serverConfig.AddVideoCodecFilter(builder => builder.Include(VideoCodec.AVC))
-                    .AddAudioCodecFilter(builder => builder.Include(AudioCodec.AAC));
-
-        serverConfig.AddStandaloneServices();
-
-        serverConfig.AddStreamProcessor()
-                    .AddHlsTransmuxer();
-    });
-
-    return builder.Build();
-}
 ```
 
 ## Results

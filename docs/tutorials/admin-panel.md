@@ -24,30 +24,27 @@ Edit `Program.cs` file:
 using LiveStreamingServerNet;
 using LiveStreamingServerNet.AdminPanelUI;
 using LiveStreamingServerNet.Flv.Installer;
-using LiveStreamingServerNet.Networking.Helpers;
 using LiveStreamingServerNet.Standalone;
 using LiveStreamingServerNet.Standalone.Installer;
 using System.Net;
 
-using var liveStreamingServer = LiveStreamingServerBuilder.Create()
-    .ConfigureRtmpServer(options => options.AddStandaloneServices().AddFlv())
-    .ConfigureLogging(options => options.AddConsole())
-    .Build();
-
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddBackgroundServer(liveStreamingServer, new IPEndPoint(IPAddress.Any, 1935));
+builder.Services.AddLiveStreamingServer(
+    [new IPEndPoint(IPAddress.Any, 1935)],
+    options => options.AddStandaloneServices().AddFlv()
+);
 
 var app = builder.Build();
 
-app.UseHttpFlv(liveStreamingServer);
-app.MapStandaloneServerApiEndPoints(liveStreamingServer);
+app.UseHttpFlv();
+app.MapStandaloneServerApiEndPoints();
 app.UseAdminPanelUI(new AdminPanelUIOptions { BasePath = "/ui", HasHttpFlvPreview = true });
 
 app.Run();
 ```
 
-This code sets up the live streaming server and the ASP.NET Core web app, while the live streaming server will run alongside the web app using port 1935. In addition, the web app will serve both HTTP-FLV and the admin panel UI, as well as the API endpoints required by the admin panel.
+This code adds the live streaming server to the ASP.NET Core web app, while the live streaming server will run in the background using port 1935. In addition, the web app will serve both HTTP-FLV and the admin panel UI, as well as the API endpoints required by the admin panel.
 
 ### Step 3: Launch Your Live Streaming Server
 

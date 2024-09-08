@@ -20,23 +20,21 @@ Edit `Program.cs` file:
 using System.Net;
 using LiveStreamingServerNet;
 using LiveStreamingServerNet.Flv.Installer;
-using LiveStreamingServerNet.Networking.Helpers;
-
-using var liveStreamingServer = LiveStreamingServerBuilder.Create()
-    .ConfigureRtmpServer(options => options.AddFlv())
-    .ConfigureLogging(options => options.AddConsole())
-    .Build();
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddBackgroundServer(liveStreamingServer, new IPEndPoint(IPAddress.Any, 1935));
+builder.Services.AddLiveStreamingServer(
+    [new IPEndPoint(IPAddress.Any, 1935)],
+    options => options.AddFlv()
+);
 
 var app = builder.Build();
 
 app.UseWebSockets();
-app.UseWebSocketFlv(liveStreamingServer);
 
-app.UseHttpFlv(liveStreamingServer);
+app.UseWebSocketFlv();
+
+app.UseHttpFlv();
 
 await app.RunAsync();
 ```
@@ -48,14 +46,16 @@ Note that `app.UseWebSockets()` must be added before `app.UseWebSocketFlv(liveSt
 If CORS is required, you can add the CORS service and middleware as usual. For example:
 
 ```cs linenums="1"
-using var liveStreamingServer = LiveStreamingServerBuilder.Create()
-    .ConfigureRtmpServer(options => options.AddFlv())
-    .ConfigureLogging(options => options.AddConsole())
-    .Build();
+using System.Net;
+using LiveStreamingServerNet;
+using LiveStreamingServerNet.Flv.Installer;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddBackgroundServer(liveStreamingServer, new IPEndPoint(IPAddress.Any, 1935));
+builder.Services.AddLiveStreamingServer(
+    [new IPEndPoint(IPAddress.Any, 1935)],
+    options => options.AddFlv()
+);
 
 builder.Services.AddCors(options =>
     options.AddDefaultPolicy(policy =>
@@ -67,12 +67,11 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-app.UseCors();
-
 app.UseWebSockets();
-app.UseWebSocketFlv(liveStreamingServer);
 
-app.UseHttpFlv(liveStreamingServer);
+app.UseWebSocketFlv();
+
+app.UseHttpFlv();
 
 await app.RunAsync();
 ```

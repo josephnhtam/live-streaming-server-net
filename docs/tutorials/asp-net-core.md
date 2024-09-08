@@ -18,24 +18,17 @@ Edit `Program.cs` file:
 ```cs linenums="1"
 using System.Net;
 using LiveStreamingServerNet;
-using LiveStreamingServerNet.Networking.Helpers;
-
-using var liveStreamingServer = LiveStreamingServerBuilder.Create()
-    .ConfigureRtmpServer(options => options.AddFlv())
-    .ConfigureLogging(options => options.AddConsole())
-    .Build();
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddBackgroundServer(liveStreamingServer, new IPEndPoint(IPAddress.Any, 1935));
+builder.Services.AddLiveStreamingServer([new IPEndPoint(IPAddress.Any, 1935)]);
 
 var app = builder.Build();
+
 await app.RunAsync();
 ```
 
-This code sets up the live streaming server and the ASP.NET Core web app, while the live streaming server will run alongside the web app using port 1935.
-
-Note that `app.UseWebSockets()` must be added before `app.UseWebSocketFlv(liveStreamingServer)` to ensure a correct WebSocket pipeline.
+This code adds the live streaming server to the ASP.NET Core web app, while the live streaming server will in the background using port 1935.
 
 ### Step 3: Launch Your Live Streaming Server
 

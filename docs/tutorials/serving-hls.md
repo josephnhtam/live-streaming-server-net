@@ -23,7 +23,6 @@ Edit `Program.cs` file:
 
 ```cs linenums="1"
 using LiveStreamingServerNet;
-using LiveStreamingServerNet.Networking.Helpers;
 using LiveStreamingServerNet.StreamProcessor.AspNetCore.Configurations;
 using LiveStreamingServerNet.StreamProcessor.AspNetCore.Installer;
 using LiveStreamingServerNet.StreamProcessor.Contracts;
@@ -35,21 +34,18 @@ using System.Net;
 var outputDir = Path.Combine(Directory.GetCurrentDirectory(), "hls-output");
 new DirectoryInfo(outputDir).Create();
 
-var liveStreamingServer = LiveStreamingServerBuilder.Create()
-    .ConfigureRtmpServer(options => options
-        .AddStreamProcessor(options => options.AddStreamProcessorEventHandler<HlsTransmuxerEventListener>())
-        .AddHlsTransmuxer(options => options.OutputPathResolver = new HlsTransmuxerOutputPathResolver(outputDir))
-    )
-    .ConfigureLogging(options => options.AddConsole())
-    .Build();
-
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddBackgroundServer(liveStreamingServer, new IPEndPoint(IPAddress.Any, 1935));
+builder.Services.AddLiveStreamingServer(
+    [new IPEndPoint(IPAddress.Any, 1935)],
+    options => options
+        .AddStreamProcessor(options => options.AddStreamProcessorEventHandler<HlsTransmuxerEventListener>())
+        .AddHlsTransmuxer(options => options.OutputPathResolver = new HlsTransmuxerOutputPathResolver(outputDir))
+);
 
 var app = builder.Build();
 
-app.UseHlsFiles(liveStreamingServer, new HlsServingOptions
+app.UseHlsFiles(new HlsServingOptions
 {
     Root = outputDir,
     RequestPath = "/hls"
