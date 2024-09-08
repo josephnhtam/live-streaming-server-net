@@ -49,7 +49,8 @@ namespace LiveStreamingServerNet
         public ILiveStreamingServer Build()
         {
             Services.AddRtmpServer(_configureRtmpServer, _configureServer);
-            Services.AddHostedService<ConfigurableLiveStreamingServerService>();
+            Services.AddSingleton<ConfigurableLiveStreamingServerService>();
+            Services.AddHostedService(svc => svc.GetRequiredService<ConfigurableLiveStreamingServerService>());
 
             Services.Configure<ConsoleLifetimeOptions>(options => options.SuppressStatusMessages = true);
 
