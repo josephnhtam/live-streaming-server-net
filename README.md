@@ -115,23 +115,20 @@ Program.cs
 using System.Net;
 using LiveStreamingServerNet;
 using LiveStreamingServerNet.Flv.Installer;
-using LiveStreamingServerNet.Networking.Helpers;
-
-using var liveStreamingServer = LiveStreamingServerBuilder.Create()
-    .ConfigureRtmpServer(options => options.AddFlv())
-    .ConfigureLogging(options => options.AddConsole())
-    .Build();
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddBackgroundServer(liveStreamingServer, new IPEndPoint(IPAddress.Any, 1935));
+builder.Services.AddLiveStreamingServer(
+    [new IPEndPoint(IPAddress.Any, 1935)],
+    options => options.AddFlv()
+);
 
 var app = builder.Build();
 
 app.UseWebSockets();
-app.UseWebSocketFlv(liveStreamingServer);
+app.UseWebSocketFlv();
 
-app.UseHttpFlv(liveStreamingServer);
+app.UseHttpFlv();
 
 await app.RunAsync();
 ```
