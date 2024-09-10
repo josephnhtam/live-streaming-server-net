@@ -9,7 +9,10 @@ namespace LiveStreamingServerNet.FlvDemo
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddLiveStreamingServer();
+            builder.Services.AddLiveStreamingServer(
+                new IPEndPoint(IPAddress.Any, 1935),
+                options => options.AddFlv()
+            );
 
             var app = builder.Build();
 
@@ -20,14 +23,6 @@ namespace LiveStreamingServerNet.FlvDemo
             app.UseHttpFlv();
 
             await app.RunAsync();
-        }
-
-        private static IServiceCollection AddLiveStreamingServer(this IServiceCollection services)
-        {
-            return services.AddLiveStreamingServer(
-                new IPEndPoint(IPAddress.Any, 1935),
-                options => options.AddFlv()
-            );
         }
     }
 }
