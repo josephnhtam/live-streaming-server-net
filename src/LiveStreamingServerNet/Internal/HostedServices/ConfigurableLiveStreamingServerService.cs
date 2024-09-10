@@ -1,11 +1,12 @@
-﻿using LiveStreamingServerNet.Networking;
+﻿using LiveStreamingServerNet.Internal.HostedServices.Contracts;
+using LiveStreamingServerNet.Networking;
 using LiveStreamingServerNet.Networking.Contracts;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 namespace LiveStreamingServerNet.Internal.HostedService
 {
-    internal class ConfigurableLiveStreamingServerService : BackgroundService
+    internal class ConfigurableLiveStreamingServerService : BackgroundService, IConfigurableLiveStreamingServerService
     {
         private readonly IServer _server;
         private readonly ILogger _logger;
