@@ -46,7 +46,7 @@ namespace LiveStreamingServerNet.KubernetesPodDemo
             var blobContainerClient = CreateBlobContainerClient(configuration);
 
             return services.AddLiveStreamingServer(
-                [new IPEndPoint(IPAddress.Any, 1935)],
+                new IPEndPoint(IPAddress.Any, 1935),
                 rtmpServerConfigurator =>
                 {
                     if (blobContainerClient != null)

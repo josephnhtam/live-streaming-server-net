@@ -11,6 +11,15 @@ namespace LiveStreamingServerNet
     {
         public static IServiceCollection AddLiveStreamingServer(
             this IServiceCollection services,
+            ServerEndPoint serverEndPoint,
+            Action<IRtmpServerConfigurator>? configureRtmpServer = null,
+            Action<IServerConfigurator>? configureServer = null)
+        {
+            return AddLiveStreamingServer(services, new[] { serverEndPoint }, configureRtmpServer, configureServer);
+        }
+
+        public static IServiceCollection AddLiveStreamingServer(
+            this IServiceCollection services,
             IEnumerable<ServerEndPoint> serverEndPoints,
             Action<IRtmpServerConfigurator>? configureRtmpServer = null,
             Action<IServerConfigurator>? configureServer = null)

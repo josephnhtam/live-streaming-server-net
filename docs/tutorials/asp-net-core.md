@@ -21,7 +21,7 @@ using LiveStreamingServerNet;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddLiveStreamingServer([new IPEndPoint(IPAddress.Any, 1935)]);
+builder.Services.AddLiveStreamingServer(new IPEndPoint(IPAddress.Any, 1935));
 
 var app = builder.Build();
 

@@ -31,7 +31,7 @@ using System.Net;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddLiveStreamingServer(
-    [new IPEndPoint(IPAddress.Any, 1935)],
+    new IPEndPoint(IPAddress.Any, 1935),
     options => options.AddStandaloneServices().AddFlv()
 );
 

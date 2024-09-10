@@ -25,7 +25,7 @@ namespace LiveStreamingServerNet.FlvDemo
         private static IServiceCollection AddLiveStreamingServer(this IServiceCollection services)
         {
             return services.AddLiveStreamingServer(
-                [new IPEndPoint(IPAddress.Any, 1935)],
+                new IPEndPoint(IPAddress.Any, 1935),
                 options => options.AddFlv()
             );
         }

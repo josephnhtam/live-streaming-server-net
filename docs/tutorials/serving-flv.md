@@ -24,7 +24,7 @@ using LiveStreamingServerNet.Flv.Installer;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddLiveStreamingServer(
-    [new IPEndPoint(IPAddress.Any, 1935)],
+    new IPEndPoint(IPAddress.Any, 1935),
     options => options.AddFlv()
 );
 
@@ -53,7 +53,7 @@ using LiveStreamingServerNet.Flv.Installer;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddLiveStreamingServer(
-    [new IPEndPoint(IPAddress.Any, 1935)],
+    new IPEndPoint(IPAddress.Any, 1935),
     options => options.AddFlv()
 );
 

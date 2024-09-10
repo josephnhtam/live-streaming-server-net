@@ -46,7 +46,7 @@ namespace LiveStreamingServerNet.HlsDemo
         private static IServiceCollection AddLiveStreamingServer(this IServiceCollection services, string outputDir)
         {
             return services.AddLiveStreamingServer(
-                [new IPEndPoint(IPAddress.Any, 1935)],
+                new IPEndPoint(IPAddress.Any, 1935),
                 options => options
                     .Configure(options => options.EnableGopCaching = false)
                     .AddVideoCodecFilter(builder => builder.Include(VideoCodec.AVC))

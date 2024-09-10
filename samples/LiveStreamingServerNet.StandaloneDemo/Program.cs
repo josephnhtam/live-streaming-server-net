@@ -27,7 +27,7 @@ namespace LiveStreamingServerNet.StandaloneDemo
         private static IServiceCollection AddLiveStreamingServer(this IServiceCollection services)
         {
             return services.AddLiveStreamingServer(
-                [new IPEndPoint(IPAddress.Any, 1935)],
+                new IPEndPoint(IPAddress.Any, 1935),
                 options => options
                     .AddBandwidthLimiter(100_000_000)
                     .AddStandaloneServices()
