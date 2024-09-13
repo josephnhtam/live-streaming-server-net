@@ -23,7 +23,6 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Containers
         private byte _videoContinuityCounter;
         private byte _audioContinuityCounter;
         private uint _sequenceNumber;
-        private byte[]? _patBuffer;
 
         private uint? _segmentTimestamp;
         private int _payloadSize;

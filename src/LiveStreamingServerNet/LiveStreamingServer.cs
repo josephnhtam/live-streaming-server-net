@@ -1,5 +1,4 @@
-﻿using LiveStreamingServerNet.Internal.HostedService;
-using LiveStreamingServerNet.Internal.HostedServices.Contracts;
+﻿using LiveStreamingServerNet.Internal.HostedServices.Contracts;
 using LiveStreamingServerNet.Networking;
 using LiveStreamingServerNet.Networking.Contracts;
 using Microsoft.Extensions.DependencyInjection;
