@@ -5,7 +5,7 @@
         ValueTask RtmpClientCreatedAsync(IRtmpClientContext clientContext);
         ValueTask RtmpClientDisposedAsync(IRtmpClientContext clientContext);
 
-        ValueTask RtmpClientHandshakeCompleteAsync(IRtmpClientContext clientId);
+        ValueTask RtmpClientHandshakeCompleteAsync(IRtmpClientContext clientContext);
         ValueTask RtmpClientConnectedAsync(IRtmpClientContext clientContext, IReadOnlyDictionary<string, object> commandObject, IReadOnlyDictionary<string, object>? arguments);
     }
 

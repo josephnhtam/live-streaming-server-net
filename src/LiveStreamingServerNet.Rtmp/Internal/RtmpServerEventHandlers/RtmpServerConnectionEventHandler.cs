@@ -34,7 +34,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpServerEventHandlers
             return ValueTask.CompletedTask;
         }
 
-        public ValueTask OnRtmpClientHandshakeCompleteAsync(IEventContext context, IRtmpClientContext clientId)
+        public ValueTask OnRtmpClientHandshakeCompleteAsync(IEventContext context, IRtmpClientContext clientContext)
         {
             return ValueTask.CompletedTask;
         }

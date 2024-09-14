@@ -9,7 +9,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Contracts
         ValueTask OnRtmpClientCreatedAsync(IEventContext context, IRtmpClientContext clientContext);
         ValueTask OnRtmpClientDisposedAsync(IEventContext context, IRtmpClientContext clientContext);
 
-        ValueTask OnRtmpClientHandshakeCompleteAsync(IEventContext context, IRtmpClientContext clientId);
+        ValueTask OnRtmpClientHandshakeCompleteAsync(IEventContext context, IRtmpClientContext clientContext);
         ValueTask OnRtmpClientConnectedAsync(IEventContext context, IRtmpClientContext clientContext, IReadOnlyDictionary<string, object> commandObject, IReadOnlyDictionary<string, object>? arguments);
     }
 

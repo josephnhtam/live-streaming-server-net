@@ -69,18 +69,18 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpServerEventHandlers
             }
         }
 
-        public async ValueTask RtmpClientHandshakeCompleteAsync(IRtmpClientContext clientId)
+        public async ValueTask RtmpClientHandshakeCompleteAsync(IRtmpClientContext clientContext)
         {
             try
             {
                 using var context = EventContext.Obtain();
 
                 foreach (var eventHandler in GetEventHandlers())
-                    await eventHandler.OnRtmpClientHandshakeCompleteAsync(context, clientId);
+                    await eventHandler.OnRtmpClientHandshakeCompleteAsync(context, clientContext);
             }
             catch (Exception ex)
             {
-                _logger.DispatchingRtmpClientHandshakeCompleteEventError(clientId.Client.ClientId, ex);
+                _logger.DispatchingRtmpClientHandshakeCompleteEventError(clientContext.Client.ClientId, ex);
             }
         }
     }
