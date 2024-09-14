@@ -2,6 +2,6 @@
 {
     internal interface IClientFactory
     {
-        IClient Create(uint clientId, ITcpClientInternal tcpClient);
+        IClient Create(uint clientId, ITcpClientInternal tcpClient, ServerEndPoint serverEndPoint);
     }
 }

@@ -12,33 +12,31 @@ namespace LiveStreamingServerNet.Rtmp.Internal
 {
     internal class RtmpClientHandler : IRtmpClientHandler
     {
+        private readonly IRtmpClientContext _clientContext;
         private readonly IMediator _mediator;
         private readonly IRtmpServerConnectionEventDispatcher _eventDispatcher;
-        private readonly IRtmpClientContextFactory _clientContextFactory;
         private readonly ILogger _logger;
         private readonly IBandwidthLimiter? _bandwidthLimiter;
         private readonly IPool<RtmpChunkEvent> _rtmpChunkEventPool;
 
-        private IRtmpClientContext _clientContext = default!;
 
         public RtmpClientHandler(
+            IRtmpClientContext clientContext,
             IMediator mediator,
             IRtmpServerConnectionEventDispatcher eventDispatcher,
-            IRtmpClientContextFactory clientContextFactory,
             ILogger<RtmpClientHandler> logger,
             IBandwidthLimiterFactory? bandwidthLimiterFactory = null)
         {
+            _clientContext = clientContext;
             _mediator = mediator;
             _eventDispatcher = eventDispatcher;
-            _clientContextFactory = clientContextFactory;
             _logger = logger;
             _bandwidthLimiter = bandwidthLimiterFactory?.Create();
             _rtmpChunkEventPool = new Pool<RtmpChunkEvent>(() => new RtmpChunkEvent());
         }
 
-        public async Task InitializeAsync(IClientHandle client)
+        public async Task InitializeAsync()
         {
-            _clientContext = _clientContextFactory.Create(client);
             await OnRtmpClientCreatedAsync();
         }
 

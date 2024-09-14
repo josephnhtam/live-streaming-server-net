@@ -3,7 +3,7 @@ using System.Net.Sockets;
 
 namespace LiveStreamingServerNet.Networking.Internal.Contracts
 {
-    internal interface ITcpClientInternal : ITcpClient
+    internal interface ITcpClientInternal : ITcpClient, IDisposable
     {
         void Close();
         Socket Client { get; }

@@ -10,13 +10,15 @@ namespace LiveStreamingServerNet.Networking.Internal
 {
     internal sealed class Client : IClient
     {
+        private readonly ITcpClientInternal _tcpClient;
+        private readonly ServerEndPoint _serverEndPoint;
         private readonly IClientBufferSender _bufferSender;
         private readonly INetworkStreamFactory _networkStreamFactory;
+        private readonly IClientHandlerFactory _clientHandlerFactory;
         private readonly ILogger _logger;
 
-        private ITcpClientInternal _tcpClient = default!;
+        private readonly TaskCompletionSource _stoppedTcs = new();
         private CancellationTokenSource? _cts;
-        private TaskCompletionSource _stoppedTcs = new();
 
         public uint ClientId { get; }
         public DateTime StartTime { get; }
@@ -27,33 +29,42 @@ namespace LiveStreamingServerNet.Networking.Internal
         public Client(
             uint clientId,
             ITcpClientInternal tcpClient,
+            ServerEndPoint serverEndPoint,
             IClientBufferSender bufferSender,
             INetworkStreamFactory networkStreamFactory,
+            IClientHandlerFactory clientHandlerFactory,
             ILogger<Client> logger)
         {
             ClientId = clientId;
             StartTime = DateTime.UtcNow;
+
             _tcpClient = tcpClient;
+            _serverEndPoint = serverEndPoint;
             _bufferSender = bufferSender;
             _networkStreamFactory = networkStreamFactory;
+            _clientHandlerFactory = clientHandlerFactory;
             _logger = logger;
         }
 
-        public async Task RunAsync(IClientHandler handler, ServerEndPoint serverEndPoint, CancellationToken stoppingToken)
+        public async Task RunAsync(CancellationToken stoppingToken)
         {
             _logger.ClientConnected(ClientId);
-
-            await handler.InitializeAsync(this);
 
             _cts = CancellationTokenSource.CreateLinkedTokenSource(stoppingToken);
             var cancellationToken = _cts.Token;
 
+            IClientHandler? handler = null;
             INetworkStream? networkStream = null;
 
             try
             {
-                networkStream = await CreateNetworkStreamAsync(serverEndPoint, cancellationToken);
+                handler = CreateClientHandler();
+
+                networkStream = await CreateNetworkStreamAsync(_serverEndPoint, cancellationToken);
+
                 _bufferSender.Start(networkStream, cancellationToken);
+
+                await handler.InitializeAsync();
 
                 while (_tcpClient.Connected && !cancellationToken.IsCancellationRequested)
                 {
@@ -73,11 +84,26 @@ namespace LiveStreamingServerNet.Networking.Internal
             }
 
             await _bufferSender.DisposeAsync();
-            await handler.DisposeAsync();
+
+            await (handler?.DisposeAsync() ?? ValueTask.CompletedTask);
+
             networkStream?.Dispose();
+
             _tcpClient.Close();
 
+            _stoppedTcs.TrySetResult();
+
             _logger.ClientDisconnected(ClientId);
+        }
+
+        private IClientHandler CreateClientHandler()
+        {
+            return _clientHandlerFactory.CreateClientHandler(this);
+        }
+
+        private Task<INetworkStream> CreateNetworkStreamAsync(ServerEndPoint serverEndPoint, CancellationToken cancellationToken)
+        {
+            return _networkStreamFactory.CreateNetworkStreamAsync(_tcpClient, serverEndPoint, cancellationToken);
         }
 
         public void Send(IDataBuffer dataBuffer, Action<bool>? callback)
@@ -123,14 +149,8 @@ namespace LiveStreamingServerNet.Networking.Internal
 
         public ValueTask DisposeAsync()
         {
-            _tcpClient.Close();
-            _stoppedTcs.TrySetResult();
+            _tcpClient.Dispose();
             return ValueTask.CompletedTask;
-        }
-
-        private async Task<INetworkStream> CreateNetworkStreamAsync(ServerEndPoint serverEndPoint, CancellationToken cancellationToken)
-        {
-            return await _networkStreamFactory.CreateNetworkStreamAsync(_tcpClient, serverEndPoint, cancellationToken);
         }
     }
 }

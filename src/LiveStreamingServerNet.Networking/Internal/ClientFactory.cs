@@ -1,4 +1,5 @@
-﻿using LiveStreamingServerNet.Networking.Internal.Contracts;
+﻿using LiveStreamingServerNet.Networking.Contracts;
+using LiveStreamingServerNet.Networking.Internal.Contracts;
 using Microsoft.Extensions.Logging;
 
 namespace LiveStreamingServerNet.Networking.Internal
@@ -7,22 +8,25 @@ namespace LiveStreamingServerNet.Networking.Internal
     {
         private readonly IClientBufferSenderFactory _senderFactory;
         private readonly INetworkStreamFactory _networkStreamFactory;
+        private readonly IClientHandlerFactory _clientHandlerFactory;
         private readonly ILogger<Client> _logger;
 
         public ClientFactory(
             IClientBufferSenderFactory senderFactory,
             INetworkStreamFactory networkStreamFactory,
+            IClientHandlerFactory clientHandlerFactory,
             ILogger<Client> logger)
         {
             _senderFactory = senderFactory;
             _networkStreamFactory = networkStreamFactory;
+            _clientHandlerFactory = clientHandlerFactory;
             _logger = logger;
         }
 
-        public IClient Create(uint clientId, ITcpClientInternal tcpClient)
+        public IClient Create(uint clientId, ITcpClientInternal tcpClient, ServerEndPoint serverEndPoint)
         {
             var bufferSender = _senderFactory.Create(clientId);
-            return new Client(clientId, tcpClient, bufferSender, _networkStreamFactory, _logger);
+            return new Client(clientId, tcpClient, serverEndPoint, bufferSender, _networkStreamFactory, _clientHandlerFactory, _logger);
         }
     }
 }

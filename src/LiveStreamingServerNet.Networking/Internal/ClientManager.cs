@@ -11,7 +11,6 @@ namespace LiveStreamingServerNet.Networking.Internal
         private readonly ConcurrentDictionary<uint, IClient> _clients = new();
         private readonly ConcurrentDictionary<uint, ClientTask> _clientTasks = new();
         private readonly IClientFactory _clientFactory;
-        private readonly IClientHandlerFactory _clientHandlerFactory;
         private readonly IServerEventDispatcher _eventDispatcher;
         private readonly ILogger _logger;
 
@@ -19,12 +18,10 @@ namespace LiveStreamingServerNet.Networking.Internal
 
         public ClientManager(
             IClientFactory clientFactory,
-            IClientHandlerFactory clientHandlerFactory,
             IServerEventDispatcher eventDispatcher,
             ILogger<ClientManager> logger)
         {
             _clientFactory = clientFactory;
-            _clientHandlerFactory = clientHandlerFactory;
             _eventDispatcher = eventDispatcher;
             _logger = logger;
         }
@@ -36,12 +33,10 @@ namespace LiveStreamingServerNet.Networking.Internal
             await OnClientAcceptedAsync(tcpClient);
 
             var clientId = GetNextClientId();
-            var client = CreateClient(clientId, tcpClient);
-
-            var clientHandler = CreateClientHandler();
+            var client = CreateClient(clientId, tcpClient, serverEndPoint);
 
             _clients.TryAdd(clientId, client);
-            var clientTask = client.RunAsync(clientHandler, serverEndPoint, cancellationToken);
+            var clientTask = client.RunAsync(cancellationToken);
 
             _clientTasks.TryAdd(clientId, new(client, clientTask));
             await OnClientConnectedAsync(client);
@@ -60,9 +55,9 @@ namespace LiveStreamingServerNet.Networking.Internal
             return Interlocked.Increment(ref _nextClientId);
         }
 
-        private IClient CreateClient(uint clientId, ITcpClientInternal tcpClient)
+        private IClient CreateClient(uint clientId, ITcpClientInternal tcpClient, ServerEndPoint serverEndPoint)
         {
-            return _clientFactory.Create(clientId, tcpClient);
+            return _clientFactory.Create(clientId, tcpClient, serverEndPoint);
         }
 
         public IClientHandle? GetClient(uint clientId)
@@ -73,11 +68,6 @@ namespace LiveStreamingServerNet.Networking.Internal
         public IReadOnlyList<IClientHandle> GetClientHandles()
         {
             return _clients.Select(x => x.Value).OfType<IClientHandle>().ToList();
-        }
-
-        private IClientHandler CreateClientHandler()
-        {
-            return _clientHandlerFactory.CreateClientHandler();
         }
 
         public async Task WaitUntilAllClientTasksCompleteAsync(CancellationToken cancellationToken)

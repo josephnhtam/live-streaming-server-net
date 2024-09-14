@@ -15,9 +15,7 @@ namespace LiveStreamingServerNet.Rtmp.Test
         private readonly IMediator _mediator;
         private readonly IRtmpServerConnectionEventDispatcher _eventDispatcher;
         private readonly ILogger<RtmpClientHandler> _logger;
-        private readonly IClientHandle _clientHandle;
         private readonly IRtmpClientContext _clientContext;
-        private readonly IRtmpClientContextFactory _clientContextFactory;
         private readonly IBandwidthLimiter _bandwidthLimiter;
         private readonly IBandwidthLimiterFactory _bandwidthLimiterFactory;
         private readonly INetworkStream _networkStream;
@@ -29,11 +27,7 @@ namespace LiveStreamingServerNet.Rtmp.Test
             _eventDispatcher = Substitute.For<IRtmpServerConnectionEventDispatcher>();
             _logger = Substitute.For<ILogger<RtmpClientHandler>>();
 
-            _clientHandle = Substitute.For<IClientHandle>();
-
             _clientContext = Substitute.For<IRtmpClientContext>();
-            _clientContextFactory = Substitute.For<IRtmpClientContextFactory>();
-            _clientContextFactory.Create(Arg.Any<IClientHandle>()).Returns(_clientContext);
 
             _bandwidthLimiter = Substitute.For<IBandwidthLimiter>();
             _bandwidthLimiter.ConsumeBandwidth(Arg.Any<long>()).Returns(true);
@@ -43,7 +37,7 @@ namespace LiveStreamingServerNet.Rtmp.Test
 
             _networkStream = Substitute.For<INetworkStream>();
 
-            _sut = new RtmpClientHandler(_mediator, _eventDispatcher, _clientContextFactory, _logger, _bandwidthLimiterFactory);
+            _sut = new RtmpClientHandler(_clientContext, _mediator, _eventDispatcher, _logger, _bandwidthLimiterFactory);
         }
 
         public void Dispose()
@@ -59,7 +53,7 @@ namespace LiveStreamingServerNet.Rtmp.Test
                 .Returns(new RtmpEventConsumingResult(true, 0));
 
             _clientContext.State.Returns(RtmpClientState.HandshakeC0);
-            await _sut.InitializeAsync(_clientHandle);
+            await _sut.InitializeAsync();
 
             // Act
             await _sut.HandleClientLoopAsync(_networkStream, default);
@@ -76,7 +70,7 @@ namespace LiveStreamingServerNet.Rtmp.Test
                 .Returns(new RtmpEventConsumingResult(true, 0));
 
             _clientContext.State.Returns(RtmpClientState.HandshakeC1);
-            await _sut.InitializeAsync(_clientHandle);
+            await _sut.InitializeAsync();
 
             // Act
             await _sut.HandleClientLoopAsync(_networkStream, default);
@@ -93,7 +87,7 @@ namespace LiveStreamingServerNet.Rtmp.Test
                 .Returns(new RtmpEventConsumingResult(true, 0));
 
             _clientContext.State.Returns(RtmpClientState.HandshakeC2);
-            await _sut.InitializeAsync(_clientHandle);
+            await _sut.InitializeAsync();
 
             // Act
             await _sut.HandleClientLoopAsync(_networkStream, default);
@@ -110,7 +104,7 @@ namespace LiveStreamingServerNet.Rtmp.Test
                 .Returns(new RtmpEventConsumingResult(true, 0));
 
             _clientContext.State.Returns(RtmpClientState.HandshakeDone);
-            await _sut.InitializeAsync(_clientHandle);
+            await _sut.InitializeAsync();
 
             // Act
             await _sut.HandleClientLoopAsync(_networkStream, default);
@@ -131,7 +125,7 @@ namespace LiveStreamingServerNet.Rtmp.Test
                 .Returns(new RtmpEventConsumingResult(true, 0));
 
             _clientContext.State.Returns(state);
-            await _sut.InitializeAsync(_clientHandle);
+            await _sut.InitializeAsync();
 
             // Act
             var result = await _sut.HandleClientLoopAsync(_networkStream, default);
@@ -152,7 +146,7 @@ namespace LiveStreamingServerNet.Rtmp.Test
                 .Returns(new RtmpEventConsumingResult(false, 0));
 
             _clientContext.State.Returns(state);
-            await _sut.InitializeAsync(_clientHandle);
+            await _sut.InitializeAsync();
 
             // Act
             var result = await _sut.HandleClientLoopAsync(_networkStream, default);
@@ -175,7 +169,7 @@ namespace LiveStreamingServerNet.Rtmp.Test
             _bandwidthLimiter.ConsumeBandwidth(Arg.Any<long>()).Returns(false);
 
             _clientContext.State.Returns(state);
-            await _sut.InitializeAsync(_clientHandle);
+            await _sut.InitializeAsync();
 
             // Act
             var result = await _sut.HandleClientLoopAsync(_networkStream, default);

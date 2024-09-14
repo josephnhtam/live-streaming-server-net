@@ -2,6 +2,6 @@
 {
     public interface IClientHandlerFactory
     {
-        IClientHandler CreateClientHandler();
+        IClientHandler CreateClientHandler(IClientHandle client);
     }
 }

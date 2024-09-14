@@ -11,6 +11,7 @@ namespace LiveStreamingServerNet.Networking.Test
     {
         private readonly ServerEndPoint _serverEndPoint;
         private readonly IClientHandler _clientHandler;
+        private readonly IClientHandlerFactory _clientHandlerFactory;
         private readonly ITcpClientInternal _tcpClient;
         private readonly IClientBufferSender _bufferSender;
         private readonly INetworkStream _networkStream;
@@ -38,7 +39,10 @@ namespace LiveStreamingServerNet.Networking.Test
                 .CreateNetworkStreamAsync(_tcpClient, _serverEndPoint, Arg.Any<CancellationToken>())
                 .Returns(_networkStream);
 
-            _sut = new Client(1, _tcpClient, _bufferSender, _networkStreamFactory, _logger);
+            _clientHandlerFactory = Substitute.For<IClientHandlerFactory>();
+            _sut = new Client(1, _tcpClient, _serverEndPoint, _bufferSender, _networkStreamFactory, _clientHandlerFactory, _logger);
+
+            _clientHandlerFactory.CreateClientHandler(_sut).Returns(_clientHandler);
 
             _cts = new CancellationTokenSource();
             _cancellationToken = _cts.Token;
@@ -48,17 +52,17 @@ namespace LiveStreamingServerNet.Networking.Test
         public async Task RunAsync_Should_InitializeClientHandler()
         {
             // Act
-            await _sut.RunAsync(_clientHandler, _serverEndPoint, _cancellationToken);
+            await _sut.RunAsync(_cancellationToken);
 
             // Assert
-            _ = _clientHandler.Received(1).InitializeAsync(_sut);
+            _ = _clientHandler.Received(1).InitializeAsync();
         }
 
         [Fact]
         public async Task RunAsync_Should_CreateNetworkStream()
         {
             // Act
-            await _sut.RunAsync(_clientHandler, _serverEndPoint, _cancellationToken);
+            await _sut.RunAsync(_cancellationToken);
 
             // Assert
             _ = _networkStreamFactory.Received(1).CreateNetworkStreamAsync(_tcpClient, _serverEndPoint, Arg.Any<CancellationToken>());
@@ -73,7 +77,7 @@ namespace LiveStreamingServerNet.Networking.Test
             _tcpClient.Connected.Returns(false);
 
             // Act
-            await _sut.RunAsync(_clientHandler, _serverEndPoint, _cancellationToken);
+            await _sut.RunAsync(_cancellationToken);
 
             // Assert
             _bufferSender.Received(1).Start(_networkStream, Arg.Any<CancellationToken>());
@@ -89,7 +93,7 @@ namespace LiveStreamingServerNet.Networking.Test
                 .Returns(true, true, false);
 
             // Act
-            await _sut.RunAsync(_clientHandler, _serverEndPoint, _cancellationToken);
+            await _sut.RunAsync(_cancellationToken);
 
             // Assert
             _ = _clientHandler.Received(3).HandleClientLoopAsync(Arg.Any<INetworkStream>(), Arg.Any<CancellationToken>());
@@ -103,7 +107,7 @@ namespace LiveStreamingServerNet.Networking.Test
                 .Returns(Task.Delay(100).ContinueWith(_ => true));
 
             // Act
-            var clientTask = _sut.RunAsync(_clientHandler, _serverEndPoint, _cancellationToken);
+            var clientTask = _sut.RunAsync(_cancellationToken);
 
             _cts.Cancel();
             await clientTask;
@@ -125,7 +129,7 @@ namespace LiveStreamingServerNet.Networking.Test
                 .Returns(Task.Delay(100).ContinueWith(_ => true));
 
             // Act
-            var clientTask = _sut.RunAsync(_clientHandler, _serverEndPoint, _cancellationToken);
+            var clientTask = _sut.RunAsync(_cancellationToken);
 
             _sut.Disconnect();
             await clientTask;

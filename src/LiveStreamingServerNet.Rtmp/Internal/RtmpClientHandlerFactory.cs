@@ -28,9 +28,10 @@ namespace LiveStreamingServerNet.Rtmp.Internal
             _bandwidthLimiterFactory = bandwidthLimiterFactory;
         }
 
-        public IClientHandler CreateClientHandler()
+        public IClientHandler CreateClientHandler(IClientHandle client)
         {
-            return new RtmpClientHandler(_mediator, _eventDispatcher, _clientContextFactory, _logger, _bandwidthLimiterFactory);
+            var clientContext = _clientContextFactory.Create(client);
+            return new RtmpClientHandler(clientContext, _mediator, _eventDispatcher, _logger, _bandwidthLimiterFactory);
         }
     }
 }
