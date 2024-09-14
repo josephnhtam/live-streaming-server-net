@@ -124,7 +124,7 @@ namespace LiveStreamingServerNet.Rtmp.Test
         [InlineData(RtmpClientState.HandshakeC1)]
         [InlineData(RtmpClientState.HandshakeC2)]
         [InlineData(RtmpClientState.HandshakeDone)]
-        public async Task HandleClientLoopAsync_Should_RetrunTrue_When_EventHandlingIsSuccessful(RtmpClientState state)
+        internal async Task HandleClientLoopAsync_Should_RetrunTrue_When_EventHandlingIsSuccessful(RtmpClientState state)
         {
             // Arrange
             _mediator.Send(Arg.Any<IRequest<RtmpEventConsumingResult>>(), Arg.Any<CancellationToken>())
@@ -145,7 +145,7 @@ namespace LiveStreamingServerNet.Rtmp.Test
         [InlineData(RtmpClientState.HandshakeC1)]
         [InlineData(RtmpClientState.HandshakeC2)]
         [InlineData(RtmpClientState.HandshakeDone)]
-        public async Task HandleClientLoopAsync_Should_RetrunFalse_When_EventHandlingIsNotSuccessful(RtmpClientState state)
+        internal async Task HandleClientLoopAsync_Should_RetrunFalse_When_EventHandlingIsNotSuccessful(RtmpClientState state)
         {
             // Arrange
             _mediator.Send(Arg.Any<IRequest<RtmpEventConsumingResult>>(), Arg.Any<CancellationToken>())
@@ -166,7 +166,7 @@ namespace LiveStreamingServerNet.Rtmp.Test
         [InlineData(RtmpClientState.HandshakeC1)]
         [InlineData(RtmpClientState.HandshakeC2)]
         [InlineData(RtmpClientState.HandshakeDone)]
-        public async Task HandleClientLoopAsync_Should_RetrunFalse_When_BandwidthLimitIsExceeded(RtmpClientState state)
+        internal async Task HandleClientLoopAsync_Should_RetrunFalse_When_BandwidthLimitIsExceeded(RtmpClientState state)
         {
             // Arrange
             _mediator.Send(Arg.Any<IRequest<RtmpEventConsumingResult>>(), Arg.Any<CancellationToken>())
