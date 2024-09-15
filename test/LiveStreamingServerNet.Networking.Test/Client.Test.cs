@@ -14,6 +14,7 @@ namespace LiveStreamingServerNet.Networking.Test
         private readonly IClientHandlerFactory _clientHandlerFactory;
         private readonly ITcpClientInternal _tcpClient;
         private readonly IClientBufferSender _bufferSender;
+        private readonly IClientBufferSenderFactory _bufferSenderFactory;
         private readonly INetworkStream _networkStream;
         private readonly INetworkStreamFactory _networkStreamFactory;
         private readonly ILogger<Client> _logger;
@@ -33,6 +34,9 @@ namespace LiveStreamingServerNet.Networking.Test
             _tcpClient.Connected.Returns(true, false);
             _clientHandler.HandleClientLoopAsync(Arg.Any<INetworkStream>(), Arg.Any<CancellationToken>()).Returns(true, false);
 
+            _bufferSenderFactory = Substitute.For<IClientBufferSenderFactory>();
+            _bufferSenderFactory.Create(1).Returns(_bufferSender);
+
             _networkStream = Substitute.For<INetworkStream>();
             _networkStreamFactory = Substitute.For<INetworkStreamFactory>();
             _networkStreamFactory
@@ -40,7 +44,8 @@ namespace LiveStreamingServerNet.Networking.Test
                 .Returns(_networkStream);
 
             _clientHandlerFactory = Substitute.For<IClientHandlerFactory>();
-            _sut = new Client(1, _tcpClient, _serverEndPoint, _bufferSender, _networkStreamFactory, _clientHandlerFactory, _logger);
+
+            _sut = new Client(1, _tcpClient, _serverEndPoint, _bufferSenderFactory, _networkStreamFactory, _clientHandlerFactory, _logger);
 
             _clientHandlerFactory.CreateClientHandler(_sut).Returns(_clientHandler);
 

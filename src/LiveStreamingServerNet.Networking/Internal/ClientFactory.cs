@@ -25,8 +25,7 @@ namespace LiveStreamingServerNet.Networking.Internal
 
         public IClient Create(uint clientId, ITcpClientInternal tcpClient, ServerEndPoint serverEndPoint)
         {
-            var bufferSender = _senderFactory.Create(clientId);
-            return new Client(clientId, tcpClient, serverEndPoint, bufferSender, _networkStreamFactory, _clientHandlerFactory, _logger);
+            return new Client(clientId, tcpClient, serverEndPoint, _senderFactory, _networkStreamFactory, _clientHandlerFactory, _logger);
         }
     }
 }

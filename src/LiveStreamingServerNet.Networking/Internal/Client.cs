@@ -12,10 +12,11 @@ namespace LiveStreamingServerNet.Networking.Internal
     {
         private readonly ITcpClientInternal _tcpClient;
         private readonly ServerEndPoint _serverEndPoint;
-        private readonly IClientBufferSender _bufferSender;
         private readonly INetworkStreamFactory _networkStreamFactory;
         private readonly IClientHandlerFactory _clientHandlerFactory;
         private readonly ILogger _logger;
+
+        private readonly IClientBufferSender _bufferSender;
 
         private readonly TaskCompletionSource _stoppedTcs = new();
         private CancellationTokenSource? _cts;
@@ -30,7 +31,7 @@ namespace LiveStreamingServerNet.Networking.Internal
             uint clientId,
             ITcpClientInternal tcpClient,
             ServerEndPoint serverEndPoint,
-            IClientBufferSender bufferSender,
+            IClientBufferSenderFactory senderFactory,
             INetworkStreamFactory networkStreamFactory,
             IClientHandlerFactory clientHandlerFactory,
             ILogger<Client> logger)
@@ -40,10 +41,11 @@ namespace LiveStreamingServerNet.Networking.Internal
 
             _tcpClient = tcpClient;
             _serverEndPoint = serverEndPoint;
-            _bufferSender = bufferSender;
             _networkStreamFactory = networkStreamFactory;
             _clientHandlerFactory = clientHandlerFactory;
             _logger = logger;
+
+            _bufferSender = senderFactory.Create(clientId);
         }
 
         public async Task RunAsync(CancellationToken stoppingToken)
