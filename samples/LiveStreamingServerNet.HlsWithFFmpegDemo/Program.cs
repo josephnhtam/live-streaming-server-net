@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.FileProviders;
 using System.Net;
 
-namespace LiveStreamingServerNet.HlsDemoWithFFmpeg
+namespace LiveStreamingServerNet.HlsWithFFmpegDemo
 {
     public static class Program
     {
