@@ -17,6 +17,9 @@ namespace LiveStreamingServerNet.Networking.Server.Internal.Logging
         [LoggerMessage(LogLevel.Information, "Server is shutting down")]
         public static partial void ServerShuttingDown(this ILogger logger);
 
+        [LoggerMessage(LogLevel.Error, "An error occurred while running the server")]
+        public static partial void ServerError(this ILogger logger, Exception ex);
+
         [LoggerMessage(LogLevel.Error, "An error occurred while accepting a client connection")]
         public static partial void AcceptClientError(this ILogger logger, SocketException exception);
 
