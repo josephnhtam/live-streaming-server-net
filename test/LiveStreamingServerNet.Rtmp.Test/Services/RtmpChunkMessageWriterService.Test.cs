@@ -42,7 +42,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
             service.Write(streamBuffer, basicHeader, messageHeader, payloadBuffer.MoveTo(0), (uint)expectedChunkSize);
 
             // Assert
-            using var stream = new NetworkStream(new MemoryStream(streamBuffer.UnderlyingBuffer));
+            await using var stream = new NetworkStream(new MemoryStream(streamBuffer.UnderlyingBuffer));
             using var targetBuffer = new DataBuffer();
 
             var remainingPayloadSize = expectedPayload.Length;

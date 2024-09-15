@@ -10,7 +10,7 @@ using NSubstitute;
 
 namespace LiveStreamingServerNet.Rtmp.Test
 {
-    public class RtmpClientHandlerTest : IDisposable
+    public class RtmpClientHandlerTest : IAsyncDisposable
     {
         private readonly IMediator _mediator;
         private readonly IRtmpServerConnectionEventDispatcher _eventDispatcher;
@@ -40,9 +40,9 @@ namespace LiveStreamingServerNet.Rtmp.Test
             _sut = new RtmpClientHandler(_clientContext, _mediator, _eventDispatcher, _logger, _bandwidthLimiterFactory);
         }
 
-        public void Dispose()
+        public async ValueTask DisposeAsync()
         {
-            _networkStream.Dispose();
+            await _networkStream.DisposeAsync();
         }
 
         [Fact]

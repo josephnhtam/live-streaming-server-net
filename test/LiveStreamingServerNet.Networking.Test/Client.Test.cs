@@ -120,9 +120,9 @@ namespace LiveStreamingServerNet.Networking.Test
             // Assert
             _ = _clientHandler.Received().HandleClientLoopAsync(Arg.Any<INetworkStream>(), Arg.Any<CancellationToken>());
 
-            _ = _bufferSender.Received().DisposeAsync();
             _ = _clientHandler.Received().DisposeAsync();
-            _networkStream.Received().Dispose();
+            _ = _bufferSender.Received().DisposeAsync();
+            _ = _networkStream.Received().DisposeAsync();
             _tcpClient.Received().Close();
         }
 
@@ -140,9 +140,9 @@ namespace LiveStreamingServerNet.Networking.Test
             await clientTask;
 
             // Assert
-            _ = _bufferSender.Received().DisposeAsync();
             _ = _clientHandler.Received().DisposeAsync();
-            _networkStream.Received().Dispose();
+            _ = _bufferSender.Received().DisposeAsync();
+            _ = _networkStream.Received().DisposeAsync();
             _tcpClient.Received().Close();
         }
 
