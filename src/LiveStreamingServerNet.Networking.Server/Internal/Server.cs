@@ -65,6 +65,7 @@ namespace LiveStreamingServerNet.Networking.Server.Internal
             }
             catch (Exception ex)
             {
+                _logger.ServerError(ex);
                 serverException = ex;
             }
 
