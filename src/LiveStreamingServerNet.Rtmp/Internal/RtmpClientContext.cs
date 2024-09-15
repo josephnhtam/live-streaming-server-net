@@ -89,7 +89,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal
         {
             switch (mediaType)
             {
-                case MediaType.Audio:
+                case MediaType.Video:
                     lock (_videoTimestampSyncLock)
                     {
                         if (timestamp > _videoTimestamp)
