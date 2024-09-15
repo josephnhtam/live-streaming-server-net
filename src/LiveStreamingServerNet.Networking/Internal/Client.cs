@@ -77,16 +77,18 @@ namespace LiveStreamingServerNet.Networking.Internal
             {
                 _logger.ClientLoopError(ClientId, ex);
             }
+            finally
+            {
+                linkedCts.Cancel();
 
-            linkedCts.Cancel();
+                await DisposeAsync(handler);
+                await DisposeAsync(_bufferSender);
+                await DisposeAsync(networkStream);
+                CloseTcpClient();
 
-            await DisposeAsync(handler);
-            await DisposeAsync(_bufferSender);
-            await DisposeAsync(networkStream);
-            CloseTcpClient();
-
-            _stoppedTcs.TrySetResult();
-            _logger.ClientDisconnected(ClientId);
+                _stoppedTcs.TrySetResult();
+                _logger.ClientDisconnected(ClientId);
+            }
         }
 
         private IClientHandler CreateClientHandler()
