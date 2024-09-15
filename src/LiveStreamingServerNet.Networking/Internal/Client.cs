@@ -17,13 +17,12 @@ namespace LiveStreamingServerNet.Networking.Internal
         private readonly ILogger _logger;
 
         private readonly IClientBufferSender _bufferSender;
-
         private readonly TaskCompletionSource _stoppedTcs = new();
-        private CancellationTokenSource? _cts;
+        private readonly CancellationTokenSource _cts = new();
 
         public uint ClientId { get; }
         public DateTime StartTime { get; }
-        public bool IsConnected => _tcpClient?.Connected ?? false;
+        public bool IsConnected => _tcpClient.Connected;
         public EndPoint LocalEndPoint => _tcpClient.Client.LocalEndPoint!;
         public EndPoint RemoteEndPoint => _tcpClient.Client.RemoteEndPoint!;
 
@@ -52,20 +51,18 @@ namespace LiveStreamingServerNet.Networking.Internal
         {
             _logger.ClientConnected(ClientId);
 
-            _cts = CancellationTokenSource.CreateLinkedTokenSource(stoppingToken);
-            var cancellationToken = _cts.Token;
+            using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(_cts.Token, stoppingToken);
+            var cancellationToken = linkedCts.Token;
 
             IClientHandler? handler = null;
             INetworkStream? networkStream = null;
 
             try
             {
-                handler = CreateClientHandler();
-
                 networkStream = await CreateNetworkStreamAsync(_serverEndPoint, cancellationToken);
-
                 _bufferSender.Start(networkStream, cancellationToken);
 
+                handler = CreateClientHandler();
                 await handler.InitializeAsync();
 
                 while (_tcpClient.Connected && !cancellationToken.IsCancellationRequested)
@@ -80,21 +77,15 @@ namespace LiveStreamingServerNet.Networking.Internal
             {
                 _logger.ClientLoopError(ClientId, ex);
             }
-            finally
-            {
-                _cts.Cancel();
-            }
 
-            await _bufferSender.DisposeAsync();
+            linkedCts.Cancel();
 
-            await (handler?.DisposeAsync() ?? ValueTask.CompletedTask);
-
-            networkStream?.Dispose();
-
-            _tcpClient.Close();
+            await DisposeAsync(handler);
+            await DisposeAsync(_bufferSender);
+            await DisposeAsync(networkStream);
+            CloseTcpClient();
 
             _stoppedTcs.TrySetResult();
-
             _logger.ClientDisconnected(ClientId);
         }
 
@@ -140,7 +131,7 @@ namespace LiveStreamingServerNet.Networking.Internal
 
         public void Disconnect()
         {
-            _cts?.Cancel();
+            _cts.Cancel();
         }
 
         public async Task DisconnectAsync(CancellationToken cancellation)
@@ -149,8 +140,36 @@ namespace LiveStreamingServerNet.Networking.Internal
             await _stoppedTcs.Task.WithCancellation(cancellation);
         }
 
+        private async Task DisposeAsync(IAsyncDisposable? disposable)
+        {
+            try
+            {
+                if (disposable != null)
+                {
+                    await disposable.DisposeAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.DisposeError(ClientId, ex);
+            }
+        }
+
+        private void CloseTcpClient()
+        {
+            try
+            {
+                _tcpClient.Close();
+            }
+            catch (Exception ex)
+            {
+                _logger.CloseTcpClientError(ClientId, ex);
+            }
+        }
+
         public ValueTask DisposeAsync()
         {
+            _cts.Dispose();
             _tcpClient.Dispose();
             return ValueTask.CompletedTask;
         }

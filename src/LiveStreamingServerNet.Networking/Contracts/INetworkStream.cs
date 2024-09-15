@@ -2,7 +2,7 @@
 
 namespace LiveStreamingServerNet.Networking.Contracts
 {
-    public interface INetworkStream : INetworkStreamWriter, INetworkStreamReader, IDisposable
+    public interface INetworkStream : INetworkStreamWriter, INetworkStreamReader, IAsyncDisposable
     {
         Stream InnerStream { get; }
     }

@@ -55,5 +55,11 @@ namespace LiveStreamingServerNet.Networking.Internal.Logging
 
         [LoggerMessage(LogLevel.Error, "An error occurred while dispatching server stopped event")]
         public static partial void DispatchingServerStoppedEventError(this ILogger logger, Exception ex);
+
+        [LoggerMessage(LogLevel.Error, "ClientId: {ClientId} | An error occurred while disposing the client")]
+        public static partial void DisposeError(this ILogger logger, uint clientId, Exception ex);
+
+        [LoggerMessage(LogLevel.Error, "ClientId: {ClientId} | An error occurred while closing the TCP client")]
+        public static partial void CloseTcpClientError(this ILogger logger, uint clientId, Exception ex);
     }
 }

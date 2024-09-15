@@ -12,11 +12,6 @@ namespace LiveStreamingServerNet.Networking.Internal
             InnerStream = stream;
         }
 
-        public void Dispose()
-        {
-            InnerStream.Dispose();
-        }
-
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public ValueTask ReadExactlyAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken = default)
         {
@@ -27,6 +22,11 @@ namespace LiveStreamingServerNet.Networking.Internal
         public ValueTask WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken = default)
         {
             return InnerStream.WriteAsync(new Memory<byte>(buffer, offset, count), cancellationToken);
+        }
+
+        public ValueTask DisposeAsync()
+        {
+            return InnerStream.DisposeAsync();
         }
     }
 }
