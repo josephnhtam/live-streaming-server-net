@@ -18,6 +18,6 @@ namespace LiveStreamingServerNet.Networking.Internal.Logging
         public static partial void DisposeError(this ILogger logger, uint sessionId, Exception exception);
 
         [LoggerMessage(LogLevel.Error, "SessionId: {SessionId} | An error occurred while closing the TCP client")]
-        public static partial void CloseTcpClientError(this ILogger logger, uint sessionId, Exception ex);
+        public static partial void CloseTcpClientError(this ILogger logger, uint sessionId, Exception exception);
     }
 }

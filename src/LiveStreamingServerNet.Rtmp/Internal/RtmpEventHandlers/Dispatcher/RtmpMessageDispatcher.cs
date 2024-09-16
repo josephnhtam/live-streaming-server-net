@@ -4,10 +4,10 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Dispatcher
 {
-    internal class RtmpMessageDispatcher : IRtmpMessageDispatcher
+    internal class RtmpMessageDispatcher<TContext> : IRtmpMessageDispatcher<TContext>
     {
         private readonly IServiceProvider _services;
-        private readonly IReadOnlyDictionary<byte, IRtmpMessageHandler> _handlerCache;
+        private readonly IReadOnlyDictionary<byte, IRtmpMessageHandler<TContext>> _handlerCache;
 
         public RtmpMessageDispatcher(IServiceProvider services, IRtmpMessageHandlerMap handlerMap)
         {
@@ -15,21 +15,21 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Dispatcher
             _handlerCache = CreateHandlerCache(handlerMap);
         }
 
-        public async ValueTask<bool> DispatchAsync(IRtmpChunkStreamContext chunkStreamContext, IRtmpClientSessionContext clientContext, CancellationToken cancellationToken)
+        public async ValueTask<bool> DispatchAsync(IRtmpChunkStreamContext chunkStreamContext, TContext context, CancellationToken cancellationToken)
         {
             var handler = _handlerCache.GetValueOrDefault(chunkStreamContext.MessageHeader.MessageTypeId) ??
                 throw new InvalidOperationException($"No handler found for message type {chunkStreamContext.MessageHeader.MessageTypeId}");
 
-            return await handler.HandleAsync(chunkStreamContext, clientContext, chunkStreamContext.PayloadBuffer!, cancellationToken);
+            return await handler.HandleAsync(chunkStreamContext, context, chunkStreamContext.PayloadBuffer!, cancellationToken);
         }
 
-        private IReadOnlyDictionary<byte, IRtmpMessageHandler> CreateHandlerCache(IRtmpMessageHandlerMap handlerMap)
+        private IReadOnlyDictionary<byte, IRtmpMessageHandler<TContext>> CreateHandlerCache(IRtmpMessageHandlerMap handlerMap)
         {
-            var handlerCache = new Dictionary<byte, IRtmpMessageHandler>();
+            var handlerCache = new Dictionary<byte, IRtmpMessageHandler<TContext>>();
 
             foreach (var (messageTypeId, handlerType) in handlerMap.GetHandlers())
             {
-                handlerCache[messageTypeId] = _services.GetRequiredService(handlerType) as IRtmpMessageHandler ??
+                handlerCache[messageTypeId] = _services.GetRequiredService(handlerType) as IRtmpMessageHandler<TContext> ??
                     throw new InvalidOperationException($"No handler found for message type {messageTypeId}");
             }
 

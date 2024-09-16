@@ -26,12 +26,12 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
         }
 
         private static void WriteFirstChunk<TRtmpChunkMessageHeader>(
-           IDataBuffer targetBuffer,
-           RtmpChunkBasicHeader basicHeader,
-           TRtmpChunkMessageHeader messageHeader,
-           RtmpChunkExtendedTimestampHeader? extendedTimestampHeader,
-           IDataBuffer payloadBuffer,
-           uint outChunkSize) where TRtmpChunkMessageHeader : struct, IRtmpChunkMessageHeader
+            IDataBuffer targetBuffer,
+            RtmpChunkBasicHeader basicHeader,
+            TRtmpChunkMessageHeader messageHeader,
+            RtmpChunkExtendedTimestampHeader? extendedTimestampHeader,
+            IDataBuffer payloadBuffer,
+            uint outChunkSize) where TRtmpChunkMessageHeader : struct, IRtmpChunkMessageHeader
         {
             var remainingPayloadSize = payloadBuffer.Size - payloadBuffer.Position;
             var payloadSize = (int)Math.Min(outChunkSize, remainingPayloadSize);

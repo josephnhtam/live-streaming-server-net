@@ -7,15 +7,15 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Dispatcher
 {
     internal static class Installer
     {
-        public static IServiceCollection AddRtmpMessageHandlers(this IServiceCollection services, params Assembly[] assemblies)
+        public static IServiceCollection AddRtmpMessageHandlers<TContext>(this IServiceCollection services, params Assembly[] assemblies)
         {
-            return services.AddRtmpMessageHandlers(assemblies.SelectMany(x => x.GetTypes()).ToArray());
+            return services.AddRtmpMessageHandlers<TContext>(assemblies.SelectMany(x => x.GetTypes()).ToArray());
         }
 
-        public static IServiceCollection AddRtmpMessageHandlers(this IServiceCollection services, params Type[] handlerTypes)
+        public static IServiceCollection AddRtmpMessageHandlers<TContext>(this IServiceCollection services, params Type[] handlerTypes)
         {
             var handlerMap = handlerTypes
-                .Where(t => t.IsClass && !t.IsAbstract && t.IsAssignableTo(typeof(IRtmpMessageHandler)))
+                .Where(t => t.IsClass && !t.IsAbstract && t.IsAssignableTo(typeof(IRtmpMessageHandler<TContext>)))
                 .Select(t => (HandlerType: t, MessageType: t.GetCustomAttributes<RtmpMessageTypeAttribute>()))
                 .Where(x => x.MessageType.Any())
                 .SelectMany(x => x.MessageType.Select(y => (x.HandlerType, MessageType: y)))
@@ -27,7 +27,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Dispatcher
             }
 
             services.AddSingleton<IRtmpMessageHandlerMap>(new RtmpMessageHandlerMap(handlerMap))
-                    .AddSingleton<IRtmpMessageDispatcher, RtmpMessageDispatcher>();
+                    .AddSingleton<IRtmpMessageDispatcher<TContext>, RtmpMessageDispatcher<TContext>>();
 
             return services;
         }

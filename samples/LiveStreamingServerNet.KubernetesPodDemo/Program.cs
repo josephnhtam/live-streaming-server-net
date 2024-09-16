@@ -26,8 +26,8 @@ namespace LiveStreamingServerNet.KubernetesPodDemo
             builder.Services.AddCors(options =>
                 options.AddDefaultPolicy(policy =>
                     policy.AllowAnyHeader()
-                          .AllowAnyOrigin()
-                          .AllowAnyMethod()
+                        .AllowAnyOrigin()
+                        .AllowAnyMethod()
                 )
             );
 
@@ -40,7 +40,8 @@ namespace LiveStreamingServerNet.KubernetesPodDemo
             await app.RunAsync();
         }
 
-        private static async Task<IServiceCollection> AddLiveStreamingServerAsync(this IServiceCollection services, IConfiguration configuration)
+        private static async Task<IServiceCollection> AddLiveStreamingServerAsync(this IServiceCollection services,
+            IConfiguration configuration)
         {
             var redisConn = await CreateRedisConn(configuration);
             var blobContainerClient = CreateBlobContainerClient(configuration);
@@ -89,7 +90,8 @@ namespace LiveStreamingServerNet.KubernetesPodDemo
 
         private static async Task<ConnectionMultiplexer> CreateRedisConn(IConfiguration configuration)
         {
-            var redisConnStr = configuration.GetConnectionString("Redis") ?? throw new ArgumentNullException("Redis connection string is required");
+            var redisConnStr = configuration.GetConnectionString("Redis") ??
+                               throw new ArgumentNullException("Redis connection string is required");
             return await ConnectionMultiplexer.ConnectAsync(redisConnStr);
         }
 
@@ -116,7 +118,8 @@ namespace LiveStreamingServerNet.KubernetesPodDemo
                 var mainManifest = storedManifests.FirstOrDefault(x => x.Name.Equals(mainManifestName));
 
                 if (mainManifest != default)
-                    _logger.LogInformation($"[{context.Identifier}] Main manifest {mainManifestName} stored at {mainManifest.Uri}");
+                    _logger.LogInformation(
+                        $"[{context.Identifier}] Main manifest {mainManifestName} stored at {mainManifest.Uri}");
                 else
                     _logger.LogError($"[{context.Identifier}] Main manifest {mainManifestName} not found");
 

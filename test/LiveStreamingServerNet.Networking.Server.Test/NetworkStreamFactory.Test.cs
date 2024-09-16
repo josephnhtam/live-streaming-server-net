@@ -5,7 +5,7 @@ using NSubstitute;
 using System.Net;
 using System.Net.Security;
 
-namespace LiveStreamingServerNet.Networking.Test
+namespace LiveStreamingServerNet.Networking.Server.Test
 {
     public class NetworkStreamFactoryTest : IDisposable
     {

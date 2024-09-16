@@ -2,8 +2,8 @@
 using LiveStreamingServerNet.Internal.HostedServices;
 using LiveStreamingServerNet.Internal.HostedServices.Contracts;
 using LiveStreamingServerNet.Networking.Server.Installer.Contracts;
-using LiveStreamingServerNet.Rtmp.Installer;
-using LiveStreamingServerNet.Rtmp.Installer.Contracts;
+using LiveStreamingServerNet.Rtmp.Server.Installer;
+using LiveStreamingServerNet.Rtmp.Server.Installer.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;

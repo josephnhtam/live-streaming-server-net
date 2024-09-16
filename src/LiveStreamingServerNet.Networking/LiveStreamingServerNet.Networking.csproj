@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
     <Authors>Joseph NH Tam</Authors>
-    <Description>This package provides shared components for LiveStreamingServerNet.Networking.Server and LiveStreamingServerNet.Networking.Client implementations.</Description>
+    <Description>This package provides shared components for both Server and Client implementations.</Description>
     <PackageTags>live-streaming;tcp</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>

@@ -1,6 +1,6 @@
 ﻿using LiveStreamingServerNet.Networking;
 using LiveStreamingServerNet.Networking.Server.Contracts;
-using LiveStreamingServerNet.Rtmp.Contracts;
+using LiveStreamingServerNet.Rtmp.Server.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Contracts;
 using System.Web;
 

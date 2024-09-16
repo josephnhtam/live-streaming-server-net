@@ -2,8 +2,8 @@
 using LiveStreamingServerNet.KubernetesPod.Internal.Logging;
 using LiveStreamingServerNet.KubernetesPod.Services.Contracts;
 using LiveStreamingServerNet.Networking.Contracts;
-using LiveStreamingServerNet.Rtmp.Auth;
-using LiveStreamingServerNet.Rtmp.Auth.Contracts;
+using LiveStreamingServerNet.Rtmp.Server.Auth;
+using LiveStreamingServerNet.Rtmp.Server.Auth.Contracts;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 

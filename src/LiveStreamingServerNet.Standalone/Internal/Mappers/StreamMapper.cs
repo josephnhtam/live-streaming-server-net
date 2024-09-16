@@ -1,6 +1,6 @@
 ﻿using LiveStreamingServerNet.AdminPanelUI.Dtos;
 using LiveStreamingServerNet.Networking.Contracts;
-using LiveStreamingServerNet.Rtmp.Contracts;
+using LiveStreamingServerNet.Rtmp.Server.Contracts;
 using Riok.Mapperly.Abstractions;
 
 namespace LiveStreamingServerNet.Standalone.Internal.Mappers

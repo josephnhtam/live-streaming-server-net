@@ -6,7 +6,7 @@ using LiveStreamingServerNet.Utilities.Extensions;
 using Microsoft.Extensions.Logging;
 using System.Net;
 
-namespace LiveStreamingServerNet.Networking.Server.Internal
+namespace LiveStreamingServerNet.Networking.Internal
 {
     internal sealed class Session : ISession
     {
@@ -62,12 +62,16 @@ namespace LiveStreamingServerNet.Networking.Server.Internal
                 _bufferSender.Start(networkStream, cancellationToken);
 
                 handler = CreateSessionHandler();
-                await handler.InitializeAsync(cancellationToken);
+
+                if (!await handler.InitializeAsync(cancellationToken))
+                {
+                    return;
+                }
 
                 while (_tcpClient.Connected && !cancellationToken.IsCancellationRequested)
                 {
                     if (!await handler.HandleSessionLoopAsync(networkStream, cancellationToken))
-                        break;
+                        return;
                 }
             }
             catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { }

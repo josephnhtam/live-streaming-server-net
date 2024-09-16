@@ -1,7 +1,7 @@
 ﻿using LiveStreamingServerNet.KubernetesPod.Internal.Services.Contracts;
 using LiveStreamingServerNet.Networking.Contracts;
-using LiveStreamingServerNet.Rtmp.Auth;
-using LiveStreamingServerNet.Rtmp.Auth.Contracts;
+using LiveStreamingServerNet.Rtmp.Server.Auth;
+using LiveStreamingServerNet.Rtmp.Server.Auth.Contracts;
 
 namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
 {

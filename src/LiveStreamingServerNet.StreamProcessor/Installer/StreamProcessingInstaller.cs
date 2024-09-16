@@ -1,4 +1,4 @@
-﻿using LiveStreamingServerNet.Rtmp.Installer.Contracts;
+﻿using LiveStreamingServerNet.Rtmp.Server.Installer.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Installer.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal;
