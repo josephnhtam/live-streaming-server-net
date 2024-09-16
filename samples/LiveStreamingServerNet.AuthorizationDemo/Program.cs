@@ -1,7 +1,7 @@
 ﻿using LiveStreamingServerNet.Networking;
 using LiveStreamingServerNet.Networking.Contracts;
-using LiveStreamingServerNet.Rtmp.Auth;
-using LiveStreamingServerNet.Rtmp.Auth.Contracts;
+using LiveStreamingServerNet.Rtmp.Server.Auth;
+using LiveStreamingServerNet.Rtmp.Server.Auth.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Net;

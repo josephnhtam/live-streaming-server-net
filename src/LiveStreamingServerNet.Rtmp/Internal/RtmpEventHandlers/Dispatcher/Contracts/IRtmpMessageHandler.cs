@@ -3,8 +3,8 @@ using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 
 namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Dispatcher.Contracts
 {
-    internal interface IRtmpMessageHandler
+    internal interface IRtmpMessageHandler<TContext>
     {
-        ValueTask<bool> HandleAsync(IRtmpChunkStreamContext chunkStreamContext, IRtmpClientSessionContext clientContext, IDataBuffer payloadBuffer, CancellationToken cancellationToken);
+        ValueTask<bool> HandleAsync(IRtmpChunkStreamContext chunkStreamContext, TContext context, IDataBuffer payloadBuffer, CancellationToken cancellationToken);
     }
 }

@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net8.0;net7.0</TargetFrameworks>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+    <Authors>Joseph NH Tam</Authors>
+    <Description>This package implements an RTMP client.</Description>
+    <PackageTags>live-streaming;rtmp</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <Version>0.15.0</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LiveStreamingServerNet.Networking.Client\LiveStreamingServerNet.Networking.Client.csproj" />
+    <ProjectReference Include="..\LiveStreamingServerNet.Rtmp\LiveStreamingServerNet.Rtmp.csproj" />
+  </ItemGroup>
+
+</Project>

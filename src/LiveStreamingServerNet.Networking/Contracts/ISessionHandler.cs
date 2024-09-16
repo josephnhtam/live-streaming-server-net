@@ -2,7 +2,7 @@
 {
     public interface ISessionHandler : IAsyncDisposable
     {
-        Task InitializeAsync(CancellationToken cancellationToken);
+        ValueTask<bool> InitializeAsync(CancellationToken cancellationToken);
         Task<bool> HandleSessionLoopAsync(INetworkStreamReader networkStream, CancellationToken cancellationToken);
     }
 }

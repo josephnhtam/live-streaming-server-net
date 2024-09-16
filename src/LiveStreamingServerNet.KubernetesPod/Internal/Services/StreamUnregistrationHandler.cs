@@ -1,5 +1,5 @@
 ﻿using LiveStreamingServerNet.KubernetesPod.Internal.Services.Contracts;
-using LiveStreamingServerNet.Rtmp.Contracts;
+using LiveStreamingServerNet.Rtmp.Server.Contracts;
 using LiveStreamingServerNet.Utilities.Contracts;
 
 namespace LiveStreamingServerNet.KubernetesPod.Internal.Services

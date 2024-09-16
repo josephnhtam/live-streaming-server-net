@@ -2,7 +2,7 @@
 using LiveStreamingServerNet.KubernetesPod.Installer.Contracts;
 using LiveStreamingServerNet.KubernetesPod.Internal.Services;
 using LiveStreamingServerNet.KubernetesPod.Internal.Services.Contracts;
-using LiveStreamingServerNet.Rtmp.Installer.Contracts;
+using LiveStreamingServerNet.Rtmp.Server.Installer.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LiveStreamingServerNet.KubernetesPod.Installer

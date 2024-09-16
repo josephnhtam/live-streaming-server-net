@@ -10,7 +10,7 @@ using LiveStreamingServerNet.Flv.Internal.WebSocketClients;
 using LiveStreamingServerNet.Flv.Internal.WebSocketClients.Contracts;
 using LiveStreamingServerNet.Flv.Middlewares;
 using LiveStreamingServerNet.Networking.Server.Contracts;
-using LiveStreamingServerNet.Rtmp.Installer.Contracts;
+using LiveStreamingServerNet.Rtmp.Server.Installer.Contracts;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;

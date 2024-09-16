@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.Netw
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.Utilities", "src\LiveStreamingServerNet.Utilities\LiveStreamingServerNet.Utilities.csproj", "{CFCD9768-1EA2-4565-A6A7-30750D3D8F40}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.Rtmp", "src\LiveStreamingServerNet.Rtmp\LiveStreamingServerNet.Rtmp.csproj", "{EBD91510-86A5-49A2-A97B-E2A0AACFB516}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.Rtmp.Server", "src\LiveStreamingServerNet.Rtmp.Server\LiveStreamingServerNet.Rtmp.Server.csproj", "{EBD91510-86A5-49A2-A97B-E2A0AACFB516}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.Flv", "src\LiveStreamingServerNet.Flv\LiveStreamingServerNet.Flv.csproj", "{1DB2249D-DEF5-4E2D-AED9-E5429C392C01}"
 EndProject
@@ -39,7 +39,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{C85AC04A
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.Networking.Test", "test\LiveStreamingServerNet.Networking.Test\LiveStreamingServerNet.Networking.Test.csproj", "{67DCDCEA-6E4F-476D-B993-FF5BA02ACA7F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.Rtmp.Test", "test\LiveStreamingServerNet.Rtmp.Test\LiveStreamingServerNet.Rtmp.Test.csproj", "{91B1B8A8-A311-468B-B5E0-0B6DCBA20246}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.Rtmp.Server.Test", "test\LiveStreamingServerNet.Rtmp.Server.Test\LiveStreamingServerNet.Rtmp.Server.Test.csproj", "{91B1B8A8-A311-468B-B5E0-0B6DCBA20246}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.AuthorizationDemo", "samples\LiveStreamingServerNet.AuthorizationDemo\LiveStreamingServerNet.AuthorizationDemo.csproj", "{F6C4B2F6-5913-4CCE-A9E8-32EA51247D51}"
 EndProject
@@ -75,7 +75,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.Netw
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.Networking", "src\LiveStreamingServerNet.Networking\LiveStreamingServerNet.Networking.csproj", "{E6F733DA-3F22-4C2E-8389-35651E0ADE36}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveStreamingServerNet.Networking.Server.Test", "test\LiveStreamingServerNet.Networking.Server.Test\LiveStreamingServerNet.Networking.Server.Test.csproj", "{6584699E-532D-49EC-B521-B2151587588F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.Networking.Server.Test", "test\LiveStreamingServerNet.Networking.Server.Test\LiveStreamingServerNet.Networking.Server.Test.csproj", "{6584699E-532D-49EC-B521-B2151587588F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveStreamingServerNet.Rtmp.Client", "src\LiveStreamingServerNet.Rtmp.Client\LiveStreamingServerNet.Rtmp.Client.csproj", "{24D44F66-B6B3-4472-AF13-EA4DE4E47BAE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveStreamingServerNet.Rtmp", "src\LiveStreamingServerNet.Rtmp\LiveStreamingServerNet.Rtmp.csproj", "{05FCBA0F-B176-4695-92B6-37DA252F2A82}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -223,6 +227,14 @@ Global
 		{6584699E-532D-49EC-B521-B2151587588F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6584699E-532D-49EC-B521-B2151587588F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6584699E-532D-49EC-B521-B2151587588F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{24D44F66-B6B3-4472-AF13-EA4DE4E47BAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{24D44F66-B6B3-4472-AF13-EA4DE4E47BAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{24D44F66-B6B3-4472-AF13-EA4DE4E47BAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{24D44F66-B6B3-4472-AF13-EA4DE4E47BAE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{05FCBA0F-B176-4695-92B6-37DA252F2A82}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05FCBA0F-B176-4695-92B6-37DA252F2A82}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05FCBA0F-B176-4695-92B6-37DA252F2A82}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05FCBA0F-B176-4695-92B6-37DA252F2A82}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

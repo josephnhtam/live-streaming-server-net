@@ -1,5 +1,5 @@
 ﻿using LiveStreamingServerNet.AdminPanelUI.Dtos;
-using LiveStreamingServerNet.Rtmp.Contracts;
+using LiveStreamingServerNet.Rtmp.Server.Contracts;
 using LiveStreamingServerNet.Standalone.Exceptions;
 using LiveStreamingServerNet.Standalone.Internal.Mappers;
 using LiveStreamingServerNet.Standalone.Services.Contracts;
