@@ -32,46 +32,46 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
 
         public async ValueTask<RtmpEventConsumingResult> Handle(RtmpChunkEvent @event, CancellationToken cancellationToken)
         {
+            var result = await HandleChunkEvent(@event, cancellationToken);
+
+            if (result.Succeeded)
+            {
+                HandleAcknowledgement(@event, result.ConsumedBytes);
+                return result;
+            }
+
+            _logger.FailedToHandleChunkEvent(@event.ClientContext.Client.ClientId);
+            return result;
+        }
+
+        private async ValueTask<RtmpEventConsumingResult> HandleChunkEvent(RtmpChunkEvent @event, CancellationToken cancellationToken)
+        {
             var headerBuffer = _dataBufferPool.Obtain();
 
             try
             {
-                var result = await HandleChunkEvent(@event, headerBuffer, cancellationToken);
-                if (result.Succeeded)
+                var basicHeader = await RtmpChunkBasicHeader.ReadAsync(headerBuffer, @event.NetworkStream, cancellationToken);
+
+                var chunkStreamContext = @event.ClientContext.GetChunkStreamContext(basicHeader.ChunkStreamId);
+
+                var success = basicHeader.ChunkType switch
                 {
-                    HandleAcknowledgement(@event, result.ConsumedBytes);
-                    return result;
-                }
+                    0 => await HandleChunkMessageHeaderType0Async(chunkStreamContext, @event, headerBuffer, cancellationToken),
+                    1 => await HandleChunkMessageHeaderType1Async(chunkStreamContext, @event, headerBuffer, cancellationToken),
+                    2 => await HandleChunkMessageHeaderType2Async(chunkStreamContext, @event, headerBuffer, cancellationToken),
+                    3 => await HandleChunkMessageHeaderType3Async(chunkStreamContext, @event, headerBuffer, cancellationToken),
+                    _ => throw new ArgumentOutOfRangeException(nameof(basicHeader.ChunkType))
+                };
 
-                _logger.FailedToHandleChunkEvent(@event.ClientContext.Client.ClientId);
+                if (!success)
+                    return new RtmpEventConsumingResult(false, 0);
 
-                return result;
+                return await HandleChunkEventPayloadAsync(chunkStreamContext, @event, headerBuffer.Size, cancellationToken);
             }
             finally
             {
                 _dataBufferPool.Recycle(headerBuffer);
             }
-        }
-
-        private async ValueTask<RtmpEventConsumingResult> HandleChunkEvent(RtmpChunkEvent @event, IDataBuffer headerBuffer, CancellationToken cancellationToken)
-        {
-            var basicHeader = await RtmpChunkBasicHeader.ReadAsync(headerBuffer, @event.NetworkStream, cancellationToken);
-
-            var chunkStreamContext = @event.ClientContext.GetChunkStreamContext(basicHeader.ChunkStreamId);
-
-            var success = basicHeader.ChunkType switch
-            {
-                0 => await HandleChunkMessageHeaderType0Async(chunkStreamContext, @event, headerBuffer, cancellationToken),
-                1 => await HandleChunkMessageHeaderType1Async(chunkStreamContext, @event, headerBuffer, cancellationToken),
-                2 => await HandleChunkMessageHeaderType2Async(chunkStreamContext, @event, headerBuffer, cancellationToken),
-                3 => await HandleChunkMessageHeaderType3Async(chunkStreamContext, @event, headerBuffer, cancellationToken),
-                _ => throw new ArgumentOutOfRangeException(nameof(basicHeader.ChunkType))
-            };
-
-            if (!success)
-                return new RtmpEventConsumingResult(false, 0);
-
-            return await HandleChunkEventPayloadAsync(chunkStreamContext, @event, headerBuffer.Size, cancellationToken);
         }
 
         private void HandleAcknowledgement(RtmpChunkEvent @event, int consumedBytes)
