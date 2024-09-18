@@ -7,5 +7,6 @@
             return (int)(DateTime.UtcNow - DateTime.UnixEpoch).TotalSeconds;
         }
 
+        public static ReadOnlyMemory<byte> FourZeroBytes = new byte[4];
     }
 }
