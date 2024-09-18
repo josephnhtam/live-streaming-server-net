@@ -10,6 +10,7 @@ hide:
 ![build and test](https://github.com/josephnhtam/live-streaming-server-net/actions/workflows/build_and_test.yaml/badge.svg)
 [![Nuget](https://img.shields.io/nuget/v/LiveStreamingServerNet)](https://www.nuget.org/packages/LiveStreamingServerNet/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![JetBrains OSS](https://img.shields.io/badge/JetBrains-OSS-yellow.svg)](https://www.jetbrains.com/community/opensource)
 
 Live-Streaming-Server-Net is a high-performance and flexible toolset which allows you to build your own live streaming server using .NET.
 
