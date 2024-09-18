@@ -36,6 +36,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal
         private uint _audioTimestamp;
         private readonly object _videoTimestampSyncLock = new();
         private readonly object _audioTimestampSyncLock = new();
+
         private readonly Dictionary<uint, IRtmpChunkStreamContext> _chunkStreamContexts = new();
         private readonly IBufferPool? _bufferPool;
 
@@ -43,7 +44,6 @@ namespace LiveStreamingServerNet.Rtmp.Internal
         {
             Client = client;
             _bufferPool = bufferPool;
-            State = RtmpClientState.HandshakeC0;
         }
 
         public IRtmpPublishStreamContext CreatePublishStreamContext(string streamPath, IReadOnlyDictionary<string, string> streamArguments)
