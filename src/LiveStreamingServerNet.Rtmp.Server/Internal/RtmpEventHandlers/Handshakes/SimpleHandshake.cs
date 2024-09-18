@@ -6,8 +6,9 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Handshak
     internal class SimpleHandshake
     {
         private const byte _clientType = 3;
-
         private readonly IDataBuffer _incomingBuffer;
+
+        private int _s1Time;
 
         public SimpleHandshake(IDataBuffer incomingBuffer)
         {
@@ -33,14 +34,22 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Handshak
 
         public void WriteS1(IDataBuffer outgoingBuffer)
         {
-            outgoingBuffer.Write(HandshakeUtilities.GetTime());
-            outgoingBuffer.Write(RtmpServerConstants.ServerVersion);
+            _s1Time = HandshakeUtilities.GetTime();
+
+            outgoingBuffer.Write(_s1Time);
+            outgoingBuffer.Write(HandshakeUtilities.FourZeroBytes.Span);
             outgoingBuffer.WriteRandomBytes(1536 - 8);
         }
 
         public void WriteS2(IDataBuffer outgoingBuffer)
         {
-            _incomingBuffer.CopyAllTo(outgoingBuffer);
+            var c1Time = _incomingBuffer.ReadInt32();
+            _incomingBuffer.Advance(4);
+            var randomEcho = _incomingBuffer.ReadBytes(1528);
+
+            outgoingBuffer.Write(c1Time);
+            outgoingBuffer.Write(_s1Time);
+            outgoingBuffer.Write(randomEcho);
         }
     }
 }
