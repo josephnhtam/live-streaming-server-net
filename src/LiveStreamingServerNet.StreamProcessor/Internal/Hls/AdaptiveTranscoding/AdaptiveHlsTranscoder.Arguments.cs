@@ -89,7 +89,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.AdaptiveTranscodin
                 arguments.Add($"-maxrate:v:{i} {filter.MaxVideoBitrate}");
                 arguments.Add($"-b:a:{i} {filter.MaxAudioBitrate}");
 
-                AddOptionalArgument(arguments, filter.ExtraArguments);
+                AddOptionalArgument(arguments, filter.ExtraArguments?.Invoke(i));
             }
         }
 

@@ -1,5 +1,6 @@
 using LiveStreamingServerNet.StreamProcessor.AspNetCore.Installer;
 using LiveStreamingServerNet.StreamProcessor.Contracts;
+using LiveStreamingServerNet.StreamProcessor.Hls.Configurations;
 using LiveStreamingServerNet.StreamProcessor.Installer;
 using LiveStreamingServerNet.StreamProcessor.Utilities;
 using LiveStreamingServerNet.Utilities.Contracts;
@@ -50,6 +51,38 @@ namespace LiveStreamingServerNet.AdaptiveHlsDemo
                     {
                         options.FFmpegPath = ExecutableFinder.FindExecutableFromPATH("ffmpeg")!;
                         options.FFprobePath = ExecutableFinder.FindExecutableFromPATH("ffprobe")!;
+
+                        options.DownsamplingFilters =
+                        [
+                            new DownsamplingFilter(
+                                Name: "360p",
+                                Height: 360,
+                                MaxVideoBitrate: "600k",
+                                MaxAudioBitrate: "64k"
+                            ),
+
+                            new DownsamplingFilter(
+                                Name: "480p",
+                                Height: 480,
+                                MaxVideoBitrate: "1500k",
+                                MaxAudioBitrate: "128k"
+                            ),
+
+                            new DownsamplingFilter(
+                                Name: "720p",
+                                Height: 720,
+                                MaxVideoBitrate: "3000k",
+                                MaxAudioBitrate: "256k"
+                            ),
+
+                            new DownsamplingFilter(
+                                Name: "720p_rotated",
+                                Height: 720,
+                                MaxVideoBitrate: "3000k",
+                                MaxAudioBitrate: "256k",
+                                ExtraArguments: (streamIndex) => $"-filter:v:{streamIndex} transpose=1"
+                            ),
+                        ];
 
                         // Hardware acceleration 
                         // options.VideoDecodingArguments = "-hwaccel auto -c:v h264_cuvid";
