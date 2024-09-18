@@ -235,6 +235,10 @@ This project is licensed under the terms of the [MIT license](https://github.com
 
 ## Acknowledgments
 
-<img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jetbrains.png" alt="JetBrains" width="200"/>
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./images/jetbrains-white.svg">
+  <source media="(prefers-color-scheme: light)" srcset="./images/jetbrains.svg">
+  <img src="./images/jetbrains.svg" alt="JetBrains" width="200"/>
+</picture>
 
 Special thanks to [JetBrains](https://www.jetbrains.com/) for providing the open-source software license that supports the development of this project.
