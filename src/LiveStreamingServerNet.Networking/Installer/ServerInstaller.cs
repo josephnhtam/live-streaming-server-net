@@ -30,10 +30,10 @@ namespace LiveStreamingServerNet.Networking.Installer
 
             services.AddSingleton<IServerEventDispatcher, ServerEventDispatcher>();
 
+            configure?.Invoke(new ServerConfigurator(services));
+
             services.TryAddSingleton<IDataBufferPool, DataBufferPool>();
             services.TryAddSingleton<IBufferPool, BufferPool>();
-
-            configure?.Invoke(new ServerConfigurator(services));
 
             return services;
         }
