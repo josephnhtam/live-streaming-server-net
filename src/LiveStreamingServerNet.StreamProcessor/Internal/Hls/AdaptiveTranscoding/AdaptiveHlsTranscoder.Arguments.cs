@@ -85,11 +85,33 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.AdaptiveTranscodin
                 arguments.Add("-map 0:v:0");
                 arguments.Add("-map 0:a:0");
 
-                arguments.Add($"-filter:v:{i} scale=-2:{filter.Height}");
+                arguments.Add($"-filter:v:{i} {CreateVideoFilter(filter)}");
                 arguments.Add($"-maxrate:v:{i} {filter.MaxVideoBitrate}");
+
+                var audioFilter = CreateAudioFilter(filter);
+                if (audioFilter != null) arguments.Add($"-filter:a:{i} {audioFilter}");
+
                 arguments.Add($"-b:a:{i} {filter.MaxAudioBitrate}");
 
                 AddOptionalArgument(arguments, filter.ExtraArguments?.Invoke(i));
+            }
+
+            static string CreateVideoFilter(DownsamplingFilter filter)
+            {
+                var videoFilters = new List<string> { $"scale=-2:{filter.Height}" };
+
+                if (filter.VideoFilter != null)
+                    videoFilters.AddRange(filter.VideoFilter);
+
+                return string.Join(",", videoFilters);
+            }
+
+            static string? CreateAudioFilter(DownsamplingFilter filter)
+            {
+                if (filter.AudioFilter != null)
+                    return string.Join(",", filter.AudioFilter);
+
+                return null;
             }
         }
 

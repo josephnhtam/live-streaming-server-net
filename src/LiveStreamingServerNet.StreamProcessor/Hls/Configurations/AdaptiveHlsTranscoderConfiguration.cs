@@ -58,5 +58,12 @@ namespace LiveStreamingServerNet.StreamProcessor.Hls.Configurations
     );
 
     public delegate string ExtraFilterArguments(int streamIndex);
-    public record DownsamplingFilter(string Name, int Height, string MaxVideoBitrate, string MaxAudioBitrate, ExtraFilterArguments? ExtraArguments = null);
+    public record DownsamplingFilter(
+        string Name,
+        int Height,
+        string MaxVideoBitrate,
+        string MaxAudioBitrate,
+        IEnumerable<string>? VideoFilter = null,
+        IEnumerable<string>? AudioFilter = null,
+        ExtraFilterArguments? ExtraArguments = null);
 }

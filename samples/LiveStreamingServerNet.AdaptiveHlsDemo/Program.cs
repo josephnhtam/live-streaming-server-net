@@ -80,7 +80,7 @@ namespace LiveStreamingServerNet.AdaptiveHlsDemo
                                 Height: 720,
                                 MaxVideoBitrate: "3000k",
                                 MaxAudioBitrate: "256k",
-                                ExtraArguments: (streamIndex) => $"-filter:v:{streamIndex} transpose=1"
+                                VideoFilter: ["transpose=1"]
                             ),
                         ];
 
