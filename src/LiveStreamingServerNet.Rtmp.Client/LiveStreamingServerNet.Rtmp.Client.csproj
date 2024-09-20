@@ -14,6 +14,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Mediator.Abstractions" Version="3.0.0-preview.27" />
+    <PackageReference Include="Mediator.SourceGenerator" Version="3.0.0-preview.27">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\LiveStreamingServerNet.Networking.Client\LiveStreamingServerNet.Networking.Client.csproj" />
     <ProjectReference Include="..\LiveStreamingServerNet.Rtmp\LiveStreamingServerNet.Rtmp.csproj" />
   </ItemGroup>
