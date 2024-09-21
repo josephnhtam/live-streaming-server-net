@@ -16,20 +16,20 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
     [RtmpCommand("connect")]
     internal class RtmpConnectCommandHandler : RtmpCommandHandler<RtmpConnectCommand, IRtmpClientSessionContext>
     {
-        private readonly IRtmpProtocolControlMessageSenderService _protocolControlMessageSender;
+        private readonly IRtmpProtocolControlService _protocolControl;
         private readonly IRtmpCommandMessageSenderService _commandMessageSender;
         private readonly IRtmpServerConnectionEventDispatcher _eventDispatcher;
         private readonly RtmpServerConfiguration _config;
         private readonly ILogger _logger;
 
         public RtmpConnectCommandHandler(
-            IRtmpProtocolControlMessageSenderService protocolControlMessageSender,
+            IRtmpProtocolControlService protocolControl,
             IRtmpCommandMessageSenderService commandMessageSender,
             IRtmpServerConnectionEventDispatcher eventDispatcher,
             IOptions<RtmpServerConfiguration> config,
             ILogger<RtmpConnectCommandHandler> logger)
         {
-            _protocolControlMessageSender = protocolControlMessageSender;
+            _protocolControl = protocolControl;
             _commandMessageSender = commandMessageSender;
             _eventDispatcher = eventDispatcher;
             _config = config.Value;
@@ -60,9 +60,9 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
 
             clientContext.AppName = appName;
 
-            _protocolControlMessageSender.SetChunkSize(clientContext, _config.OutChunkSize);
-            _protocolControlMessageSender.WindowAcknowledgementSize(clientContext, _config.WindowAcknowledgementSize);
-            _protocolControlMessageSender.SetClientBandwidth(clientContext, _config.ClientBandwidth, RtmpClientBandwidthLimitType.Dynamic);
+            _protocolControl.SetChunkSize(clientContext, _config.OutChunkSize);
+            _protocolControl.WindowAcknowledgementSize(clientContext, _config.WindowAcknowledgementSize);
+            _protocolControl.SetPeerBandwidth(clientContext, _config.ClientBandwidth, RtmpClientBandwidthLimitType.Dynamic);
 
             RespondToClient(clientContext, command);
 

@@ -12,19 +12,19 @@ using NSubstitute;
 
 namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
 {
-    public class RtmpProtocolControlMessageSenderServiceTest
+    public class RtmpProtocolControlServiceTest
     {
         private readonly IFixture _fixture;
         private readonly IRtmpChunkMessageSenderService _chunkMessageSender;
-        private readonly IRtmpProtocolControlMessageSenderService _sut;
+        private readonly IRtmpProtocolControlService _sut;
         private readonly IRtmpClientSessionContext _clientContext;
         private readonly IDataBuffer _payloadBuffer;
 
-        public RtmpProtocolControlMessageSenderServiceTest()
+        public RtmpProtocolControlServiceTest()
         {
             _fixture = new Fixture();
             _chunkMessageSender = Substitute.For<IRtmpChunkMessageSenderService>();
-            _sut = new RtmpProtocolControlMessageSenderService(_chunkMessageSender);
+            _sut = new RtmpProtocolControlService(_chunkMessageSender);
 
             _clientContext = Substitute.For<IRtmpClientSessionContext>();
             _payloadBuffer = new DataBuffer();
@@ -175,7 +175,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
         }
 
         [Fact]
-        public void SetClientBandwidth_Should_SendSetClientBandwidthMessageAndSetOutBandwidth()
+        public void SetPeerBandwidth_Should_SendSetPeerBandwidthMessage()
         {
             // Arrange
             var bandwidth = _fixture.Create<uint>();
@@ -186,7 +186,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             expectedBuffer.Write((byte)limitType);
 
             // Act
-            _sut.SetClientBandwidth(_clientContext, bandwidth, limitType);
+            _sut.SetPeerBandwidth(_clientContext, bandwidth, limitType);
 
             // Assert
             _chunkMessageSender.Received(1).Send(
