@@ -4,7 +4,7 @@ using LiveStreamingServerNet.Utilities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace LiveStreamingServerNet.Rtmp.Internal.RtmpServerEventHandlers
+namespace LiveStreamingServerNet.Rtmp.Internal
 {
     internal class RtmpServerConnectionEventDispatcher : IRtmpServerConnectionEventDispatcher
     {
