@@ -16,18 +16,18 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers
     internal class RtmpChunkEventHandler : IRequestHandler<RtmpChunkEvent, RtmpEventConsumingResult>
     {
         private readonly IRtmpMessageDispatcher<IRtmpClientSessionContext> _dispatcher;
-        private readonly IRtmpProtocolControlMessageSenderService _protocolControlMessageSender;
+        private readonly IRtmpProtocolControlService _protocolControl;
         private readonly IRtmpChunkMessageAggregatorService _chunkMessageAggregator;
         private readonly ILogger _logger;
 
         public RtmpChunkEventHandler(
             IRtmpMessageDispatcher<IRtmpClientSessionContext> dispatcher,
-            IRtmpProtocolControlMessageSenderService protocolControlMessageSender,
+            IRtmpProtocolControlService protocolControl,
             IRtmpChunkMessageAggregatorService chunkMessageAggregator,
             ILogger<RtmpChunkEventHandler> logger)
         {
             _dispatcher = dispatcher;
-            _protocolControlMessageSender = protocolControlMessageSender;
+            _protocolControl = protocolControl;
             _chunkMessageAggregator = chunkMessageAggregator;
             _logger = logger;
         }
@@ -56,7 +56,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers
             clientContext.SequenceNumber += (uint)consumedBytes;
             if (clientContext.SequenceNumber - clientContext.LastAcknowledgedSequenceNumber >= clientContext.InWindowAcknowledgementSize)
             {
-                _protocolControlMessageSender.Acknowledgement(clientContext, clientContext.SequenceNumber);
+                _protocolControl.Acknowledgement(clientContext, clientContext.SequenceNumber);
 
                 const uint overflow = 0xf0000000;
                 if (clientContext.SequenceNumber >= overflow)

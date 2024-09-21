@@ -6,11 +6,11 @@ using LiveStreamingServerNet.Rtmp.Server.Internal.Services.Contracts;
 
 namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
 {
-    internal class RtmpProtocolControlMessageSenderService : IRtmpProtocolControlMessageSenderService
+    internal class RtmpProtocolControlService : IRtmpProtocolControlService
     {
         private readonly IRtmpChunkMessageSenderService _chunkMessageSenderService;
 
-        public RtmpProtocolControlMessageSenderService(IRtmpChunkMessageSenderService chunkMessageSenderService)
+        public RtmpProtocolControlService(IRtmpChunkMessageSenderService chunkMessageSenderService)
         {
             _chunkMessageSenderService = chunkMessageSenderService;
         }
@@ -57,14 +57,14 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
             clientContext.OutWindowAcknowledgementSize = windowAcknowledgementSize;
         }
 
-        public void SetClientBandwidth(IRtmpClientSessionContext clientContext, uint clientBandwidth, RtmpClientBandwidthLimitType limitType)
+        public void SetPeerBandwidth(IRtmpClientSessionContext clientContext, uint peerBandwidth, RtmpClientBandwidthLimitType limitType)
         {
             var basicHeader = new RtmpChunkBasicHeader(0, RtmpConstants.ProtocolControlMessageChunkStreamId);
             var messageHeader = new RtmpChunkMessageHeaderType0(0, RtmpMessageType.SetClientBandwidth, RtmpConstants.ProtocolControlMessageStreamId);
 
             _chunkMessageSenderService.Send(clientContext, basicHeader, messageHeader, dataBuffer =>
             {
-                dataBuffer.WriteUInt32BigEndian(clientBandwidth);
+                dataBuffer.WriteUInt32BigEndian(peerBandwidth);
                 dataBuffer.Write((byte)limitType);
             });
         }

@@ -36,7 +36,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers
             // Arrange
             var dataBufferPool = new DataBufferPool(Options.Create(new DataBufferPoolConfiguration()));
             var dispatcher = Substitute.For<IRtmpMessageDispatcher<IRtmpClientSessionContext>>();
-            var protocolControlMessageSender = Substitute.For<IRtmpProtocolControlMessageSenderService>();
+            var protocolControl = Substitute.For<IRtmpProtocolControlService>();
             var logger = Substitute.For<ILogger<RtmpChunkEventHandler>>();
 
             using IDataBuffer resultPayloadBuffer = new DataBuffer();
@@ -53,7 +53,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers
 
             var networkStream = new ClientNetworkStream(1, stream);
             var chunkMessageAggregator = new RtmpChunkMessageAggregatorService(dataBufferPool);
-            var sut = new RtmpChunkEventHandler(dispatcher, protocolControlMessageSender, chunkMessageAggregator, logger);
+            var sut = new RtmpChunkEventHandler(dispatcher, protocolControl, chunkMessageAggregator, logger);
 
             while (!tcs.Task.IsCompleted)
             {
