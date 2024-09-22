@@ -53,7 +53,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
                 dataBuffer.WriteUInt32BigEndian(acknowledgementWindowSize);
             });
 
-            clientContext.OutWindowAcknowledgementSize = acknowledgementWindowSize;
+            clientContext.InWindowAcknowledgementSize = acknowledgementWindowSize;
         }
 
         public void SetClientBandwidth(IRtmpClientContext clientContext, uint clientBandwidth, RtmpClientBandwidthLimitType limitType)

@@ -11,7 +11,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.ProtocolControls
     public class RtmpWindowAcknowledgementSizeHandlerTest
     {
         [Fact]
-        public async Task HandleAsync_Should_SetInWindowAcknowledgementSize()
+        public async Task HandleAsync_Should_SetOutWindowAcknowledgementSize()
         {
             // Arrange
             var fixture = new Fixture();
