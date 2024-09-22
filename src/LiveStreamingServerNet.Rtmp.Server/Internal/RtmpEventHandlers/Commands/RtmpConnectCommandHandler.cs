@@ -62,7 +62,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
 
             _protocolControl.SetChunkSize(clientContext, _config.OutChunkSize);
             _protocolControl.WindowAcknowledgementSize(clientContext, _config.WindowAcknowledgementSize);
-            _protocolControl.SetPeerBandwidth(clientContext, _config.ClientBandwidth, RtmpClientBandwidthLimitType.Dynamic);
+            _protocolControl.SetPeerBandwidth(clientContext, _config.PeerBandwidth, RtmpPeerBandwidthLimitType.Dynamic);
 
             RespondToClient(clientContext, command);
 
