@@ -22,7 +22,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
             string commandName,
             double transactionId,
             IReadOnlyDictionary<string, object>? commandObject,
-            IReadOnlyList<object?> parameters,
+            IReadOnlyList<object?>? parameters,
             AmfEncodingType amfEncodingType,
             Action<bool>? callback)
         {
@@ -37,7 +37,14 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
             }, callback);
         }
 
-        public ValueTask SendCommandMessageAsync(IRtmpClientSessionContext clientContext, uint chunkStreamId, string commandName, double transactionId, IReadOnlyDictionary<string, object>? commandObject, IReadOnlyList<object?> parameters, AmfEncodingType amfEncodingType = AmfEncodingType.Amf0)
+        public ValueTask SendCommandMessageAsync(
+            IRtmpClientSessionContext clientContext,
+            uint chunkStreamId,
+            string commandName,
+            double transactionId,
+            IReadOnlyDictionary<string, object>? commandObject,
+            IReadOnlyList<object?>? parameters,
+            AmfEncodingType amfEncodingType = AmfEncodingType.Amf0)
         {
             var tcs = new ValueTaskCompletionSource();
             SendCommandMessage(clientContext, chunkStreamId, commandName, transactionId, commandObject, parameters, amfEncodingType, _ => tcs.SetResult());
@@ -50,7 +57,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
             string commandName,
             double transactionId,
             IReadOnlyDictionary<string, object>? commandObject,
-            IReadOnlyList<object?> parameters,
+            IReadOnlyList<object?>? parameters,
             AmfEncodingType amfEncodingType)
         {
             var basicHeader = new RtmpChunkBasicHeader(0, chunkStreamId);
@@ -65,7 +72,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
         }
 
         static List<object?> CreateParameters(string commandName, double transactionId,
-            IReadOnlyDictionary<string, object>? commandObject, IReadOnlyList<object?> parameters)
+            IReadOnlyDictionary<string, object>? commandObject, IReadOnlyList<object?>? parameters)
         {
             var result = new List<object?>
             {
@@ -74,7 +81,8 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
                 commandObject
             };
 
-            result.AddRange(parameters);
+            if (parameters != null)
+                result.AddRange(parameters);
 
             return result;
         }

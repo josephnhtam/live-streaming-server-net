@@ -11,7 +11,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services.Contracts
             string commandName,
             double transactionId,
             IReadOnlyDictionary<string, object>? commandObject,
-            IReadOnlyList<object?> parameters,
+            IReadOnlyList<object?>? parameters = null,
             AmfEncodingType amfEncodingType = AmfEncodingType.Amf0,
             Action<bool>? callback = null);
 
@@ -21,7 +21,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services.Contracts
             string commandName,
             double transactionId,
             IReadOnlyDictionary<string, object>? commandObject,
-            IReadOnlyList<object?> parameters,
+            IReadOnlyList<object?>? parameters = null,
             AmfEncodingType amfEncodingType = AmfEncodingType.Amf0);
 
         void SendCommandMessage(
@@ -30,7 +30,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services.Contracts
             string commandName,
             double transactionId,
             IReadOnlyDictionary<string, object>? commandObject,
-            IReadOnlyList<object?> parameters,
+            IReadOnlyList<object?>? parameters = null,
             AmfEncodingType amfEncodingType = AmfEncodingType.Amf0);
     }
 }
