@@ -9,17 +9,21 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.Services
 {
     internal class RtmpChunkMessageSenderService : IRtmpChunkMessageSenderService
     {
+        private readonly IRtmpClientContext _clientContext;
         private readonly IDataBufferPool _dataBufferPool;
         private readonly IRtmpChunkMessageWriterService _writer;
 
-        public RtmpChunkMessageSenderService(IDataBufferPool dataBufferPool, IRtmpChunkMessageWriterService writer)
+        public RtmpChunkMessageSenderService(
+            IRtmpClientContext clientContext,
+            IDataBufferPool dataBufferPool,
+            IRtmpChunkMessageWriterService writer)
         {
+            _clientContext = clientContext;
             _dataBufferPool = dataBufferPool;
             _writer = writer;
         }
 
         public void Send<TRtmpChunkMessageHeader>(
-            IRtmpSessionContext context,
             RtmpChunkBasicHeader basicHeader,
             TRtmpChunkMessageHeader messageHeader,
             Action<IDataBuffer> payloadWriter,
@@ -29,6 +33,8 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.Services
 
             try
             {
+                var context = GetSessionContext();
+
                 context.Session.Send(targetBuffer =>
                     _writer.Write(targetBuffer, basicHeader, messageHeader, payloadBuffer, context.OutChunkSize),
                     callback
@@ -40,10 +46,10 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.Services
             }
         }
 
-        public ValueTask SendAsync<TRtmpChunkMessageHeader>(IRtmpSessionContext context, RtmpChunkBasicHeader basicHeader, TRtmpChunkMessageHeader messageHeader, Action<IDataBuffer> payloadWriter) where TRtmpChunkMessageHeader : struct, IRtmpChunkMessageHeader
+        public ValueTask SendAsync<TRtmpChunkMessageHeader>(RtmpChunkBasicHeader basicHeader, TRtmpChunkMessageHeader messageHeader, Action<IDataBuffer> payloadWriter) where TRtmpChunkMessageHeader : struct, IRtmpChunkMessageHeader
         {
             var tcs = new ValueTaskCompletionSource();
-            Send(context, basicHeader, messageHeader, payloadWriter, _ => tcs.SetResult());
+            Send(basicHeader, messageHeader, payloadWriter, _ => tcs.SetResult());
             return tcs.Task;
         }
 
@@ -54,6 +60,12 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.Services
             payloadBuffer.MoveTo(0);
             messageHeader.SetMessageLength(payloadBuffer.Size);
             return payloadBuffer;
+        }
+
+        private IRtmpSessionContext GetSessionContext()
+        {
+            return _clientContext.SessionContext ??
+                throw new InvalidOperationException("Session context is not available");
         }
     }
 }

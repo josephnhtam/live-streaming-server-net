@@ -13,5 +13,14 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.Contracts
 
         new uint InChunkSize { get; set; }
         uint OutChunkSize { get; set; }
+
+        uint InWindowAcknowledgementSize { get; set; }
+        uint OutWindowAcknowledgementSize { get; set; }
+
+        uint SequenceNumber { get; set; }
+        uint LastAcknowledgedSequenceNumber { get; set; }
+
+        string? AppName { get; set; }
+        uint? StreamId { get; set; }
     }
 }
