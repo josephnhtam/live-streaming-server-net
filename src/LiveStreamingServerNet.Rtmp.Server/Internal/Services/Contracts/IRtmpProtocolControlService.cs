@@ -8,7 +8,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services.Contracts
         void AbortMessage(IRtmpClientSessionContext clientContext, uint streamId);
         void Acknowledgement(IRtmpClientSessionContext clientContext, uint sequenceNumber);
         void SetChunkSize(IRtmpClientSessionContext clientContext, uint chunkSize);
-        void SetPeerBandwidth(IRtmpClientSessionContext clientContext, uint peerBandwidth, RtmpClientBandwidthLimitType limitType);
+        void SetPeerBandwidth(IRtmpClientSessionContext clientContext, uint peerBandwidth, RtmpPeerBandwidthLimitType limitType);
         void WindowAcknowledgementSize(IRtmpClientSessionContext clientContext, uint windowAcknowledgementSize);
     }
 }

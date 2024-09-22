@@ -179,7 +179,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
         {
             // Arrange
             var bandwidth = _fixture.Create<uint>();
-            var limitType = _fixture.Create<RtmpClientBandwidthLimitType>();
+            var limitType = _fixture.Create<RtmpPeerBandwidthLimitType>();
 
             using var expectedBuffer = new DataBuffer();
             expectedBuffer.WriteUInt32BigEndian(bandwidth);
@@ -198,7 +198,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
                 Arg.Is<RtmpChunkMessageHeaderType0>(x =>
                     x.Timestamp == 0 &&
                     x.MessageStreamId == RtmpConstants.ProtocolControlMessageStreamId &&
-                    x.MessageTypeId == RtmpMessageType.SetClientBandwidth
+                    x.MessageTypeId == RtmpMessageType.SetPeerBandwidth
                 ),
                 Arg.Any<Action<IDataBuffer>>(),
                 Arg.Any<Action<bool>>()

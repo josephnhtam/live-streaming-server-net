@@ -7,7 +7,7 @@
         public const byte AbortMessage = 2;
         public const byte Acknowledgement = 3;
         public const byte WindowAcknowledgementSize = 5;
-        public const byte SetClientBandwidth = 6;
+        public const byte SetPeerBandwidth = 6;
 
         /* user control messages */
         public const byte UserControlMessage = 4;
