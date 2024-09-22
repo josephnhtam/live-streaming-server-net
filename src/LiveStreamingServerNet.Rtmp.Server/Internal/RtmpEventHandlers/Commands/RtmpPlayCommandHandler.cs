@@ -10,6 +10,7 @@ using LiveStreamingServerNet.Rtmp.Server.Internal.Services.Contracts;
 using LiveStreamingServerNet.Rtmp.Server.Internal.Services.Extensions;
 using LiveStreamingServerNet.Rtmp.Server.Internal.Utilities;
 using Microsoft.Extensions.Logging;
+using System.Diagnostics;
 
 namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
 {
@@ -72,6 +73,8 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
         private static (string StreamPath, IReadOnlyDictionary<string, string> StreamArguments)
             ParseSubscriptionContext(RtmpPlayCommand command, IRtmpClientSessionContext clientContext)
         {
+            Debug.Assert(!string.IsNullOrEmpty(clientContext.AppName));
+
             var (streamName, arguments) = StreamUtilities.ParseStreamName(command.StreamName);
             var streamPath = StreamUtilities.ComposeStreamPath(clientContext.AppName, streamName);
             return (streamPath, arguments.AsReadOnly());

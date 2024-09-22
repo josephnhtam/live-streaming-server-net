@@ -23,7 +23,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Contracts
         uint SequenceNumber { get; set; }
         uint LastAcknowledgedSequenceNumber { get; set; }
 
-        string AppName { get; set; }
+        string? AppName { get; set; }
         uint? StreamId { get; }
 
         uint VideoTimestamp { get; }
