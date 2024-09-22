@@ -1,4 +1,5 @@
-﻿using LiveStreamingServerNet.Rtmp.Client.Internal.Logging;
+﻿using LiveStreamingClientNet.Rtmp.Client.Internal.Contracts;
+using LiveStreamingServerNet.Rtmp.Client.Internal.Logging;
 using LiveStreamingServerNet.Rtmp.Client.Internal.RtmpEvents;
 using LiveStreamingServerNet.Rtmp.Internal;
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
@@ -10,13 +11,18 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.RtmpEventHandlers
     internal class RtmpHandshakeS2EventHandler : IRequestHandler<RtmpHandshakeS2Event, RtmpEventConsumingResult>
     {
         private readonly IDataBufferPool _dataBufferPool;
+        private readonly IRtmpClientConnectionEventDispatcher _eventDispatcher;
         private readonly ILogger _logger;
 
         private const int HandshakeS2Size = 1536;
 
-        public RtmpHandshakeS2EventHandler(IDataBufferPool dataBufferPool, ILogger<RtmpHandshakeS1EventHandler> logger)
+        public RtmpHandshakeS2EventHandler(
+            IDataBufferPool dataBufferPool,
+            IRtmpClientConnectionEventDispatcher eventDispatcher,
+            ILogger<RtmpHandshakeS1EventHandler> logger)
         {
             _dataBufferPool = dataBufferPool;
+            _eventDispatcher = eventDispatcher;
             _logger = logger;
         }
 
@@ -32,7 +38,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.RtmpEventHandlers
 
                 _logger.HandshakeS2Handled(@event.Context.Session.Id);
 
-                //await _eventDispatcher.RtmpHandshakeCompleteAsync(@event.Context);
+                await _eventDispatcher.RtmpHandshakeCompleteAsync(@event.Context);
 
                 return new RtmpEventConsumingResult(true, HandshakeS2Size);
             }

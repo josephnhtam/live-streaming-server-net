@@ -13,16 +13,19 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
     internal class RtmpSessionHandler : ISessionHandler
     {
         private readonly IRtmpSessionContext _context;
+        private readonly IRtmpClientContext _clientContext;
         private readonly IMediator _mediator;
         private readonly ILogger _logger;
         private readonly IPool<RtmpChunkEvent> _rtmpChunkEventPool;
 
         public RtmpSessionHandler(
             IRtmpSessionContext context,
+            IRtmpClientContext clientContext,
             IMediator mediator,
             ILogger<RtmpSessionHandler> logger)
         {
             _context = context;
+            _clientContext = clientContext;
             _mediator = mediator;
             _logger = logger;
             _rtmpChunkEventPool = new Pool<RtmpChunkEvent>(() => new RtmpChunkEvent());
@@ -30,6 +33,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
 
         public async ValueTask<bool> InitializeAsync(CancellationToken cancellationToken)
         {
+            _clientContext.SessionContext = _context;
             return await InitiateHandshakeAsync(_context, cancellationToken);
         }
 
@@ -88,9 +92,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
                 @event.Context = context;
                 @event.NetworkStream = networkStream;
 
-                //return await _mediator.Send(@event, cancellationToken);
-                await Task.Yield();
-                return new RtmpEventConsumingResult(true, 0);
+                return await _mediator.Send(@event, cancellationToken);
             }
             finally
             {

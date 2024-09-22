@@ -16,6 +16,16 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
         public uint InChunkSize { get; set; } = RtmpConstants.DefaultChunkSize;
         public uint OutChunkSize { get; set; } = RtmpConstants.DefaultChunkSize;
 
+        public uint InWindowAcknowledgementSize { get; set; }
+        public uint OutWindowAcknowledgementSize { get; set; }
+
+        public uint SequenceNumber { get; set; }
+        public uint LastAcknowledgedSequenceNumber { get; set; }
+
+        public string? AppName { get; set; }
+        public uint? StreamId { get; set; }
+
+
         private readonly Dictionary<uint, IRtmpChunkStreamContext> _chunkStreamContexts = new();
 
         public RtmpSessionContext(ISessionHandle session)
