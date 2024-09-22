@@ -172,7 +172,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
 
         private void SendSubscriptionStartedMessage(IRtmpClientContext clientContext, IRtmpChunkStreamContext chunkStreamContext)
         {
-            _commandMessageSender.SendOnStatusCommandMessageAsync(
+            _commandMessageSender.SendOnStatusCommandMessage(
                 clientContext,
                 chunkStreamContext.ChunkStreamId,
                 RtmpArgumentValues.Status,
@@ -182,7 +182,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
 
         private void SendBadConnectionCommandMessage(IRtmpClientContext clientContext, IRtmpChunkStreamContext chunkStreamContext, string reason)
         {
-            _commandMessageSender.SendOnStatusCommandMessageAsync(
+            _commandMessageSender.SendOnStatusCommandMessage(
                 clientContext,
                 chunkStreamContext.ChunkStreamId,
                 RtmpArgumentValues.Error,
