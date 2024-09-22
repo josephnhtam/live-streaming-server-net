@@ -26,7 +26,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
         public uint SequenceNumber { get; set; }
         public uint LastAcknowledgedSequenceNumber { get; set; }
 
-        public string AppName { get; set; } = default!;
+        public string? AppName { get; set; }
         public uint? StreamId => _isStreamCreated ? _streamId : null;
 
         public uint VideoTimestamp => _videoTimestamp;
