@@ -141,7 +141,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
         }
 
         [Fact]
-        public void WindowAcknowledgementSize_Should_SendWindowAcknowledgementSizeMessageAndSetInWindowAcknowledgementSize()
+        public void WindowAcknowledgementSize_Should_SendWindowAcknowledgementSizeMessageAndSetOutWindowAcknowledgementSize()
         {
             // Arrange
             var size = _fixture.Create<uint>();
@@ -171,7 +171,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
             _payloadBuffer.UnderlyingBuffer.Take(_payloadBuffer.Size)
                 .Should().BeEquivalentTo(expectedBuffer.UnderlyingBuffer.Take(expectedBuffer.Size));
 
-            _clientContext.Received(1).InWindowAcknowledgementSize = size;
+            _clientContext.Received(1).OutWindowAcknowledgementSize = size;
         }
 
         [Fact]

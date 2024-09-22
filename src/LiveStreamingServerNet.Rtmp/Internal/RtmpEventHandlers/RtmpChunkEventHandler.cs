@@ -78,11 +78,11 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers
         {
             var clientContext = @event.ClientContext;
 
-            if (clientContext.OutWindowAcknowledgementSize == 0)
+            if (clientContext.InWindowAcknowledgementSize == 0)
                 return;
 
             clientContext.SequenceNumber += (uint)consumedBytes;
-            if (clientContext.SequenceNumber - clientContext.LastAcknowledgedSequenceNumber >= clientContext.OutWindowAcknowledgementSize)
+            if (clientContext.SequenceNumber - clientContext.LastAcknowledgedSequenceNumber >= clientContext.InWindowAcknowledgementSize)
             {
                 _protocolControlMessageSender.Acknowledgement(clientContext, clientContext.SequenceNumber);
 

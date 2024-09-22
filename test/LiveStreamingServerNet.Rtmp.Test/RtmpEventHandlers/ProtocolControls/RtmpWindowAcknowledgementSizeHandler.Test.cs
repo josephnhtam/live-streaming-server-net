@@ -11,7 +11,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.ProtocolControls
     public class RtmpWindowAcknowledgementSizeHandlerTest
     {
         [Fact]
-        public async Task HandleAsync_Should_SetOutWindowAcknowledgementSize()
+        public async Task HandleAsync_Should_SetInWindowAcknowledgementSize()
         {
             // Arrange
             var fixture = new Fixture();
@@ -31,7 +31,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.ProtocolControls
 
             // Assert
             result.Should().BeTrue();
-            clientContext.Received(1).OutWindowAcknowledgementSize = windowAcknowledgementSize;
+            clientContext.Received(1).InWindowAcknowledgementSize = windowAcknowledgementSize;
         }
     }
 }

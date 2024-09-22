@@ -43,17 +43,17 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
                 dataBuffer.WriteUInt32BigEndian(sequenceNumber));
         }
 
-        public void WindowAcknowledgementSize(IRtmpClientContext clientContext, uint acknowledgementWindowSize)
+        public void WindowAcknowledgementSize(IRtmpClientContext clientContext, uint windowAcknowledgementSize)
         {
             var basicHeader = new RtmpChunkBasicHeader(0, RtmpConstants.ProtocolControlMessageChunkStreamId);
             var messageHeader = new RtmpChunkMessageHeaderType0(0, RtmpMessageType.WindowAcknowledgementSize, RtmpConstants.ProtocolControlMessageStreamId);
 
             _chunkMessageSenderService.Send(clientContext, basicHeader, messageHeader, dataBuffer =>
             {
-                dataBuffer.WriteUInt32BigEndian(acknowledgementWindowSize);
+                dataBuffer.WriteUInt32BigEndian(windowAcknowledgementSize);
             });
 
-            clientContext.InWindowAcknowledgementSize = acknowledgementWindowSize;
+            clientContext.OutWindowAcknowledgementSize = windowAcknowledgementSize;
         }
 
         public void SetClientBandwidth(IRtmpClientContext clientContext, uint clientBandwidth, RtmpClientBandwidthLimitType limitType)
