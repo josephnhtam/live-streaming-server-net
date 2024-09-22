@@ -31,7 +31,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.ProtocolControls
 
             // Assert
             result.Should().BeTrue();
-            clientContext.Received(1).InWindowAcknowledgementSize = windowAcknowledgementSize;
+            clientContext.Received(1).OutWindowAcknowledgementSize = windowAcknowledgementSize;
         }
     }
 }

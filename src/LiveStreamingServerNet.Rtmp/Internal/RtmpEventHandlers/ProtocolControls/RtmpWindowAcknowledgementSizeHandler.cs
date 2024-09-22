@@ -23,8 +23,8 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.ProtocolControl
             IDataBuffer payloadBuffer,
             CancellationToken cancellationToken)
         {
-            clientContext.InWindowAcknowledgementSize = payloadBuffer.ReadUInt32BigEndian();
-            _logger.WindowAcknowledgementSize(clientContext.Client.ClientId, clientContext.InWindowAcknowledgementSize);
+            clientContext.OutWindowAcknowledgementSize = payloadBuffer.ReadUInt32BigEndian();
+            _logger.WindowAcknowledgementSize(clientContext.Client.ClientId, clientContext.OutWindowAcknowledgementSize);
             return ValueTask.FromResult(true);
         }
     }

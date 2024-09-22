@@ -59,7 +59,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands
             clientContext.AppName = appName;
 
             _protocolControlMessageSender.SetChunkSize(clientContext, _config.OutChunkSize);
-            _protocolControlMessageSender.WindowAcknowledgementSize(clientContext, _config.OutAcknowledgementWindowSize);
+            _protocolControlMessageSender.WindowAcknowledgementSize(clientContext, _config.WindowAcknowledgementSize);
             _protocolControlMessageSender.SetClientBandwidth(clientContext, _config.ClientBandwidth, RtmpClientBandwidthLimitType.Dynamic);
 
             RespondToClient(clientContext, command);
