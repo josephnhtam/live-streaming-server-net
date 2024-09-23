@@ -9,6 +9,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Utilities
         {
             return (uint)Random.Shared.Next(2, ushort.MaxValue + 1);
         }
+
         public static List<object?> CreateExpectedCommandProperties(string level, string code)
         {
             return Arg.Is<List<object?>>(x =>

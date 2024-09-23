@@ -46,7 +46,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
             _clientContext.Received(1).CreateNewStream();
 
             _commandMessageSender.Received(1).SendCommandMessage(
-                _clientContext, 0, "_result", transactionId, Arg.Any<IReadOnlyDictionary<string, object>>(),
+                _clientContext, 0, 0, "_result", transactionId, Arg.Any<IReadOnlyDictionary<string, object>>(),
                 Arg.Is<IReadOnlyList<object?>>(x => (uint)x.First()! == streamId));
         }
 
@@ -70,7 +70,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
             _clientContext.DidNotReceive().CreateNewStream();
 
             _commandMessageSender.DidNotReceive().SendCommandMessage(
-                _clientContext, 0, "_result", transactionId, Arg.Any<IReadOnlyDictionary<string, object>>(), Arg.Any<IReadOnlyList<object?>>());
+                _clientContext, 0, 0, "_result", transactionId, Arg.Any<IReadOnlyDictionary<string, object>>(), Arg.Any<IReadOnlyList<object?>>());
         }
     }
 }

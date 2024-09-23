@@ -36,6 +36,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
         {
             _commandMessageSender.SendCommandMessage(
                 clientContext: clientContext,
+                messageStreamId: 0,
                 chunkStreamId: 0,
                 commandName: "_result",
                 transactionId: command.TransactionId,

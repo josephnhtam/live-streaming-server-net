@@ -58,11 +58,12 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
         {
             foreach (var subscriberGroup in
                 subscribers.Where(x => x.StreamSubscriptionContext != null)
-                           .GroupBy(x => x.StreamSubscriptionContext!.ChunkStreamId))
+                           .GroupBy(x => (x.StreamSubscriptionContext!.StreamId, x.StreamSubscriptionContext!.ChunkStreamId)))
             {
                 _commandMessageSender.SendOnStatusCommandMessage(
                     subscriberGroup.ToList(),
-                    subscriberGroup.Key,
+                    subscriberGroup.Key.StreamId,
+                    subscriberGroup.Key.ChunkStreamId,
                     RtmpArgumentValues.Status,
                     RtmpStatusCodes.PlayUnpublishNotify,
                     "Stream is unpublished.",
@@ -76,6 +77,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
         {
             _commandMessageSender.SendOnStatusCommandMessage(
                 subscriber,
+                subscriber.StreamId ?? 0,
                 subscriber.StreamSubscriptionContext!.ChunkStreamId,
                 RtmpArgumentValues.Status,
                 RtmpStatusCodes.PlayUnpublishNotify,

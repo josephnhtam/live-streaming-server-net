@@ -18,6 +18,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
 
         public void SendCommandMessage(
             IRtmpClientSessionContext clientContext,
+            uint messageStreamId,
             uint chunkStreamId,
             string commandName,
             double transactionId,
@@ -28,7 +29,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
         {
             var basicHeader = new RtmpChunkBasicHeader(0, chunkStreamId);
             var messageHeader = new RtmpChunkMessageHeaderType0(0,
-                amfEncodingType == AmfEncodingType.Amf0 ? RtmpMessageType.CommandMessageAmf0 : RtmpMessageType.CommandMessageAmf3, 0);
+                amfEncodingType == AmfEncodingType.Amf0 ? RtmpMessageType.CommandMessageAmf0 : RtmpMessageType.CommandMessageAmf3, messageStreamId);
 
             _chunkMessageSender.Send(clientContext, basicHeader, messageHeader, dataBuffer =>
             {
@@ -39,6 +40,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
 
         public ValueTask SendCommandMessageAsync(
             IRtmpClientSessionContext clientContext,
+            uint messageStreamId,
             uint chunkStreamId,
             string commandName,
             double transactionId,
@@ -47,12 +49,13 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
             AmfEncodingType amfEncodingType = AmfEncodingType.Amf0)
         {
             var tcs = new ValueTaskCompletionSource();
-            SendCommandMessage(clientContext, chunkStreamId, commandName, transactionId, commandObject, parameters, amfEncodingType, _ => tcs.SetResult());
+            SendCommandMessage(clientContext, messageStreamId, chunkStreamId, commandName, transactionId, commandObject, parameters, amfEncodingType, _ => tcs.SetResult());
             return tcs.Task;
         }
 
         public void SendCommandMessage(
             IReadOnlyList<IRtmpClientSessionContext> clientContexts,
+            uint messageStreamId,
             uint chunkStreamId,
             string commandName,
             double transactionId,
@@ -62,7 +65,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
         {
             var basicHeader = new RtmpChunkBasicHeader(0, chunkStreamId);
             var messageHeader = new RtmpChunkMessageHeaderType0(0,
-                amfEncodingType == AmfEncodingType.Amf0 ? RtmpMessageType.CommandMessageAmf0 : RtmpMessageType.CommandMessageAmf3, 0);
+                amfEncodingType == AmfEncodingType.Amf0 ? RtmpMessageType.CommandMessageAmf0 : RtmpMessageType.CommandMessageAmf3, messageStreamId);
 
             _chunkMessageSender.Send(clientContexts, basicHeader, messageHeader, dataBuffer =>
             {
