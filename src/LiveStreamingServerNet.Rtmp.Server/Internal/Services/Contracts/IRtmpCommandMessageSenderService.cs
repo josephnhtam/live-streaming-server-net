@@ -7,6 +7,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services.Contracts
     {
         void SendCommandMessage(
             IRtmpClientSessionContext clientContext,
+            uint messageStreamId,
             uint chunkStreamId,
             string commandName,
             double transactionId,
@@ -17,6 +18,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services.Contracts
 
         ValueTask SendCommandMessageAsync(
             IRtmpClientSessionContext clientContext,
+            uint messageStreamId,
             uint chunkStreamId,
             string commandName,
             double transactionId,
@@ -26,6 +28,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services.Contracts
 
         void SendCommandMessage(
             IReadOnlyList<IRtmpClientSessionContext> clientContexts,
+            uint messageStreamId,
             uint chunkStreamId,
             string commandName,
             double transactionId,

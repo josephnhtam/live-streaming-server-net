@@ -91,7 +91,7 @@ namespace LiveStreamingServerNet.Networking.Test
         {
             // Arrange
             _tcpClient.Connected.Returns(true);
-
+            _clientSessionHandler.InitializeAsync(Arg.Any<CancellationToken>()).Returns(true);
             _clientSessionHandler.HandleSessionLoopAsync(Arg.Any<INetworkStream>(), Arg.Any<CancellationToken>())
                 .Returns(true, true, false);
 
@@ -106,6 +106,7 @@ namespace LiveStreamingServerNet.Networking.Test
         public async Task RunAsync_Should_BeCancellable()
         {
             _tcpClient.Connected.Returns(true);
+            _clientSessionHandler.InitializeAsync(Arg.Any<CancellationToken>()).Returns(true);
             _clientSessionHandler.HandleSessionLoopAsync(Arg.Any<INetworkStream>(), Arg.Any<CancellationToken>())
                 .Returns(Task.Delay(100).ContinueWith(_ => true));
 

@@ -31,6 +31,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
         {
             // Arrange
             var clientContext = Substitute.For<IRtmpClientSessionContext>();
+            var messageStreamId = _fixture.Create<uint>();
             var chunkStreamId = Helpers.CreateRandomChunkStreamId();
             var commandName = _fixture.Create<string>();
             var transactionId = _fixture.Create<double>();
@@ -56,7 +57,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
                     x.MessageTypeId ==
                         (amfEncodingType == AmfEncodingType.Amf0 ?
                         RtmpMessageType.CommandMessageAmf0 : RtmpMessageType.CommandMessageAmf3) &&
-                    x.MessageStreamId == 0
+                    x.MessageStreamId == messageStreamId
                 ),
                 Arg.Any<Action<IDataBuffer>>(),
                 callback
@@ -69,6 +70,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             // Act
             _commandMessageSender.SendCommandMessage(
                 clientContext,
+                messageStreamId,
                 chunkStreamId,
                 commandName,
                 transactionId,
@@ -89,7 +91,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
                     x.MessageTypeId ==
                         (amfEncodingType == AmfEncodingType.Amf0 ?
                         RtmpMessageType.CommandMessageAmf0 : RtmpMessageType.CommandMessageAmf3) &&
-                    x.MessageStreamId == 0
+                    x.MessageStreamId == messageStreamId
                 ),
                 Arg.Any<Action<IDataBuffer>>(),
                 callback);
@@ -102,6 +104,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
         {
             // Arrange
             var clientContext = Substitute.For<IRtmpClientSessionContext>();
+            var messageStreamId = _fixture.Create<uint>();
             var chunkStreamId = Helpers.CreateRandomChunkStreamId();
             var commandName = _fixture.Create<string>();
             var transactionId = _fixture.Create<double>();
@@ -126,7 +129,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
                     x.MessageTypeId ==
                         (amfEncodingType == AmfEncodingType.Amf0 ?
                         RtmpMessageType.CommandMessageAmf0 : RtmpMessageType.CommandMessageAmf3) &&
-                    x.MessageStreamId == 0
+                    x.MessageStreamId == messageStreamId
                 ),
                 Arg.Any<Action<IDataBuffer>>(),
                 Arg.Any<Action<bool>>()
@@ -139,6 +142,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             // Act
             await _commandMessageSender.SendCommandMessageAsync(
                 clientContext,
+                messageStreamId,
                 chunkStreamId,
                 commandName,
                 transactionId,
@@ -159,7 +163,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
                     x.MessageTypeId ==
                         (amfEncodingType == AmfEncodingType.Amf0 ?
                         RtmpMessageType.CommandMessageAmf0 : RtmpMessageType.CommandMessageAmf3) &&
-                    x.MessageStreamId == 0
+                    x.MessageStreamId == messageStreamId
                 ),
                 Arg.Any<Action<IDataBuffer>>(),
                 Arg.Any<Action<bool>>());
@@ -172,6 +176,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
         {
             // Arrange
             var clientContexts = new List<IRtmpClientSessionContext> { Substitute.For<IRtmpClientSessionContext>(), Substitute.For<IRtmpClientSessionContext>() };
+            var messageStreamId = _fixture.Create<uint>();
             var chunkStreamId = Helpers.CreateRandomChunkStreamId();
             var commandName = _fixture.Create<string>();
             var transactionId = _fixture.Create<double>();
@@ -196,7 +201,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
                     x.MessageTypeId ==
                         (amfEncodingType == AmfEncodingType.Amf0 ?
                         RtmpMessageType.CommandMessageAmf0 : RtmpMessageType.CommandMessageAmf3) &&
-                    x.MessageStreamId == 0
+                    x.MessageStreamId == messageStreamId
                 ),
                 Arg.Any<Action<IDataBuffer>>()
             )).Do(x =>
@@ -207,6 +212,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             // Act
             _commandMessageSender.SendCommandMessage(
                 clientContexts,
+                messageStreamId,
                 chunkStreamId,
                 commandName,
                 transactionId,
@@ -227,7 +233,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
                     x.MessageTypeId ==
                         (amfEncodingType == AmfEncodingType.Amf0 ?
                         RtmpMessageType.CommandMessageAmf0 : RtmpMessageType.CommandMessageAmf3) &&
-                    x.MessageStreamId == 0
+                    x.MessageStreamId == messageStreamId
                 ),
                 Arg.Any<Action<IDataBuffer>>());
 

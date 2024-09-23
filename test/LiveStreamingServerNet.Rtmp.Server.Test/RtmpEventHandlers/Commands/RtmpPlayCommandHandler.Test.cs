@@ -42,7 +42,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
             _logger = Substitute.For<ILogger<RtmpPlayCommandHandler>>();
 
             _commandMessageSender.When(x =>
-                x.SendCommandMessage(Arg.Any<IRtmpClientSessionContext>(), Arg.Any<uint>(), Arg.Any<string>(), Arg.Any<double>(),
+                x.SendCommandMessage(Arg.Any<IRtmpClientSessionContext>(), Arg.Any<uint>(), Arg.Any<uint>(), Arg.Any<string>(), Arg.Any<double>(),
                     Arg.Any<IReadOnlyDictionary<string, object>>(), Arg.Any<IReadOnlyList<object?>>(),
                     Arg.Any<AmfEncodingType>(), Arg.Any<Action<bool>>()))
                 .Do(x => x.Arg<Action<bool>>()?.Invoke(true));
@@ -149,7 +149,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
             Received.InOrder(() =>
             {
                 _commandMessageSender.Received(1).SendCommandMessage(
-                    _clientContext, chunkStreamId, "onStatus", 0, null,
+                    _clientContext, streamId, chunkStreamId, "onStatus", 0, null,
                     Helpers.CreateExpectedCommandProperties(RtmpArgumentValues.Status, RtmpStatusCodes.PlayStart),
                     Arg.Any<AmfEncodingType>(), Arg.Any<Action<bool>>());
 
@@ -213,7 +213,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
 
             // Assert
             _commandMessageSender.Received(1).SendCommandMessage(
-                _clientContext, chunkStreamId, "onStatus", 0, null,
+                _clientContext, streamId, chunkStreamId, "onStatus", 0, null,
                 Helpers.CreateExpectedCommandProperties(RtmpArgumentValues.Error, RtmpStatusCodes.PlayBadConnection),
                 Arg.Any<AmfEncodingType>(), Arg.Any<Action<bool>>());
 

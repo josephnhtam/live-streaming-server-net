@@ -59,6 +59,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             _commandMessageSender.Received(1).SendCommandMessage(
                 Arg.Is<IReadOnlyList<IRtmpClientSessionContext>>(x => x.Contains(existingSubscriber)),
                 Arg.Any<uint>(),
+                Arg.Any<uint>(),
                 "onStatus",
                 0,
                 null,
@@ -94,6 +95,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             // Assert
             _commandMessageSender.Received(1).SendCommandMessage(
                 clientContext,
+                Arg.Any<uint>(),
                 Arg.Any<uint>(),
                 "onStatus",
                 0,

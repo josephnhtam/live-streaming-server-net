@@ -62,7 +62,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
             _protocolControl.Received(1).SetPeerBandwidth(_clientContext, _config.PeerBandwidth, Arg.Any<RtmpPeerBandwidthLimitType>());
 
             _commandMessageSender.Received(1).SendCommandMessage(
-                _clientContext, 3, "_result", transactionId, Arg.Any<IReadOnlyDictionary<string, object>>(), Arg.Any<IReadOnlyList<object?>>());
+                _clientContext, 0, 3, "_result", transactionId, Arg.Any<IReadOnlyDictionary<string, object>>(), Arg.Any<IReadOnlyList<object?>>());
 
             _ = _eventDispatcher.Received(1).RtmpClientConnectedAsync(
                 _clientContext,
@@ -96,7 +96,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
                 Arg.Any<IRtmpClientSessionContext>(), Arg.Any<uint>(), Arg.Any<RtmpPeerBandwidthLimitType>());
 
             _commandMessageSender.DidNotReceive().SendCommandMessage(
-                Arg.Any<IRtmpClientSessionContext>(), Arg.Any<uint>(), Arg.Any<string>(), Arg.Any<double>(),
+                Arg.Any<IRtmpClientSessionContext>(), Arg.Any<uint>(), Arg.Any<uint>(), Arg.Any<string>(), Arg.Any<double>(),
                 Arg.Any<IReadOnlyDictionary<string, object>>(), Arg.Any<IReadOnlyList<object?>>());
 
             _ = _eventDispatcher.DidNotReceive().RtmpClientConnectedAsync(
@@ -129,7 +129,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
                 Arg.Any<IRtmpClientSessionContext>(), Arg.Any<uint>(), Arg.Any<RtmpPeerBandwidthLimitType>());
 
             _commandMessageSender.DidNotReceive().SendCommandMessage(
-                Arg.Any<IRtmpClientSessionContext>(), Arg.Any<uint>(), Arg.Any<string>(), Arg.Any<double>(),
+                Arg.Any<IRtmpClientSessionContext>(), Arg.Any<uint>(), Arg.Any<uint>(), Arg.Any<string>(), Arg.Any<double>(),
                 Arg.Any<IReadOnlyDictionary<string, object>>(), Arg.Any<IReadOnlyList<object?>>());
 
             _ = _eventDispatcher.DidNotReceive().RtmpClientConnectedAsync(

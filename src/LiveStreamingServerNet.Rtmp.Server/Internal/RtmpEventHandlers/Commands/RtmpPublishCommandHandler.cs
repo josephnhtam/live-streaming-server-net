@@ -137,6 +137,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
         {
             _commandMessageSender.SendOnStatusCommandMessage(
                 clientContext,
+                clientContext.StreamId ?? 0,
                 chunkStreamContext.ChunkStreamId,
                 RtmpArgumentValues.Error,
                 RtmpStatusCodes.PublishBadName,
@@ -147,6 +148,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
         {
             _commandMessageSender.SendOnStatusCommandMessage(
                 clientContext,
+                clientContext.StreamId ?? 0,
                 chunkStreamContext.ChunkStreamId,
                 RtmpArgumentValues.Error,
                 RtmpStatusCodes.PublishBadConnection,
@@ -157,6 +159,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
         {
             await _commandMessageSender.SendOnStatusCommandMessageAsync(
                 clientContext,
+                clientContext.StreamId ?? 0,
                 chunkStreamContext.ChunkStreamId,
                 RtmpArgumentValues.Error,
                 RtmpStatusCodes.PublishUnauthorized,
@@ -167,6 +170,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
         {
             _commandMessageSender.SendOnStatusCommandMessage(
                 clientContext,
+                clientContext.StreamId ?? 0,
                 chunkStreamContext.ChunkStreamId,
                 RtmpArgumentValues.Status,
                 RtmpStatusCodes.PublishStart,
