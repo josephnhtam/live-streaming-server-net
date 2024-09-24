@@ -6,33 +6,13 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
     internal class RtmpStreamManagerService : IRtmpStreamManagerService
     {
         private readonly object _publishingSyncLock = new();
-        private readonly Dictionary<IRtmpClientSessionContext, string> _publishStreamPaths = new();
-        private readonly Dictionary<string, IRtmpClientSessionContext> _publishingClientContexts = new();
+        private readonly Dictionary<string, IRtmpPublishStreamContext> _publishStreamContexts = new();
 
         private readonly object _subscribingSyncLock = new();
-        private readonly Dictionary<string, List<IRtmpClientSessionContext>> _subscribingClientContexts = new();
-        private readonly Dictionary<IRtmpClientSessionContext, string> _subscribedStreamPaths = new();
+        private readonly Dictionary<string, List<IRtmpSubscribeStreamContext>> _subscribeStreamContexts = new();
 
-        public string? GetPublishStreamPath(IRtmpClientSessionContext publisherClientContext)
-        {
-            return _publishStreamPaths.GetValueOrDefault(publisherClientContext);
-        }
-
-        public IRtmpClientSessionContext? GetPublishingClientContext(string streamPath)
-        {
-            lock (_publishingSyncLock)
-            {
-                return _publishingClientContexts.GetValueOrDefault(streamPath);
-            }
-        }
-
-        public IRtmpPublishStreamContext? GetPublishStreamContext(string streamPath)
-        {
-            var publishingClientContext = GetPublishingClientContext(streamPath);
-            return publishingClientContext?.PublishStreamContext;
-        }
-
-        public PublishingStreamResult StartPublishingStream(IRtmpClientSessionContext publisherClientContext, string streamPath, IReadOnlyDictionary<string, string> streamArguments, out IList<IRtmpClientSessionContext> existingSubscribers)
+        public PublishingStreamResult StartPublishing(
+            IRtmpStream stream, string streamPath, IReadOnlyDictionary<string, string> streamArguments, out IList<IRtmpSubscribeStreamContext> existingSubscribers)
         {
             lock (_publishingSyncLock)
             {
@@ -40,28 +20,27 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
                 {
                     existingSubscribers = null!;
 
-                    if (_subscribedStreamPaths.ContainsKey(publisherClientContext))
-                        return PublishingStreamResult.AlreadySubscribing;
-
-                    if (_publishStreamPaths.ContainsKey(publisherClientContext))
+                    if (stream.PublishContext != null)
                         return PublishingStreamResult.AlreadyPublishing;
 
-                    if (_publishingClientContexts.ContainsKey(streamPath))
+                    if (stream.SubscribeContext != null)
+                        return PublishingStreamResult.AlreadySubscribing;
+
+                    if (_publishStreamContexts.ContainsKey(streamPath))
                         return PublishingStreamResult.AlreadyExists;
 
-                    var publishStreamContext = publisherClientContext.CreatePublishStreamContext(streamPath, streamArguments);
+                    var publishStreamContext = stream.CreatePublishContext(streamPath, streamArguments);
+                    _publishStreamContexts.Add(streamPath, publishStreamContext);
 
-                    _publishStreamPaths.Add(publisherClientContext, streamPath);
-                    _publishingClientContexts.Add(streamPath, publisherClientContext);
-
-                    existingSubscribers = _subscribingClientContexts.GetValueOrDefault(streamPath)?.ToList() ?? new List<IRtmpClientSessionContext>();
+                    existingSubscribers = _subscribeStreamContexts.GetValueOrDefault(streamPath)?.ToList() ??
+                        new List<IRtmpSubscribeStreamContext>();
 
                     return PublishingStreamResult.Succeeded;
                 }
             }
         }
 
-        public bool StopPublishingStream(IRtmpClientSessionContext publisherClientContext, out IList<IRtmpClientSessionContext> existingSubscribers)
+        public bool StopPublishing(IRtmpPublishStreamContext publishStreamContext, out IList<IRtmpSubscribeStreamContext> existingSubscribers)
         {
             lock (_publishingSyncLock)
             {
@@ -69,65 +48,62 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
                 {
                     existingSubscribers = null!;
 
-                    if (!_publishStreamPaths.TryGetValue(publisherClientContext, out var streamPath))
-                        return false;
+                    var streamPath = publishStreamContext.StreamPath;
 
-                    _publishingClientContexts.Remove(streamPath);
-                    _publishStreamPaths.Remove(publisherClientContext);
+                    _publishStreamContexts.Remove(streamPath);
 
-                    existingSubscribers = _subscribingClientContexts.GetValueOrDefault(streamPath)?.ToList() ?? new List<IRtmpClientSessionContext>();
+                    existingSubscribers = _subscribeStreamContexts.GetValueOrDefault(streamPath)?.ToList() ??
+                        new List<IRtmpSubscribeStreamContext>();
 
                     return true;
                 }
             }
         }
 
-        public bool IsStreamPathPublishing(string streamPath)
+        public bool IsStreamPublishing(string streamPath)
         {
             lock (_publishingSyncLock)
             {
-                return _publishingClientContexts.ContainsKey(streamPath);
+                return _publishStreamContexts.ContainsKey(streamPath);
             }
         }
 
-        public SubscribingStreamResult StartSubscribingStream(IRtmpClientSessionContext subscriberClientContext, uint chunkStreamId, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
+        public SubscribingStreamResult StartSubscribing(
+            IRtmpStream stream, uint chunkStreamId, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
             lock (_publishingSyncLock)
             {
                 lock (_subscribingSyncLock)
                 {
-                    if (_publishStreamPaths.ContainsKey(subscriberClientContext))
+                    if (stream.PublishContext != null)
                         return SubscribingStreamResult.AlreadyPublishing;
 
-                    if (_subscribedStreamPaths.ContainsKey(subscriberClientContext))
+                    if (stream.SubscribeContext != null)
                         return SubscribingStreamResult.AlreadySubscribing;
 
-                    if (!_subscribingClientContexts.TryGetValue(streamPath, out var subscribers))
+                    if (!_subscribeStreamContexts.TryGetValue(streamPath, out var subscribers))
                     {
-                        subscribers = new List<IRtmpClientSessionContext>();
-                        _subscribingClientContexts[streamPath] = subscribers;
+                        subscribers = new List<IRtmpSubscribeStreamContext>();
+                        _subscribeStreamContexts[streamPath] = subscribers;
                     }
 
-                    subscriberClientContext.CreateStreamSubscriptionContext(chunkStreamId, streamPath, streamArguments);
-
-                    subscribers.Add(subscriberClientContext);
-                    _subscribedStreamPaths.Add(subscriberClientContext, streamPath);
+                    var subscribeStreamContext = stream.CreateSubscribeContext(chunkStreamId, streamPath, streamArguments);
+                    subscribers.Add(subscribeStreamContext);
 
                     return SubscribingStreamResult.Succeeded;
                 }
             }
         }
 
-        public bool StopSubscribingStream(IRtmpClientSessionContext subscriberClientContext)
+        public bool StopSubscribing(IRtmpSubscribeStreamContext subscribeStreamContext)
         {
             lock (_subscribingSyncLock)
             {
-                if (!_subscribedStreamPaths.Remove(subscriberClientContext, out var streamPath))
-                    return false;
+                var streamPath = subscribeStreamContext.StreamPath;
 
-                if (_subscribingClientContexts.TryGetValue(streamPath, out var subscribers) &&
-                    subscribers.Remove(subscriberClientContext) && subscribers.Count == 0)
-                    _subscribingClientContexts.Remove(streamPath);
+                if (_subscribeStreamContexts.TryGetValue(streamPath, out var subscribers) &&
+                    subscribers.Remove(subscribeStreamContext) && subscribers.Count == 0)
+                    _subscribeStreamContexts.Remove(streamPath);
 
                 return true;
             }
@@ -137,23 +113,24 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
         {
             lock (_publishingSyncLock)
             {
-                return _publishingClientContexts.Keys.ToList();
+                return _publishStreamContexts.Keys.ToList();
             }
         }
 
-        public IRtmpClientSessionContext? GetPublisher(string streamPath)
+        public IRtmpPublishStreamContext? GetPublishStreamContext(string streamPath)
         {
             lock (_publishingSyncLock)
             {
-                return _publishingClientContexts.GetValueOrDefault(streamPath);
+                return _publishStreamContexts.GetValueOrDefault(streamPath);
             }
         }
 
-        public IReadOnlyList<IRtmpClientSessionContext> GetSubscribers(string streamPath)
+        public IReadOnlyList<IRtmpSubscribeStreamContext> GetSubscribeStreamContexts(string streamPath)
         {
             lock (_subscribingSyncLock)
             {
-                return _subscribingClientContexts.GetValueOrDefault(streamPath)?.ToList() ?? new List<IRtmpClientSessionContext>();
+                return _subscribeStreamContexts.GetValueOrDefault(streamPath)?.ToList() ??
+                    new List<IRtmpSubscribeStreamContext>();
             }
         }
     }

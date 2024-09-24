@@ -4,20 +4,16 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services.Contracts
 {
     internal interface IRtmpStreamManagerService
     {
-        bool IsStreamPathPublishing(string streamPath);
-        string? GetPublishStreamPath(IRtmpClientSessionContext publisherClientContext);
-        IRtmpClientSessionContext? GetPublishingClientContext(string streamPath);
-        IRtmpPublishStreamContext? GetPublishStreamContext(string streamPath);
+        PublishingStreamResult StartPublishing(IRtmpStream stream, string streamPath, IReadOnlyDictionary<string, string> streamArguments, out IList<IRtmpSubscribeStreamContext> existingSubscribers);
+        bool StopPublishing(IRtmpPublishStreamContext publishStreamContext, out IList<IRtmpSubscribeStreamContext> existingSubscribers);
 
-        PublishingStreamResult StartPublishingStream(IRtmpClientSessionContext publisherClientContext, string streamPath, IReadOnlyDictionary<string, string> streamArguments, out IList<IRtmpClientSessionContext> existingSubscribers);
-        bool StopPublishingStream(IRtmpClientSessionContext publisherClientContext, out IList<IRtmpClientSessionContext> existingSubscribers);
-
-        SubscribingStreamResult StartSubscribingStream(IRtmpClientSessionContext subscriberClientContext, uint chunkStreamId, string streamPath, IReadOnlyDictionary<string, string> streamArguments);
-        bool StopSubscribingStream(IRtmpClientSessionContext subscriberClientContext);
+        SubscribingStreamResult StartSubscribing(IRtmpStream stream, uint chunkStreamId, string streamPath, IReadOnlyDictionary<string, string> streamArguments);
+        bool StopSubscribing(IRtmpSubscribeStreamContext subscribeStreamContext);
 
         IReadOnlyList<string> GetStreamPaths();
-        IRtmpClientSessionContext? GetPublisher(string streamPath);
-        IReadOnlyList<IRtmpClientSessionContext> GetSubscribers(string streamPath);
+        IRtmpPublishStreamContext? GetPublishStreamContext(string streamPath);
+        IReadOnlyList<IRtmpSubscribeStreamContext> GetSubscribeStreamContexts(string streamPath);
+        bool IsStreamPublishing(string streamPath);
     }
 
     internal enum PublishingStreamResult

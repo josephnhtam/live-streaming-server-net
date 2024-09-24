@@ -25,45 +25,44 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
             _eventDispatcher = eventDispatcher;
         }
 
-        public async ValueTask DeleteStreamAsync(IRtmpClientSessionContext clientContext)
+        public async ValueTask DeleteStreamAsync(IRtmpStream stream)
         {
-            await StopPublishingStreamIfNeededAsync(clientContext);
-            await StopSubscribingStreamIfNeededAsync(clientContext);
+            await StopPublishingStreamIfNeededAsync(stream);
+            await StopSubscribingStreamIfNeededAsync(stream);
 
-            clientContext.DeleteStream();
+            stream.Delete();
         }
 
-        private async ValueTask StopPublishingStreamIfNeededAsync(IRtmpClientSessionContext clientContext)
+        private async ValueTask StopPublishingStreamIfNeededAsync(IRtmpStream stream)
         {
-            if (!_rtmpStreamManager.StopPublishingStream(clientContext, out var existingSubscriber))
+            if (stream.PublishContext == null || !_rtmpStreamManager.StopPublishing(stream.PublishContext, out var existingSubscriber))
                 return;
 
             _userControlMessageSender.SendStreamEofMessage(existingSubscriber.AsReadOnly());
             SendStreamUnpublishNotify(existingSubscriber.AsReadOnly());
-            await _eventDispatcher.RtmpStreamUnpublishedAsync(clientContext, clientContext.PublishStreamContext!.StreamPath);
+            await _eventDispatcher.RtmpStreamUnpublishedAsync(stream.PublishContext.Stream.ClientContext, stream.PublishContext.StreamPath);
         }
 
-        private async ValueTask StopSubscribingStreamIfNeededAsync(IRtmpClientSessionContext clientContext)
+        private async ValueTask StopSubscribingStreamIfNeededAsync(IRtmpStream stream)
         {
-            if (!_rtmpStreamManager.StopSubscribingStream(clientContext))
+            if (stream.SubscribeContext == null || !_rtmpStreamManager.StopSubscribing(stream.SubscribeContext))
                 return;
 
-            SendSubscriptionStoppedMessage(clientContext);
-            await _eventDispatcher.RtmpStreamUnsubscribedAsync(clientContext, clientContext.StreamSubscriptionContext!.StreamPath);
+            SendSubscriptionStoppedMessage(stream.SubscribeContext);
+            await _eventDispatcher.RtmpStreamUnsubscribedAsync(stream.SubscribeContext.Stream.ClientContext, stream.SubscribeContext.StreamPath);
         }
 
         private void SendStreamUnpublishNotify(
-            IReadOnlyList<IRtmpClientSessionContext> subscribers,
+            IReadOnlyList<IRtmpSubscribeStreamContext> subscribers,
             AmfEncodingType amfEncodingType = AmfEncodingType.Amf0)
         {
             foreach (var subscriberGroup in
-                subscribers.Where(x => x.StreamSubscriptionContext != null)
-                           .GroupBy(x => (x.StreamSubscriptionContext!.StreamId, x.StreamSubscriptionContext!.ChunkStreamId)))
+                subscribers.Where(x => x.Stream?.SubscribeContext != null)
+                           .GroupBy(x => x.Stream!.Id))
             {
                 _commandMessageSender.SendOnStatusCommandMessage(
-                    subscriberGroup.ToList(),
-                    subscriberGroup.Key.StreamId,
-                    subscriberGroup.Key.ChunkStreamId,
+                    subscriberGroup.Select(x => x.Stream.ClientContext).ToList(),
+                    subscriberGroup.Key,
                     RtmpArgumentValues.Status,
                     RtmpStatusCodes.PlayUnpublishNotify,
                     "Stream is unpublished.",
@@ -72,13 +71,12 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
         }
 
         private void SendSubscriptionStoppedMessage(
-            IRtmpClientSessionContext subscriber,
+            IRtmpSubscribeStreamContext subscriber,
             AmfEncodingType amfEncodingType = AmfEncodingType.Amf0)
         {
             _commandMessageSender.SendOnStatusCommandMessage(
-                subscriber,
-                subscriber.StreamId ?? 0,
-                subscriber.StreamSubscriptionContext!.ChunkStreamId,
+                subscriber.Stream.ClientContext,
+                subscriber.Stream.Id,
                 RtmpArgumentValues.Status,
                 RtmpStatusCodes.PlayUnpublishNotify,
                 "Stream is stopped.",

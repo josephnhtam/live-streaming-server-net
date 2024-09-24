@@ -84,7 +84,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Media
             publishStreamContext.GroupOfPicturesCacheActivated.Returns(gopCacheActivated);
 
             _clientContext.PublishStreamContext.Returns(publishStreamContext);
-            _streamManager.GetSubscribers(stremaPath).Returns(subscribers);
+            _streamManager.GetSubscribeStreamContexts(stremaPath).Returns(subscribers);
 
             var firstByte = (byte)((byte)audioCodec << 4);
             _dataBuffer.Write(firstByte);

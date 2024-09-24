@@ -94,7 +94,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Media
             publishStreamContext.StreamPath.Returns(stremaPath);
 
             _clientContext.PublishStreamContext.Returns(publishStreamContext);
-            _streamManager.GetSubscribers(stremaPath).Returns(subscribers);
+            _streamManager.GetSubscribeStreamContexts(stremaPath).Returns(subscribers);
 
             var firstByte = (byte)((byte)frameType << 4 | (byte)videoCodec);
             _dataBuffer.Write(firstByte);

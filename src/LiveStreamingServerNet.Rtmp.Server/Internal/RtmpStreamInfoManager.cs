@@ -20,17 +20,16 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
 
         public IRtmpStreamInfo? GetStreamInfo(string streamPath)
         {
-            var publisherContext = _service.GetPublishingClientContext(streamPath);
-            var publishStreamContext = publisherContext?.PublishStreamContext;
+            var publishStreamContext = _service.GetPublishStreamContext(streamPath);
 
             if (publishStreamContext == null)
                 return null;
 
-            var subscriberContexts = _service.GetSubscribers(publishStreamContext.StreamPath);
+            var subscriberContexts = _service.GetSubscribeStreamContexts(publishStreamContext.StreamPath);
 
             return new RtmpStreamInfo(
-                   publisherContext!.Client,
-                   subscriberContexts.Select(x => x.Client).OfType<ISessionControl>().ToList(),
+                   publishStreamContext.Stream.ClientContext.Client,
+                   subscriberContexts.Select(x => x.Stream.ClientContext.Client).OfType<ISessionControl>().ToList(),
                    publishStreamContext);
         }
 

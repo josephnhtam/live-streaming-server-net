@@ -112,7 +112,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
             if (_bandwidthLimiter != null)
                 await _bandwidthLimiter.DisposeAsync();
 
-            await _clientContext.DisposeAsync();
+            _clientContext.Dispose();
         }
 
         private async ValueTask OnRtmpClientCreatedAsync()

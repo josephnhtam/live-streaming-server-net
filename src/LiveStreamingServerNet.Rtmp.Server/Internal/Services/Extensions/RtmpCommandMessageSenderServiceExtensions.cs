@@ -12,7 +12,6 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services.Extensions
             this IRtmpCommandMessageSenderService sender,
             IRtmpClientSessionContext clientContext,
             uint messageStreamId,
-            uint chunkStreamId,
             string level,
             string code,
             string description,
@@ -26,14 +25,13 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services.Extensions
                 { RtmpArgumentNames.Description, description }
             };
 
-            sender.SendCommandMessage(clientContext, messageStreamId, chunkStreamId, "onStatus", 0, null, new List<object?> { properties }, amfEncodingType, callback);
+            sender.SendCommandMessage(clientContext, messageStreamId, RtmpConstants.OnStatusChunkStreamId, "onStatus", 0, null, new List<object?> { properties }, amfEncodingType, callback);
         }
 
         public static void SendOnStatusCommandMessage(
             this IRtmpCommandMessageSenderService sender,
             IReadOnlyList<IRtmpClientSessionContext> clientContexts,
             uint messageStreamId,
-            uint chunkStreamId,
             string level,
             string code,
             string description,
@@ -46,21 +44,20 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services.Extensions
                 { RtmpArgumentNames.Description, description }
             };
 
-            sender.SendCommandMessage(clientContexts, messageStreamId, chunkStreamId, "onStatus", 0, null, new List<object?> { properties }, amfEncodingType);
+            sender.SendCommandMessage(clientContexts, messageStreamId, RtmpConstants.OnStatusChunkStreamId, "onStatus", 0, null, new List<object?> { properties }, amfEncodingType);
         }
 
         public static ValueTask SendOnStatusCommandMessageAsync(
             this IRtmpCommandMessageSenderService sender,
             IRtmpClientSessionContext clientContext,
             uint messageStreamId,
-            uint chunkStreamId,
             string level,
             string code,
             string description,
             AmfEncodingType amfEncodingType = AmfEncodingType.Amf0)
         {
             var tcs = new ValueTaskCompletionSource();
-            sender.SendOnStatusCommandMessage(clientContext, messageStreamId, chunkStreamId, level, code, description, amfEncodingType, _ => tcs.SetResult());
+            sender.SendOnStatusCommandMessage(clientContext, messageStreamId, level, code, description, amfEncodingType, _ => tcs.SetResult());
             return tcs.Task;
         }
     }

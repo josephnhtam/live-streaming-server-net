@@ -15,62 +15,62 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
             _chunkMessageSenderService = chunkMessageSenderService;
         }
 
-        public void SendStreamBeginMessage(IRtmpClientSessionContext clientContext)
+        public void SendStreamBeginMessage(IRtmpSubscribeStreamContext subscribeStreamContext)
         {
-            if (clientContext.StreamSubscriptionContext == null)
-                return;
-
             var basicHeader = new RtmpChunkBasicHeader(0, RtmpConstants.UserControlMessageChunkStreamId);
             var messageHeader = new RtmpChunkMessageHeaderType0(0, RtmpMessageType.UserControlMessage, RtmpConstants.UserControlMessageStreamId);
 
-            _chunkMessageSenderService.Send(clientContext, basicHeader, messageHeader, dataBuffer =>
+            _chunkMessageSenderService.Send(subscribeStreamContext.Stream.ClientContext, basicHeader, messageHeader, dataBuffer =>
             {
                 dataBuffer.WriteUint16BigEndian(RtmpUserControlMessageTypes.StreamBegin);
-                dataBuffer.WriteUInt32BigEndian(clientContext.StreamSubscriptionContext!.StreamId);
+                dataBuffer.WriteUInt32BigEndian(subscribeStreamContext.Stream.Id);
             });
         }
 
-        public void SendStreamBeginMessage(IReadOnlyList<IRtmpClientSessionContext> clientContexts)
+        public void SendStreamBeginMessage(IReadOnlyList<IRtmpSubscribeStreamContext> subscribeStreamContexts)
         {
-            foreach (var clientContextGroup in clientContexts.Where(x => x.StreamSubscriptionContext != null).GroupBy(x => x.StreamSubscriptionContext!.StreamId))
+            foreach (var subscribeStreamContextGroup in subscribeStreamContexts.GroupBy(x => x.Stream.Id))
             {
+                var streamId = subscribeStreamContextGroup.Key;
+                var clientContexts = subscribeStreamContextGroup.Select(x => x.Stream.ClientContext).ToList();
+
                 var basicHeader = new RtmpChunkBasicHeader(0, RtmpConstants.UserControlMessageChunkStreamId);
                 var messageHeader = new RtmpChunkMessageHeaderType0(0, RtmpMessageType.UserControlMessage, RtmpConstants.UserControlMessageStreamId);
 
-                _chunkMessageSenderService.Send(clientContextGroup.ToList(), basicHeader, messageHeader, dataBuffer =>
+                _chunkMessageSenderService.Send(clientContexts, basicHeader, messageHeader, dataBuffer =>
                 {
                     dataBuffer.WriteUint16BigEndian(RtmpUserControlMessageTypes.StreamBegin);
-                    dataBuffer.WriteUInt32BigEndian(clientContextGroup.Key);
+                    dataBuffer.WriteUInt32BigEndian(streamId);
                 });
             }
         }
 
-        public void SendStreamEofMessage(IRtmpClientSessionContext clientContext)
+        public void SendStreamEofMessage(IRtmpSubscribeStreamContext subscribeStreamContext)
         {
-            if (clientContext.StreamSubscriptionContext == null)
-                return;
-
             var basicHeader = new RtmpChunkBasicHeader(0, RtmpConstants.UserControlMessageChunkStreamId);
             var messageHeader = new RtmpChunkMessageHeaderType0(0, RtmpMessageType.UserControlMessage, RtmpConstants.UserControlMessageStreamId);
 
-            _chunkMessageSenderService.Send(clientContext, basicHeader, messageHeader, dataBuffer =>
+            _chunkMessageSenderService.Send(subscribeStreamContext.Stream.ClientContext, basicHeader, messageHeader, dataBuffer =>
             {
                 dataBuffer.WriteUint16BigEndian(RtmpUserControlMessageTypes.StreamEof);
-                dataBuffer.WriteUInt32BigEndian(clientContext.StreamSubscriptionContext!.StreamId);
+                dataBuffer.WriteUInt32BigEndian(subscribeStreamContext.Stream.Id);
             });
         }
 
-        public void SendStreamEofMessage(IReadOnlyList<IRtmpClientSessionContext> clientContexts)
+        public void SendStreamEofMessage(IReadOnlyList<IRtmpSubscribeStreamContext> subscribeStreamContexts)
         {
-            foreach (var clientContextGroup in clientContexts.Where(x => x.StreamSubscriptionContext != null).GroupBy(x => x.StreamSubscriptionContext!.StreamId))
+            foreach (var subscribeStreamContextGroup in subscribeStreamContexts.GroupBy(x => x.Stream.Id))
             {
+                var streamId = subscribeStreamContextGroup.Key;
+                var clientContexts = subscribeStreamContextGroup.Select(x => x.Stream.ClientContext).ToList();
+
                 var basicHeader = new RtmpChunkBasicHeader(0, RtmpConstants.UserControlMessageChunkStreamId);
                 var messageHeader = new RtmpChunkMessageHeaderType0(0, RtmpMessageType.UserControlMessage, RtmpConstants.UserControlMessageStreamId);
 
-                _chunkMessageSenderService.Send(clientContextGroup.ToList(), basicHeader, messageHeader, dataBuffer =>
+                _chunkMessageSenderService.Send(clientContexts, basicHeader, messageHeader, dataBuffer =>
                 {
                     dataBuffer.WriteUint16BigEndian(RtmpUserControlMessageTypes.StreamEof);
-                    dataBuffer.WriteUInt32BigEndian(clientContextGroup.Key);
+                    dataBuffer.WriteUInt32BigEndian(streamId);
                 });
             }
         }

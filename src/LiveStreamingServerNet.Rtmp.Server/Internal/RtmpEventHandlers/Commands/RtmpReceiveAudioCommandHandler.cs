@@ -16,11 +16,12 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
             RtmpReceiveAudioCommand command,
             CancellationToken cancellationToken)
         {
-            var subscriptionContext = clientContext.StreamSubscriptionContext;
+            var streamId = chunkStreamContext.MessageHeader.MessageStreamId;
+            var subscribeStreamContext = clientContext.GetStream(streamId)?.SubscribeContext;
 
-            if (subscriptionContext != null)
+            if (subscribeStreamContext != null)
             {
-                subscriptionContext.IsReceivingAudio = command.Flag;
+                subscribeStreamContext.IsReceivingAudio = command.Flag;
             }
 
             return ValueTask.FromResult(true);

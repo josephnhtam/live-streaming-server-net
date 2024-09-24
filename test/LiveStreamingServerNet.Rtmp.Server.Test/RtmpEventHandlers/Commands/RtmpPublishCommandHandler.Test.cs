@@ -103,7 +103,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
         [InlineData(false, false)]
         [InlineData(true, false)]
         [InlineData(true, true)]
-        public async Task HandleAsync_Should_SendPlayStartAndCaches_If_AuthorizedAndStreamIsSubscribedSuccesfully(bool publishStreamExists, bool gopCacheActivated)
+        public async Task HandleAsync_Should_SendPlayStartAndCaches_If_AuthorizedAndStreamIsSubscribedSuccessfully(bool publishStreamExists, bool gopCacheActivated)
         {
             // Arrange
             var transactionId = 0.0;
@@ -164,7 +164,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
         [Theory]
         [InlineData(PublishingStreamResult.AlreadyPublishing)]
         [InlineData(PublishingStreamResult.AlreadySubscribing)]
-        internal async Task HandleAsync_Should_SendError_If_AuthorizedButStreamSubscriptionNotSuccesful(PublishingStreamResult publishingResult)
+        internal async Task HandleAsync_Should_SendError_If_AuthorizedButStreamSubscriptionNotSuccessful(PublishingStreamResult publishingResult)
         {
             // Arrange
             var transactionId = 0.0;

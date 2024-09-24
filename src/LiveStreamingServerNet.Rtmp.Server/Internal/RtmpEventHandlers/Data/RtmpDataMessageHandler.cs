@@ -16,15 +16,18 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Data
     [RtmpMessageType(RtmpMessageType.DataMessageAmf3)]
     internal class RtmpDataMessageHandler : IRtmpMessageHandler<IRtmpClientSessionContext>
     {
+        private readonly IRtmpStreamManagerService _streamManager;
         private readonly IRtmpMediaMessageCacherService _mediaMessageCacher;
         private readonly IRtmpServerStreamEventDispatcher _eventDispatcher;
         private readonly ILogger<RtmpDataMessageHandler> _logger;
 
         public RtmpDataMessageHandler(
+            IRtmpStreamManagerService streamManager,
             IRtmpMediaMessageCacherService mediaMessageCacher,
             IRtmpServerStreamEventDispatcher eventDispatcher,
             ILogger<RtmpDataMessageHandler> logger)
         {
+            _streamManager = streamManager;
             _mediaMessageCacher = mediaMessageCacher;
             _eventDispatcher = eventDispatcher;
             _logger = logger;
@@ -73,7 +76,8 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Data
             IRtmpChunkStreamContext chunkStreamContext,
             IReadOnlyDictionary<string, object> metaData)
         {
-            var publishStreamContext = clientContext.PublishStreamContext;
+            var streamId = chunkStreamContext.MessageHeader.MessageStreamId;
+            var publishStreamContext = clientContext.GetStream(streamId)?.PublishContext;
 
             if (publishStreamContext == null)
             {
@@ -83,9 +87,9 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Data
 
             CacheStreamMetaData(metaData, publishStreamContext);
 
-            BroadcastMetaDataToSubscribers(clientContext, chunkStreamContext, publishStreamContext);
+            BroadcastMetaDataToSubscribers(chunkStreamContext, publishStreamContext);
 
-            await _eventDispatcher.RtmpStreamMetaDataReceivedAsync(clientContext, clientContext.PublishStreamContext!.StreamPath, metaData);
+            await _eventDispatcher.RtmpStreamMetaDataReceivedAsync(clientContext, publishStreamContext.StreamPath, metaData);
 
             return true;
         }
@@ -96,15 +100,15 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Data
         }
 
         private void BroadcastMetaDataToSubscribers(
-            IRtmpClientSessionContext clientContext,
             IRtmpChunkStreamContext chunkStreamContext,
             IRtmpPublishStreamContext publishStreamContext)
         {
+            var subscribeStreamContexts = _streamManager.GetSubscribeStreamContexts(publishStreamContext.StreamPath);
+
             _mediaMessageCacher.SendCachedStreamMetaDataMessage(
-                clientContext,
+                subscribeStreamContexts,
                 publishStreamContext,
-                chunkStreamContext.MessageHeader.Timestamp,
-                chunkStreamContext.MessageHeader.MessageStreamId);
+                chunkStreamContext.MessageHeader.Timestamp);
         }
     }
 }
