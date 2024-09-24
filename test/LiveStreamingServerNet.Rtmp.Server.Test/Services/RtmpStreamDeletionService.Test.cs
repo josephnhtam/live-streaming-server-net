@@ -85,7 +85,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             var existingSubscribers = new List<IRtmpClientSessionContext> { existingSubscriber };
 
             var streamPath = _fixture.Create<string>();
-            clientContext.StreamSubscriptionContext!.StreamPath.Returns(streamPath);
+            clientContext.SubscribeStreamContext!.StreamPath.Returns(streamPath);
 
             _rtmpStreamManager.StopSubscribingStream(clientContext).Returns(true);
 

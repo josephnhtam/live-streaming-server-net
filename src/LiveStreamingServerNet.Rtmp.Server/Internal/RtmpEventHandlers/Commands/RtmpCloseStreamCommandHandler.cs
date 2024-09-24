@@ -24,8 +24,11 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
             RtmpCloseStreamCommand command,
             CancellationToken cancellationToken)
         {
-            if (clientContext.StreamId.HasValue)
-                await _streamDeletionService.DeleteStreamAsync(clientContext);
+            var streamId = chunkStreamContext.MessageHeader.MessageStreamId;
+            var stream = clientContext.GetStream(streamId);
+
+            if (stream != null)
+                await _streamDeletionService.DeleteStreamAsync(stream);
 
             return true;
         }

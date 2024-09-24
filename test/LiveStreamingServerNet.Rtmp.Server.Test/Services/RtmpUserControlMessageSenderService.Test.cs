@@ -57,7 +57,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
         {
             // Arrange
             var streamId = _fixture.Create<uint>();
-            _clientContext.StreamSubscriptionContext!.StreamId.Returns(streamId);
+            _clientContext.SubscribeStreamContext!.StreamId.Returns(streamId);
 
             using var expectedBuffer = new DataBuffer();
             expectedBuffer.WriteUint16BigEndian(RtmpUserControlMessageTypes.StreamBegin);
@@ -91,7 +91,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
         public void SendStreamBeginMessage_Should_BroadcastStreamBeginMessage()
         {
             // Arrange
-            _clientContext.StreamSubscriptionContext!.StreamId.Returns(0u);
+            _clientContext.SubscribeStreamContext!.StreamId.Returns(0u);
             var clientContexts = new List<IRtmpClientSessionContext> { _clientContext };
 
             using var expectedBuffer = new DataBuffer();
@@ -125,7 +125,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
         {
             // Arrange
             var streamId = _fixture.Create<uint>();
-            _clientContext.StreamSubscriptionContext!.StreamId.Returns(streamId);
+            _clientContext.SubscribeStreamContext!.StreamId.Returns(streamId);
 
             using var expectedBuffer = new DataBuffer();
             expectedBuffer.WriteUint16BigEndian(RtmpUserControlMessageTypes.StreamEof);
@@ -158,7 +158,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
         public void SendStreamEofMessage_Should_BroadcastStreamEofMessage()
         {
             // Arrange
-            _clientContext.StreamSubscriptionContext!.StreamId.Returns(0u);
+            _clientContext.SubscribeStreamContext!.StreamId.Returns(0u);
             var clientContexts = new List<IRtmpClientSessionContext> { _clientContext };
 
             using var expectedBuffer = new DataBuffer();

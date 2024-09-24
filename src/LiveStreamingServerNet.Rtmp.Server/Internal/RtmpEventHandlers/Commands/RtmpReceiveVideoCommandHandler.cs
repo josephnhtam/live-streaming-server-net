@@ -16,11 +16,12 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
             RtmpReceiveVideoCommand command,
             CancellationToken cancellationToken)
         {
-            var subscriptionContext = clientContext.StreamSubscriptionContext;
+            var streamId = chunkStreamContext.MessageHeader.MessageStreamId;
+            var subscribeStreamContext = clientContext.GetStream(streamId)?.SubscribeContext;
 
-            if (subscriptionContext != null)
+            if (subscribeStreamContext != null)
             {
-                subscriptionContext.IsReceivingVideo = command.Flag;
+                subscribeStreamContext.IsReceivingVideo = command.Flag;
             }
 
             return ValueTask.FromResult(true);

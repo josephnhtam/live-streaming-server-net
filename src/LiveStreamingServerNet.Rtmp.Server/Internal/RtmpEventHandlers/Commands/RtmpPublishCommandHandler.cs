@@ -47,7 +47,10 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
         {
             _logger.Publish(clientContext.Client.Id, command.PublishingName, command.PublishingType);
 
-            if (clientContext.StreamId == null)
+            var streamId = chunkStreamContext.MessageHeader.MessageStreamId;
+            var stream = clientContext.GetStream(streamId);
+
+            if (stream == null)
             {
                 _logger.StreamNotYetCreated(clientContext.Client.Id);
                 return false;
@@ -55,7 +58,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
 
             var (streamPath, streamArguments) = ParsePublishContext(command, clientContext);
 
-            var authorizationResult = await AuthorizeAsync(clientContext, command, chunkStreamContext, streamPath, streamArguments);
+            var authorizationResult = await AuthorizeAsync(stream, command, chunkStreamContext, streamPath, streamArguments);
 
             if (!authorizationResult.IsAuthorized)
                 return false;
@@ -63,7 +66,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
             streamPath = authorizationResult.StreamPathOverride ?? streamPath;
             streamArguments = authorizationResult.StreamArgumentsOverride ?? streamArguments;
 
-            await StartPublishingAsync(clientContext, command, chunkStreamContext, streamPath, streamArguments);
+            await StartPublishingAsync(stream, command, chunkStreamContext, streamPath, streamArguments);
             return true;
         }
 
@@ -78,54 +81,54 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
         }
 
         private async ValueTask<AuthorizationResult> AuthorizeAsync(
-            IRtmpClientSessionContext clientContext,
+            IRtmpStream stream,
             RtmpPublishCommand command,
             IRtmpChunkStreamContext chunkStreamContext,
             string streamPath,
             IReadOnlyDictionary<string, string> streamArguments)
         {
             var result = await _streamAuthorization.AuthorizePublishingAsync(
-                clientContext, streamPath, command.PublishingType, streamArguments);
+                stream.ClientContext, streamPath, command.PublishingType, streamArguments);
 
             if (!result.IsAuthorized)
             {
-                _logger.AuthorizationFailed(clientContext.Client.Id, streamPath, command.PublishingType, result.Reason ?? "Unknown");
-                await SendAuthorizationFailedCommandMessageAsync(clientContext, chunkStreamContext, result.Reason ?? "Unknown");
+                _logger.AuthorizationFailed(stream.ClientContext.Client.Id, streamPath, command.PublishingType, result.Reason ?? "Unknown");
+                await SendAuthorizationFailedCommandMessageAsync(stream, chunkStreamContext, result.Reason ?? "Unknown");
             }
 
             return result;
         }
 
         private async ValueTask<bool> StartPublishingAsync(
-            IRtmpClientSessionContext clientContext,
+            IRtmpStream stream,
             RtmpPublishCommand command,
             IRtmpChunkStreamContext chunkStreamContext,
             string streamPath,
             IReadOnlyDictionary<string, string> streamArguments)
         {
-            var startPublishingResult = _streamManager.StartPublishingStream(clientContext, streamPath, streamArguments, out _);
+            var startPublishingResult = _streamManager.StartPublishing(stream, streamPath, streamArguments, out _);
 
             switch (startPublishingResult)
             {
                 case PublishingStreamResult.Succeeded:
-                    _logger.PublishingStarted(clientContext.Client.Id, streamPath, command.PublishingType);
-                    SendPublishingStartedMessage(clientContext, chunkStreamContext);
-                    await _eventDispatcher.RtmpStreamPublishedAsync(clientContext, streamPath, streamArguments);
+                    _logger.PublishingStarted(stream.ClientContext.Client.Id, streamPath, command.PublishingType);
+                    SendPublishingStartedMessage(stream, chunkStreamContext);
+                    await _eventDispatcher.RtmpStreamPublishedAsync(stream.ClientContext, streamPath, streamArguments);
                     return true;
 
                 case PublishingStreamResult.AlreadySubscribing:
-                    _logger.AlreadySubscribing(clientContext.Client.Id, streamPath);
-                    SendBadConnectionCommandMessage(clientContext, chunkStreamContext, "Already subscribing.");
+                    _logger.AlreadySubscribing(stream.ClientContext.Client.Id, streamPath);
+                    SendBadConnectionCommandMessage(stream, chunkStreamContext, "Already subscribing.");
                     return false;
 
                 case PublishingStreamResult.AlreadyPublishing:
-                    _logger.AlreadyPublishing(clientContext.Client.Id, streamPath);
-                    SendBadConnectionCommandMessage(clientContext, chunkStreamContext, "Already publishing.");
+                    _logger.AlreadyPublishing(stream.ClientContext.Client.Id, streamPath);
+                    SendBadConnectionCommandMessage(stream, chunkStreamContext, "Already publishing.");
                     return false;
 
                 case PublishingStreamResult.AlreadyExists:
-                    _logger.StreamAlreadyExists(clientContext.Client.Id, streamPath, command.PublishingType);
-                    SendAlreadyExistsCommandMessage(clientContext, chunkStreamContext);
+                    _logger.StreamAlreadyExists(stream.ClientContext.Client.Id, streamPath, command.PublishingType);
+                    SendAlreadyExistsCommandMessage(stream, chunkStreamContext);
                     return false;
 
                 default:
@@ -133,45 +136,41 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
             }
         }
 
-        private void SendAlreadyExistsCommandMessage(IRtmpClientSessionContext clientContext, IRtmpChunkStreamContext chunkStreamContext)
+        private void SendAlreadyExistsCommandMessage(IRtmpStream stream, IRtmpChunkStreamContext chunkStreamContext)
         {
             _commandMessageSender.SendOnStatusCommandMessage(
-                clientContext,
-                clientContext.StreamId ?? 0,
-                chunkStreamContext.ChunkStreamId,
+                stream.ClientContext,
+                stream.Id,
                 RtmpArgumentValues.Error,
                 RtmpStatusCodes.PublishBadName,
                 "Stream already exists.");
         }
 
-        private void SendBadConnectionCommandMessage(IRtmpClientSessionContext clientContext, IRtmpChunkStreamContext chunkStreamContext, string reason)
+        private void SendBadConnectionCommandMessage(IRtmpStream stream, IRtmpChunkStreamContext chunkStreamContext, string reason)
         {
             _commandMessageSender.SendOnStatusCommandMessage(
-                clientContext,
-                clientContext.StreamId ?? 0,
-                chunkStreamContext.ChunkStreamId,
+                stream.ClientContext,
+                stream.Id,
                 RtmpArgumentValues.Error,
                 RtmpStatusCodes.PublishBadConnection,
                 reason);
         }
 
-        private async ValueTask SendAuthorizationFailedCommandMessageAsync(IRtmpClientSessionContext clientContext, IRtmpChunkStreamContext chunkStreamContext, string reason)
+        private async ValueTask SendAuthorizationFailedCommandMessageAsync(IRtmpStream stream, IRtmpChunkStreamContext chunkStreamContext, string reason)
         {
             await _commandMessageSender.SendOnStatusCommandMessageAsync(
-                clientContext,
-                clientContext.StreamId ?? 0,
-                chunkStreamContext.ChunkStreamId,
+                stream.ClientContext,
+                stream.Id,
                 RtmpArgumentValues.Error,
                 RtmpStatusCodes.PublishUnauthorized,
                 reason);
         }
 
-        private void SendPublishingStartedMessage(IRtmpClientSessionContext clientContext, IRtmpChunkStreamContext chunkStreamContext)
+        private void SendPublishingStartedMessage(IRtmpStream stream, IRtmpChunkStreamContext chunkStreamContext)
         {
             _commandMessageSender.SendOnStatusCommandMessage(
-                clientContext,
-                clientContext.StreamId ?? 0,
-                chunkStreamContext.ChunkStreamId,
+                stream.ClientContext,
+                stream.Id,
                 RtmpArgumentValues.Status,
                 RtmpStatusCodes.PublishStart,
                 "Publishing started.");

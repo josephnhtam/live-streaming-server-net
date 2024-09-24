@@ -74,7 +74,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
 
         public async ValueTask BroadcastMediaMessageAsync(
             IRtmpPublishStreamContext publishStreamContext,
-            IReadOnlyList<IRtmpClientSessionContext> subscribers,
+            IReadOnlyList<IRtmpSubscribeStreamContext> subscribers,
             MediaType mediaType,
             uint timestamp,
             bool isSkippable,
@@ -85,26 +85,21 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
             subscribers = subscribers.Where((subscriber) => FilterSubscribers(subscriber, isSkippable)).ToList();
 
             if (subscribers.Any())
-                EnqueueMediaPackages(subscribers, mediaType, payloadBuffer, timestamp, publishStreamContext.StreamId, isSkippable);
+                EnqueueMediaPackages(subscribers, mediaType, payloadBuffer, timestamp, isSkippable);
 
-            bool FilterSubscribers(IRtmpClientSessionContext subscriber, bool isSkippable)
+            bool FilterSubscribers(IRtmpSubscribeStreamContext subscriber, bool isSkippable)
             {
-                var subscriptionContext = subscriber.StreamSubscriptionContext;
-
-                if (subscriptionContext == null)
-                    return false;
-
                 if (!isSkippable)
                     return true;
 
                 switch (mediaType)
                 {
                     case MediaType.Audio:
-                        if (!subscriptionContext.IsReceivingAudio)
+                        if (!subscriber.IsReceivingAudio)
                             return false;
                         break;
                     case MediaType.Video:
-                        if (!subscriptionContext.IsReceivingVideo)
+                        if (!subscriber.IsReceivingVideo)
                             return false;
                         break;
                 }
@@ -114,11 +109,10 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
         }
 
         private void EnqueueMediaPackages(
-            IReadOnlyList<IRtmpClientSessionContext> subscribersList,
+            IReadOnlyList<IRtmpSubscribeStreamContext> subscribersList,
             MediaType type,
             IDataBuffer payloadBuffer,
             uint timestamp,
-            uint streamId,
             bool isSkippable)
         {
             var basicHeader = new RtmpChunkBasicHeader(
@@ -127,18 +121,19 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
                 RtmpConstants.VideoMessageChunkStreamId :
                 RtmpConstants.AudioMessageChunkStreamId);
 
-            var messageHeader = new RtmpChunkMessageHeaderType0(
-                timestamp,
-                payloadBuffer.Size,
-                type == MediaType.Video ?
-                RtmpMessageType.VideoMessage :
-                RtmpMessageType.AudioMessage,
-                streamId);
-
-            foreach (var subscribersGroup in subscribersList.GroupBy(x => x.OutChunkSize))
+            foreach (var subscribersGroup in subscribersList.GroupBy(x => (x.Stream.Id, x.Stream.ClientContext.OutChunkSize)))
             {
-                var outChunkSize = subscribersGroup.Key;
+                var streamId = subscribersGroup.Key.Id;
+                var outChunkSize = subscribersGroup.Key.OutChunkSize;
                 var subscribers = subscribersGroup.ToList();
+
+                var messageHeader = new RtmpChunkMessageHeaderType0(
+                    timestamp,
+                    payloadBuffer.Size,
+                    type == MediaType.Video ?
+                    RtmpMessageType.VideoMessage :
+                    RtmpMessageType.AudioMessage,
+                    streamId);
 
                 var tempBuffer = _dataBufferPool.Obtain();
 
@@ -147,11 +142,12 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
                     _chunkMessageWriter.Write(tempBuffer, basicHeader, messageHeader, payloadBuffer.MoveTo(0), outChunkSize);
 
                     var rentedBuffer = tempBuffer.ToRentedBuffer(subscribers.Count);
-                    var mediaPackage = new ClientMediaPackage(rentedBuffer, isSkippable, timestamp, type);
 
                     foreach (var subscriber in subscribers)
                     {
-                        var mediaContext = GetMediaContext(subscriber);
+                        var mediaPackage = new ClientMediaPackage(subscriber, rentedBuffer, isSkippable, timestamp, type);
+
+                        var mediaContext = GetMediaContext(subscriber.Stream.ClientContext);
                         if (mediaContext == null || !mediaContext.AddPackage(ref mediaPackage))
                             rentedBuffer.Unclaim();
                     }
@@ -181,12 +177,9 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
 
                     try
                     {
-                        if (clientContext.StreamSubscriptionContext == null)
-                            continue;
-
                         if (!subscriptionInitialized)
                         {
-                            await clientContext.StreamSubscriptionContext.UntilInitializationComplete();
+                            await package.StreamContext.UntilInitializationComplete();
                             subscriptionInitialized = true;
                         }
 
@@ -215,7 +208,9 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
 
         private async Task SendPackageAsync(ClientMediaContext context, IRtmpClientSessionContext clientContext, ClientMediaPackage package, CancellationToken cancellation)
         {
-            if (!clientContext.UpdateTimestamp(package.Timestamp, package.MediaType) && package.IsSkippable)
+            var streamContext = package.StreamContext;
+
+            if (!streamContext.Stream.UpdateTimestamp(package.Timestamp, package.MediaType) && package.IsSkippable)
                 return;
 
             if (_config.MediaPackageBatchWindow > TimeSpan.Zero)
@@ -232,12 +227,25 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
 
             while (context.ReadPackage(out var package))
             {
-                if (clientContext.UpdateTimestamp(package.Timestamp, package.MediaType) || !package.IsSkippable)
+                if (packages.First().StreamContext.Stream.Id != package.StreamContext.Stream.Id)
+                {
+                    await FlushAsync(clientContext, packages);
+
+                    packages.Clear();
+                    packages.Add(package);
+                }
+
+                if (package.StreamContext.Stream.UpdateTimestamp(package.Timestamp, package.MediaType) || !package.IsSkippable)
                     packages.Add(package);
                 else
                     package.RentedPayload.Unclaim();
             }
 
+            await FlushAsync(clientContext, packages);
+        }
+
+        private async Task FlushAsync(IRtmpClientSessionContext clientContext, List<ClientMediaPackage> packages)
+        {
             try
             {
                 var tempBuffer = new RentedBuffer(_dataBufferPool.BufferPool, packages.Sum(x => x.RentedPayload.Size));
@@ -344,6 +352,6 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
             }
         }
 
-        private record struct ClientMediaPackage(IRentedBuffer RentedPayload, bool IsSkippable, uint Timestamp, MediaType MediaType);
+        private record struct ClientMediaPackage(IRtmpSubscribeStreamContext StreamContext, IRentedBuffer RentedPayload, bool IsSkippable, uint Timestamp, MediaType MediaType);
     }
 }

@@ -75,36 +75,34 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
         }
 
         public void SendCachedHeaderMessages(
-            IRtmpClientSessionContext clientContext,
-            IRtmpPublishStreamContext publishStreamContext,
-            uint messageStreamId)
+            IRtmpSubscribeStreamContext subscribeStreamContext,
+            IRtmpPublishStreamContext publishStreamContext)
         {
             var audioSequenceHeader = publishStreamContext.AudioSequenceHeader;
             if (audioSequenceHeader != null)
             {
-                SendMediaPackage(clientContext, MediaType.Audio, audioSequenceHeader, audioSequenceHeader.Length, 0, messageStreamId, true);
+                SendMediaPackage(subscribeStreamContext, MediaType.Audio, audioSequenceHeader, audioSequenceHeader.Length, 0, true);
             }
 
             var videoSequenceHeader = publishStreamContext.VideoSequenceHeader;
             if (videoSequenceHeader != null)
             {
-                SendMediaPackage(clientContext, MediaType.Video, videoSequenceHeader, videoSequenceHeader.Length, 0, messageStreamId, true);
+                SendMediaPackage(subscribeStreamContext, MediaType.Video, videoSequenceHeader, videoSequenceHeader.Length, 0, true);
             }
         }
 
         public void SendCachedStreamMetaDataMessage(
-            IRtmpClientSessionContext clientContext,
+            IRtmpSubscribeStreamContext subscribeStreamContext,
             IRtmpPublishStreamContext publishStreamContext,
-            uint timestamp,
-            uint messageStreamId)
+            uint timestamp)
         {
             if (publishStreamContext.StreamMetaData == null)
                 return;
 
             var basicHeader = new RtmpChunkBasicHeader(0, RtmpConstants.DataMessageChunkStreamId);
-            var messageHeader = new RtmpChunkMessageHeaderType0(timestamp, RtmpMessageType.DataMessageAmf0, messageStreamId);
+            var messageHeader = new RtmpChunkMessageHeaderType0(timestamp, RtmpMessageType.DataMessageAmf0, subscribeStreamContext.Stream.Id);
 
-            _chunkMessageSender.Send(clientContext, basicHeader, messageHeader, (dataBuffer) =>
+            _chunkMessageSender.Send(subscribeStreamContext.Stream.ClientContext, basicHeader, messageHeader, (dataBuffer) =>
                 dataBuffer.WriteAmf(new List<object?>
                 {
                     RtmpDataMessageConstants.OnMetaData,
@@ -114,48 +112,59 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
         }
 
         public void SendCachedStreamMetaDataMessage(
-            IReadOnlyList<IRtmpClientSessionContext> clientContexts,
+            IReadOnlyList<IRtmpSubscribeStreamContext> subscribeStreamContexts,
             IRtmpPublishStreamContext publishStreamContext,
-            uint timestamp,
-            uint messageStreamId)
+            uint timestamp)
         {
             if (publishStreamContext.StreamMetaData == null)
                 return;
 
             var basicHeader = new RtmpChunkBasicHeader(0, RtmpConstants.DataMessageChunkStreamId);
-            var messageHeader = new RtmpChunkMessageHeaderType0(timestamp, RtmpMessageType.DataMessageAmf0, messageStreamId);
 
-            _chunkMessageSender.Send(clientContexts, basicHeader, messageHeader, (dataBuffer) =>
-                dataBuffer.WriteAmf(new List<object?>
-                {
+            foreach (var group in subscribeStreamContexts.GroupBy(x => x.Stream.Id))
+            {
+                var streamId = group.Key;
+                var clientContexts = group.Select(x => x.Stream.ClientContext).ToList();
+
+                var messageHeader = new RtmpChunkMessageHeaderType0(timestamp, RtmpMessageType.DataMessageAmf0, streamId);
+
+                _chunkMessageSender.Send(clientContexts, basicHeader, messageHeader, (dataBuffer) =>
+                    dataBuffer.WriteAmf(new List<object?>
+                    {
                     RtmpDataMessageConstants.OnMetaData,
                     publishStreamContext.StreamMetaData
-                }, AmfEncodingType.Amf0)
-            );
+                    }, AmfEncodingType.Amf0)
+                );
+            }
         }
 
         public void SendCachedGroupOfPictures(
-            IRtmpClientSessionContext clientContext,
-            IRtmpPublishStreamContext publishStreamContext,
-            uint messageStreamId)
+            IRtmpSubscribeStreamContext subscribeStreamContext,
+            IRtmpPublishStreamContext publishStreamContext)
         {
             foreach (var picture in publishStreamContext.GroupOfPicturesCache.Get())
             {
-                SendMediaPackage(clientContext, picture.Type, picture.Payload.Buffer, picture.Payload.Size, picture.Timestamp, messageStreamId, false);
+                SendMediaPackage(
+                    subscribeStreamContext,
+                    picture.Type,
+                    picture.Payload.Buffer,
+                    picture.Payload.Size,
+                    picture.Timestamp,
+                    false);
+
                 picture.Payload.Unclaim();
             }
         }
 
         private void SendMediaPackage(
-            IRtmpClientSessionContext clientContext,
+            IRtmpSubscribeStreamContext subscribeStreamContext,
             MediaType type,
             byte[] payloadBuffer,
             int payloadSize,
             uint timestamp,
-            uint messageStreamId,
             bool isHeader)
         {
-            if (!clientContext.UpdateTimestamp(timestamp, type) && !isHeader)
+            if (!subscribeStreamContext.Stream.UpdateTimestamp(timestamp, type) && !isHeader)
                 return;
 
             var basicHeader = new RtmpChunkBasicHeader(
@@ -169,9 +178,13 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
                 type == MediaType.Video ?
                 RtmpMessageType.VideoMessage :
                 RtmpMessageType.AudioMessage,
-                messageStreamId);
+                subscribeStreamContext.Stream.Id);
 
-            _chunkMessageSender.Send(clientContext, basicHeader, messageHeader, (dataBuffer) => dataBuffer.Write(payloadBuffer, 0, payloadSize));
+            _chunkMessageSender.Send(
+                subscribeStreamContext.Stream.ClientContext,
+                basicHeader,
+                messageHeader,
+                (dataBuffer) => dataBuffer.Write(payloadBuffer, 0, payloadSize));
         }
 
         public ValueTask DisposeAsync()

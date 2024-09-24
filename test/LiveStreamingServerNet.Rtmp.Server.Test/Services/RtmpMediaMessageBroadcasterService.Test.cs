@@ -58,13 +58,13 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             // Arrange
             var client = Substitute.For<ISessionHandle>();
 
-            var streamContext = Substitute.For<IRtmpStreamSubscriptionContext>();
+            var streamContext = Substitute.For<IRtmpSubscribeStreamContext>();
             streamContext.IsReceivingVideo.Returns(true);
             streamContext.IsReceivingAudio.Returns(true);
 
             var clientContext = Substitute.For<IRtmpClientSessionContext>();
             clientContext.Client.Returns(client);
-            clientContext.StreamSubscriptionContext.Returns(streamContext);
+            clientContext.SubscribeStreamContext.Returns(streamContext);
 
             var publishStreamContext = new RtmpPublishStreamContext(
                 _fixture.Create<uint>(),

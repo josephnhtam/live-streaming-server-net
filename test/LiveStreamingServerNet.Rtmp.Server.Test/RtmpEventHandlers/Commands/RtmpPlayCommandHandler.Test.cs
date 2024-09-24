@@ -104,7 +104,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
         [InlineData(false, false)]
         [InlineData(true, false)]
         [InlineData(true, true)]
-        public async Task HandleAsync_Should_SendPlayStartAndCaches_If_AuthorizedAndStreamIsSubscribedSuccesfully(bool publishStreamExists, bool gopCacheActivated)
+        public async Task HandleAsync_Should_SendPlayStartAndCaches_If_AuthorizedAndStreamIsSubscribedSuccessfully(bool publishStreamExists, bool gopCacheActivated)
         {
             // Arrange
             var transactionId = 0.0;
@@ -134,11 +134,11 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
                 .Returns(AuthorizationResult.Authorized())
                 .AndDoes(x =>
                 {
-                    _clientContext.StreamSubscriptionContext!.StreamPath.Returns(x.Arg<string>());
-                    _clientContext.StreamSubscriptionContext!.StreamArguments.Returns(x.Arg<IReadOnlyDictionary<string, string>>());
+                    _clientContext.SubscribeStreamContext!.StreamPath.Returns(x.Arg<string>());
+                    _clientContext.SubscribeStreamContext!.StreamArguments.Returns(x.Arg<IReadOnlyDictionary<string, string>>());
                 });
 
-            _streamManager.StartSubscribingStream(
+            _streamManager.StartSubscribeStream(
                 _clientContext, chunkStreamId, streamPath, Helpers.CreateExpectedStreamArguments("password", "123456"))
                 .Returns(SubscribingStreamResult.Succeeded);
 
@@ -166,7 +166,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
                             _clientContext, _publishStreamContext, messageStreamId);
                 }
 
-                _clientContext.Received(1).StreamSubscriptionContext!.CompleteInitialization();
+                _clientContext.Received(1).SubscribeStreamContext!.CompleteInitialization();
 
                 _ = _eventDispatcher.Received(1).RtmpStreamSubscribedAsync(
                     _clientContext, streamPath, Helpers.CreateExpectedStreamArguments("password", "123456"));
@@ -178,7 +178,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
         [Theory]
         [InlineData(SubscribingStreamResult.AlreadyPublishing)]
         [InlineData(SubscribingStreamResult.AlreadySubscribing)]
-        internal async Task HandleAsync_Should_SendError_If_AuthorizedButStreamSubscriptionNotSuccesful(SubscribingStreamResult subscribingResult)
+        internal async Task HandleAsync_Should_SendError_If_AuthorizedButStreamSubscriptionNotSuccessfully(SubscribingStreamResult subscribingResult)
         {
             // Arrange
             var transactionId = 0.0;
@@ -201,11 +201,11 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
                 .Returns(AuthorizationResult.Authorized())
                 .AndDoes(x =>
                 {
-                    _clientContext.StreamSubscriptionContext!.StreamPath.Returns(x.Arg<string>());
-                    _clientContext.StreamSubscriptionContext!.StreamArguments.Returns(x.Arg<IReadOnlyDictionary<string, string>>());
+                    _clientContext.SubscribeStreamContext!.StreamPath.Returns(x.Arg<string>());
+                    _clientContext.SubscribeStreamContext!.StreamArguments.Returns(x.Arg<IReadOnlyDictionary<string, string>>());
                 });
 
-            _streamManager.StartSubscribingStream(_clientContext, chunkStreamId, streamPath, Helpers.CreateExpectedStreamArguments("password", "123456"))
+            _streamManager.StartSubscribeStream(_clientContext, chunkStreamId, streamPath, Helpers.CreateExpectedStreamArguments("password", "123456"))
                 .Returns(subscribingResult);
 
             // Act

@@ -48,7 +48,8 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Media
             IDataBuffer payloadBuffer,
             CancellationToken cancellationToken)
         {
-            var publishStreamContext = clientContext.PublishStreamContext;
+            var streamId = chunkStreamContext.MessageHeader.MessageStreamId;
+            var publishStreamContext = clientContext.GetStream(streamId)?.PublishContext;
 
             if (publishStreamContext == null)
             {
@@ -69,7 +70,6 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Media
 
             await BroadcastVideoMessageToSubscribersAsync(
                 chunkStreamContext,
-                clientContext,
                 publishStreamContext,
                 payloadBuffer.MoveTo(0),
                 IsSkippable(avcPacketType));
@@ -79,24 +79,22 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Media
 
         private async ValueTask BroadcastVideoMessageToSubscribersAsync(
             IRtmpChunkStreamContext chunkStreamContext,
-            IRtmpClientSessionContext clientContext,
             IRtmpPublishStreamContext publishStreamContext,
             IDataBuffer payloadBuffer,
             bool isSkippable)
         {
-            var subscribers = _streamManager.GetSubscribers(publishStreamContext.StreamPath);
-            await BroadcastVideoMessageToSubscribersAsync(chunkStreamContext, clientContext, publishStreamContext, isSkippable, payloadBuffer, subscribers);
+            var subscribers = _streamManager.GetSubscribeStreamContexts(publishStreamContext.StreamPath);
+            await BroadcastVideoMessageToSubscribersAsync(chunkStreamContext, publishStreamContext, isSkippable, payloadBuffer, subscribers);
         }
 
         private async ValueTask BroadcastVideoMessageToSubscribersAsync(
             IRtmpChunkStreamContext chunkStreamContext,
-            IRtmpClientSessionContext clientContext,
             IRtmpPublishStreamContext publishStreamContext,
             bool isSkippable,
             IDataBuffer payloadBuffer,
-            IReadOnlyList<IRtmpClientSessionContext> subscribers)
+            IReadOnlyList<IRtmpSubscribeStreamContext> subscribers)
         {
-            clientContext.UpdateTimestamp(chunkStreamContext.MessageHeader.Timestamp, MediaType.Video);
+            publishStreamContext.Stream.UpdateTimestamp(chunkStreamContext.MessageHeader.Timestamp, MediaType.Video);
 
             await _mediaMessageBroadcaster.BroadcastMediaMessageAsync(
                 publishStreamContext,

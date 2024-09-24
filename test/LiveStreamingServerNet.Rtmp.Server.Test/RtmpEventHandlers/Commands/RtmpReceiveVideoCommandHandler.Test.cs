@@ -27,9 +27,9 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
             // Arrange
             var command = new RtmpReceiveVideoCommand(0, new Dictionary<string, object>(), flag);
 
-            var subscriptionContext = Substitute.For<IRtmpStreamSubscriptionContext>();
+            var subscriptionContext = Substitute.For<IRtmpSubscribeStreamContext>();
 
-            _clientContext.StreamSubscriptionContext.Returns(subscriptionContext);
+            _clientContext.SubscribeStreamContext.Returns(subscriptionContext);
 
             // Act
             var result = await _sut.HandleAsync(_chunkStreamContext, _clientContext, command, CancellationToken.None);
@@ -47,7 +47,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
             // Arrange
             var command = new RtmpReceiveVideoCommand(0, new Dictionary<string, object>(), flag);
 
-            _clientContext.StreamSubscriptionContext.Returns((IRtmpStreamSubscriptionContext?)null);
+            _clientContext.SubscribeStreamContext.Returns((IRtmpSubscribeStreamContext?)null);
 
             // Act
             var result = await _sut.HandleAsync(_chunkStreamContext, _clientContext, command, CancellationToken.None);
