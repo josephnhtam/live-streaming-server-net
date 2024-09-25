@@ -77,8 +77,8 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Media
             IDataBuffer payloadBuffer,
             bool isSkippable)
         {
-            var subscribers = _streamManager.GetSubscribeStreamContexts(publishStreamContext.StreamPath);
-            await BroadcastAudioMessageToSubscribersAsync(chunkStreamContext, publishStreamContext, isSkippable, payloadBuffer, subscribers);
+            var subscribeStreamContexts = _streamManager.GetSubscribeStreamContexts(publishStreamContext.StreamPath);
+            await BroadcastAudioMessageToSubscribersAsync(chunkStreamContext, publishStreamContext, isSkippable, payloadBuffer, subscribeStreamContexts);
         }
 
         private async ValueTask BroadcastAudioMessageToSubscribersAsync(
@@ -86,13 +86,13 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Media
             IRtmpPublishStreamContext publishStreamContext,
             bool isSkippable,
             IDataBuffer payloadBuffer,
-            IReadOnlyList<IRtmpSubscribeStreamContext> subscribers)
+            IReadOnlyList<IRtmpSubscribeStreamContext> subscribeStreamContexts)
         {
             publishStreamContext.Stream.UpdateTimestamp(chunkStreamContext.MessageHeader.Timestamp, MediaType.Audio);
 
             await _mediaMessageBroadcaster.BroadcastMediaMessageAsync(
                 publishStreamContext,
-                subscribers,
+                subscribeStreamContexts,
                 MediaType.Audio,
                 chunkStreamContext.MessageHeader.Timestamp,
                 isSkippable,

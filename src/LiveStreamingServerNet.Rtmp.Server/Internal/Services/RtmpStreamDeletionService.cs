@@ -53,11 +53,11 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
         }
 
         private void SendStreamUnpublishNotify(
-            IReadOnlyList<IRtmpSubscribeStreamContext> subscribers,
+            IReadOnlyList<IRtmpSubscribeStreamContext> subscribeStreamContexts,
             AmfEncodingType amfEncodingType = AmfEncodingType.Amf0)
         {
             foreach (var subscriberGroup in
-                subscribers.Where(x => x.Stream?.SubscribeContext != null)
+                subscribeStreamContexts.Where(x => x.Stream?.SubscribeContext != null)
                            .GroupBy(x => x.Stream!.Id))
             {
                 _commandMessageSender.SendOnStatusCommandMessage(
@@ -71,12 +71,12 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
         }
 
         private void SendSubscriptionStoppedMessage(
-            IRtmpSubscribeStreamContext subscriber,
+            IRtmpSubscribeStreamContext subscribeStreamContext,
             AmfEncodingType amfEncodingType = AmfEncodingType.Amf0)
         {
             _commandMessageSender.SendOnStatusCommandMessage(
-                subscriber.Stream.ClientContext,
-                subscriber.Stream.Id,
+                subscribeStreamContext.Stream.ClientContext,
+                subscribeStreamContext.Stream.Id,
                 RtmpArgumentValues.Status,
                 RtmpStatusCodes.PlayUnpublishNotify,
                 "Stream is stopped.",
