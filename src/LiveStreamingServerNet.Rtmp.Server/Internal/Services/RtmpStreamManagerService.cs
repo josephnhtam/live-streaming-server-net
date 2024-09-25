@@ -12,13 +12,13 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
         private readonly Dictionary<string, List<IRtmpSubscribeStreamContext>> _subscribeStreamContexts = new();
 
         public PublishingStreamResult StartPublishing(
-            IRtmpStream stream, string streamPath, IReadOnlyDictionary<string, string> streamArguments, out IList<IRtmpSubscribeStreamContext> existingSubscribers)
+            IRtmpStream stream, string streamPath, IReadOnlyDictionary<string, string> streamArguments, out IList<IRtmpSubscribeStreamContext> subscribeStreamContexts)
         {
             lock (_publishingSyncLock)
             {
                 lock (_subscribingSyncLock)
                 {
-                    existingSubscribers = null!;
+                    subscribeStreamContexts = null!;
 
                     if (stream.PublishContext != null)
                         return PublishingStreamResult.AlreadyPublishing;
@@ -32,7 +32,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
                     var publishStreamContext = stream.CreatePublishContext(streamPath, streamArguments);
                     _publishStreamContexts.Add(streamPath, publishStreamContext);
 
-                    existingSubscribers = _subscribeStreamContexts.GetValueOrDefault(streamPath)?.ToList() ??
+                    subscribeStreamContexts = _subscribeStreamContexts.GetValueOrDefault(streamPath)?.ToList() ??
                         new List<IRtmpSubscribeStreamContext>();
 
                     return PublishingStreamResult.Succeeded;
@@ -40,19 +40,19 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
             }
         }
 
-        public bool StopPublishing(IRtmpPublishStreamContext publishStreamContext, out IList<IRtmpSubscribeStreamContext> existingSubscribers)
+        public bool StopPublishing(IRtmpPublishStreamContext publishStreamContext, out IList<IRtmpSubscribeStreamContext> subscribeStreamContexts)
         {
             lock (_publishingSyncLock)
             {
                 lock (_subscribingSyncLock)
                 {
-                    existingSubscribers = null!;
+                    subscribeStreamContexts = null!;
 
                     var streamPath = publishStreamContext.StreamPath;
 
                     _publishStreamContexts.Remove(streamPath);
 
-                    existingSubscribers = _subscribeStreamContexts.GetValueOrDefault(streamPath)?.ToList() ??
+                    subscribeStreamContexts = _subscribeStreamContexts.GetValueOrDefault(streamPath)?.ToList() ??
                         new List<IRtmpSubscribeStreamContext>();
 
                     return true;

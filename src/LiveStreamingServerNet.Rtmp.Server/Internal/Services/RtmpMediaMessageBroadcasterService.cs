@@ -74,7 +74,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
 
         public async ValueTask BroadcastMediaMessageAsync(
             IRtmpPublishStreamContext publishStreamContext,
-            IReadOnlyList<IRtmpSubscribeStreamContext> subscribers,
+            IReadOnlyList<IRtmpSubscribeStreamContext> subscribeStreamContexts,
             MediaType mediaType,
             uint timestamp,
             bool isSkippable,
@@ -82,12 +82,12 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
         {
             await _interception.ReceiveMediaMessageAsync(publishStreamContext.StreamPath, mediaType, payloadBuffer, timestamp, isSkippable);
 
-            subscribers = subscribers.Where((subscriber) => FilterSubscribers(subscriber, isSkippable)).ToList();
+            subscribeStreamContexts = subscribeStreamContexts.Where((subscriber) => FilterSubscribers(subscriber, isSkippable)).ToList();
 
-            if (subscribers.Any())
-                EnqueueMediaPackages(subscribers, mediaType, payloadBuffer, timestamp, isSkippable);
+            if (subscribeStreamContexts.Any())
+                EnqueueMediaPackages(subscribeStreamContexts, mediaType, payloadBuffer, timestamp, isSkippable);
 
-            bool FilterSubscribers(IRtmpSubscribeStreamContext subscriber, bool isSkippable)
+            bool FilterSubscribers(IRtmpSubscribeStreamContext subscribeStreamContext, bool isSkippable)
             {
                 if (!isSkippable)
                     return true;
@@ -95,11 +95,11 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
                 switch (mediaType)
                 {
                     case MediaType.Audio:
-                        if (!subscriber.IsReceivingAudio)
+                        if (!subscribeStreamContext.IsReceivingAudio)
                             return false;
                         break;
                     case MediaType.Video:
-                        if (!subscriber.IsReceivingVideo)
+                        if (!subscribeStreamContext.IsReceivingVideo)
                             return false;
                         break;
                 }
@@ -109,7 +109,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
         }
 
         private void EnqueueMediaPackages(
-            IReadOnlyList<IRtmpSubscribeStreamContext> subscribersList,
+            IReadOnlyList<IRtmpSubscribeStreamContext> subscribeStreamContexts,
             MediaType type,
             IDataBuffer payloadBuffer,
             uint timestamp,
@@ -121,7 +121,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
                 RtmpConstants.VideoMessageChunkStreamId :
                 RtmpConstants.AudioMessageChunkStreamId);
 
-            foreach (var subscribersGroup in subscribersList.GroupBy(x => (x.Stream.Id, x.Stream.ClientContext.OutChunkSize)))
+            foreach (var subscribersGroup in subscribeStreamContexts.GroupBy(x => (x.Stream.Id, x.Stream.ClientContext.OutChunkSize)))
             {
                 var streamId = subscribersGroup.Key.Id;
                 var outChunkSize = subscribersGroup.Key.OutChunkSize;
@@ -227,14 +227,6 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
 
             while (context.ReadPackage(out var package))
             {
-                if (packages.First().StreamContext.Stream.Id != package.StreamContext.Stream.Id)
-                {
-                    await FlushAsync(clientContext, packages);
-
-                    packages.Clear();
-                    packages.Add(package);
-                }
-
                 if (package.StreamContext.Stream.UpdateTimestamp(package.Timestamp, package.MediaType) || !package.IsSkippable)
                     packages.Add(package);
                 else
