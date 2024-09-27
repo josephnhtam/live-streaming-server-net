@@ -164,7 +164,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
             uint timestamp,
             bool isHeader)
         {
-            if (!subscribeStreamContext.Stream.UpdateTimestamp(timestamp, type) && !isHeader)
+            if (!subscribeStreamContext.UpdateTimestamp(timestamp, type) && !isHeader)
                 return;
 
             var basicHeader = new RtmpChunkBasicHeader(

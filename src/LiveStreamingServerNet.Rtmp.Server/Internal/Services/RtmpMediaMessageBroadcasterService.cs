@@ -210,7 +210,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
         {
             var streamContext = package.StreamContext;
 
-            if (!streamContext.Stream.UpdateTimestamp(package.Timestamp, package.MediaType) && package.IsSkippable)
+            if (!streamContext.UpdateTimestamp(package.Timestamp, package.MediaType) && package.IsSkippable)
                 return;
 
             if (_config.MediaPackageBatchWindow > TimeSpan.Zero)
@@ -227,7 +227,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
 
             while (context.ReadPackage(out var package))
             {
-                if (package.StreamContext.Stream.UpdateTimestamp(package.Timestamp, package.MediaType) || !package.IsSkippable)
+                if (package.StreamContext.UpdateTimestamp(package.Timestamp, package.MediaType) || !package.IsSkippable)
                     packages.Add(package);
                 else
                     package.RentedPayload.Unclaim();

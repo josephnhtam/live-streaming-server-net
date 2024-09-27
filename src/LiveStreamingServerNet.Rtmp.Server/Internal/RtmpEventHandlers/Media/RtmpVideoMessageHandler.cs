@@ -94,7 +94,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Media
             IDataBuffer payloadBuffer,
             IReadOnlyList<IRtmpSubscribeStreamContext> subscribeStreamContexts)
         {
-            publishStreamContext.Stream.UpdateTimestamp(chunkStreamContext.MessageHeader.Timestamp, MediaType.Video);
+            publishStreamContext.UpdateTimestamp(chunkStreamContext.MessageHeader.Timestamp, MediaType.Video);
 
             await _mediaMessageBroadcaster.BroadcastMediaMessageAsync(
                 publishStreamContext,
