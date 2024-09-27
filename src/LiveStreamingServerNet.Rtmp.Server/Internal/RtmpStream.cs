@@ -60,10 +60,10 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
         private void ValidateContextCreation()
         {
             if (PublishContext != null)
-                throw new InvalidOperationException("Publish context does not exist.");
+                throw new InvalidOperationException("Publish context already exists.");
 
             if (SubscribeContext != null)
-                throw new InvalidOperationException("Subscribe context does not exist.");
+                throw new InvalidOperationException("Subscribe context already exists.");
         }
 
         public void Delete()
