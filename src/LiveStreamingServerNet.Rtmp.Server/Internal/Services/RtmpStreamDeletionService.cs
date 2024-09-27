@@ -35,30 +35,32 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
 
         private async ValueTask StopPublishingStreamIfNeededAsync(IRtmpStream stream)
         {
-            if (stream.PublishContext == null || !_rtmpStreamManager.StopPublishing(stream.PublishContext, out var existingSubscriber))
+            var publishStreamContext = stream.PublishContext;
+
+            if (publishStreamContext == null || !_rtmpStreamManager.StopPublishing(publishStreamContext, out var existingSubscriber))
                 return;
 
             _userControlMessageSender.SendStreamEofMessage(existingSubscriber.AsReadOnly());
             SendStreamUnpublishNotify(existingSubscriber.AsReadOnly());
-            await _eventDispatcher.RtmpStreamUnpublishedAsync(stream.PublishContext.Stream.ClientContext, stream.PublishContext.StreamPath);
+            await _eventDispatcher.RtmpStreamUnpublishedAsync(stream.ClientContext, publishStreamContext.StreamPath);
         }
 
         private async ValueTask StopSubscribingStreamIfNeededAsync(IRtmpStream stream)
         {
-            if (stream.SubscribeContext == null || !_rtmpStreamManager.StopSubscribing(stream.SubscribeContext))
+            var subscribeStreamContext = stream.SubscribeContext;
+
+            if (subscribeStreamContext == null || !_rtmpStreamManager.StopSubscribing(subscribeStreamContext))
                 return;
 
-            SendSubscriptionStoppedMessage(stream.SubscribeContext);
-            await _eventDispatcher.RtmpStreamUnsubscribedAsync(stream.SubscribeContext.Stream.ClientContext, stream.SubscribeContext.StreamPath);
+            SendSubscriptionStoppedMessage(subscribeStreamContext);
+            await _eventDispatcher.RtmpStreamUnsubscribedAsync(stream.ClientContext, subscribeStreamContext.StreamPath);
         }
 
         private void SendStreamUnpublishNotify(
             IReadOnlyList<IRtmpSubscribeStreamContext> subscribeStreamContexts,
             AmfEncodingType amfEncodingType = AmfEncodingType.Amf0)
         {
-            foreach (var subscriberGroup in
-                subscribeStreamContexts.Where(x => x.Stream?.SubscribeContext != null)
-                           .GroupBy(x => x.Stream!.Id))
+            foreach (var subscriberGroup in subscribeStreamContexts.GroupBy(x => x.Stream.Id))
             {
                 _commandMessageSender.SendOnStatusCommandMessage(
                     subscriberGroup.Select(x => x.Stream.ClientContext).ToList(),

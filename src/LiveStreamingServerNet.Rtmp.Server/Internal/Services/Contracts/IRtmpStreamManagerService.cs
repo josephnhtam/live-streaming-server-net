@@ -7,7 +7,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services.Contracts
         PublishingStreamResult StartPublishing(IRtmpStream stream, string streamPath, IReadOnlyDictionary<string, string> streamArguments, out IList<IRtmpSubscribeStreamContext> subscribeStreamContexts);
         bool StopPublishing(IRtmpPublishStreamContext publishStreamContext, out IList<IRtmpSubscribeStreamContext> subscribeStreamContexts);
 
-        SubscribingStreamResult StartSubscribing(IRtmpStream stream, uint chunkStreamId, string streamPath, IReadOnlyDictionary<string, string> streamArguments);
+        SubscribingStreamResult StartSubscribing(IRtmpStream stream, string streamPath, IReadOnlyDictionary<string, string> streamArguments);
         bool StopSubscribing(IRtmpSubscribeStreamContext subscribeStreamContext);
 
         IReadOnlyList<string> GetStreamPaths();
