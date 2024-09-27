@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>net8.0;net7.0</TargetFrameworks>
@@ -31,7 +31,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\LiveStreamingServerNet.Rtmp.Server\LiveStreamingServerNet.Rtmp.Server.csproj" />
-    <ProjectReference Include="..\LiveStreamingServerNet.Rtmp.Test\LiveStreamingServerNet.Rtmp.Test.csproj" />
   </ItemGroup>
-  
+
 </Project>

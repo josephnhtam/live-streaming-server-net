@@ -1,15 +1,10 @@
 ﻿using LiveStreamingServerNet.Rtmp.Internal;
 using NSubstitute;
 
-namespace LiveStreamingServerNet.Rtmp.Server.Test.Utilities
+namespace LiveStreamingServerNet.Rtmp.Test.Utilities
 {
     public static class Helpers
     {
-        public static uint CreateRandomChunkStreamId()
-        {
-            return (uint)Random.Shared.Next(2, ushort.MaxValue + 1);
-        }
-
         public static List<object?> CreateExpectedCommandProperties(string level, string code)
         {
             return Arg.Is<List<object?>>(x =>
