@@ -46,11 +46,16 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
             {
                 lock (_subscribingSyncLock)
                 {
-                    subscribeStreamContexts = null!;
-
                     var streamPath = publishStreamContext.StreamPath;
 
-                    _publishStreamContexts.Remove(streamPath);
+                    if (publishStreamContext.Stream.PublishContext != publishStreamContext ||
+                        !_publishStreamContexts.Remove(streamPath))
+                    {
+                        subscribeStreamContexts = new List<IRtmpSubscribeStreamContext>();
+                        return false;
+                    }
+
+                    publishStreamContext.Stream.RemovePublishContext();
 
                     subscribeStreamContexts = _subscribeStreamContexts.GetValueOrDefault(streamPath)?.ToList() ??
                         new List<IRtmpSubscribeStreamContext>();
@@ -69,7 +74,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
         }
 
         public SubscribingStreamResult StartSubscribing(
-            IRtmpStream stream, uint chunkStreamId, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
+            IRtmpStream stream, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
             lock (_publishingSyncLock)
             {
@@ -87,7 +92,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
                         _subscribeStreamContexts[streamPath] = subscribers;
                     }
 
-                    var subscribeStreamContext = stream.CreateSubscribeContext(chunkStreamId, streamPath, streamArguments);
+                    var subscribeStreamContext = stream.CreateSubscribeContext(streamPath, streamArguments);
                     subscribers.Add(subscribeStreamContext);
 
                     return SubscribingStreamResult.Succeeded;
@@ -101,8 +106,16 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
             {
                 var streamPath = subscribeStreamContext.StreamPath;
 
-                if (_subscribeStreamContexts.TryGetValue(streamPath, out var subscribers) &&
-                    subscribers.Remove(subscribeStreamContext) && subscribers.Count == 0)
+                if (subscribeStreamContext.Stream.SubscribeContext != subscribeStreamContext ||
+                    !_subscribeStreamContexts.TryGetValue(streamPath, out var subscribers) ||
+                    !subscribers.Remove(subscribeStreamContext))
+                {
+                    return false;
+                }
+
+                subscribeStreamContext.Stream.RemoveSubscribeContext();
+
+                if (subscribers.Count == 0)
                     _subscribeStreamContexts.Remove(streamPath);
 
                 return true;

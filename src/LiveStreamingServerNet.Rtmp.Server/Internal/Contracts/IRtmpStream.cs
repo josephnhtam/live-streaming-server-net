@@ -14,7 +14,10 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Contracts
         IRtmpSubscribeStreamContext? SubscribeContext { get; }
 
         IRtmpPublishStreamContext CreatePublishContext(string streamPath, IReadOnlyDictionary<string, string> streamArguments);
-        IRtmpSubscribeStreamContext CreateSubscribeContext(uint chunkStreamId, string streamPath, IReadOnlyDictionary<string, string> streamArguments);
+        IRtmpSubscribeStreamContext CreateSubscribeContext(string streamPath, IReadOnlyDictionary<string, string> streamArguments);
+
+        void RemovePublishContext();
+        void RemoveSubscribeContext();
 
         bool UpdateTimestamp(uint timestamp, MediaType mediaType);
         void Delete();

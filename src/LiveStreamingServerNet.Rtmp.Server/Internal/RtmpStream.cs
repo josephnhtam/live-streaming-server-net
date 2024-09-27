@@ -33,16 +33,45 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
 
         public IRtmpPublishStreamContext CreatePublishContext(string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
-            var newContext = new RtmpPublishStreamContext(this, streamPath, streamArguments, _bufferPool);
-            PublishContext = newContext;
-            return newContext;
+            ValidateContextCreation();
+
+            PublishContext = new RtmpPublishStreamContext(this, streamPath, streamArguments, _bufferPool);
+            return PublishContext;
         }
 
-        public IRtmpSubscribeStreamContext CreateSubscribeContext(uint chunkStreamId, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
+        public IRtmpSubscribeStreamContext CreateSubscribeContext(string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
-            var newContext = new RtmpSubscribeStreamContext(this, chunkStreamId, streamPath, streamArguments);
-            SubscribeContext = newContext;
-            return newContext;
+            ValidateContextCreation();
+
+            SubscribeContext = new RtmpSubscribeStreamContext(this, streamPath, streamArguments);
+            return SubscribeContext;
+        }
+
+        public void RemovePublishContext()
+        {
+            if (PublishContext != null)
+            {
+                PublishContext.Dispose();
+                PublishContext = null;
+            }
+        }
+
+        public void RemoveSubscribeContext()
+        {
+            if (SubscribeContext != null)
+            {
+                SubscribeContext.Dispose();
+                SubscribeContext = null;
+            }
+        }
+
+        private void ValidateContextCreation()
+        {
+            if (PublishContext != null)
+                throw new InvalidOperationException("Publish context does not exist.");
+
+            if (SubscribeContext != null)
+                throw new InvalidOperationException("Subscribe context does not exist.");
         }
 
         public bool UpdateTimestamp(uint timestamp, MediaType mediaType)
@@ -79,11 +108,8 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
         {
             _onDelete?.Invoke(this);
 
-            if (PublishContext != null)
-                PublishContext.Dispose();
-
-            if (SubscribeContext != null)
-                SubscribeContext.Dispose();
+            RemovePublishContext();
+            RemoveSubscribeContext();
         }
     }
 
@@ -149,7 +175,6 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
     internal class RtmpSubscribeStreamContext : IRtmpSubscribeStreamContext
     {
         public IRtmpStream Stream { get; }
-        public uint ChunkStreamId { get; }
         public string StreamPath { get; }
         public IReadOnlyDictionary<string, string> StreamArguments { get; }
 
@@ -160,10 +185,9 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
         private readonly TaskCompletionSource _initializationTcs;
         private readonly Task _initializationTask;
 
-        public RtmpSubscribeStreamContext(IRtmpStream stream, uint chunkStreamId, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
+        public RtmpSubscribeStreamContext(IRtmpStream stream, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
             Stream = stream;
-            ChunkStreamId = chunkStreamId;
             StreamPath = streamPath;
             StreamArguments = new Dictionary<string, string>(streamArguments);
 

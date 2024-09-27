@@ -108,25 +108,25 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
             string streamPath,
             IReadOnlyDictionary<string, string> streamArguments)
         {
-            var startSubscribingResult = _streamManager.StartSubscribing(stream, chunkStreamContext.ChunkStreamId, streamPath, streamArguments);
+            var startSubscribingResult = _streamManager.StartSubscribing(stream, streamPath, streamArguments);
 
             switch (startSubscribingResult)
             {
                 case SubscribingStreamResult.Succeeded:
                     _logger.SubscriptionStarted(stream.ClientContext.Client.Id, streamPath);
-                    SendSubscriptionStartedMessage(stream, chunkStreamContext);
+                    SendSubscriptionStartedMessage(stream);
                     SendCachedStreamMessages(stream, chunkStreamContext);
                     await CompleteSubscriptionInitializationAsync(stream);
                     return true;
 
                 case SubscribingStreamResult.AlreadySubscribing:
                     _logger.AlreadySubscribing(stream.ClientContext.Client.Id, streamPath);
-                    SendBadConnectionCommandMessage(stream, chunkStreamContext, "Already subscribing.");
+                    SendBadConnectionCommandMessage(stream, "Already subscribing.");
                     return false;
 
                 case SubscribingStreamResult.AlreadyPublishing:
                     _logger.AlreadyPublishing(stream.ClientContext.Client.Id, streamPath);
-                    SendBadConnectionCommandMessage(stream, chunkStreamContext, "Already publishing.");
+                    SendBadConnectionCommandMessage(stream, "Already publishing.");
                     return false;
 
                 default:
@@ -179,7 +179,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
                 reason);
         }
 
-        private void SendSubscriptionStartedMessage(IRtmpStream stream, IRtmpChunkStreamContext chunkStreamContext)
+        private void SendSubscriptionStartedMessage(IRtmpStream stream)
         {
             _commandMessageSender.SendOnStatusCommandMessage(
                 stream.ClientContext,
@@ -189,7 +189,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
                 "Stream subscribed.");
         }
 
-        private void SendBadConnectionCommandMessage(IRtmpStream stream, IRtmpChunkStreamContext chunkStreamContext, string reason)
+        private void SendBadConnectionCommandMessage(IRtmpStream stream, string reason)
         {
             _commandMessageSender.SendOnStatusCommandMessage(
                 stream.ClientContext,
