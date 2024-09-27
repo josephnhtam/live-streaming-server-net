@@ -1,9 +1,10 @@
-﻿using FluentAssertions;
+﻿using AutoFixture;
+using FluentAssertions;
 using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.Networking.Server.Internal;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpHeaders;
 using LiveStreamingServerNet.Rtmp.Internal.Services;
-using LiveStreamingServerNet.Rtmp.Server.Test.Utilities;
+using LiveStreamingServerNet.Rtmp.Test.Utilities;
 using LiveStreamingServerNet.Utilities.Buffers;
 using System.Security.Cryptography;
 
@@ -22,10 +23,11 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
         public async Task Write_Should_SeparateChunkType0MessageIntoChunks(uint timestamp, int payloadSize, int chunkSize)
         {
             // Arrange
-            var expectedChunkStreamId = Helpers.CreateRandomChunkStreamId();
+            var fixture = new Fixture();
+            var expectedChunkStreamId = fixture.Create<uint>();
             var expectedTimestamp = timestamp;
-            var expectedMessageTypeId = (byte)Random.Shared.Next();
-            var expectedMessageStreamId = (uint)Random.Shared.Next();
+            var expectedMessageTypeId = fixture.Create<byte>();
+            var expectedMessageStreamId = fixture.Create<uint>();
             var expectedPayload = RandomNumberGenerator.GetBytes(payloadSize);
             var expectedChunkSize = chunkSize;
 
@@ -42,7 +44,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             service.Write(streamBuffer, basicHeader, messageHeader, payloadBuffer.MoveTo(0), (uint)expectedChunkSize);
 
             // Assert
-            await using var stream = new ClientNetworkStream(1, new MemoryStream(streamBuffer.UnderlyingBuffer));
+            await using var stream = new NetworkStream(new MemoryStream(streamBuffer.UnderlyingBuffer));
             using var targetBuffer = new DataBuffer();
 
             var remainingPayloadSize = expectedPayload.Length;

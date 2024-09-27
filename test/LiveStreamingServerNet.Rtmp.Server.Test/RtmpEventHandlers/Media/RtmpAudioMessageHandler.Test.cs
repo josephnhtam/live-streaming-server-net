@@ -52,7 +52,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Media
         public async Task HandleAsync_Should_ReturnFalse_When_StreamNotYetCreated()
         {
             // Arrange
-            _clientContext.PublishStreamContext.Returns((IRtmpPublishStreamContext?)null);
+            _clientContext.GetStream(Arg.Any<uint>()).Returns((IRtmpStream?)null);
 
             // Act
             var result = await _sut.HandleAsync(_chunkStreamContext, _clientContext, _dataBuffer, default);
@@ -75,16 +75,25 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Media
         {
             // Arrange
             var stremaPath = _fixture.Create<string>();
+            var streamId = _fixture.Create<uint>();
 
-            var subscriber = Substitute.For<IRtmpClientSessionContext>();
-            var subscribers = new List<IRtmpClientSessionContext>() { subscriber };
+            var subscribeStreamContext = Substitute.For<IRtmpSubscribeStreamContext>();
+            var subscribeStreamContexts = new List<IRtmpSubscribeStreamContext>() { subscribeStreamContext };
 
+            var publishStream = Substitute.For<IRtmpStream>();
             var publishStreamContext = Substitute.For<IRtmpPublishStreamContext>();
+
+            publishStream.Id.Returns(streamId);
+            publishStream.ClientContext.Returns(_clientContext);
+            publishStream.PublishContext.Returns(publishStreamContext);
             publishStreamContext.StreamPath.Returns(stremaPath);
+            publishStreamContext.Stream.Returns(publishStream);
             publishStreamContext.GroupOfPicturesCacheActivated.Returns(gopCacheActivated);
 
-            _clientContext.PublishStreamContext.Returns(publishStreamContext);
-            _streamManager.GetSubscribeStreamContexts(stremaPath).Returns(subscribers);
+            _chunkStreamContext.MessageHeader.MessageStreamId.Returns(streamId);
+
+            _clientContext.GetStream(streamId).Returns(publishStream);
+            _streamManager.GetSubscribeStreamContexts(stremaPath).Returns(subscribeStreamContexts);
 
             var firstByte = (byte)((byte)audioCodec << 4);
             _dataBuffer.Write(firstByte);
@@ -112,11 +121,11 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Media
             _ = _mediaMessageCacher.Received(gopCacheActivated && isPictureCachable ? 1 : 0)
                 .CachePictureAsync(publishStreamContext, MediaType.Audio, _dataBuffer, _chunkStreamContext.MessageHeader.Timestamp);
 
-            _clientContext.Received(1).UpdateTimestamp(_chunkStreamContext.MessageHeader.Timestamp, MediaType.Audio);
+            publishStream.Received(1).UpdateTimestamp(_chunkStreamContext.MessageHeader.Timestamp, MediaType.Audio);
 
             await _mediaMessageBroadcaster.Received(1).BroadcastMediaMessageAsync(
                 publishStreamContext,
-                subscribers,
+                subscribeStreamContexts,
                 MediaType.Audio,
                 _chunkStreamContext.MessageHeader.Timestamp,
                 isSkippable,

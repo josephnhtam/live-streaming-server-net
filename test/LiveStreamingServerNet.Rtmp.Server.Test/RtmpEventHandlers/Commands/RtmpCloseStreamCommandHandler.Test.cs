@@ -26,35 +26,40 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
         }
 
         [Fact]
-        public async Task HandleAsync_Should_DeletesStream_When_StreamIdIsNotNull()
+        public async Task HandleAsync_Should_DeletesStream_When_StreamExists()
+        {
+            // Arrange
+            var command = new RtmpCloseStreamCommand(0, new Dictionary<string, object>());
+            var stream = Substitute.For<IRtmpStream>();
+            var streamId = _fixture.Create<uint>();
+
+            _chunkStreamContext.MessageHeader.MessageStreamId.Returns(streamId);
+            _clientContext.GetStream(streamId).Returns(stream);
+
+            // Act
+            var result = await _sut.HandleAsync(_chunkStreamContext, _clientContext, command, default);
+
+            // Assert
+            result.Should().BeTrue();
+            _ = _streamDeletionService.Received(1).DeleteStreamAsync(stream);
+        }
+
+        [Fact]
+        public async Task HandleAsync_Should_NotDeletesStream_When_StreamDoesntExist()
         {
             // Arrange
             var command = new RtmpCloseStreamCommand(0, new Dictionary<string, object>());
             var streamId = _fixture.Create<uint>();
-            _clientContext.StreamId.Returns(streamId);
+
+            _chunkStreamContext.MessageHeader.MessageStreamId.Returns(streamId);
+            _clientContext.GetStream(streamId).Returns((IRtmpStream?)null);
 
             // Act
             var result = await _sut.HandleAsync(_chunkStreamContext, _clientContext, command, default);
 
             // Assert
             result.Should().BeTrue();
-            _ = _streamDeletionService.Received(1).DeleteStreamAsync(_clientContext);
-        }
-
-        [Fact]
-        public async Task HandleAsync_Should_NotDeletesStream_When_StreamIdIsNotNull()
-        {
-            // Arrange
-            var command = new RtmpCloseStreamCommand(0, new Dictionary<string, object>());
-            uint? streamId = null;
-            _clientContext.StreamId.Returns(streamId);
-
-            // Act
-            var result = await _sut.HandleAsync(_chunkStreamContext, _clientContext, command, default);
-
-            // Assert
-            result.Should().BeTrue();
-            _ = _streamDeletionService.DidNotReceive().DeleteStreamAsync(Arg.Any<IRtmpClientSessionContext>());
+            _ = _streamDeletionService.DidNotReceive().DeleteStreamAsync(Arg.Any<IRtmpStream>());
         }
     }
 }

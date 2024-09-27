@@ -2,7 +2,6 @@
 using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.Services.Contracts;
 using LiveStreamingServerNet.Rtmp.Server.Configurations;
-using LiveStreamingServerNet.Rtmp.Server.Internal;
 using LiveStreamingServerNet.Rtmp.Server.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Server.Internal.MediaPackageDiscarding.Contracts;
 using LiveStreamingServerNet.Rtmp.Server.Internal.Services;
@@ -56,23 +55,25 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
         public async Task BroadcastMediaMessageAsync_Should_SendMediaMessageToClient_After_ClientSubscriptionIsInitialized()
         {
             // Arrange
-            var client = Substitute.For<ISessionHandle>();
+            var subscriber = Substitute.For<ISessionHandle>();
 
-            var streamContext = Substitute.For<IRtmpSubscribeStreamContext>();
-            streamContext.IsReceivingVideo.Returns(true);
-            streamContext.IsReceivingAudio.Returns(true);
+            var subscriberContext = Substitute.For<IRtmpClientSessionContext>();
+            subscriberContext.Client.Returns(subscriber);
 
-            var clientContext = Substitute.For<IRtmpClientSessionContext>();
-            clientContext.Client.Returns(client);
-            clientContext.SubscribeStreamContext.Returns(streamContext);
+            var subscribeStream = Substitute.For<IRtmpStream>();
+            var subscribeStreamContext = Substitute.For<IRtmpSubscribeStreamContext>();
+            subscribeStream.Id.Returns(_fixture.Create<uint>());
+            subscribeStream.ClientContext.Returns(subscriberContext);
+            subscribeStreamContext.IsReceivingVideo.Returns(true);
+            subscribeStreamContext.IsReceivingAudio.Returns(true);
+            subscribeStreamContext.Stream.Returns(subscribeStream);
 
-            var publishStreamContext = new RtmpPublishStreamContext(
-                _fixture.Create<uint>(),
-                _fixture.Create<string>(),
-                _fixture.Create<Dictionary<string, string>>(),
-                null);
+            var publishStream = Substitute.For<IRtmpStream>();
+            var publishStreamContext = Substitute.For<IRtmpPublishStreamContext>();
+            publishStream.Id.Returns(_fixture.Create<uint>());
+            publishStream.PublishContext.Returns(publishStreamContext);
 
-            var subscribers = new List<IRtmpClientSessionContext> { clientContext };
+            var subscribeStreamContexts = new List<IRtmpSubscribeStreamContext> { subscribeStreamContext };
             var mediaType = _fixture.Create<MediaType>();
             var timestamp = _fixture.Create<uint>();
             var isSkippable = false;
@@ -80,19 +81,19 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
 
             var tcs = new TaskCompletionSource();
 
-            client.When(x => x.SendAsync(Arg.Any<IRentedBuffer>())).Do(_ => tcs.TrySetResult());
+            subscriber.When(x => x.SendAsync(Arg.Any<IRentedBuffer>())).Do(_ => tcs.TrySetResult());
 
             // Act
-            _sut.RegisterClient(clientContext);
-            await _sut.BroadcastMediaMessageAsync(publishStreamContext, subscribers, mediaType, timestamp, isSkippable, payloadBuffer);
+            _sut.RegisterClient(subscriberContext);
+            await _sut.BroadcastMediaMessageAsync(publishStreamContext, subscribeStreamContexts, mediaType, timestamp, isSkippable, payloadBuffer);
 
             // Assert
             await tcs.Task;
 
             Received.InOrder(() =>
             {
-                streamContext.Received(1).UntilInitializationComplete();
-                client.Received(1).SendAsync(Arg.Any<IRentedBuffer>());
+                subscribeStreamContext.Received(1).UntilInitializationComplete();
+                subscriber.Received(1).SendAsync(Arg.Any<IRentedBuffer>());
             });
         }
     }

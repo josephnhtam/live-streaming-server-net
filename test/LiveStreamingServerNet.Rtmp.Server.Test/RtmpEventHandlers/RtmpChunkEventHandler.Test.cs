@@ -10,7 +10,7 @@ using LiveStreamingServerNet.Rtmp.Server.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers;
 using LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEvents;
 using LiveStreamingServerNet.Rtmp.Server.Internal.Services.Contracts;
-using LiveStreamingServerNet.Rtmp.Server.Test.Utilities;
+using LiveStreamingServerNet.Rtmp.Test.Utilities;
 using LiveStreamingServerNet.Utilities.Buffers;
 using LiveStreamingServerNet.Utilities.Buffers.Configurations;
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
@@ -51,7 +51,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers
                     tcs.SetResult();
                 });
 
-            var networkStream = new ClientNetworkStream(1, stream);
+            var networkStream = new NetworkStream(stream);
             var chunkMessageAggregator = new RtmpChunkMessageAggregatorService(dataBufferPool);
             var sut = new RtmpChunkEventHandler(dispatcher, protocolControl, chunkMessageAggregator, logger);
 
@@ -104,7 +104,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers
 
             {
                 var chunkSize = 128u;
-                var chunkStreamId = Helpers.CreateRandomChunkStreamId();
+                var chunkStreamId = fixture.Create<uint>();
 
                 var streamContext = new RtmpChunkStreamContext(chunkStreamId);
                 var clientContext = Substitute.For<IRtmpClientSessionContext>();
@@ -130,7 +130,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers
 
             {
                 var chunkSize = 2000u;
-                var chunkStreamId = Helpers.CreateRandomChunkStreamId();
+                var chunkStreamId = fixture.Create<uint>();
 
                 var streamContext = new RtmpChunkStreamContext(chunkStreamId);
                 var clientContext = Substitute.For<IRtmpClientSessionContext>();
@@ -156,7 +156,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers
 
             {
                 var chunkSize = 500u;
-                var chunkStreamId = Helpers.CreateRandomChunkStreamId();
+                var chunkStreamId = fixture.Create<uint>();
 
                 var streamContext = new RtmpChunkStreamContext(chunkStreamId);
                 var clientContext = Substitute.For<IRtmpClientSessionContext>();
@@ -182,7 +182,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers
 
             {
                 var chunkSize = 500u;
-                var chunkStreamId = Helpers.CreateRandomChunkStreamId();
+                var chunkStreamId = fixture.Create<uint>();
 
                 var streamContext = new RtmpChunkStreamContext(chunkStreamId);
                 var clientContext = Substitute.For<IRtmpClientSessionContext>();

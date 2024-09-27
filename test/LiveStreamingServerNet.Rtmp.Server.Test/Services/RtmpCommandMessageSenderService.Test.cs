@@ -6,7 +6,7 @@ using LiveStreamingServerNet.Rtmp.Internal.RtmpHeaders;
 using LiveStreamingServerNet.Rtmp.Server.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Server.Internal.Services;
 using LiveStreamingServerNet.Rtmp.Server.Internal.Services.Contracts;
-using LiveStreamingServerNet.Rtmp.Server.Test.Utilities;
+using LiveStreamingServerNet.Rtmp.Test.Utilities;
 using LiveStreamingServerNet.Utilities.Buffers;
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using NSubstitute;
@@ -32,7 +32,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             // Arrange
             var clientContext = Substitute.For<IRtmpClientSessionContext>();
             var messageStreamId = _fixture.Create<uint>();
-            var chunkStreamId = Helpers.CreateRandomChunkStreamId();
+            var chunkStreamId = _fixture.Create<uint>();
             var commandName = _fixture.Create<string>();
             var transactionId = _fixture.Create<double>();
             var commandObject = _fixture.Create<Dictionary<string, object>>();
@@ -105,7 +105,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             // Arrange
             var clientContext = Substitute.For<IRtmpClientSessionContext>();
             var messageStreamId = _fixture.Create<uint>();
-            var chunkStreamId = Helpers.CreateRandomChunkStreamId();
+            var chunkStreamId = _fixture.Create<uint>();
             var commandName = _fixture.Create<string>();
             var transactionId = _fixture.Create<double>();
             var commandObject = _fixture.Create<Dictionary<string, object>>();
@@ -177,7 +177,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             // Arrange
             var clientContexts = new List<IRtmpClientSessionContext> { Substitute.For<IRtmpClientSessionContext>(), Substitute.For<IRtmpClientSessionContext>() };
             var messageStreamId = _fixture.Create<uint>();
-            var chunkStreamId = Helpers.CreateRandomChunkStreamId();
+            var chunkStreamId = _fixture.Create<uint>();
             var commandName = _fixture.Create<string>();
             var transactionId = _fixture.Create<double>();
             var commandObject = _fixture.Create<Dictionary<string, object>>();

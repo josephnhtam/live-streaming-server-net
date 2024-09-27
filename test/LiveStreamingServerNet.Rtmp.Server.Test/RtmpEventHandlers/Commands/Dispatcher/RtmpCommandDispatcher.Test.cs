@@ -8,7 +8,7 @@ using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands.Dispatcher
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands.Dispatcher.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.Utilities;
 using LiveStreamingServerNet.Rtmp.Server.Internal.Contracts;
-using LiveStreamingServerNet.Rtmp.Server.Test.Utilities;
+using LiveStreamingServerNet.Rtmp.Test.Utilities;
 using LiveStreamingServerNet.Utilities.Buffers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;

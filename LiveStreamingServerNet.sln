@@ -77,9 +77,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.Netw
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.Networking.Server.Test", "test\LiveStreamingServerNet.Networking.Server.Test\LiveStreamingServerNet.Networking.Server.Test.csproj", "{6584699E-532D-49EC-B521-B2151587588F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveStreamingServerNet.Rtmp.Client", "src\LiveStreamingServerNet.Rtmp.Client\LiveStreamingServerNet.Rtmp.Client.csproj", "{24D44F66-B6B3-4472-AF13-EA4DE4E47BAE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.Rtmp.Client", "src\LiveStreamingServerNet.Rtmp.Client\LiveStreamingServerNet.Rtmp.Client.csproj", "{24D44F66-B6B3-4472-AF13-EA4DE4E47BAE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveStreamingServerNet.Rtmp", "src\LiveStreamingServerNet.Rtmp\LiveStreamingServerNet.Rtmp.csproj", "{05FCBA0F-B176-4695-92B6-37DA252F2A82}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.Rtmp", "src\LiveStreamingServerNet.Rtmp\LiveStreamingServerNet.Rtmp.csproj", "{05FCBA0F-B176-4695-92B6-37DA252F2A82}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveStreamingServerNet.Rtmp.Test", "test\LiveStreamingServerNet.Rtmp.Test\LiveStreamingServerNet.Rtmp.Test.csproj", "{772B6681-727C-469B-82B5-2760451F4E0F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -235,6 +237,10 @@ Global
 		{05FCBA0F-B176-4695-92B6-37DA252F2A82}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{05FCBA0F-B176-4695-92B6-37DA252F2A82}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{05FCBA0F-B176-4695-92B6-37DA252F2A82}.Release|Any CPU.Build.0 = Release|Any CPU
+		{772B6681-727C-469B-82B5-2760451F4E0F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{772B6681-727C-469B-82B5-2760451F4E0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{772B6681-727C-469B-82B5-2760451F4E0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{772B6681-727C-469B-82B5-2760451F4E0F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -258,6 +264,7 @@ Global
 		{7246C890-7231-4E08-9482-97AAAE4E9CD7} = {C85AC04A-5060-4C4B-830A-D7F51F602749}
 		{71895ADC-8ED6-478A-9CCC-372C0E88D57D} = {45761E33-F086-403D-BB6E-8059F8CC6BA8}
 		{6584699E-532D-49EC-B521-B2151587588F} = {C85AC04A-5060-4C4B-830A-D7F51F602749}
+		{772B6681-727C-469B-82B5-2760451F4E0F} = {C85AC04A-5060-4C4B-830A-D7F51F602749}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0A9A3928-2852-49B9-85EF-F00480E9FE7F}
