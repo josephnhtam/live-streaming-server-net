@@ -29,7 +29,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
 
         private uint _nextStreamId;
         private readonly ConcurrentDictionary<uint, IRtmpStream> _streams = new();
-        private readonly Dictionary<uint, IRtmpChunkStreamContext> _chunkStreamContexts = new();
+        private readonly ConcurrentDictionary<uint, IRtmpChunkStreamContext> _chunkStreamContexts = new();
         private readonly IBufferPool? _bufferPool;
 
         public RtmpClientSessionContext(ISessionHandle client, IBufferPool? bufferPool)
@@ -38,20 +38,12 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
             _bufferPool = bufferPool;
         }
 
-        public uint GetInChunkSize()
-        {
-            return InChunkSize;
-        }
-
         public IRtmpChunkStreamContext GetChunkStreamContext(uint chunkStreamId)
         {
-            lock (_chunkStreamContexts)
-            {
-                if (_chunkStreamContexts.TryGetValue(chunkStreamId, out var context))
-                    return context;
+            return _chunkStreamContexts.GetOrAdd(chunkStreamId, CreateChunkStreamContext);
 
-                return _chunkStreamContexts[chunkStreamId] = new RtmpChunkStreamContext(chunkStreamId);
-            }
+            static IRtmpChunkStreamContext CreateChunkStreamContext(uint chunkStreamId)
+                => new RtmpChunkStreamContext(chunkStreamId);
         }
 
         public IRtmpStream CreateNewStream()
