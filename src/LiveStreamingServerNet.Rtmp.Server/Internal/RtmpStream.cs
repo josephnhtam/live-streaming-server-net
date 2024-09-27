@@ -113,7 +113,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
                         return false;
                     }
 
-                default:
+                case MediaType.Audio:
                     lock (_audioTimestampSyncLock)
                     {
                         if (timestamp > _audioTimestamp)
@@ -124,6 +124,9 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
 
                         return false;
                     }
+
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(mediaType), mediaType, null);
             }
         }
 
