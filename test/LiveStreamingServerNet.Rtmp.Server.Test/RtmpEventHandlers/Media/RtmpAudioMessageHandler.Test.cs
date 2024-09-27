@@ -121,7 +121,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Media
             _ = _mediaMessageCacher.Received(gopCacheActivated && isPictureCachable ? 1 : 0)
                 .CachePictureAsync(publishStreamContext, MediaType.Audio, _dataBuffer, _chunkStreamContext.MessageHeader.Timestamp);
 
-            publishStream.Received(1).UpdateTimestamp(_chunkStreamContext.MessageHeader.Timestamp, MediaType.Audio);
+            publishStreamContext.Received(1).UpdateTimestamp(_chunkStreamContext.MessageHeader.Timestamp, MediaType.Audio);
 
             await _mediaMessageBroadcaster.Received(1).BroadcastMediaMessageAsync(
                 publishStreamContext,

@@ -197,9 +197,9 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             var streamId = _fixture.Create<uint>();
 
             subscribeStreamContext.Stream.Returns(subscribeStream);
+            subscribeStreamContext.UpdateTimestamp(Arg.Any<uint>(), Arg.Any<MediaType>()).Returns(true);
             subscribeStream.Id.Returns(streamId);
             subscribeStream.ClientContext.Returns(subscriberContext);
-            subscribeStream.UpdateTimestamp(Arg.Any<uint>(), Arg.Any<MediaType>()).Returns(true);
 
             publishStreamContext.AudioSequenceHeader.Returns(audioSequenceHeader);
 
@@ -238,9 +238,9 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             var streamId = _fixture.Create<uint>();
 
             subscribeStreamContext.Stream.Returns(subscribeStream);
+            subscribeStreamContext.UpdateTimestamp(Arg.Any<uint>(), Arg.Any<MediaType>()).Returns(true);
             subscribeStream.Id.Returns(streamId);
             subscribeStream.ClientContext.Returns(subscriberContext);
-            subscribeStream.UpdateTimestamp(Arg.Any<uint>(), Arg.Any<MediaType>()).Returns(true);
 
             publishStreamContext.VideoSequenceHeader.Returns(videoSequenceHeader);
 
@@ -280,9 +280,9 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             var streamId = _fixture.Create<uint>();
 
             subscribeStreamContext.Stream.Returns(subscribeStream);
+            subscribeStreamContext.UpdateTimestamp(Arg.Any<uint>(), Arg.Any<MediaType>()).Returns(true);
             subscribeStream.Id.Returns(streamId);
             subscribeStream.ClientContext.Returns(subscriberContext);
-            subscribeStream.UpdateTimestamp(Arg.Any<uint>(), Arg.Any<MediaType>()).Returns(true);
 
             publishStreamContext.StreamMetaData.Returns(streamMetaData);
 
@@ -324,9 +324,9 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             var streamId = _fixture.Create<uint>();
 
             subscribeStreamContext.Stream.Returns(subscribeStream);
+            subscribeStreamContext.UpdateTimestamp(Arg.Any<uint>(), Arg.Any<MediaType>()).Returns(true);
             subscribeStream.Id.Returns(streamId);
             subscribeStream.ClientContext.Returns(subscriberContext);
-            subscribeStream.UpdateTimestamp(Arg.Any<uint>(), Arg.Any<MediaType>()).Returns(true);
 
             publishStreamContext.StreamMetaData.Returns(streamMetaData);
 
@@ -369,9 +369,9 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
 
             subscriberContext.OutChunkSize.Returns(outChunkSize);
             subscribeStreamContext.Stream.Returns(subscribeStream);
+            subscribeStreamContext.UpdateTimestamp(Arg.Any<uint>(), Arg.Any<MediaType>()).Returns(true);
             subscribeStream.Id.Returns(streamId);
             subscribeStream.ClientContext.Returns(subscriberContext);
-            subscribeStream.UpdateTimestamp(Arg.Any<uint>(), Arg.Any<MediaType>()).Returns(true);
 
             var pictureCache1 = new PictureCache(
                 _fixture.Create<MediaType>(),

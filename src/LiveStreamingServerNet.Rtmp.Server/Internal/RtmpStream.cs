@@ -12,16 +12,8 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
         public IRtmpPublishStreamContext? PublishContext { get; private set; }
         public IRtmpSubscribeStreamContext? SubscribeContext { get; private set; }
 
-        public uint VideoTimestamp => _videoTimestamp;
-        public uint AudioTimestamp => _audioTimestamp;
-
-        private uint _videoTimestamp;
-        private uint _audioTimestamp;
-
         private readonly IBufferPool? _bufferPool;
         private readonly Action<IRtmpStream>? _onDelete;
-        private readonly object _videoTimestampSyncLock = new();
-        private readonly object _audioTimestampSyncLock = new();
 
         public RtmpStream(uint streamId, IRtmpClientSessionContext clientContext, IBufferPool? bufferPool, Action<IRtmpStream>? onDelete)
         {
@@ -74,6 +66,37 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
                 throw new InvalidOperationException("Subscribe context does not exist.");
         }
 
+        public void Delete()
+        {
+            _onDelete?.Invoke(this);
+
+            RemovePublishContext();
+            RemoveSubscribeContext();
+        }
+    }
+
+    internal abstract class RtmpStreamContext : IRtmpStreamContext
+    {
+        public IRtmpStream Stream { get; }
+        public string StreamPath { get; }
+        public IReadOnlyDictionary<string, string> StreamArguments { get; }
+
+        public uint VideoTimestamp => _videoTimestamp;
+        public uint AudioTimestamp => _audioTimestamp;
+
+        private uint _videoTimestamp;
+        private uint _audioTimestamp;
+
+        private readonly object _videoTimestampSyncLock = new();
+        private readonly object _audioTimestampSyncLock = new();
+
+        protected RtmpStreamContext(IRtmpStream stream, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
+        {
+            Stream = stream;
+            StreamPath = streamPath;
+            StreamArguments = streamArguments;
+        }
+
         public bool UpdateTimestamp(uint timestamp, MediaType mediaType)
         {
             switch (mediaType)
@@ -104,20 +127,11 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
             }
         }
 
-        public void Delete()
-        {
-            _onDelete?.Invoke(this);
-
-            RemovePublishContext();
-            RemoveSubscribeContext();
-        }
+        public virtual void Dispose() { }
     }
 
-    internal class RtmpPublishStreamContext : IRtmpPublishStreamContext
+    internal class RtmpPublishStreamContext : RtmpStreamContext, IRtmpPublishStreamContext
     {
-        public IRtmpStream Stream { get; }
-        public string StreamPath { get; }
-        public IReadOnlyDictionary<string, string> StreamArguments { get; }
         public IReadOnlyDictionary<string, object>? StreamMetaData { get; set; }
         public byte[]? VideoSequenceHeader { get; set; }
         public byte[]? AudioSequenceHeader { get; set; }
@@ -125,17 +139,16 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
         public IGroupOfPicturesCache GroupOfPicturesCache { get; }
         public DateTime StartTime { get; }
 
-        public RtmpPublishStreamContext(IRtmpStream stream, string streamPath, IReadOnlyDictionary<string, string> streamArguments, IBufferPool? bufferPool)
+        public RtmpPublishStreamContext(IRtmpStream stream, string streamPath, IReadOnlyDictionary<string, string> streamArguments, IBufferPool? bufferPool) :
+            base(stream, streamPath, streamArguments)
         {
-            Stream = stream;
-            StreamPath = streamPath;
-            StreamArguments = new Dictionary<string, string>(streamArguments);
             GroupOfPicturesCache = new GroupOfPicturesCache(bufferPool);
             StartTime = DateTime.UtcNow;
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
+            base.Dispose();
             GroupOfPicturesCache.Dispose();
         }
     }
@@ -172,12 +185,8 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
         }
     }
 
-    internal class RtmpSubscribeStreamContext : IRtmpSubscribeStreamContext
+    internal class RtmpSubscribeStreamContext : RtmpStreamContext, IRtmpSubscribeStreamContext
     {
-        public IRtmpStream Stream { get; }
-        public string StreamPath { get; }
-        public IReadOnlyDictionary<string, string> StreamArguments { get; }
-
         public bool IsPaused { get; set; }
         public bool IsReceivingAudio { get; set; }
         public bool IsReceivingVideo { get; set; }
@@ -185,12 +194,9 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
         private readonly TaskCompletionSource _initializationTcs;
         private readonly Task _initializationTask;
 
-        public RtmpSubscribeStreamContext(IRtmpStream stream, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
+        public RtmpSubscribeStreamContext(IRtmpStream stream, string streamPath, IReadOnlyDictionary<string, string> streamArguments) :
+            base(stream, streamPath, streamArguments)
         {
-            Stream = stream;
-            StreamPath = streamPath;
-            StreamArguments = new Dictionary<string, string>(streamArguments);
-
             IsReceivingAudio = true;
             IsReceivingVideo = true;
 
@@ -208,8 +214,9 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
             return _initializationTask;
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
+            base.Dispose();
             _initializationTcs.TrySetCanceled();
         }
     }

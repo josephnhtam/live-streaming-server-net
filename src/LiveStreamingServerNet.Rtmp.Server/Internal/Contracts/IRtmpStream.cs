@@ -5,8 +5,6 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Contracts
     internal interface IRtmpStream
     {
         uint Id { get; }
-        uint VideoTimestamp { get; }
-        uint AudioTimestamp { get; }
 
         IRtmpClientSessionContext ClientContext { get; }
 
@@ -19,15 +17,22 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Contracts
         void RemovePublishContext();
         void RemoveSubscribeContext();
 
-        bool UpdateTimestamp(uint timestamp, MediaType mediaType);
         void Delete();
     }
 
-    internal interface IRtmpPublishStreamContext : IDisposable
+    internal interface IRtmpStreamContext : IDisposable
     {
         IRtmpStream Stream { get; }
         string StreamPath { get; }
         IReadOnlyDictionary<string, string> StreamArguments { get; }
+
+        uint VideoTimestamp { get; }
+        uint AudioTimestamp { get; }
+        bool UpdateTimestamp(uint timestamp, MediaType mediaType);
+    }
+
+    internal interface IRtmpPublishStreamContext : IRtmpStreamContext
+    {
         IReadOnlyDictionary<string, object>? StreamMetaData { get; set; }
 
         byte[]? VideoSequenceHeader { get; set; }
@@ -39,12 +44,8 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Contracts
         DateTime StartTime { get; }
     }
 
-    internal interface IRtmpSubscribeStreamContext : IDisposable
+    internal interface IRtmpSubscribeStreamContext : IRtmpStreamContext
     {
-        IRtmpStream Stream { get; }
-        string StreamPath { get; }
-        IReadOnlyDictionary<string, string> StreamArguments { get; }
-
         bool IsReceivingAudio { get; set; }
         bool IsReceivingVideo { get; set; }
 
