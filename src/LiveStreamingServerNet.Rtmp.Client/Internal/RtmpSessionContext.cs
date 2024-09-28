@@ -23,10 +23,9 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
         public uint LastAcknowledgedSequenceNumber { get; set; }
 
         public string? AppName { get; set; }
-        public uint? StreamId { get; set; }
 
-
-        private readonly Dictionary<uint, IRtmpChunkStreamContext> _chunkStreamContexts = new();
+        private readonly ConcurrentDictionary<uint, IRtmpStreamContext> _streamContexts = new();
+        private readonly ConcurrentDictionary<uint, IRtmpChunkStreamContext> _chunkStreamContexts = new();
 
         public RtmpSessionContext(ISessionHandle session)
         {
@@ -35,17 +34,44 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
 
         public IRtmpChunkStreamContext GetChunkStreamContext(uint chunkStreamId)
         {
-            lock (_chunkStreamContexts)
-            {
-                if (_chunkStreamContexts.TryGetValue(chunkStreamId, out var context))
-                    return context;
+            return _chunkStreamContexts.GetOrAdd(chunkStreamId, CreateChunkStreamContext);
 
-                return _chunkStreamContexts[chunkStreamId] = new RtmpChunkStreamContext(chunkStreamId);
-            }
+            static IRtmpChunkStreamContext CreateChunkStreamContext(uint chunkStreamId)
+                => new RtmpChunkStreamContext(chunkStreamId);
+        }
+
+        public IRtmpStreamContext CreateStreamContext(uint streamId)
+        {
+            if (_streamContexts.ContainsKey(streamId))
+                throw new InvalidOperationException($"Stream context with ID {streamId} already exists.");
+
+            var streamContext = new RtmpStreamContext(streamId, this);
+            _streamContexts[streamId] = streamContext;
+
+            return streamContext;
+        }
+
+        public List<IRtmpStreamContext> GetStreamContexts()
+        {
+            return _streamContexts.Values.ToList();
+        }
+
+        public IRtmpStreamContext? GetStreamContext(uint streamId)
+        {
+            return _streamContexts.GetValueOrDefault(streamId);
+        }
+
+        public void RemoveStreamContext(uint streamId)
+        {
+            if (_streamContexts.TryRemove(streamId, out var streamContext))
+                streamContext.Dispose();
         }
 
         public ValueTask DisposeAsync()
         {
+            foreach (var streamContext in _streamContexts.Values)
+                RemoveStreamContext(streamContext.StreamId);
+
             return ValueTask.CompletedTask;
         }
     }

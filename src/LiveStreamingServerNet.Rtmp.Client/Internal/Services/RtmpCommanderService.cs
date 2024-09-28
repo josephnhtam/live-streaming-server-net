@@ -100,19 +100,15 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.Services
 
             Command(command, async (context, result) =>
             {
-                if (context.StreamId.HasValue)
+                if (result.Parameters is not double streamIdNumber)
                 {
                     return false;
                 }
 
-                if (result.Parameters is not double streamId)
-                {
-                    return false;
-                }
+                var streamId = (uint)streamIdNumber;
+                context.CreateStreamContext(streamId);
 
-                context.StreamId = (uint)streamId;
-
-                await _streamEventDispatcher.RtmpStreamCreated(context, context.StreamId.Value);
+                await _streamEventDispatcher.RtmpStreamCreated(context, streamId);
                 return true;
             });
         }
