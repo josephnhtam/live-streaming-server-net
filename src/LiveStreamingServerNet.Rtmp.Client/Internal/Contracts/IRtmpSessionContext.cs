@@ -21,6 +21,10 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.Contracts
         uint LastAcknowledgedSequenceNumber { get; set; }
 
         string? AppName { get; set; }
-        uint? StreamId { get; set; }
+
+        IRtmpStreamContext CreateStreamContext(uint streamId);
+        List<IRtmpStreamContext> GetStreamContexts();
+        IRtmpStreamContext? GetStreamContext(uint streamId);
+        void RemoveStreamContext(uint streamId);
     }
 }
