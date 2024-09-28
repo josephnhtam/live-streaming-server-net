@@ -83,9 +83,6 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
         private uint _videoTimestamp;
         private uint _audioTimestamp;
 
-        private readonly object _videoTimestampSyncLock = new();
-        private readonly object _audioTimestampSyncLock = new();
-
         protected RtmpStreamContextBase(IRtmpStreamContext streamContext, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
             StreamContext = streamContext;
@@ -98,31 +95,31 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
             switch (mediaType)
             {
                 case MediaType.Video:
-                    lock (_videoTimestampSyncLock)
-                    {
-                        if (timestamp > _videoTimestamp)
-                        {
-                            _videoTimestamp = timestamp;
-                            return true;
-                        }
-
-                        return false;
-                    }
+                    return UpdateTimestamp(ref _videoTimestamp, timestamp);
 
                 case MediaType.Audio:
-                    lock (_audioTimestampSyncLock)
-                    {
-                        if (timestamp > _audioTimestamp)
-                        {
-                            _audioTimestamp = timestamp;
-                            return true;
-                        }
-
-                        return false;
-                    }
+                    return UpdateTimestamp(ref _audioTimestamp, timestamp);
 
                 default:
                     throw new ArgumentOutOfRangeException(nameof(mediaType), mediaType, null);
+            }
+        }
+
+        private static bool UpdateTimestamp(ref uint currentTimestamp, uint newTimestamp)
+        {
+            while (true)
+            {
+                var original = currentTimestamp;
+
+                if (newTimestamp <= original)
+                {
+                    return false;
+                }
+
+                if (Interlocked.CompareExchange(ref currentTimestamp, newTimestamp, original) == original)
+                {
+                    return true;
+                }
             }
         }
 
