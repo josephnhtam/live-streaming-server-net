@@ -2,9 +2,21 @@
 {
     public interface IRtmpStream
     {
-        public uint StreamId { get; }
+        uint StreamId { get; }
+
+        IRtmpPublishStream Publish { get; }
+        IRtmpSubscribeStream Subscribe { get; }
+    }
+
+    public interface IRtmpPublishStream { }
+
+    public interface IRtmpSubscribeStream
+    {
+        IReadOnlyDictionary<string, object>? StreamMetaData { get; set; }
 
         void Play(string streamName);
         void Play(string streamName, double start, double duration, bool reset);
+
+        event EventHandler<IReadOnlyDictionary<string, object>> OnStreamMetaDataUpdated;
     }
 }

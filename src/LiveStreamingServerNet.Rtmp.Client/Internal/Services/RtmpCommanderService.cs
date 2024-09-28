@@ -1,5 +1,4 @@
-﻿using LiveStreamingClientNet.Rtmp.Client.Internal.Contracts;
-using LiveStreamingServerNet.Rtmp.Client.Internal.Contracts;
+﻿using LiveStreamingServerNet.Rtmp.Client.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Client.Internal.Services.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal;
 
@@ -7,21 +6,18 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.Services
 {
     internal partial class RtmpCommanderService : IRtmpCommanderService
     {
+        private readonly IRtmpClientContext _clientContext;
         private readonly IRtmpCommandResultManagerService _commandResultManager;
         private readonly IRtmpCommandMessageSenderService _commandMessageSender;
-        private readonly IRtmpClientConnectionEventDispatcher _connectionEventDispatcher;
-        private readonly IRtmpClientStreamEventDispatcher _streamEventDispatcher;
 
         public RtmpCommanderService(
+            IRtmpClientContext clientContext,
             IRtmpCommandResultManagerService commandResultManager,
-            IRtmpCommandMessageSenderService commandMessageSender,
-            IRtmpClientConnectionEventDispatcher connectionEventDispatcher,
-            IRtmpClientStreamEventDispatcher streamEventDispatcher)
+            IRtmpCommandMessageSenderService commandMessageSender)
         {
+            _clientContext = clientContext;
             _commandResultManager = commandResultManager;
             _commandMessageSender = commandMessageSender;
-            _connectionEventDispatcher = connectionEventDispatcher;
-            _streamEventDispatcher = streamEventDispatcher;
         }
 
         public void Command(RtmpCommand command)
@@ -75,28 +71,17 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.Services
                 {
                     if (codeString == RtmpStatusCodes.ConnectSuccess)
                     {
-                        await HandleConnectResultAsync(true, context, result, callback);
+                        await (callback?.Invoke(true, result.CommandObject, result.Parameters) ?? ValueTask.CompletedTask);
                         return true;
                     }
 
-                    await HandleConnectResultAsync(false, context, result, callback);
+                    await (callback?.Invoke(false, result.CommandObject, result.Parameters) ?? ValueTask.CompletedTask);
                     return false;
                 }
 
-                await HandleConnectResultAsync(true, context, result, callback);
+                await (callback?.Invoke(true, result.CommandObject, result.Parameters) ?? ValueTask.CompletedTask);
                 return true;
             }, cancellationCallback);
-
-            async Task HandleConnectResultAsync(bool success, IRtmpSessionContext context, RtmpCommandResult result, ConnectCallbackDelegate? callback)
-            {
-                if (success)
-                    await _connectionEventDispatcher.RtmpConnectedAsync(context, result.CommandObject, result.Parameters);
-                else
-                    await _connectionEventDispatcher.RtmpConnectionRejectedAsync(context, result.CommandObject, result.Parameters);
-
-                if (callback != null)
-                    await callback.Invoke(success, result.CommandObject, result.Parameters);
-            }
         }
 
         public void CreateStream(CreateStreamCallbackDelegate? callback, Action? cancellationCallback)
@@ -121,13 +106,12 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.Services
                     var streamId = (uint)streamIdNumber;
                     var streamContext = context.CreateStreamContext(streamId);
 
-                    await _streamEventDispatcher.RtmpStreamCreated(context, streamId);
-                    callback?.Invoke(true, streamContext);
+                    await (callback?.Invoke(true, streamContext) ?? ValueTask.CompletedTask);
                     return true;
                 }
                 catch
                 {
-                    callback?.Invoke(false, null);
+                    await (callback?.Invoke(false, null) ?? ValueTask.CompletedTask);
                     return false;
                 }
             }, cancellationCallback);
@@ -135,6 +119,16 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.Services
 
         public void Play(uint streamId, string streamName, double start, double duration, bool reset)
         {
+            var sessionContext = GetSessionContext();
+            var streamContext = sessionContext.GetStreamContext(streamId);
+
+            if (streamContext == null)
+            {
+                throw new InvalidOperationException("Stream does not exist.");
+            }
+
+            streamContext.CreateSubscribeContext();
+
             var command = new RtmpCommand(
                 messageStreamId: streamId,
                 chunkStreamId: 3,
@@ -145,5 +139,8 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.Services
 
             Command(command);
         }
+
+        private IRtmpSessionContext GetSessionContext()
+            => _clientContext.SessionContext ?? throw new InvalidOperationException("Session is not available.");
     }
 }

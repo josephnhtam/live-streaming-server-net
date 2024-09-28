@@ -1,4 +1,4 @@
-﻿using LiveStreamingClientNet.Rtmp.Client.Contracts;
+﻿using LiveStreamingServerNet.Rtmp.Client.Configurations;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LiveStreamingServerNet.Rtmp.Client.Installer.Contracts
@@ -7,15 +7,6 @@ namespace LiveStreamingServerNet.Rtmp.Client.Installer.Contracts
     {
         IServiceCollection Services { get; }
 
-        IRtmpClientConfigurator AddConnectionEventHandler<TConnectionEventHandler>()
-            where TConnectionEventHandler : class, IRtmpClientConnectionEventHandler;
-
-        IRtmpClientConfigurator AddConnectionEventHandler(Func<IServiceProvider, IRtmpClientConnectionEventHandler> implementationFactory);
-
-        IRtmpClientConfigurator AddStreamEventHandler<TStreamEventHandler>()
-            where TStreamEventHandler : class, IRtmpClientStreamEventHandler;
-
-        IRtmpClientConfigurator AddStreamEventHandler(Func<IServiceProvider, IRtmpClientStreamEventHandler> implementationFactory);
-
+        IRtmpClientConfigurator Configure(Action<RtmpClientConfiguration>? configure);
     }
 }

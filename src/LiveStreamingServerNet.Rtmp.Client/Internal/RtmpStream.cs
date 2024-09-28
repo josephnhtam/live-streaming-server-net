@@ -8,11 +8,10 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
     internal class RtmpStream : IRtmpStream
     {
         private readonly IRtmpStreamContext _streamContext;
-        private readonly IRtmpChunkMessageSenderService _chunkMessageSender;
-        private readonly IRtmpCommanderService _commander;
-        private readonly ILogger<RtmpStream> _logger;
 
         public uint StreamId => _streamContext.StreamId;
+        public IRtmpPublishStream Publish { get; }
+        public IRtmpSubscribeStream Subscribe { get; }
 
         public RtmpStream(
             IRtmpStreamContext streamContext,
@@ -21,19 +20,80 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
             ILogger<RtmpStream> logger)
         {
             _streamContext = streamContext;
-            _chunkMessageSender = chunkMessageSender;
-            _commander = commander;
-            _logger = logger;
+
+            Publish = new RtmpPublishStream(streamContext, chunkMessageSender, commander, logger);
+            Subscribe = new RtmpSubscribeStream(streamContext, chunkMessageSender, commander, logger);
         }
 
-        public void Play(string streamName)
+        internal class RtmpPublishStream : IRtmpPublishStream
         {
-            Play(streamName, 0, 0, false);
+            private readonly IRtmpStreamContext _streamContext;
+            private readonly IRtmpChunkMessageSenderService _chunkMessageSender;
+            private readonly IRtmpCommanderService _commander;
+            private readonly ILogger _logger;
+
+            public RtmpPublishStream(
+                IRtmpStreamContext streamContext,
+                IRtmpChunkMessageSenderService chunkMessageSender,
+                IRtmpCommanderService commander,
+                ILogger logger)
+            {
+                _streamContext = streamContext;
+                _chunkMessageSender = chunkMessageSender;
+                _commander = commander;
+                _logger = logger;
+            }
         }
 
-        public void Play(string streamName, double start, double duration, bool reset)
+        internal class RtmpSubscribeStream : IRtmpSubscribeStream
         {
-            _commander.Play(_streamContext.StreamId, streamName, start, duration, reset);
+            private readonly IRtmpStreamContext _streamContext;
+            private readonly IRtmpChunkMessageSenderService _chunkMessageSender;
+            private readonly IRtmpCommanderService _commander;
+            private readonly ILogger _logger;
+            public IReadOnlyDictionary<string, object>? StreamMetaData { get; set; }
+            public event EventHandler<IReadOnlyDictionary<string, object>>? OnStreamMetaDataUpdated;
+
+            public RtmpSubscribeStream(
+                IRtmpStreamContext streamContext,
+                IRtmpChunkMessageSenderService chunkMessageSender,
+                IRtmpCommanderService commander,
+                ILogger logger)
+            {
+                _streamContext = streamContext;
+                _chunkMessageSender = chunkMessageSender;
+                _commander = commander;
+                _logger = logger;
+
+                _streamContext.OnSubscribeContextCreated += OnSubscribeContextCreated;
+                _streamContext.OnSubscribeContextRemoved += OnSubscribeContextRemoved;
+            }
+
+            public void Play(string streamName)
+            {
+                Play(streamName, 0, 0, false);
+            }
+
+            public void Play(string streamName, double start, double duration, bool reset)
+            {
+                _commander.Play(_streamContext.StreamId, streamName, start, duration, reset);
+            }
+
+            private void OnSubscribeContextCreated(object? sender, IRtmpSubscribeStreamContext subscribeStreamContext)
+            {
+                subscribeStreamContext.OnStreamMetaDataUpdated += OnStreamContextMetaDataUpdated;
+            }
+
+            private void OnSubscribeContextRemoved(object? sender, IRtmpSubscribeStreamContext subscribeStreamContext)
+            {
+                subscribeStreamContext.OnStreamMetaDataUpdated -= OnStreamContextMetaDataUpdated;
+            }
+
+            private void OnStreamContextMetaDataUpdated(object? sender, IReadOnlyDictionary<string, object> streamMetaData)
+            {
+                StreamMetaData = streamMetaData;
+                OnStreamMetaDataUpdated?.Invoke(this, streamMetaData);
+            }
         }
     }
 }

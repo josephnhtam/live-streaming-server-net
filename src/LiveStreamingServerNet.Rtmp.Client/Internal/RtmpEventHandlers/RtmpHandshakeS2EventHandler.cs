@@ -1,4 +1,4 @@
-﻿using LiveStreamingClientNet.Rtmp.Client.Internal.Contracts;
+﻿using LiveStreamingServerNet.Rtmp.Client.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Client.Internal.Logging;
 using LiveStreamingServerNet.Rtmp.Client.Internal.RtmpEvents;
 using LiveStreamingServerNet.Rtmp.Internal;
@@ -11,14 +11,14 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.RtmpEventHandlers
     internal class RtmpHandshakeS2EventHandler : IRequestHandler<RtmpHandshakeS2Event, RtmpEventConsumingResult>
     {
         private readonly IDataBufferPool _dataBufferPool;
-        private readonly IRtmpClientConnectionEventDispatcher _eventDispatcher;
+        private readonly IRtmpHandshakeEventDispatcher _eventDispatcher;
         private readonly ILogger _logger;
 
         private const int HandshakeS2Size = 1536;
 
         public RtmpHandshakeS2EventHandler(
             IDataBufferPool dataBufferPool,
-            IRtmpClientConnectionEventDispatcher eventDispatcher,
+            IRtmpHandshakeEventDispatcher eventDispatcher,
             ILogger<RtmpHandshakeS1EventHandler> logger)
         {
             _dataBufferPool = dataBufferPool;

@@ -1,5 +1,4 @@
-﻿using LiveStreamingClientNet.Rtmp.Client.Contracts;
-using LiveStreamingServerNet.Networking;
+﻿using LiveStreamingServerNet.Networking;
 using LiveStreamingServerNet.Networking.Client.Contracts;
 using LiveStreamingServerNet.Rtmp.Client.Configurations;
 using LiveStreamingServerNet.Rtmp.Client.Contracts;
@@ -12,7 +11,7 @@ using System.Diagnostics;
 
 namespace LiveStreamingServerNet.Rtmp.Client.Internal
 {
-    internal class RtmpClient : IRtmpClient, IRtmpClientConnectionEventHandler
+    internal class RtmpClient : IRtmpClient, IRtmpHandshakeEventHandler
     {
         private readonly IClient _client;
         private readonly IRtmpCommanderService _commander;
@@ -178,11 +177,5 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
             _handshakeTcs.TrySetResult();
             return ValueTask.CompletedTask;
         }
-
-        public ValueTask RtmpConnectedAsync(IEventContext context, IDictionary<string, object> commandObject, object? parameters)
-            => ValueTask.CompletedTask;
-
-        public ValueTask RtmpConnectionRejectedAsync(IEventContext context, IDictionary<string, object> commandObject, object? parameters)
-            => ValueTask.CompletedTask;
     }
 }

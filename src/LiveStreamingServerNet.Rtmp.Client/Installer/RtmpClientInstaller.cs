@@ -1,5 +1,4 @@
 ﻿using LiveStreamingClientNet.Rtmp.Client.Internal;
-using LiveStreamingClientNet.Rtmp.Client.Internal.Contracts;
 using LiveStreamingServerNet.Networking.Client.Installer;
 using LiveStreamingServerNet.Networking.Client.Installer.Contracts;
 using LiveStreamingServerNet.Rtmp.Client.Installer.Contracts;
@@ -13,7 +12,6 @@ using LiveStreamingServerNet.Rtmp.Internal.Services;
 using LiveStreamingServerNet.Rtmp.Internal.Services.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 using LiveStreamingServerNet.Rtmp.Client.Contracts;
-using LiveStreamingClientNet.Rtmp.Client.Contracts;
 using LiveStreamingServerNet.Networking.Client.Contracts;
 
 namespace LiveStreamingServerNet.Rtmp.Client.Installer
@@ -84,15 +82,14 @@ namespace LiveStreamingServerNet.Rtmp.Client.Installer
 
         private static IServiceCollection AddRtmpClientEventDispatchers(this IServiceCollection services)
         {
-            services.AddSingleton<IRtmpClientConnectionEventDispatcher, RtmpClientConnectionEventDispatcher>()
-                    .AddSingleton<IRtmpClientStreamEventDispatcher, RtmpClientStreamEventDispatcher>();
+            services.AddSingleton<IRtmpHandshakeEventDispatcher, RtmpHandshakeEventDispatcher>();
 
             return services;
         }
 
         private static IServiceCollection AddRtmpClientEventHandlers(this IServiceCollection services)
         {
-            services.AddSingleton<IRtmpClientConnectionEventHandler>(sp => sp.GetRequiredService<RtmpClient>())
+            services.AddSingleton<IRtmpHandshakeEventHandler>(sp => sp.GetRequiredService<RtmpClient>())
                     .AddSingleton<IClientEventHandler>(sp => sp.GetRequiredService<RtmpCommandResultManagerService>());
 
             return services;
