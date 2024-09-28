@@ -5,5 +5,35 @@
         uint StreamId { get; }
 
         IRtmpSessionContext SessionContext { get; }
+
+        IRtmpPublishStreamContext? PublishContext { get; }
+        IRtmpSubscribeStreamContext? SubscribeContext { get; }
+
+        IRtmpPublishStreamContext CreatePublishContext();
+        IRtmpSubscribeStreamContext CreateSubscribeContext();
+
+        void RemovePublishContext();
+        void RemoveSubscribeContext();
+
+        event EventHandler<IRtmpPublishStreamContext> OnPublishContextCreated;
+        event EventHandler<IRtmpSubscribeStreamContext> OnSubscribeContextCreated;
+        event EventHandler<IRtmpPublishStreamContext> OnPublishContextRemoved;
+        event EventHandler<IRtmpSubscribeStreamContext> OnSubscribeContextRemoved;
+    }
+
+    internal interface IRtmpMediaStreamContext : IDisposable
+    {
+        IRtmpStreamContext StreamContext { get; }
+    }
+
+    internal interface IRtmpPublishStreamContext : IRtmpMediaStreamContext
+    {
+    }
+
+    internal interface IRtmpSubscribeStreamContext : IRtmpMediaStreamContext
+    {
+        IReadOnlyDictionary<string, object>? StreamMetaData { get; set; }
+
+        event EventHandler<IReadOnlyDictionary<string, object>> OnStreamMetaDataUpdated;
     }
 }
