@@ -71,7 +71,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
         }
     }
 
-    internal abstract class RtmpStreamContextBase : IRtmpStreamContextBase
+    internal abstract class RtmpMediaStreamContext : IRtmpMediaStreamContext
     {
         public IRtmpStreamContext StreamContext { get; }
         public string StreamPath { get; }
@@ -83,7 +83,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
         private uint _videoTimestamp;
         private uint _audioTimestamp;
 
-        protected RtmpStreamContextBase(IRtmpStreamContext streamContext, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
+        protected RtmpMediaStreamContext(IRtmpStreamContext streamContext, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
             StreamContext = streamContext;
             StreamPath = streamPath;
@@ -126,7 +126,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
         public virtual void Dispose() { }
     }
 
-    internal class RtmpPublishStreamContext : RtmpStreamContextBase, IRtmpPublishStreamContext
+    internal class RtmpPublishStreamContext : RtmpMediaStreamContext, IRtmpPublishStreamContext
     {
         public IReadOnlyDictionary<string, object>? StreamMetaData { get; set; }
         public byte[]? VideoSequenceHeader { get; set; }
@@ -181,7 +181,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
         }
     }
 
-    internal class RtmpSubscribeStreamContext : RtmpStreamContextBase, IRtmpSubscribeStreamContext
+    internal class RtmpSubscribeStreamContext : RtmpMediaStreamContext, IRtmpSubscribeStreamContext
     {
         public bool IsPaused { get; set; }
         public bool IsReceivingAudio { get; set; }
