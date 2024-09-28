@@ -5,6 +5,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.Services.Contracts
     internal interface IRtmpCommandMessageSenderService
     {
         void SendCommandMessage(
+            uint messageStreamId,
             uint chunkStreamId,
             string commandName,
             double transactionId,
@@ -14,6 +15,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.Services.Contracts
             Action<bool>? callback = null);
 
         ValueTask SendCommandMessageAsync(
+            uint messageStreamId,
             uint chunkStreamId,
             string commandName,
             double transactionId,
