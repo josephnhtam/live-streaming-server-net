@@ -24,8 +24,8 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
             RtmpCreateStreamCommand command,
             CancellationToken cancellationToken)
         {
-            var stream = clientContext.CreateNewStream();
-            RespondToClient(clientContext, command, stream.Id);
+            var streamContext = clientContext.CreateStreamContext();
+            RespondToClient(clientContext, command, streamContext.StreamId);
             return ValueTask.FromResult(true);
         }
 

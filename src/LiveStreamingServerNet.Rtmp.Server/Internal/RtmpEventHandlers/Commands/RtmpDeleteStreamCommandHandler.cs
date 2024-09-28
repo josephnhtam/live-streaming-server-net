@@ -25,10 +25,10 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
             CancellationToken cancellationToken)
         {
             var streamId = (uint)Math.Round(command.StreamId);
-            var stream = clientContext.GetStream(streamId);
+            var streamContext = clientContext.GetStreamContext(streamId);
 
-            if (stream != null)
-                await _streamDeletionService.DeleteStreamAsync(stream);
+            if (streamContext != null)
+                await _streamDeletionService.DeleteStreamAsync(streamContext);
 
             return true;
         }

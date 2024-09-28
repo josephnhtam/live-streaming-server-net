@@ -24,7 +24,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
         private readonly IRtmpMediaMessageCacherService _mediaMessageCacher;
         private readonly IRtmpServerStreamEventDispatcher _eventDispatcher;
         private readonly IStreamAuthorization _streamAuthorization;
-        private readonly IRtmpStream _subscribeStream;
+        private readonly IRtmpStreamContext _streamContext;
         private readonly IRtmpSubscribeStreamContext _subscribeStreamContext;
         private readonly IRtmpPublishStreamContext _publishStreamContext;
         private readonly ILogger<RtmpPlayCommandHandler> _logger;
@@ -40,13 +40,13 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
             _mediaMessageCacher = Substitute.For<IRtmpMediaMessageCacherService>();
             _eventDispatcher = Substitute.For<IRtmpServerStreamEventDispatcher>();
             _streamAuthorization = Substitute.For<IStreamAuthorization>();
-            _subscribeStream = Substitute.For<IRtmpStream>();
+            _streamContext = Substitute.For<IRtmpStreamContext>();
             _subscribeStreamContext = Substitute.For<IRtmpSubscribeStreamContext>();
             _publishStreamContext = Substitute.For<IRtmpPublishStreamContext>();
             _logger = Substitute.For<ILogger<RtmpPlayCommandHandler>>();
 
-            _subscribeStream.ClientContext.Returns(_clientContext);
-            _subscribeStreamContext.Stream.Returns(_subscribeStream);
+            _streamContext.ClientContext.Returns(_clientContext);
+            _subscribeStreamContext.StreamContext.Returns(_streamContext);
 
             _commandMessageSender.When(x =>
                 x.SendCommandMessage(Arg.Any<IRtmpClientSessionContext>(), Arg.Any<uint>(), Arg.Any<uint>(), Arg.Any<string>(), Arg.Any<double>(),
@@ -73,7 +73,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
             var streamName = "streamName?password=123456";
             var command = new RtmpPlayCommand(transactionId, commandObject, streamName, 0, 0, false);
 
-            _clientContext.GetStream(Arg.Any<uint>()).Returns((IRtmpStream?)null);
+            _clientContext.GetStreamContext(Arg.Any<uint>()).Returns((IRtmpStreamContext?)null);
 
             // Act
             var result = await _sut.HandleAsync(_chunkStreamContext, _clientContext, command, default);
@@ -95,7 +95,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
             var command = new RtmpPlayCommand(transactionId, commandObject, streamName, 0, 0, false);
 
             _chunkStreamContext.MessageHeader.MessageStreamId.Returns(streamId);
-            _clientContext.GetStream(streamId).Returns(_subscribeStream);
+            _clientContext.GetStreamContext(streamId).Returns(_streamContext);
             _clientContext.AppName.Returns(appName);
 
             _streamAuthorization.AuthorizeSubscribingAsync(_clientContext, streamPath, Helpers.CreateExpectedStreamArguments("password", "123456"))
@@ -125,15 +125,15 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
             var timestamp = _fixture.Create<uint>();
             var command = new RtmpPlayCommand(transactionId, commandObject, streamName, 0, 0, false);
 
-            _clientContext.GetStream(streamId).Returns(_subscribeStream);
+            _clientContext.GetStreamContext(streamId).Returns(_streamContext);
             _clientContext.AppName.Returns(appName);
 
             _chunkStreamContext.ChunkStreamId.Returns(chunkStreamId);
             _chunkStreamContext.MessageHeader.Timestamp.Returns(timestamp);
             _chunkStreamContext.MessageHeader.MessageStreamId.Returns(streamId);
 
-            _subscribeStream.Id.Returns(streamId);
-            _subscribeStream.SubscribeContext.Returns(_subscribeStreamContext);
+            _streamContext.StreamId.Returns(streamId);
+            _streamContext.SubscribeContext.Returns(_subscribeStreamContext);
 
             if (publishStreamExists)
             {
@@ -145,7 +145,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
                 .Returns(AuthorizationResult.Authorized());
 
             _streamManager.StartSubscribing(
-                _subscribeStream, streamPath, Helpers.CreateExpectedStreamArguments("password", "123456"))
+                _streamContext, streamPath, Helpers.CreateExpectedStreamArguments("password", "123456"))
                 .Returns(SubscribingStreamResult.Succeeded)
                 .AndDoes(x =>
                 {
@@ -202,20 +202,20 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
             var timestamp = _fixture.Create<uint>();
             var command = new RtmpPlayCommand(transactionId, commandObject, streamName, 0, 0, false);
 
-            _clientContext.GetStream(streamId).Returns(_subscribeStream);
+            _clientContext.GetStreamContext(streamId).Returns(_streamContext);
             _clientContext.AppName.Returns(appName);
 
             _chunkStreamContext.ChunkStreamId.Returns(chunkStreamId);
             _chunkStreamContext.MessageHeader.Timestamp.Returns(timestamp);
             _chunkStreamContext.MessageHeader.MessageStreamId.Returns(streamId);
 
-            _subscribeStream.Id.Returns(streamId);
+            _streamContext.StreamId.Returns(streamId);
 
             _streamAuthorization.AuthorizeSubscribingAsync(
                 _clientContext, streamPath, Helpers.CreateExpectedStreamArguments("password", "123456"))
                 .Returns(AuthorizationResult.Authorized());
 
-            _streamManager.StartSubscribing(_subscribeStream, streamPath, Helpers.CreateExpectedStreamArguments("password", "123456"))
+            _streamManager.StartSubscribing(_streamContext, streamPath, Helpers.CreateExpectedStreamArguments("password", "123456"))
                 .Returns(subscribingResult);
 
             // Act

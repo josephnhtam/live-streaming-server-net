@@ -100,9 +100,9 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
                 return;
 
             var basicHeader = new RtmpChunkBasicHeader(0, RtmpConstants.DataMessageChunkStreamId);
-            var messageHeader = new RtmpChunkMessageHeaderType0(timestamp, RtmpMessageType.DataMessageAmf0, subscribeStreamContext.Stream.Id);
+            var messageHeader = new RtmpChunkMessageHeaderType0(timestamp, RtmpMessageType.DataMessageAmf0, subscribeStreamContext.StreamContext.StreamId);
 
-            _chunkMessageSender.Send(subscribeStreamContext.Stream.ClientContext, basicHeader, messageHeader, (dataBuffer) =>
+            _chunkMessageSender.Send(subscribeStreamContext.StreamContext.ClientContext, basicHeader, messageHeader, (dataBuffer) =>
                 dataBuffer.WriteAmf(new List<object?>
                 {
                     RtmpDataMessageConstants.OnMetaData,
@@ -121,10 +121,10 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
 
             var basicHeader = new RtmpChunkBasicHeader(0, RtmpConstants.DataMessageChunkStreamId);
 
-            foreach (var group in subscribeStreamContexts.GroupBy(x => x.Stream.Id))
+            foreach (var group in subscribeStreamContexts.GroupBy(x => x.StreamContext.StreamId))
             {
                 var streamId = group.Key;
-                var clientContexts = group.Select(x => x.Stream.ClientContext).ToList();
+                var clientContexts = group.Select(x => x.StreamContext.ClientContext).ToList();
 
                 var messageHeader = new RtmpChunkMessageHeaderType0(timestamp, RtmpMessageType.DataMessageAmf0, streamId);
 
@@ -178,10 +178,10 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
                 type == MediaType.Video ?
                 RtmpMessageType.VideoMessage :
                 RtmpMessageType.AudioMessage,
-                subscribeStreamContext.Stream.Id);
+                subscribeStreamContext.StreamContext.StreamId);
 
             _chunkMessageSender.Send(
-                subscribeStreamContext.Stream.ClientContext,
+                subscribeStreamContext.StreamContext.ClientContext,
                 basicHeader,
                 messageHeader,
                 (dataBuffer) => dataBuffer.Write(payloadBuffer, 0, payloadSize));

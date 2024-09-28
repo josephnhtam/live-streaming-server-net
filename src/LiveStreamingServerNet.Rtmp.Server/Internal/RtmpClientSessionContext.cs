@@ -28,7 +28,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
         public string? AppName { get; set; }
 
         private uint _nextStreamId;
-        private readonly ConcurrentDictionary<uint, IRtmpStream> _streams = new();
+        private readonly ConcurrentDictionary<uint, IRtmpStreamContext> _streamContexts = new();
         private readonly ConcurrentDictionary<uint, IRtmpChunkStreamContext> _chunkStreamContexts = new();
         private readonly IBufferPool? _bufferPool;
 
@@ -46,30 +46,36 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
                 => new RtmpChunkStreamContext(chunkStreamId);
         }
 
-        public IRtmpStream CreateNewStream()
+        public IRtmpStreamContext CreateStreamContext()
         {
             var streamId = Interlocked.Increment(ref _nextStreamId);
 
-            var stream = new RtmpStream(streamId, this, _bufferPool, s => _streams.TryRemove(s.Id, out _));
-            _streams[streamId] = stream;
+            var streamContext = new RtmpStreamContext(streamId, this, _bufferPool);
+            _streamContexts[streamId] = streamContext;
 
-            return stream;
+            return streamContext;
         }
 
-        public List<IRtmpStream> GetStreams()
+        public List<IRtmpStreamContext> GetStreamContexts()
         {
-            return _streams.Values.ToList();
+            return _streamContexts.Values.ToList();
         }
 
-        public IRtmpStream? GetStream(uint streamId)
+        public IRtmpStreamContext? GetStreamContext(uint streamId)
         {
-            return _streams.GetValueOrDefault(streamId);
+            return _streamContexts.GetValueOrDefault(streamId);
+        }
+
+        public void RemoveStreamContext(uint streamId)
+        {
+            if (_streamContexts.TryRemove(streamId, out var streamContext))
+                streamContext.Dispose();
         }
 
         public void Dispose()
         {
-            foreach (var stream in _streams.Values)
-                stream.Delete();
+            foreach (var streamContext in _streamContexts.Values)
+                RemoveStreamContext(streamContext.StreamId);
         }
     }
 }

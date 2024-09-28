@@ -4,23 +4,21 @@ using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 
 namespace LiveStreamingServerNet.Rtmp.Server.Internal
 {
-    internal class RtmpStream : IRtmpStream
+    internal class RtmpStreamContext : IRtmpStreamContext
     {
-        public uint Id { get; }
+        public uint StreamId { get; }
 
         public IRtmpClientSessionContext ClientContext { get; }
         public IRtmpPublishStreamContext? PublishContext { get; private set; }
         public IRtmpSubscribeStreamContext? SubscribeContext { get; private set; }
 
         private readonly IBufferPool? _bufferPool;
-        private readonly Action<IRtmpStream>? _onDelete;
 
-        public RtmpStream(uint streamId, IRtmpClientSessionContext clientContext, IBufferPool? bufferPool, Action<IRtmpStream>? onDelete)
+        public RtmpStreamContext(uint streamId, IRtmpClientSessionContext clientContext, IBufferPool? bufferPool)
         {
-            Id = streamId;
+            StreamId = streamId;
             ClientContext = clientContext;
             _bufferPool = bufferPool;
-            _onDelete = onDelete;
         }
 
         public IRtmpPublishStreamContext CreatePublishContext(string streamPath, IReadOnlyDictionary<string, string> streamArguments)
@@ -66,18 +64,16 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
                 throw new InvalidOperationException("Subscribe context already exists.");
         }
 
-        public void Delete()
+        public void Dispose()
         {
-            _onDelete?.Invoke(this);
-
             RemovePublishContext();
             RemoveSubscribeContext();
         }
     }
 
-    internal abstract class RtmpStreamContext : IRtmpStreamContext
+    internal abstract class RtmpStreamContextBase : IRtmpStreamContextBase
     {
-        public IRtmpStream Stream { get; }
+        public IRtmpStreamContext StreamContext { get; }
         public string StreamPath { get; }
         public IReadOnlyDictionary<string, string> StreamArguments { get; }
 
@@ -90,9 +86,9 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
         private readonly object _videoTimestampSyncLock = new();
         private readonly object _audioTimestampSyncLock = new();
 
-        protected RtmpStreamContext(IRtmpStream stream, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
+        protected RtmpStreamContextBase(IRtmpStreamContext streamContext, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
-            Stream = stream;
+            StreamContext = streamContext;
             StreamPath = streamPath;
             StreamArguments = streamArguments;
         }
@@ -133,7 +129,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
         public virtual void Dispose() { }
     }
 
-    internal class RtmpPublishStreamContext : RtmpStreamContext, IRtmpPublishStreamContext
+    internal class RtmpPublishStreamContext : RtmpStreamContextBase, IRtmpPublishStreamContext
     {
         public IReadOnlyDictionary<string, object>? StreamMetaData { get; set; }
         public byte[]? VideoSequenceHeader { get; set; }
@@ -142,8 +138,8 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
         public IGroupOfPicturesCache GroupOfPicturesCache { get; }
         public DateTime StartTime { get; }
 
-        public RtmpPublishStreamContext(IRtmpStream stream, string streamPath, IReadOnlyDictionary<string, string> streamArguments, IBufferPool? bufferPool) :
-            base(stream, streamPath, streamArguments)
+        public RtmpPublishStreamContext(IRtmpStreamContext streamContext, string streamPath, IReadOnlyDictionary<string, string> streamArguments, IBufferPool? bufferPool) :
+            base(streamContext, streamPath, streamArguments)
         {
             GroupOfPicturesCache = new GroupOfPicturesCache(bufferPool);
             StartTime = DateTime.UtcNow;
@@ -188,7 +184,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
         }
     }
 
-    internal class RtmpSubscribeStreamContext : RtmpStreamContext, IRtmpSubscribeStreamContext
+    internal class RtmpSubscribeStreamContext : RtmpStreamContextBase, IRtmpSubscribeStreamContext
     {
         public bool IsPaused { get; set; }
         public bool IsReceivingAudio { get; set; }
@@ -197,8 +193,8 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
         private readonly TaskCompletionSource _initializationTcs;
         private readonly Task _initializationTask;
 
-        public RtmpSubscribeStreamContext(IRtmpStream stream, string streamPath, IReadOnlyDictionary<string, string> streamArguments) :
-            base(stream, streamPath, streamArguments)
+        public RtmpSubscribeStreamContext(IRtmpStreamContext streamContext, string streamPath, IReadOnlyDictionary<string, string> streamArguments) :
+            base(streamContext, streamPath, streamArguments)
         {
             IsReceivingAudio = true;
             IsReceivingVideo = true;
