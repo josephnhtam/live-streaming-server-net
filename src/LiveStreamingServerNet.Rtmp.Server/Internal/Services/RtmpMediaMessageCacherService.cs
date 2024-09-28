@@ -2,6 +2,7 @@
 using LiveStreamingServerNet.Rtmp.Internal.Extensions;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpHeaders;
+using LiveStreamingServerNet.Rtmp.Internal.Utilities;
 using LiveStreamingServerNet.Rtmp.Server.Configurations;
 using LiveStreamingServerNet.Rtmp.Server.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Server.Internal.Logging;
@@ -106,7 +107,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
                 dataBuffer.WriteAmf(new List<object?>
                 {
                     RtmpDataMessageConstants.OnMetaData,
-                    publishStreamContext.StreamMetaData
+                    publishStreamContext.StreamMetaData.ToAmfArray()
                 }, AmfEncodingType.Amf0)
             );
         }
@@ -131,8 +132,8 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
                 _chunkMessageSender.Send(clientContexts, basicHeader, messageHeader, (dataBuffer) =>
                     dataBuffer.WriteAmf(new List<object?>
                     {
-                    RtmpDataMessageConstants.OnMetaData,
-                    publishStreamContext.StreamMetaData
+                        RtmpDataMessageConstants.OnMetaData,
+                        publishStreamContext.StreamMetaData.ToAmfArray()
                     }, AmfEncodingType.Amf0)
                 );
             }
