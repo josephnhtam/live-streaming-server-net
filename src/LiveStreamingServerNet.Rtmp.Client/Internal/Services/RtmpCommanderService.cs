@@ -27,6 +27,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.Services
         public void Command(RtmpCommand command)
         {
             _commandMessageSender.SendCommandMessage(
+                command.messageStreamId,
                 command.chunkStreamId,
                 command.commandName,
                 transactionId: 0,
@@ -36,11 +37,12 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.Services
             );
         }
 
-        public void Command(RtmpCommand command, Func<IRtmpSessionContext, RtmpCommandResult, Task<bool>> callback)
+        public void Command(RtmpCommand command, CommandCallbackDelegate callback, Action? cancellationCallback = null)
         {
-            var transactionId = _commandResultManager.RegisterCommandCallback(callback);
+            var transactionId = _commandResultManager.RegisterCommandCallback(callback, cancellationCallback);
 
             _commandMessageSender.SendCommandMessage(
+               command.messageStreamId,
                command.chunkStreamId,
                command.commandName,
                transactionId,
@@ -50,7 +52,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.Services
            );
         }
 
-        public void Connect(string appName, IDictionary<string, object>? information = null)
+        public void Connect(string appName, IDictionary<string, object>? information, ConnectCallbackDelegate? callback, Action? cancellationCallback)
         {
             var commandObject = information == null ?
                 new Dictionary<string, object>() :
@@ -59,40 +61,48 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.Services
             commandObject["app"] = appName;
 
             var command = new RtmpCommand(
-               chunkStreamId: 3,
-               commandName: "connect",
-               commandObject: commandObject
+                messageStreamId: 0,
+                chunkStreamId: 3,
+                commandName: "connect",
+                commandObject: commandObject
             );
 
             Command(command, async (context, result) =>
             {
-                if (!string.IsNullOrEmpty(context.AppName))
-                {
-                    return false;
-                }
-
                 context.AppName = appName;
 
                 if (result.CommandObject.TryGetValue(RtmpArgumentNames.Code, out var code) && code is string codeString)
                 {
                     if (codeString == RtmpStatusCodes.ConnectSuccess)
                     {
-                        await _connectionEventDispatcher.RtmpConnectedAsync(context, result.CommandObject, result.Parameters);
+                        await HandleConnectResultAsync(true, context, result, callback);
                         return true;
                     }
 
-                    await _connectionEventDispatcher.RtmpConnectionRejectedAsync(context, result.CommandObject, result.Parameters);
+                    await HandleConnectResultAsync(false, context, result, callback);
                     return false;
                 }
 
-                await _connectionEventDispatcher.RtmpConnectedAsync(context, result.CommandObject, result.Parameters);
+                await HandleConnectResultAsync(true, context, result, callback);
                 return true;
-            });
+            }, cancellationCallback);
+
+            async Task HandleConnectResultAsync(bool success, IRtmpSessionContext context, RtmpCommandResult result, ConnectCallbackDelegate? callback)
+            {
+                if (success)
+                    await _connectionEventDispatcher.RtmpConnectedAsync(context, result.CommandObject, result.Parameters);
+                else
+                    await _connectionEventDispatcher.RtmpConnectionRejectedAsync(context, result.CommandObject, result.Parameters);
+
+                if (callback != null)
+                    await callback.Invoke(success, result.CommandObject, result.Parameters);
+            }
         }
 
-        public void CreateStream()
+        public void CreateStream(CreateStreamCallbackDelegate? callback, Action? cancellationCallback)
         {
             var command = new RtmpCommand(
+                messageStreamId: 0,
                 chunkStreamId: 3,
                 commandName: "createStream",
                 commandObject: new Dictionary<string, object>()
@@ -102,15 +112,38 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.Services
             {
                 if (result.Parameters is not double streamIdNumber)
                 {
+                    callback?.Invoke(false, null);
                     return false;
                 }
 
-                var streamId = (uint)streamIdNumber;
-                context.CreateStreamContext(streamId);
+                try
+                {
+                    var streamId = (uint)streamIdNumber;
+                    var streamContext = context.CreateStreamContext(streamId);
 
-                await _streamEventDispatcher.RtmpStreamCreated(context, streamId);
-                return true;
-            });
+                    await _streamEventDispatcher.RtmpStreamCreated(context, streamId);
+                    callback?.Invoke(true, streamContext);
+                    return true;
+                }
+                catch
+                {
+                    callback?.Invoke(false, null);
+                    return false;
+                }
+            }, cancellationCallback);
+        }
+
+        public void Play(uint streamId, string streamName, double start, double duration, bool reset)
+        {
+            var command = new RtmpCommand(
+                messageStreamId: streamId,
+                chunkStreamId: 3,
+                commandName: "play",
+                commandObject: new Dictionary<string, object>(),
+                parameters: new List<object?> { streamName, start, duration, reset }
+            );
+
+            Command(command);
         }
     }
 }

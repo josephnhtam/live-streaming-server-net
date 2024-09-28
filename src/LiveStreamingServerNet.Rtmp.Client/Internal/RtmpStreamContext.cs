@@ -7,6 +7,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
         public uint StreamId { get; }
 
         public IRtmpSessionContext SessionContext { get; }
+
         public RtmpStreamContext(uint streamId, IRtmpSessionContext sessionContext)
         {
             StreamId = streamId;
