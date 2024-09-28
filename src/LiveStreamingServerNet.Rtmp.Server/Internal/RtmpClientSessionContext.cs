@@ -72,10 +72,12 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
                 streamContext.Dispose();
         }
 
-        public void Dispose()
+        public ValueTask DisposeAsync()
         {
             foreach (var streamContext in _streamContexts.Values)
                 RemoveStreamContext(streamContext.StreamId);
+
+            return ValueTask.CompletedTask;
         }
     }
 }
