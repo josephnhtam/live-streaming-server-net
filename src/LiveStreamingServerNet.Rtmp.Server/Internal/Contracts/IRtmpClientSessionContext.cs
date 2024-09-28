@@ -5,7 +5,7 @@ using System.Collections.Concurrent;
 
 namespace LiveStreamingServerNet.Rtmp.Server.Internal.Contracts
 {
-    internal interface IRtmpClientSessionContext : IRtmpChunkStreamContextProvider, IDisposable
+    internal interface IRtmpClientSessionContext : IRtmpChunkStreamContextProvider, IAsyncDisposable
     {
         ISessionHandle Client { get; }
         ConcurrentDictionary<string, object> Items { get; }
