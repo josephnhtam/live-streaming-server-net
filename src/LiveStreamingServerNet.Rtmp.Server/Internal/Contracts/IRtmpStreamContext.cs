@@ -18,7 +18,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Contracts
         void RemoveSubscribeContext();
     }
 
-    internal interface IRtmpStreamContextBase : IDisposable
+    internal interface IRtmpMediaStreamContext : IDisposable
     {
         IRtmpStreamContext StreamContext { get; }
         string StreamPath { get; }
@@ -29,7 +29,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Contracts
         bool UpdateTimestamp(uint timestamp, MediaType mediaType);
     }
 
-    internal interface IRtmpPublishStreamContext : IRtmpStreamContextBase
+    internal interface IRtmpPublishStreamContext : IRtmpMediaStreamContext
     {
         IReadOnlyDictionary<string, object>? StreamMetaData { get; set; }
 
@@ -42,7 +42,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Contracts
         DateTime StartTime { get; }
     }
 
-    internal interface IRtmpSubscribeStreamContext : IRtmpStreamContextBase
+    internal interface IRtmpSubscribeStreamContext : IRtmpMediaStreamContext
     {
         bool IsReceivingAudio { get; set; }
         bool IsReceivingVideo { get; set; }
