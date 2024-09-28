@@ -31,12 +31,12 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
             var command = new RtmpReceiveAudioCommand(0, new Dictionary<string, object>(), flag);
 
             var streamId = _fixture.Create<uint>();
-            var stream = Substitute.For<IRtmpStream>();
+            var streamContext = Substitute.For<IRtmpStreamContext>();
             var subscribeStreamContext = Substitute.For<IRtmpSubscribeStreamContext>();
 
             _chunkStreamContext.MessageHeader.MessageStreamId.Returns(streamId);
-            _clientContext.GetStream(streamId).Returns(stream);
-            stream.SubscribeContext.Returns(subscribeStreamContext);
+            _clientContext.GetStreamContext(streamId).Returns(streamContext);
+            streamContext.SubscribeContext.Returns(subscribeStreamContext);
 
             // Act
             var result = await _sut.HandleAsync(_chunkStreamContext, _clientContext, command, CancellationToken.None);
@@ -56,11 +56,11 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
             var command = new RtmpReceiveAudioCommand(0, new Dictionary<string, object>(), flag);
 
             var streamId = _fixture.Create<uint>();
-            var stream = Substitute.For<IRtmpStream>();
+            var streamContext = Substitute.For<IRtmpStreamContext>();
 
             _chunkStreamContext.MessageHeader.MessageStreamId.Returns(streamId);
-            _clientContext.GetStream(streamId).Returns(stream);
-            stream.SubscribeContext.Returns((IRtmpSubscribeStreamContext?)null);
+            _clientContext.GetStreamContext(streamId).Returns(streamContext);
+            streamContext.SubscribeContext.Returns((IRtmpSubscribeStreamContext?)null);
 
             // Act
             var result = await _sut.HandleAsync(_chunkStreamContext, _clientContext, command, CancellationToken.None);
@@ -78,10 +78,10 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
             var command = new RtmpReceiveAudioCommand(0, new Dictionary<string, object>(), flag);
 
             var streamId = _fixture.Create<uint>();
-            var stream = Substitute.For<IRtmpStream>();
+            var streamContext = Substitute.For<IRtmpStreamContext>();
 
             _chunkStreamContext.MessageHeader.MessageStreamId.Returns(streamId);
-            _clientContext.GetStream(Arg.Any<uint>()).Returns((IRtmpStream?)null);
+            _clientContext.GetStreamContext(Arg.Any<uint>()).Returns((IRtmpStreamContext?)null);
 
             // Act
             var result = await _sut.HandleAsync(_chunkStreamContext, _clientContext, command, CancellationToken.None);

@@ -25,45 +25,45 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
             _eventDispatcher = eventDispatcher;
         }
 
-        public async ValueTask DeleteStreamAsync(IRtmpStream stream)
+        public async ValueTask DeleteStreamAsync(IRtmpStreamContext streamContext)
         {
-            await StopPublishingStreamIfNeededAsync(stream);
-            await StopSubscribingStreamIfNeededAsync(stream);
+            await StopPublishingStreamIfNeededAsync(streamContext);
+            await StopSubscribingStreamIfNeededAsync(streamContext);
 
-            stream.Delete();
+            streamContext.ClientContext.RemoveStreamContext(streamContext.StreamId);
         }
 
-        private async ValueTask StopPublishingStreamIfNeededAsync(IRtmpStream stream)
+        private async ValueTask StopPublishingStreamIfNeededAsync(IRtmpStreamContext streamContext)
         {
-            var publishStreamContext = stream.PublishContext;
+            var publishStreamContext = streamContext.PublishContext;
 
             if (publishStreamContext == null || !_rtmpStreamManager.StopPublishing(publishStreamContext, out var existingSubscriber))
                 return;
 
             _userControlMessageSender.SendStreamEofMessage(existingSubscriber.AsReadOnly());
             SendStreamUnpublishNotify(existingSubscriber.AsReadOnly());
-            await _eventDispatcher.RtmpStreamUnpublishedAsync(stream.ClientContext, publishStreamContext.StreamPath);
+            await _eventDispatcher.RtmpStreamUnpublishedAsync(streamContext.ClientContext, publishStreamContext.StreamPath);
         }
 
-        private async ValueTask StopSubscribingStreamIfNeededAsync(IRtmpStream stream)
+        private async ValueTask StopSubscribingStreamIfNeededAsync(IRtmpStreamContext streamContext)
         {
-            var subscribeStreamContext = stream.SubscribeContext;
+            var subscribeStreamContext = streamContext.SubscribeContext;
 
             if (subscribeStreamContext == null || !_rtmpStreamManager.StopSubscribing(subscribeStreamContext))
                 return;
 
             SendSubscriptionStoppedMessage(subscribeStreamContext);
-            await _eventDispatcher.RtmpStreamUnsubscribedAsync(stream.ClientContext, subscribeStreamContext.StreamPath);
+            await _eventDispatcher.RtmpStreamUnsubscribedAsync(streamContext.ClientContext, subscribeStreamContext.StreamPath);
         }
 
         private void SendStreamUnpublishNotify(
             IReadOnlyList<IRtmpSubscribeStreamContext> subscribeStreamContexts,
             AmfEncodingType amfEncodingType = AmfEncodingType.Amf0)
         {
-            foreach (var subscriberGroup in subscribeStreamContexts.GroupBy(x => x.Stream.Id))
+            foreach (var subscriberGroup in subscribeStreamContexts.GroupBy(x => x.StreamContext.StreamId))
             {
                 _commandMessageSender.SendOnStatusCommandMessage(
-                    subscriberGroup.Select(x => x.Stream.ClientContext).ToList(),
+                    subscriberGroup.Select(x => x.StreamContext.ClientContext).ToList(),
                     subscriberGroup.Key,
                     RtmpArgumentValues.Status,
                     RtmpStatusCodes.PlayUnpublishNotify,
@@ -77,8 +77,8 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
             AmfEncodingType amfEncodingType = AmfEncodingType.Amf0)
         {
             _commandMessageSender.SendOnStatusCommandMessage(
-                subscribeStreamContext.Stream.ClientContext,
-                subscribeStreamContext.Stream.Id,
+                subscribeStreamContext.StreamContext.ClientContext,
+                subscribeStreamContext.StreamContext.StreamId,
                 RtmpArgumentValues.Status,
                 RtmpStatusCodes.PlayUnpublishNotify,
                 "Stream is stopped.",

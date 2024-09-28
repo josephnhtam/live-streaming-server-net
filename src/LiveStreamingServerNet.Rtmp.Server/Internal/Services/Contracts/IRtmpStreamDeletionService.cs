@@ -4,6 +4,6 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services.Contracts
 {
     internal interface IRtmpStreamDeletionService
     {
-        ValueTask DeleteStreamAsync(IRtmpStream stream);
+        ValueTask DeleteStreamAsync(IRtmpStreamContext streamContext);
     }
 }

@@ -4,10 +4,10 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services.Contracts
 {
     internal interface IRtmpStreamManagerService
     {
-        PublishingStreamResult StartPublishing(IRtmpStream stream, string streamPath, IReadOnlyDictionary<string, string> streamArguments, out IList<IRtmpSubscribeStreamContext> subscribeStreamContexts);
+        PublishingStreamResult StartPublishing(IRtmpStreamContext streamContext, string streamPath, IReadOnlyDictionary<string, string> streamArguments, out IList<IRtmpSubscribeStreamContext> subscribeStreamContexts);
         bool StopPublishing(IRtmpPublishStreamContext publishStreamContext, out IList<IRtmpSubscribeStreamContext> subscribeStreamContexts);
 
-        SubscribingStreamResult StartSubscribing(IRtmpStream stream, string streamPath, IReadOnlyDictionary<string, string> streamArguments);
+        SubscribingStreamResult StartSubscribing(IRtmpStreamContext streamContext, string streamPath, IReadOnlyDictionary<string, string> streamArguments);
         bool StopSubscribing(IRtmpSubscribeStreamContext subscribeStreamContext);
 
         IReadOnlyList<string> GetStreamPaths();

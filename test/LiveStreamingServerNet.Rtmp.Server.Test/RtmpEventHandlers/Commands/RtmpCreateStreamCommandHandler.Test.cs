@@ -32,12 +32,12 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
             // Arrange
             var transactionId = _fixture.Create<double>();
             var streamId = _fixture.Create<uint>();
-            var stream = Substitute.For<IRtmpStream>();
+            var streamContext = Substitute.For<IRtmpStreamContext>();
             var commandObject = new Dictionary<string, object>();
             var command = new RtmpCreateStreamCommand(transactionId, commandObject);
 
-            stream.Id.Returns(streamId);
-            _clientContext.CreateNewStream().Returns(stream);
+            streamContext.StreamId.Returns(streamId);
+            _clientContext.CreateStreamContext().Returns(streamContext);
 
             // Act
             var result = await _sut.HandleAsync(_chunkStreamContext, _clientContext, command, default);
@@ -45,7 +45,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
             // Assert
             result.Should().BeTrue();
 
-            _clientContext.Received(1).CreateNewStream();
+            _clientContext.Received(1).CreateStreamContext();
 
             _commandMessageSender.Received(1).SendCommandMessage(
                 _clientContext, 0, 0, "_result", transactionId, Arg.Any<IReadOnlyDictionary<string, object>>(),

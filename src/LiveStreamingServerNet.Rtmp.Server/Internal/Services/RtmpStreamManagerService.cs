@@ -12,7 +12,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
         private readonly Dictionary<string, List<IRtmpSubscribeStreamContext>> _subscribeStreamContexts = new();
 
         public PublishingStreamResult StartPublishing(
-            IRtmpStream stream, string streamPath, IReadOnlyDictionary<string, string> streamArguments, out IList<IRtmpSubscribeStreamContext> subscribeStreamContexts)
+            IRtmpStreamContext streamContext, string streamPath, IReadOnlyDictionary<string, string> streamArguments, out IList<IRtmpSubscribeStreamContext> subscribeStreamContexts)
         {
             lock (_publishingSyncLock)
             {
@@ -20,16 +20,16 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
                 {
                     subscribeStreamContexts = null!;
 
-                    if (stream.PublishContext != null)
+                    if (streamContext.PublishContext != null)
                         return PublishingStreamResult.AlreadyPublishing;
 
-                    if (stream.SubscribeContext != null)
+                    if (streamContext.SubscribeContext != null)
                         return PublishingStreamResult.AlreadySubscribing;
 
                     if (_publishStreamContexts.ContainsKey(streamPath))
                         return PublishingStreamResult.AlreadyExists;
 
-                    var publishStreamContext = stream.CreatePublishContext(streamPath, streamArguments);
+                    var publishStreamContext = streamContext.CreatePublishContext(streamPath, streamArguments);
                     _publishStreamContexts.Add(streamPath, publishStreamContext);
 
                     subscribeStreamContexts = _subscribeStreamContexts.GetValueOrDefault(streamPath)?.ToList() ??
@@ -48,14 +48,14 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
                 {
                     var streamPath = publishStreamContext.StreamPath;
 
-                    if (publishStreamContext.Stream.PublishContext != publishStreamContext ||
+                    if (publishStreamContext.StreamContext.PublishContext != publishStreamContext ||
                         !_publishStreamContexts.Remove(streamPath))
                     {
                         subscribeStreamContexts = new List<IRtmpSubscribeStreamContext>();
                         return false;
                     }
 
-                    publishStreamContext.Stream.RemovePublishContext();
+                    publishStreamContext.StreamContext.RemovePublishContext();
 
                     subscribeStreamContexts = _subscribeStreamContexts.GetValueOrDefault(streamPath)?.ToList() ??
                         new List<IRtmpSubscribeStreamContext>();
@@ -74,16 +74,16 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
         }
 
         public SubscribingStreamResult StartSubscribing(
-            IRtmpStream stream, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
+            IRtmpStreamContext streamContext, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
             lock (_publishingSyncLock)
             {
                 lock (_subscribingSyncLock)
                 {
-                    if (stream.PublishContext != null)
+                    if (streamContext.PublishContext != null)
                         return SubscribingStreamResult.AlreadyPublishing;
 
-                    if (stream.SubscribeContext != null)
+                    if (streamContext.SubscribeContext != null)
                         return SubscribingStreamResult.AlreadySubscribing;
 
                     if (!_subscribeStreamContexts.TryGetValue(streamPath, out var subscribers))
@@ -92,7 +92,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
                         _subscribeStreamContexts[streamPath] = subscribers;
                     }
 
-                    var subscribeStreamContext = stream.CreateSubscribeContext(streamPath, streamArguments);
+                    var subscribeStreamContext = streamContext.CreateSubscribeContext(streamPath, streamArguments);
                     subscribers.Add(subscribeStreamContext);
 
                     return SubscribingStreamResult.Succeeded;
@@ -106,14 +106,14 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
             {
                 var streamPath = subscribeStreamContext.StreamPath;
 
-                if (subscribeStreamContext.Stream.SubscribeContext != subscribeStreamContext ||
+                if (subscribeStreamContext.StreamContext.SubscribeContext != subscribeStreamContext ||
                     !_subscribeStreamContexts.TryGetValue(streamPath, out var subscribers) ||
                     !subscribers.Remove(subscribeStreamContext))
                 {
                     return false;
                 }
 
-                subscribeStreamContext.Stream.RemoveSubscribeContext();
+                subscribeStreamContext.StreamContext.RemoveSubscribeContext();
 
                 if (subscribers.Count == 0)
                     _subscribeStreamContexts.Remove(streamPath);

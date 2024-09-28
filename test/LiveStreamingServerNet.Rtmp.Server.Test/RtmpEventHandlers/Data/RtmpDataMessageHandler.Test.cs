@@ -20,7 +20,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Data
         private readonly Fixture _fixture;
         private readonly IRtmpClientSessionContext _clientContext;
         private readonly IRtmpChunkStreamContext _chunkStreamContext;
-        private readonly IRtmpStream _stream;
+        private readonly IRtmpStreamContext _streamContext;
         private readonly IRtmpPublishStreamContext _publishStreamContext;
         private readonly DataBuffer _payloadBuffer;
         private readonly IRtmpMediaMessageCacherService _mediaMessageCacher;
@@ -34,7 +34,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Data
             _fixture = new Fixture();
             _clientContext = Substitute.For<IRtmpClientSessionContext>();
             _chunkStreamContext = Substitute.For<IRtmpChunkStreamContext>();
-            _stream = Substitute.For<IRtmpStream>();
+            _streamContext = Substitute.For<IRtmpStreamContext>();
             _publishStreamContext = Substitute.For<IRtmpPublishStreamContext>();
             _payloadBuffer = new DataBuffer();
             _mediaMessageCacher = Substitute.For<IRtmpMediaMessageCacherService>();
@@ -43,8 +43,8 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Data
             _streamManager = Substitute.For<IRtmpStreamManagerService>();
             _sut = new RtmpDataMessageHandler(_streamManager, _mediaMessageCacher, _eventDispatcher, _logger);
 
-            _stream.ClientContext.Returns(_clientContext);
-            _publishStreamContext.Stream.Returns(_stream);
+            _streamContext.ClientContext.Returns(_clientContext);
+            _publishStreamContext.StreamContext.Returns(_streamContext);
 
             var amfEncodingType = AmfEncodingType.Amf0;
             var metaData = new Dictionary<string, object>() { { "framerate", 60.0 } };
@@ -69,8 +69,8 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Data
             var streamid = _fixture.Create<uint>();
 
             _chunkStreamContext.MessageHeader.MessageStreamId.Returns(streamid);
-            _clientContext.GetStream(streamid).Returns(_stream);
-            _stream.PublishContext.Returns(_publishStreamContext);
+            _clientContext.GetStreamContext(streamid).Returns(_streamContext);
+            _streamContext.PublishContext.Returns(_publishStreamContext);
 
             // Act
             var result = await _sut.HandleAsync(_chunkStreamContext, _clientContext, _payloadBuffer, default);
@@ -85,7 +85,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Data
         public async Task HandleAsync_Should_ReturnFalse_For_MetaDataMessage_When_StreamDoesntExist()
         {
             // Arrange
-            _clientContext.GetStream(Arg.Any<uint>()).Returns((IRtmpStream?)null);
+            _clientContext.GetStreamContext(Arg.Any<uint>()).Returns((IRtmpStreamContext?)null);
 
             // Act
             var result = await _sut.HandleAsync(_chunkStreamContext, _clientContext, _payloadBuffer, default);
@@ -101,8 +101,8 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Data
             var streamid = _fixture.Create<uint>();
 
             _chunkStreamContext.MessageHeader.MessageStreamId.Returns(streamid);
-            _clientContext.GetStream(streamid).Returns(_stream);
-            _stream.PublishContext.Returns((IRtmpPublishStreamContext?)null);
+            _clientContext.GetStreamContext(streamid).Returns(_streamContext);
+            _streamContext.PublishContext.Returns((IRtmpPublishStreamContext?)null);
 
             // Act
             var result = await _sut.HandleAsync(_chunkStreamContext, _clientContext, _payloadBuffer, default);

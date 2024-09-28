@@ -57,7 +57,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Media
         public async Task HandleAsync_Should_ReturnFalse_When_StreamNotYetCreated()
         {
             // Arrange
-            _clientContext.GetStream(Arg.Any<uint>()).Returns((IRtmpStream?)null);
+            _clientContext.GetStreamContext(Arg.Any<uint>()).Returns((IRtmpStreamContext?)null);
 
             // Act
             var result = await _sut.HandleAsync(_chunkStreamContext, _clientContext, _dataBuffer, default);
@@ -88,21 +88,21 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Media
             var stremaPath = _fixture.Create<string>();
             var streamId = _fixture.Create<uint>();
 
-            var subscribeStreamContext = Substitute.For<IRtmpSubscribeStreamContext>();
-            var subscribeStreamContexts = new List<IRtmpSubscribeStreamContext>() { subscribeStreamContext };
+            var subscriber_subscribeStreamContext = Substitute.For<IRtmpSubscribeStreamContext>();
+            var subscriber_subscribeStreamContexts = new List<IRtmpSubscribeStreamContext>() { subscriber_subscribeStreamContext };
 
-            var publishStream = Substitute.For<IRtmpStream>();
-            var publishStreamContext = Substitute.For<IRtmpPublishStreamContext>();
+            var publisher_streamContext = Substitute.For<IRtmpStreamContext>();
+            var publisher_publishStreamContext = Substitute.For<IRtmpPublishStreamContext>();
 
-            publishStream.Id.Returns(streamId);
-            publishStream.ClientContext.Returns(_clientContext);
-            publishStream.PublishContext.Returns(publishStreamContext);
-            publishStreamContext.StreamPath.Returns(stremaPath);
-            publishStreamContext.Stream.Returns(publishStream);
+            publisher_streamContext.StreamId.Returns(streamId);
+            publisher_streamContext.ClientContext.Returns(_clientContext);
+            publisher_streamContext.PublishContext.Returns(publisher_publishStreamContext);
+            publisher_publishStreamContext.StreamPath.Returns(stremaPath);
+            publisher_publishStreamContext.StreamContext.Returns(publisher_streamContext);
 
             _chunkStreamContext.MessageHeader.MessageStreamId.Returns(streamId);
-            _clientContext.GetStream(streamId).Returns(publishStream);
-            _streamManager.GetSubscribeStreamContexts(stremaPath).Returns(subscribeStreamContexts);
+            _clientContext.GetStreamContext(streamId).Returns(publisher_streamContext);
+            _streamManager.GetSubscribeStreamContexts(stremaPath).Returns(subscriber_subscribeStreamContexts);
 
             var firstByte = (byte)((byte)frameType << 4 | (byte)videoCodec);
             _dataBuffer.Write(firstByte);
@@ -128,19 +128,19 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Media
             result.Should().BeTrue();
 
             if (gopCacheActivated && frameType == VideoFrameType.KeyFrame)
-                _ = _mediaMessageCacher.Received(1).ClearGroupOfPicturesCacheAsync(publishStreamContext);
+                _ = _mediaMessageCacher.Received(1).ClearGroupOfPicturesCacheAsync(publisher_publishStreamContext);
 
             _ = _mediaMessageCacher.Received(hasHeader ? 1 : 0)
-                .CacheSequenceHeaderAsync(publishStreamContext, MediaType.Video, _dataBuffer);
+                .CacheSequenceHeaderAsync(publisher_publishStreamContext, MediaType.Video, _dataBuffer);
 
             _ = _mediaMessageCacher.Received(gopCacheActivated && isPictureCachable ? 1 : 0)
-                .CachePictureAsync(publishStreamContext, MediaType.Video, _dataBuffer, _chunkStreamContext.MessageHeader.Timestamp);
+                .CachePictureAsync(publisher_publishStreamContext, MediaType.Video, _dataBuffer, _chunkStreamContext.MessageHeader.Timestamp);
 
-            publishStreamContext.Received(1).UpdateTimestamp(_chunkStreamContext.MessageHeader.Timestamp, MediaType.Video);
+            publisher_publishStreamContext.Received(1).UpdateTimestamp(_chunkStreamContext.MessageHeader.Timestamp, MediaType.Video);
 
             await _mediaMessageBroadcaster.Received(1).BroadcastMediaMessageAsync(
-                publishStreamContext,
-                subscribeStreamContexts,
+                publisher_publishStreamContext,
+                subscriber_subscribeStreamContexts,
                 MediaType.Video,
                 _chunkStreamContext.MessageHeader.Timestamp,
                 isSkippable,

@@ -121,9 +121,9 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
                 RtmpConstants.VideoMessageChunkStreamId :
                 RtmpConstants.AudioMessageChunkStreamId);
 
-            foreach (var subscribersGroup in subscribeStreamContexts.GroupBy(x => (x.Stream.Id, x.Stream.ClientContext.OutChunkSize)))
+            foreach (var subscribersGroup in subscribeStreamContexts.GroupBy(x => (x.StreamContext.StreamId, x.StreamContext.ClientContext.OutChunkSize)))
             {
-                var streamId = subscribersGroup.Key.Id;
+                var streamId = subscribersGroup.Key.StreamId;
                 var outChunkSize = subscribersGroup.Key.OutChunkSize;
                 var subscribers = subscribersGroup.ToList();
 
@@ -147,7 +147,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
                     {
                         var mediaPackage = new ClientMediaPackage(subscriber, rentedBuffer, isSkippable, timestamp, type);
 
-                        var mediaContext = GetMediaContext(subscriber.Stream.ClientContext);
+                        var mediaContext = GetMediaContext(subscriber.StreamContext.ClientContext);
                         if (mediaContext == null || !mediaContext.AddPackage(ref mediaPackage))
                             rentedBuffer.Unclaim();
                     }

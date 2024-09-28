@@ -24,8 +24,9 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Contracts
 
         string? AppName { get; set; }
 
-        IRtmpStream CreateNewStream();
-        List<IRtmpStream> GetStreams();
-        IRtmpStream? GetStream(uint streamId);
+        IRtmpStreamContext CreateStreamContext();
+        List<IRtmpStreamContext> GetStreamContexts();
+        IRtmpStreamContext? GetStreamContext(uint streamId);
+        void RemoveStreamContext(uint streamId);
     }
 }

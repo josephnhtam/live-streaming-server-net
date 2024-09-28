@@ -44,7 +44,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Media
             CancellationToken cancellationToken)
         {
             var streamId = chunkStreamContext.MessageHeader.MessageStreamId;
-            var publishStreamContext = clientContext.GetStream(streamId)?.PublishContext;
+            var publishStreamContext = clientContext.GetStreamContext(streamId)?.PublishContext;
 
             if (publishStreamContext == null)
             {

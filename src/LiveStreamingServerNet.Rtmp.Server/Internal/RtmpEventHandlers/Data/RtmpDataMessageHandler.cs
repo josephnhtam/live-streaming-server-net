@@ -77,7 +77,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Data
             IReadOnlyDictionary<string, object> metaData)
         {
             var streamId = chunkStreamContext.MessageHeader.MessageStreamId;
-            var publishStreamContext = clientContext.GetStream(streamId)?.PublishContext;
+            var publishStreamContext = clientContext.GetStreamContext(streamId)?.PublishContext;
 
             if (publishStreamContext == null)
             {

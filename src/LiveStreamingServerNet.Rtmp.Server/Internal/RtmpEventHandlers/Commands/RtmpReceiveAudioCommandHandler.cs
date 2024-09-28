@@ -17,7 +17,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
             CancellationToken cancellationToken)
         {
             var streamId = chunkStreamContext.MessageHeader.MessageStreamId;
-            var subscribeStreamContext = clientContext.GetStream(streamId)?.SubscribeContext;
+            var subscribeStreamContext = clientContext.GetStreamContext(streamId)?.SubscribeContext;
 
             if (subscribeStreamContext != null)
             {

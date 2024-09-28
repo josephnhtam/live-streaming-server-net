@@ -36,45 +36,45 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
         public async Task DeleteStream_Should_StopClientPublishingStream_When_StreamIsBeingPublishedByTheClient()
         {
             // Arrange
-            var publisherContext = Substitute.For<IRtmpClientSessionContext>();
-            var subscriberContext = Substitute.For<IRtmpClientSessionContext>();
-            var publishStreamContext = Substitute.For<IRtmpPublishStreamContext>();
-            var publishStream = Substitute.For<IRtmpStream>();
-            var subscribeStream = Substitute.For<IRtmpStream>();
-            var subscribeStreamContext = Substitute.For<IRtmpSubscribeStreamContext>();
-            var subscribeStreamContexts = new List<IRtmpSubscribeStreamContext> { subscribeStreamContext };
+            var publisher_clientContext = Substitute.For<IRtmpClientSessionContext>();
+            var subscriber_clientContext = Substitute.For<IRtmpClientSessionContext>();
+            var publisher_publishStreamContext = Substitute.For<IRtmpPublishStreamContext>();
+            var publisher_streamContext = Substitute.For<IRtmpStreamContext>();
+            var subscriber_streamContext = Substitute.For<IRtmpStreamContext>();
+            var subscriber_subscribeStreamContext = Substitute.For<IRtmpSubscribeStreamContext>();
+            var subscriber_subscribeStreamContexts = new List<IRtmpSubscribeStreamContext> { subscriber_subscribeStreamContext };
             var streamPath = _fixture.Create<string>();
-            var publishStreamId = _fixture.Create<uint>();
-            var subscribeStreamId = _fixture.Create<uint>();
+            var publisher_streamId = _fixture.Create<uint>();
+            var subscriber_streamId = _fixture.Create<uint>();
 
-            publishStreamContext.StreamPath.Returns(streamPath);
-            publishStreamContext.Stream.Returns(publishStream);
-            publishStream.ClientContext.Returns(publisherContext);
-            publishStream.PublishContext.Returns(publishStreamContext);
-            publishStream.Id.Returns(publishStreamId);
+            publisher_publishStreamContext.StreamPath.Returns(streamPath);
+            publisher_publishStreamContext.StreamContext.Returns(publisher_streamContext);
+            publisher_streamContext.ClientContext.Returns(publisher_clientContext);
+            publisher_streamContext.PublishContext.Returns(publisher_publishStreamContext);
+            publisher_streamContext.StreamId.Returns(publisher_streamId);
 
-            subscribeStreamContext.StreamPath.Returns(streamPath);
-            subscribeStreamContext.Stream.Returns(subscribeStream);
-            subscribeStream.ClientContext.Returns(subscriberContext);
-            subscribeStream.SubscribeContext.Returns(subscribeStreamContext);
-            subscribeStream.Id.Returns(subscribeStreamId);
+            subscriber_subscribeStreamContext.StreamPath.Returns(streamPath);
+            subscriber_subscribeStreamContext.StreamContext.Returns(subscriber_streamContext);
+            subscriber_streamContext.ClientContext.Returns(subscriber_clientContext);
+            subscriber_streamContext.SubscribeContext.Returns(subscriber_subscribeStreamContext);
+            subscriber_streamContext.StreamId.Returns(subscriber_streamId);
 
-            _rtmpStreamManager.StopPublishing(publishStreamContext, out Arg.Any<IList<IRtmpSubscribeStreamContext>>()).Returns(x =>
+            _rtmpStreamManager.StopPublishing(publisher_publishStreamContext, out Arg.Any<IList<IRtmpSubscribeStreamContext>>()).Returns(x =>
             {
-                x[1] = subscribeStreamContexts;
+                x[1] = subscriber_subscribeStreamContexts;
                 return true;
             });
 
             // Act
-            await _rtmpStreamDeletionService.DeleteStreamAsync(publishStream);
+            await _rtmpStreamDeletionService.DeleteStreamAsync(publisher_streamContext);
 
             // Assert
             _userControlMessageSender.Received(1).SendStreamEofMessage(
-                Arg.Is<IReadOnlyList<IRtmpSubscribeStreamContext>>(x => x.Contains(subscribeStreamContext)));
+                Arg.Is<IReadOnlyList<IRtmpSubscribeStreamContext>>(x => x.Contains(subscriber_subscribeStreamContext)));
 
             _commandMessageSender.Received(1).SendCommandMessage(
-                Arg.Is<IReadOnlyList<IRtmpClientSessionContext>>(x => x.Contains(subscriberContext)),
-                subscribeStreamId,
+                Arg.Is<IReadOnlyList<IRtmpClientSessionContext>>(x => x.Contains(subscriber_clientContext)),
+                subscriber_streamId,
                 RtmpConstants.OnStatusChunkStreamId,
                 "onStatus",
                 0,
@@ -87,47 +87,47 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
                 Arg.Any<AmfEncodingType>()
             );
 
-            _ = _eventDispatcher.Received(1).RtmpStreamUnpublishedAsync(publisherContext, streamPath);
+            _ = _eventDispatcher.Received(1).RtmpStreamUnpublishedAsync(publisher_clientContext, streamPath);
 
-            publishStream.Received(1).Delete();
+            publisher_clientContext.Received(1).RemoveStreamContext(publisher_streamId);
         }
 
         [Fact]
         public async Task DeleteStream_Should_StopClientSubscribingStream_When_StreamIsBeingSubscribedByTheClient()
         {
             // Arrange
-            var publisherContext = Substitute.For<IRtmpClientSessionContext>();
-            var subscriberContext = Substitute.For<IRtmpClientSessionContext>();
-            var publishStreamContext = Substitute.For<IRtmpPublishStreamContext>();
-            var publishStream = Substitute.For<IRtmpStream>();
-            var subscribeStream = Substitute.For<IRtmpStream>();
-            var subscribeStreamContext = Substitute.For<IRtmpSubscribeStreamContext>();
-            var subscribeStreamContexts = new List<IRtmpSubscribeStreamContext> { subscribeStreamContext };
+            var publisher_clientContext = Substitute.For<IRtmpClientSessionContext>();
+            var subscriber_clientContext = Substitute.For<IRtmpClientSessionContext>();
+            var publisher_publishStreamContext = Substitute.For<IRtmpPublishStreamContext>();
+            var publisher_streamContext = Substitute.For<IRtmpStreamContext>();
+            var subscriber_streamContext = Substitute.For<IRtmpStreamContext>();
+            var subscriber_subscribeStreamContext = Substitute.For<IRtmpSubscribeStreamContext>();
+            var subscriber_subscribeStreamContexts = new List<IRtmpSubscribeStreamContext> { subscriber_subscribeStreamContext };
             var streamPath = _fixture.Create<string>();
-            var publishStreamId = _fixture.Create<uint>();
-            var subscribeStreamId = _fixture.Create<uint>();
+            var publisher_streamId = _fixture.Create<uint>();
+            var subscriber_streamId = _fixture.Create<uint>();
 
-            publishStreamContext.StreamPath.Returns(streamPath);
-            publishStreamContext.Stream.Returns(publishStream);
-            publishStream.ClientContext.Returns(publisherContext);
-            publishStream.PublishContext.Returns(publishStreamContext);
-            publishStream.Id.Returns(publishStreamId);
+            publisher_publishStreamContext.StreamPath.Returns(streamPath);
+            publisher_publishStreamContext.StreamContext.Returns(publisher_streamContext);
+            publisher_streamContext.ClientContext.Returns(publisher_clientContext);
+            publisher_streamContext.PublishContext.Returns(publisher_publishStreamContext);
+            publisher_streamContext.StreamId.Returns(publisher_streamId);
 
-            subscribeStreamContext.StreamPath.Returns(streamPath);
-            subscribeStreamContext.Stream.Returns(subscribeStream);
-            subscribeStream.ClientContext.Returns(subscriberContext);
-            subscribeStream.SubscribeContext.Returns(subscribeStreamContext);
-            subscribeStream.Id.Returns(subscribeStreamId);
+            subscriber_subscribeStreamContext.StreamPath.Returns(streamPath);
+            subscriber_subscribeStreamContext.StreamContext.Returns(subscriber_streamContext);
+            subscriber_streamContext.ClientContext.Returns(subscriber_clientContext);
+            subscriber_streamContext.SubscribeContext.Returns(subscriber_subscribeStreamContext);
+            subscriber_streamContext.StreamId.Returns(subscriber_streamId);
 
-            _rtmpStreamManager.StopSubscribing(subscribeStreamContext).Returns(true);
+            _rtmpStreamManager.StopSubscribing(subscriber_subscribeStreamContext).Returns(true);
 
             // Act
-            await _rtmpStreamDeletionService.DeleteStreamAsync(subscribeStream);
+            await _rtmpStreamDeletionService.DeleteStreamAsync(subscriber_streamContext);
 
             // Assert
             _commandMessageSender.Received(1).SendCommandMessage(
-                subscriberContext,
-                subscribeStreamId,
+                subscriber_clientContext,
+                subscriber_streamId,
                 RtmpConstants.OnStatusChunkStreamId,
                 "onStatus",
                 0,
@@ -140,9 +140,9 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
                 Arg.Any<AmfEncodingType>()
             );
 
-            _ = _eventDispatcher.Received(1).RtmpStreamUnsubscribedAsync(subscriberContext, streamPath);
+            _ = _eventDispatcher.Received(1).RtmpStreamUnsubscribedAsync(subscriber_clientContext, streamPath);
 
-            subscribeStream.Received(1).Delete();
+            subscriber_clientContext.Received(1).RemoveStreamContext(subscriber_streamId);
         }
     }
 }

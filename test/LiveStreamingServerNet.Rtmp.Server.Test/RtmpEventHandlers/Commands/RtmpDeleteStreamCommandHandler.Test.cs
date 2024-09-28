@@ -32,12 +32,12 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
             // Arrange
             var transactionId = _fixture.Create<double>();
             var streamId = _fixture.Create<uint>();
-            var stream = Substitute.For<IRtmpStream>();
+            var streamContext = Substitute.For<IRtmpStreamContext>();
             var commandObject = new Dictionary<string, object>();
             var command = new RtmpDeleteStreamCommand(transactionId, commandObject, streamId);
 
             _chunkStreamContext.MessageHeader.MessageStreamId.Returns(streamId);
-            _clientContext.GetStream(streamId).Returns(stream);
+            _clientContext.GetStreamContext(streamId).Returns(streamContext);
 
             // Act
             var result = await _sut.HandleAsync(_chunkStreamContext, _clientContext, command, default);
@@ -45,7 +45,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
             // Assert
             result.Should().BeTrue();
 
-            _ = _streamDeletionService.Received(1).DeleteStreamAsync(stream);
+            _ = _streamDeletionService.Received(1).DeleteStreamAsync(streamContext);
         }
 
         [Fact]
@@ -58,7 +58,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
             var command = new RtmpDeleteStreamCommand(transactionId, commandObject, streamId);
 
             _chunkStreamContext.MessageHeader.MessageStreamId.Returns(streamId);
-            _clientContext.GetStream(streamId).Returns((IRtmpStream?)null);
+            _clientContext.GetStreamContext(streamId).Returns((IRtmpStreamContext?)null);
 
             // Act
             var result = await _sut.HandleAsync(_chunkStreamContext, _clientContext, command, default);
@@ -66,9 +66,9 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
             // Assert
             result.Should().BeTrue();
 
-            _clientContext.DidNotReceive().CreateNewStream();
+            _clientContext.DidNotReceive().CreateStreamContext();
 
-            _ = _streamDeletionService.DidNotReceive().DeleteStreamAsync(Arg.Any<IRtmpStream>());
+            _ = _streamDeletionService.DidNotReceive().DeleteStreamAsync(Arg.Any<IRtmpStreamContext>());
         }
     }
 }
