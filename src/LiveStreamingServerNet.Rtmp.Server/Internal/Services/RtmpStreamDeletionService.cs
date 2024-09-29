@@ -56,7 +56,6 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
             if (subscribeStreamContext == null || !_rtmpStreamManager.StopSubscribing(subscribeStreamContext))
                 return;
 
-            SendSubscriptionStoppedMessage(subscribeStreamContext);
             await _eventDispatcher.RtmpStreamUnsubscribedAsync(streamContext.ClientContext, subscribeStreamContext.StreamPath);
         }
 
@@ -74,19 +73,6 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
                     "Stream is unpublished.",
                     amfEncodingType);
             }
-        }
-
-        private void SendSubscriptionStoppedMessage(
-            IRtmpSubscribeStreamContext subscribeStreamContext,
-            AmfEncodingType amfEncodingType = AmfEncodingType.Amf0)
-        {
-            _commandMessageSender.SendOnStatusCommandMessage(
-                subscribeStreamContext.StreamContext.ClientContext,
-                subscribeStreamContext.StreamContext.StreamId,
-                RtmpStatusLevels.Status,
-                RtmpStreamStatusCodes.PlayUnpublishNotify,
-                "Stream is stopped.",
-                amfEncodingType);
         }
     }
 }
