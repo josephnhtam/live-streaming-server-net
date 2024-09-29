@@ -1,5 +1,6 @@
 ﻿using LiveStreamingServerNet.Rtmp;
 using LiveStreamingServerNet.Rtmp.Client;
+using LiveStreamingServerNet.Rtmp.Client.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Net;
@@ -26,6 +27,11 @@ namespace LiveStreamingServerNet.RtmpClientPlayDemo
 
             var rtmpStream = await rtmpClient.CreateStreamAsync();
 
+            await RecordStreamAsFlvAsync(rtmpClient, rtmpStream, logger);
+        }
+
+        private static async Task RecordStreamAsFlvAsync(IRtmpClient rtmpClient, IRtmpStream rtmpStream, ILogger<Program> logger)
+        {
             using var fileStream = new FileStream("output.flv", FileMode.Create, FileAccess.Write, FileShare.Read);
             using var binaryWriter = new BinaryWriter(fileStream);
 
@@ -52,7 +58,6 @@ namespace LiveStreamingServerNet.RtmpClientPlayDemo
             };
 
             rtmpStream.Subscribe.Play("demo");
-
             await rtmpClient.UntilStoppedAsync();
         }
     }
