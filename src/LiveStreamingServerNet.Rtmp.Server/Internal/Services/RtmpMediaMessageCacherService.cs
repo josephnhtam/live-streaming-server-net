@@ -107,7 +107,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
                 dataBuffer.WriteAmf(new List<object?>
                 {
                     RtmpDataMessageConstants.OnMetaData,
-                    publishStreamContext.StreamMetaData.ToAmfArray()
+                    publishStreamContext.StreamMetaData
                 }, AmfEncodingType.Amf0)
             );
         }
@@ -133,7 +133,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
                     dataBuffer.WriteAmf(new List<object?>
                     {
                         RtmpDataMessageConstants.OnMetaData,
-                        publishStreamContext.StreamMetaData.ToAmfArray()
+                        publishStreamContext.StreamMetaData
                     }, AmfEncodingType.Amf0)
                 );
             }
