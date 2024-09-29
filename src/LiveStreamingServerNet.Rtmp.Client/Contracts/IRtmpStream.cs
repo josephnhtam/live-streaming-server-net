@@ -8,6 +8,9 @@ namespace LiveStreamingServerNet.Rtmp.Client.Contracts
 
         IRtmpPublishStream Publish { get; }
         IRtmpSubscribeStream Subscribe { get; }
+
+        void CloseStream();
+        void DeleteStream();
     }
 
     public interface IRtmpPublishStream { }

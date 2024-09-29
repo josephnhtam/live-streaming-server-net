@@ -1,7 +1,6 @@
 ﻿using LiveStreamingServerNet.Rtmp.Client.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Client.Internal.Logging;
 using LiveStreamingServerNet.Rtmp.Client.Internal.Services.Contracts;
-using LiveStreamingServerNet.Rtmp.Internal;
 using LiveStreamingServerNet.Rtmp.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands.Dispatcher;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands.Dispatcher.Attributes;
@@ -26,7 +25,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.RtmpEventHandlers.Commands
             _logger = logger;
         }
 
-        public override async ValueTask<bool> HandleAsync(
+        public override ValueTask<bool> HandleAsync(
             IRtmpChunkStreamContext chunkStreamContext,
             IRtmpSessionContext context,
             RtmpOnStatusCommand command,
@@ -38,13 +37,13 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.RtmpEventHandlers.Commands
             if (subscribeStreamContext == null)
             {
                 _logger.SubscribeStreamNotYetCreated(context.Session.Id, streamId);
-                return true;
+                return ValueTask.FromResult(true);
             }
 
             if (command.Parameters is not IDictionary<string, object> parameters)
             {
                 _logger.InvalidOnStatusParameters(context.Session.Id, streamId);
-                return true;
+                return ValueTask.FromResult(true);
             }
 
             var level = parameters.GetValueOrDefault<string>(RtmpArguments.Level) ?? string.Empty;
@@ -53,7 +52,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.RtmpEventHandlers.Commands
 
             subscribeStreamContext.ReceiveStatus(new(level, code, description));
 
-            return true;
+            return ValueTask.FromResult(true);
         }
     }
 }
