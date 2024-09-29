@@ -179,7 +179,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
                     {
                         if (!subscriptionInitialized)
                         {
-                            await package.StreamContext.UntilInitializationComplete();
+                            await package.StreamContext.UntilInitializationCompleteAsync();
                             subscriptionInitialized = true;
                         }
 
