@@ -1,5 +1,4 @@
-﻿using LiveStreamingServerNet.Rtmp.Internal;
-using LiveStreamingServerNet.Rtmp.Internal.Extensions;
+﻿using LiveStreamingServerNet.Rtmp.Internal.Extensions;
 using LiveStreamingServerNet.Rtmp.Server.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Server.Internal.Services.Contracts;
 using LiveStreamingServerNet.Rtmp.Server.Internal.Services.Extensions;
@@ -25,10 +24,15 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
             _eventDispatcher = eventDispatcher;
         }
 
-        public async ValueTask DeleteStreamAsync(IRtmpStreamContext streamContext)
+        public async ValueTask CloseStreamAsync(IRtmpStreamContext streamContext)
         {
             await StopPublishingStreamIfNeededAsync(streamContext);
             await StopSubscribingStreamIfNeededAsync(streamContext);
+        }
+
+        public async ValueTask DeleteStreamAsync(IRtmpStreamContext streamContext)
+        {
+            await CloseStreamAsync(streamContext);
 
             streamContext.ClientContext.RemoveStreamContext(streamContext.StreamId);
         }
