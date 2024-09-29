@@ -1,11 +1,11 @@
-﻿using LiveStreamingServerNet.Rtmp.Internal;
-using LiveStreamingServerNet.Rtmp.Internal.Contracts;
-using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Dispatcher.Contracts;
-using LiveStreamingServerNet.Rtmp.Internal.Services.Contracts;
-using LiveStreamingServerNet.Rtmp.Client.Internal.Contracts;
+﻿using LiveStreamingServerNet.Rtmp.Client.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Client.Internal.Logging;
 using LiveStreamingServerNet.Rtmp.Client.Internal.RtmpEvents;
 using LiveStreamingServerNet.Rtmp.Client.Internal.Services.Contracts;
+using LiveStreamingServerNet.Rtmp.Internal;
+using LiveStreamingServerNet.Rtmp.Internal.Contracts;
+using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Dispatcher.Contracts;
+using LiveStreamingServerNet.Rtmp.Internal.Services.Contracts;
 using Mediator;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;

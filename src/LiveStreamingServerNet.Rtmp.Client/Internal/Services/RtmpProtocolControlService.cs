@@ -1,8 +1,8 @@
-﻿using LiveStreamingServerNet.Rtmp.Internal;
+﻿using LiveStreamingServerNet.Rtmp.Client.Internal.Contracts;
+using LiveStreamingServerNet.Rtmp.Client.Internal.Services.Contracts;
+using LiveStreamingServerNet.Rtmp.Internal;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpHeaders;
-using LiveStreamingServerNet.Rtmp.Client.Internal.Services.Contracts;
-using LiveStreamingServerNet.Rtmp.Client.Internal.Contracts;
 using System.Diagnostics;
 
 namespace LiveStreamingServerNet.Rtmp.Client.Internal.Services

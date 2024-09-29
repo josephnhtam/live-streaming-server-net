@@ -1,9 +1,9 @@
-﻿using LiveStreamingServerNet.Rtmp.Internal.Contracts;
+﻿using LiveStreamingServerNet.Rtmp.Client.Internal.Contracts;
+using LiveStreamingServerNet.Rtmp.Client.Internal.Logging;
+using LiveStreamingServerNet.Rtmp.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Dispatcher.Attributes;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Dispatcher.Contracts;
-using LiveStreamingServerNet.Rtmp.Client.Internal.Contracts;
-using LiveStreamingServerNet.Rtmp.Client.Internal.Logging;
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using Microsoft.Extensions.Logging;
 

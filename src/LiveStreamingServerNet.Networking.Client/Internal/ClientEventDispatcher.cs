@@ -1,7 +1,7 @@
-﻿using LiveStreamingServerNet.Networking.Contracts;
-using LiveStreamingServerNet.Networking.Client.Contracts;
+﻿using LiveStreamingServerNet.Networking.Client.Contracts;
 using LiveStreamingServerNet.Networking.Client.Internal.Contracts;
 using LiveStreamingServerNet.Networking.Client.Internal.Logging;
+using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.Utilities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
