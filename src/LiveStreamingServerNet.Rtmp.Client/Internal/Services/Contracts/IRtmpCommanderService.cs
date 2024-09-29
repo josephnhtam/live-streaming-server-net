@@ -9,6 +9,8 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.Services.Contracts
         void Command(RtmpCommand command, CommandCallbackDelegate callback, Action? cancellationCallback = null);
         void Connect(string appName, IDictionary<string, object>? information = null, ConnectCallbackDelegate? callback = null, Action? cancellationCallback = null);
         void CreateStream(CreateStreamCallbackDelegate? callback = null, Action? cancellationCallback = null);
+        void CloseStream(uint streamId);
+        void DeleteStream(uint streamId);
         void Play(uint streamId, string streamName, double start, double duration, bool reset);
     }
 

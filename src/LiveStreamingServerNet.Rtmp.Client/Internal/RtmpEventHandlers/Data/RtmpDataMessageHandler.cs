@@ -7,7 +7,6 @@ using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Dispatcher.Attribut
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Dispatcher.Contracts;
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using Microsoft.Extensions.Logging;
-using System.Runtime.CompilerServices;
 
 namespace LiveStreamingServerNet.Rtmp.Client.Internal.RtmpEventHandlers.Data
 {

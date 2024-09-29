@@ -1,6 +1,5 @@
 ﻿using LiveStreamingServerNet.Rtmp.Client.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Client.Internal.Services.Contracts;
-using LiveStreamingServerNet.Rtmp.Internal;
 
 namespace LiveStreamingServerNet.Rtmp.Client.Internal.Services
 {
@@ -115,6 +114,54 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.Services
                     return false;
                 }
             }, cancellationCallback);
+        }
+
+        public void CloseStream(uint streamId)
+        {
+            var sessionContext = GetSessionContext();
+            var streamContext = sessionContext.GetStreamContext(streamId);
+
+            if (streamContext == null)
+            {
+                throw new InvalidOperationException("Stream does not exist.");
+            }
+
+            streamContext.RemovePublishContext();
+            streamContext.RemoveSubscribeContext();
+
+            var command = new RtmpCommand(
+                messageStreamId: streamId,
+                chunkStreamId: 3,
+                commandName: "closeStream",
+                commandObject: null
+            );
+
+            Command(command);
+        }
+
+        public void DeleteStream(uint streamId)
+        {
+            var sessionContext = GetSessionContext();
+            var streamContext = sessionContext.GetStreamContext(streamId);
+
+            if (streamContext == null)
+            {
+                throw new InvalidOperationException("Stream does not exist.");
+            }
+
+            streamContext.RemovePublishContext();
+            streamContext.RemoveSubscribeContext();
+            sessionContext.RemoveStreamContext(streamId);
+
+            var command = new RtmpCommand(
+                messageStreamId: streamId,
+                chunkStreamId: 3,
+                commandName: "deleteStream",
+                commandObject: null,
+                parameters: new List<object?> { (double)streamId }
+            );
+
+            Command(command);
         }
 
         public void Play(uint streamId, string streamName, double start, double duration, bool reset)
