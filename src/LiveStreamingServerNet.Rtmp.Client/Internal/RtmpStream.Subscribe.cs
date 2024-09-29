@@ -18,7 +18,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
 
             public IReadOnlyDictionary<string, object>? StreamMetaData { get; set; }
 
-            public event EventHandler<IReadOnlyDictionary<string, object>>? OnStreamMetaDataUpdated;
+            public event EventHandler<IReadOnlyDictionary<string, object>>? OnStreamMetaDataReceived;
             public event EventHandler<IRentedBuffer>? OnVideoDataReceived;
             public event EventHandler<IRentedBuffer>? OnAudioDataReceived;
             public event EventHandler<StatusEventArgs>? OnStatusReceived;
@@ -51,7 +51,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
 
             private void OnSubscribeContextCreated(object? sender, IRtmpSubscribeStreamContext subscribeStreamContext)
             {
-                subscribeStreamContext.OnStreamMetaDataUpdated += OnStreamContextMetaDataUpdated;
+                subscribeStreamContext.OnStreamMetaDataReceived += OnStreamContextMetaDataRecevied;
                 subscribeStreamContext.OnVideoDataReceived += OnStreamContextVideoDataReceived;
                 subscribeStreamContext.OnAudioDataReceived += OnStreamContextAudioDataReceived;
                 subscribeStreamContext.OnStatusReceived += OnStreamContextStatusRecevied;
@@ -59,18 +59,18 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
 
             private void OnSubscribeContextRemoved(object? sender, IRtmpSubscribeStreamContext subscribeStreamContext)
             {
-                subscribeStreamContext.OnStreamMetaDataUpdated -= OnStreamContextMetaDataUpdated;
+                subscribeStreamContext.OnStreamMetaDataReceived -= OnStreamContextMetaDataRecevied;
                 subscribeStreamContext.OnVideoDataReceived -= OnStreamContextVideoDataReceived;
                 subscribeStreamContext.OnAudioDataReceived -= OnStreamContextAudioDataReceived;
                 subscribeStreamContext.OnStatusReceived -= OnStreamContextStatusRecevied;
             }
 
-            private void OnStreamContextMetaDataUpdated(object? sender, IReadOnlyDictionary<string, object> streamMetaData)
+            private void OnStreamContextMetaDataRecevied(object? sender, IReadOnlyDictionary<string, object> streamMetaData)
             {
                 try
                 {
                     StreamMetaData = streamMetaData;
-                    OnStreamMetaDataUpdated?.Invoke(this, streamMetaData);
+                    OnStreamMetaDataReceived?.Invoke(this, streamMetaData);
                 }
                 catch (Exception ex)
                 {
