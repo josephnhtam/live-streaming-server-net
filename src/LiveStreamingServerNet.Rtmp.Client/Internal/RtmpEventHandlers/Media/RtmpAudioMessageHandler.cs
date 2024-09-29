@@ -39,7 +39,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.RtmpEventHandlers.Media
 
             try
             {
-                subscribeStreamContext.ReceiveAudioData(rentedBuffer);
+                subscribeStreamContext.ReceiveAudioData(new(rentedBuffer, chunkStreamContext.MessageHeader.Timestamp));
 
                 return ValueTask.FromResult(true);
             }

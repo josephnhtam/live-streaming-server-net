@@ -22,11 +22,13 @@ namespace LiveStreamingServerNet.Rtmp.Client.Contracts
         void Play(string streamName);
         void Play(string streamName, double start, double duration, bool reset);
 
-        event EventHandler<IReadOnlyDictionary<string, object>> OnStreamMetaDataReceived;
-        event EventHandler<IRentedBuffer> OnVideoDataReceived;
-        event EventHandler<IRentedBuffer> OnAudioDataReceived;
+        event EventHandler<StreamMetaDataEventArgs> OnStreamMetaDataReceived;
+        event EventHandler<MediaDataEventArgs> OnVideoDataReceived;
+        event EventHandler<MediaDataEventArgs> OnAudioDataReceived;
         event EventHandler<StatusEventArgs> OnStatusReceived;
     }
 
+    public record struct StreamMetaDataEventArgs(IReadOnlyDictionary<string, object> StreamMetaData);
     public record struct StatusEventArgs(string Level, string Code, string Description);
+    public record struct MediaDataEventArgs(IRentedBuffer RentedBuffer, uint Timestamp);
 }

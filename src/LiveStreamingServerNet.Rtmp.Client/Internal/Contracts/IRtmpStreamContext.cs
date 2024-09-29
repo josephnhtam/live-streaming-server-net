@@ -36,13 +36,13 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.Contracts
     internal interface IRtmpSubscribeStreamContext : IRtmpMediaStreamContext
     {
         IReadOnlyDictionary<string, object>? StreamMetaData { get; set; }
-        void ReceiveVideoData(IRentedBuffer rentedBuffer);
-        void ReceiveAudioData(IRentedBuffer rentedBuffer);
+        void ReceiveVideoData(MediaDataEventArgs rentedBuffer);
+        void ReceiveAudioData(MediaDataEventArgs rentedBuffer);
         void ReceiveStatus(StatusEventArgs eventArgs);
 
-        event EventHandler<IReadOnlyDictionary<string, object>> OnStreamMetaDataReceived;
-        event EventHandler<IRentedBuffer> OnVideoDataReceived;
-        event EventHandler<IRentedBuffer> OnAudioDataReceived;
+        event EventHandler<StreamMetaDataEventArgs> OnStreamMetaDataReceived;
+        event EventHandler<MediaDataEventArgs> OnVideoDataReceived;
+        event EventHandler<MediaDataEventArgs> OnAudioDataReceived;
         event EventHandler<StatusEventArgs> OnStatusReceived;
     }
 }

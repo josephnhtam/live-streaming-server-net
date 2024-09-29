@@ -100,9 +100,9 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
     {
         private IReadOnlyDictionary<string, object>? _streamMetaData;
 
-        public event EventHandler<IReadOnlyDictionary<string, object>>? OnStreamMetaDataReceived;
-        public event EventHandler<IRentedBuffer>? OnVideoDataReceived;
-        public event EventHandler<IRentedBuffer>? OnAudioDataReceived;
+        public event EventHandler<StreamMetaDataEventArgs>? OnStreamMetaDataReceived;
+        public event EventHandler<MediaDataEventArgs>? OnVideoDataReceived;
+        public event EventHandler<MediaDataEventArgs>? OnAudioDataReceived;
         public event EventHandler<StatusEventArgs>? OnStatusReceived;
 
         public RtmpSubscribeStreamContext(IRtmpStreamContext streamContext) : base(streamContext) { }
@@ -116,19 +116,19 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
 
                 if (value != null)
                 {
-                    OnStreamMetaDataReceived?.Invoke(this, value);
+                    OnStreamMetaDataReceived?.Invoke(this, new(value));
                 }
             }
         }
 
-        public void ReceiveVideoData(IRentedBuffer rentedBuffer)
+        public void ReceiveVideoData(MediaDataEventArgs eventArgs)
         {
-            OnVideoDataReceived?.Invoke(this, rentedBuffer);
+            OnVideoDataReceived?.Invoke(this, eventArgs);
         }
 
-        public void ReceiveAudioData(IRentedBuffer rentedBuffer)
+        public void ReceiveAudioData(MediaDataEventArgs eventArgs)
         {
-            OnAudioDataReceived?.Invoke(this, rentedBuffer);
+            OnAudioDataReceived?.Invoke(this, eventArgs);
         }
 
         public void ReceiveStatus(StatusEventArgs eventArgs)
