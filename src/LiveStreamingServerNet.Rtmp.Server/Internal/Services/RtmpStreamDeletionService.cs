@@ -65,8 +65,8 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
                 _commandMessageSender.SendOnStatusCommandMessage(
                     subscriberGroup.Select(x => x.StreamContext.ClientContext).ToList(),
                     subscriberGroup.Key,
-                    RtmpArgumentValues.Status,
-                    RtmpStatusCodes.PlayUnpublishNotify,
+                    RtmpStatusLevels.Status,
+                    RtmpStreamStatusCodes.PlayUnpublishNotify,
                     "Stream is unpublished.",
                     amfEncodingType);
             }
@@ -79,8 +79,8 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
             _commandMessageSender.SendOnStatusCommandMessage(
                 subscribeStreamContext.StreamContext.ClientContext,
                 subscribeStreamContext.StreamContext.StreamId,
-                RtmpArgumentValues.Status,
-                RtmpStatusCodes.PlayUnpublishNotify,
+                RtmpStatusLevels.Status,
+                RtmpStreamStatusCodes.PlayUnpublishNotify,
                 "Stream is stopped.",
                 amfEncodingType);
         }

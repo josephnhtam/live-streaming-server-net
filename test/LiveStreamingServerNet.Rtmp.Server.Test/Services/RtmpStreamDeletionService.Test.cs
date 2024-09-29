@@ -81,8 +81,8 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
                 null,
                 Arg.Is<List<object?>>(x =>
                     x.First() is IDictionary<string, object> &&
-                    (x.First() as IDictionary<string, object>)![RtmpArgumentNames.Level] as string == RtmpArgumentValues.Status &&
-                    (x.First() as IDictionary<string, object>)![RtmpArgumentNames.Code] as string == RtmpStatusCodes.PlayUnpublishNotify
+                    (x.First() as IDictionary<string, object>)![RtmpArguments.Level] as string == RtmpStatusLevels.Status &&
+                    (x.First() as IDictionary<string, object>)![RtmpArguments.Code] as string == RtmpStreamStatusCodes.PlayUnpublishNotify
                 ),
                 Arg.Any<AmfEncodingType>()
             );
@@ -134,8 +134,8 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
                 null,
                 Arg.Is<List<object?>>(x =>
                     x.First() is IDictionary<string, object> &&
-                    (x.First() as IDictionary<string, object>)![RtmpArgumentNames.Level] as string == RtmpArgumentValues.Status &&
-                    (x.First() as IDictionary<string, object>)![RtmpArgumentNames.Code] as string == RtmpStatusCodes.PlayUnpublishNotify
+                    (x.First() as IDictionary<string, object>)![RtmpArguments.Level] as string == RtmpStatusLevels.Status &&
+                    (x.First() as IDictionary<string, object>)![RtmpArguments.Code] as string == RtmpStreamStatusCodes.PlayUnpublishNotify
                 ),
                 Arg.Any<AmfEncodingType>()
             );

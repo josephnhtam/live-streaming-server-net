@@ -77,17 +77,21 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
         }
 
         public SubscribingStreamResult StartSubscribing(
-            IRtmpStreamContext streamContext, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
+            IRtmpStreamContext streamContext, string streamPath, IReadOnlyDictionary<string, string> streamArguments, out IRtmpPublishStreamContext? publishStreamContext)
         {
             lock (_publishingSyncLock)
             {
                 lock (_subscribingSyncLock)
                 {
+                    publishStreamContext = null;
+
                     if (streamContext.PublishContext != null)
                         return SubscribingStreamResult.AlreadyPublishing;
 
                     if (streamContext.SubscribeContext != null)
                         return SubscribingStreamResult.AlreadySubscribing;
+
+                    _publishStreamContexts.TryGetValue(streamPath, out publishStreamContext);
 
                     if (!_subscribeStreamContexts.TryGetValue(streamPath, out var subscribers))
                     {

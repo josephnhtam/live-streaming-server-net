@@ -22,5 +22,8 @@ namespace LiveStreamingServerNet.Rtmp.Client.Contracts
         event EventHandler<IReadOnlyDictionary<string, object>> OnStreamMetaDataUpdated;
         event EventHandler<IRentedBuffer> OnVideoDataReceived;
         event EventHandler<IRentedBuffer> OnAudioDataReceived;
+        event EventHandler<StatusEventArgs> OnStatusReceived;
     }
+
+    public record struct StatusEventArgs(string Level, string Code, string Description);
 }

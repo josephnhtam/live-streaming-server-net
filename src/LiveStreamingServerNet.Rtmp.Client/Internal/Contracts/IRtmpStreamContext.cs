@@ -1,4 +1,5 @@
-﻿using LiveStreamingServerNet.Utilities.Buffers.Contracts;
+﻿using LiveStreamingServerNet.Rtmp.Client.Contracts;
+using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 
 namespace LiveStreamingServerNet.Rtmp.Client.Internal.Contracts
 {
@@ -37,9 +38,11 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.Contracts
         IReadOnlyDictionary<string, object>? StreamMetaData { get; set; }
         void ReceiveVideoData(IRentedBuffer rentedBuffer);
         void ReceiveAudioData(IRentedBuffer rentedBuffer);
+        void ReceiveStatus(StatusEventArgs eventArgs);
 
         event EventHandler<IReadOnlyDictionary<string, object>> OnStreamMetaDataUpdated;
         event EventHandler<IRentedBuffer> OnVideoDataReceived;
         event EventHandler<IRentedBuffer> OnAudioDataReceived;
+        event EventHandler<StatusEventArgs> OnStatusReceived;
     }
 }

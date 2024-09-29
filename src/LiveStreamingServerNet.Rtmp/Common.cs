@@ -58,4 +58,42 @@
         SequenceHeader = 0,
         Raw = 1
     }
+
+    public static class RtmpArguments
+    {
+        public const string Level = "level";
+        public const string Code = "code";
+        public const string Description = "description";
+        public const string Details = "details";
+        public const string ClientId = "clientid";
+        public const string ObjectEncoding = "objectEncoding";
+    }
+
+    public static class RtmpConnectionStatusCodes
+    {
+        public const string ConnectSuccess = "NetConnection.Connect.Success";
+        public const string ConnectRejected = "NetConnection.Connect.Rejected";
+    }
+
+    public static class RtmpStreamStatusCodes
+    {
+        public const string PauseNotify = "NetStream.Pause.Notify";
+        public const string UnpauseNotify = "NetStream.Unpause.Notify";
+        public const string PublishStart = "NetStream.Publish.Start";
+        public const string DataStart = "NetStream.Data.Start";
+        public const string UnpublishSuccess = "NetStream.Unpublish.Success";
+        public const string PublishUnauthorized = "NetStream.publish.Unauthorized";
+        public const string PublishBadName = "NetStream.Publish.BadName";
+        public const string PublishBadConnection = "NetStream.Publish.BadConnection";
+        public const string PlayReset = "NetStream.Play.Reset";
+        public const string PlayStart = "NetStream.Play.Start";
+        public const string PlayBadConnection = "NetStream.Play.BadConnection";
+        public const string PlayUnpublishNotify = "NetStream.Play.UnpublishNotify";
+    }
+
+    public static class RtmpStatusLevels
+    {
+        public const string Error = "error";
+        public const string Status = "status";
+    }
 }

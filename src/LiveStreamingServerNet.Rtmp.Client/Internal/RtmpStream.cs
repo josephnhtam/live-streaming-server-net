@@ -1,5 +1,6 @@
 ﻿using LiveStreamingServerNet.Rtmp.Client.Contracts;
 using LiveStreamingServerNet.Rtmp.Client.Internal.Contracts;
+using LiveStreamingServerNet.Rtmp.Client.Internal.Logging;
 using LiveStreamingServerNet.Rtmp.Client.Internal.Services.Contracts;
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using Microsoft.Extensions.Logging;
@@ -54,9 +55,11 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
             private readonly ILogger _logger;
 
             public IReadOnlyDictionary<string, object>? StreamMetaData { get; set; }
+
             public event EventHandler<IReadOnlyDictionary<string, object>>? OnStreamMetaDataUpdated;
             public event EventHandler<IRentedBuffer>? OnVideoDataReceived;
             public event EventHandler<IRentedBuffer>? OnAudioDataReceived;
+            public event EventHandler<StatusEventArgs>? OnStatusReceived;
 
             public RtmpSubscribeStream(
                 IRtmpStreamContext streamContext,
@@ -88,6 +91,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
                 subscribeStreamContext.OnStreamMetaDataUpdated += OnStreamContextMetaDataUpdated;
                 subscribeStreamContext.OnVideoDataReceived += OnStreamContextVideoDataReceived;
                 subscribeStreamContext.OnAudioDataReceived += OnStreamContextAudioDataReceived;
+                subscribeStreamContext.OnStatusReceived += OnStreamContextStatusRecevied;
             }
 
             private void OnSubscribeContextRemoved(object? sender, IRtmpSubscribeStreamContext subscribeStreamContext)
@@ -95,22 +99,56 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
                 subscribeStreamContext.OnStreamMetaDataUpdated -= OnStreamContextMetaDataUpdated;
                 subscribeStreamContext.OnVideoDataReceived -= OnStreamContextVideoDataReceived;
                 subscribeStreamContext.OnAudioDataReceived -= OnStreamContextAudioDataReceived;
+                subscribeStreamContext.OnStatusReceived -= OnStreamContextStatusRecevied;
             }
 
             private void OnStreamContextMetaDataUpdated(object? sender, IReadOnlyDictionary<string, object> streamMetaData)
             {
-                StreamMetaData = streamMetaData;
-                OnStreamMetaDataUpdated?.Invoke(this, streamMetaData);
+                try
+                {
+                    StreamMetaData = streamMetaData;
+                    OnStreamMetaDataUpdated?.Invoke(this, streamMetaData);
+                }
+                catch (Exception ex)
+                {
+                    _logger.StreamMetaDataUpdateError(_streamContext.StreamId, ex);
+                }
             }
 
             private void OnStreamContextVideoDataReceived(object? sender, IRentedBuffer rentedBuffer)
             {
-                OnVideoDataReceived?.Invoke(this, rentedBuffer);
+                try
+                {
+                    OnVideoDataReceived?.Invoke(this, rentedBuffer);
+                }
+                catch (Exception ex)
+                {
+                    _logger.VideoDataReceiveError(_streamContext.StreamId, ex);
+                }
             }
 
             private void OnStreamContextAudioDataReceived(object? sender, IRentedBuffer rentedBuffer)
             {
-                OnAudioDataReceived?.Invoke(this, rentedBuffer);
+                try
+                {
+                    OnAudioDataReceived?.Invoke(this, rentedBuffer);
+                }
+                catch (Exception ex)
+                {
+                    _logger.AudioDataReceiveError(_streamContext.StreamId, ex);
+                }
+            }
+
+            private void OnStreamContextStatusRecevied(object? sender, StatusEventArgs e)
+            {
+                try
+                {
+                    OnStatusReceived?.Invoke(this, e);
+                }
+                catch (Exception ex)
+                {
+                    _logger.StatusReceiveError(_streamContext.StreamId, ex);
+                }
             }
         }
     }
