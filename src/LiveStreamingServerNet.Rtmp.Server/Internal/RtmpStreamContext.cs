@@ -211,7 +211,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
             _initializationTcs.SetResult();
         }
 
-        public Task UntilInitializationComplete()
+        public Task UntilInitializationCompleteAsync()
         {
             return _initializationTask;
         }
