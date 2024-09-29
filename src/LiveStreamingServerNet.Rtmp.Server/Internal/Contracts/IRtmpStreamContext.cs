@@ -27,6 +27,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Contracts
         uint VideoTimestamp { get; }
         uint AudioTimestamp { get; }
         bool UpdateTimestamp(uint timestamp, MediaType mediaType);
+        void ResetTimestamps();
     }
 
     internal interface IRtmpPublishStreamContext : IRtmpMediaStreamContext
