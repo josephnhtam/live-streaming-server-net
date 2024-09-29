@@ -90,6 +90,12 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
             StreamArguments = streamArguments;
         }
 
+        public void ResetTimestamps()
+        {
+            _videoTimestamp = 0;
+            _audioTimestamp = 0;
+        }
+
         public bool UpdateTimestamp(uint timestamp, MediaType mediaType)
         {
             switch (mediaType)

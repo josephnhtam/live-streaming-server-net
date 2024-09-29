@@ -35,6 +35,9 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
                     subscribeStreamContexts = _subscribeStreamContexts.GetValueOrDefault(streamPath)?.ToList() ??
                         new List<IRtmpSubscribeStreamContext>();
 
+                    foreach (var subscribeStreamContext in subscribeStreamContexts)
+                        subscribeStreamContext.ResetTimestamps();
+
                     return PublishingStreamResult.Succeeded;
                 }
             }
