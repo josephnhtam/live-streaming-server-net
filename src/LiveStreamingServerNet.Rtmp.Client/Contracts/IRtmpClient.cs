@@ -4,6 +4,8 @@ namespace LiveStreamingServerNet.Rtmp.Client.Contracts
 {
     public interface IRtmpClient : IAsyncDisposable
     {
+        IServiceProvider Services { get; }
+
         bool IsHandshakeCompleted { get; }
         bool IsConnected { get; }
         bool IsStarted { get; }

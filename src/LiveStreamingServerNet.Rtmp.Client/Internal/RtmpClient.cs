@@ -32,6 +32,8 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
         public bool IsStarted => _clientTask != null;
         public bool IsStopped => _clientTcs.Task.IsCompleted;
 
+        public IServiceProvider Services => _client.Services;
+
         public RtmpClient(
             IClient client,
             IRtmpCommanderService commander,
