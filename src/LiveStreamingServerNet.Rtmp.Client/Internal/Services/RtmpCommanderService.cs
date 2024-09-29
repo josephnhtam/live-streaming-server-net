@@ -67,9 +67,9 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.Services
             {
                 context.AppName = appName;
 
-                if (result.CommandObject.TryGetValue(RtmpArgumentNames.Code, out var code) && code is string codeString)
+                if (result.CommandObject.TryGetValue(RtmpArguments.Code, out var code) && code is string codeString)
                 {
-                    if (codeString == RtmpStatusCodes.ConnectSuccess)
+                    if (codeString == RtmpConnectionStatusCodes.ConnectSuccess)
                     {
                         await (callback?.Invoke(true, result.CommandObject, result.Parameters) ?? ValueTask.CompletedTask);
                         return true;
@@ -90,7 +90,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.Services
                 messageStreamId: 0,
                 chunkStreamId: 3,
                 commandName: "createStream",
-                commandObject: new Dictionary<string, object>()
+                commandObject: null
             );
 
             Command(command, async (context, result) =>
@@ -133,7 +133,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.Services
                 messageStreamId: streamId,
                 chunkStreamId: 3,
                 commandName: "play",
-                commandObject: new Dictionary<string, object>(),
+                commandObject: null,
                 parameters: new List<object?> { streamName, start, duration, reset }
             );
 

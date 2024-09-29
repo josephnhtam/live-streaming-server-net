@@ -8,8 +8,8 @@ namespace LiveStreamingServerNet.Rtmp.Test.Utilities
         public static List<object?> CreateExpectedCommandProperties(string level, string code)
         {
             return Arg.Is<List<object?>>(x =>
-                ((Dictionary<string, object?>)x[0]!)[RtmpArgumentNames.Level] as string == level &&
-                ((Dictionary<string, object?>)x[0]!)[RtmpArgumentNames.Code] as string == code
+                ((Dictionary<string, object?>)x[0]!)[RtmpArguments.Level] as string == level &&
+                ((Dictionary<string, object?>)x[0]!)[RtmpArguments.Code] as string == code
             );
         }
 

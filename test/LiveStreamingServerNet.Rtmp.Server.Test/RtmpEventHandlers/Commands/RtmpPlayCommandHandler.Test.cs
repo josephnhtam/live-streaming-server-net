@@ -145,8 +145,13 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
                 .Returns(AuthorizationResult.Authorized());
 
             _streamManager.StartSubscribing(
-                _streamContext, streamPath, Helpers.CreateExpectedStreamArguments("password", "123456"))
-                .Returns(SubscribingStreamResult.Succeeded)
+                _streamContext, streamPath, Helpers.CreateExpectedStreamArguments("password", "123456"),
+                out Arg.Any<IRtmpPublishStreamContext?>())
+                .Returns(x =>
+                {
+                    x[3] = publishStreamExists ? _publishStreamContext : null;
+                    return SubscribingStreamResult.Succeeded;
+                })
                 .AndDoes(x =>
                 {
                     _subscribeStreamContext.StreamPath.Returns(x.Arg<string>());
@@ -157,31 +162,36 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
             var result = await _sut.HandleAsync(_chunkStreamContext, _clientContext, command, default);
 
             // Assert
-            Received.InOrder(() =>
+            Received.InOrder((Action)(() =>
             {
-                _commandMessageSender.Received(1).SendCommandMessage(
-                    _clientContext, streamId, RtmpConstants.OnStatusChunkStreamId, "onStatus", 0, null,
-                    Helpers.CreateExpectedCommandProperties(RtmpArgumentValues.Status, RtmpStatusCodes.PlayStart),
-                    Arg.Any<AmfEncodingType>(), Arg.Any<Action<bool>>());
-
                 if (publishStreamExists)
                 {
-                    _mediaMessageCacher.Received(1).SendCachedStreamMetaDataMessage(
+                    _commandMessageSender.Received<IRtmpCommandMessageSenderService>(1).SendCommandMessage(
+                        _clientContext, streamId, RtmpConstants.OnStatusChunkStreamId, "onStatus", 0, null,
+                        Helpers.CreateExpectedCommandProperties(RtmpStatusLevels.Status, RtmpStreamStatusCodes.PlayReset),
+                        Arg.Any<AmfEncodingType>(), Arg.Any<Action<bool>>());
+
+                    _commandMessageSender.Received<IRtmpCommandMessageSenderService>(1).SendCommandMessage(
+                        _clientContext, streamId, RtmpConstants.OnStatusChunkStreamId, "onStatus", 0, null,
+                        Helpers.CreateExpectedCommandProperties(RtmpStatusLevels.Status, (string)RtmpStreamStatusCodes.PlayStart),
+                        Arg.Any<AmfEncodingType>(), Arg.Any<Action<bool>>());
+
+                    _mediaMessageCacher.Received<IRtmpMediaMessageCacherService>(1).SendCachedStreamMetaDataMessage(
                         _subscribeStreamContext, _publishStreamContext, timestamp);
 
-                    _mediaMessageCacher.Received(1).SendCachedHeaderMessages(
+                    _mediaMessageCacher.Received<IRtmpMediaMessageCacherService>(1).SendCachedHeaderMessages(
                         _subscribeStreamContext, _publishStreamContext);
 
                     if (gopCacheActivated)
-                        _mediaMessageCacher.Received(1).SendCachedGroupOfPictures(
+                        _mediaMessageCacher.Received<IRtmpMediaMessageCacherService>(1).SendCachedGroupOfPictures(
                             _subscribeStreamContext, _publishStreamContext);
                 }
 
-                _subscribeStreamContext.Received(1).CompleteInitialization();
+                _subscribeStreamContext.Received<IRtmpSubscribeStreamContext>(1).CompleteInitialization();
 
-                _ = _eventDispatcher.Received(1).RtmpStreamSubscribedAsync(
+                _ = _eventDispatcher.Received<IRtmpServerStreamEventDispatcher>(1).RtmpStreamSubscribedAsync(
                     _clientContext, streamPath, Helpers.CreateExpectedStreamArguments("password", "123456"));
-            });
+            }));
 
             result.Should().BeTrue();
         }
@@ -215,7 +225,9 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
                 _clientContext, streamPath, Helpers.CreateExpectedStreamArguments("password", "123456"))
                 .Returns(AuthorizationResult.Authorized());
 
-            _streamManager.StartSubscribing(_streamContext, streamPath, Helpers.CreateExpectedStreamArguments("password", "123456"))
+            _streamManager.StartSubscribing(
+                _streamContext, streamPath, Helpers.CreateExpectedStreamArguments("password", "123456"),
+                out Arg.Any<IRtmpPublishStreamContext?>())
                 .Returns(subscribingResult);
 
             // Act
@@ -224,7 +236,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
             // Assert
             _commandMessageSender.Received(1).SendCommandMessage(
                 _clientContext, streamId, RtmpConstants.OnStatusChunkStreamId, "onStatus", 0, null,
-                Helpers.CreateExpectedCommandProperties(RtmpArgumentValues.Error, RtmpStatusCodes.PlayBadConnection),
+                Helpers.CreateExpectedCommandProperties(RtmpStatusLevels.Error, RtmpStreamStatusCodes.PlayBadConnection),
                 Arg.Any<AmfEncodingType>(), Arg.Any<Action<bool>>());
 
             result.Should().BeTrue();

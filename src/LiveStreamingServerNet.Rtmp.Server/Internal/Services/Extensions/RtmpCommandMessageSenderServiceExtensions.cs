@@ -20,12 +20,22 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services.Extensions
         {
             var properties = new Dictionary<string, object?>
             {
-                { RtmpArgumentNames.Level, level },
-                { RtmpArgumentNames.Code, code },
-                { RtmpArgumentNames.Description, description }
+                { RtmpArguments.Level, level },
+                { RtmpArguments.Code, code },
+                { RtmpArguments.Description, description }
             };
 
-            sender.SendCommandMessage(clientContext, messageStreamId, RtmpConstants.OnStatusChunkStreamId, "onStatus", 0, null, new List<object?> { properties }, amfEncodingType, callback);
+            sender.SendCommandMessage(
+                clientContext,
+                messageStreamId,
+                RtmpConstants.OnStatusChunkStreamId,
+                "onStatus",
+                0,
+                null,
+                new List<object?> { properties },
+                amfEncodingType,
+                callback
+            );
         }
 
         public static void SendOnStatusCommandMessage(
@@ -39,12 +49,21 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services.Extensions
         {
             var properties = new Dictionary<string, object?>
             {
-                { RtmpArgumentNames.Level, level },
-                { RtmpArgumentNames.Code, code },
-                { RtmpArgumentNames.Description, description }
+                { RtmpArguments.Level, level },
+                { RtmpArguments.Code, code },
+                { RtmpArguments.Description, description }
             };
 
-            sender.SendCommandMessage(clientContexts, messageStreamId, RtmpConstants.OnStatusChunkStreamId, "onStatus", 0, null, new List<object?> { properties }, amfEncodingType);
+            sender.SendCommandMessage(
+                clientContexts,
+                messageStreamId,
+                RtmpConstants.OnStatusChunkStreamId,
+                "onStatus",
+                0,
+                null,
+                new List<object?> { properties },
+                amfEncodingType
+            );
         }
 
         public static ValueTask SendOnStatusCommandMessageAsync(
@@ -57,7 +76,17 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services.Extensions
             AmfEncodingType amfEncodingType = AmfEncodingType.Amf0)
         {
             var tcs = new ValueTaskCompletionSource();
-            sender.SendOnStatusCommandMessage(clientContext, messageStreamId, level, code, description, amfEncodingType, _ => tcs.SetResult());
+
+            sender.SendOnStatusCommandMessage(
+                clientContext,
+                messageStreamId,
+                level,
+                code,
+                description,
+                amfEncodingType,
+                _ => tcs.SetResult()
+            );
+
             return tcs.Task;
         }
     }

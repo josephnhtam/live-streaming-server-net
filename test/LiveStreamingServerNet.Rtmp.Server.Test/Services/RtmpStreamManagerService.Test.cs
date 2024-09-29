@@ -221,7 +221,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             var sut = new RtmpStreamManagerService();
 
             // Act
-            var result = sut.StartSubscribing(streamContext, streamPath, streamArguments);
+            var result = sut.StartSubscribing(streamContext, streamPath, streamArguments, out _);
 
             // Assert
             result.Should().Be(SubscribingStreamResult.Succeeded);
@@ -243,7 +243,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             sut.StartPublishing(streamContext, streamPath, streamArguments, out _);
 
             // Act
-            var result = sut.StartSubscribing(streamContext, streamPath, streamArguments);
+            var result = sut.StartSubscribing(streamContext, streamPath, streamArguments, out _);
 
             // Assert
             result.Should().Be(SubscribingStreamResult.AlreadyPublishing);
@@ -261,10 +261,10 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             var streamArguments = _fixture.Create<Dictionary<string, string>>();
 
             var sut = new RtmpStreamManagerService();
-            sut.StartSubscribing(streamContext, streamPath, streamArguments);
+            sut.StartSubscribing(streamContext, streamPath, streamArguments, out _);
 
             // Act
-            var result = sut.StartSubscribing(streamContext, streamPath, streamArguments);
+            var result = sut.StartSubscribing(streamContext, streamPath, streamArguments, out _);
 
             // Assert
             result.Should().Be(SubscribingStreamResult.AlreadySubscribing);
@@ -282,7 +282,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             var streamArguments = _fixture.Create<Dictionary<string, string>>();
 
             var sut = new RtmpStreamManagerService();
-            sut.StartSubscribing(streamContext, streamPath, streamArguments);
+            sut.StartSubscribing(streamContext, streamPath, streamArguments, out _);
 
             var subscribeStreamContext = streamContext.SubscribeContext!;
 
@@ -324,8 +324,8 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             var streamArguments = _fixture.Create<Dictionary<string, string>>();
 
             var sut = new RtmpStreamManagerService();
-            sut.StartSubscribing(streamContext1, streamPath, streamArguments);
-            sut.StartSubscribing(streamContext2, streamPath, streamArguments);
+            sut.StartSubscribing(streamContext1, streamPath, streamArguments, out _);
+            sut.StartSubscribing(streamContext2, streamPath, streamArguments, out _);
 
             // Act
             var result = sut.GetSubscribeStreamContexts(streamPath);
@@ -356,8 +356,8 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             var streamArguments = _fixture.Create<Dictionary<string, string>>();
 
             var sut = new RtmpStreamManagerService();
-            sut.StartSubscribing(streamContext1, streamPath, streamArguments);
-            sut.StartSubscribing(streamContext2, streamPath, streamArguments);
+            sut.StartSubscribing(streamContext1, streamPath, streamArguments, out _);
+            sut.StartSubscribing(streamContext2, streamPath, streamArguments, out _);
 
             // Act
             var result = sut.StartPublishing(streamContext3, streamPath, streamArguments, out var existingSubscribers);

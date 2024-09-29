@@ -1,4 +1,5 @@
-﻿using LiveStreamingServerNet.Rtmp.Client.Internal.Contracts;
+﻿using LiveStreamingServerNet.Rtmp.Client.Contracts;
+using LiveStreamingServerNet.Rtmp.Client.Internal.Contracts;
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 
 namespace LiveStreamingServerNet.Rtmp.Client.Internal
@@ -102,6 +103,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
         public event EventHandler<IReadOnlyDictionary<string, object>>? OnStreamMetaDataUpdated;
         public event EventHandler<IRentedBuffer>? OnVideoDataReceived;
         public event EventHandler<IRentedBuffer>? OnAudioDataReceived;
+        public event EventHandler<StatusEventArgs>? OnStatusReceived;
 
         public RtmpSubscribeStreamContext(IRtmpStreamContext streamContext) : base(streamContext) { }
 
@@ -127,6 +129,11 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
         public void ReceiveAudioData(IRentedBuffer rentedBuffer)
         {
             OnAudioDataReceived?.Invoke(this, rentedBuffer);
+        }
+
+        public void ReceiveStatus(StatusEventArgs eventArgs)
+        {
+            OnStatusReceived?.Invoke(this, eventArgs);
         }
     }
 }

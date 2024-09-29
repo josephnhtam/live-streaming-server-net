@@ -90,10 +90,10 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
                 {
                     new Dictionary<string, object>
                     {
-                        { RtmpArgumentNames.Level, RtmpArgumentValues.Status },
-                        { RtmpArgumentNames.Code, RtmpStatusCodes.ConnectSuccess },
-                        { RtmpArgumentNames.Description, "Connection succeeded." },
-                        { RtmpArgumentNames.ObjectEncoding, 0 }
+                        { RtmpArguments.Level, RtmpStatusLevels.Status },
+                        { RtmpArguments.Code, RtmpConnectionStatusCodes.ConnectSuccess },
+                        { RtmpArguments.Description, "Connection succeeded." },
+                        { RtmpArguments.ObjectEncoding, 0 }
                     }
                 }
             );

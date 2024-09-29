@@ -42,5 +42,20 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.Logging
 
         [LoggerMessage(LogLevel.Error, "SessionId: {SessionId} | StreamId: {StreamId} | Subscribe stream not yet created")]
         public static partial void SubscribeStreamNotYetCreated(this ILogger logger, uint sessionId, uint streamId);
+
+        [LoggerMessage(LogLevel.Error, "StreamId: {StreamId} | An error occurred while updating stream metadata")]
+        public static partial void StreamMetaDataUpdateError(this ILogger logger, uint streamId, Exception ex);
+
+        [LoggerMessage(LogLevel.Error, "StreamId: {StreamId} | An error occurred while receiving video data")]
+        public static partial void VideoDataReceiveError(this ILogger logger, uint streamId, Exception ex);
+
+        [LoggerMessage(LogLevel.Error, "StreamId: {StreamId} | An error occurred while receiving audio data")]
+        public static partial void AudioDataReceiveError(this ILogger logger, uint streamId, Exception ex);
+
+        [LoggerMessage(LogLevel.Error, "StreamId: {StreamId} | An error occurred while receiving status")]
+        public static partial void StatusReceiveError(this ILogger logger, uint streamId, Exception ex);
+
+        [LoggerMessage(LogLevel.Error, "SessionId: {SessionId} | StreamId: {StreamId} | Invalid onStatus parameters")]
+        public static partial void InvalidOnStatusParameters(this ILogger logger, uint sessionId, uint streamId);
     }
 }
