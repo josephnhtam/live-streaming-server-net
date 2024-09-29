@@ -18,9 +18,9 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
 
             public IReadOnlyDictionary<string, object>? StreamMetaData { get; set; }
 
-            public event EventHandler<IReadOnlyDictionary<string, object>>? OnStreamMetaDataReceived;
-            public event EventHandler<IRentedBuffer>? OnVideoDataReceived;
-            public event EventHandler<IRentedBuffer>? OnAudioDataReceived;
+            public event EventHandler<StreamMetaDataEventArgs>? OnStreamMetaDataReceived;
+            public event EventHandler<MediaDataEventArgs>? OnVideoDataReceived;
+            public event EventHandler<MediaDataEventArgs>? OnAudioDataReceived;
             public event EventHandler<StatusEventArgs>? OnStatusReceived;
 
             public RtmpSubscribeStream(
@@ -65,12 +65,12 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
                 subscribeStreamContext.OnStatusReceived -= OnStreamContextStatusRecevied;
             }
 
-            private void OnStreamContextMetaDataRecevied(object? sender, IReadOnlyDictionary<string, object> streamMetaData)
+            private void OnStreamContextMetaDataRecevied(object? sender, StreamMetaDataEventArgs e)
             {
                 try
                 {
-                    StreamMetaData = streamMetaData;
-                    OnStreamMetaDataReceived?.Invoke(this, streamMetaData);
+                    StreamMetaData = e.StreamMetaData;
+                    OnStreamMetaDataReceived?.Invoke(this, e);
                 }
                 catch (Exception ex)
                 {
@@ -78,11 +78,11 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
                 }
             }
 
-            private void OnStreamContextVideoDataReceived(object? sender, IRentedBuffer rentedBuffer)
+            private void OnStreamContextVideoDataReceived(object? sender, MediaDataEventArgs e)
             {
                 try
                 {
-                    OnVideoDataReceived?.Invoke(this, rentedBuffer);
+                    OnVideoDataReceived?.Invoke(this, e);
                 }
                 catch (Exception ex)
                 {
@@ -90,11 +90,11 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
                 }
             }
 
-            private void OnStreamContextAudioDataReceived(object? sender, IRentedBuffer rentedBuffer)
+            private void OnStreamContextAudioDataReceived(object? sender, MediaDataEventArgs e)
             {
                 try
                 {
-                    OnAudioDataReceived?.Invoke(this, rentedBuffer);
+                    OnAudioDataReceived?.Invoke(this, e);
                 }
                 catch (Exception ex)
                 {
