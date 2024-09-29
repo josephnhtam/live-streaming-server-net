@@ -48,7 +48,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Media
 
             if (publishStreamContext == null)
             {
-                _logger.StreamNotYetCreated(clientContext.Client.Id);
+                _logger.PublishStreamNotYetCreated(clientContext.Client.Id, streamId);
                 return false;
             }
 
