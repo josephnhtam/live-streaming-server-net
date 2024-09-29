@@ -1,4 +1,6 @@
-﻿namespace LiveStreamingServerNet.Rtmp.Client.Internal.Contracts
+﻿using LiveStreamingServerNet.Utilities.Buffers.Contracts;
+
+namespace LiveStreamingServerNet.Rtmp.Client.Internal.Contracts
 {
     internal interface IRtmpStreamContext : IDisposable
     {
@@ -33,7 +35,11 @@
     internal interface IRtmpSubscribeStreamContext : IRtmpMediaStreamContext
     {
         IReadOnlyDictionary<string, object>? StreamMetaData { get; set; }
+        void ReceiveVideoData(IRentedBuffer rentedBuffer);
+        void ReceiveAudioData(IRentedBuffer rentedBuffer);
 
         event EventHandler<IReadOnlyDictionary<string, object>> OnStreamMetaDataUpdated;
+        event EventHandler<IRentedBuffer> OnVideoDataReceived;
+        event EventHandler<IRentedBuffer> OnAudioDataReceived;
     }
 }
