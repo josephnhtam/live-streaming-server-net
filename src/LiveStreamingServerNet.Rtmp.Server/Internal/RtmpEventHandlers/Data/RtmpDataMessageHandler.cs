@@ -64,7 +64,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Data
             switch (eventName)
             {
                 case RtmpDataMessageConstants.OnMetaData:
-                    var metaData = amfData[2] as Dictionary<string, object>;
+                    var metaData = amfData[2] as IDictionary<string, object>;
                     return metaData != null ? await HandleOnMetaDataAsync(clientContext, chunkStreamContext, metaData.AsReadOnly()) : true;
                 default:
                     return true;

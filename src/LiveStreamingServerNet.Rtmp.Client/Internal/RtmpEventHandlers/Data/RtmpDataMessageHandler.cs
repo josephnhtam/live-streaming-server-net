@@ -7,6 +7,7 @@ using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Dispatcher.Attribut
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Dispatcher.Contracts;
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using Microsoft.Extensions.Logging;
+using System.Runtime.CompilerServices;
 
 namespace LiveStreamingServerNet.Rtmp.Client.Internal.RtmpEventHandlers.Data
 {
@@ -48,7 +49,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.RtmpEventHandlers.Data
            IRtmpChunkStreamContext chunkStreamContext,
            object[] amfData)
         {
-            var metaData = amfData[1] as Dictionary<string, object>;
+            var metaData = amfData[1] as IDictionary<string, object>;
 
             if (metaData == null)
                 return ValueTask.FromResult(true);
@@ -57,7 +58,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.RtmpEventHandlers.Data
             var subscribeStreamContext = context.GetStreamContext(streamId)?.SubscribeContext;
 
             if (subscribeStreamContext != null)
-                subscribeStreamContext.StreamMetaData = metaData;
+                subscribeStreamContext.StreamMetaData = new Dictionary<string, object>(metaData);
 
             return ValueTask.FromResult(true);
         }
