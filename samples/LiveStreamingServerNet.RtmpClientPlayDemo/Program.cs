@@ -27,10 +27,10 @@ namespace LiveStreamingServerNet.RtmpClientPlayDemo
 
             var rtmpStream = await rtmpClient.CreateStreamAsync();
 
-            await RecordStreamAsFlvAsync(rtmpClient, rtmpStream, logger);
+            await RecordStreamAsFlvAsync("demo", rtmpClient, rtmpStream, logger);
         }
 
-        private static async Task RecordStreamAsFlvAsync(IRtmpClient rtmpClient, IRtmpStream rtmpStream, ILogger<Program> logger)
+        private static async Task RecordStreamAsFlvAsync(string streamName, IRtmpClient rtmpClient, IRtmpStream rtmpStream, ILogger<Program> logger)
         {
             using var fileStream = new FileStream("output.flv", FileMode.Create, FileAccess.Write, FileShare.Read);
             using var binaryWriter = new BinaryWriter(fileStream);
@@ -57,7 +57,7 @@ namespace LiveStreamingServerNet.RtmpClientPlayDemo
                 }
             };
 
-            rtmpStream.Subscribe.Play("demo");
+            rtmpStream.Subscribe.Play(streamName);
             await rtmpClient.UntilStoppedAsync();
         }
     }
