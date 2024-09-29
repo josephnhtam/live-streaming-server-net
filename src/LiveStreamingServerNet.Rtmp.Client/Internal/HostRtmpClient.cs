@@ -20,6 +20,9 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
         public bool IsStarted => _innerClient.IsStarted;
         public bool IsStopped => _innerClient.IsStopped;
 
+        public Task<ConnectResponse> ConnectAsync(ServerEndPoint endPoint, string appName)
+            => _innerClient.ConnectAsync(endPoint, appName);
+
         public Task<ConnectResponse> ConnectAsync(ServerEndPoint endPoint, string appName, IDictionary<string, object> information)
             => _innerClient.ConnectAsync(endPoint, appName, information);
 
