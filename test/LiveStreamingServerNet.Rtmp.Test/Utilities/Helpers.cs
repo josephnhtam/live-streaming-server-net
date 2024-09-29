@@ -1,5 +1,4 @@
-﻿using LiveStreamingServerNet.Rtmp.Internal;
-using NSubstitute;
+﻿using NSubstitute;
 
 namespace LiveStreamingServerNet.Rtmp.Test.Utilities
 {
