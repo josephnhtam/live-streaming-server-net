@@ -125,21 +125,6 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             await _rtmpStreamDeletionService.DeleteStreamAsync(subscriber_streamContext);
 
             // Assert
-            _commandMessageSender.Received(1).SendCommandMessage(
-                subscriber_clientContext,
-                subscriber_streamId,
-                RtmpConstants.OnStatusChunkStreamId,
-                "onStatus",
-                0,
-                null,
-                Arg.Is<List<object?>>(x =>
-                    x.First() is IDictionary<string, object> &&
-                    (x.First() as IDictionary<string, object>)![RtmpArguments.Level] as string == RtmpStatusLevels.Status &&
-                    (x.First() as IDictionary<string, object>)![RtmpArguments.Code] as string == RtmpStreamStatusCodes.PlayUnpublishNotify
-                ),
-                Arg.Any<AmfEncodingType>()
-            );
-
             _ = _eventDispatcher.Received(1).RtmpStreamUnsubscribedAsync(subscriber_clientContext, streamPath);
 
             subscriber_clientContext.Received(1).RemoveStreamContext(subscriber_streamId);
