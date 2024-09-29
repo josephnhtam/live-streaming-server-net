@@ -40,7 +40,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.Contracts
         void ReceiveAudioData(IRentedBuffer rentedBuffer);
         void ReceiveStatus(StatusEventArgs eventArgs);
 
-        event EventHandler<IReadOnlyDictionary<string, object>> OnStreamMetaDataUpdated;
+        event EventHandler<IReadOnlyDictionary<string, object>> OnStreamMetaDataReceived;
         event EventHandler<IRentedBuffer> OnVideoDataReceived;
         event EventHandler<IRentedBuffer> OnAudioDataReceived;
         event EventHandler<StatusEventArgs> OnStatusReceived;

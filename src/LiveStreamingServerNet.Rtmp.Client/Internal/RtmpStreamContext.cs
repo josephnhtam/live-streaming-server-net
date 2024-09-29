@@ -100,7 +100,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
     {
         private IReadOnlyDictionary<string, object>? _streamMetaData;
 
-        public event EventHandler<IReadOnlyDictionary<string, object>>? OnStreamMetaDataUpdated;
+        public event EventHandler<IReadOnlyDictionary<string, object>>? OnStreamMetaDataReceived;
         public event EventHandler<IRentedBuffer>? OnVideoDataReceived;
         public event EventHandler<IRentedBuffer>? OnAudioDataReceived;
         public event EventHandler<StatusEventArgs>? OnStatusReceived;
@@ -116,7 +116,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
 
                 if (value != null)
                 {
-                    OnStreamMetaDataUpdated?.Invoke(this, value);
+                    OnStreamMetaDataReceived?.Invoke(this, value);
                 }
             }
         }

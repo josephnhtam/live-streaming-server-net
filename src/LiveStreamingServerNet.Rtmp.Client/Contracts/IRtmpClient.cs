@@ -9,6 +9,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Contracts
         bool IsStarted { get; }
         bool IsStopped { get; }
 
+        Task<ConnectResponse> ConnectAsync(ServerEndPoint endPoint, string appName);
         Task<ConnectResponse> ConnectAsync(ServerEndPoint endPoint, string appName, IDictionary<string, object> information);
         Task<IRtmpStream> CreateStreamAsync();
         Task UntilStoppedAsync();

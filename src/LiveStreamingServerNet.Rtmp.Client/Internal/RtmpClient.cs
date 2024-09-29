@@ -46,6 +46,11 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
             _config = config.Value;
         }
 
+        public Task<ConnectResponse> ConnectAsync(ServerEndPoint endPoint, string appName)
+        {
+            return ConnectAsync(endPoint, appName, new Dictionary<string, object>());
+        }
+
         public async Task<ConnectResponse> ConnectAsync(ServerEndPoint endPoint, string appName, IDictionary<string, object> information)
         {
             if (Interlocked.CompareExchange(ref _connectOnce, 1, 0) == 1)

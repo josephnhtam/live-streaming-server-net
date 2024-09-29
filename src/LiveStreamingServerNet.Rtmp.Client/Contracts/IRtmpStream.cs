@@ -22,7 +22,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Contracts
         void Play(string streamName);
         void Play(string streamName, double start, double duration, bool reset);
 
-        event EventHandler<IReadOnlyDictionary<string, object>> OnStreamMetaDataUpdated;
+        event EventHandler<IReadOnlyDictionary<string, object>> OnStreamMetaDataReceived;
         event EventHandler<IRentedBuffer> OnVideoDataReceived;
         event EventHandler<IRentedBuffer> OnAudioDataReceived;
         event EventHandler<StatusEventArgs> OnStatusReceived;
