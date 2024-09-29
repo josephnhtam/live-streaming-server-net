@@ -55,6 +55,9 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Logging
         [LoggerMessage(LogLevel.Warning, "ClientId: {ClientId} | Stream is not yet created")]
         public static partial void StreamNotYetCreated(this ILogger logger, uint clientId);
 
+        [LoggerMessage(LogLevel.Warning, "ClientId: {ClientId} | StreamId: {StreamId} | Stream is not yet created")]
+        public static partial void PublishStreamNotYetCreated(this ILogger logger, uint clientId, uint streamId);
+
         [LoggerMessage(LogLevel.Trace, "ClientId: {ClientId} | Acknowledgement received")]
         public static partial void AcknowledgementReceived(this ILogger logger, uint clientId);
 
