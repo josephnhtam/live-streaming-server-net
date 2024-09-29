@@ -61,12 +61,12 @@ namespace LiveStreamingServerNet.Flv.Internal
             _initializationTcs.SetResult();
         }
 
-        public Task UntilInitializationComplete()
+        public Task UntilInitializationCompleteAsync()
         {
             return _initializationTask;
         }
 
-        public Task UntilComplete()
+        public Task UntilCompleteAsync()
         {
             return _completeTask;
         }

@@ -64,7 +64,7 @@ namespace LiveStreamingServerNet.Flv.Test.Services
         public async Task RunClientAsync_Should_Stop_After_ClientIsComplete()
         {
             // Arrange
-            _client.UntilComplete().Returns(Task.CompletedTask);
+            _client.UntilCompleteAsync().Returns(Task.CompletedTask);
 
             // Act
             await _sut.RunClientAsync(_client);

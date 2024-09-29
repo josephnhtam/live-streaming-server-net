@@ -24,7 +24,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
                 await SendCachedFlvTagsAsync(client, streamContext, client.StoppingToken);
 
                 client.CompleteInitialization();
-                await client.UntilComplete();
+                await client.UntilCompleteAsync();
             }
             finally
             {

@@ -9,8 +9,8 @@ namespace LiveStreamingServerNet.Flv.Internal.Contracts
         CancellationToken StoppingToken { get; }
         void Stop();
         void CompleteInitialization();
-        Task UntilInitializationComplete();
-        Task UntilComplete();
+        Task UntilInitializationCompleteAsync();
+        Task UntilCompleteAsync();
         ValueTask WriteHeaderAsync(bool allowAudioTags, bool allowVideoTags, CancellationToken cancellationToken);
         ValueTask WriteTagAsync(FlvTagType tagType, uint timestamp, Action<IDataBuffer> payloadBuffer, CancellationToken cancellationToken);
     }
