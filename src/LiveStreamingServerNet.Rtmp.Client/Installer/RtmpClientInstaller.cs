@@ -32,8 +32,6 @@ namespace LiveStreamingServerNet.Rtmp.Client.Installer
 
             configureRtmpClient?.Invoke(new RtmpClientConfigurator(services));
 
-            //services.AddDefaults();
-
             return services;
         }
 

@@ -177,5 +177,17 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
             _handshakeTcs.TrySetResult();
             return ValueTask.CompletedTask;
         }
+
+        public async ValueTask DisposeAsync()
+        {
+            if (!_clientCts.IsCancellationRequested)
+            {
+                _clientCts.Cancel();
+            }
+
+            _clientCts.Dispose();
+
+            await UntilStoppedAsync();
+        }
     }
 }
