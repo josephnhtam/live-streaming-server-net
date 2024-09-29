@@ -1,4 +1,5 @@
 ﻿using LiveStreamingServerNet.Rtmp.Client.Internal.Contracts;
+using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 
 namespace LiveStreamingServerNet.Rtmp.Client.Internal
 {
@@ -91,14 +92,18 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
 
     internal class RtmpPublishStreamContext : RtmpMediaStreamContext, IRtmpPublishStreamContext
     {
-        public RtmpPublishStreamContext(IRtmpStreamContext streamContext) : base(streamContext)
-        { }
+        public RtmpPublishStreamContext(IRtmpStreamContext streamContext) : base(streamContext) { }
     }
 
     internal class RtmpSubscribeStreamContext : RtmpMediaStreamContext, IRtmpSubscribeStreamContext
     {
         private IReadOnlyDictionary<string, object>? _streamMetaData;
+
         public event EventHandler<IReadOnlyDictionary<string, object>>? OnStreamMetaDataUpdated;
+        public event EventHandler<IRentedBuffer>? OnVideoDataReceived;
+        public event EventHandler<IRentedBuffer>? OnAudioDataReceived;
+
+        public RtmpSubscribeStreamContext(IRtmpStreamContext streamContext) : base(streamContext) { }
 
         public IReadOnlyDictionary<string, object>? StreamMetaData
         {
@@ -114,7 +119,14 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
             }
         }
 
-        public RtmpSubscribeStreamContext(IRtmpStreamContext streamContext) : base(streamContext)
-        { }
+        public void ReceiveVideoData(IRentedBuffer rentedBuffer)
+        {
+            OnVideoDataReceived?.Invoke(this, rentedBuffer);
+        }
+
+        public void ReceiveAudioData(IRentedBuffer rentedBuffer)
+        {
+            OnAudioDataReceived?.Invoke(this, rentedBuffer);
+        }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace LiveStreamingServerNet.Rtmp.Client.Contracts
+﻿using LiveStreamingServerNet.Utilities.Buffers.Contracts;
+
+namespace LiveStreamingServerNet.Rtmp.Client.Contracts
 {
     public interface IRtmpStream
     {
@@ -18,5 +20,7 @@
         void Play(string streamName, double start, double duration, bool reset);
 
         event EventHandler<IReadOnlyDictionary<string, object>> OnStreamMetaDataUpdated;
+        event EventHandler<IRentedBuffer> OnVideoDataReceived;
+        event EventHandler<IRentedBuffer> OnAudioDataReceived;
     }
 }

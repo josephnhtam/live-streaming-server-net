@@ -1,6 +1,7 @@
 ﻿using LiveStreamingServerNet.Rtmp.Client.Contracts;
 using LiveStreamingServerNet.Rtmp.Client.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Client.Internal.Services.Contracts;
+using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using Microsoft.Extensions.Logging;
 
 namespace LiveStreamingServerNet.Rtmp.Client.Internal
@@ -51,8 +52,11 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
             private readonly IRtmpChunkMessageSenderService _chunkMessageSender;
             private readonly IRtmpCommanderService _commander;
             private readonly ILogger _logger;
+
             public IReadOnlyDictionary<string, object>? StreamMetaData { get; set; }
             public event EventHandler<IReadOnlyDictionary<string, object>>? OnStreamMetaDataUpdated;
+            public event EventHandler<IRentedBuffer>? OnVideoDataReceived;
+            public event EventHandler<IRentedBuffer>? OnAudioDataReceived;
 
             public RtmpSubscribeStream(
                 IRtmpStreamContext streamContext,
@@ -82,17 +86,31 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
             private void OnSubscribeContextCreated(object? sender, IRtmpSubscribeStreamContext subscribeStreamContext)
             {
                 subscribeStreamContext.OnStreamMetaDataUpdated += OnStreamContextMetaDataUpdated;
+                subscribeStreamContext.OnVideoDataReceived += OnStreamContextVideoDataReceived;
+                subscribeStreamContext.OnAudioDataReceived += OnStreamContextAudioDataReceived;
             }
 
             private void OnSubscribeContextRemoved(object? sender, IRtmpSubscribeStreamContext subscribeStreamContext)
             {
                 subscribeStreamContext.OnStreamMetaDataUpdated -= OnStreamContextMetaDataUpdated;
+                subscribeStreamContext.OnVideoDataReceived -= OnStreamContextVideoDataReceived;
+                subscribeStreamContext.OnAudioDataReceived -= OnStreamContextAudioDataReceived;
             }
 
             private void OnStreamContextMetaDataUpdated(object? sender, IReadOnlyDictionary<string, object> streamMetaData)
             {
                 StreamMetaData = streamMetaData;
                 OnStreamMetaDataUpdated?.Invoke(this, streamMetaData);
+            }
+
+            private void OnStreamContextVideoDataReceived(object? sender, IRentedBuffer rentedBuffer)
+            {
+                OnVideoDataReceived?.Invoke(this, rentedBuffer);
+            }
+
+            private void OnStreamContextAudioDataReceived(object? sender, IRentedBuffer rentedBuffer)
+            {
+                OnAudioDataReceived?.Invoke(this, rentedBuffer);
             }
         }
     }

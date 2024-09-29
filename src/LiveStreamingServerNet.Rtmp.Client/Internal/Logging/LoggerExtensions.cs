@@ -39,5 +39,8 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.Logging
 
         [LoggerMessage(LogLevel.Error, "SessionId: {SessionId} | An error occurred while handling command result")]
         public static partial void CommandResultHandlingError(this ILogger logger, uint sessionId, Exception ex);
+
+        [LoggerMessage(LogLevel.Error, "SessionId: {SessionId} | StreamId: {StreamId} | Subscribe stream not yet created")]
+        public static partial void SubscribeStreamNotYetCreated(this ILogger logger, uint sessionId, uint streamId);
     }
 }
