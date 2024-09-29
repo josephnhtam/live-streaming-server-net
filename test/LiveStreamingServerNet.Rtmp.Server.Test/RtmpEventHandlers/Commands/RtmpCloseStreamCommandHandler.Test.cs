@@ -26,7 +26,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
         }
 
         [Fact]
-        public async Task HandleAsync_Should_DeletesStream_When_StreamExists()
+        public async Task HandleAsync_Should_CloseStream_When_StreamExists()
         {
             // Arrange
             var command = new RtmpCloseStreamCommand(0, new Dictionary<string, object>());
@@ -41,11 +41,11 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
 
             // Assert
             result.Should().BeTrue();
-            _ = _streamDeletionService.Received(1).DeleteStreamAsync(streamContext);
+            _ = _streamDeletionService.Received(1).CloseStreamAsync(streamContext);
         }
 
         [Fact]
-        public async Task HandleAsync_Should_NotDeletesStream_When_StreamDoesntExist()
+        public async Task HandleAsync_Should_NotCloseStream_When_StreamDoesntExist()
         {
             // Arrange
             var command = new RtmpCloseStreamCommand(0, new Dictionary<string, object>());
@@ -59,7 +59,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
 
             // Assert
             result.Should().BeTrue();
-            _ = _streamDeletionService.DidNotReceive().DeleteStreamAsync(Arg.Any<IRtmpStreamContext>());
+            _ = _streamDeletionService.DidNotReceive().CloseStreamAsync(Arg.Any<IRtmpStreamContext>());
         }
     }
 }
