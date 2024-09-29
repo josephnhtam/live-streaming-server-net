@@ -117,7 +117,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
             {
                 var original = currentTimestamp;
 
-                if (newTimestamp <= original)
+                if (original > 0 && newTimestamp <= original)
                 {
                     return false;
                 }
