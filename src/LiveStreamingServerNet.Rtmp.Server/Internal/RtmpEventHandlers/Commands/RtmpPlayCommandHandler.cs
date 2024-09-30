@@ -20,6 +20,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
     {
         private readonly IRtmpStreamManagerService _streamManager;
         private readonly IRtmpCommandMessageSenderService _commandMessageSender;
+        private readonly IRtmpUserControlMessageSenderService _userControlMessageSender;
         private readonly IRtmpMediaMessageCacherService _mediaMessageCacher;
         private readonly IRtmpServerStreamEventDispatcher _eventDispatcher;
         private readonly IStreamAuthorization _streamAuthorization;
@@ -28,6 +29,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
         public RtmpPlayCommandHandler(
             IRtmpStreamManagerService streamManager,
             IRtmpCommandMessageSenderService commandMessageSender,
+            IRtmpUserControlMessageSenderService userControlMessageSender,
             IRtmpMediaMessageCacherService mediaMessageCacher,
             IRtmpServerStreamEventDispatcher eventDispatcher,
             IStreamAuthorization streamAuthorization,
@@ -35,6 +37,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
         {
             _streamManager = streamManager;
             _commandMessageSender = commandMessageSender;
+            _userControlMessageSender = userControlMessageSender;
             _mediaMessageCacher = mediaMessageCacher;
             _eventDispatcher = eventDispatcher;
             _streamAuthorization = streamAuthorization;
@@ -140,7 +143,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
             if (publishStreamContext == null)
                 return;
 
-            SendSubscriptionStartedMessage(streamContext);
+            SendSubscriptionStartedMessage(streamContext.SubscribeContext);
             SendCachedStreamMessages(streamContext, chunkStreamContext, publishStreamContext);
         }
 
@@ -186,8 +189,12 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
                 reason);
         }
 
-        private void SendSubscriptionStartedMessage(IRtmpStreamContext streamContext)
+        private void SendSubscriptionStartedMessage(IRtmpSubscribeStreamContext subscribeStreamContext)
         {
+            var streamContext = subscribeStreamContext.StreamContext;
+
+            _userControlMessageSender.SendStreamBeginMessage(subscribeStreamContext);
+
             _commandMessageSender.SendOnStatusCommandMessage(
                 streamContext.ClientContext,
                 streamContext.StreamId,

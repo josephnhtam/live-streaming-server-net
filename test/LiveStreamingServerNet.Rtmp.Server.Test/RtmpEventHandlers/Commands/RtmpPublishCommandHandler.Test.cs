@@ -21,6 +21,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
         private readonly IRtmpClientSessionContext _clientContext;
         private readonly IRtmpStreamManagerService _streamManager;
         private readonly IRtmpCommandMessageSenderService _commandMessageSender;
+        private readonly IRtmpUserControlMessageSenderService _userControlMessageSender;
         private readonly IRtmpServerStreamEventDispatcher _eventDispatcher;
         private readonly IStreamAuthorization _streamAuthorization;
         private readonly IRtmpStreamContext _streamContext;
@@ -35,6 +36,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
             _clientContext = Substitute.For<IRtmpClientSessionContext>();
             _streamManager = Substitute.For<IRtmpStreamManagerService>();
             _commandMessageSender = Substitute.For<IRtmpCommandMessageSenderService>();
+            _userControlMessageSender = Substitute.For<IRtmpUserControlMessageSenderService>();
             _eventDispatcher = Substitute.For<IRtmpServerStreamEventDispatcher>();
             _streamAuthorization = Substitute.For<IStreamAuthorization>();
             _streamContext = Substitute.For<IRtmpStreamContext>();
@@ -53,6 +55,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
             _sut = new RtmpPublishCommandHandler(
                 _streamManager,
                 _commandMessageSender,
+                _userControlMessageSender,
                 _eventDispatcher,
                 _streamAuthorization,
                 _logger
@@ -170,24 +173,27 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
             // Assert
             Received.InOrder((Action)(() =>
             {
-                _commandMessageSender.Received<IRtmpCommandMessageSenderService>(1).SendCommandMessage(
+                _commandMessageSender.Received(1).SendCommandMessage(
                     _clientContext, streamId, RtmpConstants.OnStatusChunkStreamId, "onStatus", 0, null,
                     Helpers.CreateExpectedCommandProperties(RtmpStatusLevels.Status, RtmpStreamStatusCodes.PublishStart),
                     Arg.Any<AmfEncodingType>(), Arg.Any<Action<bool>>());
 
-                _commandMessageSender.Received<IRtmpCommandMessageSenderService>(1).SendCommandMessage(
+                _userControlMessageSender.Received(1).SendStreamBeginMessage(
+                    Arg.Is<IReadOnlyList<IRtmpSubscribeStreamContext>>(x => x.Contains(subscriber_subscribeStreamContext)));
+
+                _commandMessageSender.Received(1).SendCommandMessage(
                     Arg.Is<IReadOnlyList<IRtmpClientSessionContext>>(x => x.Contains(subscriber_clientContext)),
                     subsciber_streamId, RtmpConstants.OnStatusChunkStreamId, "onStatus", 0, null,
                     Helpers.CreateExpectedCommandProperties(RtmpStatusLevels.Status, RtmpStreamStatusCodes.PlayReset),
                     Arg.Any<AmfEncodingType>());
 
-                _commandMessageSender.Received<IRtmpCommandMessageSenderService>(1).SendCommandMessage(
+                _commandMessageSender.Received(1).SendCommandMessage(
                    Arg.Is<IReadOnlyList<IRtmpClientSessionContext>>(x => x.Contains(subscriber_clientContext)),
                    subsciber_streamId, RtmpConstants.OnStatusChunkStreamId, "onStatus", 0, null,
                    Helpers.CreateExpectedCommandProperties(RtmpStatusLevels.Status, (string)RtmpStreamStatusCodes.PlayStart),
                    Arg.Any<AmfEncodingType>());
 
-                _ = _eventDispatcher.Received<IRtmpServerStreamEventDispatcher>(1).RtmpStreamPublishedAsync(
+                _ = _eventDispatcher.Received(1).RtmpStreamPublishedAsync(
                     _clientContext, streamPath, Helpers.CreateExpectedStreamArguments("password", "123456"));
             }));
 

@@ -44,8 +44,8 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
             if (publishStreamContext == null || !_rtmpStreamManager.StopPublishing(publishStreamContext, out var existingSubscriber))
                 return;
 
-            _userControlMessageSender.SendStreamEofMessage(existingSubscriber.AsReadOnly());
             SendStreamUnpublishNotify(existingSubscriber.AsReadOnly());
+            _userControlMessageSender.SendStreamEofMessage(existingSubscriber.AsReadOnly());
             await _eventDispatcher.RtmpStreamUnpublishedAsync(streamContext.ClientContext, publishStreamContext.StreamPath);
         }
 

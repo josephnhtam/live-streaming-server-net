@@ -69,27 +69,30 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             await _rtmpStreamDeletionService.DeleteStreamAsync(publisher_streamContext);
 
             // Assert
-            _userControlMessageSender.Received(1).SendStreamEofMessage(
-                Arg.Is<IReadOnlyList<IRtmpSubscribeStreamContext>>(x => x.Contains(subscriber_subscribeStreamContext)));
+            Received.InOrder(() =>
+            {
+                _commandMessageSender.Received(1).SendCommandMessage(
+                    Arg.Is<IReadOnlyList<IRtmpClientSessionContext>>(x => x.Contains(subscriber_clientContext)),
+                    subscriber_streamId,
+                    RtmpConstants.OnStatusChunkStreamId,
+                    "onStatus",
+                    0,
+                    null,
+                    Arg.Is<List<object?>>(x =>
+                        x.First() is IDictionary<string, object> &&
+                        (x.First() as IDictionary<string, object>)![RtmpArguments.Level] as string == RtmpStatusLevels.Status &&
+                        (x.First() as IDictionary<string, object>)![RtmpArguments.Code] as string == RtmpStreamStatusCodes.PlayUnpublishNotify
+                    ),
+                    Arg.Any<AmfEncodingType>()
+                );
 
-            _commandMessageSender.Received(1).SendCommandMessage(
-                Arg.Is<IReadOnlyList<IRtmpClientSessionContext>>(x => x.Contains(subscriber_clientContext)),
-                subscriber_streamId,
-                RtmpConstants.OnStatusChunkStreamId,
-                "onStatus",
-                0,
-                null,
-                Arg.Is<List<object?>>(x =>
-                    x.First() is IDictionary<string, object> &&
-                    (x.First() as IDictionary<string, object>)![RtmpArguments.Level] as string == RtmpStatusLevels.Status &&
-                    (x.First() as IDictionary<string, object>)![RtmpArguments.Code] as string == RtmpStreamStatusCodes.PlayUnpublishNotify
-                ),
-                Arg.Any<AmfEncodingType>()
-            );
+                _userControlMessageSender.Received(1).SendStreamEofMessage(
+                    Arg.Is<IReadOnlyList<IRtmpSubscribeStreamContext>>(x => x.Contains(subscriber_subscribeStreamContext)));
 
-            _ = _eventDispatcher.Received(1).RtmpStreamUnpublishedAsync(publisher_clientContext, streamPath);
+                _ = _eventDispatcher.Received(1).RtmpStreamUnpublishedAsync(publisher_clientContext, streamPath);
 
-            publisher_clientContext.Received(1).RemoveStreamContext(publisher_streamId);
+                publisher_clientContext.Received(1).RemoveStreamContext(publisher_streamId);
+            });
         }
 
         [Fact]

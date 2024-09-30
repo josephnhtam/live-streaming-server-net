@@ -20,6 +20,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
     {
         private readonly IRtmpStreamManagerService _streamManager;
         private readonly IRtmpCommandMessageSenderService _commandMessageSender;
+        private readonly IRtmpUserControlMessageSenderService _userControlMessageSender;
         private readonly IRtmpServerStreamEventDispatcher _eventDispatcher;
         private readonly IStreamAuthorization _streamAuthorization;
         private readonly ILogger _logger;
@@ -27,12 +28,14 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
         public RtmpPublishCommandHandler(
             IRtmpStreamManagerService streamManager,
             IRtmpCommandMessageSenderService commandMessageSender,
+            IRtmpUserControlMessageSenderService userControlMessageSender,
             IRtmpServerStreamEventDispatcher eventDispatcher,
             IStreamAuthorization streamAuthorization,
             ILogger<RtmpPublishCommandHandler> logger)
         {
             _streamManager = streamManager;
             _commandMessageSender = commandMessageSender;
+            _userControlMessageSender = userControlMessageSender;
             _eventDispatcher = eventDispatcher;
             _streamAuthorization = streamAuthorization;
             _logger = logger;
@@ -173,6 +176,8 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
                 RtmpStatusLevels.Status,
                 RtmpStreamStatusCodes.PublishStart,
                 "Publishing started.");
+
+            _userControlMessageSender.SendStreamBeginMessage(subscribeStreamContexts.AsReadOnly());
 
             foreach (var batch in subscribeStreamContexts.GroupBy(x => x.StreamContext.StreamId))
             {
