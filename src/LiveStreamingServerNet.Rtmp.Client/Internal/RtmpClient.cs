@@ -147,6 +147,27 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
             return await connectTcs.Task;
         }
 
+        public void Command(RtmpCommand command)
+        {
+            _commander.Command(command);
+        }
+
+        public async Task<RtmpCommandResponse> CommandAsync(RtmpCommand command)
+        {
+            var tcs = new TaskCompletionSource<RtmpCommandResponse>();
+
+            _commander.Command(command,
+                callback: (context, response) =>
+                {
+                    tcs.SetResult(response);
+                    return Task.FromResult(true);
+                },
+                cancellationCallback: () => tcs.TrySetCanceled()
+            );
+
+            return await tcs.Task;
+        }
+
         private async Task AwaitForHandshakeAsync()
         {
             Debug.Assert(_clientTask != null);

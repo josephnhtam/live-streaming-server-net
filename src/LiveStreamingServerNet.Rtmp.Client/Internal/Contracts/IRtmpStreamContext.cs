@@ -1,5 +1,4 @@
 ﻿using LiveStreamingServerNet.Rtmp.Client.Contracts;
-using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 
 namespace LiveStreamingServerNet.Rtmp.Client.Internal.Contracts
 {
@@ -39,10 +38,12 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.Contracts
         void ReceiveVideoData(MediaDataEventArgs rentedBuffer);
         void ReceiveAudioData(MediaDataEventArgs rentedBuffer);
         void ReceiveStatus(StatusEventArgs eventArgs);
+        void ReceiveUserControlEvent(UserControlEventArgs eventArgs);
 
         event EventHandler<StreamMetaDataEventArgs> OnStreamMetaDataReceived;
         event EventHandler<MediaDataEventArgs> OnVideoDataReceived;
         event EventHandler<MediaDataEventArgs> OnAudioDataReceived;
         event EventHandler<StatusEventArgs> OnStatusReceived;
+        event EventHandler<UserControlEventArgs> OnUserControlEventReceived;
     }
 }

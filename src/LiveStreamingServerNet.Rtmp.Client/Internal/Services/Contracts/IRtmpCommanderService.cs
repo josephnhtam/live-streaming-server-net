@@ -1,5 +1,5 @@
-﻿using LiveStreamingServerNet.Rtmp.Client.Internal.Contracts;
-using LiveStreamingServerNet.Rtmp.Internal.Extensions;
+﻿using LiveStreamingServerNet.Rtmp.Client.Contracts;
+using LiveStreamingServerNet.Rtmp.Client.Internal.Contracts;
 
 namespace LiveStreamingServerNet.Rtmp.Client.Internal.Services.Contracts
 {
@@ -13,15 +13,6 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.Services.Contracts
         void DeleteStream(uint streamId);
         void Play(uint streamId, string streamName, double start, double duration, bool reset);
     }
-
-    internal record struct RtmpCommand(
-        uint messageStreamId,
-        uint chunkStreamId,
-        string commandName,
-        IReadOnlyDictionary<string, object>? commandObject,
-        IReadOnlyList<object?>? parameters = null,
-        AmfEncodingType amfEncodingType = AmfEncodingType.Amf0
-    );
 
     internal delegate ValueTask ConnectCallbackDelegate(bool Success, IDictionary<string, object> CommandObject, object? Parameters);
     internal delegate ValueTask CreateStreamCallbackDelegate(bool Success, IRtmpStreamContext? StreamContext);

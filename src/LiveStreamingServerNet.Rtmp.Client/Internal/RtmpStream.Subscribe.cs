@@ -2,7 +2,6 @@
 using LiveStreamingServerNet.Rtmp.Client.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Client.Internal.Logging;
 using LiveStreamingServerNet.Rtmp.Client.Internal.Services.Contracts;
-using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using Microsoft.Extensions.Logging;
 
 namespace LiveStreamingServerNet.Rtmp.Client.Internal
@@ -22,6 +21,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
             public event EventHandler<MediaDataEventArgs>? OnVideoDataReceived;
             public event EventHandler<MediaDataEventArgs>? OnAudioDataReceived;
             public event EventHandler<StatusEventArgs>? OnStatusReceived;
+            public event EventHandler<UserControlEventArgs>? OnUserControlEventReceived;
 
             public RtmpSubscribeStream(
                 RtmpStream stream,
@@ -55,6 +55,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
                 subscribeStreamContext.OnVideoDataReceived += OnStreamContextVideoDataReceived;
                 subscribeStreamContext.OnAudioDataReceived += OnStreamContextAudioDataReceived;
                 subscribeStreamContext.OnStatusReceived += OnStreamContextStatusRecevied;
+                subscribeStreamContext.OnUserControlEventReceived += OnStreamUserControlEventReceived;
             }
 
             private void OnSubscribeContextRemoved(object? sender, IRtmpSubscribeStreamContext subscribeStreamContext)
@@ -63,6 +64,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
                 subscribeStreamContext.OnVideoDataReceived -= OnStreamContextVideoDataReceived;
                 subscribeStreamContext.OnAudioDataReceived -= OnStreamContextAudioDataReceived;
                 subscribeStreamContext.OnStatusReceived -= OnStreamContextStatusRecevied;
+                subscribeStreamContext.OnUserControlEventReceived -= OnStreamUserControlEventReceived;
             }
 
             private void OnStreamContextMetaDataRecevied(object? sender, StreamMetaDataEventArgs e)
@@ -111,6 +113,18 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
                 catch (Exception ex)
                 {
                     _logger.StatusReceiveError(_streamContext.StreamId, ex);
+                }
+            }
+
+            private void OnStreamUserControlEventReceived(object? sender, UserControlEventArgs e)
+            {
+                try
+                {
+                    OnUserControlEventReceived?.Invoke(this, e);
+                }
+                catch (Exception ex)
+                {
+                    _logger.UserControlEventReceiveError(_streamContext.StreamId, ex);
                 }
             }
         }

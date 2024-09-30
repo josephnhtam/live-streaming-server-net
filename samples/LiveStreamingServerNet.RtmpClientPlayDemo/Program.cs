@@ -41,6 +41,9 @@ namespace LiveStreamingServerNet.RtmpClientPlayDemo
             rtmpStream.Subscribe.OnStreamMetaDataReceived += (sender, e) =>
                 logger.LogInformation($"Stream meta data received: {JsonSerializer.Serialize(e.StreamMetaData)}");
 
+            rtmpStream.Subscribe.OnUserControlEventReceived += (sender, e) =>
+                logger.LogInformation($"User control event received: {e.EventType}");
+
             rtmpStream.Subscribe.OnVideoDataReceived += (sender, e) =>
                 flvWriter.WriteTag(FlvTagType.Video, e.Timestamp, e.RentedBuffer.AsSpan());
 

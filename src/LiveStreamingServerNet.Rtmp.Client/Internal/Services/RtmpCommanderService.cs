@@ -1,4 +1,5 @@
-﻿using LiveStreamingServerNet.Rtmp.Client.Internal.Contracts;
+﻿using LiveStreamingServerNet.Rtmp.Client.Contracts;
+using LiveStreamingServerNet.Rtmp.Client.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Client.Internal.Services.Contracts;
 
 namespace LiveStreamingServerNet.Rtmp.Client.Internal.Services
@@ -22,13 +23,13 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.Services
         public void Command(RtmpCommand command)
         {
             _commandMessageSender.SendCommandMessage(
-                command.messageStreamId,
-                command.chunkStreamId,
-                command.commandName,
+                command.MessageStreamId,
+                command.ChunkStreamId,
+                command.CommandName,
                 transactionId: 0,
-                command.commandObject,
-                command.parameters,
-                command.amfEncodingType
+                command.CommandObject,
+                command.Parameters,
+                command.AmfEncodingType
             );
         }
 
@@ -37,13 +38,13 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.Services
             var transactionId = _commandResultManager.RegisterCommandCallback(callback, cancellationCallback);
 
             _commandMessageSender.SendCommandMessage(
-               command.messageStreamId,
-               command.chunkStreamId,
-               command.commandName,
+               command.MessageStreamId,
+               command.ChunkStreamId,
+               command.CommandName,
                transactionId,
-               command.commandObject,
-               command.parameters,
-               command.amfEncodingType
+               command.CommandObject,
+               command.Parameters,
+               command.AmfEncodingType
            );
         }
 
@@ -56,10 +57,10 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.Services
             commandObject["app"] = appName;
 
             var command = new RtmpCommand(
-                messageStreamId: 0,
-                chunkStreamId: 3,
-                commandName: "connect",
-                commandObject: commandObject
+                MessageStreamId: 0,
+                ChunkStreamId: 3,
+                CommandName: "connect",
+                CommandObject: commandObject
             );
 
             Command(command, async (context, result) =>
@@ -86,10 +87,10 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.Services
         public void CreateStream(CreateStreamCallbackDelegate? callback, Action? cancellationCallback)
         {
             var command = new RtmpCommand(
-                messageStreamId: 0,
-                chunkStreamId: 3,
-                commandName: "createStream",
-                commandObject: null
+                MessageStreamId: 0,
+                ChunkStreamId: 3,
+                CommandName: "createStream",
+                CommandObject: null
             );
 
             Command(command, async (context, result) =>
@@ -130,10 +131,10 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.Services
             streamContext.RemoveSubscribeContext();
 
             var command = new RtmpCommand(
-                messageStreamId: streamId,
-                chunkStreamId: 3,
-                commandName: "closeStream",
-                commandObject: null
+                MessageStreamId: streamId,
+                ChunkStreamId: 3,
+                CommandName: "closeStream",
+                CommandObject: null
             );
 
             Command(command);
@@ -154,11 +155,11 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.Services
             sessionContext.RemoveStreamContext(streamId);
 
             var command = new RtmpCommand(
-                messageStreamId: streamId,
-                chunkStreamId: 3,
-                commandName: "deleteStream",
-                commandObject: null,
-                parameters: new List<object?> { (double)streamId }
+                MessageStreamId: streamId,
+                ChunkStreamId: 3,
+                CommandName: "deleteStream",
+                CommandObject: null,
+                Parameters: new List<object?> { (double)streamId }
             );
 
             Command(command);
@@ -177,11 +178,11 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.Services
             streamContext.CreateSubscribeContext();
 
             var command = new RtmpCommand(
-                messageStreamId: streamId,
-                chunkStreamId: 3,
-                commandName: "play",
-                commandObject: null,
-                parameters: new List<object?> { streamName, start, duration, reset }
+                MessageStreamId: streamId,
+                ChunkStreamId: 3,
+                CommandName: "play",
+                CommandObject: null,
+                Parameters: new List<object?> { streamName, start, duration, reset }
             );
 
             Command(command);

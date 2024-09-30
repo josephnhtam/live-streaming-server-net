@@ -137,7 +137,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             _streamContext.StreamId.Returns(streamId);
 
             using var expectedBuffer = new DataBuffer();
-            expectedBuffer.WriteUint16BigEndian(RtmpUserControlMessageTypes.StreamEof);
+            expectedBuffer.WriteUint16BigEndian(RtmpUserControlMessageTypes.StreamEOF);
             expectedBuffer.WriteUInt32BigEndian(streamId);
 
             // Act
@@ -171,7 +171,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             var subscriberStreamContexts = new List<IRtmpSubscribeStreamContext> { _subscribeStreamContext };
 
             using var expectedBuffer = new DataBuffer();
-            expectedBuffer.WriteUint16BigEndian(RtmpUserControlMessageTypes.StreamEof);
+            expectedBuffer.WriteUint16BigEndian(RtmpUserControlMessageTypes.StreamEOF);
             expectedBuffer.WriteUInt32BigEndian(0u);
 
             // Act

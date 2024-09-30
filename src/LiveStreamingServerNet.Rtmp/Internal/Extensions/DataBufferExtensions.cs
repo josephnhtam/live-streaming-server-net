@@ -87,10 +87,4 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Extensions
             return results;
         }
     }
-
-    internal enum AmfEncodingType
-    {
-        Amf0,
-        Amf3
-    }
 }

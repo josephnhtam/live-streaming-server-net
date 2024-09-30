@@ -1,6 +1,4 @@
-﻿using LiveStreamingServerNet.Rtmp.Internal.Extensions;
-
-namespace LiveStreamingServerNet.Rtmp.Client.Internal.Services.Contracts
+﻿namespace LiveStreamingServerNet.Rtmp.Client.Internal.Services.Contracts
 {
     internal interface IRtmpCommandMessageSenderService
     {

@@ -26,9 +26,19 @@ namespace LiveStreamingServerNet.Rtmp.Client.Contracts
         event EventHandler<MediaDataEventArgs> OnVideoDataReceived;
         event EventHandler<MediaDataEventArgs> OnAudioDataReceived;
         event EventHandler<StatusEventArgs> OnStatusReceived;
+        event EventHandler<UserControlEventArgs> OnUserControlEventReceived;
     }
 
     public record struct StreamMetaDataEventArgs(IReadOnlyDictionary<string, object> StreamMetaData);
     public record struct StatusEventArgs(string Level, string Code, string Description);
     public record struct MediaDataEventArgs(IRentedBuffer RentedBuffer, uint Timestamp);
+    public record struct UserControlEventArgs(UserControlEventType EventType);
+
+    public enum UserControlEventType
+    {
+        StreamBegin = 0,
+        StreamEOF = 1,
+        StreamDry = 2,
+        StreamIsRecorded = 4,
+    }
 }
