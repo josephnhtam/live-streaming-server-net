@@ -1,0 +1,17 @@
+<Project>
+  <PropertyGroup>
+    <Copyright>Copyright 2024 Joseph NH Tam</Copyright>
+    <Authors>Joseph NH Tam</Authors>
+
+    <PackageIcon>icon.png</PackageIcon>
+	<PackageReadmeFile>README.NuGet.md</PackageReadmeFile>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+	<PackageProjectUrl>https://josephnhtam.github.io/live-streaming-server-net</PackageProjectUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)icon.png" Pack="true" Visible="false" PackagePath="\" />
+	<None Include="$(MSBuildThisFileDirectory)README.NuGet.md" Pack="true" Visible="false" PackagePath="\" />
+  </ItemGroup>
+</Project>
