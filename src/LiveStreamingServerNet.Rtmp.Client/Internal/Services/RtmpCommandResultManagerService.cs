@@ -1,5 +1,6 @@
 ﻿using LiveStreamingServerNet.Networking.Client.Contracts;
 using LiveStreamingServerNet.Networking.Contracts;
+using LiveStreamingServerNet.Rtmp.Client.Contracts;
 using LiveStreamingServerNet.Rtmp.Client.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Client.Internal.Services.Contracts;
 using LiveStreamingServerNet.Utilities.Contracts;
@@ -38,10 +39,10 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.Services
             return transactionId;
         }
 
-        public async ValueTask<bool> HandleCommandResultAsync(IRtmpSessionContext context, RtmpCommandResult result)
+        public async ValueTask<bool> HandleCommandResultAsync(IRtmpSessionContext context, RtmpCommandResponse response)
         {
-            if (_commandCallbacks.TryRemove(result.TransactionId, out var callback))
-                return await callback.Callback(context, result);
+            if (_commandCallbacks.TryRemove(response.TransactionId, out var callback))
+                return await callback.Callback(context, response);
 
             return true;
         }

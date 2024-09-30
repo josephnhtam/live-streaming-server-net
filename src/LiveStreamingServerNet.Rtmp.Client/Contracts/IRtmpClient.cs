@@ -14,6 +14,10 @@ namespace LiveStreamingServerNet.Rtmp.Client.Contracts
         Task<ConnectResponse> ConnectAsync(ServerEndPoint endPoint, string appName);
         Task<ConnectResponse> ConnectAsync(ServerEndPoint endPoint, string appName, IDictionary<string, object> information);
         Task<IRtmpStream> CreateStreamAsync();
+
+        void Command(RtmpCommand command);
+        Task<RtmpCommandResponse> CommandAsync(RtmpCommand command);
+
         Task UntilStoppedAsync();
         void Stop();
     }

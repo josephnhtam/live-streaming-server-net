@@ -37,7 +37,7 @@ namespace LiveStreamingServerNet.RtmpClientPlayDemo
             header.Write(dataBuffer);
             dataBuffer.Write(payload);
             dataBuffer.WriteUInt32BigEndian(packageSize);
-            
+
             _streamWriter.Write(dataBuffer.UnderlyingBuffer.AsSpan(0, dataBuffer.Size));
         }
 

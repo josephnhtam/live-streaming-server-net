@@ -1,6 +1,5 @@
 ﻿using LiveStreamingServerNet.Rtmp.Client.Contracts;
 using LiveStreamingServerNet.Rtmp.Client.Internal.Contracts;
-using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 
 namespace LiveStreamingServerNet.Rtmp.Client.Internal
 {
@@ -104,6 +103,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
         public event EventHandler<MediaDataEventArgs>? OnVideoDataReceived;
         public event EventHandler<MediaDataEventArgs>? OnAudioDataReceived;
         public event EventHandler<StatusEventArgs>? OnStatusReceived;
+        public event EventHandler<UserControlEventArgs>? OnUserControlEventReceived;
 
         public RtmpSubscribeStreamContext(IRtmpStreamContext streamContext) : base(streamContext) { }
 
@@ -116,7 +116,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
 
                 if (value != null)
                 {
-                    OnStreamMetaDataReceived?.Invoke(this, new(value));
+                    OnStreamMetaDataReceived?.Invoke(this, new StreamMetaDataEventArgs(value));
                 }
             }
         }
@@ -134,6 +134,11 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
         public void ReceiveStatus(StatusEventArgs eventArgs)
         {
             OnStatusReceived?.Invoke(this, eventArgs);
+        }
+
+        public void ReceiveUserControlEvent(UserControlEventArgs eventArgs)
+        {
+            OnUserControlEventReceived?.Invoke(this, eventArgs);
         }
     }
 }

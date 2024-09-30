@@ -97,4 +97,10 @@
         public const string Error = "error";
         public const string Status = "status";
     }
+
+    public enum AmfEncodingType
+    {
+        Amf0,
+        Amf3
+    }
 }

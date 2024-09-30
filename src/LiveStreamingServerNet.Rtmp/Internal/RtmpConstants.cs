@@ -20,7 +20,7 @@
     internal static class RtmpUserControlMessageTypes
     {
         public const ushort StreamBegin = 0;
-        public const ushort StreamEof = 1;
+        public const ushort StreamEOF = 1;
         public const ushort StreamDry = 2;
         public const ushort SetBufferLength = 3;
         public const ushort StreamIsRecorded = 4;

@@ -1,13 +1,13 @@
-﻿using LiveStreamingServerNet.Rtmp.Client.Internal.Contracts;
+﻿using LiveStreamingServerNet.Rtmp.Client.Contracts;
+using LiveStreamingServerNet.Rtmp.Client.Internal.Contracts;
 
 namespace LiveStreamingServerNet.Rtmp.Client.Internal.Services.Contracts
 {
     internal interface IRtmpCommandResultManagerService
     {
         double RegisterCommandCallback(CommandCallbackDelegate callback, Action? cancellationCallback = null);
-        ValueTask<bool> HandleCommandResultAsync(IRtmpSessionContext context, RtmpCommandResult result);
+        ValueTask<bool> HandleCommandResultAsync(IRtmpSessionContext context, RtmpCommandResponse response);
     }
 
-    internal delegate Task<bool> CommandCallbackDelegate(IRtmpSessionContext Context, RtmpCommandResult Result);
-    internal record struct RtmpCommandResult(double TransactionId, IDictionary<string, object> CommandObject, IList<object>? Parameters);
+    internal delegate Task<bool> CommandCallbackDelegate(IRtmpSessionContext Context, RtmpCommandResponse Response);
 }
