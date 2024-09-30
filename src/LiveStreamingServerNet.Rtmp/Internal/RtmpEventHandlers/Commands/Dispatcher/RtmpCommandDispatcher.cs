@@ -18,6 +18,8 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands.Dispat
         private readonly ConcurrentDictionary<Type, (Type, ParameterInfo[])> _commandParametersMap;
         private readonly ConcurrentDictionary<Type, RtmpCommandHandler<TContext>> _commandHandlerCache;
 
+        private static object _outOfRange = new object();
+
         public RtmpCommandDispatcher(IServiceProvider services, IRtmpCommandHanlderMap handlerMap, ILogger<RtmpCommandDispatcher<TContext>> logger)
         {
             _services = services;
@@ -56,24 +58,61 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands.Dispat
         {
             var results = new object[commandParameterInfos.Length];
 
-            try
+            for (int i = 0; i < commandParameterInfos.Length; i++)
             {
-                for (int i = 0; i < commandParameterInfos.Length; i++)
+                if (i == commandParameterInfos.Length - 1 &&
+                    commandParameterInfos[i].ParameterType == typeof(IList<object>))
                 {
-                    var parameter = isUsingAmf3 ? reader.ReadAmf3() : reader.ReadAmf0();
-
-                    if (parameter is IAmfObject amfObject)
-                        parameter = amfObject.ToObject();
-
-                    if (parameter is Dictionary<object, object> dictionary)
-                        parameter = dictionary.ToDictionary(x => x.Key.ToString()!, x => x.Value);
-
-                    results[i] = parameter;
+                    results[i] = ReadParameters(reader, isUsingAmf3);
+                    break;
                 }
+
+                var parameter = ReadParameter(reader, isUsingAmf3);
+
+                if (parameter == _outOfRange)
+                    break;
+
+                results[i] = parameter;
             }
-            catch (IndexOutOfRangeException) { }
 
             return results;
+        }
+
+        private static List<object> ReadParameters(AmfReader reader, bool isUsingAmf3)
+        {
+            var result = new List<object>();
+
+            while (true)
+            {
+                var parameter = ReadParameter(reader, isUsingAmf3);
+
+                if (parameter == _outOfRange)
+                    break;
+
+                result.Add(parameter);
+            }
+
+            return result;
+        }
+
+        private static object ReadParameter(AmfReader reader, bool isUsingAmf3)
+        {
+            try
+            {
+                var parameter = isUsingAmf3 ? reader.ReadAmf3() : reader.ReadAmf0();
+
+                if (parameter is IAmfObject amfObject)
+                    parameter = amfObject.ToObject();
+
+                if (parameter is Dictionary<object, object> dictionary)
+                    parameter = dictionary.ToDictionary(x => x.Key.ToString()!, x => x.Value);
+
+                return parameter;
+            }
+            catch (IndexOutOfRangeException)
+            {
+                return _outOfRange;
+            }
         }
 
         private (Type, ParameterInfo[]) GetCommandInfo(Type handlerType)
