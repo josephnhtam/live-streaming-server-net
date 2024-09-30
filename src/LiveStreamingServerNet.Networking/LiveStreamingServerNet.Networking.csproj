@@ -5,11 +5,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
-    <Authors>Joseph NH Tam</Authors>
     <Description>This package provides shared components and utilities for TCP server and client implementations.</Description>
     <PackageTags>live-streaming;tcp</PackageTags>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <Version>0.15.0</Version>
   </PropertyGroup>
 
