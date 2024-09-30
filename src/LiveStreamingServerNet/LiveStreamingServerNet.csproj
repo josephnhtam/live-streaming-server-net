@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     <IsPackable>true</IsPackable>
     <Authors>Joseph NH Tam</Authors>
-    <Description>A .NET implementation of RTMP server.</Description>
+    <Description>A .NET implementation of RTMP live streaming server.</Description>
     <PackageTags>live-streaming;rtmp;flv;http-flv;websocket-flv;hls</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>

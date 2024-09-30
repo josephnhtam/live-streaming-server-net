@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
     <Authors>Joseph NH Tam</Authors>
-    <Description>This package provides Kubernetes integration with live streaming server.</Description>
+    <Description>This package provides Kubernetes integration with LiveStreamingServerNet.</Description>
     <PackageTags>live-streaming;rtmp;flv;http-flv;websocket-flv;hls;kubenetes</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>

@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
     <Authors>Joseph NH Tam</Authors>
-    <Description>This package implements the TCP client.</Description>
+    <Description>This package implements a TCP client.</Description>
     <PackageTags>live-streaming;tcp</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
