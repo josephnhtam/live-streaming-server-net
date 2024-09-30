@@ -182,7 +182,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
                 streamContext.ClientContext,
                 streamContext.StreamId,
                 RtmpStatusLevels.Error,
-                RtmpStreamStatusCodes.PublishUnauthorized,
+                RtmpStreamStatusCodes.PlayFailed,
                 reason);
         }
 
