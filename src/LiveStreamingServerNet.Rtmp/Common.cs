@@ -82,7 +82,7 @@
         public const string PublishStart = "NetStream.Publish.Start";
         public const string DataStart = "NetStream.Data.Start";
         public const string UnpublishSuccess = "NetStream.Unpublish.Success";
-        public const string PublishUnauthorized = "NetStream.publish.Unauthorized";
+        public const string PublishUnauthorized = "NetStream.Publish.Unauthorized";
         public const string PublishBadName = "NetStream.Publish.BadName";
         public const string PublishBadConnection = "NetStream.Publish.BadConnection";
         public const string PlayReset = "NetStream.Play.Reset";
