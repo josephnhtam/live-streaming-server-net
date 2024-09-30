@@ -87,6 +87,7 @@
         public const string PublishBadConnection = "NetStream.Publish.BadConnection";
         public const string PlayReset = "NetStream.Play.Reset";
         public const string PlayStart = "NetStream.Play.Start";
+        public const string PlayFailed = "NetStream.Play.Failed";
         public const string PlayBadConnection = "NetStream.Play.BadConnection";
         public const string PlayUnpublishNotify = "NetStream.Play.UnpublishNotify";
     }
