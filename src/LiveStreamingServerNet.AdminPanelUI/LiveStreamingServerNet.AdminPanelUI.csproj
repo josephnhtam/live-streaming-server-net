@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     <IsPackable>true</IsPackable>
     <Authors>Joseph NH Tam</Authors>
-    <Description>This package provides the Admin Panel UI for LiveStreamingServer.NET.</Description>
+    <Description>This package provides the Admin Panel UI for LiveStreamingServerNET.</Description>
     <PackageTags>live-streaming;rtmp;flv;http-flv</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>

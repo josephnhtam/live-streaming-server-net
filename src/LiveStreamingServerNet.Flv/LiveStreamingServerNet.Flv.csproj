@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     <IsPackable>true</IsPackable>
     <Authors>Joseph NH Tam</Authors>
-    <Description>This package provides the ASP.NET Core middlewares to serve FLV via HTTP and WebSocket.</Description>
+    <Description>This package provides the ASP.NET Core middlewares for serving FLV live streams via HTTP and WebSocket.</Description>
     <PackageTags>live-streaming;rtmp;flv;http-flv;websocket-flv</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>

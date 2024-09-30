@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     <IsPackable>true</IsPackable>
     <Authors>Joseph NH Tam</Authors>
-    <Description>This package provides shared components for Rtmp.Server and Rtmp.Client implementations.</Description>
+    <Description>This package provides shared components and utilities for RTMP server and client implementations.</Description>
     <PackageTags>live-streaming;rtmp</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
