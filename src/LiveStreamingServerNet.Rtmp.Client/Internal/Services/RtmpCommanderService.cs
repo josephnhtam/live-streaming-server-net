@@ -94,7 +94,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.Services
 
             Command(command, async (context, result) =>
             {
-                if (result.Parameters is not double streamIdNumber)
+                if (result.Parameters?.FirstOrDefault() is not double streamIdNumber)
                 {
                     callback?.Invoke(false, null);
                     return false;

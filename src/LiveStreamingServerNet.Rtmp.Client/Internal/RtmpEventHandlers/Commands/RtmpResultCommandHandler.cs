@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 
 namespace LiveStreamingServerNet.Rtmp.Client.Internal.RtmpEventHandlers.Commands
 {
-    internal record RtmpResultCommand(double TransactionId, IDictionary<string, object> CommandObject, object? Parameters);
+    internal record RtmpResultCommand(double TransactionId, IDictionary<string, object> CommandObject, IList<object>? Parameters);
 
     [RtmpCommand("_result")]
     internal class RtmpResultCommandHandler : RtmpCommandHandler<RtmpResultCommand, IRtmpSessionContext>

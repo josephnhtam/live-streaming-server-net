@@ -9,5 +9,5 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.Services.Contracts
     }
 
     internal delegate Task<bool> CommandCallbackDelegate(IRtmpSessionContext Context, RtmpCommandResult Result);
-    internal record struct RtmpCommandResult(double TransactionId, IDictionary<string, object> CommandObject, object? Parameters);
+    internal record struct RtmpCommandResult(double TransactionId, IDictionary<string, object> CommandObject, IList<object>? Parameters);
 }
