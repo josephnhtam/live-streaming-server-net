@@ -5,11 +5,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Contracts
     public interface IRtmpClient : IAsyncDisposable
     {
         IServiceProvider Services { get; }
-
-        bool IsHandshakeCompleted { get; }
-        bool IsConnected { get; }
-        bool IsStarted { get; }
-        bool IsStopped { get; }
+        RtmpClientStatus Status { get; }
 
         Task<ConnectResponse> ConnectAsync(ServerEndPoint endPoint, string appName);
         Task<ConnectResponse> ConnectAsync(ServerEndPoint endPoint, string appName, IDictionary<string, object> information);

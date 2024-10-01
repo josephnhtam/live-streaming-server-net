@@ -28,17 +28,9 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
         private readonly TaskCompletionSource _clientTcs = new();
         private readonly TaskCompletionSource _handshakeTcs = new();
 
-        private Task? _clientTask;
         private int _connectOnce;
-        private uint _lastChunkStreamId = RtmpConstants.ReservedChunkStreamId;
-
-        public bool IsConnected { get; private set; }
-        public bool IsHandshakeCompleted => _handshakeTcs.Task.IsCompletedSuccessfully;
-
-        public bool IsStarted => _clientTask != null;
-        public bool IsStopped => _clientTcs.Task.IsCompleted;
-
-        public IServiceProvider Services => _client.Services;
+        private bool _connected;
+        private Task? _clientTask;
 
         public RtmpClient(
             IClient client,
@@ -52,6 +44,28 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
             _protocolControl = protocolControl;
             _streamFactory = streamFactory;
             _config = config.Value;
+        }
+
+        public IServiceProvider Services => _client.Services;
+
+        public RtmpClientStatus Status
+        {
+            get
+            {
+                if (_clientTcs.Task.IsCompleted)
+                    return RtmpClientStatus.Stopped;
+
+                if (_connected)
+                    return RtmpClientStatus.Connected;
+
+                if (_handshakeTcs.Task.IsCompletedSuccessfully)
+                    return RtmpClientStatus.HandshakeCompleted;
+
+                if (_clientTask != null)
+                    return RtmpClientStatus.Connecting;
+
+                return RtmpClientStatus.None;
+            }
         }
 
         public Task<ConnectResponse> ConnectAsync(ServerEndPoint endPoint, string appName)
@@ -78,7 +92,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
 
         public async Task<IRtmpStream> CreateStreamAsync()
         {
-            if (!IsConnected)
+            if (!_connected)
                 throw new InvalidOperationException("Client is not connected.");
 
             var createStreamTcs = new TaskCompletionSource<IRtmpStream>();
@@ -118,7 +132,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
             }
             finally
             {
-                IsConnected = false;
+                _connected = false;
             }
         }
 
@@ -136,7 +150,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
                 {
                     if (success)
                     {
-                        IsConnected = true;
+                        _connected = true;
                         connectTcs.TrySetResult(new(new Dictionary<string, object>(information), parameters));
                     }
                     else
@@ -211,11 +225,6 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
         {
             _handshakeTcs.TrySetResult();
             return ValueTask.CompletedTask;
-        }
-
-        public uint GetNextChunkStreamId()
-        {
-            return Interlocked.Increment(ref _lastChunkStreamId);
         }
 
         public async ValueTask DisposeAsync()
