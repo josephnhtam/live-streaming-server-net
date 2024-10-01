@@ -3,10 +3,9 @@
     public enum RtmpClientStatus
     {
         None = 0,
-        Connecting = 1,
-        HandshakeStarted = 2,
-        HandshakeCompleted = 3,
-        Connected = 4,
-        Stopped = 5
+        Handshaking = 1,
+        Connecting = 2,
+        Connected = 3,
+        Stopped = 4
     }
 }

@@ -52,8 +52,8 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
         {
             _ when _clientTcs.Task.IsCompleted => RtmpClientStatus.Stopped,
             _ when _connected => RtmpClientStatus.Connected,
-            _ when _handshakeTcs.Task.IsCompletedSuccessfully => RtmpClientStatus.HandshakeCompleted,
-            _ when _clientTask != null => RtmpClientStatus.Connecting,
+            _ when _handshakeTcs.Task.IsCompletedSuccessfully => RtmpClientStatus.Connecting,
+            _ when _clientTask != null => RtmpClientStatus.Handshaking,
             _ => RtmpClientStatus.None
         };
 
