@@ -15,19 +15,25 @@ namespace LiveStreamingServerNet.RtmpClientPlayDemo
         /// </summary>
         public static async Task Main()
         {
+            var rtmpUrl = "rtmp://127.0.0.1/live/demo";
+            var parsedRtmpUrl = await RtmpUrlParser.ParseAsync(rtmpUrl);
+
+            var serverEndPoint = parsedRtmpUrl.ServerEndPoint;
+            var information = new Dictionary<string, object> { ["tcUrl"] = parsedRtmpUrl.TcUrl };
+            var appName = parsedRtmpUrl.AppName;
+            var streamName = parsedRtmpUrl.StreamName;
+
             var rtmpClient = RtmpClientBuilder.Create()
                 .ConfigureLogging(options => options.AddConsole().SetMinimumLevel(LogLevel.Trace))
                 .Build();
 
             var logger = rtmpClient.Services.GetRequiredService<ILogger<Program>>();
 
-            var serverEndPoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 1935);
-            var information = new Dictionary<string, object> { ["tcUrl"] = "rtmp://127.0.0.1/live" };
-            await rtmpClient.ConnectAsync(serverEndPoint, "live", information);
+            await rtmpClient.ConnectAsync(serverEndPoint, appName, information);
 
             var rtmpStream = await rtmpClient.CreateStreamAsync();
 
-            await RecordStreamAsFlvAsync("demo", rtmpClient, rtmpStream, logger);
+            await RecordStreamAsFlvAsync(streamName, rtmpClient, rtmpStream, logger);
         }
 
         private static async Task RecordStreamAsFlvAsync(string streamName, IRtmpClient rtmpClient, IRtmpStream rtmpStream, ILogger<Program> logger)
