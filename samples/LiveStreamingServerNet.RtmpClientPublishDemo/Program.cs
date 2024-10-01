@@ -56,7 +56,7 @@ namespace LiveStreamingServerNet.RtmpClientPublishDemo
                 if (header == null)
                     return;
 
-                (uint Timestamp, DateTime Time)? start = null;
+                var timeController = new TimeSynchronizer();
 
                 while (true)
                 {
@@ -76,24 +76,32 @@ namespace LiveStreamingServerNet.RtmpClientPublishDemo
                             await stream.Publish.SendVideoDataAsync(tag.Payload, tag.Header.Timestamp);
                         }
 
-                        if (!start.HasValue)
-                        {
-                            start = (tag.Header.Timestamp, DateTime.UtcNow);
-                        }
-
-                        var intendedTime = tag.Header.Timestamp - start.Value.Timestamp;
-                        var elapsedTime = (DateTime.UtcNow - start.Value.Time).TotalMilliseconds;
-
-                        var delay = intendedTime - elapsedTime;
-
-                        if (delay > 0)
-                            await Task.Delay((int)delay);
+                        await timeController.SyncWithTimestampAsync(tag.Header.Timestamp);
                     }
                     finally
                     {
                         tag.Payload.Unclaim();
                     }
                 }
+            }
+        }
+
+        private class TimeSynchronizer
+        {
+            private (uint Timestamp, DateTime Time)? start = null;
+
+            public async ValueTask SyncWithTimestampAsync(uint timestamp)
+            {
+                if (!start.HasValue)
+                    start = (timestamp, DateTime.UtcNow);
+
+                var intendedTime = timestamp - start.Value.Timestamp;
+                var elapsedTime = (DateTime.UtcNow - start.Value.Time).TotalMilliseconds;
+
+                var delay = intendedTime - elapsedTime;
+
+                if (delay > 0)
+                    await Task.Delay((int)delay);
             }
         }
     }
