@@ -2,7 +2,6 @@
 using LiveStreamingServerNet.Rtmp.Client.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using System.Diagnostics;
 
 namespace LiveStreamingServerNet.RtmpClientPublishDemo
 {
@@ -26,6 +25,9 @@ namespace LiveStreamingServerNet.RtmpClientPublishDemo
                 .Build();
 
             var logger = rtmpClient.Services.GetRequiredService<ILogger<Program>>();
+
+            rtmpClient.OnBandwidthLimitUpdated += (sender, e) =>
+                logger.LogInformation($"Bandwidth limit updated: {e.BandwidthLimit}");
 
             await rtmpClient.ConnectAsync(serverEndPoint, appName, information);
 

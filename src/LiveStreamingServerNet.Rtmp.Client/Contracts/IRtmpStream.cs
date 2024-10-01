@@ -31,7 +31,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Contracts
 
     public interface IRtmpSubscribeStream
     {
-        IReadOnlyDictionary<string, object>? StreamMetaData { get; set; }
+        IReadOnlyDictionary<string, object>? StreamMetaData { get; }
 
         void Play(string streamName);
         void Play(string streamName, double start, double duration, bool reset);

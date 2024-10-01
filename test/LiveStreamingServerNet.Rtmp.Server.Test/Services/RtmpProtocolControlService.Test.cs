@@ -179,7 +179,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
         {
             // Arrange
             var bandwidth = _fixture.Create<uint>();
-            var limitType = _fixture.Create<RtmpPeerBandwidthLimitType>();
+            var limitType = _fixture.Create<RtmpBandwidthLimitType>();
 
             using var expectedBuffer = new DataBuffer();
             expectedBuffer.WriteUInt32BigEndian(bandwidth);

@@ -132,14 +132,16 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
         public IReadOnlyDictionary<string, object>? StreamMetaData
         {
             get => _streamMetaData;
-            set
-            {
-                _streamMetaData = value;
+            set => SetStreamMetaData(value);
+        }
 
-                if (value != null)
-                {
-                    OnStreamMetaDataReceived?.Invoke(this, new StreamMetaDataEventArgs(value));
-                }
+        private void SetStreamMetaData(IReadOnlyDictionary<string, object>? value)
+        {
+            _streamMetaData = value;
+
+            if (value != null)
+            {
+                OnStreamMetaDataReceived?.Invoke(this, new StreamMetaDataEventArgs(value));
             }
         }
 

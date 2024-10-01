@@ -9,14 +9,20 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
         private readonly ServiceProvider _serviceProvider;
         private readonly IRtmpClient _innerClient;
 
+        public event EventHandler<BandwidthLimitEventArgs>? OnBandwidthLimitUpdated;
+
         public HostRtmpClient(ServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
             _innerClient = serviceProvider.GetRequiredService<IRtmpClient>();
+
+            _innerClient.OnBandwidthLimitUpdated += (sender, e) => OnBandwidthLimitUpdated?.Invoke(sender, e);
         }
 
         public IServiceProvider Services => _innerClient.Services;
         public RtmpClientStatus Status => _innerClient.Status;
+
+        public RtmpBandwidthLimit? BandwidthLimit => _innerClient.BandwidthLimit;
 
         public Task<ConnectResponse> ConnectAsync(ServerEndPoint endPoint, string appName)
             => _innerClient.ConnectAsync(endPoint, appName);

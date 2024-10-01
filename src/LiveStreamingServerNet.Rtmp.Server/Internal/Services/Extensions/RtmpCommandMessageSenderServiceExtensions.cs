@@ -1,8 +1,6 @@
-﻿using LiveStreamingServerNet.Rtmp.Internal;
-using LiveStreamingServerNet.Rtmp.Server.Internal.Contracts;
+﻿using LiveStreamingServerNet.Rtmp.Server.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Server.Internal.Services.Contracts;
 using LiveStreamingServerNet.Utilities.Common;
-using System.Net.Http;
 
 namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services.Extensions
 {

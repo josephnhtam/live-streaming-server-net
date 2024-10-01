@@ -6,6 +6,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Contracts
     {
         IServiceProvider Services { get; }
         RtmpClientStatus Status { get; }
+        RtmpBandwidthLimit? BandwidthLimit { get; }
 
         Task<ConnectResponse> ConnectAsync(ServerEndPoint endPoint, string appName);
         Task<ConnectResponse> ConnectAsync(ServerEndPoint endPoint, string appName, IDictionary<string, object> information);
@@ -16,7 +17,10 @@ namespace LiveStreamingServerNet.Rtmp.Client.Contracts
 
         Task UntilStoppedAsync();
         void Stop();
+
+        event EventHandler<BandwidthLimitEventArgs> OnBandwidthLimitUpdated;
     }
 
+    public record struct BandwidthLimitEventArgs(RtmpBandwidthLimit? BandwidthLimit);
     public record struct ConnectResponse(IReadOnlyDictionary<string, object> CommandObject, object? Parameters);
 }

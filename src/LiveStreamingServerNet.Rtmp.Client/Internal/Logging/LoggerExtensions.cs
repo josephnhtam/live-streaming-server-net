@@ -58,6 +58,9 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.Logging
         [LoggerMessage(LogLevel.Error, "StreamId: {StreamId} | An error occurred while receiving user control event")]
         public static partial void UserControlEventReceiveError(this ILogger logger, uint streamId, Exception ex);
 
+        [LoggerMessage(LogLevel.Error, "An error occurred while updating bandwidth limit")]
+        public static partial void BandwidthLimitUpdateError(this ILogger logger, Exception ex);
+
         [LoggerMessage(LogLevel.Error, "SessionId: {SessionId} | StreamId: {StreamId} | Invalid onStatus parameters")]
         public static partial void InvalidOnStatusParameters(this ILogger logger, uint sessionId, uint streamId);
     }
