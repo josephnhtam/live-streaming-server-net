@@ -25,7 +25,6 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.MediaPackageDiscarding
         {
             if (!isDiscardable)
             {
-                _isDiscarding = false;
                 return false;
             }
 
