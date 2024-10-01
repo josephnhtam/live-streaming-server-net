@@ -3,6 +3,7 @@ using LiveStreamingServerNet.Rtmp.Internal;
 using LiveStreamingServerNet.Rtmp.Server.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Server.Internal.Services;
 using LiveStreamingServerNet.Rtmp.Server.Internal.Services.Contracts;
+using LiveStreamingServerNet.Rtmp.Test.Utilities;
 using NSubstitute;
 
 namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
@@ -45,7 +46,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             var streamPath = _fixture.Create<string>();
             var publisher_streamId = _fixture.Create<uint>();
             var subscriber_streamId = _fixture.Create<uint>();
-            var subscriber_CommandChunkStreamId = _fixture.Create<uint>();
+            var subscriber_CommandChunkStreamId = Helpers.CreateRandomChunkStreamId();
 
             publisher_publishStreamContext.StreamPath.Returns(streamPath);
             publisher_publishStreamContext.StreamContext.Returns(publisher_streamContext);

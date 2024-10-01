@@ -123,7 +123,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
             var streamName = "streamName?password=123456";
             var streamPath = "/appName/streamName";
             var streamId = _fixture.Create<uint>();
-            var chunkStreamId = _fixture.Create<uint>();
+            var chunkStreamId = Helpers.CreateRandomChunkStreamId();
             var timestamp = _fixture.Create<uint>();
             var command = new RtmpPlayCommand(transactionId, commandObject, streamName, 0, 0, false);
 
@@ -212,7 +212,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
             var streamName = "streamName?password=123456";
             var streamPath = "/appName/streamName";
             var streamId = _fixture.Create<uint>();
-            var chunkStreamId = _fixture.Create<uint>();
+            var chunkStreamId = Helpers.CreateRandomChunkStreamId();
             var timestamp = _fixture.Create<uint>();
             var command = new RtmpPlayCommand(transactionId, commandObject, streamName, 0, 0, false);
 

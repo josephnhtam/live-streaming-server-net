@@ -122,7 +122,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
             var streamPath = "/appName/streamName";
             var streamId = _fixture.Create<uint>();
             var publishingType = "live";
-            var chunkStreamId = _fixture.Create<uint>();
+            var chunkStreamId = Helpers.CreateRandomChunkStreamId();
             var timestamp = _fixture.Create<uint>();
             var command = new RtmpPublishCommand(transactionId, commandObject, streamName, publishingType);
 
@@ -212,7 +212,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
             var streamPath = "/appName/streamName";
             var streamId = _fixture.Create<uint>();
             var publishingType = "live";
-            var chunkStreamId = _fixture.Create<uint>();
+            var chunkStreamId = Helpers.CreateRandomChunkStreamId();
             var timestamp = _fixture.Create<uint>();
             var command = new RtmpPublishCommand(transactionId, commandObject, streamName, publishingType);
 
