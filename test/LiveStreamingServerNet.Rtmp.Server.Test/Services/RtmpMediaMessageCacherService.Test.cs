@@ -8,6 +8,7 @@ using LiveStreamingServerNet.Rtmp.Server.Configurations;
 using LiveStreamingServerNet.Rtmp.Server.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Server.Internal.Services;
 using LiveStreamingServerNet.Rtmp.Server.Internal.Services.Contracts;
+using LiveStreamingServerNet.Rtmp.Test.Utilities;
 using LiveStreamingServerNet.Utilities.Buffers;
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using Microsoft.Extensions.Logging;
@@ -194,9 +195,11 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             var subscriber_streamContext = Substitute.For<IRtmpStreamContext>();
             var publisher_streamContext = Substitute.For<IRtmpPublishStreamContext>();
             var audioSequenceHeader = _fixture.Create<byte[]>();
+            var audioChunkStreamId = Helpers.CreateRandomChunkStreamId();
             var streamId = _fixture.Create<uint>();
 
             subscriber_subscribeStreamContext.StreamContext.Returns(subscriber_streamContext);
+            subscriber_subscribeStreamContext.AudioChunkStreamId.Returns(audioChunkStreamId);
             subscriber_subscribeStreamContext.UpdateTimestamp(Arg.Any<uint>(), Arg.Any<MediaType>()).Returns(true);
             subscriber_streamContext.StreamId.Returns(streamId);
             subscriber_streamContext.ClientContext.Returns(subscriber_clientContext);
@@ -207,7 +210,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             _chunkMessageSender.When(
                 x => x.Send(
                     subscriber_clientContext,
-                    Arg.Is<RtmpChunkBasicHeader>(x => x.ChunkType == 0 && x.ChunkStreamId == subscriber_subscribeStreamContext.AudioChunkStreamId),
+                    Arg.Is<RtmpChunkBasicHeader>(x => x.ChunkType == 0 && x.ChunkStreamId == audioChunkStreamId),
                     Arg.Is<RtmpChunkMessageHeaderType0>(x => x.MessageTypeId == RtmpMessageType.AudioMessage),
                     Arg.Any<Action<IDataBuffer>>()
                 )
@@ -219,7 +222,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             // Assert
             _chunkMessageSender.Received(1).Send(
                 subscriber_clientContext,
-                Arg.Is<RtmpChunkBasicHeader>(x => x.ChunkType == 0 && x.ChunkStreamId == subscriber_subscribeStreamContext.AudioChunkStreamId),
+                Arg.Is<RtmpChunkBasicHeader>(x => x.ChunkType == 0 && x.ChunkStreamId == audioChunkStreamId),
                 Arg.Is<RtmpChunkMessageHeaderType0>(x => x.MessageTypeId == RtmpMessageType.AudioMessage),
                 Arg.Any<Action<IDataBuffer>>());
 
@@ -235,9 +238,11 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             var subscriber_streamContext = Substitute.For<IRtmpStreamContext>();
             var publishr_streamContext = Substitute.For<IRtmpPublishStreamContext>();
             var videoSequenceHeader = _fixture.Create<byte[]>();
+            var videoChunkStreamId = Helpers.CreateRandomChunkStreamId();
             var streamId = _fixture.Create<uint>();
 
             subscriber_subscribeStreamContext.StreamContext.Returns(subscriber_streamContext);
+            subscriber_subscribeStreamContext.VideoChunkStreamId.Returns(videoChunkStreamId);
             subscriber_subscribeStreamContext.UpdateTimestamp(Arg.Any<uint>(), Arg.Any<MediaType>()).Returns(true);
             subscriber_streamContext.StreamId.Returns(streamId);
             subscriber_streamContext.ClientContext.Returns(subscriber_clientContext);
@@ -248,7 +253,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             _chunkMessageSender.When(
                 x => x.Send(
                     subscriber_clientContext,
-                    Arg.Is<RtmpChunkBasicHeader>(x => x.ChunkType == 0 && x.ChunkStreamId == subscriber_subscribeStreamContext.VideoChunkStreamId),
+                    Arg.Is<RtmpChunkBasicHeader>(x => x.ChunkType == 0 && x.ChunkStreamId == videoChunkStreamId),
                     Arg.Is<RtmpChunkMessageHeaderType0>(x => x.MessageTypeId == RtmpMessageType.VideoMessage),
                     Arg.Any<Action<IDataBuffer>>()
                 )
@@ -260,7 +265,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             // Assert
             _chunkMessageSender.Received(1).Send(
                subscriber_clientContext,
-               Arg.Is<RtmpChunkBasicHeader>(x => x.ChunkType == 0 && x.ChunkStreamId == subscriber_subscribeStreamContext.VideoChunkStreamId),
+               Arg.Is<RtmpChunkBasicHeader>(x => x.ChunkType == 0 && x.ChunkStreamId == videoChunkStreamId),
                Arg.Is<RtmpChunkMessageHeaderType0>(x => x.MessageTypeId == RtmpMessageType.VideoMessage),
                Arg.Any<Action<IDataBuffer>>());
 
@@ -276,10 +281,12 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             var subscriber_subscribeStreamContext = Substitute.For<IRtmpSubscribeStreamContext>();
             var subscriber_streamContext = Substitute.For<IRtmpStreamContext>();
             var streamMetaData = _fixture.Create<Dictionary<string, object>>();
+            var dataChunkStreamId = Helpers.CreateRandomChunkStreamId();
             var timestamp = _fixture.Create<uint>();
             var streamId = _fixture.Create<uint>();
 
             subscriber_subscribeStreamContext.StreamContext.Returns(subscriber_streamContext);
+            subscriber_subscribeStreamContext.DataChunkStreamId.Returns(dataChunkStreamId);
             subscriber_subscribeStreamContext.UpdateTimestamp(Arg.Any<uint>(), Arg.Any<MediaType>()).Returns(true);
             subscriber_streamContext.StreamId.Returns(streamId);
             subscriber_streamContext.ClientContext.Returns(subscriber_clientContext);
@@ -290,7 +297,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             _chunkMessageSender.When(
                 x => x.Send(
                     subscriber_clientContext,
-                    Arg.Is<RtmpChunkBasicHeader>(x => x.ChunkType == 0 && x.ChunkStreamId == subscriber_subscribeStreamContext.DataChunkStreamId),
+                    Arg.Is<RtmpChunkBasicHeader>(x => x.ChunkType == 0 && x.ChunkStreamId == dataChunkStreamId),
                     Arg.Is<RtmpChunkMessageHeaderType0>(x => x.MessageTypeId == RtmpMessageType.DataMessageAmf0),
                     Arg.Any<Action<IDataBuffer>>()
                 )
@@ -302,7 +309,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             // Assert
             _chunkMessageSender.Received(1).Send(
                 subscriber_clientContext,
-                Arg.Is<RtmpChunkBasicHeader>(x => x.ChunkType == 0 && x.ChunkStreamId == subscriber_subscribeStreamContext.DataChunkStreamId),
+                Arg.Is<RtmpChunkBasicHeader>(x => x.ChunkType == 0 && x.ChunkStreamId == dataChunkStreamId),
                 Arg.Is<RtmpChunkMessageHeaderType0>(x => x.MessageTypeId == RtmpMessageType.DataMessageAmf0),
                 Arg.Any<Action<IDataBuffer>>());
 
@@ -320,6 +327,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             var subscriber_streamContext = Substitute.For<IRtmpStreamContext>();
             var publisher_publishStreamContext = Substitute.For<IRtmpPublishStreamContext>();
             var streamMetaData = _fixture.Create<Dictionary<string, object>>();
+            var dataChunkStreamId = Helpers.CreateRandomChunkStreamId();
             var timestamp = _fixture.Create<uint>();
             var streamId = _fixture.Create<uint>();
 
@@ -334,7 +342,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             _chunkMessageSender.When(
                 x => x.Send(
                     Arg.Is<List<IRtmpClientSessionContext>>(x => x.Contains(subscriber_clientContext)),
-                    Arg.Is<RtmpChunkBasicHeader>(x => x.ChunkType == 0 && x.ChunkStreamId == subscriber_subscribeStreamContext.DataChunkStreamId),
+                    Arg.Is<RtmpChunkBasicHeader>(x => x.ChunkType == 0 && x.ChunkStreamId == dataChunkStreamId),
                     Arg.Is<RtmpChunkMessageHeaderType0>(x => x.MessageTypeId == RtmpMessageType.DataMessageAmf0),
                     Arg.Any<Action<IDataBuffer>>()
                 )
@@ -347,7 +355,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             // Assert
             _chunkMessageSender.Received(1).Send(
                 Arg.Is<List<IRtmpClientSessionContext>>(x => x.Contains(subscriber_clientContext)),
-                Arg.Is<RtmpChunkBasicHeader>(x => x.ChunkType == 0 && x.ChunkStreamId == subscriber_subscribeStreamContext.DataChunkStreamId),
+                Arg.Is<RtmpChunkBasicHeader>(x => x.ChunkType == 0 && x.ChunkStreamId == dataChunkStreamId),
                 Arg.Is<RtmpChunkMessageHeaderType0>(x => x.MessageTypeId == RtmpMessageType.DataMessageAmf0),
                 Arg.Any<Action<IDataBuffer>>());
 

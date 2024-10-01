@@ -23,7 +23,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
         {
             // Arrange
             var fixture = new Fixture();
-            var expectedChunkStreamId = fixture.Create<uint>();
+            var expectedChunkStreamId = Helpers.CreateRandomChunkStreamId();
             var expectedTimestamp = timestamp;
             var expectedMessageTypeId = fixture.Create<byte>();
             var expectedMessageStreamId = fixture.Create<uint>();
