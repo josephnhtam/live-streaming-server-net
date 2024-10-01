@@ -21,7 +21,7 @@ namespace LiveStreamingServerNet.RtmpClientPublishDemo
             var appName = parsedRtmpUrl.AppName;
             var streamName = parsedRtmpUrl.StreamName;
 
-            var rtmpClient = RtmpClientBuilder.Create()
+            await using var rtmpClient = RtmpClientBuilder.Create()
                 .ConfigureLogging(options => options.AddConsole().SetMinimumLevel(LogLevel.Trace))
                 .Build();
 
