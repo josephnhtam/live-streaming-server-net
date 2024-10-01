@@ -27,8 +27,8 @@ This `DemoPasswordValidator` is a simple example class to check if the password 
 
 ```cs linenums="1"
 using LiveStreamingServerNet.Networking.Contracts;
-using LiveStreamingServerNet.Rtmp.Auth;
-using LiveStreamingServerNet.Rtmp.Auth.Contracts;
+using LiveStreamingServerNet.Rtmp.Server.Auth;
+using LiveStreamingServerNet.Rtmp.Server.Auth.Contracts;
 
 public class DemoAuthorizationHandler : IAuthorizationHandler
 {
@@ -40,7 +40,7 @@ public class DemoAuthorizationHandler : IAuthorizationHandler
     }
 
     public async Task<AuthorizationResult> AuthorizePublishingAsync(
-        IClientInfo client,
+        ISessionInfo client,
         string streamPath,
         IReadOnlyDictionary<string, string> streamArguments,
         string publishingType)
@@ -53,7 +53,7 @@ public class DemoAuthorizationHandler : IAuthorizationHandler
     }
 
     public Task<AuthorizationResult> AuthorizeSubscribingAsync(
-        IClientInfo client,
+        ISessionInfo client,
         string streamPath,
         IReadOnlyDictionary<string, string> streamArguments)
     {
