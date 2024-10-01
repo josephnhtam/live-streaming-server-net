@@ -10,7 +10,7 @@ Below are the interfaces for these event handlers:
 public interface IRtmpServerConnectionEventHandler
 {
     int GetOrder() => 0;
-    ValueTask OnRtmpClientCreatedAsync(IEventContext context, IClientControl client);
+    ValueTask OnRtmpClientCreatedAsync(IEventContext context, ISessionControl client);
     ValueTask OnRtmpClientDisposedAsync(IEventContext context, uint clientId);
     ValueTask OnRtmpClientHandshakeCompleteAsync(IEventContext context, uint clientId);
     ValueTask OnRtmpClientConnectedAsync(IEventContext context, uint clientId, IReadOnlyDictionary<string, object> commandObject, IReadOnlyDictionary<string, object>? arguments);
@@ -46,6 +46,12 @@ For instance, if you want to limit the publishing time of every stream to a maxi
 ### Implement IRtmpServerStreamEventHandler
 
 ```cs linenums="1"
+using LiveStreamingServerNet.Networking.Server.Contracts;
+using LiveStreamingServerNet.Rtmp.Server.Contracts;
+using LiveStreamingServerNet.Utilities.Contracts;
+using Microsoft.Extensions.Options;
+using System.Collections.Concurrent;
+
 public class PublishingTimeLimiterConfig
 {
     public int PublishingTimeLimitSeconds { get; set; }
@@ -111,6 +117,12 @@ The PublishingTimeLimiter, which implements `IRtmpServerStreamEventHandler`, wil
 ### Register the Event Handler
 
 ```cs linenums="1"
+using LiveStreamingServerNet;
+using LiveStreamingServerNet.Networking;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using System.Net;
+
 using var liveStreamingServer = LiveStreamingServerBuilder.Create()
     .ConfigureRtmpServer(options =>
     {
