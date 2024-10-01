@@ -59,11 +59,11 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
                 _clientContext,
                 Arg.Is<RtmpChunkBasicHeader>(x =>
                     x.ChunkType == 0 &&
-                    x.ChunkStreamId == RtmpConstants.ProtocolControlMessageChunkStreamId
+                    x.ChunkStreamId == RtmpConstants.ControlChunkStreamId
                 ),
                 Arg.Is<RtmpChunkMessageHeaderType0>(x =>
                     x.Timestamp == 0 &&
-                    x.MessageStreamId == RtmpConstants.ProtocolControlMessageStreamId &&
+                    x.MessageStreamId == RtmpConstants.ControlStreamId &&
                     x.MessageTypeId == RtmpMessageType.SetChunkSize
                 ),
                 Arg.Any<Action<IDataBuffer>>(),
@@ -93,11 +93,11 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
                 _clientContext,
                 Arg.Is<RtmpChunkBasicHeader>(x =>
                     x.ChunkType == 0 &&
-                    x.ChunkStreamId == RtmpConstants.ProtocolControlMessageChunkStreamId
+                    x.ChunkStreamId == RtmpConstants.ControlChunkStreamId
                 ),
                 Arg.Is<RtmpChunkMessageHeaderType0>(x =>
                     x.Timestamp == 0 &&
-                    x.MessageStreamId == RtmpConstants.ProtocolControlMessageStreamId &&
+                    x.MessageStreamId == RtmpConstants.ControlStreamId &&
                     x.MessageTypeId == RtmpMessageType.AbortMessage
                 ),
                 Arg.Any<Action<IDataBuffer>>(),
@@ -125,11 +125,11 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
                 _clientContext,
                 Arg.Is<RtmpChunkBasicHeader>(x =>
                     x.ChunkType == 0 &&
-                    x.ChunkStreamId == RtmpConstants.ProtocolControlMessageChunkStreamId
+                    x.ChunkStreamId == RtmpConstants.ControlChunkStreamId
                 ),
                 Arg.Is<RtmpChunkMessageHeaderType0>(x =>
                     x.Timestamp == 0 &&
-                    x.MessageStreamId == RtmpConstants.ProtocolControlMessageStreamId &&
+                    x.MessageStreamId == RtmpConstants.ControlStreamId &&
                     x.MessageTypeId == RtmpMessageType.Acknowledgement
                 ),
                 Arg.Any<Action<IDataBuffer>>(),
@@ -157,11 +157,11 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
                 _clientContext,
                 Arg.Is<RtmpChunkBasicHeader>(x =>
                     x.ChunkType == 0 &&
-                    x.ChunkStreamId == RtmpConstants.ProtocolControlMessageChunkStreamId
+                    x.ChunkStreamId == RtmpConstants.ControlChunkStreamId
                 ),
                 Arg.Is<RtmpChunkMessageHeaderType0>(x =>
                     x.Timestamp == 0 &&
-                    x.MessageStreamId == RtmpConstants.ProtocolControlMessageStreamId &&
+                    x.MessageStreamId == RtmpConstants.ControlStreamId &&
                     x.MessageTypeId == RtmpMessageType.WindowAcknowledgementSize
                 ),
                 Arg.Any<Action<IDataBuffer>>(),
@@ -193,11 +193,11 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
                 _clientContext,
                 Arg.Is<RtmpChunkBasicHeader>(x =>
                     x.ChunkType == 0 &&
-                    x.ChunkStreamId == RtmpConstants.ProtocolControlMessageChunkStreamId
+                    x.ChunkStreamId == RtmpConstants.ControlChunkStreamId
                 ),
                 Arg.Is<RtmpChunkMessageHeaderType0>(x =>
                     x.Timestamp == 0 &&
-                    x.MessageStreamId == RtmpConstants.ProtocolControlMessageStreamId &&
+                    x.MessageStreamId == RtmpConstants.ControlStreamId &&
                     x.MessageTypeId == RtmpMessageType.SetPeerBandwidth
                 ),
                 Arg.Any<Action<IDataBuffer>>(),

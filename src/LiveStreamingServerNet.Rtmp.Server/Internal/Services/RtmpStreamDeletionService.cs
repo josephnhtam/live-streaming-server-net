@@ -62,16 +62,14 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
             IReadOnlyList<IRtmpSubscribeStreamContext> subscribeStreamContexts,
             AmfEncodingType amfEncodingType = AmfEncodingType.Amf0)
         {
-            foreach (var subscriberGroup in subscribeStreamContexts.GroupBy(x => x.StreamContext.StreamId))
-            {
-                _commandMessageSender.SendOnStatusCommandMessage(
-                    subscriberGroup.Select(x => x.StreamContext.ClientContext).ToList(),
-                    subscriberGroup.Key,
-                    RtmpStatusLevels.Status,
-                    RtmpStreamStatusCodes.PlayUnpublishNotify,
-                    "Stream is unpublished.",
-                    amfEncodingType);
-            }
+            var streamContexts = subscribeStreamContexts.Select(x => x.StreamContext).ToList();
+
+            _commandMessageSender.SendOnStatusCommandMessage(
+                streamContexts,
+                RtmpStatusLevels.Status,
+                RtmpStreamStatusCodes.PlayUnpublishNotify,
+                "Stream is unpublished.",
+                amfEncodingType);
         }
     }
 }

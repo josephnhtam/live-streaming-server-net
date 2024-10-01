@@ -2,6 +2,7 @@
 using LiveStreamingServerNet.Rtmp.Server.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Server.Internal.Services.Contracts;
 using LiveStreamingServerNet.Utilities.Common;
+using System.Net.Http;
 
 namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services.Extensions
 {
@@ -9,8 +10,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services.Extensions
     {
         public static void SendOnStatusCommandMessage(
             this IRtmpCommandMessageSenderService sender,
-            IRtmpClientSessionContext clientContext,
-            uint messageStreamId,
+            IRtmpStreamContext streamContext,
             string level,
             string code,
             string description,
@@ -25,9 +25,9 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services.Extensions
             };
 
             sender.SendCommandMessage(
-                clientContext,
-                messageStreamId,
-                RtmpConstants.OnStatusChunkStreamId,
+                streamContext.ClientContext,
+                streamContext.StreamId,
+                streamContext.CommandChunkStreamId,
                 "onStatus",
                 0,
                 null,
@@ -39,8 +39,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services.Extensions
 
         public static void SendOnStatusCommandMessage(
             this IRtmpCommandMessageSenderService sender,
-            IReadOnlyList<IRtmpClientSessionContext> clientContexts,
-            uint messageStreamId,
+            IReadOnlyList<IRtmpStreamContext> streamContexts,
             string level,
             string code,
             string description,
@@ -53,22 +52,28 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services.Extensions
                 { RtmpArguments.Description, description }
             };
 
-            sender.SendCommandMessage(
-                clientContexts,
-                messageStreamId,
-                RtmpConstants.OnStatusChunkStreamId,
-                "onStatus",
-                0,
-                null,
-                new List<object?> { properties },
-                amfEncodingType
-            );
+            foreach (var batch in streamContexts.GroupBy(x => (x.StreamId, x.CommandChunkStreamId)))
+            {
+                var streamId = batch.Key.StreamId;
+                var chunkStreamId = batch.Key.CommandChunkStreamId;
+                var clientContexts = batch.Select(x => x.ClientContext).ToList();
+
+                sender.SendCommandMessage(
+                    clientContexts,
+                    streamId,
+                    chunkStreamId,
+                    "onStatus",
+                    0,
+                    null,
+                    new List<object?> { properties },
+                    amfEncodingType
+                );
+            }
         }
 
         public static ValueTask SendOnStatusCommandMessageAsync(
             this IRtmpCommandMessageSenderService sender,
-            IRtmpClientSessionContext clientContext,
-            uint messageStreamId,
+            IRtmpStreamContext streamContext,
             string level,
             string code,
             string description,
@@ -77,8 +82,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services.Extensions
             var tcs = new ValueTaskCompletionSource();
 
             sender.SendOnStatusCommandMessage(
-                clientContext,
-                messageStreamId,
+                streamContext,
                 level,
                 code,
                 description,

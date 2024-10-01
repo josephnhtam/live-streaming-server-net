@@ -27,7 +27,9 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
 
         public string? AppName { get; set; }
 
-        private uint _nextStreamId;
+        private uint _lastStreamId = RtmpConstants.ReservedStreamId;
+        private uint _lastChunkStreamId = RtmpConstants.ReservedChunkStreamId;
+
         private readonly ConcurrentDictionary<uint, IRtmpStreamContext> _streamContexts = new();
         private readonly ConcurrentDictionary<uint, IRtmpChunkStreamContext> _chunkStreamContexts = new();
         private readonly IBufferPool? _bufferPool;
@@ -46,9 +48,14 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
                 => new RtmpChunkStreamContext(chunkStreamId);
         }
 
+        public uint GetNextChunkStreamId()
+        {
+            return Interlocked.Increment(ref _lastChunkStreamId);
+        }
+
         public IRtmpStreamContext CreateStreamContext()
         {
-            var streamId = Interlocked.Increment(ref _nextStreamId);
+            var streamId = Interlocked.Increment(ref _lastStreamId);
 
             var streamContext = new RtmpStreamContext(streamId, this, _bufferPool);
             _streamContexts[streamId] = streamContext;

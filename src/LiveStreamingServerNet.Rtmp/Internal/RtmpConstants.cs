@@ -4,17 +4,11 @@
     {
         public const uint DefaultChunkSize = 128;
 
-        public const uint ProtocolControlMessageChunkStreamId = 2;
-        public const uint ProtocolControlMessageStreamId = 0;
+        public const uint ControlStreamId = 0;
+        public const uint ControlChunkStreamId = 2;
 
-        public const uint UserControlMessageChunkStreamId = 2;
-        public const uint UserControlMessageStreamId = 0;
-
-        public const uint OnStatusChunkStreamId = 3;
-
-        public const uint AudioMessageChunkStreamId = 4;
-        public const uint VideoMessageChunkStreamId = 5;
-        public const uint DataMessageChunkStreamId = 6;
+        public const uint ReservedStreamId = 0;
+        public const uint ReservedChunkStreamId = 2;
     }
 
     internal static class RtmpUserControlMessageTypes

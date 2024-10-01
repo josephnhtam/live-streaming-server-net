@@ -171,12 +171,12 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
                     _userControlMessageSender.Received(1).SendStreamBeginMessage(_subscribeStreamContext);
 
                     _commandMessageSender.Received(1).SendCommandMessage(
-                        _clientContext, streamId, RtmpConstants.OnStatusChunkStreamId, "onStatus", 0, null,
+                        _clientContext, streamId, _streamContext.CommandChunkStreamId, "onStatus", 0, null,
                         Helpers.CreateExpectedCommandProperties(RtmpStatusLevels.Status, RtmpStreamStatusCodes.PlayReset),
                         Arg.Any<AmfEncodingType>(), Arg.Any<Action<bool>>());
 
                     _commandMessageSender.Received(1).SendCommandMessage(
-                        _clientContext, streamId, RtmpConstants.OnStatusChunkStreamId, "onStatus", 0, null,
+                        _clientContext, streamId, _streamContext.CommandChunkStreamId, "onStatus", 0, null,
                         Helpers.CreateExpectedCommandProperties(RtmpStatusLevels.Status, (string)RtmpStreamStatusCodes.PlayStart),
                         Arg.Any<AmfEncodingType>(), Arg.Any<Action<bool>>());
 
@@ -239,7 +239,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
 
             // Assert
             _commandMessageSender.Received(1).SendCommandMessage(
-                _clientContext, streamId, RtmpConstants.OnStatusChunkStreamId, "onStatus", 0, null,
+                _clientContext, streamId, _streamContext.CommandChunkStreamId, "onStatus", 0, null,
                 Helpers.CreateExpectedCommandProperties(RtmpStatusLevels.Error, RtmpStreamStatusCodes.PlayBadConnection),
                 Arg.Any<AmfEncodingType>(), Arg.Any<Action<bool>>());
 

@@ -80,11 +80,11 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
                 _clientContext,
                 Arg.Is<RtmpChunkBasicHeader>(x =>
                     x.ChunkType == 0 &&
-                    x.ChunkStreamId == RtmpConstants.UserControlMessageChunkStreamId
+                    x.ChunkStreamId == RtmpConstants.ControlChunkStreamId
                 ),
                 Arg.Is<RtmpChunkMessageHeaderType0>(x =>
                     x.Timestamp == 0 &&
-                    x.MessageStreamId == RtmpConstants.UserControlMessageStreamId &&
+                    x.MessageStreamId == RtmpConstants.ControlStreamId &&
                     x.MessageTypeId == RtmpMessageType.UserControlMessage
                 ),
                 Arg.Any<Action<IDataBuffer>>(),
@@ -115,11 +115,11 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
                 Arg.Is<IReadOnlyList<IRtmpClientSessionContext>>(x => x.Contains(_clientContext)),
                 Arg.Is<RtmpChunkBasicHeader>(x =>
                     x.ChunkType == 0 &&
-                    x.ChunkStreamId == RtmpConstants.UserControlMessageChunkStreamId
+                    x.ChunkStreamId == RtmpConstants.ControlChunkStreamId
                 ),
                 Arg.Is<RtmpChunkMessageHeaderType0>(x =>
                     x.Timestamp == 0 &&
-                    x.MessageStreamId == RtmpConstants.UserControlMessageStreamId &&
+                    x.MessageStreamId == RtmpConstants.ControlStreamId &&
                     x.MessageTypeId == RtmpMessageType.UserControlMessage
                 ),
                 Arg.Any<Action<IDataBuffer>>()
@@ -148,11 +148,11 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
                 _clientContext,
                 Arg.Is<RtmpChunkBasicHeader>(x =>
                     x.ChunkType == 0 &&
-                    x.ChunkStreamId == RtmpConstants.UserControlMessageChunkStreamId
+                    x.ChunkStreamId == RtmpConstants.ControlChunkStreamId
                 ),
                 Arg.Is<RtmpChunkMessageHeaderType0>(x =>
                     x.Timestamp == 0 &&
-                    x.MessageStreamId == RtmpConstants.UserControlMessageStreamId &&
+                    x.MessageStreamId == RtmpConstants.ControlStreamId &&
                     x.MessageTypeId == RtmpMessageType.UserControlMessage
                 ),
                 Arg.Any<Action<IDataBuffer>>(),
@@ -182,11 +182,11 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
                 Arg.Is<IReadOnlyList<IRtmpClientSessionContext>>(x => x.Contains(_clientContext)),
                 Arg.Is<RtmpChunkBasicHeader>(x =>
                     x.ChunkType == 0 &&
-                    x.ChunkStreamId == RtmpConstants.UserControlMessageChunkStreamId
+                    x.ChunkStreamId == RtmpConstants.ControlChunkStreamId
                 ),
                 Arg.Is<RtmpChunkMessageHeaderType0>(x =>
                     x.Timestamp == 0 &&
-                    x.MessageStreamId == RtmpConstants.UserControlMessageStreamId &&
+                    x.MessageStreamId == RtmpConstants.ControlStreamId &&
                     x.MessageTypeId == RtmpMessageType.UserControlMessage
                 ),
                 Arg.Any<Action<IDataBuffer>>()

@@ -115,17 +115,17 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
             uint timestamp,
             bool isSkippable)
         {
-            var basicHeader = new RtmpChunkBasicHeader(
-                0,
-                type == MediaType.Video ?
-                RtmpConstants.VideoMessageChunkStreamId :
-                RtmpConstants.AudioMessageChunkStreamId);
-
-            foreach (var subscribersGroup in subscribeStreamContexts.GroupBy(x => (x.StreamContext.StreamId, x.StreamContext.ClientContext.OutChunkSize)))
+            foreach (var subscribersGroup in subscribeStreamContexts.GroupBy(x =>
+                (x.StreamContext.StreamId,
+                 ChunkStreamId: type == MediaType.Video ? x.VideoChunkStreamId : x.AudioChunkStreamId,
+                 x.StreamContext.ClientContext.OutChunkSize)))
             {
                 var streamId = subscribersGroup.Key.StreamId;
+                var chunkStreamId = subscribersGroup.Key.ChunkStreamId;
                 var outChunkSize = subscribersGroup.Key.OutChunkSize;
                 var subscribers = subscribersGroup.ToList();
+
+                var basicHeader = new RtmpChunkBasicHeader(0, chunkStreamId);
 
                 var messageHeader = new RtmpChunkMessageHeaderType0(
                     timestamp,

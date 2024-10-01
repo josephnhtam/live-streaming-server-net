@@ -69,8 +69,8 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.RtmpEventHandlers.UserCont
         {
             var timestamp = payloadBuffer.ReadUInt32BigEndian();
 
-            var basicHeader = new RtmpChunkBasicHeader(0, RtmpConstants.UserControlMessageChunkStreamId);
-            var messageHeader = new RtmpChunkMessageHeaderType0(0, RtmpMessageType.UserControlMessage, RtmpConstants.UserControlMessageStreamId);
+            var basicHeader = new RtmpChunkBasicHeader(0, RtmpConstants.ControlChunkStreamId);
+            var messageHeader = new RtmpChunkMessageHeaderType0(0, RtmpMessageType.UserControlMessage, RtmpConstants.ControlStreamId);
 
             _chunkMessageSender.Send(basicHeader, messageHeader, dataBuffer =>
             {

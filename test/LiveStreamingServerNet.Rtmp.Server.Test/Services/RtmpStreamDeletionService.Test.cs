@@ -45,6 +45,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             var streamPath = _fixture.Create<string>();
             var publisher_streamId = _fixture.Create<uint>();
             var subscriber_streamId = _fixture.Create<uint>();
+            var subscriber_CommandChunkStreamId = _fixture.Create<uint>();
 
             publisher_publishStreamContext.StreamPath.Returns(streamPath);
             publisher_publishStreamContext.StreamContext.Returns(publisher_streamContext);
@@ -57,6 +58,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             subscriber_streamContext.ClientContext.Returns(subscriber_clientContext);
             subscriber_streamContext.SubscribeContext.Returns(subscriber_subscribeStreamContext);
             subscriber_streamContext.StreamId.Returns(subscriber_streamId);
+            subscriber_streamContext.CommandChunkStreamId.Returns(subscriber_CommandChunkStreamId);
 
             _rtmpStreamManager.StopPublishing(publisher_publishStreamContext, out Arg.Any<IList<IRtmpSubscribeStreamContext>>()).Returns(x =>
             {
@@ -73,7 +75,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
                 _commandMessageSender.Received(1).SendCommandMessage(
                     Arg.Is<IReadOnlyList<IRtmpClientSessionContext>>(x => x.Contains(subscriber_clientContext)),
                     subscriber_streamId,
-                    RtmpConstants.OnStatusChunkStreamId,
+                    subscriber_CommandChunkStreamId,
                     "onStatus",
                     0,
                     null,
