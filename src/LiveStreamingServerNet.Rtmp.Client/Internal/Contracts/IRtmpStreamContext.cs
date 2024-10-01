@@ -18,6 +18,12 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.Contracts
         void RemovePublishContext();
         void RemoveSubscribeContext();
 
+        void ReceiveStatus(StatusEventArgs eventArgs);
+        void ReceiveUserControlEvent(UserControlEventArgs eventArgs);
+
+        event EventHandler<StatusEventArgs> OnStatusReceived;
+        event EventHandler<UserControlEventArgs> OnUserControlEventReceived;
+
         event EventHandler<IRtmpPublishStreamContext> OnPublishContextCreated;
         event EventHandler<IRtmpSubscribeStreamContext> OnSubscribeContextCreated;
         event EventHandler<IRtmpPublishStreamContext> OnPublishContextRemoved;
@@ -31,6 +37,9 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.Contracts
 
     internal interface IRtmpPublishStreamContext : IRtmpMediaStreamContext
     {
+        uint DataChunkStreamId { get; }
+        uint AudioChunkStreamId { get; }
+        uint VideoChunkStreamId { get; }
     }
 
     internal interface IRtmpSubscribeStreamContext : IRtmpMediaStreamContext
@@ -38,13 +47,9 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.Contracts
         IReadOnlyDictionary<string, object>? StreamMetaData { get; set; }
         void ReceiveVideoData(MediaDataEventArgs rentedBuffer);
         void ReceiveAudioData(MediaDataEventArgs rentedBuffer);
-        void ReceiveStatus(StatusEventArgs eventArgs);
-        void ReceiveUserControlEvent(UserControlEventArgs eventArgs);
 
         event EventHandler<StreamMetaDataEventArgs> OnStreamMetaDataReceived;
         event EventHandler<MediaDataEventArgs> OnVideoDataReceived;
         event EventHandler<MediaDataEventArgs> OnAudioDataReceived;
-        event EventHandler<StatusEventArgs> OnStatusReceived;
-        event EventHandler<UserControlEventArgs> OnUserControlEventReceived;
     }
 }

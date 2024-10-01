@@ -16,5 +16,17 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.Services.Contracts
             TRtmpChunkMessageHeader messageHeader,
             Action<IDataBuffer> payloadWriter)
             where TRtmpChunkMessageHeader : struct, IRtmpChunkMessageHeader;
+
+        void Send<TRtmpChunkMessageHeader>(
+           RtmpChunkBasicHeader basicHeader,
+           TRtmpChunkMessageHeader messageHeader,
+           IRentedBuffer payload,
+           Action<bool>? callback = null) where TRtmpChunkMessageHeader : struct, IRtmpChunkMessageHeader;
+
+        ValueTask SendAsync<TRtmpChunkMessageHeader>(
+            RtmpChunkBasicHeader basicHeader,
+            TRtmpChunkMessageHeader messageHeader,
+            IRentedBuffer payload)
+            where TRtmpChunkMessageHeader : struct, IRtmpChunkMessageHeader;
     }
 }

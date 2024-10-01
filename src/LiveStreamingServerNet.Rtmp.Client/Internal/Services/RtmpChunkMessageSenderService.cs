@@ -27,10 +27,31 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.Services
             RtmpChunkBasicHeader basicHeader,
             TRtmpChunkMessageHeader messageHeader,
             Action<IDataBuffer> payloadWriter,
-            Action<bool>? callback) where TRtmpChunkMessageHeader : struct, IRtmpChunkMessageHeader
+            Action<bool>? callback)
+            where TRtmpChunkMessageHeader : struct, IRtmpChunkMessageHeader
         {
             var payloadBuffer = CreatePayloadBuffer(ref messageHeader, payloadWriter);
+            DoSend(basicHeader, messageHeader, callback, payloadBuffer);
+        }
 
+        public void Send<TRtmpChunkMessageHeader>(
+            RtmpChunkBasicHeader basicHeader,
+            TRtmpChunkMessageHeader messageHeader,
+            IRentedBuffer payload,
+            Action<bool>? callback = null)
+            where TRtmpChunkMessageHeader : struct, IRtmpChunkMessageHeader
+        {
+            var payloadBuffer = CreatePayloadBuffer(ref messageHeader, payload);
+            DoSend(basicHeader, messageHeader, callback, payloadBuffer);
+        }
+
+        private void DoSend<TRtmpChunkMessageHeader>(
+            RtmpChunkBasicHeader basicHeader,
+            TRtmpChunkMessageHeader messageHeader,
+            Action<bool>? callback,
+            IDataBuffer payloadBuffer)
+            where TRtmpChunkMessageHeader : struct, IRtmpChunkMessageHeader
+        {
             try
             {
                 var context = GetSessionContext();
@@ -46,17 +67,47 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.Services
             }
         }
 
-        public ValueTask SendAsync<TRtmpChunkMessageHeader>(RtmpChunkBasicHeader basicHeader, TRtmpChunkMessageHeader messageHeader, Action<IDataBuffer> payloadWriter) where TRtmpChunkMessageHeader : struct, IRtmpChunkMessageHeader
+        public ValueTask SendAsync<TRtmpChunkMessageHeader>(
+            RtmpChunkBasicHeader basicHeader,
+            TRtmpChunkMessageHeader messageHeader,
+            Action<IDataBuffer> payloadWriter)
+            where TRtmpChunkMessageHeader : struct, IRtmpChunkMessageHeader
         {
             var tcs = new ValueTaskCompletionSource();
             Send(basicHeader, messageHeader, payloadWriter, _ => tcs.SetResult());
             return tcs.Task;
         }
 
-        private IDataBuffer CreatePayloadBuffer<TRtmpChunkMessageHeader>(ref TRtmpChunkMessageHeader messageHeader, Action<IDataBuffer> payloadWriter) where TRtmpChunkMessageHeader : struct, IRtmpChunkMessageHeader
+        public ValueTask SendAsync<TRtmpChunkMessageHeader>(
+            RtmpChunkBasicHeader basicHeader,
+            TRtmpChunkMessageHeader messageHeader,
+            IRentedBuffer payload)
+            where TRtmpChunkMessageHeader : struct, IRtmpChunkMessageHeader
+        {
+            var tcs = new ValueTaskCompletionSource();
+            Send(basicHeader, messageHeader, payload, _ => tcs.SetResult());
+            return tcs.Task;
+        }
+
+        private IDataBuffer CreatePayloadBuffer<TRtmpChunkMessageHeader>(
+            ref TRtmpChunkMessageHeader messageHeader,
+            Action<IDataBuffer> payloadWriter)
+            where TRtmpChunkMessageHeader : struct, IRtmpChunkMessageHeader
         {
             var payloadBuffer = _dataBufferPool.Obtain();
             payloadWriter.Invoke(payloadBuffer);
+            payloadBuffer.MoveTo(0);
+            messageHeader.SetMessageLength(payloadBuffer.Size);
+            return payloadBuffer;
+        }
+
+        private IDataBuffer CreatePayloadBuffer<TRtmpChunkMessageHeader>(
+            ref TRtmpChunkMessageHeader messageHeader,
+            IRentedBuffer payload)
+            where TRtmpChunkMessageHeader : struct, IRtmpChunkMessageHeader
+        {
+            var payloadBuffer = _dataBufferPool.Obtain();
+            payloadBuffer.Write(payload.AsSpan());
             payloadBuffer.MoveTo(0);
             messageHeader.SetMessageLength(payloadBuffer.Size);
             return payloadBuffer;

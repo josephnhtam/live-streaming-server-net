@@ -2,6 +2,7 @@
 using LiveStreamingServerNet.Rtmp.Client.Exceptions;
 using LiveStreamingServerNet.Rtmp.Client.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Client.Internal.Extensions;
+using LiveStreamingServerNet.Rtmp.Client.Internal.Logging;
 using LiveStreamingServerNet.Rtmp.Client.Internal.Services.Contracts;
 using Microsoft.Extensions.Logging;
 
@@ -14,22 +15,31 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
     {
         private readonly IRtmpStreamContext _streamContext;
         private readonly IRtmpCommanderService _commander;
-        private bool _isDeleted;
+        private readonly ILogger<RtmpStream> _logger;
 
         public uint StreamId => _streamContext.StreamId;
         public IRtmpPublishStream Publish { get; }
         public IRtmpSubscribeStream Subscribe { get; }
 
+        public event EventHandler<StatusEventArgs>? OnStatusReceived;
+        public event EventHandler<UserControlEventArgs>? OnUserControlEventReceived;
+
+        private bool _isDeleted;
+
         public RtmpStream(
             IRtmpStreamContext streamContext,
-            IRtmpChunkMessageSenderService chunkMessageSender,
             IRtmpCommanderService commander,
+            IRtmpMediaDataSenderService mediaDataSender,
             ILogger<RtmpStream> logger)
         {
             _streamContext = streamContext;
             _commander = commander;
-            Publish = new RtmpPublishStream(this, streamContext, chunkMessageSender, commander, logger);
+            _logger = logger;
+            Publish = new RtmpPublishStream(this, streamContext, commander, mediaDataSender, logger);
             Subscribe = new RtmpSubscribeStream(this, streamContext, commander, logger);
+
+            _streamContext.OnStatusReceived += OnStreamContextStatusRecevied;
+            _streamContext.OnUserControlEventReceived += OnStreamUserControlEventReceived;
         }
 
         public void Command(RtmpCommand command)
@@ -71,6 +81,30 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
             if (_isDeleted)
             {
                 throw new RtmpStreamDeletedException();
+            }
+        }
+
+        private void OnStreamContextStatusRecevied(object? sender, StatusEventArgs e)
+        {
+            try
+            {
+                OnStatusReceived?.Invoke(this, e);
+            }
+            catch (Exception ex)
+            {
+                _logger.StatusReceiveError(_streamContext.StreamId, ex);
+            }
+        }
+
+        private void OnStreamUserControlEventReceived(object? sender, UserControlEventArgs e)
+        {
+            try
+            {
+                OnUserControlEventReceived?.Invoke(this, e);
+            }
+            catch (Exception ex)
+            {
+                _logger.UserControlEventReceiveError(_streamContext.StreamId, ex);
             }
         }
     }

@@ -32,17 +32,10 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.RtmpEventHandlers.Commands
             CancellationToken cancellationToken)
         {
             var streamId = chunkStreamContext.MessageHeader.MessageStreamId;
-            var subscribeStreamContext = context.GetStreamContext(streamId)?.SubscribeContext;
-
-            if (subscribeStreamContext == null)
-            {
-                _logger.SubscribeStreamNotYetCreated(context.Session.Id, streamId);
-                return ValueTask.FromResult(true);
-            }
+            var streamContext = context.GetStreamContext(streamId);
 
             if (command.Parameters is not IDictionary<string, object> parameters)
             {
-                _logger.InvalidOnStatusParameters(context.Session.Id, streamId);
                 return ValueTask.FromResult(true);
             }
 
@@ -50,7 +43,10 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.RtmpEventHandlers.Commands
             var code = parameters.GetValueOrDefault<string>(RtmpArguments.Code) ?? string.Empty;
             var description = parameters.GetValueOrDefault<string>(RtmpArguments.Description) ?? string.Empty;
 
-            subscribeStreamContext.ReceiveStatus(new(level, code, description));
+            if (streamContext != null)
+            {
+                streamContext.ReceiveStatus(new(level, code, description));
+            }
 
             return ValueTask.FromResult(true);
         }

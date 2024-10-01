@@ -188,6 +188,29 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.Services
             Command(command);
         }
 
+        public void Publish(uint streamId, string streamName, string type)
+        {
+            var sessionContext = GetSessionContext();
+            var streamContext = sessionContext.GetStreamContext(streamId);
+
+            if (streamContext == null)
+            {
+                throw new InvalidOperationException("Stream does not exist.");
+            }
+
+            streamContext.CreatePublishContext();
+
+            var command = new RtmpCommand(
+                streamContext.StreamId,
+                streamContext.CommandChunkStreamId,
+                CommandName: "publish",
+                CommandObject: null,
+                Parameters: new List<object?> { streamName, type }
+            );
+
+            Command(command);
+        }
+
         private IRtmpSessionContext GetSessionContext()
             => _clientContext.SessionContext ?? throw new InvalidOperationException("Session is not available.");
     }

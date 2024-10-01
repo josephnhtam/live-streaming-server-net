@@ -11,6 +11,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.Services.Contracts
         void CloseStream(uint streamId);
         void DeleteStream(uint streamId);
         void Play(uint streamId, string streamName, double start, double duration, bool reset);
+        void Publish(uint streamId, string streamName, string type);
     }
 
     internal record struct RtmpCommand(
