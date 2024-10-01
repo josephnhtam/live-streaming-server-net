@@ -6,6 +6,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
     internal class RtmpStreamContext : IRtmpStreamContext
     {
         public uint StreamId { get; }
+        public uint CommandChunkStreamId { get; }
 
         public IRtmpSessionContext SessionContext { get; }
         public IRtmpPublishStreamContext? PublishContext { get; private set; }
@@ -20,6 +21,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
         {
             StreamId = streamId;
             SessionContext = sessionContext;
+            CommandChunkStreamId = sessionContext.GetNextChunkStreamId();
         }
 
         public IRtmpPublishStreamContext CreatePublishContext()
