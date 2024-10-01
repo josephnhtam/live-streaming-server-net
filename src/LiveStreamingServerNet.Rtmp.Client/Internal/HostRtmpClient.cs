@@ -15,11 +15,8 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
             _innerClient = serviceProvider.GetRequiredService<IRtmpClient>();
         }
 
-        public bool IsHandshakeCompleted => _innerClient.IsHandshakeCompleted;
-        public bool IsConnected => _innerClient.IsConnected;
-        public bool IsStarted => _innerClient.IsStarted;
-        public bool IsStopped => _innerClient.IsStopped;
         public IServiceProvider Services => _innerClient.Services;
+        public RtmpClientStatus Status => _innerClient.Status;
 
         public Task<ConnectResponse> ConnectAsync(ServerEndPoint endPoint, string appName)
             => _innerClient.ConnectAsync(endPoint, appName);
