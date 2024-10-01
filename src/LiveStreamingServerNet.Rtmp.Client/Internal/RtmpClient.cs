@@ -88,7 +88,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
                 {
                     if (success && streamContext != null)
                     {
-                        var stream = _streamFactory.Create(this, streamContext);
+                        var stream = _streamFactory.Create(streamContext);
                         createStreamTcs.TrySetResult(stream);
                     }
                     else

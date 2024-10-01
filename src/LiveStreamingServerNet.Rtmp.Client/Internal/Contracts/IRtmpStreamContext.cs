@@ -5,6 +5,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.Contracts
     internal interface IRtmpStreamContext : IDisposable
     {
         uint StreamId { get; }
+        uint CommandChunkStreamId { get; }
 
         IRtmpSessionContext SessionContext { get; }
 

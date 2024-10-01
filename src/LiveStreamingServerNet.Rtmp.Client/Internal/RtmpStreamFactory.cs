@@ -21,9 +21,9 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
             _logger = logger;
         }
 
-        public IRtmpStream Create(RtmpClient client, IRtmpStreamContext context)
+        public IRtmpStream Create(IRtmpStreamContext context)
         {
-            return new RtmpStream(client, context, _chunkMessageSender, _commander, _logger);
+            return new RtmpStream(context, _chunkMessageSender, _commander, _logger);
         }
     }
 }

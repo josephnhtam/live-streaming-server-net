@@ -14,7 +14,6 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
     {
         private readonly IRtmpStreamContext _streamContext;
         private readonly IRtmpCommanderService _commander;
-        private readonly uint _commandChunkStreamId;
         private bool _isDeleted;
 
         public uint StreamId => _streamContext.StreamId;
@@ -22,7 +21,6 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
         public IRtmpSubscribeStream Subscribe { get; }
 
         public RtmpStream(
-            RtmpClient rtmpClient,
             IRtmpStreamContext streamContext,
             IRtmpChunkMessageSenderService chunkMessageSender,
             IRtmpCommanderService commander,
@@ -30,14 +28,13 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
         {
             _streamContext = streamContext;
             _commander = commander;
-            _commandChunkStreamId = rtmpClient.GetNextChunkStreamId();
             Publish = new RtmpPublishStream(this, streamContext, chunkMessageSender, commander, logger);
             Subscribe = new RtmpSubscribeStream(this, streamContext, commander, logger);
         }
 
         public void Command(RtmpCommand command)
         {
-            _commander.Command(command.ToInternal(StreamId, _commandChunkStreamId));
+            _commander.Command(command.ToInternal(StreamId, _streamContext.CommandChunkStreamId));
         }
 
         public async Task<RtmpCommandResponse> CommandAsync(RtmpCommand command)
@@ -45,7 +42,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
             var tcs = new TaskCompletionSource<RtmpCommandResponse>();
 
             _commander.Command(
-                command.ToInternal(StreamId, _commandChunkStreamId),
+                command.ToInternal(StreamId, _streamContext.CommandChunkStreamId),
                 callback: (context, response) =>
                 {
                     tcs.SetResult(response.ToExternal());

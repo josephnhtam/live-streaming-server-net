@@ -4,6 +4,6 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.Contracts
 {
     internal interface IRtmpStreamFactory
     {
-        IRtmpStream Create(RtmpClient client, IRtmpStreamContext context);
+        IRtmpStream Create(IRtmpStreamContext context);
     }
 }
