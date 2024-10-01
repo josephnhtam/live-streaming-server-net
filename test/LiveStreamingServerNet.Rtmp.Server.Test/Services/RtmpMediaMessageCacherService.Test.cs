@@ -332,6 +332,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             var streamId = _fixture.Create<uint>();
 
             subscriber_subscribeStreamContext.StreamContext.Returns(subscriber_streamContext);
+            subscriber_subscribeStreamContext.DataChunkStreamId.Returns(dataChunkStreamId);
             subscriber_subscribeStreamContext.UpdateTimestamp(Arg.Any<uint>(), Arg.Any<MediaType>()).Returns(true);
             subscriber_streamContext.StreamId.Returns(streamId);
             subscriber_streamContext.ClientContext.Returns(subscriber_clientContext);
