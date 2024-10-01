@@ -48,25 +48,14 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
 
         public IServiceProvider Services => _client.Services;
 
-        public RtmpClientStatus Status
+        public RtmpClientStatus Status => this switch
         {
-            get
-            {
-                if (_clientTcs.Task.IsCompleted)
-                    return RtmpClientStatus.Stopped;
-
-                if (_connected)
-                    return RtmpClientStatus.Connected;
-
-                if (_handshakeTcs.Task.IsCompletedSuccessfully)
-                    return RtmpClientStatus.HandshakeCompleted;
-
-                if (_clientTask != null)
-                    return RtmpClientStatus.Connecting;
-
-                return RtmpClientStatus.None;
-            }
-        }
+            _ when _clientTcs.Task.IsCompleted => RtmpClientStatus.Stopped,
+            _ when _connected => RtmpClientStatus.Connected,
+            _ when _handshakeTcs.Task.IsCompletedSuccessfully => RtmpClientStatus.HandshakeCompleted,
+            _ when _clientTask != null => RtmpClientStatus.Connecting,
+            _ => RtmpClientStatus.None
+        };
 
         public Task<ConnectResponse> ConnectAsync(ServerEndPoint endPoint, string appName)
         {
