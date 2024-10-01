@@ -25,7 +25,6 @@ namespace LiveStreamingServerNet.Flv.Internal.MediaPackageDiscarding
         {
             if (!isDiscardable)
             {
-                _isDiscarding = false;
                 return false;
             }
 
