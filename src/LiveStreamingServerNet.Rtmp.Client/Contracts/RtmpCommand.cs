@@ -1,7 +1,6 @@
 ﻿namespace LiveStreamingServerNet.Rtmp.Client.Contracts
 {
     public record struct RtmpCommand(
-        uint MessageStreamId,
         uint ChunkStreamId,
         string CommandName,
         IReadOnlyDictionary<string, object>? CommandObject = null,
