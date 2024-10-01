@@ -1,4 +1,5 @@
 ﻿using LiveStreamingServerNet.Networking.Contracts;
+using LiveStreamingServerNet.Rtmp.Client.Contracts;
 using LiveStreamingServerNet.Rtmp.Client.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal;
 using LiveStreamingServerNet.Rtmp.Internal.Contracts;
@@ -13,6 +14,8 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
 
         public RtmpSessionState State { get; set; } = RtmpSessionState.HandshakeS0;
 
+        public RtmpBandwidthLimit? BandwidthLimit { get => _bandwidthLimit; set => SetBandwidthLimit(value); }
+
         public uint InChunkSize { get; set; } = RtmpConstants.DefaultChunkSize;
         public uint OutChunkSize { get; set; } = RtmpConstants.DefaultChunkSize;
 
@@ -24,10 +27,13 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
 
         public string? AppName { get; set; }
 
+        private RtmpBandwidthLimit? _bandwidthLimit;
         private uint _lastChunkStreamId = RtmpConstants.ReservedChunkStreamId;
 
         private readonly ConcurrentDictionary<uint, IRtmpStreamContext> _streamContexts = new();
         private readonly ConcurrentDictionary<uint, IRtmpChunkStreamContext> _chunkStreamContexts = new();
+
+        public event EventHandler<BandwidthLimitEventArgs>? OnBandwidthLimitUpdated;
 
         public RtmpSessionContext(ISessionHandle session)
         {
@@ -72,6 +78,12 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
         {
             if (_streamContexts.TryRemove(streamId, out var streamContext))
                 streamContext.Dispose();
+        }
+
+        private void SetBandwidthLimit(RtmpBandwidthLimit? value)
+        {
+            _bandwidthLimit = value;
+            OnBandwidthLimitUpdated?.Invoke(this, new BandwidthLimitEventArgs(value));
         }
 
         public ValueTask DisposeAsync()

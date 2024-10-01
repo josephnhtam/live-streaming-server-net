@@ -3,7 +3,6 @@ using LiveStreamingServerNet.Rtmp.Client;
 using LiveStreamingServerNet.Rtmp.Client.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using System.Net;
 using System.Text.Json;
 
 namespace LiveStreamingServerNet.RtmpClientPlayDemo

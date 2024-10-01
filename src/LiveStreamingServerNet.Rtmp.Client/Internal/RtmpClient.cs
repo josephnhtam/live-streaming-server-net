@@ -5,9 +5,11 @@ using LiveStreamingServerNet.Rtmp.Client.Contracts;
 using LiveStreamingServerNet.Rtmp.Client.Exceptions;
 using LiveStreamingServerNet.Rtmp.Client.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Client.Internal.Extensions;
+using LiveStreamingServerNet.Rtmp.Client.Internal.Logging;
 using LiveStreamingServerNet.Rtmp.Client.Internal.Services.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal;
 using LiveStreamingServerNet.Utilities.Contracts;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Diagnostics;
 
@@ -19,9 +21,11 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
     internal class RtmpClient : IRtmpClient, IRtmpHandshakeEventHandler
     {
         private readonly IClient _client;
+        private readonly IRtmpClientContext _context;
         private readonly IRtmpCommanderService _commander;
         private readonly IRtmpProtocolControlService _protocolControl;
         private readonly IRtmpStreamFactory _streamFactory;
+        private readonly ILogger<RtmpClient> _logger;
         private readonly RtmpClientConfiguration _config;
 
         private readonly CancellationTokenSource _clientCts = new();
@@ -32,21 +36,28 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
         private bool _connected;
         private Task? _clientTask;
 
+        public IServiceProvider Services => _client.Services;
+        public RtmpBandwidthLimit? BandwidthLimit { get; private set; }
+
+        public event EventHandler<BandwidthLimitEventArgs>? OnBandwidthLimitUpdated;
+
         public RtmpClient(
             IClient client,
+            IRtmpClientContext context,
             IRtmpCommanderService commander,
             IRtmpProtocolControlService protocolControl,
             IRtmpStreamFactory streamFactory,
-            IOptions<RtmpClientConfiguration> config)
+            IOptions<RtmpClientConfiguration> config,
+            ILogger<RtmpClient> logger)
         {
             _client = client;
+            _context = context;
             _commander = commander;
             _protocolControl = protocolControl;
             _streamFactory = streamFactory;
             _config = config.Value;
+            _logger = logger;
         }
-
-        public IServiceProvider Services => _client.Services;
 
         public RtmpClientStatus Status => this switch
         {
@@ -56,6 +67,13 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
             _ when _clientTask != null => RtmpClientStatus.Handshaking,
             _ => RtmpClientStatus.None
         };
+
+        private void OnSessionContextReady()
+        {
+            Debug.Assert(_context.SessionContext != null);
+
+            _context.SessionContext.OnBandwidthLimitUpdated += OnSessionContextBandwidthLimitUpdated;
+        }
 
         public Task<ConnectResponse> ConnectAsync(ServerEndPoint endPoint, string appName)
         {
@@ -210,8 +228,22 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
             }
         }
 
+        private void OnSessionContextBandwidthLimitUpdated(object? sender, BandwidthLimitEventArgs e)
+        {
+            try
+            {
+                BandwidthLimit = e.BandwidthLimit;
+                OnBandwidthLimitUpdated?.Invoke(this, e);
+            }
+            catch (Exception ex)
+            {
+                _logger.BandwidthLimitUpdateError(ex);
+            }
+        }
+
         ValueTask IRtmpHandshakeEventHandler.OnRtmpHandshakeCompleteAsync(IEventContext context)
         {
+            OnSessionContextReady();
             _handshakeTcs.TrySetResult();
             return ValueTask.CompletedTask;
         }

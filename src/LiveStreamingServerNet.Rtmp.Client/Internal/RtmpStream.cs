@@ -1,5 +1,4 @@
 ﻿using LiveStreamingServerNet.Rtmp.Client.Contracts;
-using LiveStreamingServerNet.Rtmp.Client.Exceptions;
 using LiveStreamingServerNet.Rtmp.Client.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Client.Internal.Extensions;
 using LiveStreamingServerNet.Rtmp.Client.Internal.Logging;

@@ -1,6 +1,5 @@
 ﻿using AutoFixture;
 using FluentAssertions;
-using LiveStreamingServerNet.Rtmp.Internal;
 using LiveStreamingServerNet.Rtmp.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Server.Configurations;
 using LiveStreamingServerNet.Rtmp.Server.Internal.Contracts;
@@ -59,7 +58,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
             _clientContext.Received(1).AppName = appName;
             _protocolControl.Received(1).SetChunkSize(_clientContext, _config.OutChunkSize);
             _protocolControl.Received(1).WindowAcknowledgementSize(_clientContext, _config.WindowAcknowledgementSize);
-            _protocolControl.Received(1).SetPeerBandwidth(_clientContext, _config.PeerBandwidth, Arg.Any<RtmpPeerBandwidthLimitType>());
+            _protocolControl.Received(1).SetPeerBandwidth(_clientContext, _config.PeerBandwidth, Arg.Any<RtmpBandwidthLimitType>());
 
             _commandMessageSender.Received(1).SendCommandMessage(
                 _clientContext, 0, 3, "_result", transactionId, Arg.Any<IReadOnlyDictionary<string, object>>(), Arg.Any<IReadOnlyList<object?>>());
@@ -93,7 +92,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
             _protocolControl.DidNotReceive().SetChunkSize(Arg.Any<IRtmpClientSessionContext>(), Arg.Any<uint>());
             _protocolControl.DidNotReceive().WindowAcknowledgementSize(Arg.Any<IRtmpClientSessionContext>(), Arg.Any<uint>());
             _protocolControl.DidNotReceive().SetPeerBandwidth(
-                Arg.Any<IRtmpClientSessionContext>(), Arg.Any<uint>(), Arg.Any<RtmpPeerBandwidthLimitType>());
+                Arg.Any<IRtmpClientSessionContext>(), Arg.Any<uint>(), Arg.Any<RtmpBandwidthLimitType>());
 
             _commandMessageSender.DidNotReceive().SendCommandMessage(
                 Arg.Any<IRtmpClientSessionContext>(), Arg.Any<uint>(), Arg.Any<uint>(), Arg.Any<string>(), Arg.Any<double>(),
@@ -126,7 +125,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
             _protocolControl.DidNotReceive().SetChunkSize(Arg.Any<IRtmpClientSessionContext>(), Arg.Any<uint>());
             _protocolControl.DidNotReceive().WindowAcknowledgementSize(Arg.Any<IRtmpClientSessionContext>(), Arg.Any<uint>());
             _protocolControl.DidNotReceive().SetPeerBandwidth(
-                Arg.Any<IRtmpClientSessionContext>(), Arg.Any<uint>(), Arg.Any<RtmpPeerBandwidthLimitType>());
+                Arg.Any<IRtmpClientSessionContext>(), Arg.Any<uint>(), Arg.Any<RtmpBandwidthLimitType>());
 
             _commandMessageSender.DidNotReceive().SendCommandMessage(
                 Arg.Any<IRtmpClientSessionContext>(), Arg.Any<uint>(), Arg.Any<uint>(), Arg.Any<string>(), Arg.Any<double>(),

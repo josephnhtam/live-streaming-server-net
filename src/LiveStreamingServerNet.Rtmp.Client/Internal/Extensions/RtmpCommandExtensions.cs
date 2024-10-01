@@ -1,9 +1,9 @@
 ﻿namespace LiveStreamingServerNet.Rtmp.Client.Internal.Extensions
 {
-    using RtmpCommand = Client.Contracts.RtmpCommand;
-    using RtmpCommandResponse = Client.Contracts.RtmpCommandResponse;
     using InternalRtmpCommand = Services.Contracts.RtmpCommand;
     using InternalRtmpCommandResponse = Services.Contracts.RtmpCommandResponse;
+    using RtmpCommand = Client.Contracts.RtmpCommand;
+    using RtmpCommandResponse = Client.Contracts.RtmpCommandResponse;
 
     internal static class RtmpCommandExtensions
     {

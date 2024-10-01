@@ -1,5 +1,4 @@
-﻿using LiveStreamingServerNet.Rtmp.Internal;
-using LiveStreamingServerNet.Rtmp.Internal.Contracts;
+﻿using LiveStreamingServerNet.Rtmp.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands.Dispatcher;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands.Dispatcher.Attributes;
 using LiveStreamingServerNet.Rtmp.Server.Configurations;
@@ -62,7 +61,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
 
             _protocolControl.SetChunkSize(clientContext, _config.OutChunkSize);
             _protocolControl.WindowAcknowledgementSize(clientContext, _config.WindowAcknowledgementSize);
-            _protocolControl.SetPeerBandwidth(clientContext, _config.PeerBandwidth, RtmpPeerBandwidthLimitType.Dynamic);
+            _protocolControl.SetPeerBandwidth(clientContext, _config.PeerBandwidth, RtmpBandwidthLimitType.Dynamic);
 
             RespondToClient(clientContext, command);
 

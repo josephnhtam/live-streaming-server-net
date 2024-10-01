@@ -18,6 +18,10 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.RtmpEventHandlers.Protocol
             IDataBuffer payloadBuffer,
             CancellationToken cancellationToken)
         {
+            var bandwidth = payloadBuffer.ReadUInt32BigEndian();
+            var limitType = (RtmpBandwidthLimitType)payloadBuffer.ReadByte();
+            context.BandwidthLimit = new RtmpBandwidthLimit(bandwidth, limitType);
+
             return ValueTask.FromResult(true);
         }
     }

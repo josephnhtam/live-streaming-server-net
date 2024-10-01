@@ -22,13 +22,6 @@
         public const ushort PingResponse = 7;
     }
 
-    internal enum RtmpPeerBandwidthLimitType : byte
-    {
-        Hard = 0,
-        Soft = 1,
-        Dynamic = 2
-    }
-
     internal static class RtmpDataMessageConstants
     {
         public const string SetDataFrame = "@setDataFrame";

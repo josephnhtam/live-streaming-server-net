@@ -15,7 +15,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
             private readonly IRtmpCommanderService _commander;
             private readonly ILogger _logger;
 
-            public IReadOnlyDictionary<string, object>? StreamMetaData { get; set; }
+            public IReadOnlyDictionary<string, object>? StreamMetaData { get; private set; }
 
             public event EventHandler<StreamMetaDataEventArgs>? OnStreamMetaDataReceived;
             public event EventHandler<MediaDataEventArgs>? OnVideoDataReceived;

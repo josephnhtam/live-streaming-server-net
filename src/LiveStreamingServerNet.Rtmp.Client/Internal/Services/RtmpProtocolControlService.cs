@@ -66,7 +66,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.Services
             _clientContext.SessionContext.OutWindowAcknowledgementSize = acknowledgementWindowSize;
         }
 
-        public void SetPeerBandwidth(uint peerBandwidth, RtmpPeerBandwidthLimitType limitType)
+        public void SetPeerBandwidth(uint peerBandwidth, RtmpBandwidthLimitType limitType)
         {
             var basicHeader = new RtmpChunkBasicHeader(0, RtmpConstants.ControlChunkStreamId);
             var messageHeader = new RtmpChunkMessageHeaderType0(0, RtmpMessageType.SetPeerBandwidth, RtmpConstants.ControlStreamId);
