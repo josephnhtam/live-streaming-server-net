@@ -210,7 +210,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
             }
         }
 
-        public ValueTask OnRtmpHandshakeCompleteAsync(IEventContext context)
+        ValueTask IRtmpHandshakeEventHandler.OnRtmpHandshakeCompleteAsync(IEventContext context)
         {
             _handshakeTcs.TrySetResult();
             return ValueTask.CompletedTask;
