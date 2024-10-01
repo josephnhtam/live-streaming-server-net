@@ -4,6 +4,7 @@ using LiveStreamingServerNet.Rtmp.Client.Configurations;
 using LiveStreamingServerNet.Rtmp.Client.Contracts;
 using LiveStreamingServerNet.Rtmp.Client.Exceptions;
 using LiveStreamingServerNet.Rtmp.Client.Internal.Contracts;
+using LiveStreamingServerNet.Rtmp.Client.Internal.Extensions;
 using LiveStreamingServerNet.Rtmp.Client.Internal.Services.Contracts;
 using LiveStreamingServerNet.Utilities.Contracts;
 using Microsoft.Extensions.Options;
@@ -11,6 +12,9 @@ using System.Diagnostics;
 
 namespace LiveStreamingServerNet.Rtmp.Client.Internal
 {
+    using RtmpCommand = Client.Contracts.RtmpCommand;
+    using RtmpCommandResponse = Client.Contracts.RtmpCommandResponse;
+
     internal class RtmpClient : IRtmpClient, IRtmpHandshakeEventHandler
     {
         private readonly IClient _client;
@@ -149,17 +153,18 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
 
         public void Command(RtmpCommand command)
         {
-            _commander.Command(command);
+            _commander.Command(command.ToInternal(0));
         }
 
         public async Task<RtmpCommandResponse> CommandAsync(RtmpCommand command)
         {
             var tcs = new TaskCompletionSource<RtmpCommandResponse>();
 
-            _commander.Command(command,
+            _commander.Command(
+                command.ToInternal(0),
                 callback: (context, response) =>
                 {
-                    tcs.SetResult(response);
+                    tcs.SetResult(response.ToExternal());
                     return Task.FromResult(true);
                 },
                 cancellationCallback: () => tcs.TrySetCanceled()

@@ -11,6 +11,9 @@ namespace LiveStreamingServerNet.Rtmp.Client.Contracts
 
         void CloseStream();
         void DeleteStream();
+
+        void Command(RtmpCommand command);
+        Task<RtmpCommandResponse> CommandAsync(RtmpCommand command);
     }
 
     public interface IRtmpPublishStream { }
