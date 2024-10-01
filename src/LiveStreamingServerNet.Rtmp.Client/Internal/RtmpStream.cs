@@ -80,7 +80,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
         {
             if (_isDeleted)
             {
-                throw new RtmpStreamDeletedException();
+                throw new InvalidOperationException("The stream is deleted.");
             }
         }
 
