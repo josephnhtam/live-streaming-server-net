@@ -2,16 +2,17 @@
 
 namespace LiveStreamingServerNet.Flv.Internal
 {
-    internal record struct FlvTagHeader(FlvTagType tagType, uint dataSize, uint timestamp)
+    internal record struct FlvTagHeader(FlvTagType TagType, uint DataSize, uint Timestamp)
     {
         public const int Size = 11;
 
         public void Write(IDataBuffer dataBuffer)
         {
-            dataBuffer.Write((byte)tagType);
-            dataBuffer.WriteUInt24BigEndian(dataSize);
-            dataBuffer.WriteUInt24BigEndian(timestamp);
-            dataBuffer.WriteUInt32BigEndian(0);
+            dataBuffer.Write((byte)TagType);
+            dataBuffer.WriteUInt24BigEndian(DataSize);
+            dataBuffer.WriteUInt24BigEndian(Timestamp);
+            dataBuffer.Write((byte)(Timestamp >> 24));
+            dataBuffer.WriteUInt24BigEndian(0);
         }
     }
 
