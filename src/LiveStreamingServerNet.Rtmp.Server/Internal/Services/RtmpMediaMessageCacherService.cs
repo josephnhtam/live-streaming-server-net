@@ -99,7 +99,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
             if (publishStreamContext.StreamMetaData == null)
                 return;
 
-            var basicHeader = new RtmpChunkBasicHeader(0, RtmpConstants.DataMessageChunkStreamId);
+            var basicHeader = new RtmpChunkBasicHeader(0, subscribeStreamContext.DataChunkStreamId);
             var messageHeader = new RtmpChunkMessageHeaderType0(timestamp, RtmpMessageType.DataMessageAmf0, subscribeStreamContext.StreamContext.StreamId);
 
             _chunkMessageSender.Send(subscribeStreamContext.StreamContext.ClientContext, basicHeader, messageHeader, (dataBuffer) =>
@@ -119,12 +119,13 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
             if (publishStreamContext.StreamMetaData == null)
                 return;
 
-            var basicHeader = new RtmpChunkBasicHeader(0, RtmpConstants.DataMessageChunkStreamId);
-
-            foreach (var group in subscribeStreamContexts.GroupBy(x => x.StreamContext.StreamId))
+            foreach (var group in subscribeStreamContexts.GroupBy(x => (x.StreamContext.StreamId, x.DataChunkStreamId)))
             {
-                var streamId = group.Key;
+                var streamId = group.Key.StreamId;
+                var chunkStreamId = group.Key.DataChunkStreamId;
                 var clientContexts = group.Select(x => x.StreamContext.ClientContext).ToList();
+
+                var basicHeader = new RtmpChunkBasicHeader(0, chunkStreamId);
 
                 var messageHeader = new RtmpChunkMessageHeaderType0(timestamp, RtmpMessageType.DataMessageAmf0, streamId);
 
@@ -169,15 +170,15 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
 
             var basicHeader = new RtmpChunkBasicHeader(
                 0,
-                type == MediaType.Video ?
-                RtmpConstants.VideoMessageChunkStreamId :
-                RtmpConstants.AudioMessageChunkStreamId);
+                type == MediaType.Audio ?
+                subscribeStreamContext.AudioChunkStreamId :
+                subscribeStreamContext.VideoChunkStreamId);
 
             var messageHeader = new RtmpChunkMessageHeaderType0(
                 timestamp,
-                type == MediaType.Video ?
-                RtmpMessageType.VideoMessage :
-                RtmpMessageType.AudioMessage,
+                type == MediaType.Audio ?
+                RtmpMessageType.AudioMessage :
+                RtmpMessageType.VideoMessage,
                 subscribeStreamContext.StreamContext.StreamId);
 
             _chunkMessageSender.Send(

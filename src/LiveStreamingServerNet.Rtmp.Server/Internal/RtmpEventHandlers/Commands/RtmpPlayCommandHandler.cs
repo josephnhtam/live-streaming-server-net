@@ -182,8 +182,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
             IRtmpStreamContext streamContext, IRtmpChunkStreamContext chunkStreamContext, string reason)
         {
             await _commandMessageSender.SendOnStatusCommandMessageAsync(
-                streamContext.ClientContext,
-                streamContext.StreamId,
+                streamContext,
                 RtmpStatusLevels.Error,
                 RtmpStreamStatusCodes.PlayFailed,
                 reason);
@@ -191,20 +190,16 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
 
         private void SendSubscriptionStartedMessage(IRtmpSubscribeStreamContext subscribeStreamContext)
         {
-            var streamContext = subscribeStreamContext.StreamContext;
-
             _userControlMessageSender.SendStreamBeginMessage(subscribeStreamContext);
 
             _commandMessageSender.SendOnStatusCommandMessage(
-                streamContext.ClientContext,
-                streamContext.StreamId,
+                subscribeStreamContext.StreamContext,
                 RtmpStatusLevels.Status,
                 RtmpStreamStatusCodes.PlayReset,
                 "Stream subscribed.");
 
             _commandMessageSender.SendOnStatusCommandMessage(
-                streamContext.ClientContext,
-                streamContext.StreamId,
+                subscribeStreamContext.StreamContext,
                 RtmpStatusLevels.Status,
                 RtmpStreamStatusCodes.PlayStart,
                 "Stream subscribed.");
@@ -213,8 +208,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
         private void SendBadConnectionCommandMessage(IRtmpStreamContext streamContext, string reason)
         {
             _commandMessageSender.SendOnStatusCommandMessage(
-                streamContext.ClientContext,
-                streamContext.StreamId,
+                streamContext,
                 RtmpStatusLevels.Error,
                 RtmpStreamStatusCodes.PlayBadConnection,
                 reason);

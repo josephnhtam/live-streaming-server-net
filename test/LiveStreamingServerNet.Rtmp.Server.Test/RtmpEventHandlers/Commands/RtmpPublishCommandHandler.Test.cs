@@ -173,7 +173,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
             Received.InOrder((Action)(() =>
             {
                 _commandMessageSender.Received(1).SendCommandMessage(
-                    _clientContext, streamId, RtmpConstants.OnStatusChunkStreamId, "onStatus", 0, null,
+                    _clientContext, streamId, _streamContext.CommandChunkStreamId, "onStatus", 0, null,
                     Helpers.CreateExpectedCommandProperties(RtmpStatusLevels.Status, RtmpStreamStatusCodes.PublishStart),
                     Arg.Any<AmfEncodingType>(), Arg.Any<Action<bool>>());
 
@@ -182,13 +182,13 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
 
                 _commandMessageSender.Received(1).SendCommandMessage(
                     Arg.Is<IReadOnlyList<IRtmpClientSessionContext>>(x => x.Contains(subscriber_clientContext)),
-                    subsciber_streamId, RtmpConstants.OnStatusChunkStreamId, "onStatus", 0, null,
+                    subsciber_streamId, _streamContext.CommandChunkStreamId, "onStatus", 0, null,
                     Helpers.CreateExpectedCommandProperties(RtmpStatusLevels.Status, RtmpStreamStatusCodes.PlayReset),
                     Arg.Any<AmfEncodingType>());
 
                 _commandMessageSender.Received(1).SendCommandMessage(
                    Arg.Is<IReadOnlyList<IRtmpClientSessionContext>>(x => x.Contains(subscriber_clientContext)),
-                   subsciber_streamId, RtmpConstants.OnStatusChunkStreamId, "onStatus", 0, null,
+                   subsciber_streamId, _streamContext.CommandChunkStreamId, "onStatus", 0, null,
                    Helpers.CreateExpectedCommandProperties(RtmpStatusLevels.Status, (string)RtmpStreamStatusCodes.PlayStart),
                    Arg.Any<AmfEncodingType>());
 
@@ -241,7 +241,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
 
             // Assert
             _commandMessageSender.Received(1).SendCommandMessage(
-                _clientContext, streamId, RtmpConstants.OnStatusChunkStreamId, "onStatus", 0, null,
+                _clientContext, streamId, _streamContext.CommandChunkStreamId, "onStatus", 0, null,
                 Helpers.CreateExpectedCommandProperties(RtmpStatusLevels.Error, RtmpStreamStatusCodes.PublishBadConnection),
                 Arg.Any<AmfEncodingType>(), Arg.Any<Action<bool>>());
 

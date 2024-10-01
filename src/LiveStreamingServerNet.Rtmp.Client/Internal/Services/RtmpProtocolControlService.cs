@@ -24,8 +24,8 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.Services
         {
             Debug.Assert(_clientContext.SessionContext != null);
 
-            var basicHeader = new RtmpChunkBasicHeader(0, RtmpConstants.ProtocolControlMessageChunkStreamId);
-            var messageHeader = new RtmpChunkMessageHeaderType0(0, RtmpMessageType.SetChunkSize, RtmpConstants.ProtocolControlMessageStreamId);
+            var basicHeader = new RtmpChunkBasicHeader(0, RtmpConstants.ControlChunkStreamId);
+            var messageHeader = new RtmpChunkMessageHeaderType0(0, RtmpMessageType.SetChunkSize, RtmpConstants.ControlStreamId);
 
             _chunkMessageSenderService.Send(basicHeader, messageHeader, dataBuffer =>
                 dataBuffer.WriteUInt32BigEndian(chunkSize));
@@ -35,8 +35,8 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.Services
 
         public void AbortMessage(uint streamId)
         {
-            var basicHeader = new RtmpChunkBasicHeader(0, RtmpConstants.ProtocolControlMessageChunkStreamId);
-            var messageHeader = new RtmpChunkMessageHeaderType0(0, RtmpMessageType.AbortMessage, RtmpConstants.ProtocolControlMessageStreamId);
+            var basicHeader = new RtmpChunkBasicHeader(0, RtmpConstants.ControlChunkStreamId);
+            var messageHeader = new RtmpChunkMessageHeaderType0(0, RtmpMessageType.AbortMessage, RtmpConstants.ControlStreamId);
 
             _chunkMessageSenderService.Send(basicHeader, messageHeader, dataBuffer =>
                 dataBuffer.WriteUInt32BigEndian(streamId));
@@ -44,8 +44,8 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.Services
 
         public void Acknowledgement(uint sequenceNumber)
         {
-            var basicHeader = new RtmpChunkBasicHeader(0, RtmpConstants.ProtocolControlMessageChunkStreamId);
-            var messageHeader = new RtmpChunkMessageHeaderType0(0, RtmpMessageType.Acknowledgement, RtmpConstants.ProtocolControlMessageStreamId);
+            var basicHeader = new RtmpChunkBasicHeader(0, RtmpConstants.ControlChunkStreamId);
+            var messageHeader = new RtmpChunkMessageHeaderType0(0, RtmpMessageType.Acknowledgement, RtmpConstants.ControlStreamId);
 
             _chunkMessageSenderService.Send(basicHeader, messageHeader, dataBuffer =>
                 dataBuffer.WriteUInt32BigEndian(sequenceNumber));
@@ -55,8 +55,8 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.Services
         {
             Debug.Assert(_clientContext.SessionContext != null);
 
-            var basicHeader = new RtmpChunkBasicHeader(0, RtmpConstants.ProtocolControlMessageChunkStreamId);
-            var messageHeader = new RtmpChunkMessageHeaderType0(0, RtmpMessageType.WindowAcknowledgementSize, RtmpConstants.ProtocolControlMessageStreamId);
+            var basicHeader = new RtmpChunkBasicHeader(0, RtmpConstants.ControlChunkStreamId);
+            var messageHeader = new RtmpChunkMessageHeaderType0(0, RtmpMessageType.WindowAcknowledgementSize, RtmpConstants.ControlStreamId);
 
             _chunkMessageSenderService.Send(basicHeader, messageHeader, dataBuffer =>
             {
@@ -68,8 +68,8 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.Services
 
         public void SetPeerBandwidth(uint peerBandwidth, RtmpPeerBandwidthLimitType limitType)
         {
-            var basicHeader = new RtmpChunkBasicHeader(0, RtmpConstants.ProtocolControlMessageChunkStreamId);
-            var messageHeader = new RtmpChunkMessageHeaderType0(0, RtmpMessageType.SetPeerBandwidth, RtmpConstants.ProtocolControlMessageStreamId);
+            var basicHeader = new RtmpChunkBasicHeader(0, RtmpConstants.ControlChunkStreamId);
+            var messageHeader = new RtmpChunkMessageHeaderType0(0, RtmpMessageType.SetPeerBandwidth, RtmpConstants.ControlStreamId);
 
             _chunkMessageSenderService.Send(basicHeader, messageHeader, dataBuffer =>
             {

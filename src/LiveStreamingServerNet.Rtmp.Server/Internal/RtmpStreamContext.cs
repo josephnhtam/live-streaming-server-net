@@ -7,6 +7,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
     internal class RtmpStreamContext : IRtmpStreamContext
     {
         public uint StreamId { get; }
+        public uint CommandChunkStreamId { get; }
 
         public IRtmpClientSessionContext ClientContext { get; }
         public IRtmpPublishStreamContext? PublishContext { get; private set; }
@@ -19,6 +20,8 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
             StreamId = streamId;
             ClientContext = clientContext;
             _bufferPool = bufferPool;
+
+            CommandChunkStreamId = clientContext.GetNextChunkStreamId();
         }
 
         public IRtmpPublishStreamContext CreatePublishContext(string streamPath, IReadOnlyDictionary<string, string> streamArguments)
@@ -193,6 +196,10 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
         public bool IsReceivingAudio { get; set; }
         public bool IsReceivingVideo { get; set; }
 
+        public uint DataChunkStreamId { get; }
+        public uint AudioChunkStreamId { get; }
+        public uint VideoChunkStreamId { get; }
+
         private readonly TaskCompletionSource _initializationTcs;
         private readonly Task _initializationTask;
 
@@ -201,6 +208,10 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
         {
             IsReceivingAudio = true;
             IsReceivingVideo = true;
+
+            DataChunkStreamId = streamContext.ClientContext.GetNextChunkStreamId();
+            AudioChunkStreamId = streamContext.ClientContext.GetNextChunkStreamId();
+            VideoChunkStreamId = streamContext.ClientContext.GetNextChunkStreamId();
 
             _initializationTcs = new TaskCompletionSource();
             _initializationTask = _initializationTcs.Task;

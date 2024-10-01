@@ -6,6 +6,7 @@ using LiveStreamingServerNet.Rtmp.Client.Exceptions;
 using LiveStreamingServerNet.Rtmp.Client.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Client.Internal.Extensions;
 using LiveStreamingServerNet.Rtmp.Client.Internal.Services.Contracts;
+using LiveStreamingServerNet.Rtmp.Internal;
 using LiveStreamingServerNet.Utilities.Contracts;
 using Microsoft.Extensions.Options;
 using System.Diagnostics;
@@ -29,6 +30,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
 
         private Task? _clientTask;
         private int _connectOnce;
+        private uint _lastChunkStreamId = RtmpConstants.ReservedChunkStreamId;
 
         public bool IsConnected { get; private set; }
         public bool IsHandshakeCompleted => _handshakeTcs.Task.IsCompletedSuccessfully;
@@ -86,7 +88,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
                 {
                     if (success && streamContext != null)
                     {
-                        var stream = _streamFactory.Create(streamContext);
+                        var stream = _streamFactory.Create(this, streamContext);
                         createStreamTcs.TrySetResult(stream);
                     }
                     else
@@ -153,7 +155,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
 
         public void Command(RtmpCommand command)
         {
-            _commander.Command(command.ToInternal(0));
+            _commander.Command(command.ToInternal(RtmpConstants.ControlStreamId, RtmpConstants.ControlChunkStreamId));
         }
 
         public async Task<RtmpCommandResponse> CommandAsync(RtmpCommand command)
@@ -161,7 +163,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
             var tcs = new TaskCompletionSource<RtmpCommandResponse>();
 
             _commander.Command(
-                command.ToInternal(0),
+                command.ToInternal(RtmpConstants.ControlStreamId, RtmpConstants.ControlChunkStreamId),
                 callback: (context, response) =>
                 {
                     tcs.SetResult(response.ToExternal());
@@ -209,6 +211,11 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
         {
             _handshakeTcs.TrySetResult();
             return ValueTask.CompletedTask;
+        }
+
+        public uint GetNextChunkStreamId()
+        {
+            return Interlocked.Increment(ref _lastChunkStreamId);
         }
 
         public async ValueTask DisposeAsync()

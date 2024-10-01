@@ -7,11 +7,11 @@
 
     internal static class RtmpCommandExtensions
     {
-        public static InternalRtmpCommand ToInternal(this RtmpCommand command, uint messageStreamId)
+        public static InternalRtmpCommand ToInternal(this RtmpCommand command, uint messageStreamId, uint chunkStreamId)
         {
             return new(
                 messageStreamId,
-                command.ChunkStreamId,
+                chunkStreamId,
                 command.CommandName,
                 command.CommandObject,
                 command.Parameters,
