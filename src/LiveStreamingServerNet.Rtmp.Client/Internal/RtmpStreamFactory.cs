@@ -7,23 +7,23 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
 {
     internal class RtmpStreamFactory : IRtmpStreamFactory
     {
-        private readonly IRtmpChunkMessageSenderService _chunkMessageSender;
         private readonly IRtmpCommanderService _commander;
+        private readonly IRtmpMediaDataSenderService _mediaDataSender;
         private readonly ILogger<RtmpStream> _logger;
 
         public RtmpStreamFactory(
-            IRtmpChunkMessageSenderService chunkMessageSender,
             IRtmpCommanderService commander,
+            IRtmpMediaDataSenderService mediaDataSender,
             ILogger<RtmpStream> logger)
         {
-            _chunkMessageSender = chunkMessageSender;
             _commander = commander;
+            _mediaDataSender = mediaDataSender;
             _logger = logger;
         }
 
         public IRtmpStream Create(IRtmpStreamContext context)
         {
-            return new RtmpStream(context, _chunkMessageSender, _commander, _logger);
+            return new RtmpStream(context, _commander, _mediaDataSender, _logger);
         }
     }
 }

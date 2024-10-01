@@ -57,11 +57,11 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.RtmpEventHandlers.UserCont
         {
             var streamId = payloadBuffer.ReadUInt32BigEndian();
 
-            var subscribeStreamContext = context.GetStreamContext(streamId)?.SubscribeContext;
+            var streamContext = context.GetStreamContext(streamId);
 
-            if (subscribeStreamContext != null)
+            if (streamContext != null)
             {
-                subscribeStreamContext.ReceiveUserControlEvent(new(eventType));
+                streamContext.ReceiveUserControlEvent(new(eventType));
             }
         }
 

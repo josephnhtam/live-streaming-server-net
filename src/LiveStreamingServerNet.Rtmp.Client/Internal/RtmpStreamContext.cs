@@ -12,6 +12,9 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
         public IRtmpPublishStreamContext? PublishContext { get; private set; }
         public IRtmpSubscribeStreamContext? SubscribeContext { get; private set; }
 
+        public event EventHandler<StatusEventArgs>? OnStatusReceived;
+        public event EventHandler<UserControlEventArgs>? OnUserControlEventReceived;
+
         public event EventHandler<IRtmpPublishStreamContext>? OnPublishContextCreated;
         public event EventHandler<IRtmpSubscribeStreamContext>? OnSubscribeContextCreated;
         public event EventHandler<IRtmpPublishStreamContext>? OnPublishContextRemoved;
@@ -73,6 +76,16 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
                 throw new InvalidOperationException("Subscribe context already exists.");
         }
 
+        public void ReceiveStatus(StatusEventArgs eventArgs)
+        {
+            OnStatusReceived?.Invoke(this, eventArgs);
+        }
+
+        public void ReceiveUserControlEvent(UserControlEventArgs eventArgs)
+        {
+            OnUserControlEventReceived?.Invoke(this, eventArgs);
+        }
+
         public void Dispose()
         {
             RemovePublishContext();
@@ -94,7 +107,16 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
 
     internal class RtmpPublishStreamContext : RtmpMediaStreamContext, IRtmpPublishStreamContext
     {
-        public RtmpPublishStreamContext(IRtmpStreamContext streamContext) : base(streamContext) { }
+        public uint DataChunkStreamId { get; }
+        public uint AudioChunkStreamId { get; }
+        public uint VideoChunkStreamId { get; }
+
+        public RtmpPublishStreamContext(IRtmpStreamContext streamContext) : base(streamContext)
+        {
+            DataChunkStreamId = streamContext.SessionContext.GetNextChunkStreamId();
+            AudioChunkStreamId = streamContext.SessionContext.GetNextChunkStreamId();
+            VideoChunkStreamId = streamContext.SessionContext.GetNextChunkStreamId();
+        }
     }
 
     internal class RtmpSubscribeStreamContext : RtmpMediaStreamContext, IRtmpSubscribeStreamContext
@@ -104,8 +126,6 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
         public event EventHandler<StreamMetaDataEventArgs>? OnStreamMetaDataReceived;
         public event EventHandler<MediaDataEventArgs>? OnVideoDataReceived;
         public event EventHandler<MediaDataEventArgs>? OnAudioDataReceived;
-        public event EventHandler<StatusEventArgs>? OnStatusReceived;
-        public event EventHandler<UserControlEventArgs>? OnUserControlEventReceived;
 
         public RtmpSubscribeStreamContext(IRtmpStreamContext streamContext) : base(streamContext) { }
 
@@ -131,16 +151,6 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
         public void ReceiveAudioData(MediaDataEventArgs eventArgs)
         {
             OnAudioDataReceived?.Invoke(this, eventArgs);
-        }
-
-        public void ReceiveStatus(StatusEventArgs eventArgs)
-        {
-            OnStatusReceived?.Invoke(this, eventArgs);
-        }
-
-        public void ReceiveUserControlEvent(UserControlEventArgs eventArgs)
-        {
-            OnUserControlEventReceived?.Invoke(this, eventArgs);
         }
     }
 }

@@ -14,9 +14,20 @@ namespace LiveStreamingServerNet.Rtmp.Client.Contracts
 
         void Command(RtmpCommand command);
         Task<RtmpCommandResponse> CommandAsync(RtmpCommand command);
+
+        event EventHandler<StatusEventArgs> OnStatusReceived;
+        event EventHandler<UserControlEventArgs> OnUserControlEventReceived;
     }
 
-    public interface IRtmpPublishStream { }
+    public interface IRtmpPublishStream
+    {
+        void Publish(string streamName);
+        void Publish(string streamName, string type);
+
+        ValueTask SendMetaDataAsync(IReadOnlyDictionary<string, object> metaData);
+        ValueTask SendAudioDataAsync(IRentedBuffer payload, uint timestamp);
+        ValueTask SendVideoDataAsync(IRentedBuffer payload, uint timestamp);
+    }
 
     public interface IRtmpSubscribeStream
     {
@@ -28,8 +39,6 @@ namespace LiveStreamingServerNet.Rtmp.Client.Contracts
         event EventHandler<StreamMetaDataEventArgs> OnStreamMetaDataReceived;
         event EventHandler<MediaDataEventArgs> OnVideoDataReceived;
         event EventHandler<MediaDataEventArgs> OnAudioDataReceived;
-        event EventHandler<StatusEventArgs> OnStatusReceived;
-        event EventHandler<UserControlEventArgs> OnUserControlEventReceived;
     }
 
     public record struct StreamMetaDataEventArgs(IReadOnlyDictionary<string, object> StreamMetaData);
