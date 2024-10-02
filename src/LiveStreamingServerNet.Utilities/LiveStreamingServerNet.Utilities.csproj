@@ -4,11 +4,11 @@
     <TargetFrameworks>net8.0;net7.0</TargetFrameworks>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <IsPackable>true</IsPackable>
     <Description>This package provides common helper classes and utilities for LiveStreamingServerNet.</Description>
     <PackageTags>live-streaming</PackageTags>
-    <Version>0.15.0</Version>
   </PropertyGroup>
+
+  <Import Project="$(SolutionDir)nuget\nuget-package.props" />
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" />

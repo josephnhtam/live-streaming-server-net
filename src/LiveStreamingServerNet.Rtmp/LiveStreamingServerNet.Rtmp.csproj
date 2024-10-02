@@ -4,12 +4,12 @@
     <TargetFrameworks>net8.0;net7.0</TargetFrameworks>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <IsPackable>true</IsPackable>
     <Description>This package provides shared components and utilities for RTMP server and client implementations.</Description>
     <PackageTags>live-streaming;rtmp</PackageTags>
-    <Version>0.15.0</Version>
   </PropertyGroup>
 
+  <Import Project="$(SolutionDir)nuget\nuget-package.props" />
+  
   <ItemGroup>
     <PackageReference Include="mtanksl.ActionMessageFormat" />
   </ItemGroup>

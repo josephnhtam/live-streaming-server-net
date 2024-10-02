@@ -4,12 +4,12 @@
     <TargetFrameworks>net8.0;net7.0</TargetFrameworks>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <IsPackable>true</IsPackable>
     <Description>This package provides the capability to transmux RTMP streams into HLS format, and integrates with FFmpeg for stream processing.</Description>
     <PackageTags>live-streaming;rtmp;transmuxer;transcoder;hls;dash</PackageTags>
-    <Version>0.15.0</Version>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
+
+  <Import Project="$(SolutionDir)nuget\nuget-package.props" />
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" />
