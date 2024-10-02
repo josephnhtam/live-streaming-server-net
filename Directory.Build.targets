@@ -1,0 +1,21 @@
+<Project>
+	<PropertyGroup Condition=" '$(IsTestProject)' != 'true' AND ($(MSBuildProjectDirectory.EndsWith('Test')) OR $(MSBuildProjectDirectory.EndsWith('Tests'))) ">
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+	<ItemGroup Condition=" '$(IsTestProject)' == 'true' ">
+		<PackageReference Include="AutoFixture.AutoNSubstitute" />
+		<PackageReference Include="FluentAssertions" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" />
+		<PackageReference Include="NSubstitute" />
+		<PackageReference Include="xunit" />
+		<PackageReference Include="xunit.runner.visualstudio">
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		  <PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+		<PackageReference Include="coverlet.collector">
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		  <PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+		<Using Include="Xunit" />
+	</ItemGroup>
+</Project>

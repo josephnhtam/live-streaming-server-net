@@ -4,10 +4,10 @@
     <Authors>Joseph NH Tam</Authors>
 
     <PackageIcon>icon.png</PackageIcon>
-	<PackageReadmeFile>README.NuGet.md</PackageReadmeFile>
+    <PackageReadmeFile>README.NuGet.md</PackageReadmeFile>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://josephnhtam.github.io/live-streaming-server-net</PackageProjectUrl>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
-	<PackageProjectUrl>https://josephnhtam.github.io/live-streaming-server-net</PackageProjectUrl>
   </PropertyGroup>
 
   <ItemGroup>
