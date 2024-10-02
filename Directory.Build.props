@@ -11,7 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="$(MSBuildThisFileDirectory)icon.png" Pack="true" Visible="false" PackagePath="\" />
+    <None Include="$(MSBuildThisFileDirectory)/images/icon.png" Pack="true" Visible="false" PackagePath="\" />
 	<None Include="$(MSBuildThisFileDirectory)README.NuGet.md" Pack="true" Visible="false" PackagePath="\" />
   </ItemGroup>
 </Project>
