@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Copyright>Copyright 2024 Joseph NH Tam</Copyright>
     <Authors>Joseph NH Tam</Authors>
-
+	<IsPackable>false</IsPackable>
     <PackageIcon>icon.png</PackageIcon>
     <PackageReadmeFile>README.NuGet.md</PackageReadmeFile>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
