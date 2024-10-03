@@ -3,6 +3,7 @@
     <Authors>Joseph NH Tam</Authors>
     <Copyright>Copyright 2024 Joseph NH Tam</Copyright>
 	<IsPackable>false</IsPackable>
+	<WarnOnPackingNonPackableProject>false</WarnOnPackingNonPackableProject>
   </PropertyGroup>
   
   <PropertyGroup>
