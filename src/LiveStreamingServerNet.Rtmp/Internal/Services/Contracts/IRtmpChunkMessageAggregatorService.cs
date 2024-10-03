@@ -5,7 +5,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services.Contracts
 {
     internal interface IRtmpChunkMessageAggregatorService
     {
-        ValueTask<RtmpChunkMessageAggregationResult> AggregateChunkMessages(
+        ValueTask<RtmpChunkMessageAggregationResult> AggregateChunkMessagesAsync(
             INetworkStreamReader networkStream,
             IRtmpChunkStreamContextProvider contextProvider,
             CancellationToken cancellationToken);

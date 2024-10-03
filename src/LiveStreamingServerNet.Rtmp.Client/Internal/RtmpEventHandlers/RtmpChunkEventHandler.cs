@@ -33,7 +33,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.RtmpEventHandlers
 
         public async ValueTask<RtmpEventConsumingResult> Handle(RtmpChunkEvent @event, CancellationToken cancellationToken)
         {
-            var aggregationResult = await _chunkMessageAggregator.AggregateChunkMessages(
+            var aggregationResult = await _chunkMessageAggregator.AggregateChunkMessagesAsync(
                 @event.NetworkStream, @event.Context, cancellationToken);
 
             if (aggregationResult.IsComplete && !await HandleRtmpMessageAsync(@event, aggregationResult, cancellationToken))

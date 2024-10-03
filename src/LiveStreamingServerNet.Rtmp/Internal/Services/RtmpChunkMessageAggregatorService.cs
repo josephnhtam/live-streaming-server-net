@@ -15,7 +15,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             _dataBufferPool = dataBufferPool;
         }
 
-        public async ValueTask<RtmpChunkMessageAggregationResult> AggregateChunkMessages(
+        public async ValueTask<RtmpChunkMessageAggregationResult> AggregateChunkMessagesAsync(
             INetworkStreamReader networkStream,
             IRtmpChunkStreamContextProvider contextProvider,
             CancellationToken cancellationToken)
