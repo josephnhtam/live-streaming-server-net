@@ -66,8 +66,24 @@ Live-Streaming-Server-Net is a high-performance and flexible toolset which allow
       <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet.Networking"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.Networking.svg?logo=nuget"></a></td>
     </tr>
     <tr>
+      <td><b>LiveStreamingServerNet.Networking.Client</b></td>
+      <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet.Networking.Client"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.Networking.Client.svg?logo=nuget"></a></td>
+    </tr>
+    <tr>
+      <td><b>LiveStreamingServerNet.Networking.Server</b></td>
+      <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet.Networking.Server"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.Networking.Server.svg?logo=nuget"></a></td>
+    </tr>
+    <tr>
       <td><b>LiveStreamingServerNet.Rtmp</b></td>
       <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet.Rtmp"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.Rtmp.svg?logo=nuget"></a></td>
+    </tr>
+    <tr>
+      <td><b>LiveStreamingServerNet.Rtmp.Client</b></td>
+      <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet.Rtmp.Client"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.Rtmp.Client.svg?logo=nuget"></a></td>
+    </tr>
+    <tr>
+      <td><b>LiveStreamingServerNet.Rtmp.Server</b></td>
+      <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet.Rtmp.Server"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.Rtmp.Server.svg?logo=nuget"></a></td>
     </tr>
     <tr>
       <td><b>LiveStreamingServerNet.StreamProcessor</b></td>

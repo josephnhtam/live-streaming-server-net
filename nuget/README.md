@@ -119,8 +119,24 @@ ffplay rtmp://localhost:1935/live/demo
       <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet.Networking"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.Networking.svg?logo=nuget"></a></td>
     </tr>
     <tr>
+      <th>LiveStreamingServerNet.Networking.Client</th>
+      <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet.Networking.Client"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.Networking.Client.svg?logo=nuget"></a></td>
+    </tr>
+    <tr>
+      <th>LiveStreamingServerNet.Networking.Server</th>
+      <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet.Networking.Server"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.Networking.Server.svg?logo=nuget"></a></td>
+    </tr>
+    <tr>
       <th>LiveStreamingServerNet.Rtmp</th>
       <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet.Rtmp"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.Rtmp.svg?logo=nuget"></a></td>
+    </tr>
+    <tr>
+      <th>LiveStreamingServerNet.Rtmp.Client</th>
+      <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet.Rtmp.Client"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.Rtmp.Client.svg?logo=nuget"></a></td>
+    </tr>
+    <tr>
+      <th>LiveStreamingServerNet.Rtmp.Server</th>
+      <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet.Rtmp.Server"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.Rtmp.Server.svg?logo=nuget"></a></td>
     </tr>
     <tr>
       <th>LiveStreamingServerNet.StreamProcessor</th>
