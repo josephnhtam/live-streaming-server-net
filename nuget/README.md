@@ -88,93 +88,10 @@ ffplay rtmp://localhost:1935/live/demo
 3. In the "Network" tab, enter the URL: `rtmp://localhost:1935/live/demo`.
 4. Click the "Play" button to start playing the live stream.
 
-## NuGet Packages
-
-<table>
-  <thead>
-    <tr>
-      <th>Package</th>
-      <th>Latest Version</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>LiveStreamingServerNet</th>
-      <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.svg?logo=nuget"></a></td>
-    </tr>
-    <tr>
-      <th>LiveStreamingServerNet.Standalone</th>
-      <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet.Standalone"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.Standalone.svg?logo=nuget"></a></td>
-    </tr>
-    <tr>
-      <th>LiveStreamingServerNet.AdminPanelUI</th>
-      <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet.AdminPanelUI"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.AdminPanelUI.svg?logo=nuget"></a></td>
-    </tr>
-    <tr>
-      <th>LiveStreamingServerNet.Flv</th>
-      <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet.Flv"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.Flv.svg?logo=nuget"></a></td>
-    </tr>
-    <tr>
-      <th>LiveStreamingServerNet.Networking</th>
-      <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet.Networking"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.Networking.svg?logo=nuget"></a></td>
-    </tr>
-    <tr>
-      <th>LiveStreamingServerNet.Networking.Client</th>
-      <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet.Networking.Client"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.Networking.Client.svg?logo=nuget"></a></td>
-    </tr>
-    <tr>
-      <th>LiveStreamingServerNet.Networking.Server</th>
-      <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet.Networking.Server"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.Networking.Server.svg?logo=nuget"></a></td>
-    </tr>
-    <tr>
-      <th>LiveStreamingServerNet.Rtmp</th>
-      <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet.Rtmp"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.Rtmp.svg?logo=nuget"></a></td>
-    </tr>
-    <tr>
-      <th>LiveStreamingServerNet.Rtmp.Client</th>
-      <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet.Rtmp.Client"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.Rtmp.Client.svg?logo=nuget"></a></td>
-    </tr>
-    <tr>
-      <th>LiveStreamingServerNet.Rtmp.Server</th>
-      <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet.Rtmp.Server"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.Rtmp.Server.svg?logo=nuget"></a></td>
-    </tr>
-    <tr>
-      <th>LiveStreamingServerNet.StreamProcessor</th>
-      <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet.StreamProcessor"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.StreamProcessor.svg?logo=nuget"></a></td>
-    </tr>
-    <tr>
-      <th>LiveStreamingServerNet.StreamProcessor.AmazonS3</th>
-      <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet.StreamProcessor.AmazonS3"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.StreamProcessor.AmazonS3.svg?logo=nuget"></a></td>
-    </tr>
-	<tr>
-      <th>LiveStreamingServerNet.StreamProcessor.AspNetCore</th>
-      <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet.StreamProcessor.AspNetCore"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.StreamProcessor.AspNetCore.svg?logo=nuget"></a></td>
-    </tr>
-    <tr>
-      <th>LiveStreamingServerNet.StreamProcessor.AzureBlobStorage</th>
-      <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet.StreamProcessor.AzureBlobStorage"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.StreamProcessor.AzureBlobStorage.svg?logo=nuget"></a></td>
-    </tr>
-    <tr>
-      <th>LiveStreamingServerNet.StreamProcessor.GoogleCloudStorage</th>
-      <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet.StreamProcessor.GoogleCloudStorage"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.StreamProcessor.GoogleCloudStorage.svg?logo=nuget"></a></td>
-    </tr>
-    <tr>
-      <th>LiveStreamingServerNet.Utilities</th>
-      <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet.Utilities"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.Utilities?logo=nuget"></a></td>
-    </tr>
-  </tbody>
-</table>
-
 ## License
 
 This project is licensed under the terms of the [MIT license](https://github.com/josephnhtam/live-streaming-server-net/blob/master/LICENSE).
 
 ## Acknowledgments
-
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="../images/jetbrains-white.svg">
-  <source media="(prefers-color-scheme: light)" srcset="../images/jetbrains.svg">
-  <img src="./images/jetbrains.svg" alt="JetBrains" width="200"/>
-</picture>
 
 Special thanks to [JetBrains](https://www.jetbrains.com/) for providing the open-source software license that supports the development of this project.
