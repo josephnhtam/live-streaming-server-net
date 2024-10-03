@@ -156,8 +156,8 @@ This project is licensed under the terms of the [MIT license](https://github.com
 ## Acknowledgments
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./images/jetbrains-white.svg">
-  <source media="(prefers-color-scheme: light)" srcset="./images/jetbrains.svg">
+  <source media="(prefers-color-scheme: dark)" srcset="../images/jetbrains-white.svg">
+  <source media="(prefers-color-scheme: light)" srcset="../images/jetbrains.svg">
   <img src="./images/jetbrains.svg" alt="JetBrains" width="200"/>
 </picture>
 
