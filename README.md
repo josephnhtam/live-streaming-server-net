@@ -12,6 +12,7 @@ Please check the [documentation](https://josephnhtam.github.io/live-streaming-se
 ## Features
 
 - **RTMP/RTMPS protocol**: Supports the RTMP and RTMPS protocols for streaming audio, video, and data.
+- **RTMP Client**: Provides a client library for connecting to RTMP servers and publishing/subscribing live streams.
 - **HTTP-FLV/WebSocket-FLV with ASP.NET CORE**: Provides support for serving FLV live streams using HTTP-FLV and WebSocket-FLV protocols within an ASP.NET Core application.
 - **Transmuxing RTMP streams into HLS streams**: Allows you to transmux RTMP streams into HLS (HTTP Live Streaming) streams using the built-in HLS transmuxer.
 - **Transcoding RTMP streams into Adaptive HLS streams**: Integrates with FFmpeg to transcode RTMP streams into multiple-bitrate Adaptive HLS streams.
@@ -23,12 +24,9 @@ Please check the [documentation](https://josephnhtam.github.io/live-streaming-se
 
 ## In-Progress
 
+- **Edge Server**: Although edge servers are not necessary for serving HLS, they are required for serving RTMP and FLV streams in a cluster configuration.
 - **Custom Kubernetes Operator and Kubernetes Integration**: The objective is to achieve horizontal autoscaling by scaling out the pods when more streams are published, and scaling in the pods when streams are deleted, all without affecting the existing connections.
 - **Redis Integration**: Integrate with Redis to share stream information among pods in the fleet.
-
-## Roadmap
-
-- **Edge Server**: Although edge servers are not necessary for serving HLS, they are required for serving RTMP and FLV streams in a cluster configuration.
 
 ## Quick Start
 
