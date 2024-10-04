@@ -7,23 +7,22 @@ using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands.Dispatcher
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands.Dispatcher.Attributes;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands.Dispatcher.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.Utilities;
-using LiveStreamingServerNet.Rtmp.Server.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Test.Utilities;
 using LiveStreamingServerNet.Utilities.Buffers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 
-namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands.Dispatcher
+namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Commands.Dispatcher
 {
     public class RtmpCommandDispatcherTest
     {
         private readonly IFixture _fixture;
         private readonly TestHandler _testHandler;
         private readonly Test2Handler _test2Handler;
-        private readonly IRtmpClientSessionContext _clientContext;
+        private readonly ITestContext _context;
         private readonly IRtmpChunkStreamContext _chunkStreamContext;
-        private readonly IRtmpCommandDispatcher<IRtmpClientSessionContext> _sut;
+        private readonly IRtmpCommandDispatcher<ITestContext> _sut;
 
         public RtmpCommandDispatcherTest()
         {
@@ -31,22 +30,22 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands.Dis
             _testHandler = Substitute.For<TestHandler>();
             _test2Handler = Substitute.For<Test2Handler>();
 
-            _clientContext = Substitute.For<IRtmpClientSessionContext>();
+            _context = Substitute.For<ITestContext>();
             _chunkStreamContext = Substitute.For<IRtmpChunkStreamContext>();
 
             var map = new RtmpCommandHandlerMap(new Dictionary<string, Type> {
                 { "test", typeof(TestHandler) },
                 { "test2", typeof(Test2Handler) },
             });
-            var logger = Substitute.For<ILogger<RtmpCommandDispatcher<IRtmpClientSessionContext>>>();
+            var logger = Substitute.For<ILogger<RtmpCommandDispatcher<ITestContext>>>();
 
             var services = new ServiceCollection();
             services.AddSingleton(_testHandler)
                     .AddSingleton(_test2Handler)
-                    .AddSingleton<IRtmpCommandDispatcher<IRtmpClientSessionContext>>(svc =>
-                        new RtmpCommandDispatcher<IRtmpClientSessionContext>(svc, map, logger));
+                    .AddSingleton<IRtmpCommandDispatcher<ITestContext>>(svc =>
+                        new RtmpCommandDispatcher<ITestContext>(svc, map, logger));
 
-            _sut = services.BuildServiceProvider().GetRequiredService<IRtmpCommandDispatcher<IRtmpClientSessionContext>>();
+            _sut = services.BuildServiceProvider().GetRequiredService<IRtmpCommandDispatcher<ITestContext>>();
         }
 
         [Theory]
@@ -71,16 +70,16 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands.Dis
             _chunkStreamContext.MessageHeader.MessageLength.Returns(payloadBuffer.Size);
 
             var expectedResult = _fixture.Create<bool>();
-            _testHandler.HandleAsync(_chunkStreamContext, _clientContext, Arg.Any<TestCommand>(), Arg.Any<CancellationToken>())
+            _testHandler.HandleAsync(_chunkStreamContext, _context, Arg.Any<TestCommand>(), Arg.Any<CancellationToken>())
                 .Returns(expectedResult);
 
             // Act
-            var result = await _sut.DispatchAsync(_chunkStreamContext, _clientContext, payloadBuffer, default);
+            var result = await _sut.DispatchAsync(_chunkStreamContext, _context, payloadBuffer, default);
 
             // Assert
             await _testHandler.Received(1).HandleAsync(
                 _chunkStreamContext,
-                _clientContext,
+                _context,
                 Arg.Is<TestCommand>(x =>
                     x.TransactionId == transactionId &&
                     x.CommandObject.Match(commandObject) &&
@@ -114,16 +113,16 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands.Dis
             _chunkStreamContext.MessageHeader.MessageLength.Returns(payloadBuffer.Size);
 
             var expectedResult = _fixture.Create<bool>();
-            _test2Handler.HandleAsync(_chunkStreamContext, _clientContext, Arg.Any<Test2Command>(), Arg.Any<CancellationToken>())
+            _test2Handler.HandleAsync(_chunkStreamContext, _context, Arg.Any<Test2Command>(), Arg.Any<CancellationToken>())
                 .Returns(expectedResult);
 
             // Act
-            var result = await _sut.DispatchAsync(_chunkStreamContext, _clientContext, payloadBuffer, default);
+            var result = await _sut.DispatchAsync(_chunkStreamContext, _context, payloadBuffer, default);
 
             // Assert
             await _test2Handler.Received(1).HandleAsync(
                   _chunkStreamContext,
-                  _clientContext,
+                  _context,
                   Arg.Is<Test2Command>(x =>
                       x.TransactionId == transactionId &&
                       x.Flag == flag &&
@@ -152,16 +151,18 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands.Dis
             _chunkStreamContext.MessageHeader.MessageLength.Returns(payloadBuffer.Size);
 
             // Act
-            var result = await _sut.DispatchAsync(_chunkStreamContext, _clientContext, payloadBuffer, default);
+            var result = await _sut.DispatchAsync(_chunkStreamContext, _context, payloadBuffer, default);
 
             // Assert
             result.Should().BeTrue();
         }
 
+        internal interface ITestContext { }
+
         internal record TestCommand(double TransactionId, IDictionary<string, object> CommandObject, string PublishingName);
-        [RtmpCommand("test")] internal abstract class TestHandler : RtmpCommandHandler<TestCommand, IRtmpClientSessionContext> { }
+        [RtmpCommand("test")] internal abstract class TestHandler : RtmpCommandHandler<TestCommand, ITestContext> { }
 
         internal record Test2Command(double TransactionId, bool Flag, string PublishingName, IDictionary<string, object> CommandObject, IDictionary<string, object>? Optional);
-        [RtmpCommand("test2")] internal abstract class Test2Handler : RtmpCommandHandler<Test2Command, IRtmpClientSessionContext> { }
+        [RtmpCommand("test2")] internal abstract class Test2Handler : RtmpCommandHandler<Test2Command, ITestContext> { }
     }
 }

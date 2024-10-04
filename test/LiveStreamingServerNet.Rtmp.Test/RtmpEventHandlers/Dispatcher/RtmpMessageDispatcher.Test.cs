@@ -4,22 +4,21 @@ using LiveStreamingServerNet.Rtmp.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Dispatcher;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Dispatcher.Attributes;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Dispatcher.Contracts;
-using LiveStreamingServerNet.Rtmp.Server.Internal.Contracts;
 using LiveStreamingServerNet.Utilities.Buffers;
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 
-namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Dispatcher
+namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Dispatcher
 {
     public class RtmpMessageDispatcherTest
     {
         private readonly IFixture _fixture;
         private readonly TestHandler _testHandler;
         private readonly Test2Handler _test2Handler;
-        private readonly IRtmpClientSessionContext _clientContext;
+        private readonly ITestContext _context;
         private readonly DataBuffer _payloadBuffer;
-        private readonly IRtmpMessageDispatcher<IRtmpClientSessionContext> _sut;
+        private readonly IRtmpMessageDispatcher<ITestContext> _sut;
         private IRtmpChunkStreamContext _chunkStreamContext;
 
         public RtmpMessageDispatcherTest()
@@ -28,7 +27,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Dispatcher
             _testHandler = Substitute.For<TestHandler>();
             _test2Handler = Substitute.For<Test2Handler>();
 
-            _clientContext = Substitute.For<IRtmpClientSessionContext>();
+            _context = Substitute.For<ITestContext>();
 
             _payloadBuffer = new DataBuffer();
             _payloadBuffer.Write(_fixture.Create<byte[]>());
@@ -45,10 +44,10 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Dispatcher
             var services = new ServiceCollection();
             services.AddSingleton(_testHandler)
                     .AddSingleton(_test2Handler)
-                    .AddSingleton<IRtmpMessageDispatcher<IRtmpClientSessionContext>>(svc =>
-                        new RtmpMessageDispatcher<IRtmpClientSessionContext>(svc, map));
+                    .AddSingleton<IRtmpMessageDispatcher<ITestContext>>(svc =>
+                        new RtmpMessageDispatcher<ITestContext>(svc, map));
 
-            _sut = services.BuildServiceProvider().GetRequiredService<IRtmpMessageDispatcher<IRtmpClientSessionContext>>();
+            _sut = services.BuildServiceProvider().GetRequiredService<IRtmpMessageDispatcher<ITestContext>>();
         }
 
         [Fact]
@@ -59,16 +58,16 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Dispatcher
             _chunkStreamContext.MessageHeader.MessageTypeId.Returns(messageType);
 
             var expectedResult = _fixture.Create<bool>();
-            _testHandler.HandleAsync(_chunkStreamContext, _clientContext, _payloadBuffer, Arg.Any<CancellationToken>())
+            _testHandler.HandleAsync(_chunkStreamContext, _context, _payloadBuffer, Arg.Any<CancellationToken>())
                 .Returns(expectedResult);
 
             // Act
-            var result = await _sut.DispatchAsync(_chunkStreamContext, _clientContext, default);
+            var result = await _sut.DispatchAsync(_chunkStreamContext, _context, default);
 
             // Assert
             await _testHandler.Received(1).HandleAsync(
                 _chunkStreamContext,
-                _clientContext,
+                _context,
                 _payloadBuffer,
                 Arg.Any<CancellationToken>());
 
@@ -84,16 +83,16 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Dispatcher
             _chunkStreamContext.MessageHeader.MessageTypeId.Returns(messageType);
 
             var expectedResult = _fixture.Create<bool>();
-            _test2Handler.HandleAsync(_chunkStreamContext, _clientContext, _payloadBuffer, Arg.Any<CancellationToken>())
+            _test2Handler.HandleAsync(_chunkStreamContext, _context, _payloadBuffer, Arg.Any<CancellationToken>())
                 .Returns(expectedResult);
 
             // Act
-            var result = await _sut.DispatchAsync(_chunkStreamContext, _clientContext, default);
+            var result = await _sut.DispatchAsync(_chunkStreamContext, _context, default);
 
             // Assert
             await _test2Handler.Received(1).HandleAsync(
                 _chunkStreamContext,
-                _clientContext,
+                _context,
                 _payloadBuffer,
                 Arg.Any<CancellationToken>());
 
@@ -110,19 +109,21 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Dispatcher
 
             // Act & Assert
             await Assert.ThrowsAsync<InvalidOperationException>(async () =>
-                await _sut.DispatchAsync(_chunkStreamContext, _clientContext, default));
+                await _sut.DispatchAsync(_chunkStreamContext, _context, default));
         }
 
+        internal interface ITestContext { }
+
         [RtmpMessageType(1)]
-        internal abstract class TestHandler : IRtmpMessageHandler<IRtmpClientSessionContext>
+        internal abstract class TestHandler : IRtmpMessageHandler<ITestContext>
         {
-            public abstract ValueTask<bool> HandleAsync(IRtmpChunkStreamContext chunkStreamContext, IRtmpClientSessionContext clientContext, IDataBuffer payloadBuffer, CancellationToken cancellationToken);
+            public abstract ValueTask<bool> HandleAsync(IRtmpChunkStreamContext chunkStreamContext, ITestContext clientContext, IDataBuffer payloadBuffer, CancellationToken cancellationToken);
         }
 
         [RtmpMessageType(2)]
-        internal abstract class Test2Handler : IRtmpMessageHandler<IRtmpClientSessionContext>
+        internal abstract class Test2Handler : IRtmpMessageHandler<ITestContext>
         {
-            public abstract ValueTask<bool> HandleAsync(IRtmpChunkStreamContext chunkStreamContext, IRtmpClientSessionContext clientContext, IDataBuffer payloadBuffer, CancellationToken cancellationToken);
+            public abstract ValueTask<bool> HandleAsync(IRtmpChunkStreamContext chunkStreamContext, ITestContext clientContext, IDataBuffer payloadBuffer, CancellationToken cancellationToken);
         }
     }
 }
