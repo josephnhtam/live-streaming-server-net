@@ -61,7 +61,8 @@ namespace LiveStreamingServerNet.Rtmp.Client.Installer
                     .AddSingleton<IRtmpProtocolControlService, RtmpProtocolControlService>()
                     .AddSingleton<IRtmpCommandMessageSenderService, RtmpCommandMessageSenderService>()
                     .AddSingleton<IRtmpCommanderService, RtmpCommanderService>()
-                    .AddSingleton<IRtmpMediaDataSenderService, RtmpMediaDataSenderService>();
+                    .AddSingleton<IRtmpMediaDataSenderService, RtmpMediaDataSenderService>()
+                    .AddSingleton<IRtmpAcknowledgementHandlerService, RtmpAcknowledgementHandlerService>();
 
             services.AddSingleton<RtmpCommandResultManagerService>()
                     .AddSingleton<IRtmpCommandResultManagerService>(sp => sp.GetRequiredService<RtmpCommandResultManagerService>());

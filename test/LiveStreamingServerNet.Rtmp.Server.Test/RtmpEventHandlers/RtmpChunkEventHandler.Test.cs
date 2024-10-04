@@ -16,7 +16,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers
     public class RtmpChunkEventHandlerTest
     {
         private readonly IRtmpMessageDispatcher<IRtmpClientSessionContext> _dispatcher;
-        private readonly IRtmpProtocolControlService _protocolControl;
+        private readonly IRtmpAcknowledgementHandlerService _acknowledgementHandler;
         private readonly IRtmpChunkMessageAggregatorService _chunkMessageAggregator;
         private readonly ILogger<RtmpChunkEventHandler> _logger;
         private readonly RtmpChunkEvent _event;
@@ -33,14 +33,15 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers
             _clientSessionContext = Substitute.For<IRtmpClientSessionContext>();
             _chunkStreamContext = Substitute.For<IRtmpChunkStreamContext>();
             _dispatcher = Substitute.For<IRtmpMessageDispatcher<IRtmpClientSessionContext>>();
-            _protocolControl = Substitute.For<IRtmpProtocolControlService>();
+            _acknowledgementHandler = Substitute.For<IRtmpAcknowledgementHandlerService>();
             _chunkMessageAggregator = Substitute.For<IRtmpChunkMessageAggregatorService>();
             _logger = Substitute.For<ILogger<RtmpChunkEventHandler>>();
 
             _event = new RtmpChunkEvent { ClientContext = _clientSessionContext, NetworkStream = _networkStreamReader };
             _clientSessionContext.GetChunkStreamContext(Arg.Any<uint>()).Returns(_chunkStreamContext);
+            _dispatcher.DispatchAsync(_chunkStreamContext, _clientSessionContext, Arg.Any<CancellationToken>()).Returns(true);
 
-            _sut = new RtmpChunkEventHandler(_dispatcher, _protocolControl, _chunkMessageAggregator, _logger);
+            _sut = new RtmpChunkEventHandler(_dispatcher, _chunkMessageAggregator, _acknowledgementHandler, _logger);
         }
 
         [Fact]
@@ -69,6 +70,22 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers
 
             // Assert
             _chunkMessageAggregator.Received(1).ResetChunkStreamContext(_chunkStreamContext);
+        }
+
+        [Fact]
+        internal async Task Handle_Should_InvokeAcknowledgmentHandler()
+        {
+            // Arrange
+            var chunkMessageSize = _fixture.Create<int>();
+
+            _chunkMessageAggregator.AggregateChunkMessagesAsync(_networkStreamReader, _clientSessionContext, Arg.Any<CancellationToken>())
+                .Returns(new RtmpChunkMessageAggregationResult(true, chunkMessageSize, _chunkStreamContext));
+
+            // Act
+            await _sut.Handle(_event, default);
+
+            // Assert
+            _acknowledgementHandler.Received(1).Handle(_clientSessionContext, chunkMessageSize);
         }
 
         [Theory]

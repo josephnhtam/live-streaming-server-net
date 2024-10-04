@@ -16,19 +16,19 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers
     internal class RtmpChunkEventHandler : IRequestHandler<RtmpChunkEvent, RtmpEventConsumingResult>
     {
         private readonly IRtmpMessageDispatcher<IRtmpClientSessionContext> _dispatcher;
-        private readonly IRtmpProtocolControlService _protocolControl;
         private readonly IRtmpChunkMessageAggregatorService _chunkMessageAggregator;
+        private readonly IRtmpAcknowledgementHandlerService _acknowledgementHandler;
         private readonly ILogger _logger;
 
         public RtmpChunkEventHandler(
             IRtmpMessageDispatcher<IRtmpClientSessionContext> dispatcher,
-            IRtmpProtocolControlService protocolControl,
             IRtmpChunkMessageAggregatorService chunkMessageAggregator,
+            IRtmpAcknowledgementHandlerService acknowledgementHandler,
             ILogger<RtmpChunkEventHandler> logger)
         {
             _dispatcher = dispatcher;
-            _protocolControl = protocolControl;
             _chunkMessageAggregator = chunkMessageAggregator;
+            _acknowledgementHandler = acknowledgementHandler;
             _logger = logger;
         }
 
@@ -42,31 +42,9 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers
                 return new RtmpEventConsumingResult(false, aggregationResult.ChunkMessageSize);
             }
 
-            HandleAcknowledgement(@event, aggregationResult.ChunkMessageSize);
+            _acknowledgementHandler.Handle(@event.ClientContext, aggregationResult.ChunkMessageSize);
+
             return new RtmpEventConsumingResult(true, aggregationResult.ChunkMessageSize);
-        }
-
-        private void HandleAcknowledgement(RtmpChunkEvent @event, int consumedBytes)
-        {
-            var clientContext = @event.ClientContext;
-
-            if (clientContext.InWindowAcknowledgementSize == 0)
-                return;
-
-            clientContext.SequenceNumber += (uint)consumedBytes;
-            if (clientContext.SequenceNumber - clientContext.LastAcknowledgedSequenceNumber >= clientContext.InWindowAcknowledgementSize)
-            {
-                _protocolControl.Acknowledgement(clientContext, clientContext.SequenceNumber);
-
-                const uint overflow = 0xf0000000;
-                if (clientContext.SequenceNumber >= overflow)
-                {
-                    clientContext.SequenceNumber -= overflow;
-                    clientContext.LastAcknowledgedSequenceNumber -= overflow;
-                }
-
-                clientContext.LastAcknowledgedSequenceNumber = clientContext.SequenceNumber;
-            }
         }
 
         private async Task<bool> HandleRtmpMessageAsync(
