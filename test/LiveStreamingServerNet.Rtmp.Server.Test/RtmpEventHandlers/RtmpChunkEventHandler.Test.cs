@@ -77,7 +77,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers
             else if (messageHeader is RtmpChunkMessageHeaderType1 headerType1)
             {
                 streamContext.ChunkStreamId.Should().Be(basicHeader.ChunkStreamId);
-                streamContext.MessageHeader.TimestampDelta.Should().Be(headerType1.TimestampDelta);
+                streamContext.MessageHeader.Timestamp.Should().Be(headerType1.TimestampDelta);
                 streamContext.MessageHeader.MessageLength.Should().Be(headerType1.MessageLength);
                 streamContext.MessageHeader.MessageTypeId.Should().Be(headerType1.MessageTypeId);
                 streamContext.MessageHeader.HasExtendedTimestamp.Should().Be(headerType1.HasExtendedTimestamp());
@@ -85,7 +85,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers
             else if (messageHeader is RtmpChunkMessageHeaderType2 headerType2)
             {
                 streamContext.ChunkStreamId.Should().Be(basicHeader.ChunkStreamId);
-                streamContext.MessageHeader.TimestampDelta.Should().Be(headerType2.TimestampDelta);
+                streamContext.MessageHeader.Timestamp.Should().Be(headerType2.TimestampDelta);
                 streamContext.MessageHeader.HasExtendedTimestamp.Should().Be(headerType2.HasExtendedTimestamp());
             }
 

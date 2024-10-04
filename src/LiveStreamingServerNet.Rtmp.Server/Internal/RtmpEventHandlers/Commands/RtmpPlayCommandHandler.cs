@@ -154,7 +154,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
 
             _mediaMessageCacher.SendCachedStreamMetaDataMessage(
                 streamContext.SubscribeContext, publishStreamContext,
-                chunkStreamContext.MessageHeader.Timestamp);
+                chunkStreamContext.Timestamp);
 
             _mediaMessageCacher.SendCachedHeaderMessages(
                 streamContext.SubscribeContext, publishStreamContext);

@@ -94,13 +94,13 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Media
             IDataBuffer payloadBuffer,
             IReadOnlyList<IRtmpSubscribeStreamContext> subscribeStreamContexts)
         {
-            publishStreamContext.UpdateTimestamp(chunkStreamContext.MessageHeader.Timestamp, MediaType.Video);
+            publishStreamContext.UpdateTimestamp(chunkStreamContext.Timestamp, MediaType.Video);
 
             await _mediaMessageBroadcaster.BroadcastMediaMessageAsync(
                 publishStreamContext,
                 subscribeStreamContexts,
                 MediaType.Video,
-                chunkStreamContext.MessageHeader.Timestamp,
+                chunkStreamContext.Timestamp,
                 isSkippable,
                 payloadBuffer);
         }
@@ -160,7 +160,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Media
                 }
                 else if (publishStreamContext.GroupOfPicturesCacheActivated && avcPacketType == AVCPacketType.NALU)
                 {
-                    await _mediaMessageCacher.CachePictureAsync(publishStreamContext, MediaType.Video, payloadBuffer, chunkStreamContext.MessageHeader.Timestamp);
+                    await _mediaMessageCacher.CachePictureAsync(publishStreamContext, MediaType.Video, payloadBuffer, chunkStreamContext.Timestamp);
                 }
             }
             else if (publishStreamContext.GroupOfPicturesCacheActivated)

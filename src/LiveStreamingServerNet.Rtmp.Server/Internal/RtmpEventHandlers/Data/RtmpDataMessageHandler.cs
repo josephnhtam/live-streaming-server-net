@@ -108,7 +108,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Data
             _mediaMessageCacher.SendCachedStreamMetaDataMessage(
                 subscribeStreamContexts,
                 publishStreamContext,
-                chunkStreamContext.MessageHeader.Timestamp);
+                chunkStreamContext.Timestamp);
         }
     }
 }

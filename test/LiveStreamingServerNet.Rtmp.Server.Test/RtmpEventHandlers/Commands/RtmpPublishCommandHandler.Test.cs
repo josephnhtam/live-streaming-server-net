@@ -137,7 +137,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
             _clientContext.GetStreamContext(streamId).Returns(_streamContext);
             _clientContext.AppName.Returns(appName);
             _chunkStreamContext.ChunkStreamId.Returns(chunkStreamId);
-            _chunkStreamContext.MessageHeader.Timestamp.Returns(timestamp);
+            _chunkStreamContext.Timestamp.Returns(timestamp);
             _chunkStreamContext.MessageHeader.MessageStreamId.Returns(streamId);
             _streamContext.StreamId.Returns(streamId);
 

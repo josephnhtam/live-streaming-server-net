@@ -9,12 +9,12 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Contracts
         bool IsFirstChunkOfMessage { get; }
         IRtmpChunkMessageHeaderContext MessageHeader { get; }
         IDataBuffer? PayloadBuffer { get; set; }
+        uint Timestamp { get; set; }
     }
 
     internal interface IRtmpChunkMessageHeaderContext
     {
         uint Timestamp { get; set; }
-        uint TimestampDelta { get; set; }
         int MessageLength { get; set; }
         byte MessageTypeId { get; set; }
         uint MessageStreamId { get; set; }

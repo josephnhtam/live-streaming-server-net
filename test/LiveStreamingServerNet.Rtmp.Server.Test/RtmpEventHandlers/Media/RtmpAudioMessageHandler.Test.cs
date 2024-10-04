@@ -119,15 +119,15 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Media
                 .CacheSequenceHeaderAsync(publisher_publishStreamContext, MediaType.Audio, _dataBuffer);
 
             _ = _mediaMessageCacher.Received(gopCacheActivated && isPictureCachable ? 1 : 0)
-                .CachePictureAsync(publisher_publishStreamContext, MediaType.Audio, _dataBuffer, _chunkStreamContext.MessageHeader.Timestamp);
+                .CachePictureAsync(publisher_publishStreamContext, MediaType.Audio, _dataBuffer, _chunkStreamContext.Timestamp);
 
-            publisher_publishStreamContext.Received(1).UpdateTimestamp(_chunkStreamContext.MessageHeader.Timestamp, MediaType.Audio);
+            publisher_publishStreamContext.Received(1).UpdateTimestamp(_chunkStreamContext.Timestamp, MediaType.Audio);
 
             await _mediaMessageBroadcaster.Received(1).BroadcastMediaMessageAsync(
                 publisher_publishStreamContext,
                 subscriber_subscribeStreamContexts,
                 MediaType.Audio,
-                _chunkStreamContext.MessageHeader.Timestamp,
+                _chunkStreamContext.Timestamp,
                 isSkippable,
                 _dataBuffer
             );

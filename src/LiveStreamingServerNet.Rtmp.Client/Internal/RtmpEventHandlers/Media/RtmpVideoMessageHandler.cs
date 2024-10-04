@@ -39,7 +39,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.RtmpEventHandlers.Media
 
             try
             {
-                subscribeStreamContext.ReceiveVideoData(new(rentedBuffer, chunkStreamContext.MessageHeader.Timestamp));
+                subscribeStreamContext.ReceiveVideoData(new(rentedBuffer, chunkStreamContext.Timestamp));
 
                 return ValueTask.FromResult(true);
             }

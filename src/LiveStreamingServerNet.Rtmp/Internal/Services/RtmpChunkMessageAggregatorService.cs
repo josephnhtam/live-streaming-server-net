@@ -28,7 +28,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
 
                 var chunkStreamContext = contextProvider.GetChunkStreamContext(basicHeader.ChunkStreamId);
 
-                var success = basicHeader.ChunkType switch
+                var messageHeaderSize = basicHeader.ChunkType switch
                 {
                     0 => await HandleChunkMessageHeaderType0Async(chunkStreamContext, networkStream, headerBuffer, cancellationToken),
                     1 => await HandleChunkMessageHeaderType1Async(chunkStreamContext, networkStream, headerBuffer, cancellationToken),
@@ -37,11 +37,8 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
                     _ => throw new ArgumentOutOfRangeException(nameof(basicHeader.ChunkType))
                 };
 
-                if (!success)
-                    return new RtmpChunkMessageAggregationResult(false, 0, chunkStreamContext);
-
                 return await HandleChunkMessagePayloadAsync(
-                    chunkStreamContext, networkStream, contextProvider.InChunkSize, headerBuffer.Size, cancellationToken);
+                    chunkStreamContext, networkStream, contextProvider.InChunkSize, basicHeader.Size + messageHeaderSize, cancellationToken);
             }
             finally
             {
@@ -49,105 +46,114 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
             }
         }
 
-        private async ValueTask<bool> HandleChunkMessageHeaderType0Async(
+        private async ValueTask<int> HandleChunkMessageHeaderType0Async(
             IRtmpChunkStreamContext chunkStreamContext,
             INetworkStreamReader networkStream,
             IDataBuffer dataBuffer,
             CancellationToken cancellationToken)
         {
             var messageHeader = await RtmpChunkMessageHeaderType0.ReadAsync(dataBuffer, networkStream, cancellationToken);
+            var messageHeaderSize = messageHeader.Size;
 
             chunkStreamContext.ChunkType = 0;
-            chunkStreamContext.MessageHeader.MessageLength = messageHeader.MessageLength;
-            chunkStreamContext.MessageHeader.MessageTypeId = messageHeader.MessageTypeId;
             chunkStreamContext.MessageHeader.MessageStreamId = messageHeader.MessageStreamId;
-
-            chunkStreamContext.MessageHeader.TimestampDelta = 0;
+            chunkStreamContext.MessageHeader.MessageTypeId = messageHeader.MessageTypeId;
+            chunkStreamContext.MessageHeader.MessageLength = messageHeader.MessageLength;
+            chunkStreamContext.MessageHeader.Timestamp = messageHeader.Timestamp;
             chunkStreamContext.MessageHeader.HasExtendedTimestamp = messageHeader.HasExtendedTimestamp();
+
             if (chunkStreamContext.MessageHeader.HasExtendedTimestamp)
             {
                 var extendedTimestampHeader = await RtmpChunkExtendedTimestampHeader.ReadAsync(dataBuffer, networkStream, cancellationToken);
+                messageHeaderSize += extendedTimestampHeader.Size;
+
                 chunkStreamContext.MessageHeader.Timestamp = extendedTimestampHeader.ExtendedTimestamp;
             }
-            else
-            {
-                chunkStreamContext.MessageHeader.Timestamp = messageHeader.Timestamp;
-            }
 
-            return true;
+            chunkStreamContext.Timestamp = chunkStreamContext.MessageHeader.Timestamp;
+
+            return messageHeaderSize;
         }
 
-        private async ValueTask<bool> HandleChunkMessageHeaderType1Async(
+        private async ValueTask<int> HandleChunkMessageHeaderType1Async(
             IRtmpChunkStreamContext chunkStreamContext,
             INetworkStreamReader networkStream,
             IDataBuffer dataBuffer,
             CancellationToken cancellationToken)
         {
             var messageHeader = await RtmpChunkMessageHeaderType1.ReadAsync(dataBuffer, networkStream, cancellationToken);
+            var messageHeaderSize = messageHeader.Size;
 
             chunkStreamContext.ChunkType = 1;
-            chunkStreamContext.MessageHeader.MessageLength = messageHeader.MessageLength;
             chunkStreamContext.MessageHeader.MessageTypeId = messageHeader.MessageTypeId;
-
+            chunkStreamContext.MessageHeader.MessageLength = messageHeader.MessageLength;
+            chunkStreamContext.MessageHeader.Timestamp = messageHeader.TimestampDelta;
             chunkStreamContext.MessageHeader.HasExtendedTimestamp = messageHeader.HasExtendedTimestamp();
+
             if (chunkStreamContext.MessageHeader.HasExtendedTimestamp)
             {
                 var extendedTimestampHeader = await RtmpChunkExtendedTimestampHeader.ReadAsync(dataBuffer, networkStream, cancellationToken);
-                chunkStreamContext.MessageHeader.TimestampDelta = extendedTimestampHeader.ExtendedTimestamp;
-            }
-            else
-            {
-                chunkStreamContext.MessageHeader.TimestampDelta = messageHeader.TimestampDelta;
-            }
-            chunkStreamContext.MessageHeader.Timestamp += chunkStreamContext.MessageHeader.TimestampDelta;
+                messageHeaderSize += extendedTimestampHeader.Size;
 
-            return true;
+                chunkStreamContext.MessageHeader.Timestamp = extendedTimestampHeader.ExtendedTimestamp;
+            }
+
+            chunkStreamContext.Timestamp += chunkStreamContext.MessageHeader.Timestamp;
+
+            return messageHeaderSize;
         }
 
-        private async ValueTask<bool> HandleChunkMessageHeaderType2Async(
+        private async ValueTask<int> HandleChunkMessageHeaderType2Async(
             IRtmpChunkStreamContext chunkStreamContext,
             INetworkStreamReader networkStream,
             IDataBuffer dataBuffer,
             CancellationToken cancellationToken)
         {
             var messageHeader = await RtmpChunkMessageHeaderType2.ReadAsync(dataBuffer, networkStream, cancellationToken);
+            var messageHeaderSize = messageHeader.Size;
 
             chunkStreamContext.ChunkType = 2;
-
+            chunkStreamContext.MessageHeader.Timestamp = messageHeader.TimestampDelta;
             chunkStreamContext.MessageHeader.HasExtendedTimestamp = messageHeader.HasExtendedTimestamp();
+
             if (chunkStreamContext.MessageHeader.HasExtendedTimestamp)
             {
                 var extendedTimestampHeader = await RtmpChunkExtendedTimestampHeader.ReadAsync(dataBuffer, networkStream, cancellationToken);
-                chunkStreamContext.MessageHeader.TimestampDelta = extendedTimestampHeader.ExtendedTimestamp;
-            }
-            else
-            {
-                chunkStreamContext.MessageHeader.TimestampDelta = messageHeader.TimestampDelta;
-            }
-            chunkStreamContext.MessageHeader.Timestamp += chunkStreamContext.MessageHeader.TimestampDelta;
+                messageHeaderSize += extendedTimestampHeader.Size;
 
-            return true;
+                chunkStreamContext.MessageHeader.Timestamp = extendedTimestampHeader.ExtendedTimestamp;
+            }
+
+            chunkStreamContext.Timestamp += chunkStreamContext.MessageHeader.Timestamp;
+
+            return messageHeaderSize;
         }
 
-        private async ValueTask<bool> HandleChunkMessageHeaderType3Async(
+        private async ValueTask<int> HandleChunkMessageHeaderType3Async(
             IRtmpChunkStreamContext chunkStreamContext,
             INetworkStreamReader networkStream,
             IDataBuffer dataBuffer,
             CancellationToken cancellationToken)
         {
+            int messageHeaderSize = 0;
+            var timestampDelta = chunkStreamContext.MessageHeader.Timestamp;
+
             chunkStreamContext.ChunkType = 3;
 
-            var timestampDelta = chunkStreamContext.MessageHeader.HasExtendedTimestamp ?
-                (await RtmpChunkExtendedTimestampHeader.ReadAsync(dataBuffer, networkStream, cancellationToken)).ExtendedTimestamp :
-                chunkStreamContext.MessageHeader.TimestampDelta;
+            if (chunkStreamContext.MessageHeader.HasExtendedTimestamp)
+            {
+                var extendedTimestampHeader = await RtmpChunkExtendedTimestampHeader.ReadAsync(dataBuffer, networkStream, cancellationToken);
+                messageHeaderSize += extendedTimestampHeader.Size;
+
+                timestampDelta = extendedTimestampHeader.ExtendedTimestamp;
+            }
 
             if (chunkStreamContext.IsFirstChunkOfMessage)
             {
-                chunkStreamContext.MessageHeader.TimestampDelta = timestampDelta;
-                chunkStreamContext.MessageHeader.Timestamp += timestampDelta;
+                chunkStreamContext.Timestamp += timestampDelta;
             }
 
-            return true;
+            return messageHeaderSize;
         }
 
         private async ValueTask<RtmpChunkMessageAggregationResult> HandleChunkMessagePayloadAsync(
