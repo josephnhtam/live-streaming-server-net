@@ -16,6 +16,7 @@
         public const ushort VideoPID = 0x100;
         public const byte VideoSID = 0xE0;
         public const byte AVCStreamType = 0x1B;
+        public const byte HEVCStreamType = 0x24;
 
         public const ushort AudioPID = 0x101;
         public const byte AudioSID = 0xC0;

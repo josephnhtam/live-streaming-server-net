@@ -11,6 +11,7 @@
         ValueTask<TsSegment?> FlushAsync(uint timestamp);
         void SetAACSequenceHeader(AACSequenceHeader aacSequenceHeader);
         void SetAVCSequenceHeader(AVCSequenceHeader avcSequenceHeader);
+        void SetHEVCSequenceHeader(HEVCSequenceHeader hevcSequenceHeader);
         bool WriteAudioPacket(ArraySegment<byte> buffer, uint timestamp);
         bool WriteVideoPacket(ArraySegment<byte> dataBuffer, uint timestamp, uint compositionTime, bool isKeyFrame);
     }

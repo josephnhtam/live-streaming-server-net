@@ -7,4 +7,11 @@
 
         public const int H264Frequency = 90;
     }
+
+    internal enum NALUType : byte
+    {
+        VPS = 32,
+        SPS = 33,
+        PPS = 34
+    }
 }

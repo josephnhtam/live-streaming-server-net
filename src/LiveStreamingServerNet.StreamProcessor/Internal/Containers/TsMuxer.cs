@@ -16,6 +16,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Containers
         private readonly string _outputPath;
 
         private AVCSequenceHeader? _avcSequenceHeader;
+        private HEVCSequenceHeader? _hevcSequenceHeader;
         private AACSequenceHeader? _aacSequenceHeader;
 
         private byte _patContinuityCounter;
@@ -46,6 +47,13 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Containers
         public void SetAVCSequenceHeader(AVCSequenceHeader avcSequenceHeader)
         {
             _avcSequenceHeader = avcSequenceHeader;
+            _hevcSequenceHeader = null;
+        }
+
+        public void SetHEVCSequenceHeader(HEVCSequenceHeader hevcSequenceHeader)
+        {
+            _hevcSequenceHeader = hevcSequenceHeader;
+            _avcSequenceHeader = null;
         }
 
         public void SetAACSequenceHeader(AACSequenceHeader aacSequenceHeader)
@@ -75,10 +83,18 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Containers
             var elementaryStreamInfos = new List<ElementaryStreamInfo>();
 
             if (_avcSequenceHeader != null)
+            {
                 elementaryStreamInfos.Add(new ElementaryStreamInfo(TsConstants.AVCStreamType, TsConstants.VideoPID));
+            }
+            else if (_hevcSequenceHeader != null)
+            {
+                elementaryStreamInfos.Add(new ElementaryStreamInfo(TsConstants.HEVCStreamType, TsConstants.VideoPID));
+            }
 
             if (_aacSequenceHeader != null)
+            {
                 elementaryStreamInfos.Add(new ElementaryStreamInfo(TsConstants.AACStreamType, TsConstants.AudioPID));
+            }
 
             var pmt = new ProgramMapTable(
                 TsConstants.ProgramNumber,
@@ -124,7 +140,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Containers
 
         public bool WriteVideoPacket(ArraySegment<byte> dataBuffer, uint timestamp, uint compositionTime, bool isKeyFrame)
         {
-            if (_avcSequenceHeader == null)
+            if (_avcSequenceHeader == null && _hevcSequenceHeader == null)
                 return false;
 
             if (_segmentTimestamp == null)
@@ -157,14 +173,23 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Containers
 
         private List<ArraySegment<byte>> GetRawNALUs(ArraySegment<byte> dataBuffer, bool isKeyFrame)
         {
-            Debug.Assert(_avcSequenceHeader != null);
+            Debug.Assert(_avcSequenceHeader != null || _hevcSequenceHeader != null);
 
             var rawNALUs = new List<ArraySegment<byte>>();
 
             if (isKeyFrame)
             {
-                rawNALUs.Add(_avcSequenceHeader.SPS);
-                rawNALUs.Add(_avcSequenceHeader.PPS);
+                if (_avcSequenceHeader != null)
+                {
+                    rawNALUs.Add(_avcSequenceHeader.SPS);
+                    rawNALUs.Add(_avcSequenceHeader.PPS);
+                }
+                else if (_hevcSequenceHeader != null)
+                {
+                    rawNALUs.Add(_hevcSequenceHeader.VPS);
+                    rawNALUs.Add(_hevcSequenceHeader.SPS);
+                    rawNALUs.Add(_hevcSequenceHeader.PPS);
+                }
             }
 
             rawNALUs.AddRange(AVCParser.SplitNALUs(dataBuffer));
@@ -173,8 +198,6 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Containers
 
         private List<ArraySegment<byte>> ConvertToAnnexB(List<ArraySegment<byte>> rawNALUs)
         {
-            Debug.Assert(_avcSequenceHeader != null);
-
             var nalus = new List<ArraySegment<byte>>(1 + rawNALUs.Count * 2) { AVCConstants.NALU_AUD };
 
             for (int i = 0; i < rawNALUs.Count; i++)

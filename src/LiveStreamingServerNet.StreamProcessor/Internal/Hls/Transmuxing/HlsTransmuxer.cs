@@ -106,7 +106,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
         {
             var tagHeader = FlvParser.ParseVideoTagHeader(rentedBuffer.Buffer);
 
-            if (tagHeader.VideoCodec != VideoCodec.AVC)
+            if (tagHeader.VideoCodec is not (VideoCodec.AVC or VideoCodec.HEVC))
                 return;
 
             await TryToFlushAsync(tagHeader.FrameType == VideoFrameType.KeyFrame, timestamp);
@@ -115,8 +115,17 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
 
             if (tagHeader.FrameType == VideoFrameType.KeyFrame && tagHeader.AVCPacketType == AVCPacketType.SequenceHeader)
             {
-                var sequenceHeader = AVCParser.ParseSequenceHeader(dataBuffer);
-                _tsMuxer.SetAVCSequenceHeader(sequenceHeader);
+                if (tagHeader.VideoCodec == VideoCodec.AVC)
+                {
+                    var sequenceHeader = AVCParser.ParseSequenceHeader(dataBuffer);
+                    _tsMuxer.SetAVCSequenceHeader(sequenceHeader);
+                }
+                else if (tagHeader.VideoCodec == VideoCodec.HEVC)
+                {
+                    var sequenceHeader = AVCParser.ParseHEVCSequenceHeader(dataBuffer);
+                    _tsMuxer.SetHEVCSequenceHeader(sequenceHeader);
+                }
+
                 return;
             }
 
