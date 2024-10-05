@@ -18,7 +18,7 @@ namespace LiveStreamingServerNet.HlsAuthenticationDemo
                 new IPEndPoint(IPAddress.Any, 1935),
                 options => options
                     .Configure(options => options.EnableGopCaching = false)
-                    .AddVideoCodecFilter(builder => builder.Include(VideoCodec.AVC))
+                    .AddVideoCodecFilter(builder => builder.Include(VideoCodec.AVC).Include(VideoCodec.HEVC))
                     .AddAudioCodecFilter(builder => builder.Include(AudioCodec.AAC))
                     .AddStreamProcessor()
                     .AddHlsTransmuxer()

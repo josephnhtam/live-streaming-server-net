@@ -53,7 +53,7 @@ namespace LiveStreamingServerNet.KubernetesPodDemo
                     if (blobContainerClient != null)
                     {
                         rtmpServerConfigurator
-                            .AddVideoCodecFilter(builder => builder.Include(VideoCodec.AVC))
+                            .AddVideoCodecFilter(builder => builder.Include(VideoCodec.AVC).Include(VideoCodec.HEVC))
                             .AddAudioCodecFilter(builder => builder.Include(AudioCodec.AAC))
                             .AddStreamProcessor(streamProcessingConfigurator =>
                             {
