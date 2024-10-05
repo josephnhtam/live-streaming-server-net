@@ -69,16 +69,16 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Media
         [Theory]
         [InlineData(true, VideoFrameType.KeyFrame, VideoCodec.AVC, AVCPacketType.SequenceHeader)]
         [InlineData(true, VideoFrameType.InterFrame, VideoCodec.AVC, AVCPacketType.NALU)]
-        [InlineData(true, VideoFrameType.KeyFrame, VideoCodec.HVC, AVCPacketType.SequenceHeader)]
-        [InlineData(true, VideoFrameType.InterFrame, VideoCodec.HVC, AVCPacketType.NALU)]
-        [InlineData(true, VideoFrameType.KeyFrame, VideoCodec.Opus, AVCPacketType.SequenceHeader)]
-        [InlineData(true, VideoFrameType.InterFrame, VideoCodec.Opus, AVCPacketType.NALU)]
+        [InlineData(true, VideoFrameType.KeyFrame, VideoCodec.HEVC, AVCPacketType.SequenceHeader)]
+        [InlineData(true, VideoFrameType.InterFrame, VideoCodec.HEVC, AVCPacketType.NALU)]
+        [InlineData(true, VideoFrameType.KeyFrame, VideoCodec.AV1, AVCPacketType.SequenceHeader)]
+        [InlineData(true, VideoFrameType.InterFrame, VideoCodec.AV1, AVCPacketType.NALU)]
         [InlineData(false, VideoFrameType.KeyFrame, VideoCodec.AVC, AVCPacketType.SequenceHeader)]
         [InlineData(false, VideoFrameType.InterFrame, VideoCodec.AVC, AVCPacketType.NALU)]
-        [InlineData(false, VideoFrameType.KeyFrame, VideoCodec.HVC, AVCPacketType.SequenceHeader)]
-        [InlineData(false, VideoFrameType.InterFrame, VideoCodec.HVC, AVCPacketType.NALU)]
-        [InlineData(false, VideoFrameType.KeyFrame, VideoCodec.Opus, AVCPacketType.SequenceHeader)]
-        [InlineData(false, VideoFrameType.InterFrame, VideoCodec.Opus, AVCPacketType.NALU)]
+        [InlineData(false, VideoFrameType.KeyFrame, VideoCodec.HEVC, AVCPacketType.SequenceHeader)]
+        [InlineData(false, VideoFrameType.InterFrame, VideoCodec.HEVC, AVCPacketType.NALU)]
+        [InlineData(false, VideoFrameType.KeyFrame, VideoCodec.AV1, AVCPacketType.SequenceHeader)]
+        [InlineData(false, VideoFrameType.InterFrame, VideoCodec.AV1, AVCPacketType.NALU)]
         internal async Task HandleAsync_Should_HandleCacheAndBroadcastAndReturnTrue(
             bool gopCacheActivated, VideoFrameType frameType, VideoCodec videoCodec, AVCPacketType avcPacketType)
         {
@@ -111,12 +111,12 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Media
             _dataBuffer.MoveTo(0);
 
             var hasHeader =
-                (videoCodec is VideoCodec.AVC or VideoCodec.HVC or VideoCodec.Opus) &&
+                (videoCodec is VideoCodec.AVC or VideoCodec.HEVC or VideoCodec.AV1) &&
                 avcPacketType is AVCPacketType.SequenceHeader &&
                 frameType is VideoFrameType.KeyFrame;
 
             var isPictureCachable =
-                (videoCodec is VideoCodec.AVC or VideoCodec.HVC or VideoCodec.Opus) &&
+                (videoCodec is VideoCodec.AVC or VideoCodec.HEVC or VideoCodec.AV1) &&
                 avcPacketType is AVCPacketType.NALU;
 
             var isSkippable = !hasHeader;

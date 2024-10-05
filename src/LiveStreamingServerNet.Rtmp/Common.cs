@@ -1,4 +1,7 @@
-﻿namespace LiveStreamingServerNet.Rtmp
+﻿using System.Buffers.Binary;
+using System.Text;
+
+namespace LiveStreamingServerNet.Rtmp
 {
     public enum MediaType
     {
@@ -23,8 +26,18 @@
         On2VP6WithAlphaChannel = 5,
         ScreenVideoVersion2 = 6,
         AVC = 7,
-        HVC = 12,
-        Opus = 13
+        HEVC = 12,
+        AV1 = 13
+    }
+
+    public enum VideoPacketType : byte
+    {
+        SequenceStart = 0,
+        CodedFrames = 1,
+        SequenceEnd = 2,
+        CodedFramesX = 3,
+        MetaData = 4,
+        MPEG2TSSequenceStart = 5
     }
 
     public enum AVCPacketType : byte
@@ -57,6 +70,12 @@
     {
         SequenceHeader = 0,
         Raw = 1
+    }
+
+    public static class VideoFourCC
+    {
+        public readonly static uint AV1 = BinaryPrimitives.ReadUInt32BigEndian(Encoding.ASCII.GetBytes("av01"));
+        public readonly static uint HEVC = BinaryPrimitives.ReadUInt32BigEndian(Encoding.ASCII.GetBytes("hvc1"));
     }
 
     public static class RtmpArguments

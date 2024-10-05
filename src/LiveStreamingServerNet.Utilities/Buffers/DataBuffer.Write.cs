@@ -56,7 +56,7 @@ namespace LiveStreamingServerNet.Utilities.Buffers
             _buffer[pos] = value;
         }
 
-        private void WriteUaligned<T>(T value, int size)
+        private void WriteUnaligned<T>(T value, int size)
         {
             var pos = _position;
             Advance(size);
@@ -67,57 +67,57 @@ namespace LiveStreamingServerNet.Utilities.Buffers
 
         public void Write(short value)
         {
-            WriteUaligned(value, 2);
+            WriteUnaligned(value, 2);
         }
 
         public void Write(int value)
         {
-            WriteUaligned(value, 4);
+            WriteUnaligned(value, 4);
         }
 
         public void Write(long value)
         {
-            WriteUaligned(value, 8);
+            WriteUnaligned(value, 8);
         }
 
         public void Write(ushort value)
         {
-            WriteUaligned(value, 2);
+            WriteUnaligned(value, 2);
         }
 
         public void Write(uint value)
         {
-            WriteUaligned(value, 4);
+            WriteUnaligned(value, 4);
         }
 
         public void Write(ulong value)
         {
-            WriteUaligned(value, 8);
+            WriteUnaligned(value, 8);
         }
 
         public void Write(float value)
         {
-            WriteUaligned(value, 4);
+            WriteUnaligned(value, 4);
         }
 
         public void Write(double value)
         {
-            WriteUaligned(value, 8);
+            WriteUnaligned(value, 8);
         }
 
         public void Write(bool value)
         {
-            WriteUaligned(value, 1);
+            WriteUnaligned(value, 1);
         }
 
         public void Write(char value)
         {
-            WriteUaligned(value, 2);
+            WriteUnaligned(value, 2);
         }
 
         public void WriteUint16BigEndian(ushort value)
         {
-            WriteUaligned(BinaryPrimitives.ReverseEndianness(value), 2);
+            WriteUnaligned(BinaryPrimitives.ReverseEndianness(value), 2);
         }
 
         public void WriteUInt24BigEndian(uint value)
@@ -133,12 +133,12 @@ namespace LiveStreamingServerNet.Utilities.Buffers
 
         public void WriteUInt32BigEndian(uint value)
         {
-            WriteUaligned(BinaryPrimitives.ReverseEndianness(value), 4);
+            WriteUnaligned(BinaryPrimitives.ReverseEndianness(value), 4);
         }
 
         public void WriteInt16BigEndian(short value)
         {
-            WriteUaligned(BinaryPrimitives.ReverseEndianness(value), 2);
+            WriteUnaligned(BinaryPrimitives.ReverseEndianness(value), 2);
         }
 
         public void WriteInt24BigEndian(int value)
@@ -154,7 +154,7 @@ namespace LiveStreamingServerNet.Utilities.Buffers
 
         public void WriteInt32BigEndian(int value)
         {
-            WriteUaligned(BinaryPrimitives.ReverseEndianness(value), 4);
+            WriteUnaligned(BinaryPrimitives.ReverseEndianness(value), 4);
         }
     }
 }

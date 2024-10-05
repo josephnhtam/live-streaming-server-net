@@ -57,7 +57,9 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Media
                 return false;
             }
 
-            var (frameType, videoCodec, avcPacketType) = ParseVideoMessageProperties(payloadBuffer);
+            ProcessVideoHeader(payloadBuffer);
+
+            var (frameType, videoCodec, avcPacketType) = ParseVideoMessageProperties(payloadBuffer.MoveTo(0));
 
             if (!IsVideoCodecAllowed(clientContext, publishStreamContext, videoCodec)) return false;
 
@@ -117,13 +119,87 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Media
             return true;
         }
 
-        private (VideoFrameType, VideoCodec, AVCPacketType?) ParseVideoMessageProperties(IDataBuffer payloadBuffer)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void ProcessVideoHeader(IDataBuffer payloadBuffer)
         {
             var firstByte = payloadBuffer.ReadByte();
-            var frameType = (VideoFrameType)(firstByte >> 4);
+            var isExHeader = (firstByte >> 7) != 0;
+
+            if (isExHeader)
+            {
+                ProessExVideoHeader(payloadBuffer, firstByte);
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static void ProessExVideoHeader(IDataBuffer payloadBuffer, byte firstByte)
+        {
+            var frameType = (VideoFrameType)((firstByte >> 4) & 0x7);
+            var packetType = (VideoPacketType)(firstByte & 0x0f);
+            var fourCC = payloadBuffer.ReadUInt32BigEndian();
+
+            if (fourCC == VideoFourCC.AV1)
+            {
+                ProcessExVideoHeader(payloadBuffer, frameType, packetType, VideoCodec.AV1);
+            }
+            else if (fourCC == VideoFourCC.HEVC)
+            {
+                ProcessExVideoHeader(payloadBuffer, frameType, packetType, VideoCodec.HEVC);
+            }
+            else
+            {
+                throw new NotSupportedException();
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static void ProcessExVideoHeader(
+            IDataBuffer payloadBuffer, VideoFrameType frameType, VideoPacketType packetType, VideoCodec videoCodec)
+        {
+            var avcPackageType = packetType == VideoPacketType.SequenceStart ? AVCPacketType.SequenceHeader : AVCPacketType.NALU;
+
+            if (videoCodec == VideoCodec.HEVC && packetType == VideoPacketType.CodedFrames)
+            {
+                RemovePadding(payloadBuffer, packetType, 3);
+                RewritePayloadHeader(payloadBuffer, frameType, videoCodec, avcPackageType);
+            }
+            else
+            {
+                RewritePayloadHeader(payloadBuffer, frameType, videoCodec, avcPackageType);
+                RewriteCompositionTimeOffset(payloadBuffer, 0);
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            static void RemovePadding(IDataBuffer payloadBuffer, VideoPacketType packetType, int size)
+            {
+                payloadBuffer.UnderlyingBuffer.AsSpan(size).CopyTo(payloadBuffer.UnderlyingBuffer.AsSpan());
+                payloadBuffer.Size -= size;
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            static void RewritePayloadHeader(IDataBuffer payloadBuffer, VideoFrameType frameType, VideoCodec videoCodec, AVCPacketType avcPackageType)
+            {
+                payloadBuffer.MoveTo(0);
+                payloadBuffer.Write((byte)((int)frameType << 4 | (int)videoCodec));
+                payloadBuffer.Write((byte)avcPackageType);
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            static void RewriteCompositionTimeOffset(IDataBuffer payloadBuffer, uint compositionTime)
+            {
+                payloadBuffer.MoveTo(2);
+                payloadBuffer.WriteUInt24BigEndian(compositionTime);
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static (VideoFrameType, VideoCodec, AVCPacketType?) ParseVideoMessageProperties(IDataBuffer payloadBuffer)
+        {
+            var firstByte = payloadBuffer.ReadByte();
+            var frameType = (VideoFrameType)((firstByte >> 4) & 0x7);
             var videoCodec = (VideoCodec)(firstByte & 0x0f);
 
-            if (videoCodec is VideoCodec.AVC or VideoCodec.HVC or VideoCodec.Opus)
+            if (videoCodec is VideoCodec.AVC or VideoCodec.HEVC or VideoCodec.AV1)
             {
                 var avcPackageType = (AVCPacketType)payloadBuffer.ReadByte();
                 return (frameType, videoCodec, avcPackageType);
