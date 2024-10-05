@@ -113,7 +113,7 @@ using System.Net;
 
 using var liveStreamingServer = LiveStreamingServerBuilder.Create()
     .ConfigureRtmpServer(options => options
-        .AddAudioCodecFilter(builder =>builder.Include(AudioCodec.AAC))
+        .AddAudioCodecFilter(builder => builder.Include(AudioCodec.AAC))
         .AddStreamProcessor()
         .AddAdaptiveHlsTranscoder(config =>
             config.AudioEncodingArguments = "-c:a copy"

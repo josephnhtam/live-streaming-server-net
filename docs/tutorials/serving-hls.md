@@ -114,7 +114,7 @@ You can add the video and codec filters like this:
 ```cs linenums="1"
 var liveStreamingServer = LiveStreamingServerBuilder.Create()
     .ConfigureRtmpServer(options => options
-        .AddVideoCodecFilter(builder => builder.Include(VideoCodec.AVC))
+        .AddVideoCodecFilter(builder => builder.Include(VideoCodec.AVC).Include(VideoCodec.HEVC))
         .AddAudioCodecFilter(builder => builder.Include(AudioCodec.AAC))
         .AddStreamProcessor()
         .AddHlsTransmuxer()
