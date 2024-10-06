@@ -70,8 +70,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
                 Arg.Any<Action<bool>>()
             );
 
-            _payloadBuffer.UnderlyingBuffer.Take(_payloadBuffer.Size)
-                .Should().BeEquivalentTo(expectedBuffer.UnderlyingBuffer.Take(expectedBuffer.Size));
+            _payloadBuffer.AsSpan().ToArray().Should().BeEquivalentTo(expectedBuffer.AsSpan().ToArray());
 
             _clientContext.Received(1).OutChunkSize = outChunkSize;
         }
@@ -104,8 +103,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
                 Arg.Any<Action<bool>>()
             );
 
-            _payloadBuffer.UnderlyingBuffer.Take(_payloadBuffer.Size)
-                .Should().BeEquivalentTo(expectedBuffer.UnderlyingBuffer.Take(expectedBuffer.Size));
+            _payloadBuffer.AsSpan().ToArray().Should().BeEquivalentTo(expectedBuffer.AsSpan().ToArray());
         }
 
         [Fact]
@@ -136,8 +134,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
                 Arg.Any<Action<bool>>()
             );
 
-            _payloadBuffer.UnderlyingBuffer.Take(_payloadBuffer.Size)
-                .Should().BeEquivalentTo(expectedBuffer.UnderlyingBuffer.Take(expectedBuffer.Size));
+            _payloadBuffer.AsSpan().ToArray().Should().BeEquivalentTo(expectedBuffer.AsSpan().ToArray());
         }
 
         [Fact]
@@ -168,8 +165,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
                 Arg.Any<Action<bool>>()
             );
 
-            _payloadBuffer.UnderlyingBuffer.Take(_payloadBuffer.Size)
-                .Should().BeEquivalentTo(expectedBuffer.UnderlyingBuffer.Take(expectedBuffer.Size));
+            _payloadBuffer.AsSpan().ToArray().Should().BeEquivalentTo(expectedBuffer.AsSpan().ToArray());
 
             _clientContext.Received(1).OutWindowAcknowledgementSize = size;
         }
@@ -204,8 +200,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
                 Arg.Any<Action<bool>>()
             );
 
-            _payloadBuffer.UnderlyingBuffer.Take(_payloadBuffer.Size)
-                .Should().BeEquivalentTo(expectedBuffer.UnderlyingBuffer.Take(expectedBuffer.Size));
+            _payloadBuffer.AsSpan().ToArray().Should().BeEquivalentTo(expectedBuffer.AsSpan().ToArray());
         }
     }
 }

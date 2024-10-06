@@ -72,7 +72,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
                 chunkStreamContext.Timestamp.Should().Be(initialTimestamp + chunkStreamContext.MessageHeader.Timestamp);
             }
 
-            chunkStreamContext.PayloadBuffer!.UnderlyingBuffer.Take(chunkStreamContext.PayloadBuffer!.Size)
+            chunkStreamContext.PayloadBuffer!.AsSpan(0, chunkStreamContext.PayloadBuffer!.Size).ToArray()
                 .Should().BeEquivalentTo(payload);
         }
 
@@ -196,7 +196,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.Services
 
             using var tempBuffer = new DataBuffer();
             writer.Write(tempBuffer, basicHeader, messageHeader, payloadBuffer, chunkSize);
-            return new MemoryStream(tempBuffer.UnderlyingBuffer.Take(tempBuffer.Size).ToArray());
+            return new MemoryStream(tempBuffer.AsSpan().ToArray());
         }
     }
 }

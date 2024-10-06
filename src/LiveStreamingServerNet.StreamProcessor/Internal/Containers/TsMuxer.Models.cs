@@ -296,13 +296,20 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Containers
             }
         }
 
-        private record struct TableChecksum(byte[] Buffer, int Start, int Length)
+        private ref struct TableChecksum
         {
             public const int Size = 4;
 
+            private readonly Span<byte> _buffer;
+
+            public TableChecksum(Span<byte> buffer)
+            {
+                _buffer = buffer;
+            }
+
             public void Write(IDataBuffer dataBuffer)
             {
-                var checksum = CRC32.Generate(Buffer, Start, Length);
+                var checksum = CRC32.Generate(_buffer);
                 dataBuffer.WriteUInt32BigEndian(checksum);
             }
         }

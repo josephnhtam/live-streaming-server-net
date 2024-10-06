@@ -66,9 +66,7 @@ namespace LiveStreamingServerNet.Flv.Internal
                     var header = new FlvTagHeader(tagType, payloadSize, timestamp);
                     header.Write(dataBuffer.MoveTo(0));
 
-                    await _streamWriter.WriteAsync(
-                        new ArraySegment<byte>(dataBuffer.UnderlyingBuffer, 0, dataBuffer.Size),
-                        cancellationToken);
+                    await _streamWriter.WriteAsync(dataBuffer.AsMemory(), cancellationToken);
                 }
                 finally
                 {

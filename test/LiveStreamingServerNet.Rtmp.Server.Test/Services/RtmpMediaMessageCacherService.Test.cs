@@ -226,7 +226,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
                 Arg.Is<RtmpChunkMessageHeaderType0>(x => x.MessageTypeId == RtmpMessageType.AudioMessage),
                 Arg.Any<Action<IDataBuffer>>());
 
-            audioBuffer.UnderlyingBuffer.Take(audioBuffer.Size).Should().BeEquivalentTo(audioSequenceHeader);
+            audioBuffer.AsSpan().ToArray().Should().BeEquivalentTo(audioSequenceHeader);
         }
 
         [Fact]
@@ -264,12 +264,12 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
 
             // Assert
             _chunkMessageSender.Received(1).Send(
-               subscriber_clientContext,
-               Arg.Is<RtmpChunkBasicHeader>(x => x.ChunkType == 0 && x.ChunkStreamId == videoChunkStreamId),
-               Arg.Is<RtmpChunkMessageHeaderType0>(x => x.MessageTypeId == RtmpMessageType.VideoMessage),
-               Arg.Any<Action<IDataBuffer>>());
+                subscriber_clientContext,
+                Arg.Is<RtmpChunkBasicHeader>(x => x.ChunkType == 0 && x.ChunkStreamId == videoChunkStreamId),
+                Arg.Is<RtmpChunkMessageHeaderType0>(x => x.MessageTypeId == RtmpMessageType.VideoMessage),
+                Arg.Any<Action<IDataBuffer>>());
 
-            videoBuffer.UnderlyingBuffer.Take(videoBuffer.Size).Should().BeEquivalentTo(videoSequenceHeader);
+            videoBuffer.AsSpan().ToArray().Should().BeEquivalentTo(videoSequenceHeader);
         }
 
         [Fact]
@@ -423,7 +423,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
                 Arg.Any<RtmpChunkMessageHeaderType0>(),
                 Arg.Any<Action<IDataBuffer>>());
 
-            payloadsBuffer.UnderlyingBuffer.Take(payloadsBuffer.Size).Should().BeEquivalentTo(expectedPayloadsBufffer);
+            payloadsBuffer.AsSpan().ToArray().Should().BeEquivalentTo(expectedPayloadsBufffer);
         }
     }
 }

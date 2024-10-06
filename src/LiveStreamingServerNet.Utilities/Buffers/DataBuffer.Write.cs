@@ -13,7 +13,7 @@ namespace LiveStreamingServerNet.Utilities.Buffers
             Advance(count);
 
             for (int i = 0; i < count; i++)
-                _buffer[pos + i] = (byte)RandomNumberGenerator.GetInt32(0, 255);
+                _buffer[_startIndex + pos + i] = (byte)RandomNumberGenerator.GetInt32(0, 255);
         }
 
         public void Write(Memory<byte> memory)
@@ -21,7 +21,7 @@ namespace LiveStreamingServerNet.Utilities.Buffers
             var pos = _position;
             Advance(memory.Length);
 
-            memory.Span.CopyTo(_buffer.AsSpan(pos));
+            memory.Span.CopyTo(_buffer.AsSpan(_startIndex + pos));
         }
 
         public void Write(byte[] buffer)
@@ -29,7 +29,7 @@ namespace LiveStreamingServerNet.Utilities.Buffers
             var pos = _position;
             Advance(buffer.Length);
 
-            buffer.AsSpan().CopyTo(_buffer.AsSpan(pos));
+            buffer.AsSpan().CopyTo(_buffer.AsSpan(_startIndex + pos));
         }
 
         public void Write(byte[] buffer, int offset, int count)
@@ -37,7 +37,7 @@ namespace LiveStreamingServerNet.Utilities.Buffers
             var pos = _position;
             Advance(count);
 
-            buffer.AsSpan(offset, count).CopyTo(_buffer.AsSpan(pos));
+            buffer.AsSpan(offset, count).CopyTo(_buffer.AsSpan(_startIndex + pos));
         }
 
         public void Write(ReadOnlySpan<byte> buffer)
@@ -45,7 +45,7 @@ namespace LiveStreamingServerNet.Utilities.Buffers
             var pos = _position;
             Advance(buffer.Length);
 
-            buffer.CopyTo(_buffer.AsSpan(pos));
+            buffer.CopyTo(_buffer.AsSpan(_startIndex + pos));
         }
 
         public void Write(byte value)
@@ -53,7 +53,7 @@ namespace LiveStreamingServerNet.Utilities.Buffers
             var pos = _position;
             Advance(1);
 
-            _buffer[pos] = value;
+            _buffer[_startIndex + pos] = value;
         }
 
         private void WriteUnaligned<T>(T value, int size)
@@ -61,7 +61,7 @@ namespace LiveStreamingServerNet.Utilities.Buffers
             var pos = _position;
             Advance(size);
 
-            var targetSpan = _buffer.AsSpan(pos);
+            var targetSpan = _buffer.AsSpan(_startIndex + pos);
             Unsafe.WriteUnaligned(ref MemoryMarshal.GetReference(targetSpan), value);
         }
 
@@ -125,10 +125,9 @@ namespace LiveStreamingServerNet.Utilities.Buffers
             var pos = _position;
             Advance(3);
 
-            _position = pos;
-            Write((byte)(value >> 16));
-            Write((byte)(value >> 8));
-            Write((byte)(value));
+            _buffer[_startIndex + pos] = (byte)(value >> 16);
+            _buffer[_startIndex + pos + 1] = (byte)(value >> 8);
+            _buffer[_startIndex + pos + 2] = (byte)value;
         }
 
         public void WriteUInt32BigEndian(uint value)
@@ -146,10 +145,9 @@ namespace LiveStreamingServerNet.Utilities.Buffers
             var pos = _position;
             Advance(3);
 
-            _position = pos;
-            Write((byte)(value >> 16));
-            Write((byte)(value >> 8));
-            Write((byte)(value));
+            _buffer[_startIndex + pos] = (byte)(value >> 16);
+            _buffer[_startIndex + pos + 1] = (byte)(value >> 8);
+            _buffer[_startIndex + pos + 2] = (byte)value;
         }
 
         public void WriteInt32BigEndian(int value)

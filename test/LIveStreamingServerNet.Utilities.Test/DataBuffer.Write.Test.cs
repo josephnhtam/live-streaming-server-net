@@ -29,7 +29,7 @@ namespace LIveStreamingServerNet.Utilities.Test
             var endPos = dataBuffer.Position;
             endPos.Should().Be(startPos + 1);
 
-            var result = dataBuffer.UnderlyingBuffer[startPos];
+            var result = dataBuffer.AsSpan()[startPos];
             result.Should().Be(expected);
         }
 
@@ -49,7 +49,7 @@ namespace LIveStreamingServerNet.Utilities.Test
             var endPos = dataBuffer.Position;
             endPos.Should().Be(startPos + 2);
 
-            var result = BitConverter.ToInt16(dataBuffer.UnderlyingBuffer, startPos);
+            var result = BitConverter.ToInt16(dataBuffer.AsSpan(startPos));
             result.Should().Be(expected);
         }
 
@@ -69,7 +69,7 @@ namespace LIveStreamingServerNet.Utilities.Test
             // Assert
             endPos.Should().Be(startPos + 4);
 
-            var result = BitConverter.ToInt32(dataBuffer.UnderlyingBuffer, startPos);
+            var result = BitConverter.ToInt32(dataBuffer.AsSpan(startPos));
             result.Should().Be(expected);
         }
 
@@ -89,7 +89,7 @@ namespace LIveStreamingServerNet.Utilities.Test
             var endPos = dataBuffer.Position;
             endPos.Should().Be(startPos + 8);
 
-            var result = BitConverter.ToInt64(dataBuffer.UnderlyingBuffer, startPos);
+            var result = BitConverter.ToInt64(dataBuffer.AsSpan(startPos));
             result.Should().Be(expected);
         }
 
@@ -109,7 +109,7 @@ namespace LIveStreamingServerNet.Utilities.Test
             var endPos = dataBuffer.Position;
             endPos.Should().Be(startPos + 2);
 
-            var result = BitConverter.ToUInt16(dataBuffer.UnderlyingBuffer, startPos);
+            var result = BitConverter.ToUInt16(dataBuffer.AsSpan(startPos));
             result.Should().Be(expected);
         }
 
@@ -129,7 +129,7 @@ namespace LIveStreamingServerNet.Utilities.Test
             var endPos = dataBuffer.Position;
             endPos.Should().Be(startPos + 4);
 
-            var result = BitConverter.ToUInt32(dataBuffer.UnderlyingBuffer, startPos);
+            var result = BitConverter.ToUInt32(dataBuffer.AsSpan(startPos));
             result.Should().Be(expected);
         }
 
@@ -149,7 +149,7 @@ namespace LIveStreamingServerNet.Utilities.Test
             var endPos = dataBuffer.Position;
             endPos.Should().Be(startPos + 8);
 
-            var result = BitConverter.ToUInt64(dataBuffer.UnderlyingBuffer, startPos);
+            var result = BitConverter.ToUInt64(dataBuffer.AsSpan(startPos));
             result.Should().Be(expected);
         }
 
@@ -169,7 +169,7 @@ namespace LIveStreamingServerNet.Utilities.Test
             var endPos = dataBuffer.Position;
             endPos.Should().Be(startPos + 4);
 
-            var result = BitConverter.ToSingle(dataBuffer.UnderlyingBuffer, startPos);
+            var result = BitConverter.ToSingle(dataBuffer.AsSpan(startPos));
             result.Should().Be(expected);
         }
 
@@ -189,7 +189,7 @@ namespace LIveStreamingServerNet.Utilities.Test
             var endPos = dataBuffer.Position;
             endPos.Should().Be(startPos + 8);
 
-            var result = BitConverter.ToDouble(dataBuffer.UnderlyingBuffer, startPos);
+            var result = BitConverter.ToDouble(dataBuffer.AsSpan(startPos));
             result.Should().Be(expected);
         }
 
@@ -209,7 +209,7 @@ namespace LIveStreamingServerNet.Utilities.Test
             var endPos = dataBuffer.Position;
             endPos.Should().Be(startPos + 1);
 
-            var result = BitConverter.ToBoolean(dataBuffer.UnderlyingBuffer, startPos);
+            var result = BitConverter.ToBoolean(dataBuffer.AsSpan(startPos));
             result.Should().Be(expected);
         }
 
@@ -229,7 +229,7 @@ namespace LIveStreamingServerNet.Utilities.Test
             var endPos = dataBuffer.Position;
             endPos.Should().Be(startPos + 2);
 
-            var result = BitConverter.ToChar(dataBuffer.UnderlyingBuffer, startPos);
+            var result = BitConverter.ToChar(dataBuffer.AsSpan(startPos));
             result.Should().Be(expected);
         }
 
@@ -249,7 +249,7 @@ namespace LIveStreamingServerNet.Utilities.Test
             var endPos = dataBuffer.Position;
             endPos.Should().Be(startPos + 2);
 
-            var result = BitConverter.ToUInt16(dataBuffer.UnderlyingBuffer.Skip(startPos).Take(2).Reverse().ToArray(), 0);
+            var result = BitConverter.ToUInt16(dataBuffer.AsSpan(startPos, 2).ToArray().Reverse().ToArray(), 0);
             result.Should().Be(expected);
         }
 
@@ -269,7 +269,7 @@ namespace LIveStreamingServerNet.Utilities.Test
             var endPos = dataBuffer.Position;
             endPos.Should().Be(startPos + 3);
 
-            var buffer = dataBuffer.UnderlyingBuffer.AsSpan(startPos, 3);
+            var buffer = dataBuffer.AsSpan(startPos, 3).ToArray();
             var result = (uint)(buffer[0] << 16 | buffer[1] << 8 | buffer[2]);
             result.Should().Be(expected);
         }
@@ -290,7 +290,7 @@ namespace LIveStreamingServerNet.Utilities.Test
             var endPos = dataBuffer.Position;
             endPos.Should().Be(startPos + 4);
 
-            var result = BitConverter.ToUInt32(dataBuffer.UnderlyingBuffer.Skip(startPos).Take(4).Reverse().ToArray(), 0);
+            var result = BitConverter.ToUInt32(dataBuffer.AsSpan(startPos, 4).ToArray().Reverse().ToArray(), 0);
             result.Should().Be(expected);
         }
 
@@ -310,7 +310,7 @@ namespace LIveStreamingServerNet.Utilities.Test
             var endPos = dataBuffer.Position;
             endPos.Should().Be(startPos + 2);
 
-            var result = BitConverter.ToInt16(dataBuffer.UnderlyingBuffer.Skip(startPos).Take(2).Reverse().ToArray(), 0);
+            var result = BitConverter.ToInt16(dataBuffer.AsSpan(startPos, 2).ToArray().Reverse().ToArray(), 0);
             result.Should().Be(expected);
         }
 
@@ -327,7 +327,7 @@ namespace LIveStreamingServerNet.Utilities.Test
             dataBuffer.WriteInt24BigEndian(expected);
 
             // Assert
-            var buffer = dataBuffer.UnderlyingBuffer.AsSpan(startPos, 3);
+            var buffer = dataBuffer.AsSpan(startPos, 3).ToArray();
             var result = buffer[0] << 16 | buffer[1] << 8 | buffer[2];
             result.Should().Be(expected);
         }
@@ -348,7 +348,7 @@ namespace LIveStreamingServerNet.Utilities.Test
             var endPos = dataBuffer.Position;
             endPos.Should().Be(startPos + 4);
 
-            var result = BitConverter.ToInt32(dataBuffer.UnderlyingBuffer.Skip(startPos).Take(4).Reverse().ToArray(), 0);
+            var result = BitConverter.ToInt32(dataBuffer.AsSpan(startPos, 4).ToArray().Reverse().ToArray(), 0);
             result.Should().Be(expected);
         }
 
@@ -368,7 +368,7 @@ namespace LIveStreamingServerNet.Utilities.Test
             var endPos = dataBuffer.Position;
             endPos.Should().Be(startPos + expected.Length);
 
-            var result = dataBuffer.UnderlyingBuffer.Skip(startPos).Take(expected.Length);
+            var result = dataBuffer.AsSpan(startPos, expected.Length).ToArray();
             result.Should().BeEquivalentTo(expected);
         }
 
@@ -389,7 +389,7 @@ namespace LIveStreamingServerNet.Utilities.Test
             var endPos = dataBuffer.Position;
             endPos.Should().Be(startPos + 50);
 
-            var result = dataBuffer.UnderlyingBuffer.Skip(startPos).Take(50);
+            var result = dataBuffer.AsSpan(startPos, 50).ToArray();
             result.Should().BeEquivalentTo(expected);
         }
 
@@ -409,7 +409,7 @@ namespace LIveStreamingServerNet.Utilities.Test
             var endPos = dataBuffer.Position;
             endPos.Should().Be(startPos + expected.Length);
 
-            var result = dataBuffer.UnderlyingBuffer.Skip(startPos).Take(expected.Length);
+            var result = dataBuffer.AsSpan(startPos, expected.Length).ToArray();
             result.Should().BeEquivalentTo(expected);
         }
 
@@ -429,7 +429,7 @@ namespace LIveStreamingServerNet.Utilities.Test
             var endPos = dataBuffer.Position;
             endPos.Should().Be(startPos + expected.Length);
 
-            var result = dataBuffer.UnderlyingBuffer.Skip(startPos).Take(expected.Length);
+            var result = dataBuffer.AsSpan(startPos, expected.Length).ToArray();
             result.Should().BeEquivalentTo(expected);
         }
     }

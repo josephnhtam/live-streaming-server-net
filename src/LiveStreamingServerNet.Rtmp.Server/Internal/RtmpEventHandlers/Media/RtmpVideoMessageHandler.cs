@@ -172,8 +172,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Media
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             static void RemovePadding(IDataBuffer payloadBuffer, VideoPacketType packetType, int size)
             {
-                payloadBuffer.UnderlyingBuffer.AsSpan(size).CopyTo(payloadBuffer.UnderlyingBuffer.AsSpan());
-                payloadBuffer.Size -= size;
+                payloadBuffer.TrimStart(size);
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]

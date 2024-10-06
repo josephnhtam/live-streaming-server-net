@@ -43,7 +43,6 @@ namespace LiveStreamingServerNet.Utilities.Buffers
 
         public void Recycle(IDataBuffer dataBuffer)
         {
-            Debug.Assert(dataBuffer.UnderlyingBuffer != null);
             _pool.Recycle(dataBuffer);
         }
     }

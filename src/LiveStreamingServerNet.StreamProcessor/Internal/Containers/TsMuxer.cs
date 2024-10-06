@@ -126,7 +126,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Containers
 
             var checksumStart = psiStartPosition + psiHeader.ChecksumOffset;
             var checksumLength = tsBuffer.Position - checksumStart;
-            var checksum = new TableChecksum(tsBuffer.UnderlyingBuffer, checksumStart, checksumLength);
+            var checksum = new TableChecksum(tsBuffer.AsSpan(checksumStart, checksumLength));
             checksum.Write(tsBuffer);
 
             var remainingSize = TsConstants.TsPacketSize - (tsBuffer.Position - startPosition);
@@ -347,11 +347,11 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Containers
 
             if (_flushedCount == 0)
             {
-                await fileStream.WriteAsync(_headerBuffer.UnderlyingBuffer.AsMemory(0, _headerBuffer.Size));
+                await fileStream.WriteAsync(_headerBuffer.AsMemory(0, _headerBuffer.Size));
                 _headerBuffer.Reset();
             }
 
-            await fileStream.WriteAsync(_payloadBuffer.UnderlyingBuffer.AsMemory(0, _payloadBuffer.Size));
+            await fileStream.WriteAsync(_payloadBuffer.AsMemory(0, _payloadBuffer.Size));
             _payloadBuffer.Reset();
 
             _flushedCount++;

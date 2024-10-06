@@ -93,7 +93,7 @@ namespace LIveStreamingServerNet.Utilities.Test
             // Assert
             srcDataBuffer.Position.Should().Be(0);
 
-            var result = dstDataBuffer.UnderlyingBuffer.Take(expected.Length);
+            var result = dstDataBuffer.AsSpan(0, expected.Length).ToArray();
             result.Should().BeEquivalentTo(expected);
         }
 
@@ -157,7 +157,7 @@ namespace LIveStreamingServerNet.Utilities.Test
             // Assert
             srcDataBuffer.Position.Should().Be(expectedPos);
 
-            var result = dstDataBuffer.UnderlyingBuffer.Take(expected.Length);
+            var result = dstDataBuffer.AsSpan(0, expected.Length).ToArray();
             result.Should().BeEquivalentTo(expected);
         }
 
@@ -181,7 +181,7 @@ namespace LIveStreamingServerNet.Utilities.Test
             // Assert
             srcDataBuffer.Position.Should().Be(expectedEndPos);
 
-            var result = dstDataBuffer.UnderlyingBuffer.Take(expected.Length);
+            var result = dstDataBuffer.AsSpan(0, expected.Length).ToArray();
             result.Should().BeEquivalentTo(expected);
         }
 
@@ -202,7 +202,7 @@ namespace LIveStreamingServerNet.Utilities.Test
             var size = dataBuffer.Size;
             size.Should().Be(expected.Length);
 
-            var result = dataBuffer.UnderlyingBuffer.Take(expected.Length);
+            var result = dataBuffer.AsSpan(0, expected.Length).ToArray();
             result.Should().BeEquivalentTo(expected);
         }
 
@@ -223,8 +223,49 @@ namespace LIveStreamingServerNet.Utilities.Test
             var size = dataBuffer.Size;
             size.Should().Be(startPos + expected.Length);
 
-            var result = dataBuffer.UnderlyingBuffer.Skip(startPos).Take(expected.Length);
+            var result = dataBuffer.AsSpan(startPos, expected.Length).ToArray();
             result.Should().BeEquivalentTo(expected);
+        }
+
+        [Theory]
+        [InlineData(10, 0)]
+        [InlineData(10, 5)]
+        [InlineData(10, 8)]
+        public void TrimStart(int bufferSize, int trimCount)
+        {
+            // Arrange
+            var buffer = _fixture.CreateMany<byte>(bufferSize).ToArray();
+
+            using var dataBuffer = new DataBuffer();
+            dataBuffer.Write(buffer);
+
+            // Act
+            dataBuffer.TrimStart(trimCount);
+
+            // Assert
+            dataBuffer.AsSpan().ToArray().Should().BeEquivalentTo(buffer.AsSpan(trimCount).ToArray());
+        }
+
+        [Theory]
+        [InlineData(8, 32, 0, 8)]
+        [InlineData(8, 32, 16, 8)]
+        [InlineData(8, 32, 16, 16)]
+        [InlineData(8, 32, 16, 32)]
+        public void TrimStartAndWrite(int initialCapacity, int bufferSize, int trimCount, int secondBufferSize)
+        {
+            // Arrange
+            var buffer = _fixture.CreateMany<byte>(bufferSize).ToArray();
+            var secondBuffer = _fixture.CreateMany<byte>(secondBufferSize).ToArray();
+
+            using var dataBuffer = new DataBuffer(initialCapacity);
+            dataBuffer.Write(buffer);
+
+            // Act
+            dataBuffer.TrimStart(trimCount);
+            dataBuffer.Write(secondBuffer);
+
+            // Assert
+            dataBuffer.AsSpan().ToArray().Should().BeEquivalentTo(buffer.AsSpan(trimCount).ToArray().Concat(secondBuffer));
         }
     }
 }

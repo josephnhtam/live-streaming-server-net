@@ -96,7 +96,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
                 Arg.Any<Action<IDataBuffer>>(),
                 callback);
 
-            dataBuffer.UnderlyingBuffer.Take(dataBuffer.Size).Should().BeEquivalentTo(expectedBuffer.UnderlyingBuffer.Take(expectedBuffer.Size));
+            dataBuffer.AsSpan().ToArray().Should().BeEquivalentTo(expectedBuffer.AsSpan().ToArray());
         }
 
         [Fact]
@@ -168,7 +168,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
                 Arg.Any<Action<IDataBuffer>>(),
                 Arg.Any<Action<bool>>());
 
-            dataBuffer.UnderlyingBuffer.Take(dataBuffer.Size).Should().BeEquivalentTo(expectedBuffer.UnderlyingBuffer.Take(expectedBuffer.Size));
+            dataBuffer.AsSpan().ToArray().Should().BeEquivalentTo(expectedBuffer.AsSpan().ToArray());
         }
 
         [Fact]
@@ -237,7 +237,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
                 ),
                 Arg.Any<Action<IDataBuffer>>());
 
-            dataBuffer.UnderlyingBuffer.Take(dataBuffer.Size).Should().BeEquivalentTo(expectedBuffer.UnderlyingBuffer.Take(expectedBuffer.Size));
+            dataBuffer.AsSpan().ToArray().Should().BeEquivalentTo(expectedBuffer.AsSpan().ToArray());
         }
 
         private static List<object?> GetParameters(string commandName, double transactionId,

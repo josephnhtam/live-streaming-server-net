@@ -81,7 +81,7 @@ namespace LiveStreamingServerNet.Flv.Test
             dataBuffer.Write(payload);
             dataBuffer.WriteUInt32BigEndian((uint)dataBuffer.Size);
 
-            return bytes.ToArray().SequenceEqual(dataBuffer.UnderlyingBuffer.Take(dataBuffer.Size).ToArray());
+            return bytes.ToArray().SequenceEqual(dataBuffer.AsSpan().ToArray());
         }
     }
 }

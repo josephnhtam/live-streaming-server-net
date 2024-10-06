@@ -69,8 +69,10 @@
             0xbcb4666d, 0xb8757bda, 0xb5365d03, 0xb1f740b4
         };
 
-        public static uint Generate(byte[] data, int offset, int length)
+        public static uint Generate(Span<byte> data)
         {
+            var dataLength = data.Length;
+
             unchecked
             {
                 fixed (byte* dataPtr = data)
@@ -79,7 +81,7 @@
                     {
                         uint crc = 0xffffffff;
 
-                        for (int pos = offset; pos < offset + length; pos++)
+                        for (int pos = 0; pos < dataLength; pos++)
                         {
                             var index = ((crc >> 24) ^ *(dataPtr + pos)) & 0xff;
                             crc = (crc << 8) ^ *(tablePtr + index);

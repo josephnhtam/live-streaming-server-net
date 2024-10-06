@@ -46,7 +46,7 @@ namespace LiveStreamingServerNet.Flv.Test.Services
 
             // Assert
             await _flvClient.Received(1).WriteTagAsync(expectedFlvType, timestamp, Arg.Any<Action<IDataBuffer>>(), Arg.Any<CancellationToken>());
-            dataBuffer.UnderlyingBuffer.Take(dataBuffer.Size).ToArray().Should().BeEquivalentTo(payloadBuffer.Take(payloadSize).ToArray());
+            dataBuffer.AsSpan().ToArray().Should().BeEquivalentTo(payloadBuffer.Take(payloadSize).ToArray());
         }
     }
 }

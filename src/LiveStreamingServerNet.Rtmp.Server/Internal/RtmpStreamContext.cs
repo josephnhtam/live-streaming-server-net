@@ -170,7 +170,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
 
         public void Add(PictureCacheInfo info, IDataBuffer buffer)
         {
-            _cache.Write(info, buffer.UnderlyingBuffer.AsSpan(0, buffer.Size));
+            _cache.Write(info, buffer.AsSpan());
         }
 
         public void Clear()

@@ -359,7 +359,7 @@ namespace LIveStreamingServerNet.Utilities.Test
             buffer.MoveTo(startPos).Write(expectedBytes);
 
             // Act
-            var result = buffer.MoveTo(startPos).ReadInt16BiEndian();
+            var result = buffer.MoveTo(startPos).ReadInt16BigEndian();
 
             // Assert
             var endPos = buffer.Position;

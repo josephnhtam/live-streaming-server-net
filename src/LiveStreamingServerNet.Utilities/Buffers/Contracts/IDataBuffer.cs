@@ -5,8 +5,17 @@
         int Position { get; set; }
         int Size { get; set; }
 
-        byte[] UnderlyingBuffer { get; }
+        Span<byte> AsSpan();
+        Span<byte> AsSpan(int offset);
+        Span<byte> AsSpan(int offset, int length);
+        Memory<byte> AsMemory();
+        Memory<byte> AsMemory(int offset);
+        Memory<byte> AsMemory(int offset, int length);
+        ArraySegment<byte> AsSegment();
+        ArraySegment<byte> AsSegment(int offset);
+        ArraySegment<byte> AsSegment(int offset, int length);
 
+        void TrimStart(int count);
         void Advance(int count);
         IDataBuffer MoveTo(int position);
         void Reset();
@@ -39,7 +48,7 @@
         ushort ReadUInt16BigEndian();
         uint ReadUInt24BigEndian();
         uint ReadUInt32BigEndian();
-        short ReadInt16BiEndian();
+        short ReadInt16BigEndian();
         int ReadInt24BigEndian();
         int ReadInt32BigEndian();
 
