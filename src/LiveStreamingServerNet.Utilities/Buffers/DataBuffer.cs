@@ -151,23 +151,13 @@ namespace LiveStreamingServerNet.Utilities.Buffers
 
         public IRentedBuffer ToRentedBuffer(int offset, int size, int initialClaim = 1)
         {
-            Debug.Assert(offset + size <= _size);
+            if (offset + size > _size)
+                throw new ArgumentOutOfRangeException(nameof(size));
 
-            var originalPosition = _position;
+            var rentedBuffer = new RentedBuffer(_bufferPool, size, initialClaim);
+            _buffer.AsSpan(offset, size).CopyTo(rentedBuffer.Buffer);
 
-            try
-            {
-                var rentedBuffer = new RentedBuffer(_bufferPool, size, initialClaim);
-
-                _position = offset;
-                ReadBytes(rentedBuffer.Buffer, offset, size);
-
-                return rentedBuffer;
-            }
-            finally
-            {
-                _position = originalPosition;
-            }
+            return rentedBuffer;
         }
 
         public IRentedBuffer ToRentedBuffer(int initialClaim = 1)
