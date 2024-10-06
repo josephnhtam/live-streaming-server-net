@@ -7,9 +7,6 @@ using Microsoft.Extensions.Logging;
 
 namespace LiveStreamingServerNet.Rtmp.Client.Internal
 {
-    using RtmpCommand = Client.Contracts.RtmpCommand;
-    using RtmpCommandResponse = Client.Contracts.RtmpCommandResponse;
-
     internal partial class RtmpStream : IRtmpStream
     {
         private readonly IRtmpStreamContext _streamContext;
@@ -43,7 +40,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
 
         public void Command(RtmpCommand command)
         {
-            _commander.Command(command.ToInternal(StreamId, _streamContext.CommandChunkStreamId));
+            _commander.Command(command.ToMessage(StreamId, _streamContext.CommandChunkStreamId));
         }
 
         public async Task<RtmpCommandResponse> CommandAsync(RtmpCommand command)
@@ -51,10 +48,10 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
             var tcs = new TaskCompletionSource<RtmpCommandResponse>();
 
             _commander.Command(
-                command.ToInternal(StreamId, _streamContext.CommandChunkStreamId),
+                command.ToMessage(StreamId, _streamContext.CommandChunkStreamId),
                 callback: (context, response) =>
                 {
-                    tcs.SetResult(response.ToExternal());
+                    tcs.SetResult(response);
                     return Task.FromResult(true);
                 },
                 cancellationCallback: () => tcs.TrySetCanceled()

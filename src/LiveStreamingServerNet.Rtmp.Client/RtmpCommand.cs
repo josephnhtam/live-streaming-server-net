@@ -1,4 +1,4 @@
-﻿namespace LiveStreamingServerNet.Rtmp.Client.Contracts
+﻿namespace LiveStreamingServerNet.Rtmp.Client
 {
     public record struct RtmpCommand(
         string CommandName,
