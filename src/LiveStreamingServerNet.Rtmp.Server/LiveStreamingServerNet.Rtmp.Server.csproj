@@ -11,15 +11,6 @@
   <Import Project="$(SolutionDir)nuget\nuget-package.props" />
 
   <ItemGroup>
-    <PackageReference Include="Mediator.Abstractions" />
-    <PackageReference Include="Mediator.SourceGenerator">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="mtanksl.ActionMessageFormat" />
-  </ItemGroup>
-
-  <ItemGroup>
     <InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
     <InternalsVisibleTo Include="LiveStreamingServerNet.Rtmp.Server.Test" />
   </ItemGroup>

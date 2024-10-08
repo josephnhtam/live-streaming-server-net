@@ -6,13 +6,11 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Dispatcher
 {
     internal class RtmpMessageDispatcher<TContext> : IRtmpMessageDispatcher<TContext>
     {
-        private readonly IServiceProvider _services;
         private readonly IReadOnlyDictionary<byte, IRtmpMessageHandler<TContext>> _handlerCache;
 
         public RtmpMessageDispatcher(IServiceProvider services, IRtmpMessageHandlerMap handlerMap)
         {
-            _services = services;
-            _handlerCache = CreateHandlerCache(handlerMap);
+            _handlerCache = CreateHandlerCache(services, handlerMap);
         }
 
         public async ValueTask<bool> DispatchAsync(IRtmpChunkStreamContext chunkStreamContext, TContext context, CancellationToken cancellationToken)
@@ -23,13 +21,14 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Dispatcher
             return await handler.HandleAsync(chunkStreamContext, context, chunkStreamContext.PayloadBuffer!, cancellationToken);
         }
 
-        private IReadOnlyDictionary<byte, IRtmpMessageHandler<TContext>> CreateHandlerCache(IRtmpMessageHandlerMap handlerMap)
+        private IReadOnlyDictionary<byte, IRtmpMessageHandler<TContext>> CreateHandlerCache(
+            IServiceProvider services, IRtmpMessageHandlerMap handlerMap)
         {
             var handlerCache = new Dictionary<byte, IRtmpMessageHandler<TContext>>();
 
             foreach (var (messageTypeId, handlerType) in handlerMap.GetHandlers())
             {
-                handlerCache[messageTypeId] = _services.GetRequiredService(handlerType) as IRtmpMessageHandler<TContext> ??
+                handlerCache[messageTypeId] = services.GetRequiredService(handlerType) as IRtmpMessageHandler<TContext> ??
                     throw new InvalidOperationException($"No handler found for message type {messageTypeId}");
             }
 

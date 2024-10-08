@@ -5,7 +5,7 @@ using LiveStreamingServerNet.Rtmp.Server.Internal;
 using LiveStreamingServerNet.Rtmp.Server.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEvents;
 using LiveStreamingServerNet.Rtmp.Server.RateLimiting.Contracts;
-using Mediator;
+using LiveStreamingServerNet.Utilities.Mediators.Contracts;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 

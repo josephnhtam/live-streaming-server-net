@@ -1,13 +1,13 @@
-﻿using AutoFixture;
+﻿using System.Security.Cryptography;
+using AutoFixture;
 using FluentAssertions;
 using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.RtmpHeaders;
 using LiveStreamingServerNet.Rtmp.Internal.Services;
 using LiveStreamingServerNet.Rtmp.Test.Utilities;
 using LiveStreamingServerNet.Utilities.Buffers;
-using System.Security.Cryptography;
 
-namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
+namespace LiveStreamingServerNet.Rtmp.Test.Services
 {
     public class RtmpChunkMessageWriterServiceTest
     {

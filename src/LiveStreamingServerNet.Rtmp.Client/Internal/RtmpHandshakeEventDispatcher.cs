@@ -4,7 +4,7 @@ using LiveStreamingServerNet.Utilities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace LiveStreamingClientNet.Rtmp.Client.Internal
+namespace LiveStreamingServerNet.Rtmp.Client.Internal
 {
     internal class RtmpHandshakeEventDispatcher : IRtmpHandshakeEventDispatcher
     {

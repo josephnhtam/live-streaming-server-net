@@ -1,7 +1,7 @@
 ﻿using LiveStreamingServerNet.Rtmp.Internal;
 using LiveStreamingServerNet.Rtmp.Server.Internal.Logging;
 using LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEvents;
-using Mediator;
+using LiveStreamingServerNet.Utilities.Mediators.Contracts;
 using Microsoft.Extensions.Logging;
 
 namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers

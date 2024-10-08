@@ -8,7 +8,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands.Dispat
 
         public RtmpCommandHandlerMap(IReadOnlyDictionary<string, Type> handlerMap)
         {
-            _handlerMap = handlerMap;
+            _handlerMap = new Dictionary<string, Type>(handlerMap);
         }
 
         public Type? GetHandlerType(string command)

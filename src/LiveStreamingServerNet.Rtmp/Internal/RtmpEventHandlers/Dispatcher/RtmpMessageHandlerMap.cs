@@ -8,7 +8,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Dispatcher
 
         public RtmpMessageHandlerMap(IReadOnlyDictionary<byte, Type> handlerMap)
         {
-            _handlerMap = handlerMap;
+            _handlerMap = new Dictionary<byte, Type>(handlerMap);
         }
 
         public Type? GetHandlerType(byte messageTypeId)

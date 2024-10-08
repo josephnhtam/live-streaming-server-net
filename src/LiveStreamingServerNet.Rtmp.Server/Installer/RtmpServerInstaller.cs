@@ -17,6 +17,7 @@ using LiveStreamingServerNet.Rtmp.Server.Internal.MediaPackageDiscarding.Contrac
 using LiveStreamingServerNet.Rtmp.Server.Internal.RtmpServerEventHandlers;
 using LiveStreamingServerNet.Rtmp.Server.Internal.Services;
 using LiveStreamingServerNet.Rtmp.Server.Internal.Services.Contracts;
+using LiveStreamingServerNet.Utilities.Mediators;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
@@ -54,7 +55,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Installer
         {
             services.AddServer<RtmpClientSessionHandlerFactory>(options => configureServer?.Invoke(options));
 
-            services.AddMediator();
+            services.AddMediator(options => options.AddRequestHandlerFromAssembly(typeof(RtmpServerInstaller).Assembly));
 
             services.AddSingleton<IRtmpServerContext, RtmpServerContext>()
                     .AddSingleton<IRtmpClientSessionContextFactory, RtmpClientSessionContextFactory>()

@@ -1,5 +1,4 @@
-﻿using LiveStreamingClientNet.Rtmp.Client.Internal;
-using LiveStreamingServerNet.Networking.Client.Contracts;
+﻿using LiveStreamingServerNet.Networking.Client.Contracts;
 using LiveStreamingServerNet.Networking.Client.Installer;
 using LiveStreamingServerNet.Networking.Client.Installer.Contracts;
 using LiveStreamingServerNet.Rtmp.Client.Contracts;
@@ -12,6 +11,7 @@ using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands.Dispatcher
 using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Dispatcher;
 using LiveStreamingServerNet.Rtmp.Internal.Services;
 using LiveStreamingServerNet.Rtmp.Internal.Services.Contracts;
+using LiveStreamingServerNet.Utilities.Mediators;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LiveStreamingServerNet.Rtmp.Client.Installer
@@ -39,7 +39,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Installer
         {
             services.AddClient<RtmpSessionHandlerFactory>(options => configureClient?.Invoke(options));
 
-            services.AddMediator();
+            services.AddMediator(options => options.AddRequestHandlerFromAssembly(typeof(RtmpClientInstaller).Assembly));
 
             services.AddSingleton<IRtmpClientContext, RtmpClientContext>()
                     .AddSingleton<IRtmpSessionContextFactory, RtmpSessionContextFactory>();

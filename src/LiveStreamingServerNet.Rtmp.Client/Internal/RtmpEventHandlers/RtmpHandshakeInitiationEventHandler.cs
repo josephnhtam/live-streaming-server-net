@@ -2,7 +2,7 @@
 using LiveStreamingServerNet.Rtmp.Client.Internal.RtmpEventHandlers.Handshakes;
 using LiveStreamingServerNet.Rtmp.Client.Internal.RtmpEvents;
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
-using Mediator;
+using LiveStreamingServerNet.Utilities.Mediators.Contracts;
 
 namespace LiveStreamingServerNet.Rtmp.Client.Internal.RtmpEventHandlers
 {
