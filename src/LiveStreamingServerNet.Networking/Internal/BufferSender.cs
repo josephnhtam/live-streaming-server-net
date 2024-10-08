@@ -44,10 +44,11 @@ namespace LiveStreamingServerNet.Networking.Internal
                     throw new Exception("Failed to write to the send channel");
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.BufferWritingError(ex);
                 rentedBuffer.Unclaim();
-                throw;
+                callback?.Invoke(false);
             }
         }
 
@@ -62,10 +63,11 @@ namespace LiveStreamingServerNet.Networking.Internal
                     throw new Exception("Failed to write to the send channel");
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.BufferWritingError(ex);
                 rentedBuffer.Unclaim();
-                throw;
+                callback?.Invoke(false);
             }
         }
 
@@ -86,10 +88,11 @@ namespace LiveStreamingServerNet.Networking.Internal
                         throw new Exception("Failed to write to the send channel");
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    _logger.BufferWritingError(ex);
                     rentedBuffer.Unclaim();
-                    throw;
+                    callback?.Invoke(false);
                 }
             }
             finally
@@ -175,6 +178,8 @@ namespace LiveStreamingServerNet.Networking.Internal
             catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { }
             finally
             {
+                _pendingBufferChannel.Writer.Complete();
+
                 while (_pendingBufferChannel.Reader.TryRead(out var pendingMessage))
                 {
                     InvokeCallback(pendingMessage.Callback, false);
