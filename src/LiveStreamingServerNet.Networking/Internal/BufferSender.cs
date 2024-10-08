@@ -36,39 +36,13 @@ namespace LiveStreamingServerNet.Networking.Internal
         public void Send(IDataBuffer dataBuffer, Action<bool>? callback)
         {
             var rentedBuffer = dataBuffer.ToRentedBuffer();
-
-            try
-            {
-                if (!_pendingBufferChannel.Writer.TryWrite(new PendingBuffer(rentedBuffer, callback)))
-                {
-                    throw new Exception("Failed to write to the send channel");
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.BufferWritingError(ex);
-                rentedBuffer.Unclaim();
-                callback?.Invoke(false);
-            }
+            EnqueueClaimedBuffer(callback, rentedBuffer);
         }
 
         public void Send(IRentedBuffer rentedBuffer, Action<bool>? callback)
         {
             rentedBuffer.Claim();
-
-            try
-            {
-                if (!_pendingBufferChannel.Writer.TryWrite(new PendingBuffer(rentedBuffer, callback)))
-                {
-                    throw new Exception("Failed to write to the send channel");
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.BufferWritingError(ex);
-                rentedBuffer.Unclaim();
-                callback?.Invoke(false);
-            }
+            EnqueueClaimedBuffer(callback, rentedBuffer);
         }
 
         public void Send(Action<IDataBuffer> writer, Action<bool>? callback)
@@ -80,24 +54,45 @@ namespace LiveStreamingServerNet.Networking.Internal
                 writer.Invoke(dataBuffer);
 
                 var rentedBuffer = dataBuffer.ToRentedBuffer();
-
-                try
-                {
-                    if (!_pendingBufferChannel.Writer.TryWrite(new PendingBuffer(rentedBuffer, callback)))
-                    {
-                        throw new Exception("Failed to write to the send channel");
-                    }
-                }
-                catch (Exception ex)
-                {
-                    _logger.BufferWritingError(ex);
-                    rentedBuffer.Unclaim();
-                    callback?.Invoke(false);
-                }
+                EnqueueClaimedBuffer(callback, rentedBuffer);
             }
             finally
             {
                 _dataBufferPool.Recycle(dataBuffer);
+            }
+        }
+
+        private void EnqueueClaimedBuffer(Action<bool>? callback, IRentedBuffer rentedBuffer)
+        {
+            try
+            {
+                if (!_pendingBufferChannel.Writer.TryWrite(new PendingBuffer(rentedBuffer, callback)))
+                {
+                    throw new ChannelClosedException();
+                }
+            }
+            catch (ChannelClosedException)
+            {
+                HandleBufferEnqueueFailure(callback, rentedBuffer);
+            }
+            catch (Exception ex)
+            {
+                _logger.BufferWritingError(ex);
+                HandleBufferEnqueueFailure(callback, rentedBuffer);
+            }
+
+            void HandleBufferEnqueueFailure(Action<bool>? callback, IRentedBuffer rentedBuffer)
+            {
+                rentedBuffer.Unclaim();
+
+                try
+                {
+                    callback?.Invoke(false);
+                }
+                catch (Exception ex)
+                {
+                    _logger.CallbackInvocationError(ex);
+                }
             }
         }
 

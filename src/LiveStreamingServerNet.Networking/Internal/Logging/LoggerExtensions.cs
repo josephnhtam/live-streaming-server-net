@@ -5,7 +5,7 @@ namespace LiveStreamingServerNet.Networking.Internal.Logging
 {
     internal static partial class LoggerExtensions
     {
-        [LoggerMessage(LogLevel.Trace, "An error occurred while writing to the send channel")]
+        [LoggerMessage(LogLevel.Error, "An error occurred while writing to the send channel")]
         public static partial void BufferWritingError(this ILogger logger, Exception exception);
 
         [LoggerMessage(LogLevel.Error, "NetworkStreamWriter: {NetworkStreamWriter} | An error occurred while sending data to the client")]
@@ -22,5 +22,8 @@ namespace LiveStreamingServerNet.Networking.Internal.Logging
 
         [LoggerMessage(LogLevel.Error, "SessionId: {SessionId} | An error occurred while closing the TCP client")]
         public static partial void CloseTcpClientError(this ILogger logger, uint sessionId, Exception exception);
+
+        [LoggerMessage(LogLevel.Error, "An error occurred while invoking the callback")]
+        public static partial void CallbackInvocationError(this ILogger logger, Exception exception);
     }
 }
