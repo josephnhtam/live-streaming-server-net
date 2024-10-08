@@ -7,6 +7,6 @@
   </PropertyGroup>
   
   <PropertyGroup>
-    <SolutionDir>$([System.IO.Path]::GetDirectoryName($(MSBuildProjectDirectory)))\</SolutionDir>
+    <SolutionDir>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildProjectDirectory), LiveStreamingServerNet.sln))\</SolutionDir>
   </PropertyGroup>
 </Project>
