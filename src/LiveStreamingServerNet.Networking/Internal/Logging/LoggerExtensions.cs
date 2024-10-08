@@ -5,7 +5,7 @@ namespace LiveStreamingServerNet.Networking.Internal.Logging
 {
     internal static partial class LoggerExtensions
     {
-        [LoggerMessage(LogLevel.Error, "An error occurred while writing to the send channel")]
+        [LoggerMessage(LogLevel.Trace, "An error occurred while writing to the send channel")]
         public static partial void BufferWritingError(this ILogger logger, Exception exception);
 
         [LoggerMessage(LogLevel.Error, "NetworkStreamWriter: {NetworkStreamWriter} | An error occurred while sending data to the client")]
