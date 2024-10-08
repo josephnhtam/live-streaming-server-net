@@ -84,15 +84,7 @@ namespace LiveStreamingServerNet.Networking.Internal
             void HandleBufferEnqueueFailure(Action<bool>? callback, IRentedBuffer rentedBuffer)
             {
                 rentedBuffer.Unclaim();
-
-                try
-                {
-                    callback?.Invoke(false);
-                }
-                catch (Exception ex)
-                {
-                    _logger.CallbackInvocationError(ex);
-                }
+                InvokeCallback(callback, false);
             }
         }
 
@@ -181,14 +173,17 @@ namespace LiveStreamingServerNet.Networking.Internal
                     pendingMessage.RentedBuffer.Unclaim();
                 }
             }
+        }
 
-            void InvokeCallback(Action<bool>? callback, bool successful)
+        private void InvokeCallback(Action<bool>? callback, bool successful)
+        {
+            try
             {
-                try
-                {
-                    callback?.Invoke(successful);
-                }
-                catch { }
+                callback?.Invoke(successful);
+            }
+            catch (Exception ex)
+            {
+                _logger.CallbackInvocationError(ex);
             }
         }
 
