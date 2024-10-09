@@ -107,11 +107,8 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
             result.Should().BeFalse();
         }
 
-        [Theory]
-        [InlineData(false, false)]
-        [InlineData(true, false)]
-        [InlineData(true, true)]
-        public async Task HandleAsync_Should_SendPlayStartAndCaches_If_AuthorizedAndStreamIsPublishedSuccessfully(bool publishStreamExists, bool gopCacheActivated)
+        [Fact]
+        public async Task HandleAsync_Should_DispatchEvent_If_StreamIsPublishedSuccessfully()
         {
             // Arrange
             var transactionId = 0.0;
@@ -141,12 +138,6 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
             _chunkStreamContext.MessageHeader.MessageStreamId.Returns(streamId);
             _streamContext.StreamId.Returns(streamId);
 
-            if (publishStreamExists)
-            {
-                _publishStreamContext.GroupOfPicturesCacheActivated.Returns(gopCacheActivated);
-                _streamManager.GetPublishStreamContext(streamPath).Returns(_publishStreamContext);
-            }
-
             _streamAuthorization.AuthorizePublishingAsync(
                 _clientContext, streamPath, publishingType, Helpers.CreateExpectedStreamArguments("password", "123456"))
                 .Returns(AuthorizationResult.Authorized())
@@ -169,80 +160,8 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
             var result = await _sut.HandleAsync(_chunkStreamContext, _clientContext, command, default);
 
             // Assert
-            Received.InOrder((Action)(() =>
-            {
-                _commandMessageSender.Received(1).SendCommandMessage(
-                    _clientContext, streamId, _streamContext.CommandChunkStreamId, "onStatus", 0, null,
-                    Helpers.CreateExpectedCommandProperties(RtmpStatusLevels.Status, RtmpStreamStatusCodes.PublishStart),
-                    Arg.Any<AmfEncodingType>(), Arg.Any<Action<bool>>());
-
-                _userControlMessageSender.Received(1).SendStreamBeginMessage(
-                    Arg.Is<IReadOnlyList<IRtmpSubscribeStreamContext>>(x => x.Contains(subscriber_subscribeStreamContext)));
-
-                _commandMessageSender.Received(1).SendCommandMessage(
-                    Arg.Is<IReadOnlyList<IRtmpClientSessionContext>>(x => x.Contains(subscriber_clientContext)),
-                    subsciber_streamId, _streamContext.CommandChunkStreamId, "onStatus", 0, null,
-                    Helpers.CreateExpectedCommandProperties(RtmpStatusLevels.Status, RtmpStreamStatusCodes.PlayReset),
-                    Arg.Any<AmfEncodingType>());
-
-                _commandMessageSender.Received(1).SendCommandMessage(
-                   Arg.Is<IReadOnlyList<IRtmpClientSessionContext>>(x => x.Contains(subscriber_clientContext)),
-                   subsciber_streamId, _streamContext.CommandChunkStreamId, "onStatus", 0, null,
-                   Helpers.CreateExpectedCommandProperties(RtmpStatusLevels.Status, (string)RtmpStreamStatusCodes.PlayStart),
-                   Arg.Any<AmfEncodingType>());
-
-                _ = _eventDispatcher.Received(1).RtmpStreamPublishedAsync(
-                    _clientContext, streamPath, Helpers.CreateExpectedStreamArguments("password", "123456"));
-            }));
-
-            result.Should().BeTrue();
-        }
-
-        [Theory]
-        [InlineData(PublishingStreamResult.AlreadyPublishing)]
-        [InlineData(PublishingStreamResult.AlreadySubscribing)]
-        internal async Task HandleAsync_Should_SendError_If_AuthorizedButStreamIsNotPublishedSuccessfully(PublishingStreamResult publishingResult)
-        {
-            // Arrange
-            var transactionId = 0.0;
-            var commandObject = new Dictionary<string, object>();
-            var appName = "appName";
-            var streamName = "streamName?password=123456";
-            var streamPath = "/appName/streamName";
-            var streamId = _fixture.Create<uint>();
-            var publishingType = "live";
-            var chunkStreamId = Helpers.CreateRandomChunkStreamId();
-            var timestamp = _fixture.Create<uint>();
-            var command = new RtmpPublishCommand(transactionId, commandObject, streamName, publishingType);
-
-            _clientContext.GetStreamContext(streamId).Returns(_streamContext);
-            _clientContext.AppName.Returns(appName);
-            _chunkStreamContext.ChunkStreamId.Returns(chunkStreamId);
-            _chunkStreamContext.MessageHeader.MessageStreamId.Returns(streamId);
-            _streamContext.StreamId.Returns(streamId);
-
-            _streamAuthorization.AuthorizePublishingAsync(
-                _clientContext, streamPath, publishingType, Helpers.CreateExpectedStreamArguments("password", "123456"))
-                .Returns(AuthorizationResult.Authorized())
-                .AndDoes(x =>
-                {
-                    _streamContext.PublishContext.Returns(_publishStreamContext);
-                    _publishStreamContext.StreamPath.Returns(x.ArgAt<string>(1));
-                    _publishStreamContext.StreamArguments.Returns(x.Arg<IReadOnlyDictionary<string, string>>());
-                });
-
-            _streamManager.StartPublishing(_streamContext, streamPath,
-                Helpers.CreateExpectedStreamArguments("password", "123456"), out Arg.Any<IList<IRtmpSubscribeStreamContext>>())
-                .Returns(publishingResult);
-
-            // Act
-            var result = await _sut.HandleAsync(_chunkStreamContext, _clientContext, command, default);
-
-            // Assert
-            _commandMessageSender.Received(1).SendCommandMessage(
-                _clientContext, streamId, _streamContext.CommandChunkStreamId, "onStatus", 0, null,
-                Helpers.CreateExpectedCommandProperties(RtmpStatusLevels.Error, RtmpStreamStatusCodes.PublishBadConnection),
-                Arg.Any<AmfEncodingType>(), Arg.Any<Action<bool>>());
+            _ = _eventDispatcher.Received(1).RtmpStreamPublishedAsync(
+                _clientContext, streamPath, Helpers.CreateExpectedStreamArguments("password", "123456"));
 
             result.Should().BeTrue();
         }

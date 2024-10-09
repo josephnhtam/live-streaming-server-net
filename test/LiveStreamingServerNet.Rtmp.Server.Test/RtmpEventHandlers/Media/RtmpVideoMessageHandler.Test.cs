@@ -19,10 +19,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Media
         private readonly IFixture _fixture;
         private readonly IRtmpClientSessionContext _clientContext;
         private readonly IRtmpChunkStreamContext _chunkStreamContext;
-        private readonly IRtmpStreamManagerService _streamManager;
-        private readonly IRtmpMediaMessageCacherService _mediaMessageCacher;
-        private readonly IRtmpMediaMessageBroadcasterService _mediaMessageBroadcaster;
-        private readonly RtmpServerConfiguration _config;
+        private readonly IRtmpVideoDataProcessorService _videoDataProcessor;
         private readonly ILogger<RtmpVideoMessageHandler> _logger;
         private readonly IDataBuffer _dataBuffer;
         private readonly RtmpVideoMessageHandler _sut;
@@ -32,20 +29,12 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Media
             _fixture = new Fixture();
             _clientContext = Substitute.For<IRtmpClientSessionContext>();
             _chunkStreamContext = Substitute.For<IRtmpChunkStreamContext>();
-            _streamManager = Substitute.For<IRtmpStreamManagerService>();
-            _mediaMessageCacher = Substitute.For<IRtmpMediaMessageCacherService>();
-            _mediaMessageBroadcaster = Substitute.For<IRtmpMediaMessageBroadcasterService>();
-            _config = new RtmpServerConfiguration();
+            _videoDataProcessor = Substitute.For<IRtmpVideoDataProcessorService>();
             _logger = Substitute.For<ILogger<RtmpVideoMessageHandler>>();
 
             _dataBuffer = new DataBuffer();
 
-            _sut = new RtmpVideoMessageHandler(
-                _streamManager,
-                _mediaMessageCacher,
-                _mediaMessageBroadcaster,
-                Options.Create(_config),
-                _logger);
+            _sut = new RtmpVideoMessageHandler(_videoDataProcessor, _logger);
         }
 
         public void Dispose()
@@ -66,30 +55,14 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Media
             result.Should().BeFalse();
         }
 
-        [Theory]
-        [InlineData(true, VideoFrameType.KeyFrame, VideoCodec.AVC, AVCPacketType.SequenceHeader)]
-        [InlineData(true, VideoFrameType.InterFrame, VideoCodec.AVC, AVCPacketType.NALU)]
-        [InlineData(true, VideoFrameType.KeyFrame, VideoCodec.HEVC, AVCPacketType.SequenceHeader)]
-        [InlineData(true, VideoFrameType.InterFrame, VideoCodec.HEVC, AVCPacketType.NALU)]
-        [InlineData(true, VideoFrameType.KeyFrame, VideoCodec.AV1, AVCPacketType.SequenceHeader)]
-        [InlineData(true, VideoFrameType.InterFrame, VideoCodec.AV1, AVCPacketType.NALU)]
-        [InlineData(false, VideoFrameType.KeyFrame, VideoCodec.AVC, AVCPacketType.SequenceHeader)]
-        [InlineData(false, VideoFrameType.InterFrame, VideoCodec.AVC, AVCPacketType.NALU)]
-        [InlineData(false, VideoFrameType.KeyFrame, VideoCodec.HEVC, AVCPacketType.SequenceHeader)]
-        [InlineData(false, VideoFrameType.InterFrame, VideoCodec.HEVC, AVCPacketType.NALU)]
-        [InlineData(false, VideoFrameType.KeyFrame, VideoCodec.AV1, AVCPacketType.SequenceHeader)]
-        [InlineData(false, VideoFrameType.InterFrame, VideoCodec.AV1, AVCPacketType.NALU)]
-        internal async Task HandleAsync_Should_HandleCacheAndBroadcastAndReturnTrue(
-            bool gopCacheActivated, VideoFrameType frameType, VideoCodec videoCodec, AVCPacketType avcPacketType)
+        [Fact]
+        internal async Task HandleAsync_Should_ProcessVideoData()
         {
             // Arrange
-            _config.EnableGopCaching = gopCacheActivated;
-
             var stremaPath = _fixture.Create<string>();
             var streamId = _fixture.Create<uint>();
-
-            var subscriber_subscribeStreamContext = Substitute.For<IRtmpSubscribeStreamContext>();
-            var subscriber_subscribeStreamContexts = new List<IRtmpSubscribeStreamContext>() { subscriber_subscribeStreamContext };
+            var timestamp = _fixture.Create<uint>();
+            var success = _fixture.Create<bool>();
 
             var publisher_streamContext = Substitute.For<IRtmpStreamContext>();
             var publisher_publishStreamContext = Substitute.For<IRtmpPublishStreamContext>();
@@ -100,52 +73,20 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Media
             publisher_publishStreamContext.StreamPath.Returns(stremaPath);
             publisher_publishStreamContext.StreamContext.Returns(publisher_streamContext);
 
-            _chunkStreamContext.MessageHeader.MessageStreamId.Returns(streamId);
             _clientContext.GetStreamContext(streamId).Returns(publisher_streamContext);
-            _streamManager.GetSubscribeStreamContexts(stremaPath).Returns(subscriber_subscribeStreamContexts);
+            _chunkStreamContext.MessageHeader.MessageStreamId.Returns(streamId);
+            _chunkStreamContext.Timestamp.Returns(timestamp);
 
-            var firstByte = (byte)((byte)frameType << 4 | (byte)videoCodec);
-            _dataBuffer.Write(firstByte);
-            _dataBuffer.Write((byte)avcPacketType);
-            _dataBuffer.Write(_fixture.Create<byte[]>());
-            _dataBuffer.MoveTo(0);
-
-            var hasHeader =
-                (videoCodec is VideoCodec.AVC or VideoCodec.HEVC or VideoCodec.AV1) &&
-                avcPacketType is AVCPacketType.SequenceHeader &&
-                frameType is VideoFrameType.KeyFrame;
-
-            var isPictureCachable =
-                (videoCodec is VideoCodec.AVC or VideoCodec.HEVC or VideoCodec.AV1) &&
-                avcPacketType is AVCPacketType.NALU;
-
-            var isSkippable = !hasHeader;
+            _videoDataProcessor.ProcessVideoDataAsync(publisher_publishStreamContext, timestamp, _dataBuffer)
+               .Returns(success);
 
             // Act
             var result = await _sut.HandleAsync(_chunkStreamContext, _clientContext, _dataBuffer, default);
 
             // Assert
-            result.Should().BeTrue();
+            result.Should().Be(success);
 
-            if (gopCacheActivated && frameType == VideoFrameType.KeyFrame)
-                _ = _mediaMessageCacher.Received(1).ClearGroupOfPicturesCacheAsync(publisher_publishStreamContext);
-
-            _ = _mediaMessageCacher.Received(hasHeader ? 1 : 0)
-                .CacheSequenceHeaderAsync(publisher_publishStreamContext, MediaType.Video, _dataBuffer);
-
-            _ = _mediaMessageCacher.Received(gopCacheActivated && isPictureCachable ? 1 : 0)
-                .CachePictureAsync(publisher_publishStreamContext, MediaType.Video, _dataBuffer, _chunkStreamContext.Timestamp);
-
-            publisher_publishStreamContext.Received(1).UpdateTimestamp(_chunkStreamContext.Timestamp, MediaType.Video);
-
-            await _mediaMessageBroadcaster.Received(1).BroadcastMediaMessageAsync(
-                publisher_publishStreamContext,
-                subscriber_subscribeStreamContexts,
-                MediaType.Video,
-                _chunkStreamContext.Timestamp,
-                isSkippable,
-                _dataBuffer
-            );
+            _ = _videoDataProcessor.Received(1).ProcessVideoDataAsync(publisher_publishStreamContext, timestamp, _dataBuffer);
         }
     }
 }

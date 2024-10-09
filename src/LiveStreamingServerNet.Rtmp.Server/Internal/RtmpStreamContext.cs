@@ -76,7 +76,6 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
 
     internal abstract class RtmpMediaStreamContext : IRtmpMediaStreamContext
     {
-        public IRtmpStreamContext StreamContext { get; }
         public string StreamPath { get; }
         public IReadOnlyDictionary<string, string> StreamArguments { get; }
 
@@ -86,9 +85,8 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
         private uint _videoTimestamp;
         private uint _audioTimestamp;
 
-        protected RtmpMediaStreamContext(IRtmpStreamContext streamContext, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
+        protected RtmpMediaStreamContext(string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
-            StreamContext = streamContext;
             StreamPath = streamPath;
             StreamArguments = streamArguments;
         }
@@ -137,6 +135,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
 
     internal class RtmpPublishStreamContext : RtmpMediaStreamContext, IRtmpPublishStreamContext
     {
+        public IRtmpStreamContext? StreamContext { get; }
         public IReadOnlyDictionary<string, object>? StreamMetaData { get; set; }
         public byte[]? VideoSequenceHeader { get; set; }
         public byte[]? AudioSequenceHeader { get; set; }
@@ -144,9 +143,11 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
         public IGroupOfPicturesCache GroupOfPicturesCache { get; }
         public DateTime StartTime { get; }
 
-        public RtmpPublishStreamContext(IRtmpStreamContext streamContext, string streamPath, IReadOnlyDictionary<string, string> streamArguments, IBufferPool? bufferPool) :
-            base(streamContext, streamPath, streamArguments)
+        public RtmpPublishStreamContext(
+            IRtmpStreamContext? streamContext, string streamPath, IReadOnlyDictionary<string, string> streamArguments, IBufferPool? bufferPool) :
+            base(streamPath, streamArguments)
         {
+            StreamContext = streamContext;
             GroupOfPicturesCache = new GroupOfPicturesCache(bufferPool);
             StartTime = DateTime.UtcNow;
         }
@@ -192,10 +193,10 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
 
     internal class RtmpSubscribeStreamContext : RtmpMediaStreamContext, IRtmpSubscribeStreamContext
     {
+        public IRtmpStreamContext StreamContext { get; }
         public bool IsPaused { get; set; }
         public bool IsReceivingAudio { get; set; }
         public bool IsReceivingVideo { get; set; }
-
         public uint DataChunkStreamId { get; }
         public uint AudioChunkStreamId { get; }
         public uint VideoChunkStreamId { get; }
@@ -204,8 +205,10 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
         private readonly Task _initializationTask;
 
         public RtmpSubscribeStreamContext(IRtmpStreamContext streamContext, string streamPath, IReadOnlyDictionary<string, string> streamArguments) :
-            base(streamContext, streamPath, streamArguments)
+            base(streamPath, streamArguments)
         {
+            StreamContext = streamContext;
+
             IsReceivingAudio = true;
             IsReceivingVideo = true;
 

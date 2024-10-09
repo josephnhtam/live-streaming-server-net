@@ -1,25 +1,18 @@
 ﻿using LiveStreamingServerNet.Rtmp.Server.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Server.Internal.Services.Contracts;
-using LiveStreamingServerNet.Rtmp.Server.Internal.Services.Extensions;
 
 namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
 {
     internal class RtmpStreamDeletionService : IRtmpStreamDeletionService
     {
         private readonly IRtmpStreamManagerService _rtmpStreamManager;
-        private readonly IRtmpUserControlMessageSenderService _userControlMessageSender;
-        private readonly IRtmpCommandMessageSenderService _commandMessageSender;
         private readonly IRtmpServerStreamEventDispatcher _eventDispatcher;
 
         public RtmpStreamDeletionService(
             IRtmpStreamManagerService rtmpStreamManager,
-            IRtmpUserControlMessageSenderService userControlMessageSender,
-            IRtmpCommandMessageSenderService commandMessageSender,
             IRtmpServerStreamEventDispatcher eventDispatcher)
         {
             _rtmpStreamManager = rtmpStreamManager;
-            _userControlMessageSender = userControlMessageSender;
-            _commandMessageSender = commandMessageSender;
             _eventDispatcher = eventDispatcher;
         }
 
@@ -40,11 +33,9 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
         {
             var publishStreamContext = streamContext.PublishContext;
 
-            if (publishStreamContext == null || !_rtmpStreamManager.StopPublishing(publishStreamContext, out var existingSubscriber))
+            if (publishStreamContext == null || !_rtmpStreamManager.StopPublishing(publishStreamContext, out _))
                 return;
 
-            SendStreamUnpublishNotify(existingSubscriber.AsReadOnly());
-            _userControlMessageSender.SendStreamEofMessage(existingSubscriber.AsReadOnly());
             await _eventDispatcher.RtmpStreamUnpublishedAsync(streamContext.ClientContext, publishStreamContext.StreamPath);
         }
 
@@ -56,20 +47,6 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
                 return;
 
             await _eventDispatcher.RtmpStreamUnsubscribedAsync(streamContext.ClientContext, subscribeStreamContext.StreamPath);
-        }
-
-        private void SendStreamUnpublishNotify(
-            IReadOnlyList<IRtmpSubscribeStreamContext> subscribeStreamContexts,
-            AmfEncodingType amfEncodingType = AmfEncodingType.Amf0)
-        {
-            var streamContexts = subscribeStreamContexts.Select(x => x.StreamContext).ToList();
-
-            _commandMessageSender.SendOnStatusCommandMessage(
-                streamContexts,
-                RtmpStatusLevels.Status,
-                RtmpStreamStatusCodes.PlayUnpublishNotify,
-                "Stream is unpublished.",
-                amfEncodingType);
         }
     }
 }
