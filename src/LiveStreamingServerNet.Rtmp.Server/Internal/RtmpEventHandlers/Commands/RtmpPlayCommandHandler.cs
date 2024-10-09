@@ -116,18 +116,16 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
             {
                 case SubscribingStreamResult.Succeeded:
                     _logger.SubscriptionStarted(streamContext.ClientContext.Client.Id, streamPath);
-                    SendInitialStreamMessages(streamContext, chunkStreamContext, publishStreamContext);
+                    SendCachedStreamMessages(streamContext, chunkStreamContext, publishStreamContext);
                     await CompleteSubscriptionInitializationAsync(streamContext);
                     return true;
 
                 case SubscribingStreamResult.AlreadySubscribing:
                     _logger.AlreadySubscribing(streamContext.ClientContext.Client.Id, streamPath);
-                    SendBadConnectionCommandMessage(streamContext, "Already subscribing.");
                     return false;
 
                 case SubscribingStreamResult.AlreadyPublishing:
                     _logger.AlreadyPublishing(streamContext.ClientContext.Client.Id, streamPath);
-                    SendBadConnectionCommandMessage(streamContext, "Already publishing.");
                     return false;
 
                 default:
@@ -135,22 +133,13 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
             }
         }
 
-        private void SendInitialStreamMessages(
+        private void SendCachedStreamMessages(
             IRtmpStreamContext streamContext, IRtmpChunkStreamContext chunkStreamContext, IRtmpPublishStreamContext? publishStreamContext)
         {
             Debug.Assert(streamContext.SubscribeContext != null);
 
             if (publishStreamContext == null)
                 return;
-
-            SendSubscriptionStartedMessage(streamContext.SubscribeContext);
-            SendCachedStreamMessages(streamContext, chunkStreamContext, publishStreamContext);
-        }
-
-        private void SendCachedStreamMessages(
-            IRtmpStreamContext streamContext, IRtmpChunkStreamContext chunkStreamContext, IRtmpPublishStreamContext publishStreamContext)
-        {
-            Debug.Assert(streamContext.SubscribeContext != null);
 
             _mediaMessageCacher.SendCachedStreamMetaDataMessage(
                 streamContext.SubscribeContext, publishStreamContext,
@@ -185,32 +174,6 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
                 streamContext,
                 RtmpStatusLevels.Error,
                 RtmpStreamStatusCodes.PlayFailed,
-                reason);
-        }
-
-        private void SendSubscriptionStartedMessage(IRtmpSubscribeStreamContext subscribeStreamContext)
-        {
-            _userControlMessageSender.SendStreamBeginMessage(subscribeStreamContext);
-
-            _commandMessageSender.SendOnStatusCommandMessage(
-                subscribeStreamContext.StreamContext,
-                RtmpStatusLevels.Status,
-                RtmpStreamStatusCodes.PlayReset,
-                "Stream subscribed.");
-
-            _commandMessageSender.SendOnStatusCommandMessage(
-                subscribeStreamContext.StreamContext,
-                RtmpStatusLevels.Status,
-                RtmpStreamStatusCodes.PlayStart,
-                "Stream subscribed.");
-        }
-
-        private void SendBadConnectionCommandMessage(IRtmpStreamContext streamContext, string reason)
-        {
-            _commandMessageSender.SendOnStatusCommandMessage(
-                streamContext,
-                RtmpStatusLevels.Error,
-                RtmpStreamStatusCodes.PlayBadConnection,
                 reason);
         }
     }

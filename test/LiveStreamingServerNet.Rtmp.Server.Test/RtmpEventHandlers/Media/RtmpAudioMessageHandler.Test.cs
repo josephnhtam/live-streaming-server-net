@@ -17,9 +17,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Media
         private readonly IFixture _fixture;
         private readonly IRtmpClientSessionContext _clientContext;
         private readonly IRtmpChunkStreamContext _chunkStreamContext;
-        private readonly IRtmpStreamManagerService _streamManager;
-        private readonly IRtmpMediaMessageCacherService _mediaMessageCacher;
-        private readonly IRtmpMediaMessageBroadcasterService _mediaMessageBroadcaster;
+        private readonly IRtmpAudioDataProcessorService _audioDataProcessor;
         private readonly ILogger<RtmpAudioMessageHandler> _logger;
         private readonly IDataBuffer _dataBuffer;
         private readonly RtmpAudioMessageHandler _sut;
@@ -29,18 +27,12 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Media
             _fixture = new Fixture();
             _clientContext = Substitute.For<IRtmpClientSessionContext>();
             _chunkStreamContext = Substitute.For<IRtmpChunkStreamContext>();
-            _streamManager = Substitute.For<IRtmpStreamManagerService>();
-            _mediaMessageCacher = Substitute.For<IRtmpMediaMessageCacherService>();
-            _mediaMessageBroadcaster = Substitute.For<IRtmpMediaMessageBroadcasterService>();
+            _audioDataProcessor = Substitute.For<IRtmpAudioDataProcessorService>();
             _logger = Substitute.For<ILogger<RtmpAudioMessageHandler>>();
 
             _dataBuffer = new DataBuffer();
 
-            _sut = new RtmpAudioMessageHandler(
-                _streamManager,
-                _mediaMessageCacher,
-                _mediaMessageBroadcaster,
-                _logger);
+            _sut = new RtmpAudioMessageHandler(_audioDataProcessor, _logger);
         }
 
         public void Dispose()
@@ -61,24 +53,14 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Media
             result.Should().BeFalse();
         }
 
-        [Theory]
-        [InlineData(true, AudioCodec.AAC, AACPacketType.SequenceHeader)]
-        [InlineData(true, AudioCodec.AAC, AACPacketType.Raw)]
-        [InlineData(true, AudioCodec.Opus, AACPacketType.SequenceHeader)]
-        [InlineData(true, AudioCodec.Opus, AACPacketType.Raw)]
-        [InlineData(false, AudioCodec.AAC, AACPacketType.SequenceHeader)]
-        [InlineData(false, AudioCodec.AAC, AACPacketType.Raw)]
-        [InlineData(false, AudioCodec.Opus, AACPacketType.SequenceHeader)]
-        [InlineData(false, AudioCodec.Opus, AACPacketType.Raw)]
-        internal async Task HandleAsync_Should_HandleCacheAndBroadcastAndReturnTrue(
-            bool gopCacheActivated, AudioCodec audioCodec, AACPacketType aacPacketType)
+        [Fact]
+        internal async Task HandleAsync_Should_ProcessAudioData()
         {
             // Arrange
             var stremaPath = _fixture.Create<string>();
             var streamId = _fixture.Create<uint>();
-
-            var subscriber_subscribeStreamContext = Substitute.For<IRtmpSubscribeStreamContext>();
-            var subscriber_subscribeStreamContexts = new List<IRtmpSubscribeStreamContext>() { subscriber_subscribeStreamContext };
+            var timestamp = _fixture.Create<uint>();
+            var success = _fixture.Create<bool>();
 
             var publisher_streamContext = Substitute.For<IRtmpStreamContext>();
             var publisher_publishStreamContext = Substitute.For<IRtmpPublishStreamContext>();
@@ -88,49 +70,21 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Media
             publisher_streamContext.PublishContext.Returns(publisher_publishStreamContext);
             publisher_publishStreamContext.StreamPath.Returns(stremaPath);
             publisher_publishStreamContext.StreamContext.Returns(publisher_streamContext);
-            publisher_publishStreamContext.GroupOfPicturesCacheActivated.Returns(gopCacheActivated);
-
-            _chunkStreamContext.MessageHeader.MessageStreamId.Returns(streamId);
 
             _clientContext.GetStreamContext(streamId).Returns(publisher_streamContext);
-            _streamManager.GetSubscribeStreamContexts(stremaPath).Returns(subscriber_subscribeStreamContexts);
+            _chunkStreamContext.MessageHeader.MessageStreamId.Returns(streamId);
+            _chunkStreamContext.Timestamp.Returns(timestamp);
 
-            var firstByte = (byte)((byte)audioCodec << 4);
-            _dataBuffer.Write(firstByte);
-            _dataBuffer.Write((byte)aacPacketType);
-            _dataBuffer.Write(_fixture.Create<byte[]>());
-            _dataBuffer.MoveTo(0);
-
-            var hasHeader =
-                (audioCodec is AudioCodec.AAC or AudioCodec.Opus) &&
-                aacPacketType is AACPacketType.SequenceHeader;
-
-            bool isPictureCachable = (audioCodec is AudioCodec.AAC or AudioCodec.Opus) && aacPacketType is not AACPacketType.SequenceHeader;
-
-            var isSkippable = !hasHeader;
+            _audioDataProcessor.ProcessAudioDataAsync(publisher_publishStreamContext, timestamp, _dataBuffer)
+                .Returns(success);
 
             // Act
             var result = await _sut.HandleAsync(_chunkStreamContext, _clientContext, _dataBuffer, default);
 
             // Assert
-            result.Should().BeTrue();
+            result.Should().Be(success);
 
-            _ = _mediaMessageCacher.Received(hasHeader ? 1 : 0)
-                .CacheSequenceHeaderAsync(publisher_publishStreamContext, MediaType.Audio, _dataBuffer);
-
-            _ = _mediaMessageCacher.Received(gopCacheActivated && isPictureCachable ? 1 : 0)
-                .CachePictureAsync(publisher_publishStreamContext, MediaType.Audio, _dataBuffer, _chunkStreamContext.Timestamp);
-
-            publisher_publishStreamContext.Received(1).UpdateTimestamp(_chunkStreamContext.Timestamp, MediaType.Audio);
-
-            await _mediaMessageBroadcaster.Received(1).BroadcastMediaMessageAsync(
-                publisher_publishStreamContext,
-                subscriber_subscribeStreamContexts,
-                MediaType.Audio,
-                _chunkStreamContext.Timestamp,
-                isSkippable,
-                _dataBuffer
-            );
+            _ = _audioDataProcessor.Received(1).ProcessAudioDataAsync(publisher_publishStreamContext, timestamp, _dataBuffer);
         }
     }
 }

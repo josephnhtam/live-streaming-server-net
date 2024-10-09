@@ -21,7 +21,6 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Contracts
 
     internal interface IRtmpMediaStreamContext : IDisposable
     {
-        IRtmpStreamContext StreamContext { get; }
         string StreamPath { get; }
         IReadOnlyDictionary<string, string> StreamArguments { get; }
 
@@ -33,6 +32,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Contracts
 
     internal interface IRtmpPublishStreamContext : IRtmpMediaStreamContext
     {
+        IRtmpStreamContext? StreamContext { get; }
         IReadOnlyDictionary<string, object>? StreamMetaData { get; set; }
 
         byte[]? VideoSequenceHeader { get; set; }
@@ -46,6 +46,8 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Contracts
 
     internal interface IRtmpSubscribeStreamContext : IRtmpMediaStreamContext
     {
+        IRtmpStreamContext StreamContext { get; }
+
         uint DataChunkStreamId { get; }
         uint AudioChunkStreamId { get; }
         uint VideoChunkStreamId { get; }

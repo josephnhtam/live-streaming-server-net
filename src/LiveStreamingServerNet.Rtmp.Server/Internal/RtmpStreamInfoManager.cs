@@ -22,7 +22,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
         {
             var publishStreamContext = _service.GetPublishStreamContext(streamPath);
 
-            if (publishStreamContext == null)
+            if (publishStreamContext == null || publishStreamContext.StreamContext == null)
                 return null;
 
             var subscribeStreamContexts = _service.GetSubscribeStreamContexts(publishStreamContext.StreamPath);

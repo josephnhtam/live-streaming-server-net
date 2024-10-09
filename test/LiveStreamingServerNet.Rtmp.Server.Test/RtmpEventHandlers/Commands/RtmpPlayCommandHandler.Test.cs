@@ -113,7 +113,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
         [InlineData(false, false)]
         [InlineData(true, false)]
         [InlineData(true, true)]
-        public async Task HandleAsync_Should_SendPlayStartAndCaches_If_AuthorizedAndStreamIsSubscribedSuccessfully(bool publishStreamExists, bool gopCacheActivated)
+        public async Task HandleAsync_Should_SendCaches_If_StreamIsSubscribedSuccessfully(bool publishStreamExists, bool gopCacheActivated)
         {
             // Arrange
             var transactionId = 0.0;
@@ -167,18 +167,6 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
             {
                 if (publishStreamExists)
                 {
-                    _userControlMessageSender.Received(1).SendStreamBeginMessage(_subscribeStreamContext);
-
-                    _commandMessageSender.Received(1).SendCommandMessage(
-                        _clientContext, streamId, _streamContext.CommandChunkStreamId, "onStatus", 0, null,
-                        Helpers.CreateExpectedCommandProperties(RtmpStatusLevels.Status, RtmpStreamStatusCodes.PlayReset),
-                        Arg.Any<AmfEncodingType>(), Arg.Any<Action<bool>>());
-
-                    _commandMessageSender.Received(1).SendCommandMessage(
-                        _clientContext, streamId, _streamContext.CommandChunkStreamId, "onStatus", 0, null,
-                        Helpers.CreateExpectedCommandProperties(RtmpStatusLevels.Status, (string)RtmpStreamStatusCodes.PlayStart),
-                        Arg.Any<AmfEncodingType>(), Arg.Any<Action<bool>>());
-
                     _mediaMessageCacher.Received(1).SendCachedStreamMetaDataMessage(
                         _subscribeStreamContext, _publishStreamContext, timestamp);
 
@@ -195,52 +183,6 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
                 _ = _eventDispatcher.Received(1).RtmpStreamSubscribedAsync(
                     _clientContext, streamPath, Helpers.CreateExpectedStreamArguments("password", "123456"));
             });
-
-            result.Should().BeTrue();
-        }
-
-        [Theory]
-        [InlineData(SubscribingStreamResult.AlreadyPublishing)]
-        [InlineData(SubscribingStreamResult.AlreadySubscribing)]
-        internal async Task HandleAsync_Should_SendError_If_AuthorizedButStreamIsNotSubscribedSuccessfully(SubscribingStreamResult subscribingResult)
-        {
-            // Arrange
-            var transactionId = 0.0;
-            var commandObject = new Dictionary<string, object>();
-            var appName = "appName";
-            var streamName = "streamName?password=123456";
-            var streamPath = "/appName/streamName";
-            var streamId = _fixture.Create<uint>();
-            var chunkStreamId = Helpers.CreateRandomChunkStreamId();
-            var timestamp = _fixture.Create<uint>();
-            var command = new RtmpPlayCommand(transactionId, commandObject, streamName, 0, 0, false);
-
-            _clientContext.GetStreamContext(streamId).Returns(_streamContext);
-            _clientContext.AppName.Returns(appName);
-
-            _chunkStreamContext.ChunkStreamId.Returns(chunkStreamId);
-            _chunkStreamContext.Timestamp.Returns(timestamp);
-            _chunkStreamContext.MessageHeader.MessageStreamId.Returns(streamId);
-
-            _streamContext.StreamId.Returns(streamId);
-
-            _streamAuthorization.AuthorizeSubscribingAsync(
-                _clientContext, streamPath, Helpers.CreateExpectedStreamArguments("password", "123456"))
-                .Returns(AuthorizationResult.Authorized());
-
-            _streamManager.StartSubscribing(
-                _streamContext, streamPath, Helpers.CreateExpectedStreamArguments("password", "123456"),
-                out Arg.Any<IRtmpPublishStreamContext?>())
-                .Returns(subscribingResult);
-
-            // Act
-            var result = await _sut.HandleAsync(_chunkStreamContext, _clientContext, command, default);
-
-            // Assert
-            _commandMessageSender.Received(1).SendCommandMessage(
-                _clientContext, streamId, _streamContext.CommandChunkStreamId, "onStatus", 0, null,
-                Helpers.CreateExpectedCommandProperties(RtmpStatusLevels.Error, RtmpStreamStatusCodes.PlayBadConnection),
-                Arg.Any<AmfEncodingType>(), Arg.Any<Action<bool>>());
 
             result.Should().BeTrue();
         }

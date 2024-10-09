@@ -1,21 +1,30 @@
 ﻿using AutoFixture;
 using FluentAssertions;
 using LiveStreamingServerNet.Networking.Contracts;
+using LiveStreamingServerNet.Rtmp.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Server.Internal;
 using LiveStreamingServerNet.Rtmp.Server.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Server.Internal.Services;
 using LiveStreamingServerNet.Rtmp.Server.Internal.Services.Contracts;
+using LiveStreamingServerNet.Rtmp.Test.Utilities;
 using NSubstitute;
+using System.IO;
 
 namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
 {
     public class RtmpStreamManagerServiceTest
     {
         private readonly IFixture _fixture;
+        private readonly IRtmpCommandMessageSenderService _commandMessageSender;
+        private readonly IRtmpUserControlMessageSenderService _userControlMessageSender;
+        private readonly IRtmpStreamManagerService _sut;
 
         public RtmpStreamManagerServiceTest()
         {
             _fixture = new Fixture();
+            _commandMessageSender = Substitute.For<IRtmpCommandMessageSenderService>();
+            _userControlMessageSender = Substitute.For<IRtmpUserControlMessageSenderService>();
+            _sut = new RtmpStreamManagerService(_commandMessageSender, _userControlMessageSender);
         }
 
         [Fact]
@@ -27,12 +36,11 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             var streamPath = _fixture.Create<string>();
             var streamArguments = _fixture.Create<Dictionary<string, string>>();
 
-            var sut = new RtmpStreamManagerService();
             var streamContext = clientContext.CreateStreamContext();
-            sut.StartPublishing(streamContext, streamPath, streamArguments, out _);
+            _sut.StartPublishing(streamContext, streamPath, streamArguments, out _);
 
             // Act
-            var result = sut.GetPublishStreamContext(streamPath);
+            var result = _sut.GetPublishStreamContext(streamPath);
 
             // Assert
             result.Should().Be(streamContext.PublishContext);
@@ -51,15 +59,13 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             streamContext.PublishContext.Returns((IRtmpPublishStreamContext?)null);
             streamContext.SubscribeContext.Returns((IRtmpSubscribeStreamContext?)null);
 
-            var sut = new RtmpStreamManagerService();
-
             // Act
-            var result = sut.StartPublishing(streamContext, streamPath, streamArguments, out _);
+            var result = _sut.StartPublishing(streamContext, streamPath, streamArguments, out _);
 
             // Assert
             result.Should().Be(PublishingStreamResult.Succeeded);
             streamContext.Received(1).CreatePublishContext(streamPath, streamArguments);
-            sut.IsStreamPublishing(streamPath).Should().BeTrue();
+            _sut.IsStreamPublishing(streamPath).Should().BeTrue();
         }
 
         [Fact]
@@ -77,10 +83,8 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             streamContext.SubscribeContext.Returns(subscribeStreamContext);
             subscribeStreamContext.StreamContext.Returns(streamContext);
 
-            var sut = new RtmpStreamManagerService();
-
             // Act
-            var result = sut.StartPublishing(streamContext, streamPath, streamArguments, out _);
+            var result = _sut.StartPublishing(streamContext, streamPath, streamArguments, out _);
 
             // Assert
             result.Should().Be(PublishingStreamResult.AlreadySubscribing);
@@ -101,10 +105,8 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             streamContext.PublishContext.Returns(publishStreamContext);
             publishStreamContext.StreamContext.Returns(streamContext);
 
-            var sut = new RtmpStreamManagerService();
-
             // Act
-            var result = sut.StartPublishing(streamContext, streamPath, streamArguments, out _);
+            var result = _sut.StartPublishing(streamContext, streamPath, streamArguments, out _);
 
             // Assert
             result.Should().Be(PublishingStreamResult.AlreadyPublishing);
@@ -125,11 +127,10 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             var streamPath = _fixture.Create<string>();
             var streamArguments = _fixture.Create<Dictionary<string, string>>();
 
-            var sut = new RtmpStreamManagerService();
-            sut.StartPublishing(streamContext1, streamPath, streamArguments, out _);
+            _sut.StartPublishing(streamContext1, streamPath, streamArguments, out _);
 
             // Act
-            var result = sut.StartPublishing(streamContext2, streamPath, streamArguments, out _);
+            var result = _sut.StartPublishing(streamContext2, streamPath, streamArguments, out _);
 
             // Assert
             result.Should().Be(PublishingStreamResult.AlreadyExists);
@@ -146,16 +147,15 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             var streamPath = _fixture.Create<string>();
             var streamArguments = _fixture.Create<Dictionary<string, string>>();
 
-            var sut = new RtmpStreamManagerService();
-            sut.StartPublishing(streamContext, streamPath, streamArguments, out _);
+            _sut.StartPublishing(streamContext, streamPath, streamArguments, out _);
 
             // Act
-            var result = sut.StopPublishing(streamContext.PublishContext!, out _);
+            var result = _sut.StopPublishing(streamContext.PublishContext!, out _);
 
             // Assert
             result.Should().BeTrue();
             streamContext.PublishContext.Should().BeNull();
-            sut.IsStreamPublishing(streamPath).Should().BeFalse();
+            _sut.IsStreamPublishing(streamPath).Should().BeFalse();
         }
 
         [Fact]
@@ -163,10 +163,9 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
         {
             // Arrange
             var publishStreamContext = Substitute.For<IRtmpPublishStreamContext>();
-            var sut = new RtmpStreamManagerService();
 
             // Act
-            var result = sut.StopPublishing(publishStreamContext, out _);
+            var result = _sut.StopPublishing(publishStreamContext, out _);
 
             // Assert
             result.Should().BeFalse();
@@ -183,11 +182,10 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             var streamPath = _fixture.Create<string>();
             var streamArguments = _fixture.Create<Dictionary<string, string>>();
 
-            var sut = new RtmpStreamManagerService();
-            sut.StartPublishing(streamContext, streamPath, streamArguments, out _);
+            _sut.StartPublishing(streamContext, streamPath, streamArguments, out _);
 
             // Act
-            var result = sut.IsStreamPublishing(streamPath);
+            var result = _sut.IsStreamPublishing(streamPath);
 
             // Assert
             result.Should().BeTrue();
@@ -198,10 +196,9 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
         {
             // Arrange
             var streamPath = _fixture.Create<string>();
-            var sut = new RtmpStreamManagerService();
 
             // Act
-            var result = sut.IsStreamPublishing(streamPath);
+            var result = _sut.IsStreamPublishing(streamPath);
 
             // Assert
             result.Should().BeFalse();
@@ -218,14 +215,12 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             var streamPath = _fixture.Create<string>();
             var streamArguments = _fixture.Create<Dictionary<string, string>>();
 
-            var sut = new RtmpStreamManagerService();
-
             // Act
-            var result = sut.StartSubscribing(streamContext, streamPath, streamArguments, out _);
+            var result = _sut.StartSubscribing(streamContext, streamPath, streamArguments, out _);
 
             // Assert
             result.Should().Be(SubscribingStreamResult.Succeeded);
-            sut.GetSubscribeStreamContexts(streamPath).Should().Contain(streamContext.SubscribeContext!);
+            _sut.GetSubscribeStreamContexts(streamPath).Should().Contain(streamContext.SubscribeContext!);
         }
 
         [Fact]
@@ -239,11 +234,10 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             var streamPath = _fixture.Create<string>();
             var streamArguments = _fixture.Create<Dictionary<string, string>>();
 
-            var sut = new RtmpStreamManagerService();
-            sut.StartPublishing(streamContext, streamPath, streamArguments, out _);
+            _sut.StartPublishing(streamContext, streamPath, streamArguments, out _);
 
             // Act
-            var result = sut.StartSubscribing(streamContext, streamPath, streamArguments, out _);
+            var result = _sut.StartSubscribing(streamContext, streamPath, streamArguments, out _);
 
             // Assert
             result.Should().Be(SubscribingStreamResult.AlreadyPublishing);
@@ -260,11 +254,10 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             var streamPath = _fixture.Create<string>();
             var streamArguments = _fixture.Create<Dictionary<string, string>>();
 
-            var sut = new RtmpStreamManagerService();
-            sut.StartSubscribing(streamContext, streamPath, streamArguments, out _);
+            _sut.StartSubscribing(streamContext, streamPath, streamArguments, out _);
 
             // Act
-            var result = sut.StartSubscribing(streamContext, streamPath, streamArguments, out _);
+            var result = _sut.StartSubscribing(streamContext, streamPath, streamArguments, out _);
 
             // Assert
             result.Should().Be(SubscribingStreamResult.AlreadySubscribing);
@@ -281,17 +274,16 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             var streamPath = _fixture.Create<string>();
             var streamArguments = _fixture.Create<Dictionary<string, string>>();
 
-            var sut = new RtmpStreamManagerService();
-            sut.StartSubscribing(streamContext, streamPath, streamArguments, out _);
+            _sut.StartSubscribing(streamContext, streamPath, streamArguments, out _);
 
             var subscribeStreamContext = streamContext.SubscribeContext!;
 
             // Act
-            var result = sut.StopSubscribing(subscribeStreamContext);
+            var result = _sut.StopSubscribing(subscribeStreamContext);
 
             // Assert
             result.Should().BeTrue();
-            sut.GetSubscribeStreamContexts(streamPath).Should().NotContain(subscribeStreamContext);
+            _sut.GetSubscribeStreamContexts(streamPath).Should().NotContain(subscribeStreamContext);
         }
 
         [Fact]
@@ -299,10 +291,9 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
         {
             // Arrange
             var subscribeStreamContext = Substitute.For<IRtmpSubscribeStreamContext>();
-            var sut = new RtmpStreamManagerService();
 
             // Act
-            var result = sut.StopSubscribing(subscribeStreamContext);
+            var result = _sut.StopSubscribing(subscribeStreamContext);
 
             // Assert
             result.Should().BeFalse();
@@ -323,12 +314,11 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             var streamPath = _fixture.Create<string>();
             var streamArguments = _fixture.Create<Dictionary<string, string>>();
 
-            var sut = new RtmpStreamManagerService();
-            sut.StartSubscribing(streamContext1, streamPath, streamArguments, out _);
-            sut.StartSubscribing(streamContext2, streamPath, streamArguments, out _);
+            _sut.StartSubscribing(streamContext1, streamPath, streamArguments, out _);
+            _sut.StartSubscribing(streamContext2, streamPath, streamArguments, out _);
 
             // Act
-            var result = sut.GetSubscribeStreamContexts(streamPath);
+            var result = _sut.GetSubscribeStreamContexts(streamPath);
 
             // Assert
             result.Should().HaveCount(2);
@@ -355,19 +345,138 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             var streamPath = _fixture.Create<string>();
             var streamArguments = _fixture.Create<Dictionary<string, string>>();
 
-            var sut = new RtmpStreamManagerService();
-            sut.StartSubscribing(streamContext1, streamPath, streamArguments, out _);
-            sut.StartSubscribing(streamContext2, streamPath, streamArguments, out _);
+            _sut.StartSubscribing(streamContext1, streamPath, streamArguments, out _);
+            _sut.StartSubscribing(streamContext2, streamPath, streamArguments, out _);
 
             // Act
-            var result = sut.StartPublishing(streamContext3, streamPath, streamArguments, out var existingSubscribers);
+            var result = _sut.StartPublishing(streamContext3, streamPath, streamArguments, out var existingSubscribers);
 
             // Assert
             result.Should().Be(PublishingStreamResult.Succeeded);
-            sut.IsStreamPublishing(streamPath).Should().BeTrue();
+            _sut.IsStreamPublishing(streamPath).Should().BeTrue();
             existingSubscribers.Should().HaveCount(2);
             existingSubscribers.Should().Contain(streamContext1.SubscribeContext!);
             existingSubscribers.Should().Contain(streamContext2.SubscribeContext!);
+        }
+
+        [Fact]
+        public void StartPublushing_Should_SendBadConnection_If_SubscribeStreamExists()
+        {
+            // Arrange
+            var streamPath = _fixture.Create<string>();
+            var streamArguments = _fixture.Create<Dictionary<string, string>>();
+            var streamId = _fixture.Create<uint>();
+            var commandChunkStreamId = Helpers.CreateRandomChunkStreamId();
+
+            var clientContext = Substitute.For<IRtmpClientSessionContext>();
+            var streamContext = Substitute.For<IRtmpStreamContext>();
+            var chunkStreamContext = Substitute.For<IRtmpChunkStreamContext>();
+            var subscribeStreamContext = Substitute.For<IRtmpSubscribeStreamContext>();
+
+            streamContext.StreamId.Returns(streamId);
+            streamContext.ClientContext.Returns(clientContext);
+            streamContext.PublishContext.Returns((IRtmpPublishStreamContext?)null);
+            streamContext.SubscribeContext.Returns(subscribeStreamContext);
+            streamContext.CommandChunkStreamId.Returns(commandChunkStreamId);
+
+            // Act
+            var result = _sut.StartPublishing(streamContext, streamPath, streamArguments, out _);
+
+            // Assert
+            result.Should().Be(PublishingStreamResult.AlreadySubscribing);
+
+            _commandMessageSender.Received(1).SendCommandMessage(
+                clientContext, streamId, commandChunkStreamId, "onStatus", 0, null,
+                Helpers.CreateExpectedCommandProperties(RtmpStatusLevels.Error, RtmpStreamStatusCodes.PublishBadConnection),
+                Arg.Any<AmfEncodingType>(), Arg.Any<Action<bool>>());
+        }
+
+        [Fact]
+        public void StartPublushing_Should_SendBadConnection_If_PublishStreamExists()
+        {
+            // Arrange
+            var streamPath = _fixture.Create<string>();
+            var streamArguments = _fixture.Create<Dictionary<string, string>>();
+            var streamId = _fixture.Create<uint>();
+            var commandChunkStreamId = Helpers.CreateRandomChunkStreamId();
+
+            var clientContext = Substitute.For<IRtmpClientSessionContext>();
+            var streamContext = Substitute.For<IRtmpStreamContext>();
+            var chunkStreamContext = Substitute.For<IRtmpChunkStreamContext>();
+            var publishStreamContext = Substitute.For<IRtmpPublishStreamContext>();
+
+            streamContext.StreamId.Returns(streamId);
+            streamContext.ClientContext.Returns(clientContext);
+            streamContext.PublishContext.Returns(publishStreamContext);
+            streamContext.SubscribeContext.Returns((IRtmpSubscribeStreamContext?)null);
+            streamContext.CommandChunkStreamId.Returns(commandChunkStreamId);
+
+            // Act
+            var result = _sut.StartPublishing(streamContext, streamPath, streamArguments, out _);
+
+            // Assert
+            result.Should().Be(PublishingStreamResult.AlreadyPublishing);
+
+            _commandMessageSender.Received(1).SendCommandMessage(
+                clientContext, streamId, commandChunkStreamId, "onStatus", 0, null,
+                Helpers.CreateExpectedCommandProperties(RtmpStatusLevels.Error, RtmpStreamStatusCodes.PublishBadConnection),
+                Arg.Any<AmfEncodingType>(), Arg.Any<Action<bool>>());
+        }
+
+        [Fact]
+        public void StartPublushing_Should_SendBadName_If_PublishStreamHasBeenRegistered()
+        {
+            // Arrange
+            var streamPath = _fixture.Create<string>();
+            var streamArguments = _fixture.Create<Dictionary<string, string>>();
+            var streamId = _fixture.Create<uint>();
+            var commandChunkStreamId = Helpers.CreateRandomChunkStreamId();
+
+            var clientContext = Substitute.For<IRtmpClientSessionContext>();
+            var streamContext = Substitute.For<IRtmpStreamContext>();
+            var chunkStreamContext = Substitute.For<IRtmpChunkStreamContext>();
+            var subscribeStreamContext = Substitute.For<IRtmpSubscribeStreamContext>();
+
+            streamContext.StreamId.Returns(streamId);
+            streamContext.ClientContext.Returns(clientContext);
+            streamContext.PublishContext.Returns((IRtmpPublishStreamContext?)null);
+            streamContext.SubscribeContext.Returns((IRtmpSubscribeStreamContext?)null);
+            streamContext.CommandChunkStreamId.Returns(commandChunkStreamId);
+
+            var anotherStreamContext = Substitute.For<IRtmpStreamContext>();
+            anotherStreamContext.PublishContext.Returns((IRtmpPublishStreamContext?)null);
+            anotherStreamContext.SubscribeContext.Returns((IRtmpSubscribeStreamContext?)null);
+            _sut.StartPublishing(anotherStreamContext, streamPath, _fixture.Create<Dictionary<string, string>>(), out _);
+
+            // Act
+            var result = _sut.StartPublishing(streamContext, streamPath, streamArguments, out _);
+
+            // Assert
+            result.Should().Be(PublishingStreamResult.AlreadyExists);
+
+            _commandMessageSender.Received(1).SendCommandMessage(
+                clientContext, streamId, commandChunkStreamId, "onStatus", 0, null,
+                Helpers.CreateExpectedCommandProperties(RtmpStatusLevels.Error, RtmpStreamStatusCodes.PublishBadName),
+                Arg.Any<AmfEncodingType>(), Arg.Any<Action<bool>>());
+        }
+
+        [Fact]
+        public void StartDirectPublushing_Should_ReturnAlreadyExists_If_PublishStreamHasBeenRegistered()
+        {
+            // Arrange
+            var streamPath = _fixture.Create<string>();
+            var publishStreamContext = Substitute.For<IRtmpPublishStreamContext>();
+            publishStreamContext.StreamPath.Returns(streamPath);
+
+            var anotherPublishStreamContext = Substitute.For<IRtmpPublishStreamContext>();
+            anotherPublishStreamContext.StreamPath.Returns(streamPath);
+            _sut.StartDirectPublishing(anotherPublishStreamContext, out _);
+
+            // Act
+            var result = _sut.StartDirectPublishing(publishStreamContext, out _);
+
+            // Assert
+            result.Should().Be(PublishingStreamResult.AlreadyExists);
         }
     }
 }

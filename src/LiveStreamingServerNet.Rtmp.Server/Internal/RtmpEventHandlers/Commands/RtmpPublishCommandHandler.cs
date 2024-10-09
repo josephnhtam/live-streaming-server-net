@@ -20,7 +20,6 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
     {
         private readonly IRtmpStreamManagerService _streamManager;
         private readonly IRtmpCommandMessageSenderService _commandMessageSender;
-        private readonly IRtmpUserControlMessageSenderService _userControlMessageSender;
         private readonly IRtmpServerStreamEventDispatcher _eventDispatcher;
         private readonly IStreamAuthorization _streamAuthorization;
         private readonly ILogger _logger;
@@ -35,7 +34,6 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
         {
             _streamManager = streamManager;
             _commandMessageSender = commandMessageSender;
-            _userControlMessageSender = userControlMessageSender;
             _eventDispatcher = eventDispatcher;
             _streamAuthorization = streamAuthorization;
             _logger = logger;
@@ -106,53 +104,30 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
             string streamPath,
             IReadOnlyDictionary<string, string> streamArguments)
         {
-            var startPublishingResult = _streamManager.StartPublishing(
-                streamContext, streamPath, streamArguments, out var subscribeStreamContexts);
+            var startPublishingResult = _streamManager.StartPublishing(streamContext, streamPath, streamArguments, out _);
 
             switch (startPublishingResult)
             {
                 case PublishingStreamResult.Succeeded:
                     _logger.PublishingStarted(streamContext.ClientContext.Client.Id, streamPath, command.PublishingType);
-                    SendPublishingStartedMessage(streamContext, subscribeStreamContexts);
                     await _eventDispatcher.RtmpStreamPublishedAsync(streamContext.ClientContext, streamPath, streamArguments);
                     return true;
 
                 case PublishingStreamResult.AlreadySubscribing:
                     _logger.AlreadySubscribing(streamContext.ClientContext.Client.Id, streamPath);
-                    SendBadConnectionCommandMessage(streamContext, "Already subscribing.");
                     return false;
 
                 case PublishingStreamResult.AlreadyPublishing:
                     _logger.AlreadyPublishing(streamContext.ClientContext.Client.Id, streamPath);
-                    SendBadConnectionCommandMessage(streamContext, "Already publishing.");
                     return false;
 
                 case PublishingStreamResult.AlreadyExists:
                     _logger.StreamAlreadyExists(streamContext.ClientContext.Client.Id, streamPath, command.PublishingType);
-                    SendAlreadyExistsCommandMessage(streamContext);
                     return false;
 
                 default:
                     throw new ArgumentOutOfRangeException(nameof(startPublishingResult), startPublishingResult, null);
             }
-        }
-
-        private void SendAlreadyExistsCommandMessage(IRtmpStreamContext streamContext)
-        {
-            _commandMessageSender.SendOnStatusCommandMessage(
-                streamContext,
-                RtmpStatusLevels.Error,
-                RtmpStreamStatusCodes.PublishBadName,
-                "Stream already exists.");
-        }
-
-        private void SendBadConnectionCommandMessage(IRtmpStreamContext streamContext, string reason)
-        {
-            _commandMessageSender.SendOnStatusCommandMessage(
-                streamContext,
-                RtmpStatusLevels.Error,
-                RtmpStreamStatusCodes.PublishBadConnection,
-                reason);
         }
 
         private async ValueTask SendAuthorizationFailedCommandMessageAsync(IRtmpStreamContext streamContext, string reason)
@@ -162,32 +137,6 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
                 RtmpStatusLevels.Error,
                 RtmpStreamStatusCodes.PublishUnauthorized,
                 reason);
-        }
-
-        private void SendPublishingStartedMessage(
-            IRtmpStreamContext streamContext, IList<IRtmpSubscribeStreamContext> subscribeStreamContexts)
-        {
-            _commandMessageSender.SendOnStatusCommandMessage(
-                streamContext,
-                RtmpStatusLevels.Status,
-                RtmpStreamStatusCodes.PublishStart,
-                "Publishing started.");
-
-            _userControlMessageSender.SendStreamBeginMessage(subscribeStreamContexts.AsReadOnly());
-
-            var subscriberStreamContexts = subscribeStreamContexts.Select(x => x.StreamContext).ToList();
-
-            _commandMessageSender.SendOnStatusCommandMessage(
-               subscriberStreamContexts,
-               RtmpStatusLevels.Status,
-               RtmpStreamStatusCodes.PlayReset,
-               "Stream started.");
-
-            _commandMessageSender.SendOnStatusCommandMessage(
-                subscriberStreamContexts,
-                RtmpStatusLevels.Status,
-                RtmpStreamStatusCodes.PlayStart,
-                "Stream started.");
         }
     }
 }
