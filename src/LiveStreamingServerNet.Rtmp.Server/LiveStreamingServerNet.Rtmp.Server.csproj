@@ -13,6 +13,7 @@
   <ItemGroup>
     <InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
     <InternalsVisibleTo Include="LiveStreamingServerNet.Rtmp.Server.Test" />
+    <InternalsVisibleTo Include="LiveStreamingServerNet.Rtmp.Relay" />
   </ItemGroup>
 
   <ItemGroup>

@@ -85,7 +85,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.Rtmp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.RtmpClientPlayDemo", "samples\LiveStreamingServerNet.RtmpClientPlayDemo\LiveStreamingServerNet.RtmpClientPlayDemo.csproj", "{17841723-77DF-4A42-9C24-38EB71203D39}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveStreamingServerNet.RtmpClientPublishDemo", "samples\LiveStreamingServerNet.RtmpClientPublishDemo\LiveStreamingServerNet.RtmpClientPublishDemo.csproj", "{6887F6DF-CE3F-4D6E-8E66-6A8151CA2680}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.RtmpClientPublishDemo", "samples\LiveStreamingServerNet.RtmpClientPublishDemo\LiveStreamingServerNet.RtmpClientPublishDemo.csproj", "{6887F6DF-CE3F-4D6E-8E66-6A8151CA2680}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.RtmpRelayDemo", "samples\LiveStreamingServerNet.RtmpRelayDemo\LiveStreamingServerNet.RtmpRelayDemo.csproj", "{ACA0D693-602E-4DBC-92A9-4188B86E4B45}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveStreamingServerNet.Rtmp.Relay", "src\LiveStreamingServerNet.Rtmp.Relay\LiveStreamingServerNet.Rtmp.Relay.csproj", "{D70CEDC6-7E56-4AE2-9192-3EB382397483}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -253,6 +257,14 @@ Global
 		{6887F6DF-CE3F-4D6E-8E66-6A8151CA2680}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6887F6DF-CE3F-4D6E-8E66-6A8151CA2680}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6887F6DF-CE3F-4D6E-8E66-6A8151CA2680}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ACA0D693-602E-4DBC-92A9-4188B86E4B45}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ACA0D693-602E-4DBC-92A9-4188B86E4B45}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ACA0D693-602E-4DBC-92A9-4188B86E4B45}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ACA0D693-602E-4DBC-92A9-4188B86E4B45}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D70CEDC6-7E56-4AE2-9192-3EB382397483}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D70CEDC6-7E56-4AE2-9192-3EB382397483}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D70CEDC6-7E56-4AE2-9192-3EB382397483}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D70CEDC6-7E56-4AE2-9192-3EB382397483}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -279,6 +291,7 @@ Global
 		{772B6681-727C-469B-82B5-2760451F4E0F} = {C85AC04A-5060-4C4B-830A-D7F51F602749}
 		{17841723-77DF-4A42-9C24-38EB71203D39} = {45761E33-F086-403D-BB6E-8059F8CC6BA8}
 		{6887F6DF-CE3F-4D6E-8E66-6A8151CA2680} = {45761E33-F086-403D-BB6E-8059F8CC6BA8}
+		{ACA0D693-602E-4DBC-92A9-4188B86E4B45} = {45761E33-F086-403D-BB6E-8059F8CC6BA8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0A9A3928-2852-49B9-85EF-F00480E9FE7F}
