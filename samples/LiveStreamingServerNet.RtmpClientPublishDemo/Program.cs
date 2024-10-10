@@ -1,4 +1,5 @@
-﻿using LiveStreamingServerNet.Rtmp.Client;
+﻿using LiveStreamingServerNet.Rtmp;
+using LiveStreamingServerNet.Rtmp.Client;
 using LiveStreamingServerNet.Rtmp.Client.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -38,6 +39,9 @@ namespace LiveStreamingServerNet.RtmpClientPublishDemo
 
         private static async Task PublishStreamFromFlvAsync(string streamName, IRtmpClient rtmpClient, IRtmpStream rtmpStream, ILogger<Program> logger)
         {
+            using var cts = new CancellationTokenSource();
+            using var _ = cts.Token.Register(rtmpClient.Stop);
+
             using var fileStream = new FileStream("input.flv", FileMode.Open, FileAccess.Read, FileShare.Read, 512 * 1024);
             using var flvReader = new FlvReader(fileStream);
 
@@ -45,24 +49,36 @@ namespace LiveStreamingServerNet.RtmpClientPublishDemo
                 logger.LogInformation($"User control event received: {e.EventType}");
 
             rtmpStream.OnStatusReceived += (sender, e) =>
+            {
                 logger.LogInformation($"Status received: {e.Code}");
+
+                if (e.Level == RtmpStatusLevels.Error)
+                    cts.Cancel();
+            };
 
             rtmpStream.Publish.Publish(streamName);
 
-            await Task.WhenAny(SendMediaDataAsync(rtmpStream, flvReader), rtmpClient.UntilStoppedAsync());
-
-            async Task SendMediaDataAsync(IRtmpStream stream, FlvReader flvReader)
+            try
             {
-                var header = await flvReader.ReadHeaderAsync();
+                await Task.WhenAny(SendMediaDataAsync(rtmpStream, flvReader, cts), rtmpClient.UntilStoppedAsync());
+            }
+            finally
+            {
+                cts.Cancel();
+            }
+
+            async Task SendMediaDataAsync(IRtmpStream stream, FlvReader flvReader, CancellationTokenSource cts)
+            {
+                var header = await flvReader.ReadHeaderAsync(cts.Token);
 
                 if (header == null)
                     return;
 
                 var timeController = new TimeSynchronizer();
 
-                while (true)
+                while (!cts.IsCancellationRequested)
                 {
-                    var tag = await flvReader.ReadTagAsync();
+                    var tag = await flvReader.ReadTagAsync(cts.Token);
 
                     if (tag == null)
                         return;

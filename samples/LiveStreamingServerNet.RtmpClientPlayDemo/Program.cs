@@ -59,7 +59,7 @@ namespace LiveStreamingServerNet.RtmpClientPlayDemo
             {
                 logger.LogInformation($"Status received: {e.Code}");
 
-                if (e.Code == RtmpStreamStatusCodes.PlayUnpublishNotify)
+                if (e.Level == RtmpStatusLevels.Error || e.Code == RtmpStreamStatusCodes.PlayUnpublishNotify)
                 {
                     rtmpClient.Stop();
                 }
