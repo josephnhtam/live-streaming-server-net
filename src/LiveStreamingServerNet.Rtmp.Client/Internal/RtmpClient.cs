@@ -15,7 +15,7 @@ using System.Diagnostics;
 
 namespace LiveStreamingServerNet.Rtmp.Client.Internal
 {
-    internal class RtmpClient : IRtmpClient, IRtmpHandshakeEventHandler
+    internal sealed class RtmpClient : IRtmpClient, IRtmpHandshakeEventHandler
     {
         private readonly IClient _client;
         private readonly IRtmpClientContext _context;
@@ -32,6 +32,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
         private int _connectOnce;
         private bool _connected;
         private Task? _clientTask;
+        private bool _isDisposed;
 
         public IServiceProvider Services => _client.Services;
         public RtmpBandwidthLimit? BandwidthLimit { get; private set; }
@@ -200,7 +201,11 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
             var timeoutTask = Task.Delay(_config.HandshakeTimeout, _clientCts.Token);
             var completedTask = await Task.WhenAny(_handshakeTcs.Task, _clientTask, timeoutTask);
 
-            if (completedTask == timeoutTask)
+            if (completedTask.IsCanceled)
+            {
+                throw new TaskCanceledException();
+            }
+            else if (completedTask == timeoutTask)
             {
                 throw new TimeoutException("Handshake timeout.");
             }
@@ -214,7 +219,11 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
 
         public void Stop()
         {
-            _clientCts.Cancel();
+            try
+            {
+                _clientCts.Cancel();
+            }
+            catch (ObjectDisposedException) { }
         }
 
         public async Task UntilStoppedAsync()
@@ -247,6 +256,13 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
 
         public async ValueTask DisposeAsync()
         {
+            if (_isDisposed)
+            {
+                return;
+            }
+
+            _isDisposed = true;
+
             if (!_clientCts.IsCancellationRequested)
             {
                 _clientCts.Cancel();
