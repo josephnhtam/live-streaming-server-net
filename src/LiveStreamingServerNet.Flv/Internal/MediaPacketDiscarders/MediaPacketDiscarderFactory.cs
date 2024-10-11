@@ -10,10 +10,10 @@ namespace LiveStreamingServerNet.Flv.Internal.MediaPacketDiscarders
 {
     internal class MediaPacketDiscarderFactory : IMediaPacketDiscarderFactory
     {
-        private readonly MediaPacketConfiguration _config;
+        private readonly MediaStraemingConfiguration _config;
         private readonly ILogger<PacketDiscarder> _logger;
 
-        public MediaPacketDiscarderFactory(IOptions<MediaPacketConfiguration> config, ILogger<PacketDiscarder> logger)
+        public MediaPacketDiscarderFactory(IOptions<MediaStraemingConfiguration> config, ILogger<PacketDiscarder> logger)
         {
             _config = config.Value;
             _logger = logger;

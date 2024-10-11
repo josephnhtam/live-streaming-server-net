@@ -26,7 +26,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Installer
             return this;
         }
 
-        public IRtmpServerConfigurator ConfigureMediaMessage(Action<MediaPacketConfiguration>? configure)
+        public IRtmpServerConfigurator ConfigureMediaStreaming(Action<MediaStreamingConfiguration>? configure)
         {
             if (configure != null)
                 Services.Configure(configure);

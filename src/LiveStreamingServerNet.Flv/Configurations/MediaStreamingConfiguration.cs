@@ -1,6 +1,6 @@
 ﻿namespace LiveStreamingServerNet.Flv.Configurations
 {
-    public class MediaPacketConfiguration
+    public class MediaStraemingConfiguration
     {
         public int TargetOutstandingMediaPacketsCount { get; set; } = 64;
         public long TargetOutstandingMediaPacketsSize { get; set; } = 1024 * 1024;

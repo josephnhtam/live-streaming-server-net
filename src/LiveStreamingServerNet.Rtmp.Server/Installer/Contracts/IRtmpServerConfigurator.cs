@@ -10,7 +10,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Installer.Contracts
     {
         IServiceCollection Services { get; }
         IRtmpServerConfigurator Configure(Action<RtmpServerConfiguration>? configure);
-        IRtmpServerConfigurator ConfigureMediaMessage(Action<MediaPacketConfiguration>? configure);
+        IRtmpServerConfigurator ConfigureMediaStreaming(Action<MediaStreamingConfiguration>? configure);
 
         IRtmpServerConfigurator AddAuthCodeProvider<TAuthCodeProvider>()
             where TAuthCodeProvider : class, IAuthCodeProvider;
