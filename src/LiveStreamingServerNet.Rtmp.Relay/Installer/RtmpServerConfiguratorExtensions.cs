@@ -41,11 +41,8 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Installer
         {
             services.TryAddSingleton<IRtmpDownstreamProcessFactory, RtmpDownstreamProcessFactory>();
 
-            foreach (var service in services.ToImmutableArray())
+            if (!CheckService<RtmpDownstreamManagerService>(services))
             {
-                if (service.ServiceType == typeof(RtmpDownstreamManagerService))
-                    break;
-
                 services.AddSingleton<RtmpDownstreamManagerService>();
 
                 services.AddSingleton<IRtmpServerStreamEventHandler>(
@@ -54,6 +51,17 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Installer
                 services.AddSingleton<IRtmpDownstreamManagerService>(
                     sp => sp.GetRequiredService<RtmpDownstreamManagerService>());
             }
+        }
+
+        private static bool CheckService<TService>(IServiceCollection services)
+        {
+            foreach (var service in services.ToImmutableArray())
+            {
+                if (service.ServiceType == typeof(TService))
+                    return true;
+            }
+
+            return false;
         }
     }
 }
