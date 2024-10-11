@@ -8,7 +8,6 @@ using LiveStreamingServerNet.Rtmp.Server.Internal.Services;
 using LiveStreamingServerNet.Rtmp.Server.Internal.Services.Contracts;
 using LiveStreamingServerNet.Rtmp.Test.Utilities;
 using NSubstitute;
-using System.IO;
 
 namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
 {

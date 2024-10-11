@@ -1,6 +1,6 @@
-﻿using System.Reflection;
+﻿using LiveStreamingServerNet.Utilities.Extensions;
 using LiveStreamingServerNet.Utilities.Mediators.Contracts;
-using LiveStreamingServerNet.Utilities.Extensions;
+using System.Reflection;
 
 namespace LiveStreamingServerNet.Utilities.Mediators.Internal
 {
