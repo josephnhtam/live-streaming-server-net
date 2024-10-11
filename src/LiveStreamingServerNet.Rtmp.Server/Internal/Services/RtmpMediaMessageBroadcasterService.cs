@@ -79,7 +79,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
             bool isSkippable,
             IDataBuffer payloadBuffer)
         {
-            await _interception.ReceiveMediaMessageAsync(publishStreamContext.StreamPath, mediaType, payloadBuffer, timestamp, isSkippable);
+            await _interception.ReceiveMediaMessageAsync(publishStreamContext, mediaType, payloadBuffer, timestamp, isSkippable);
 
             subscribeStreamContexts = subscribeStreamContexts.Where((subscriber) => FilterSubscribers(subscriber, isSkippable)).ToList();
 

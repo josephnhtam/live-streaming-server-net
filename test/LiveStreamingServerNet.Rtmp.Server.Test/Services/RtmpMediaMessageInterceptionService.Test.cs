@@ -1,5 +1,6 @@
 ﻿using AutoFixture;
 using LiveStreamingServerNet.Rtmp.Server.Contracts;
+using LiveStreamingServerNet.Rtmp.Server.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Server.Internal.Services;
 using LiveStreamingServerNet.Utilities.Buffers;
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
@@ -26,6 +27,9 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             var timestamp = _fixture.Create<uint>();
             var isSkippable = _fixture.Create<bool>();
 
+            var publishStreamContext = Substitute.For<IRtmpPublishStreamContext>();
+            publishStreamContext.StreamPath.Returns(streamPath);
+
             var interceptor1 = Substitute.For<IRtmpMediaMessageInterceptor>();
             var interceptor2 = Substitute.For<IRtmpMediaMessageInterceptor>();
 
@@ -34,7 +38,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             var service = new RtmpMediaMessageInterceptionService(interceptors);
 
             // Act
-            await service.ReceiveMediaMessageAsync(streamPath, mediaType, payloadBuffer, timestamp, isSkippable);
+            await service.ReceiveMediaMessageAsync(publishStreamContext, mediaType, payloadBuffer, timestamp, isSkippable);
 
             // Assert
             await interceptor1.Received(1).OnReceiveMediaMessageAsync(streamPath, mediaType, Arg.Any<IRentedBuffer>(), timestamp, isSkippable);

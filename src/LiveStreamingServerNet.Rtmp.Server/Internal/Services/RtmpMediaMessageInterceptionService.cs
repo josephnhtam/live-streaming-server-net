@@ -1,4 +1,5 @@
 ﻿using LiveStreamingServerNet.Rtmp.Server.Contracts;
+using LiveStreamingServerNet.Rtmp.Server.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Server.Internal.Services.Contracts;
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 
@@ -13,8 +14,11 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
             _interceptors = interceptors;
         }
 
-        public async ValueTask ReceiveMediaMessageAsync(string streamPath, MediaType mediaType, IDataBuffer payloadBuffer, uint timestamp, bool isSkippable)
+        public async ValueTask ReceiveMediaMessageAsync(IRtmpPublishStreamContext publishStreamContext, MediaType mediaType, IDataBuffer payloadBuffer, uint timestamp, bool isSkippable)
         {
+            if (publishStreamContext.StreamContext == null)
+                return;
+
             if (!_interceptors.Any())
                 return;
 
@@ -22,6 +26,8 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
 
             try
             {
+                var streamPath = publishStreamContext.StreamPath;
+
                 foreach (var interceptor in _interceptors)
                     await interceptor.OnReceiveMediaMessageAsync(streamPath, mediaType, rentedBuffer, timestamp, isSkippable);
             }

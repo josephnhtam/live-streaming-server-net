@@ -58,7 +58,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             await _sut.CacheSequenceHeaderAsync(publishStreamContext, mediaType, payloadBuffer);
 
             // Assert
-            await _interception.Received(1).CacheSequenceHeaderAsync(publishStreamContext.StreamPath, mediaType, sequenceHeader);
+            await _interception.Received(1).CacheSequenceHeaderAsync(publishStreamContext, mediaType, sequenceHeader);
             publishStreamContext.VideoSequenceHeader.Should().BeEquivalentTo(sequenceHeader);
         }
 
@@ -79,7 +79,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             await _sut.CacheSequenceHeaderAsync(publishStreamContext, mediaType, payloadBuffer);
 
             // Assert
-            await _interception.Received(1).CacheSequenceHeaderAsync(publishStreamContext.StreamPath, mediaType, sequenceHeader);
+            await _interception.Received(1).CacheSequenceHeaderAsync(publishStreamContext, mediaType, sequenceHeader);
             publishStreamContext.AudioSequenceHeader.Should().BeEquivalentTo(sequenceHeader);
         }
 
@@ -112,7 +112,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
 
             // Assert
             await _interception.Received(1).CachePictureAsync(
-                publishStreamContext.StreamPath,
+                publishStreamContext,
                 mediaType,
                 Arg.Any<IDataBuffer>(),
                 timestamp);
@@ -159,7 +159,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             publishStreamContext.GroupOfPicturesCache.Received(1).Clear();
 
             await _interception.Received(1).CachePictureAsync(
-                publishStreamContext.StreamPath, mediaType, Arg.Any<IDataBuffer>(), timestamp);
+                publishStreamContext, mediaType, Arg.Any<IDataBuffer>(), timestamp);
 
             publishStreamContext.GroupOfPicturesCache.Received(1).Add(Arg.Any<PictureCacheInfo>(), Arg.Any<IDataBuffer>());
 
@@ -182,7 +182,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             await _sut.ClearGroupOfPicturesCacheAsync(publishStreamContext);
 
             // Assert
-            await _interception.Received(1).ClearGroupOfPicturesCacheAsync(publishStreamContext.StreamPath);
+            await _interception.Received(1).ClearGroupOfPicturesCacheAsync(publishStreamContext);
             publishStreamContext.GroupOfPicturesCache.Received(1).Clear();
         }
 

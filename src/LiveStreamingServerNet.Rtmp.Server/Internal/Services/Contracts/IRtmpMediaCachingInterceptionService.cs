@@ -1,11 +1,12 @@
-﻿using LiveStreamingServerNet.Utilities.Buffers.Contracts;
+﻿using LiveStreamingServerNet.Rtmp.Server.Internal.Contracts;
+using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 
 namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services.Contracts
 {
     internal interface IRtmpMediaCachingInterceptionService
     {
-        ValueTask CacheSequenceHeaderAsync(string streamPath, MediaType mediaType, byte[] sequenceHeader);
-        ValueTask CachePictureAsync(string streamPath, MediaType mediaType, IDataBuffer payloadBuffer, uint timestamp);
-        ValueTask ClearGroupOfPicturesCacheAsync(string streamPath);
+        ValueTask CacheSequenceHeaderAsync(IRtmpPublishStreamContext publishStreamContext, MediaType mediaType, byte[] sequenceHeader);
+        ValueTask CachePictureAsync(IRtmpPublishStreamContext publishStreamContext, MediaType mediaType, IDataBuffer payloadBuffer, uint timestamp);
+        ValueTask ClearGroupOfPicturesCacheAsync(IRtmpPublishStreamContext publishStreamContext);
     }
 }

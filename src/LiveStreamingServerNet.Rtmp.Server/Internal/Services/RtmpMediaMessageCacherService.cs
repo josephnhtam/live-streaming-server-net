@@ -39,7 +39,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
             var sequenceHeader = payloadBuffer.MoveTo(0).ReadBytes(payloadBuffer.Size);
             payloadBuffer.MoveTo(0);
 
-            await _interception.CacheSequenceHeaderAsync(publishStreamContext.StreamPath, mediaType, sequenceHeader);
+            await _interception.CacheSequenceHeaderAsync(publishStreamContext, mediaType, sequenceHeader);
 
             switch (mediaType)
             {
@@ -64,13 +64,13 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
                 await ClearGroupOfPicturesCacheAsync(publishStreamContext);
             }
 
-            await _interception.CachePictureAsync(publishStreamContext.StreamPath, mediaType, payloadBuffer, timestamp);
+            await _interception.CachePictureAsync(publishStreamContext, mediaType, payloadBuffer, timestamp);
             publishStreamContext.GroupOfPicturesCache.Add(new PictureCacheInfo(mediaType, timestamp), payloadBuffer);
         }
 
         public async ValueTask ClearGroupOfPicturesCacheAsync(IRtmpPublishStreamContext publishStreamContext)
         {
-            await _interception.ClearGroupOfPicturesCacheAsync(publishStreamContext.StreamPath);
+            await _interception.ClearGroupOfPicturesCacheAsync(publishStreamContext);
             publishStreamContext.GroupOfPicturesCache.Clear();
         }
 

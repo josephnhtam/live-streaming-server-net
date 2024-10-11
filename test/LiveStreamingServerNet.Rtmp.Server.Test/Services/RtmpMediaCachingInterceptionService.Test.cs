@@ -1,5 +1,6 @@
 ﻿using AutoFixture;
 using LiveStreamingServerNet.Rtmp.Server.Contracts;
+using LiveStreamingServerNet.Rtmp.Server.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Server.Internal.Services;
 using LiveStreamingServerNet.Utilities.Buffers;
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
@@ -25,6 +26,9 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             var mediaType = _fixture.Create<MediaType>();
             var timestamp = _fixture.Create<uint>();
 
+            var publishStreamContext = Substitute.For<IRtmpPublishStreamContext>();
+            publishStreamContext.StreamPath.Returns(streamPath);
+
             var interceptor1 = Substitute.For<IRtmpMediaCachingInterceptor>();
             var interceptor2 = Substitute.For<IRtmpMediaCachingInterceptor>();
 
@@ -33,7 +37,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             var sut = new RtmpMediaCachingInterceptionService(interceptors);
 
             // Act
-            await sut.CachePictureAsync(streamPath, mediaType, payloadBuffer, timestamp);
+            await sut.CachePictureAsync(publishStreamContext, mediaType, payloadBuffer, timestamp);
 
             // Assert
             await interceptor1.Received(1).OnCachePictureAsync(streamPath, mediaType, Arg.Any<IRentedBuffer>(), timestamp);
@@ -48,6 +52,9 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             var mediaType = _fixture.Create<MediaType>();
             var sequenceHeader = _fixture.Create<byte[]>();
 
+            var publishStreamContext = Substitute.For<IRtmpPublishStreamContext>();
+            publishStreamContext.StreamPath.Returns(streamPath);
+
             var interceptor1 = Substitute.For<IRtmpMediaCachingInterceptor>();
             var interceptor2 = Substitute.For<IRtmpMediaCachingInterceptor>();
 
@@ -56,7 +63,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             var sut = new RtmpMediaCachingInterceptionService(interceptors);
 
             // Act
-            await sut.CacheSequenceHeaderAsync(streamPath, mediaType, sequenceHeader);
+            await sut.CacheSequenceHeaderAsync(publishStreamContext, mediaType, sequenceHeader);
 
             // Assert
             await interceptor1.Received(1).OnCacheSequenceHeaderAsync(streamPath, mediaType, sequenceHeader);
@@ -69,6 +76,9 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             // Arrange
             var streamPath = _fixture.Create<string>();
 
+            var publishStreamContext = Substitute.For<IRtmpPublishStreamContext>();
+            publishStreamContext.StreamPath.Returns(streamPath);
+
             var interceptor1 = Substitute.For<IRtmpMediaCachingInterceptor>();
             var interceptor2 = Substitute.For<IRtmpMediaCachingInterceptor>();
 
@@ -77,7 +87,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             var sut = new RtmpMediaCachingInterceptionService(interceptors);
 
             // Act
-            await sut.ClearGroupOfPicturesCacheAsync(streamPath);
+            await sut.ClearGroupOfPicturesCacheAsync(publishStreamContext);
 
             // Assert
             await interceptor1.Received(1).OnClearGroupOfPicturesCacheAsync(streamPath);
