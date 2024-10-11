@@ -44,7 +44,17 @@ namespace LiveStreamingServerNet.RtmpRelayDemo
         [GeneratedRegex(@"/?(?<appName>[^/]+)/(?<streamName>.+)$", RegexOptions.IgnoreCase)]
         private static partial Regex NamesExtractionRegex();
 
+        public ValueTask<RtmpOrigin?> ResolveUpstreamOriginAsync(string streamPath, CancellationToken cancellationToken)
+        {
+            return ResolveOriginAsync(streamPath);
+        }
+
         public ValueTask<RtmpOrigin?> ResolveDownstreamOriginAsync(string streamPath, CancellationToken cancellationToken)
+        {
+            return ResolveOriginAsync(streamPath);
+        }
+
+        private static ValueTask<RtmpOrigin?> ResolveOriginAsync(string streamPath)
         {
             var match = NamesExtractionRegex().Match(streamPath);
 

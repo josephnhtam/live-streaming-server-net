@@ -13,6 +13,14 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Installer
             Services = services;
         }
 
+        public IRtmpRelayConfigurator ConfigureUpstream(Action<RtmpUpstreamConfiguration>? configure)
+        {
+            if (configure != null)
+                Services.Configure(configure);
+
+            return this;
+        }
+
         public IRtmpRelayConfigurator ConfigureDownstream(Action<RtmpDownstreamConfiguration>? configure)
         {
             if (configure != null)

@@ -28,5 +28,29 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Logging
 
         [LoggerMessage(LogLevel.Information, "Downstream stopped (StreamPath={StreamPath})")]
         public static partial void RtmpDownstreamStopped(this ILogger logger, string streamPath);
+
+        [LoggerMessage(LogLevel.Error, "An error occurred while processing the upstream (StreamPath={StreamPath})")]
+        public static partial void RtmpUpstreamError(this ILogger logger, string streamPath, Exception ex);
+
+        [LoggerMessage(LogLevel.Error, "An error occurred while sending the media data (StreamPath={StreamPath}, MediaType={MediaType})")]
+        public static partial void RtmpUpstreamMediaDataSendingError(this ILogger logger, string streamPath, MediaType mediaType, Exception ex);
+
+        [LoggerMessage(LogLevel.Information, "Upstream idle timeout (StreamPath={StreamPath})")]
+        public static partial void RtmpUpstreamIdleTimeout(this ILogger logger, string streamPath);
+
+        [LoggerMessage(LogLevel.Information, "Origin resolved (StreamPath={StreamPath}, OriginEndPoint={OriginEndPoint})")]
+        public static partial void RtmpUpstreamOriginResolved(this ILogger logger, string streamPath, ServerEndPoint originEndPoint);
+
+        [LoggerMessage(LogLevel.Information, "Connecting to the origin for the upstream (StreamPath={StreamPath}, OriginEndPoint={OriginEndPoint})")]
+        public static partial void RtmpUpstreamConnecting(this ILogger logger, string streamPath, ServerEndPoint originEndPoint);
+
+        [LoggerMessage(LogLevel.Information, "Creating upstream (StreamPath={StreamPath})")]
+        public static partial void RtmpUpstreamCreating(this ILogger logger, string streamPath);
+
+        [LoggerMessage(LogLevel.Information, "Upstream created (StreamPath={StreamPath})")]
+        public static partial void RtmpUpstreamCreated(this ILogger logger, string streamPath);
+
+        [LoggerMessage(LogLevel.Information, "Upstream stopped (StreamPath={StreamPath})")]
+        public static partial void RtmpUpstreamStopped(this ILogger logger, string streamPath);
     }
 }

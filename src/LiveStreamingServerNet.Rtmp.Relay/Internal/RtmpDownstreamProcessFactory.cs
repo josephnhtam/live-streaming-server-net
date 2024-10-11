@@ -38,7 +38,6 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal
             _originResolver = originResolver;
             _bufferPool = bufferPool;
             _dataBufferPool = dataBufferPool;
-            _streamDeletion = streamDeletion;
             _config = config;
             _logger = logger;
         }
