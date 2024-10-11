@@ -17,8 +17,6 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Media
         private readonly IRtmpAudioDataProcessorService _audioDataProcessor;
         private readonly ILogger _logger;
 
-        private readonly IFilter<AudioCodec>? _audioCodecFilter;
-
         public RtmpAudioMessageHandler(
             IRtmpAudioDataProcessorService audioDataProcessor,
             ILogger<RtmpAudioMessageHandler> logger)
