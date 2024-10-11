@@ -14,7 +14,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Services
         private readonly IRtmpStreamManagerService _streamManager;
         private readonly RtmpDownstreamConfiguration _config;
 
-        private readonly Dictionary<string, DownstreamProcessTaskItem> _downstreamProcessTasks = new();
+        private readonly Dictionary<string, DownstreamProcessItem> _downstreamProcessTasks = new();
         private readonly object _syncLock = new();
 
         public RtmpDownstreamManagerService(
@@ -84,8 +84,17 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Services
             await downstreamProcess.RunAsync(cancellationToken);
         }
 
-        public ValueTask DisposeAsync()
-            => ValueTask.CompletedTask;
+        public async ValueTask DisposeAsync()
+        {
+            var downstreamProcesses = _downstreamProcessTasks.Values.ToArray();
+
+            foreach (var downstreamProcess in downstreamProcesses)
+            {
+                downstreamProcess.Cts.Cancel();
+            }
+
+            await Task.WhenAll(downstreamProcesses.Select(x => x.DownsteramProcessTask));
+        }
 
         public ValueTask OnRtmpStreamSubscribedAsync(IEventContext context, uint clientId, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
@@ -108,6 +117,6 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Services
         public ValueTask OnRtmpStreamUnpublishedAsync(IEventContext context, uint clientId, string streamPath)
             => ValueTask.CompletedTask;
 
-        private record DownstreamProcessTaskItem(Task DownsteramProcessTask, CancellationTokenSource Cts);
+        private record DownstreamProcessItem(Task DownsteramProcessTask, CancellationTokenSource Cts);
     }
 }
