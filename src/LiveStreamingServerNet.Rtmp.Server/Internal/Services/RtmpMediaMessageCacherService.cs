@@ -81,13 +81,13 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
             var audioSequenceHeader = publishStreamContext.AudioSequenceHeader;
             if (audioSequenceHeader != null)
             {
-                SendMediaPackage(subscribeStreamContext, MediaType.Audio, audioSequenceHeader, audioSequenceHeader.Length, 0, true);
+                SendMediaPacket(subscribeStreamContext, MediaType.Audio, audioSequenceHeader, audioSequenceHeader.Length, 0, true);
             }
 
             var videoSequenceHeader = publishStreamContext.VideoSequenceHeader;
             if (videoSequenceHeader != null)
             {
-                SendMediaPackage(subscribeStreamContext, MediaType.Video, videoSequenceHeader, videoSequenceHeader.Length, 0, true);
+                SendMediaPacket(subscribeStreamContext, MediaType.Video, videoSequenceHeader, videoSequenceHeader.Length, 0, true);
             }
         }
 
@@ -145,7 +145,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
         {
             foreach (var picture in publishStreamContext.GroupOfPicturesCache.Get())
             {
-                SendMediaPackage(
+                SendMediaPacket(
                     subscribeStreamContext,
                     picture.Type,
                     picture.Payload.Buffer,
@@ -157,7 +157,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
             }
         }
 
-        private void SendMediaPackage(
+        private void SendMediaPacket(
             IRtmpSubscribeStreamContext subscribeStreamContext,
             MediaType type,
             byte[] payloadBuffer,

@@ -138,16 +138,16 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
         private static void ProcessExVideoHeader(
             IDataBuffer payloadBuffer, VideoFrameType frameType, VideoPacketType packetType, VideoCodec videoCodec)
         {
-            var avcPackageType = packetType == VideoPacketType.SequenceStart ? AVCPacketType.SequenceHeader : AVCPacketType.NALU;
+            var avcPacketType = packetType == VideoPacketType.SequenceStart ? AVCPacketType.SequenceHeader : AVCPacketType.NALU;
 
             if (videoCodec == VideoCodec.HEVC && packetType == VideoPacketType.CodedFrames)
             {
                 RemovePadding(payloadBuffer, packetType, 3);
-                RewritePayloadHeader(payloadBuffer, frameType, videoCodec, avcPackageType);
+                RewritePayloadHeader(payloadBuffer, frameType, videoCodec, avcPacketType);
             }
             else
             {
-                RewritePayloadHeader(payloadBuffer, frameType, videoCodec, avcPackageType);
+                RewritePayloadHeader(payloadBuffer, frameType, videoCodec, avcPacketType);
                 RewriteCompositionTimeOffset(payloadBuffer, 0);
             }
 
@@ -158,11 +158,11 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            static void RewritePayloadHeader(IDataBuffer payloadBuffer, VideoFrameType frameType, VideoCodec videoCodec, AVCPacketType avcPackageType)
+            static void RewritePayloadHeader(IDataBuffer payloadBuffer, VideoFrameType frameType, VideoCodec videoCodec, AVCPacketType avcPacketType)
             {
                 payloadBuffer.MoveTo(0);
                 payloadBuffer.Write((byte)((int)frameType << 4 | (int)videoCodec));
-                payloadBuffer.Write((byte)avcPackageType);
+                payloadBuffer.Write((byte)avcPacketType);
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -182,8 +182,8 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
 
             if (videoCodec is VideoCodec.AVC or VideoCodec.HEVC or VideoCodec.AV1)
             {
-                var avcPackageType = (AVCPacketType)payloadBuffer.ReadByte();
-                return (frameType, videoCodec, avcPackageType);
+                var avcPacketType = (AVCPacketType)payloadBuffer.ReadByte();
+                return (frameType, videoCodec, avcPacketType);
             }
 
             return (frameType, videoCodec, null);

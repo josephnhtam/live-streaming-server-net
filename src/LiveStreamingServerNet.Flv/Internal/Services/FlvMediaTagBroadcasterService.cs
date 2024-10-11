@@ -1,6 +1,6 @@
 ﻿using LiveStreamingServerNet.Flv.Internal.Contracts;
 using LiveStreamingServerNet.Flv.Internal.Logging;
-using LiveStreamingServerNet.Flv.Internal.MediaPackageDiscarding.Contracts;
+using LiveStreamingServerNet.Flv.Internal.MediaPacketDiscarding.Contracts;
 using LiveStreamingServerNet.Flv.Internal.Services.Contracts;
 using LiveStreamingServerNet.Rtmp;
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
@@ -12,7 +12,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
 {
     internal class FlvMediaTagBroadcasterService : IFlvMediaTagBroadcasterService, IAsyncDisposable
     {
-        private readonly IMediaPackageDiscarderFactory _mediaPackageDiscarderFactory;
+        private readonly IMediaPacketDiscarderFactory _mediaPacketDiscarderFactory;
         private readonly IFlvMediaTagSenderService _mediaTagSender;
         private readonly ILogger _logger;
 
@@ -20,11 +20,11 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
         private readonly ConcurrentDictionary<IFlvClient, Task> _clientTasks = new();
 
         public FlvMediaTagBroadcasterService(
-            IMediaPackageDiscarderFactory mediaPackageDiscarderFactory,
+            IMediaPacketDiscarderFactory mediaPacketDiscarderFactory,
             IFlvMediaTagSenderService mediaTagSender,
             ILogger<FlvMediaTagBroadcasterService> logger)
         {
-            _mediaPackageDiscarderFactory = mediaPackageDiscarderFactory;
+            _mediaPacketDiscarderFactory = mediaPacketDiscarderFactory;
             _mediaTagSender = mediaTagSender;
             _logger = logger;
         }
@@ -36,7 +36,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
 
             rentedBuffer.Claim(subscribers.Count);
 
-            var mediaPackage = new ClientMediaPackage(
+            var mediaPacket = new ClientMediaPacket(
                 mediaType,
                 timestamp,
                 rentedBuffer,
@@ -45,7 +45,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
             foreach (var subscriber in subscribers)
             {
                 var mediaContext = GetMediaContext(subscriber);
-                if (mediaContext == null || !mediaContext.AddPackage(ref mediaPackage))
+                if (mediaContext == null || !mediaContext.AddPacket(ref mediaPacket))
                     rentedBuffer.Unclaim();
             }
 
@@ -59,8 +59,8 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
 
         public void RegisterClient(IFlvClient client)
         {
-            var mediaPackageDiscarder = _mediaPackageDiscarderFactory.Create(client.ClientId);
-            var context = new ClientMediaContext(client, mediaPackageDiscarder);
+            var mediaPacketDiscarder = _mediaPacketDiscarderFactory.Create(client.ClientId);
+            var context = new ClientMediaContext(client, mediaPacketDiscarder);
             _clientMediaContexts[client] = context;
 
             var clientTask = Task.Run(() => ClientTask(context));
@@ -92,16 +92,16 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
 
                 while (!cancellation.IsCancellationRequested)
                 {
-                    var package = await context.ReadPackageAsync(cancellation);
+                    var packet = await context.ReadPacketAsync(cancellation);
 
                     try
                     {
                         await _mediaTagSender.SendMediaTagAsync(
                             client,
-                            package.MediaType,
-                            package.RentedPayload.Buffer,
-                            package.RentedPayload.Size,
-                            package.Timestamp,
+                            packet.MediaType,
+                            packet.RentedPayload.Buffer,
+                            packet.RentedPayload.Size,
+                            packet.Timestamp,
                             cancellation);
                     }
                     catch (OperationCanceledException) when (cancellation.IsCancellationRequested) { }
@@ -111,7 +111,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
                     }
                     finally
                     {
-                        package.RentedPayload.Unclaim();
+                        packet.RentedPayload.Unclaim();
                     }
                 }
             }
@@ -122,9 +122,9 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
                 _logger.FailedToSendMediaMessage(client.ClientId, ex);
             }
 
-            while (context.ReadPackage(out var package))
+            while (context.ReadPacket(out var packet))
             {
-                package.RentedPayload.Unclaim();
+                packet.RentedPayload.Unclaim();
             }
         }
 
@@ -132,23 +132,23 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
         {
             public readonly IFlvClient Client;
             public readonly CancellationToken CancellationToken;
-            public long OutstandingPackagesSize => _outstandingPackagesSize;
-            public long OutstandingPackagesCount => _outstandingPackageCount;
+            public long OutstandingPacketsSize => _outstandingPacketsSize;
+            public long OutstandingPacketsCount => _outstandingPacketCount;
 
-            private readonly IMediaPackageDiscarder _mediaPackageDiscarder;
+            private readonly IMediaPacketDiscarder _mediaPacketDiscarder;
 
-            private readonly Channel<ClientMediaPackage> _packageChannel;
+            private readonly Channel<ClientMediaPacket> _packetChannel;
             private readonly CancellationTokenSource _cts;
 
-            private long _outstandingPackagesSize;
-            private long _outstandingPackageCount;
+            private long _outstandingPacketsSize;
+            private long _outstandingPacketCount;
 
-            public ClientMediaContext(IFlvClient client, IMediaPackageDiscarder mediaPackageDiscarder)
+            public ClientMediaContext(IFlvClient client, IMediaPacketDiscarder mediaPacketDiscarder)
             {
                 Client = client;
-                _mediaPackageDiscarder = mediaPackageDiscarder;
+                _mediaPacketDiscarder = mediaPacketDiscarder;
 
-                _packageChannel = Channel.CreateUnbounded<ClientMediaPackage>(
+                _packetChannel = Channel.CreateUnbounded<ClientMediaPacket>(
                     new UnboundedChannelOptions { SingleReader = true, AllowSynchronousContinuations = true });
                 _cts = new CancellationTokenSource();
                 CancellationToken = _cts.Token;
@@ -156,56 +156,56 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
 
             public void Stop()
             {
-                _packageChannel.Writer.Complete();
+                _packetChannel.Writer.Complete();
                 _cts.Cancel();
             }
 
-            public bool AddPackage(ref ClientMediaPackage package)
+            public bool AddPacket(ref ClientMediaPacket packet)
             {
-                if (ShouldSkipPackage(this, ref package))
+                if (ShouldSkipPacket(this, ref packet))
                 {
                     return false;
                 }
 
-                if (!_packageChannel.Writer.TryWrite(package))
+                if (!_packetChannel.Writer.TryWrite(packet))
                 {
                     return false;
                 }
 
-                Interlocked.Add(ref _outstandingPackagesSize, package.RentedPayload.Size);
-                Interlocked.Increment(ref _outstandingPackageCount);
+                Interlocked.Add(ref _outstandingPacketsSize, packet.RentedPayload.Size);
+                Interlocked.Increment(ref _outstandingPacketCount);
                 return true;
             }
 
-            public async ValueTask<ClientMediaPackage> ReadPackageAsync(CancellationToken cancellation)
+            public async ValueTask<ClientMediaPacket> ReadPacketAsync(CancellationToken cancellation)
             {
-                var package = await _packageChannel.Reader.ReadAsync(cancellation);
-                Interlocked.Add(ref _outstandingPackagesSize, -package.RentedPayload.Size);
-                Interlocked.Decrement(ref _outstandingPackageCount);
-                return package;
+                var packet = await _packetChannel.Reader.ReadAsync(cancellation);
+                Interlocked.Add(ref _outstandingPacketsSize, -packet.RentedPayload.Size);
+                Interlocked.Decrement(ref _outstandingPacketCount);
+                return packet;
             }
 
-            public bool ReadPackage(out ClientMediaPackage package)
+            public bool ReadPacket(out ClientMediaPacket packet)
             {
-                var result = _packageChannel.Reader.TryRead(out package);
+                var result = _packetChannel.Reader.TryRead(out packet);
 
                 if (result)
                 {
-                    Interlocked.Add(ref _outstandingPackagesSize, -package.RentedPayload.Size);
-                    Interlocked.Decrement(ref _outstandingPackageCount);
+                    Interlocked.Add(ref _outstandingPacketsSize, -packet.RentedPayload.Size);
+                    Interlocked.Decrement(ref _outstandingPacketCount);
                 }
 
                 return result;
             }
 
-            private bool ShouldSkipPackage(ClientMediaContext context, ref ClientMediaPackage package)
+            private bool ShouldSkipPacket(ClientMediaContext context, ref ClientMediaPacket packet)
             {
-                return _mediaPackageDiscarder.ShouldDiscardMediaPackage(
-                    package.IsSkippable, context.OutstandingPackagesSize, context.OutstandingPackagesCount);
+                return _mediaPacketDiscarder.ShouldDiscardMediaPacket(
+                    packet.IsSkippable, context.OutstandingPacketsSize, context.OutstandingPacketsCount);
             }
         }
 
-        private record struct ClientMediaPackage(
+        private record struct ClientMediaPacket(
             MediaType MediaType,
             uint Timestamp,
             IRentedBuffer RentedPayload,

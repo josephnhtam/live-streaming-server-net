@@ -91,11 +91,11 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Logging
         [LoggerMessage(LogLevel.Error, "ClientId: {ClientId} | An error occurred while sending media message")]
         public static partial void FailedToSendMediaMessage(this ILogger logger, uint clientId, Exception exception);
 
-        [LoggerMessage(LogLevel.Warning, "ClientId: {ClientId} | Resume media package | Outstanding media message size: {OutstandingPackagesSize} | count: {OutstandingPackagesCount}")]
-        public static partial void ResumeMediaPackage(this ILogger logger, uint clientId, long outstandingPackagesSize, long outstandingPackagesCount);
+        [LoggerMessage(LogLevel.Warning, "ClientId: {ClientId} | Resume media packet | Outstanding media message size: {OutstandingPacketsSize} | count: {OutstandingPacketsCount}")]
+        public static partial void ResumeMediaPacket(this ILogger logger, uint clientId, long outstandingPacketsSize, long outstandingPacketsCount);
 
-        [LoggerMessage(LogLevel.Warning, "ClientId: {ClientId} | Pause media package | Outstanding media message size: {OutstandingPackagesSize} | count: {OutstandingPackagesCount}")]
-        public static partial void PauseMediaPackage(this ILogger logger, uint clientId, long outstandingPackagesSize, long outstandingPackagesCount);
+        [LoggerMessage(LogLevel.Warning, "ClientId: {ClientId} | Pause media packet | Outstanding media message size: {OutstandingPacketsSize} | count: {OutstandingPacketsCount}")]
+        public static partial void PauseMediaPacket(this ILogger logger, uint clientId, long outstandingPacketsSize, long outstandingPacketsCount);
 
         [LoggerMessage(LogLevel.Warning, "StreamPath: {StreamPath} | Reached max GOP cache size")]
         public static partial void ReachedMaxGopCacheSize(this ILogger logger, string streamPath);

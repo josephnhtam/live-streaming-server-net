@@ -100,8 +100,8 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
 
             if (audioCodec is AudioCodec.AAC or AudioCodec.Opus)
             {
-                var aacPackageType = (AACPacketType)payloadBuffer.ReadByte();
-                return (audioCodec, aacPackageType);
+                var aacPacketType = (AACPacketType)payloadBuffer.ReadByte();
+                return (audioCodec, aacPacketType);
             }
 
             return (audioCodec, null);

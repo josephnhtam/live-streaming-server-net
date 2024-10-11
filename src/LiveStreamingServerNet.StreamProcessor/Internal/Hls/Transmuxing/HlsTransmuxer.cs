@@ -289,9 +289,9 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
                 _logger.HlsTransmuxerEnded(Name, ContextIdentifier, _config.ManifestOutputPath, streamPath);
             }
 
-            while (_channel.Reader.TryRead(out var package))
+            while (_channel.Reader.TryRead(out var packet))
             {
-                package.RentedBuffer.Unclaim();
+                packet.RentedBuffer.Unclaim();
             }
         }
 

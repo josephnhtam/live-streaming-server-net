@@ -59,9 +59,9 @@ namespace LiveStreamingServerNet.Flv.Internal
                     payloadBuffer.Invoke(dataBuffer);
 
                     var payloadSize = (uint)(dataBuffer.Size - FlvTagHeader.Size);
-                    var packageSize = (uint)dataBuffer.Size;
+                    var packetSize = (uint)dataBuffer.Size;
 
-                    dataBuffer.WriteUInt32BigEndian(packageSize);
+                    dataBuffer.WriteUInt32BigEndian(packetSize);
 
                     var header = new FlvTagHeader(tagType, payloadSize, timestamp);
                     header.Write(dataBuffer.MoveTo(0));

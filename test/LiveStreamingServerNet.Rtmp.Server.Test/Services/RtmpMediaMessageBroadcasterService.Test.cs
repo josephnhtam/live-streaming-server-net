@@ -3,7 +3,7 @@ using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.Services.Contracts;
 using LiveStreamingServerNet.Rtmp.Server.Configurations;
 using LiveStreamingServerNet.Rtmp.Server.Internal.Contracts;
-using LiveStreamingServerNet.Rtmp.Server.Internal.MediaPackageDiscarding.Contracts;
+using LiveStreamingServerNet.Rtmp.Server.Internal.MediaPacketDiscarding.Contracts;
 using LiveStreamingServerNet.Rtmp.Server.Internal.Services;
 using LiveStreamingServerNet.Rtmp.Server.Internal.Services.Contracts;
 using LiveStreamingServerNet.Utilities.Buffers;
@@ -21,8 +21,8 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
         private readonly IRtmpChunkMessageWriterService _chunkMessageWriter;
         private readonly IRtmpMediaMessageInterceptionService _interception;
         private readonly IDataBufferPool _dataBufferPool;
-        private readonly IMediaPackageDiscarder _mediaPackageDiscarder;
-        private readonly IMediaPackageDiscarderFactory _mediaPackageDiscarderFactory;
+        private readonly IMediaPacketDiscarder _mediaPacketDiscarder;
+        private readonly IMediaPacketDiscarderFactory _mediaPacketDiscarderFactory;
         private readonly RtmpServerConfiguration _config;
         private readonly ILogger<RtmpMediaMessageBroadcasterService> _logger;
         private readonly IRtmpMediaMessageBroadcasterService _sut;
@@ -33,20 +33,20 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             _chunkMessageWriter = Substitute.For<IRtmpChunkMessageWriterService>();
             _interception = Substitute.For<IRtmpMediaMessageInterceptionService>();
             _dataBufferPool = new DataBufferPool(Options.Create(new DataBufferPoolConfiguration()));
-            _mediaPackageDiscarder = Substitute.For<IMediaPackageDiscarder>();
-            _mediaPackageDiscarderFactory = Substitute.For<IMediaPackageDiscarderFactory>();
+            _mediaPacketDiscarder = Substitute.For<IMediaPacketDiscarder>();
+            _mediaPacketDiscarderFactory = Substitute.For<IMediaPacketDiscarderFactory>();
             _config = new RtmpServerConfiguration();
             _logger = Substitute.For<ILogger<RtmpMediaMessageBroadcasterService>>();
 
-            _mediaPackageDiscarderFactory.Create(Arg.Any<uint>()).Returns(_mediaPackageDiscarder);
-            _mediaPackageDiscarder.ShouldDiscardMediaPackage(Arg.Any<bool>(), Arg.Any<long>(), Arg.Any<long>())
+            _mediaPacketDiscarderFactory.Create(Arg.Any<uint>()).Returns(_mediaPacketDiscarder);
+            _mediaPacketDiscarder.ShouldDiscardMediaPacket(Arg.Any<bool>(), Arg.Any<long>(), Arg.Any<long>())
                 .Returns(false);
 
             _sut = new RtmpMediaMessageBroadcasterService(
                 _chunkMessageWriter,
                 _interception,
                 _dataBufferPool,
-                _mediaPackageDiscarderFactory,
+                _mediaPacketDiscarderFactory,
                 Options.Create(_config),
                 _logger);
         }

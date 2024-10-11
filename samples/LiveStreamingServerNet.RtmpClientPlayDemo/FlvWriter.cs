@@ -30,13 +30,13 @@ namespace LiveStreamingServerNet.RtmpClientPlayDemo
             using var dataBuffer = new DataBuffer();
 
             var payloadSize = (uint)payload.Length;
-            var packageSize = payloadSize + FlvTagHeader.Size;
+            var packetSize = payloadSize + FlvTagHeader.Size;
 
             var header = new FlvTagHeader(tagType, payloadSize, timestamp);
 
             header.Write(dataBuffer);
             dataBuffer.Write(payload);
-            dataBuffer.WriteUInt32BigEndian(packageSize);
+            dataBuffer.WriteUInt32BigEndian(packetSize);
 
             _streamWriter.Write(dataBuffer.AsSpan());
         }
