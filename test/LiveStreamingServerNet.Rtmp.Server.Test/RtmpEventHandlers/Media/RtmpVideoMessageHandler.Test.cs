@@ -1,14 +1,12 @@
 ﻿using AutoFixture;
 using FluentAssertions;
 using LiveStreamingServerNet.Rtmp.Internal.Contracts;
-using LiveStreamingServerNet.Rtmp.Server.Configurations;
 using LiveStreamingServerNet.Rtmp.Server.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Media;
 using LiveStreamingServerNet.Rtmp.Server.Internal.Services.Contracts;
 using LiveStreamingServerNet.Utilities.Buffers;
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using NSubstitute;
 using NSubstitute.ReceivedExtensions;
 
