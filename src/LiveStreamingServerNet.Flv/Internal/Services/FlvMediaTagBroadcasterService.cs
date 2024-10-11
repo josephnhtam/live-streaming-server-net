@@ -1,9 +1,10 @@
 ﻿using LiveStreamingServerNet.Flv.Internal.Contracts;
 using LiveStreamingServerNet.Flv.Internal.Logging;
-using LiveStreamingServerNet.Flv.Internal.MediaPacketDiscarding.Contracts;
+using LiveStreamingServerNet.Flv.Internal.MediaPacketDiscarders.Contracts;
 using LiveStreamingServerNet.Flv.Internal.Services.Contracts;
 using LiveStreamingServerNet.Rtmp;
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
+using LiveStreamingServerNet.Utilities.PacketDiscarders.Contracts;
 using Microsoft.Extensions.Logging;
 using System.Collections.Concurrent;
 using System.Threading.Channels;
@@ -135,7 +136,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
             public long OutstandingPacketsSize => _outstandingPacketsSize;
             public long OutstandingPacketsCount => _outstandingPacketCount;
 
-            private readonly IMediaPacketDiscarder _mediaPacketDiscarder;
+            private readonly IPacketDiscarder _mediaPacketDiscarder;
 
             private readonly Channel<ClientMediaPacket> _packetChannel;
             private readonly CancellationTokenSource _cts;
@@ -143,7 +144,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
             private long _outstandingPacketsSize;
             private long _outstandingPacketCount;
 
-            public ClientMediaContext(IFlvClient client, IMediaPacketDiscarder mediaPacketDiscarder)
+            public ClientMediaContext(IFlvClient client, IPacketDiscarder mediaPacketDiscarder)
             {
                 Client = client;
                 _mediaPacketDiscarder = mediaPacketDiscarder;
@@ -200,7 +201,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
 
             private bool ShouldSkipPacket(ClientMediaContext context, ref ClientMediaPacket packet)
             {
-                return _mediaPacketDiscarder.ShouldDiscardMediaPacket(
+                return _mediaPacketDiscarder.ShouldDiscardPacket(
                     packet.IsSkippable, context.OutstandingPacketsSize, context.OutstandingPacketsCount);
             }
         }

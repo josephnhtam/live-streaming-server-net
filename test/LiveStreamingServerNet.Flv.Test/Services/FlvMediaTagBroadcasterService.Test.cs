@@ -1,10 +1,11 @@
 ﻿using AutoFixture;
 using LiveStreamingServerNet.Flv.Internal.Contracts;
-using LiveStreamingServerNet.Flv.Internal.MediaPacketDiscarding.Contracts;
+using LiveStreamingServerNet.Flv.Internal.MediaPacketDiscarders.Contracts;
 using LiveStreamingServerNet.Flv.Internal.Services;
 using LiveStreamingServerNet.Flv.Internal.Services.Contracts;
 using LiveStreamingServerNet.Rtmp;
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
+using LiveStreamingServerNet.Utilities.PacketDiscarders.Contracts;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 
@@ -15,7 +16,7 @@ namespace LiveStreamingServerNet.Flv.Test.Services
         private readonly IFixture _fixture;
         private readonly IFlvStreamContext _streamContext;
         private readonly IMediaPacketDiscarderFactory _mediaPacketDiscarderFactory;
-        private readonly IMediaPacketDiscarder _mediaPacketDiscarder;
+        private readonly IPacketDiscarder _mediaPacketDiscarder;
         private readonly IFlvMediaTagSenderService _mediaTagSender;
         private readonly ILogger<FlvMediaTagBroadcasterService> _logger;
         private readonly FlvMediaTagBroadcasterService _sut;
@@ -25,12 +26,12 @@ namespace LiveStreamingServerNet.Flv.Test.Services
             _fixture = new Fixture();
             _streamContext = Substitute.For<IFlvStreamContext>();
             _mediaPacketDiscarderFactory = Substitute.For<IMediaPacketDiscarderFactory>();
-            _mediaPacketDiscarder = Substitute.For<IMediaPacketDiscarder>();
+            _mediaPacketDiscarder = Substitute.For<IPacketDiscarder>();
             _mediaTagSender = Substitute.For<IFlvMediaTagSenderService>();
             _logger = Substitute.For<ILogger<FlvMediaTagBroadcasterService>>();
 
             _mediaPacketDiscarderFactory.Create(Arg.Any<string>()).Returns(_mediaPacketDiscarder);
-            _mediaPacketDiscarder.ShouldDiscardMediaPacket(Arg.Any<bool>(), Arg.Any<long>(), Arg.Any<long>()).Returns(false);
+            _mediaPacketDiscarder.ShouldDiscardPacket(Arg.Any<bool>(), Arg.Any<long>(), Arg.Any<long>()).Returns(false);
 
             _sut = new FlvMediaTagBroadcasterService(
                 _mediaPacketDiscarderFactory,

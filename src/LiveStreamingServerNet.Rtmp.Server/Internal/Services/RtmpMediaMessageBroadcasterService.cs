@@ -5,10 +5,11 @@ using LiveStreamingServerNet.Rtmp.Internal.Services.Contracts;
 using LiveStreamingServerNet.Rtmp.Server.Configurations;
 using LiveStreamingServerNet.Rtmp.Server.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Server.Internal.Logging;
-using LiveStreamingServerNet.Rtmp.Server.Internal.MediaPacketDiscarding.Contracts;
+using LiveStreamingServerNet.Rtmp.Server.Internal.MediaPacketDiscarders.Contracts;
 using LiveStreamingServerNet.Rtmp.Server.Internal.Services.Contracts;
 using LiveStreamingServerNet.Utilities.Buffers;
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
+using LiveStreamingServerNet.Utilities.PacketDiscarders.Contracts;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Collections.Concurrent;
@@ -274,7 +275,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
             public long OutstandingPacketsSize => _outstandingPacketsSize;
             public long OutstandingPacketsCount => _outstandingPacketCount;
 
-            private readonly IMediaPacketDiscarder _mediaPacketDiscarder;
+            private readonly IPacketDiscarder _mediaPacketDiscarder;
             private readonly Channel<ClientMediaPacket> _packetChannel;
             private readonly CancellationTokenSource _cts;
 
@@ -338,7 +339,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
 
             private bool ShouldSkipPacket(ClientMediaContext context, bool isSkippable)
             {
-                return _mediaPacketDiscarder.ShouldDiscardMediaPacket(
+                return _mediaPacketDiscarder.ShouldDiscardPacket(
                     isSkippable, context.OutstandingPacketsSize, context.OutstandingPacketsCount);
             }
         }

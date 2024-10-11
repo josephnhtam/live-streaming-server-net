@@ -2,8 +2,8 @@
 using LiveStreamingServerNet.Flv.Installer.Contracts;
 using LiveStreamingServerNet.Flv.Internal.HttpClients;
 using LiveStreamingServerNet.Flv.Internal.HttpClients.Contracts;
-using LiveStreamingServerNet.Flv.Internal.MediaPacketDiscarding;
-using LiveStreamingServerNet.Flv.Internal.MediaPacketDiscarding.Contracts;
+using LiveStreamingServerNet.Flv.Internal.MediaPacketDiscarders;
+using LiveStreamingServerNet.Flv.Internal.MediaPacketDiscarders.Contracts;
 using LiveStreamingServerNet.Flv.Internal.Services;
 using LiveStreamingServerNet.Flv.Internal.Services.Contracts;
 using LiveStreamingServerNet.Flv.Internal.WebSocketClients;

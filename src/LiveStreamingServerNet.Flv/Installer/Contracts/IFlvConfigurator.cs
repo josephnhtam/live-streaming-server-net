@@ -4,6 +4,6 @@ namespace LiveStreamingServerNet.Flv.Installer.Contracts
 {
     public interface IFlvConfigurator
     {
-        IFlvConfigurator ConfigureMediaMessage(Action<MediaMessageConfiguration>? configure);
+        IFlvConfigurator ConfigureMediaPacket(Action<MediaPacketConfiguration>? configure);
     }
 }

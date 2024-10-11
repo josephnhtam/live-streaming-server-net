@@ -16,13 +16,13 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
     {
         private readonly IRtmpChunkMessageSenderService _chunkMessageSender;
         private readonly IRtmpMediaCachingInterceptionService _interception;
-        private readonly MediaMessageConfiguration _config;
+        private readonly MediaPacketConfiguration _config;
         private readonly ILogger _logger;
 
         public RtmpMediaMessageCacherService(
             IRtmpChunkMessageSenderService chunkMessageSender,
             IRtmpMediaCachingInterceptionService interception,
-            IOptions<MediaMessageConfiguration> config,
+            IOptions<MediaPacketConfiguration> config,
             ILogger<RtmpMediaMessageCacherService> logger)
         {
             _chunkMessageSender = chunkMessageSender;

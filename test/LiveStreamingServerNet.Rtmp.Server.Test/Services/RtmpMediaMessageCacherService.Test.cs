@@ -22,7 +22,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
         private readonly IFixture _fixture;
         private readonly IRtmpChunkMessageSenderService _chunkMessageSender;
         private readonly IRtmpMediaCachingInterceptionService _interception;
-        private readonly MediaMessageConfiguration _config;
+        private readonly MediaPacketConfiguration _config;
         private readonly ILogger<RtmpMediaMessageCacherService> _logger;
         private readonly IRtmpMediaMessageCacherService _sut;
 
@@ -31,7 +31,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             _fixture = new Fixture();
             _chunkMessageSender = Substitute.For<IRtmpChunkMessageSenderService>();
             _interception = Substitute.For<IRtmpMediaCachingInterceptionService>();
-            _config = new MediaMessageConfiguration();
+            _config = new MediaPacketConfiguration();
             _logger = Substitute.For<ILogger<RtmpMediaMessageCacherService>>();
 
             _sut = new RtmpMediaMessageCacherService(
