@@ -2,6 +2,6 @@
 {
     internal interface IRtmpUpstreamProcessFactory
     {
-        IRtmpUpstreamProcess Create(string streamPath);
+        IRtmpUpstreamProcess Create(string streamPath, IReadOnlyDictionary<string, string> streamArguments);
     }
 }

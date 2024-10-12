@@ -10,7 +10,7 @@ using LiveStreamingServerNet.Rtmp.Server.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Server.Internal.Logging;
 using LiveStreamingServerNet.Rtmp.Server.Internal.Services.Contracts;
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Runtime.CompilerServices;
@@ -30,6 +30,8 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal
         private readonly IDataBufferPool _dataBufferPool;
         private readonly RtmpDownstreamConfiguration _config;
         private readonly ILogger _logger;
+
+        public string StreamPath => _streamPath;
 
         public RtmpDownstreamProcess(
             string streamPath,

@@ -7,8 +7,9 @@
     <Description>This package provides the implementation for relaying RTMP streams.</Description>
     <PackageTags>live-streaming;rtmp</PackageTags>
     <VersionSuffix>beta</VersionSuffix>
-    <IsPackable>false</IsPackable>
   </PropertyGroup>
+
+  <Import Project="$(SolutionDir)nuget\nuget-package.props" />
 
   <ItemGroup>
     <ProjectReference Include="..\LiveStreamingServerNet.Rtmp.Client\LiveStreamingServerNet.Rtmp.Client.csproj" />

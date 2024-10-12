@@ -3,6 +3,7 @@ using LiveStreamingServerNet.Rtmp.Relay.Contracts;
 using LiveStreamingServerNet.Rtmp.Relay.Installer;
 using Microsoft.Extensions.Logging;
 using System.Net;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace LiveStreamingServerNet.RtmpRelayDemo
@@ -44,17 +45,18 @@ namespace LiveStreamingServerNet.RtmpRelayDemo
         [GeneratedRegex(@"/?(?<appName>[^/]+)/(?<streamName>.+)$", RegexOptions.IgnoreCase)]
         private static partial Regex NamesExtractionRegex();
 
-        public ValueTask<RtmpOrigin?> ResolveUpstreamOriginAsync(string streamPath, CancellationToken cancellationToken)
+        public ValueTask<RtmpOrigin?> ResolveUpstreamOriginAsync(
+            string streamPath, IReadOnlyDictionary<string, string> streamArguments, CancellationToken cancellationToken)
         {
-            return ResolveOriginAsync(streamPath);
+            return ResolveOriginAsync(streamPath, streamArguments);
         }
 
         public ValueTask<RtmpOrigin?> ResolveDownstreamOriginAsync(string streamPath, CancellationToken cancellationToken)
         {
-            return ResolveOriginAsync(streamPath);
+            return ResolveOriginAsync(streamPath, null);
         }
 
-        private static ValueTask<RtmpOrigin?> ResolveOriginAsync(string streamPath)
+        private static ValueTask<RtmpOrigin?> ResolveOriginAsync(string streamPath, IReadOnlyDictionary<string, string>? streamArguments)
         {
             var match = NamesExtractionRegex().Match(streamPath);
 
@@ -62,10 +64,33 @@ namespace LiveStreamingServerNet.RtmpRelayDemo
                 return ValueTask.FromResult<RtmpOrigin?>(null);
 
             var appName = match.Groups["appName"].Value;
-            var streamName = match.Groups["streamName"].Value;
+            var streamName = CreateStreamName(match.Groups["streamName"].Value, streamArguments);
 
             var result = new RtmpOrigin(new IPEndPoint(IPAddress.Loopback, 1935), appName, streamName);
             return ValueTask.FromResult<RtmpOrigin?>(result);
+        }
+
+        private static string CreateStreamName(string streamName, IReadOnlyDictionary<string, string>? streamArguments)
+        {
+            var streamNameBuilder = new StringBuilder();
+            streamNameBuilder.Append(streamName);
+
+            if (streamArguments?.Any() == true)
+            {
+                streamNameBuilder.Append('?');
+
+                foreach (var (key, value) in streamArguments)
+                {
+                    streamNameBuilder.Append(key);
+                    streamNameBuilder.Append('=');
+                    streamNameBuilder.Append(value);
+                    streamNameBuilder.Append('&');
+                }
+
+                streamNameBuilder.Length--;
+            }
+
+            return streamNameBuilder.ToString();
         }
     }
 }

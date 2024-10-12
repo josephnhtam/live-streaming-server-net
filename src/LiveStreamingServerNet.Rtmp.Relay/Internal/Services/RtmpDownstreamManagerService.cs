@@ -10,6 +10,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Services
 {
     internal class RtmpDownstreamManagerService : IRtmpDownstreamManagerService, IRtmpServerStreamEventHandler, IAsyncDisposable
     {
+        private readonly IServiceProvider _services;
         private readonly IRtmpDownstreamProcessFactory _downstreamProcessFactory;
         private readonly IRtmpStreamManagerService _streamManager;
         private readonly RtmpDownstreamConfiguration _config;
@@ -18,10 +19,12 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Services
         private readonly object _syncLock = new();
 
         public RtmpDownstreamManagerService(
+            IServiceProvider services,
             IRtmpDownstreamProcessFactory downstreamProcessFactory,
             IRtmpStreamManagerService streamManager,
             IOptions<RtmpDownstreamConfiguration> config)
         {
+            _services = services;
             _downstreamProcessFactory = downstreamProcessFactory;
             _streamManager = streamManager;
             _config = config.Value;

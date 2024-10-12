@@ -10,7 +10,7 @@ using LiveStreamingServerNet.Rtmp.Server.Internal;
 using LiveStreamingServerNet.Rtmp.Server.Internal.Logging;
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using LiveStreamingServerNet.Utilities.PacketDiscarders.Contracts;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Runtime.CompilerServices;
@@ -21,6 +21,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal
     internal class RtmpUpstreamProcess : IRtmpUpstreamProcess
     {
         private readonly string _streamPath;
+        private readonly IReadOnlyDictionary<string, string> _streamArguments;
         private readonly IRtmpOriginResolver _originResolver;
         private readonly IBufferPool _bufferPool;
         private readonly IDataBufferPool _dataBufferPool;
@@ -34,8 +35,12 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal
         private long _outstandingPacketsSize;
         private long _outstandingPacketCount;
 
+        public string StreamPath => _streamPath;
+        public IReadOnlyDictionary<string, string> StreamArguments => _streamArguments;
+
         public RtmpUpstreamProcess(
             string streamPath,
+            IReadOnlyDictionary<string, string> streamArguments,
             IRtmpOriginResolver originResolver,
             IBufferPool bufferPool,
             IDataBufferPool dataBufferPool,
@@ -44,6 +49,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal
             ILogger<RtmpUpstreamProcess> logger)
         {
             _streamPath = streamPath;
+            _streamArguments = new Dictionary<string, string>(streamArguments);
             _originResolver = originResolver;
             _bufferPool = bufferPool;
             _dataBufferPool = dataBufferPool;
@@ -70,7 +76,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal
         {
             using var abortCts = CancellationTokenSource.CreateLinkedTokenSource(stoppingToken);
 
-            var origin = await _originResolver.ResolveUpstreamOriginAsync(_streamPath, abortCts.Token);
+            var origin = await _originResolver.ResolveUpstreamOriginAsync(_streamPath, _streamArguments, abortCts.Token);
 
             if (origin == null)
             {

@@ -33,10 +33,11 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal
             _logger = logger;
         }
 
-        public IRtmpUpstreamProcess Create(string streamPath)
+        public IRtmpUpstreamProcess Create(string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
             return new RtmpUpstreamProcess(
                 streamPath,
+                streamArguments,
                 _originResolver,
                 _bufferPool,
                 _dataBufferPool,

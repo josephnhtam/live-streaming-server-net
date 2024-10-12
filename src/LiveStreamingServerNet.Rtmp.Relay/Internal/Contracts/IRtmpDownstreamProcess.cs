@@ -2,6 +2,8 @@
 {
     internal interface IRtmpDownstreamProcess
     {
+        string StreamPath { get; }
+
         Task RunAsync(CancellationToken cancellationToken);
     }
 }
