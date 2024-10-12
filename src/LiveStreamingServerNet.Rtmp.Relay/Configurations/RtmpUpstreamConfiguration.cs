@@ -7,7 +7,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Configurations
     public class RtmpUpstreamConfiguration
     {
         public bool Enabled { get; set; } = true;
-        public IRtmpUpstreamRelayCondition? Condition { get; } = null;
+        public IRtmpUpstreamRelayCondition? Condition { get; set; } = null;
 
         public int TargetOutstandingMediaPacketsCount { get; set; } = 64;
         public long TargetOutstandingMediaPacketsSize { get; set; } = 1024 * 1024;

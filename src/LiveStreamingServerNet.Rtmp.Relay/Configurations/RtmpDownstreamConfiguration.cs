@@ -7,7 +7,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Configurations
     public class RtmpDownstreamConfiguration
     {
         public bool Enabled { get; set; } = true;
-        public IRtmpDownstreamRelayCondition? Condition { get; } = null;
+        public IRtmpDownstreamRelayCondition? Condition { get; set; } = null;
 
         public TimeSpan MaximumIdleTime { get; set; } = TimeSpan.FromSeconds(30);
         public TimeSpan IdleCheckingInterval { get; set; } = TimeSpan.FromSeconds(3);
