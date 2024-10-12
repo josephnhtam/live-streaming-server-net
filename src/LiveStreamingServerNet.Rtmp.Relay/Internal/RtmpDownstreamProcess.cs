@@ -148,11 +148,11 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal
 
             builder = builder.ConfigureClient((configurator) =>
             {
-                configurator.Services.AddSingleton(_dataBufferPool);
-                configurator.Services.AddSingleton(_bufferPool);
-
                 if (_config.ConfigureDownstreamClient != null)
                     _config.ConfigureDownstreamClient(configurator);
+
+                configurator.Services.TryAddSingleton(_dataBufferPool);
+                configurator.Services.TryAddSingleton(_bufferPool);
             });
 
             return builder.Build();
