@@ -143,17 +143,25 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
             IRtmpSubscribeStreamContext subscribeStreamContext,
             IRtmpPublishStreamContext publishStreamContext)
         {
-            foreach (var picture in publishStreamContext.GroupOfPicturesCache.Get())
-            {
-                SendMediaPacket(
-                    subscribeStreamContext,
-                    picture.Type,
-                    picture.Payload.Buffer,
-                    picture.Payload.Size,
-                    picture.Timestamp,
-                    false);
+            var pictures = publishStreamContext.GroupOfPicturesCache.Get();
 
-                picture.Payload.Unclaim();
+            try
+            {
+                foreach (var picture in pictures)
+                {
+                    SendMediaPacket(
+                        subscribeStreamContext,
+                        picture.Type,
+                        picture.Payload.Buffer,
+                        picture.Payload.Size,
+                        picture.Timestamp,
+                        false);
+                }
+            }
+            finally
+            {
+                foreach (var picture in pictures)
+                    picture.Payload.Unclaim();
             }
         }
 
