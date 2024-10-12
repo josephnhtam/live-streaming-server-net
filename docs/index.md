@@ -81,6 +81,10 @@ Live-Streaming-Server-Net is a high-performance and flexible toolset which allow
       <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet.Rtmp.Client"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.Rtmp.Client.svg?logo=nuget"></a></td>
     </tr>
     <tr>
+      <td><b>LiveStreamingServerNet.Rtmp.Relay</b></td>
+      <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet.Rtmp.Relay"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.Rtmp.Relay.svg?logo=nuget"></a></td>
+    </tr>
+    <tr>
       <td><b>LiveStreamingServerNet.Rtmp.Server</b></td>
       <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet.Rtmp.Server"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.Rtmp.Server.svg?logo=nuget"></a></td>
     </tr>

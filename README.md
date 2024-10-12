@@ -214,6 +214,10 @@ Please refer to the [LiveStreamServerNet.StandaloneDemo](https://github.com/jose
       <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet.Rtmp.Client"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.Rtmp.Client.svg?logo=nuget"></a></td>
     </tr>
     <tr>
+      <th>LiveStreamingServerNet.Rtmp.Relay</th>
+      <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet.Rtmp.Relay"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.Rtmp.Relay.svg?logo=nuget"></a></td>
+    </tr>
+    <tr>
       <th>LiveStreamingServerNet.Rtmp.Server</th>
       <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet.Rtmp.Server"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.Rtmp.Server.svg?logo=nuget"></a></td>
     </tr>
