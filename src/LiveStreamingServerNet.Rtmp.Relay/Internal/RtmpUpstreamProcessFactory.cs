@@ -1,6 +1,7 @@
 ﻿using LiveStreamingServerNet.Rtmp.Relay.Configurations;
 using LiveStreamingServerNet.Rtmp.Relay.Contracts;
 using LiveStreamingServerNet.Rtmp.Relay.Internal.Contracts;
+using LiveStreamingServerNet.Rtmp.Relay.Internal.MediaPacketDiscarders.Contracts;
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -12,6 +13,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal
         private readonly IRtmpOriginResolver _originResolver;
         private readonly IBufferPool _bufferPool;
         private readonly IDataBufferPool _dataBufferPool;
+        private readonly IUpstreamMediaPacketDiscarderFactory _packetDiscarderFactory;
         private readonly IOptions<RtmpUpstreamConfiguration> _config;
         private readonly ILogger<RtmpUpstreamProcess> _logger;
 
@@ -19,12 +21,14 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal
             IRtmpOriginResolver originResolver,
             IBufferPool bufferPool,
             IDataBufferPool dataBufferPool,
+            IUpstreamMediaPacketDiscarderFactory packetDiscarderFactory,
             IOptions<RtmpUpstreamConfiguration> config,
             ILogger<RtmpUpstreamProcess> logger)
         {
             _originResolver = originResolver;
             _bufferPool = bufferPool;
             _dataBufferPool = dataBufferPool;
+            _packetDiscarderFactory = packetDiscarderFactory;
             _config = config;
             _logger = logger;
         }
@@ -36,6 +40,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal
                 _originResolver,
                 _bufferPool,
                 _dataBufferPool,
+                _packetDiscarderFactory,
                 _config,
                 _logger);
         }

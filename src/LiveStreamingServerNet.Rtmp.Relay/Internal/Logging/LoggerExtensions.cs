@@ -52,5 +52,11 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Logging
 
         [LoggerMessage(LogLevel.Information, "Upstream stopped (StreamPath={StreamPath})")]
         public static partial void RtmpUpstreamStopped(this ILogger logger, string streamPath);
+
+        [LoggerMessage(LogLevel.Debug, "Begin upstream media packet discard (StreamPath={StreamPath}, OutstandingSize={OutstandingSize}, OutstandingCount={OutstandingCount})")]
+        public static partial void BeginUpstreamMediaPacketDiscard(this ILogger logger, string streamPath, long outstandingSize, long outstandingCount);
+
+        [LoggerMessage(LogLevel.Debug, "End upstream media packet discard (StreamPath={StreamPath}, OutstandingSize={OutstandingSize}, OutstandingCount={OutstandingCount})")]
+        public static partial void EndUpstreamMediaPacketDiscard(this ILogger logger, string streamPath, long outstandingSize, long outstandingCount);
     }
 }

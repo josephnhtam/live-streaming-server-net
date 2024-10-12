@@ -2,6 +2,8 @@
 using LiveStreamingServerNet.Rtmp.Relay.Installer.Contracts;
 using LiveStreamingServerNet.Rtmp.Relay.Internal;
 using LiveStreamingServerNet.Rtmp.Relay.Internal.Contracts;
+using LiveStreamingServerNet.Rtmp.Relay.Internal.MediaPacketDiscarders;
+using LiveStreamingServerNet.Rtmp.Relay.Internal.MediaPacketDiscarders.Contracts;
 using LiveStreamingServerNet.Rtmp.Relay.Internal.Services;
 using LiveStreamingServerNet.Rtmp.Relay.Internal.Services.Contracts;
 using LiveStreamingServerNet.Rtmp.Server.Contracts;
@@ -46,6 +48,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Installer
         private static void AddRtmpUpstreamRelay(IServiceCollection services)
         {
             services.TryAddSingleton<IRtmpUpstreamProcessFactory, RtmpUpstreamProcessFactory>();
+            services.TryAddSingleton<IUpstreamMediaPacketDiscarderFactory, UpstreamMediaPacketDiscarderFactory>();
 
             if (!CheckService<RtmpUpstreamManagerService>(services))
             {

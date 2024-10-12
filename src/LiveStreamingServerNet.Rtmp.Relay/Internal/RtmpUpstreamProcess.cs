@@ -3,14 +3,17 @@ using LiveStreamingServerNet.Rtmp.Client.Contracts;
 using LiveStreamingServerNet.Rtmp.Relay.Configurations;
 using LiveStreamingServerNet.Rtmp.Relay.Contracts;
 using LiveStreamingServerNet.Rtmp.Relay.Internal.Contracts;
+using LiveStreamingServerNet.Rtmp.Relay.Internal.MediaPacketDiscarders.Contracts;
 using LiveStreamingServerNet.Rtmp.Relay.Internal.Utilities;
 using LiveStreamingServerNet.Rtmp.Relay.Internal.Utilities.Contracts;
 using LiveStreamingServerNet.Rtmp.Server.Internal;
 using LiveStreamingServerNet.Rtmp.Server.Internal.Logging;
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
+using LiveStreamingServerNet.Utilities.PacketDiscarders.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System.Runtime.CompilerServices;
 using System.Threading.Channels;
 
 namespace LiveStreamingServerNet.Rtmp.Relay.Internal
@@ -24,14 +27,19 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal
         private readonly RtmpUpstreamConfiguration _config;
         private readonly ILogger _logger;
 
+        private readonly IPacketDiscarder _packetDiscarder;
         private readonly Channel<MediaData> _mediaDataChannel;
+
         private bool _publishStarted;
+        private long _outstandingPacketsSize;
+        private long _outstandingPacketCount;
 
         public RtmpUpstreamProcess(
             string streamPath,
             IRtmpOriginResolver originResolver,
             IBufferPool bufferPool,
             IDataBufferPool dataBufferPool,
+            IUpstreamMediaPacketDiscarderFactory packetDiscarderFactory,
             IOptions<RtmpUpstreamConfiguration> config,
             ILogger<RtmpUpstreamProcess> logger)
         {
@@ -42,6 +50,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal
             _config = config.Value;
             _logger = logger;
 
+            _packetDiscarder = packetDiscarderFactory.Create(streamPath);
             _mediaDataChannel = CreateMediaDataChannel();
         }
 
@@ -153,12 +162,15 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal
         {
             try
             {
-                await foreach (var mediaData in _mediaDataChannel.Reader.ReadAllAsync(abortCts.Token))
+                var cancellationToken = abortCts.Token;
+
+                while (!abortCts.IsCancellationRequested)
                 {
+                    var mediaData = await DequeueMediaData(cancellationToken);
+                    idleChecker.Refresh();
+
                     try
                     {
-                        idleChecker.Refresh();
-
                         switch (mediaData.Type)
                         {
                             case MediaType.Audio:
@@ -201,8 +213,15 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void EnqueueMediaData(MediaData mediaData)
         {
+            if (_packetDiscarder.ShouldDiscardPacket(
+                mediaData.IsSkippable, _outstandingPacketsSize, _outstandingPacketCount))
+            {
+                return;
+            }
+
             try
             {
                 mediaData.Payload.Claim();
@@ -211,11 +230,23 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal
                 {
                     throw new ChannelClosedException();
                 }
+
+                Interlocked.Add(ref _outstandingPacketsSize, mediaData.Payload.Size);
+                Interlocked.Increment(ref _outstandingPacketCount);
             }
             catch
             {
                 mediaData.Payload.Unclaim();
             }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private async ValueTask<MediaData> DequeueMediaData(CancellationToken cancellationToken)
+        {
+            var mediaData = await _mediaDataChannel.Reader.ReadAsync(cancellationToken);
+            Interlocked.Add(ref _outstandingPacketsSize, -mediaData.Payload.Size);
+            Interlocked.Decrement(ref _outstandingPacketCount);
+            return mediaData;
         }
 
         public void OnReceiveMediaData(MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp, bool isSkippable)
