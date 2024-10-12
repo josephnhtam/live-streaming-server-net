@@ -38,7 +38,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Services
         private async ValueTask CreateUpstreamProcessIfNeededAsync(string streamPath)
         {
             if (!_config.Enabled || _upstreamProcessTasks.ContainsKey(streamPath) ||
-                !await VerifyConditionAsync(streamPath))
+                _streamManager.IsStreamPublishing(streamPath) || !await VerifyExtraConditionAsync(streamPath))
             {
                 return;
             }
@@ -76,7 +76,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Services
             }
         }
 
-        private async ValueTask<bool> VerifyConditionAsync(string streamPath)
+        private async ValueTask<bool> VerifyExtraConditionAsync(string streamPath)
         {
             if (_config.Condition == null)
                 return true;

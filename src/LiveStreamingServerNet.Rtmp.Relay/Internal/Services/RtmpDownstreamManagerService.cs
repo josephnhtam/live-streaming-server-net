@@ -33,19 +33,14 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Services
 
         private async ValueTask CreateDownstreamProcessIfNeededAsync(string streamPath)
         {
-            if (!_config.Enabled || _downstreamProcessTasks.ContainsKey(streamPath) ||
-                !await VerifyConditionAsync(streamPath))
+            if (!_config.Enabled || !VerifyDownstreamCreation(streamPath) || !await VerifyExtraConditionAsync(streamPath))
             {
                 return;
             }
 
             lock (_syncLock)
             {
-                if (_downstreamProcessTasks.ContainsKey(streamPath))
-                    return;
-
-                if (!_streamManager.IsStreamBeingSubscribed(streamPath) ||
-                    _streamManager.IsStreamPublishing(streamPath))
+                if (!VerifyDownstreamCreation(streamPath))
                     return;
 
                 CreatetDownstreamProcessTask(streamPath);
@@ -71,7 +66,19 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Services
             }
         }
 
-        private async ValueTask<bool> VerifyConditionAsync(string streamPath)
+        private bool VerifyDownstreamCreation(string streamPath)
+        {
+            if (_downstreamProcessTasks.ContainsKey(streamPath))
+                return false;
+
+            if (!_streamManager.IsStreamBeingSubscribed(streamPath) ||
+                _streamManager.IsStreamPublishing(streamPath))
+                return false;
+
+            return true;
+        }
+
+        private async ValueTask<bool> VerifyExtraConditionAsync(string streamPath)
         {
             if (_config.Condition == null)
                 return true;
