@@ -116,8 +116,9 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
             {
                 case SubscribingStreamResult.Succeeded:
                     _logger.SubscriptionStarted(streamContext.ClientContext.Client.Id, streamPath);
+                    await _eventDispatcher.RtmpStreamSubscribedAsync(streamContext.ClientContext, streamPath, streamArguments);
                     SendCachedStreamMessages(streamContext, chunkStreamContext, publishStreamContext);
-                    await CompleteSubscriptionInitializationAsync(streamContext);
+                    CompleteSubscriptionInitialization(streamContext);
                     return true;
 
                 case SubscribingStreamResult.AlreadySubscribing:
@@ -155,16 +156,10 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
             }
         }
 
-        private async ValueTask CompleteSubscriptionInitializationAsync(IRtmpStreamContext streamContext)
+        private void CompleteSubscriptionInitialization(IRtmpStreamContext streamContext)
         {
             Debug.Assert(streamContext.SubscribeContext != null);
-
             streamContext.SubscribeContext.CompleteInitialization();
-
-            await _eventDispatcher.RtmpStreamSubscribedAsync(
-                 streamContext.ClientContext,
-                 streamContext.SubscribeContext.StreamPath,
-                 streamContext.SubscribeContext.StreamArguments);
         }
 
         private async ValueTask SendAuthorizationFailedCommandMessageAsync(
