@@ -165,6 +165,9 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
             // Assert
             Received.InOrder(() =>
             {
+                _ = _eventDispatcher.Received(1).RtmpStreamSubscribedAsync(
+                    _clientContext, streamPath, Helpers.CreateExpectedStreamArguments("password", "123456"));
+
                 if (publishStreamExists)
                 {
                     _mediaMessageCacher.Received(1).SendCachedStreamMetaDataMessage(
@@ -179,9 +182,6 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
                 }
 
                 _subscribeStreamContext.Received(1).CompleteInitialization();
-
-                _ = _eventDispatcher.Received(1).RtmpStreamSubscribedAsync(
-                    _clientContext, streamPath, Helpers.CreateExpectedStreamArguments("password", "123456"));
             });
 
             result.Should().BeTrue();
