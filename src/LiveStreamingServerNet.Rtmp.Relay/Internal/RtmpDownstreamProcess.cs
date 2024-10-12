@@ -13,6 +13,7 @@ using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System.Runtime.CompilerServices;
 using System.Threading.Channels;
 
 namespace LiveStreamingServerNet.Rtmp.Relay.Internal
@@ -216,8 +217,12 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal
         {
             try
             {
-                await foreach (var mediaData in channel.Reader.ReadAllAsync(abortCts.Token))
+                var cancellationToken = abortCts.Token;
+
+                while (!abortCts.IsCancellationRequested)
                 {
+                    var mediaData = await DequeueMediaData(channel.Reader, cancellationToken);
+
                     try
                     {
                         var success = mediaData.Type switch
@@ -260,6 +265,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void EnqueueMediaData(MediaType mediaType, ChannelWriter<MediaData> channel, MediaDataEventArgs eventArgs)
         {
             var payloadBuffer = _dataBufferPool.Obtain();
@@ -278,6 +284,12 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal
             {
                 _dataBufferPool.Recycle(payloadBuffer);
             }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private ValueTask<MediaData> DequeueMediaData(ChannelReader<MediaData> channel, CancellationToken cancellationToken)
+        {
+            return channel.ReadAsync(cancellationToken);
         }
 
         private IIdleChecker CreateIdleCheck(CancellationTokenSource abortCts)
