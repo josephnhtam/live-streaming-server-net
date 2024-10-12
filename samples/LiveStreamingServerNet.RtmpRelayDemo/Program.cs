@@ -8,6 +8,10 @@ using System.Text.RegularExpressions;
 
 namespace LiveStreamingServerNet.RtmpRelayDemo
 {
+    /// <summary>
+    /// Create one origin server (port 1935) and two relay servers (ports 1936, 1937).
+    /// Relay servers push published streams to the origin and pull non-existent streams from it when requested.
+    /// </summary>
     public class Program
     {
         public static async Task Main()
