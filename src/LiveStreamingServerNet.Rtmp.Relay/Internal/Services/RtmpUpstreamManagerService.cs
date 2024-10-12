@@ -1,12 +1,15 @@
-﻿using LiveStreamingServerNet.Rtmp.Relay.Configurations;
+﻿using LiveStreamingServerNet.Rtmp.Client.Contracts;
+using LiveStreamingServerNet.Rtmp.Relay.Configurations;
 using LiveStreamingServerNet.Rtmp.Relay.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Relay.Internal.Services.Contracts;
 using LiveStreamingServerNet.Rtmp.Server.Contracts;
+using LiveStreamingServerNet.Rtmp.Server.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Server.Internal.Services.Contracts;
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using LiveStreamingServerNet.Utilities.Contracts;
 using Microsoft.Extensions.Options;
 using System.Collections.Concurrent;
+using IRtmpServerStreamEventHandler = LiveStreamingServerNet.Rtmp.Server.Contracts.IRtmpServerStreamEventHandler;
 
 namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Services
 {
@@ -49,13 +52,13 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Services
                 if (publishStreamContext == null)
                     return;
 
-                CreatetUpstreamProcessTask(streamPath, publishStreamContext.StreamArguments);
+                CreatetUpstreamProcessTask(publishStreamContext);
             }
 
-            void CreatetUpstreamProcessTask(string streamPath, IReadOnlyDictionary<string, string> streamArguments)
+            void CreatetUpstreamProcessTask(IRtmpPublishStreamContext publishStreamContext)
             {
                 var cts = new CancellationTokenSource();
-                var upstreamProcess = CreateUpstreamProcess(streamPath, streamArguments);
+                var upstreamProcess = CreateUpstreamProcess(publishStreamContext);
                 var upstreamProcessTask = UpstreamProcessTask(upstreamProcess, cts.Token);
 
                 _upstreamProcessTasks[streamPath] = new(upstreamProcess, upstreamProcessTask, cts);
@@ -98,9 +101,9 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Services
             }
         }
 
-        private IRtmpUpstreamProcess CreateUpstreamProcess(string streamPath, IReadOnlyDictionary<string, string> streamArguments)
+        private IRtmpUpstreamProcess CreateUpstreamProcess(IRtmpPublishStreamContext publishStreamContext)
         {
-            return _upstreamProcessFactory.Create(streamPath, streamArguments);
+            return _upstreamProcessFactory.Create(publishStreamContext);
         }
 
         private async Task UpstreamProcessTask(IRtmpUpstreamProcess upstreamProcess, CancellationToken cancellationToken)

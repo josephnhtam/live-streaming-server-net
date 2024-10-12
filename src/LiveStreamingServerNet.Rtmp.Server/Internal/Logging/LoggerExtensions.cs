@@ -135,5 +135,8 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Logging
 
         [LoggerMessage(LogLevel.Warning, "Audio codec not allowed (StreamPath={StreamPath}, AudioCodec={AudioCodec})")]
         public static partial void AudioCodecNotAllowed(this ILogger logger, string streamPath, AudioCodec audioCodec);
+
+        [LoggerMessage(LogLevel.Error, "An error occurred while initializing the upstream (StreamPath={StreamPath})")]
+        public static partial void RtmpUpstreamInitializationError(this ILogger logger, string streamPath, Exception exception);
     }
 }

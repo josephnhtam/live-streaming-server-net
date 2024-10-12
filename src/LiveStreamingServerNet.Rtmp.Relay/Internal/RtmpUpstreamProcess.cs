@@ -7,8 +7,11 @@ using LiveStreamingServerNet.Rtmp.Relay.Internal.MediaPacketDiscarders.Contracts
 using LiveStreamingServerNet.Rtmp.Relay.Internal.Utilities;
 using LiveStreamingServerNet.Rtmp.Relay.Internal.Utilities.Contracts;
 using LiveStreamingServerNet.Rtmp.Server.Internal;
+using LiveStreamingServerNet.Rtmp.Server.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Server.Internal.Logging;
+using LiveStreamingServerNet.Utilities.Buffers;
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
+using LiveStreamingServerNet.Utilities.Extensions;
 using LiveStreamingServerNet.Utilities.PacketDiscarders.Contracts;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
@@ -22,16 +25,19 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal
     {
         private readonly string _streamPath;
         private readonly IReadOnlyDictionary<string, string> _streamArguments;
+        private readonly IRtmpPublishStreamContext _publishStreamContext;
         private readonly IRtmpOriginResolver _originResolver;
         private readonly IBufferPool _bufferPool;
         private readonly IDataBufferPool _dataBufferPool;
         private readonly RtmpUpstreamConfiguration _config;
         private readonly ILogger _logger;
 
+        private readonly TaskCompletionSource _initializationComplete;
         private readonly IPacketDiscarder _packetDiscarder;
         private readonly Channel<MediaData> _mediaDataChannel;
 
-        private bool _publishStarted;
+        private uint _audioTimestamp;
+        private uint _videoTimestamp;
         private long _outstandingPacketsSize;
         private long _outstandingPacketCount;
 
@@ -39,8 +45,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal
         public IReadOnlyDictionary<string, string> StreamArguments => _streamArguments;
 
         public RtmpUpstreamProcess(
-            string streamPath,
-            IReadOnlyDictionary<string, string> streamArguments,
+            IRtmpPublishStreamContext publishStreamContext,
             IRtmpOriginResolver originResolver,
             IBufferPool bufferPool,
             IDataBufferPool dataBufferPool,
@@ -48,15 +53,17 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal
             IOptions<RtmpUpstreamConfiguration> config,
             ILogger<RtmpUpstreamProcess> logger)
         {
-            _streamPath = streamPath;
-            _streamArguments = new Dictionary<string, string>(streamArguments);
+            _streamPath = publishStreamContext.StreamPath;
+            _streamArguments = publishStreamContext.StreamArguments;
+            _publishStreamContext = publishStreamContext;
             _originResolver = originResolver;
             _bufferPool = bufferPool;
             _dataBufferPool = dataBufferPool;
             _config = config.Value;
             _logger = logger;
 
-            _packetDiscarder = packetDiscarderFactory.Create(streamPath);
+            _initializationComplete = new TaskCompletionSource();
+            _packetDiscarder = packetDiscarderFactory.Create(_streamPath);
             _mediaDataChannel = CreateMediaDataChannel();
         }
 
@@ -152,44 +159,92 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal
                 if (eventArgs.Level == RtmpStatusLevels.Error)
                 {
                     abortCts.Cancel();
-                    return;
                 }
-
-                if (eventArgs.Code == RtmpStreamStatusCodes.PublishStart)
+                else if (eventArgs.Code == RtmpStreamStatusCodes.PublishStart)
                 {
                     idleChecker.Refresh();
-                    _publishStarted = true;
-                    return;
+                    _ = InitializeUpstreamAsync(rtmpStream, abortCts);
                 }
             };
+        }
+
+        private async ValueTask InitializeUpstreamAsync(IRtmpStream rtmpStream, CancellationTokenSource abortCts)
+        {
+            try
+            {
+                if (_publishStreamContext.AudioSequenceHeader != null)
+                {
+                    await SendMediaSequenceHeaderAsync(rtmpStream, MediaType.Audio, _publishStreamContext.AudioSequenceHeader);
+                }
+
+                if (_publishStreamContext.VideoSequenceHeader != null)
+                {
+                    await SendMediaSequenceHeaderAsync(rtmpStream, MediaType.Video, _publishStreamContext.VideoSequenceHeader);
+                }
+
+                var pictures = _publishStreamContext.GroupOfPicturesCache.Get();
+                try
+                {
+                    foreach (var picture in pictures)
+                    {
+                        if (UpdateTimestamp(picture.Type, picture.Timestamp))
+                        {
+                            await SendMediaDataAsync(rtmpStream, new MediaData(picture.Type, picture.Timestamp, true, picture.Payload));
+                        }
+                    }
+                }
+                finally
+                {
+                    foreach (var picture in pictures)
+                        picture.Payload.Unclaim();
+                }
+
+                _initializationComplete.SetResult();
+            }
+            catch (Exception ex)
+            {
+                _logger.RtmpUpstreamInitializationError(_streamPath, ex);
+                abortCts.Cancel();
+            }
+
+            async ValueTask SendMediaSequenceHeaderAsync(IRtmpStream rtmpStream, MediaType mediaType, byte[] sequenceHeader)
+            {
+                var buffer = new RentedBuffer(sequenceHeader.Length);
+
+                try
+                {
+                    sequenceHeader.AsSpan().CopyTo(buffer.Buffer);
+                    await SendMediaDataAsync(rtmpStream, new MediaData(mediaType, 0, false, buffer));
+                }
+                finally
+                {
+                    buffer.Unclaim();
+                }
+            }
         }
 
         private async Task MediaDataSendingTask(IRtmpStream rtmpStream, IIdleChecker idleChecker, CancellationTokenSource abortCts)
         {
             try
             {
+                var isInitializationComplete = false;
                 var cancellationToken = abortCts.Token;
 
                 while (!abortCts.IsCancellationRequested)
                 {
+                    isInitializationComplete = await UntilInitializationCompleteAsync(isInitializationComplete, cancellationToken);
+
                     var mediaData = await DequeueMediaData(cancellationToken);
                     idleChecker.Refresh();
 
                     try
                     {
-                        switch (mediaData.Type)
+                        if (!UpdateTimestamp(mediaData.Type, mediaData.Timestamp) && mediaData.IsSkippable)
                         {
-                            case MediaType.Audio:
-                                await rtmpStream.Publish.SendAudioDataAsync(mediaData.Payload, mediaData.Timestamp);
-                                break;
-
-                            case MediaType.Video:
-                                await rtmpStream.Publish.SendVideoDataAsync(mediaData.Payload, mediaData.Timestamp);
-                                break;
-
-                            default:
-                                break;
+                            continue;
                         }
+
+                        await SendMediaDataAsync(rtmpStream, mediaData);
                     }
                     catch (Exception ex)
                     {
@@ -215,6 +270,64 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal
                 while (_mediaDataChannel.Reader.TryRead(out var mediaData))
                 {
                     mediaData.Payload.Unclaim();
+                }
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            async ValueTask<bool> UntilInitializationCompleteAsync(
+                bool isInitializationComplete, CancellationToken cancellationToken)
+            {
+                if (!isInitializationComplete)
+                {
+                    await _initializationComplete.Task.WithCancellation(cancellationToken);
+                    isInitializationComplete = true;
+                }
+
+                return isInitializationComplete;
+            }
+        }
+
+        private static async Task SendMediaDataAsync(IRtmpStream rtmpStream, MediaData mediaData)
+        {
+            switch (mediaData.Type)
+            {
+                case MediaType.Audio:
+                    await rtmpStream.Publish.SendAudioDataAsync(mediaData.Payload, mediaData.Timestamp);
+                    break;
+
+                case MediaType.Video:
+                    await rtmpStream.Publish.SendVideoDataAsync(mediaData.Payload, mediaData.Timestamp);
+                    break;
+
+                default:
+                    break;
+            }
+        }
+
+        private bool UpdateTimestamp(MediaType mediaType, uint timestamp)
+        {
+            return mediaType switch
+            {
+                MediaType.Audio => DoUpdateTimestamp(ref _audioTimestamp, timestamp),
+                MediaType.Video => DoUpdateTimestamp(ref _videoTimestamp, timestamp),
+                _ => false,
+            };
+
+            bool DoUpdateTimestamp(ref uint currentTimestamp, uint newTimestamp)
+            {
+                while (true)
+                {
+                    var original = currentTimestamp;
+
+                    if (original > 0 && newTimestamp <= original)
+                    {
+                        return false;
+                    }
+
+                    if (Interlocked.CompareExchange(ref currentTimestamp, newTimestamp, original) == original)
+                    {
+                        return true;
+                    }
                 }
             }
         }
@@ -257,9 +370,6 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal
 
         public void OnReceiveMediaData(MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp, bool isSkippable)
         {
-            if (!_publishStarted)
-                return;
-
             EnqueueMediaData(new MediaData(mediaType, timestamp, isSkippable, rentedBuffer));
         }
 
