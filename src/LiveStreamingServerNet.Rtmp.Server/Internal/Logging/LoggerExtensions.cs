@@ -4,136 +4,136 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Logging
 {
     internal static partial class LoggerExtensions
     {
-        [LoggerMessage(LogLevel.Error, "ClientId: {ClientId} | An error occurred in the client loop")]
+        [LoggerMessage(LogLevel.Error, "An error occurred in the client loop (ClientId={ClientId})")]
         public static partial void ClientLoopError(this ILogger logger, uint clientId, Exception exception);
 
-        [LoggerMessage(LogLevel.Debug, "ClientId: {ClientId} | Command ({commandName}) received")]
+        [LoggerMessage(LogLevel.Debug, "Command received (ClientId={ClientId}, commandName={CommandName})")]
         public static partial void CommandReceived(this ILogger logger, uint clientId, string commandName);
 
-        [LoggerMessage(LogLevel.Debug, "ClientId: {ClientId} | Connect: {CommandObject}")]
+        [LoggerMessage(LogLevel.Debug, "Connect (ClientId={ClientId}, CommandObject={CommandObject})")]
         public static partial void Connect(this ILogger logger, uint clientId, IDictionary<string, object> commandObject);
 
-        [LoggerMessage(LogLevel.Warning, "ClientId: {ClientId} | Client already connected")]
+        [LoggerMessage(LogLevel.Warning, "Client already connected (ClientId={ClientId})")]
         public static partial void ClientAlreadyConnected(this ILogger logger, uint clientId);
 
-        [LoggerMessage(LogLevel.Warning, "ClientId: {ClientId} | Invalid app name")]
+        [LoggerMessage(LogLevel.Warning, "Invalid app name (ClientId={ClientId})")]
         public static partial void InvalidAppName(this ILogger logger, uint clientId);
 
-        [LoggerMessage(LogLevel.Debug, "ClientId: {ClientId} | Play: {StreamName}")]
+        [LoggerMessage(LogLevel.Debug, "Play (ClientId={ClientId}, StreamName={StreamName})")]
         private static partial void PlayCore(this ILogger logger, uint clientId, string streamName);
 
         public static void Play(this ILogger logger, uint clientId, string streamName)
             => PlayCore(logger, clientId, !string.IsNullOrEmpty(streamName) ? streamName : "(Empty)");
 
-        [LoggerMessage(LogLevel.Warning, "ClientId: {ClientId} | StreamPath: {StreamPath} | Reason: {Reason} | Authorization failed")]
+        [LoggerMessage(LogLevel.Warning, "Authorization failed (ClientId={ClientId}, StreamPath={StreamPath}, Reason={Reason})")]
         public static partial void AuthorizationFailed(this ILogger logger, uint clientId, string streamPath, string reason);
 
-        [LoggerMessage(LogLevel.Warning, "ClientId: {ClientId} | StreamPath: {StreamPath} | Type:{Type} | Reason: {Reason} | Authorization failed")]
+        [LoggerMessage(LogLevel.Warning, "Authorization failed (ClientId={ClientId}, StreamPath={StreamPath}, Type={Type}, Reason={Reason})")]
         public static partial void AuthorizationFailed(this ILogger logger, uint clientId, string streamPath, string type, string reason);
 
-        [LoggerMessage(LogLevel.Information, "ClientId: {ClientId} | StreamPath: {StreamPath} | Start subscription successfully")]
+        [LoggerMessage(LogLevel.Information, "Start subscription successfully (ClientId={ClientId}, StreamPath={StreamPath})")]
         public static partial void SubscriptionStarted(this ILogger logger, uint clientId, string streamPath);
 
-        [LoggerMessage(LogLevel.Debug, "ClientId: {ClientId} | StreamPath: {StreamPath} | Already subscribing")]
+        [LoggerMessage(LogLevel.Debug, "Already subscribing (ClientId={ClientId}, StreamPath={StreamPath})")]
         public static partial void AlreadySubscribing(this ILogger logger, uint clientId, string streamPath);
 
-        [LoggerMessage(LogLevel.Debug, "ClientId: {ClientId} | StreamPath: {StreamPath} | Already publishing")]
+        [LoggerMessage(LogLevel.Debug, "Already publishing (ClientId={ClientId}, StreamPath={StreamPath})")]
         public static partial void AlreadyPublishing(this ILogger logger, uint clientId, string streamPath);
 
-        [LoggerMessage(LogLevel.Debug, "ClientId: {ClientId} | StreamName: {StreamName} | Type: {PublishingType}")]
+        [LoggerMessage(LogLevel.Debug, "Publish (ClientId={ClientId}, StreamName={StreamName}, Type={PublishingType})")]
         private static partial void PublishCore(this ILogger logger, uint clientId, string streamName, string publishingType);
 
         public static void Publish(this ILogger logger, uint clientId, string streamName, string publishingType)
             => PublishCore(logger, clientId, !string.IsNullOrEmpty(streamName) ? streamName : "(Empty)", publishingType);
 
-        [LoggerMessage(LogLevel.Information, "ClientId: {ClientId} | StreamPath: {StreamPath} | Type: {Type} | Start publishing successfully")]
+        [LoggerMessage(LogLevel.Information, "Start publishing successfully (ClientId={ClientId}, StreamPath={StreamPath}, Type={Type})")]
         public static partial void PublishingStarted(this ILogger logger, uint clientId, string streamPath, string type);
 
-        [LoggerMessage(LogLevel.Debug, "ClientId: {ClientId} | StreamPath: {StreamPath} | Type: {Type} | Stream already exists")]
+        [LoggerMessage(LogLevel.Debug, "Stream already exists (ClientId={ClientId}, StreamPath={StreamPath}, Type={Type})")]
         public static partial void StreamAlreadyExists(this ILogger logger, uint clientId, string streamPath, string type);
 
-        [LoggerMessage(LogLevel.Warning, "ClientId: {ClientId} | Stream is not yet created")]
+        [LoggerMessage(LogLevel.Warning, "Stream is not yet created (ClientId={ClientId})")]
         public static partial void StreamNotYetCreated(this ILogger logger, uint clientId);
 
-        [LoggerMessage(LogLevel.Warning, "ClientId: {ClientId} | StreamId: {StreamId} | Stream is not yet created")]
+        [LoggerMessage(LogLevel.Warning, "Stream is not yet created (ClientId={ClientId}, StreamId={StreamId})")]
         public static partial void PublishStreamNotYetCreated(this ILogger logger, uint clientId, uint streamId);
 
-        [LoggerMessage(LogLevel.Trace, "ClientId: {ClientId} | Acknowledgement received")]
+        [LoggerMessage(LogLevel.Trace, "Acknowledgement received (ClientId={ClientId})")]
         public static partial void AcknowledgementReceived(this ILogger logger, uint clientId);
 
-        [LoggerMessage(LogLevel.Debug, "ClientId: {ClientId} | SetChunkSize: {InChunkSize}")]
+        [LoggerMessage(LogLevel.Debug, "SetChunkSize (ClientId={ClientId}, InChunkSize={InChunkSize})")]
         public static partial void SetChunkSize(this ILogger logger, uint clientId, uint inChunkSize);
 
-        [LoggerMessage(LogLevel.Debug, "ClientId: {ClientId} | WindowAcknowledgementSize: {InWindowAcknowledgementSize}")]
+        [LoggerMessage(LogLevel.Debug, "WindowAcknowledgementSize (ClientId={ClientId}, InWindowAcknowledgementSize={InWindowAcknowledgementSize})")]
         public static partial void WindowAcknowledgementSize(this ILogger logger, uint clientId, uint inWindowAcknowledgementSize);
 
-        [LoggerMessage(LogLevel.Error, "ClientId: {ClientId} | Failed to handle RTMP message")]
+        [LoggerMessage(LogLevel.Error, "Failed to handle RTMP message (ClientId={ClientId})")]
         public static partial void FailedToHandleRtmpMessage(this ILogger logger, uint clientId, Exception ex);
 
-        [LoggerMessage(LogLevel.Debug, "ClientId: {ClientId} | Handshake C0 Handled")]
+        [LoggerMessage(LogLevel.Debug, "Handshake C0 Handled (ClientId={ClientId})")]
         public static partial void HandshakeC0Handled(this ILogger logger, uint clientId);
 
-        [LoggerMessage(LogLevel.Debug, "ClientId: {ClientId} | Handshake C1 Handled")]
+        [LoggerMessage(LogLevel.Debug, "Handshake C1 Handled (ClientId={ClientId})")]
         public static partial void HandshakeC1Handled(this ILogger logger, uint clientId);
 
-        [LoggerMessage(LogLevel.Error, "ClientId: {ClientId} | Handshake C1 Handling Failed")]
+        [LoggerMessage(LogLevel.Error, "Handshake C1 Handling Failed (ClientId={ClientId})")]
         public static partial void HandshakeC1HandlingFailed(this ILogger logger, uint clientId);
 
-        [LoggerMessage(LogLevel.Debug, "ClientId: {ClientId} | Handshake C2 Handled")]
+        [LoggerMessage(LogLevel.Debug, "Handshake C2 Handled (ClientId={ClientId})")]
         public static partial void HandshakeC2Handled(this ILogger logger, uint clientId);
 
-        [LoggerMessage(LogLevel.Error, "ClientId: {ClientId} | Handshake C2 Handling Failed")]
+        [LoggerMessage(LogLevel.Error, "Handshake C2 Handling Failed (ClientId={ClientId})")]
         public static partial void HandshakeC2HandlingFailed(this ILogger logger, uint clientId);
 
-        [LoggerMessage(LogLevel.Debug, "ClientId: {ClientId} | Handshake type: {HandshakeType}")]
+        [LoggerMessage(LogLevel.Debug, "Handshake type (ClientId={ClientId}, HandshakeType={HandshakeType})")]
         public static partial void HandshakeType(this ILogger logger, uint clientId, string handshakeType);
 
-        [LoggerMessage(LogLevel.Error, "ClientId: {ClientId} | An error occurred while sending media message")]
+        [LoggerMessage(LogLevel.Error, "An error occurred while sending media message (ClientId={ClientId})")]
         public static partial void FailedToSendMediaMessage(this ILogger logger, uint clientId, Exception exception);
 
-        [LoggerMessage(LogLevel.Debug, "ClientId: {ClientId} | Begin media packet discard | OutstandingSize: {OutstandingSize} | OutstandingCount: {OutstandingCount}")]
+        [LoggerMessage(LogLevel.Debug, "Begin media packet discard (ClientId={ClientId}, OutstandingSize={OutstandingSize}, OutstandingCount={OutstandingCount})")]
         public static partial void BeginMediaPacketDiscard(this ILogger logger, uint clientId, long outstandingSize, long outstandingCount);
 
-        [LoggerMessage(LogLevel.Debug, "ClientId: {ClientId} | End media packet discard | OutstandingSize: {OutstandingSize} | OutstandingCount: {OutstandingCount}")]
+        [LoggerMessage(LogLevel.Debug, "End media packet discard (ClientId={ClientId}, OutstandingSize={OutstandingSize}, OutstandingCount={OutstandingCount})")]
         public static partial void EndMediaPacketDiscard(this ILogger logger, uint clientId, long outstandingSize, long outstandingCount);
 
-        [LoggerMessage(LogLevel.Warning, "StreamPath: {StreamPath} | Reached max GOP cache size")]
+        [LoggerMessage(LogLevel.Warning, "Reached max GOP cache size (StreamPath={StreamPath})")]
         public static partial void ReachedMaxGopCacheSize(this ILogger logger, string streamPath);
 
-        [LoggerMessage(LogLevel.Warning, "ClientId: {ClientId} | Exceeded bandwidth limit")]
+        [LoggerMessage(LogLevel.Warning, "Exceeded bandwidth limit (ClientId={ClientId})")]
         public static partial void ExceededBandwidthLimit(this ILogger logger, uint clientId);
 
-        [LoggerMessage(LogLevel.Error, "ClientId: {ClientId} | An error occurred while dispatching RTMP client connected event")]
+        [LoggerMessage(LogLevel.Error, "An error occurred while dispatching RTMP client connected event (ClientId={ClientId})")]
         public static partial void DispatchingRtmpClientConnectedEventError(this ILogger logger, uint clientId, Exception ex);
 
-        [LoggerMessage(LogLevel.Error, "ClientId: {ClientId} | An error occurred while dispatching RTMP client created event")]
+        [LoggerMessage(LogLevel.Error, "An error occurred while dispatching RTMP client created event (ClientId={ClientId})")]
         public static partial void DispatchingRtmpClientCreatedEventError(this ILogger logger, uint clientId, Exception ex);
 
-        [LoggerMessage(LogLevel.Error, "ClientId: {ClientId} | An error occurred while dispatching RTMP client disposed event")]
+        [LoggerMessage(LogLevel.Error, "An error occurred while dispatching RTMP client disposed event (ClientId={ClientId})")]
         public static partial void DispatchingRtmpClientDisposedEventError(this ILogger logger, uint clientId, Exception ex);
 
-        [LoggerMessage(LogLevel.Error, "ClientId: {ClientId} | An error occurred while dispatching RTMP client handshake complete event")]
+        [LoggerMessage(LogLevel.Error, "An error occurred while dispatching RTMP client handshake complete event (ClientId={ClientId})")]
         public static partial void DispatchingRtmpClientHandshakeCompleteEventError(this ILogger logger, uint clientId, Exception ex);
 
-        [LoggerMessage(LogLevel.Error, "ClientId: {ClientId} | An error occurred while dispatching RTMP stream metadata recevied event")]
+        [LoggerMessage(LogLevel.Error, "An error occurred while dispatching RTMP stream metadata received event (ClientId={ClientId})")]
         public static partial void DispatchingRtmpStreamMetaDataReceivedEventError(this ILogger logger, uint clientId, Exception ex);
 
-        [LoggerMessage(LogLevel.Error, "ClientId: {ClientId} | An error occurred while dispatching RTMP stream published event")]
+        [LoggerMessage(LogLevel.Error, "An error occurred while dispatching RTMP stream published event (ClientId={ClientId})")]
         public static partial void DispatchingRtmpStreamPublishedEventError(this ILogger logger, uint clientId, Exception ex);
 
-        [LoggerMessage(LogLevel.Error, "ClientId: {ClientId} | An error occurred while dispatching RTMP stream unpublished event")]
+        [LoggerMessage(LogLevel.Error, "An error occurred while dispatching RTMP stream unpublished event (ClientId={ClientId})")]
         public static partial void DispatchingRtmpStreamUnpublishedEventError(this ILogger logger, uint clientId, Exception ex);
 
-        [LoggerMessage(LogLevel.Error, "ClientId: {ClientId} | An error occurred while dispatching RTMP stream subscribed event")]
+        [LoggerMessage(LogLevel.Error, "An error occurred while dispatching RTMP stream subscribed event (ClientId={ClientId})")]
         public static partial void DispatchingRtmpStreamSubscribedEventError(this ILogger logger, uint clientId, Exception ex);
 
-        [LoggerMessage(LogLevel.Error, "ClientId: {ClientId} | An error occurred while dispatching RTMP stream unsubscribed event")]
+        [LoggerMessage(LogLevel.Error, "An error occurred while dispatching RTMP stream unsubscribed event (ClientId={ClientId})")]
         public static partial void DispatchingRtmpStreamUnsubscribedEventError(this ILogger logger, uint clientId, Exception ex);
 
-        [LoggerMessage(LogLevel.Warning, "StreamPath: {StreamPath} | VideoCodec: {VideoCodec} | Video codec not allowed")]
+        [LoggerMessage(LogLevel.Warning, "Video codec not allowed (StreamPath={StreamPath}, VideoCodec={VideoCodec})")]
         public static partial void VideoCodecNotAllowed(this ILogger logger, string streamPath, VideoCodec videoCodec);
 
-        [LoggerMessage(LogLevel.Warning, "StreamPath: {StreamPath} | AudioCodec: {AudioCodec} | Audio codec not allowed")]
+        [LoggerMessage(LogLevel.Warning, "Audio codec not allowed (StreamPath={StreamPath}, AudioCodec={AudioCodec})")]
         public static partial void AudioCodecNotAllowed(this ILogger logger, string streamPath, AudioCodec audioCodec);
     }
 }

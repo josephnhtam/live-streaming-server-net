@@ -5,7 +5,7 @@ namespace LiveStreamingServerNet.Networking.Server.Internal.Logging
 {
     internal static partial class LoggerExtensions
     {
-        [LoggerMessage(LogLevel.Information, "Server is started | IPEndPoint: {IPEndPoint}")]
+        [LoggerMessage(LogLevel.Information, "Server is started (IPEndPoint={IPEndPoint})")]
         public static partial void ServerStarted(this ILogger logger, string ipEndPoint);
 
         [LoggerMessage(LogLevel.Information, "Server is started")]
@@ -26,10 +26,10 @@ namespace LiveStreamingServerNet.Networking.Server.Internal.Logging
         [LoggerMessage(LogLevel.Error, "An error occurred in the server loop")]
         public static partial void ServerLoopError(this ILogger logger, Exception exception);
 
-        [LoggerMessage(LogLevel.Information, "ClientId: {ClientId} | Connected")]
+        [LoggerMessage(LogLevel.Information, "Connected (ClientId={ClientId})")]
         public static partial void ClientConnected(this ILogger logger, uint clientId);
 
-        [LoggerMessage(LogLevel.Information, "ClientId: {ClientId} | Disconnected")]
+        [LoggerMessage(LogLevel.Information, "Disconnected (ClientId={ClientId})")]
         public static partial void ClientDisconnected(this ILogger logger, uint clientId);
 
         [LoggerMessage(LogLevel.Error, "An error occurred while dispatching listener created event")]

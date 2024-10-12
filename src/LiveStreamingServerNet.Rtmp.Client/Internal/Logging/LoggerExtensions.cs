@@ -4,64 +4,64 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.Logging
 {
     internal static partial class LoggerExtensions
     {
-        [LoggerMessage(LogLevel.Error, "SessionId: {SessionId} | An error occurred in the session loop")]
+        [LoggerMessage(LogLevel.Error, "An error occurred in the session loop (SessionId={SessionId})")]
         public static partial void SessionLoopError(this ILogger logger, uint sessionId, Exception exception);
 
-        [LoggerMessage(LogLevel.Debug, "SessionId: {SessionId} | Handshake S0 Handled")]
+        [LoggerMessage(LogLevel.Debug, "Handshake S0 Handled (SessionId={SessionId})")]
         public static partial void HandshakeS0Handled(this ILogger logger, uint sessionId);
 
-        [LoggerMessage(LogLevel.Debug, "SessionId: {SessionId} | Handshake S1 Handled")]
+        [LoggerMessage(LogLevel.Debug, "Handshake S1 Handled (SessionId={SessionId})")]
         public static partial void HandshakeS1Handled(this ILogger logger, uint sessionId);
 
-        [LoggerMessage(LogLevel.Error, "SessionId: {SessionId} | Handshake S1 Handling Failed")]
+        [LoggerMessage(LogLevel.Error, "Handshake S1 Handling Failed (SessionId={SessionId})")]
         public static partial void HandshakeS1HandlingFailed(this ILogger logger, uint sessionId);
 
-        [LoggerMessage(LogLevel.Debug, "SessionId: {SessionId} | Handshake S2 Handled")]
+        [LoggerMessage(LogLevel.Debug, "Handshake S2 Handled (SessionId={SessionId})")]
         public static partial void HandshakeS2Handled(this ILogger logger, uint sessionId);
 
-        [LoggerMessage(LogLevel.Error, "SessionId: {SessionId} | Handshake S2 Handling Failed")]
+        [LoggerMessage(LogLevel.Error, "Handshake S2 Handling Failed (SessionId={SessionId})")]
         public static partial void HandshakeS2HandlingFailed(this ILogger logger, uint sessionId);
 
-        [LoggerMessage(LogLevel.Error, "SessionId: {SessionId} | An error occurred while dispatching RTMP handshake complete event")]
+        [LoggerMessage(LogLevel.Error, "An error occurred while dispatching RTMP handshake complete event (SessionId={SessionId})")]
         public static partial void DispatchingRtmpHandshakeCompleteEventError(this ILogger logger, uint sessionId, Exception ex);
 
-        [LoggerMessage(LogLevel.Trace, "SessionId: {SessionId} | Acknowledgement received")]
+        [LoggerMessage(LogLevel.Trace, "Acknowledgement received (SessionId={SessionId})")]
         public static partial void AcknowledgementReceived(this ILogger logger, uint sessionId);
 
-        [LoggerMessage(LogLevel.Debug, "SessionId: {SessionId} | SetChunkSize: {InChunkSize}")]
+        [LoggerMessage(LogLevel.Debug, "SetChunkSize (SessionId={SessionId}, InChunkSize={InChunkSize})")]
         public static partial void SetChunkSize(this ILogger logger, uint sessionId, uint inChunkSize);
 
-        [LoggerMessage(LogLevel.Debug, "SessionId: {SessionId} | WindowAcknowledgementSize: {InWindowAcknowledgementSize}")]
+        [LoggerMessage(LogLevel.Debug, "WindowAcknowledgementSize (SessionId={SessionId}, InWindowAcknowledgementSize={InWindowAcknowledgementSize})")]
         public static partial void WindowAcknowledgementSize(this ILogger logger, uint sessionId, uint inWindowAcknowledgementSize);
 
-        [LoggerMessage(LogLevel.Error, "SessionId: {SessionId} | Failed to handle RTMP message")]
+        [LoggerMessage(LogLevel.Error, "Failed to handle RTMP message (SessionId={SessionId})")]
         public static partial void FailedToHandleRtmpMessage(this ILogger logger, uint sessionId, Exception ex);
 
-        [LoggerMessage(LogLevel.Error, "SessionId: {SessionId} | An error occurred while handling command result")]
+        [LoggerMessage(LogLevel.Error, "An error occurred while handling command result (SessionId={SessionId})")]
         public static partial void CommandResultHandlingError(this ILogger logger, uint sessionId, Exception ex);
 
-        [LoggerMessage(LogLevel.Error, "SessionId: {SessionId} | StreamId: {StreamId} | Subscribe stream not yet created")]
+        [LoggerMessage(LogLevel.Error, "Subscribe stream not yet created (SessionId={SessionId}, StreamId={StreamId})")]
         public static partial void SubscribeStreamNotYetCreated(this ILogger logger, uint sessionId, uint streamId);
 
-        [LoggerMessage(LogLevel.Error, "StreamId: {StreamId} | An error occurred while updating stream metadata")]
+        [LoggerMessage(LogLevel.Error, "An error occurred while updating stream metadata (StreamId={StreamId})")]
         public static partial void StreamMetaDataUpdateError(this ILogger logger, uint streamId, Exception ex);
 
-        [LoggerMessage(LogLevel.Error, "StreamId: {StreamId} | An error occurred while receiving video data")]
+        [LoggerMessage(LogLevel.Error, "An error occurred while receiving video data (StreamId={StreamId})")]
         public static partial void VideoDataReceiveError(this ILogger logger, uint streamId, Exception ex);
 
-        [LoggerMessage(LogLevel.Error, "StreamId: {StreamId} | An error occurred while receiving audio data")]
+        [LoggerMessage(LogLevel.Error, "An error occurred while receiving audio data (StreamId={StreamId})")]
         public static partial void AudioDataReceiveError(this ILogger logger, uint streamId, Exception ex);
 
-        [LoggerMessage(LogLevel.Error, "StreamId: {StreamId} | An error occurred while receiving status")]
+        [LoggerMessage(LogLevel.Error, "An error occurred while receiving status (StreamId={StreamId})")]
         public static partial void StatusReceiveError(this ILogger logger, uint streamId, Exception ex);
 
-        [LoggerMessage(LogLevel.Error, "StreamId: {StreamId} | An error occurred while receiving user control event")]
+        [LoggerMessage(LogLevel.Error, "An error occurred while receiving user control event (StreamId={StreamId})")]
         public static partial void UserControlEventReceiveError(this ILogger logger, uint streamId, Exception ex);
 
         [LoggerMessage(LogLevel.Error, "An error occurred while updating bandwidth limit")]
         public static partial void BandwidthLimitUpdateError(this ILogger logger, Exception ex);
 
-        [LoggerMessage(LogLevel.Error, "SessionId: {SessionId} | StreamId: {StreamId} | Invalid onStatus parameters")]
+        [LoggerMessage(LogLevel.Error, "Invalid onStatus parameters (SessionId={SessionId}, StreamId={StreamId})")]
         public static partial void InvalidOnStatusParameters(this ILogger logger, uint sessionId, uint streamId);
     }
 }
