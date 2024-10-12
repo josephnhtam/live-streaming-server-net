@@ -13,6 +13,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal
     internal class RtmpUpstreamProcessFactory : IRtmpUpstreamProcessFactory
     {
         private readonly IRtmpOriginResolver _originResolver;
+        private readonly IRtmpStreamDeletionService _streamDeletion;
         private readonly IBufferPool _bufferPool;
         private readonly IDataBufferPool _dataBufferPool;
         private readonly IUpstreamMediaPacketDiscarderFactory _packetDiscarderFactory;
@@ -21,6 +22,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal
 
         public RtmpUpstreamProcessFactory(
             IRtmpOriginResolver originResolver,
+            IRtmpStreamDeletionService streamDeletion,
             IBufferPool bufferPool,
             IDataBufferPool dataBufferPool,
             IUpstreamMediaPacketDiscarderFactory packetDiscarderFactory,
@@ -28,6 +30,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal
             ILogger<RtmpUpstreamProcess> logger)
         {
             _originResolver = originResolver;
+            _streamDeletion = streamDeletion;
             _bufferPool = bufferPool;
             _dataBufferPool = dataBufferPool;
             _packetDiscarderFactory = packetDiscarderFactory;
@@ -40,6 +43,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal
             return new RtmpUpstreamProcess(
                 publishStreamContext,
                 _originResolver,
+                _streamDeletion,
                 _bufferPool,
                 _dataBufferPool,
                 _packetDiscarderFactory,
