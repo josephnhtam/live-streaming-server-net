@@ -93,7 +93,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal
                 return;
             }
 
-            _logger.RtmpDownstreamOriginResolved(publishStreamContext.StreamPath, origin.EndPoint);
+            _logger.RtmpDownstreamOriginResolved(publishStreamContext.StreamPath, origin);
 
             var mediaDataChannel = CreateMediaDataChannel();
             var mediaDataProcessorTask = MediaDataProcessorTask(mediaDataChannel, publishStreamContext, abortCts);

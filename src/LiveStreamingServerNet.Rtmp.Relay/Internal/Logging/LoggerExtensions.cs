@@ -1,4 +1,5 @@
 ﻿using LiveStreamingServerNet.Networking;
+using LiveStreamingServerNet.Rtmp.Relay;
 using Microsoft.Extensions.Logging;
 
 namespace LiveStreamingServerNet.Rtmp.Server.Internal.Logging
@@ -14,8 +15,8 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Logging
         [LoggerMessage(LogLevel.Information, "Downstream idle timeout (StreamPath={StreamPath})")]
         public static partial void RtmpDownstreamIdleTimeout(this ILogger logger, string streamPath);
 
-        [LoggerMessage(LogLevel.Information, "Origin resolved (StreamPath={StreamPath}, OriginEndPoint={OriginEndPoint})")]
-        public static partial void RtmpDownstreamOriginResolved(this ILogger logger, string streamPath, ServerEndPoint originEndPoint);
+        [LoggerMessage(LogLevel.Information, "Downstream origin resolved (StreamPath={StreamPath}, RtmpOrigin={Origin})")]
+        public static partial void RtmpDownstreamOriginResolved(this ILogger logger, string streamPath, RtmpOrigin origin);
 
         [LoggerMessage(LogLevel.Information, "Connecting to the origin for the downstream (StreamPath={StreamPath}, OriginEndPoint={OriginEndPoint})")]
         public static partial void RtmpDownstreamConnecting(this ILogger logger, string streamPath, ServerEndPoint originEndPoint);
@@ -38,8 +39,8 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Logging
         [LoggerMessage(LogLevel.Information, "Upstream idle timeout (StreamPath={StreamPath})")]
         public static partial void RtmpUpstreamIdleTimeout(this ILogger logger, string streamPath);
 
-        [LoggerMessage(LogLevel.Information, "Origin resolved (StreamPath={StreamPath}, OriginEndPoint={OriginEndPoint})")]
-        public static partial void RtmpUpstreamOriginResolved(this ILogger logger, string streamPath, ServerEndPoint originEndPoint);
+        [LoggerMessage(LogLevel.Information, "Upstream origin resolved (StreamPath={StreamPath}, RtmpOrigin={Origin})")]
+        public static partial void RtmpUpstreamOriginResolved(this ILogger logger, string streamPath, RtmpOrigin origin);
 
         [LoggerMessage(LogLevel.Information, "Connecting to the origin for the upstream (StreamPath={StreamPath}, OriginEndPoint={OriginEndPoint})")]
         public static partial void RtmpUpstreamConnecting(this ILogger logger, string streamPath, ServerEndPoint originEndPoint);

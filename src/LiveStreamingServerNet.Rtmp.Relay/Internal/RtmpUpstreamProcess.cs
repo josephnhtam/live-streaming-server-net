@@ -77,7 +77,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal
                 return;
             }
 
-            _logger.RtmpUpstreamOriginResolved(_streamPath, origin.EndPoint);
+            _logger.RtmpUpstreamOriginResolved(_streamPath, origin);
 
             await RunUpstreamClientAsync(origin, abortCts);
         }
