@@ -13,11 +13,13 @@ namespace LiveStreamingServerNet.RtmpRelayDemo
         public static async Task Main()
         {
             using var originServer = CreateOriginServer();
-            using var relayServer = CreateRelayServer();
+            using var relayServer1 = CreateRelayServer();
+            using var relayServer2 = CreateRelayServer();
 
             await Task.WhenAll(
                 originServer.RunAsync(new IPEndPoint(IPAddress.Any, 1935)),
-                relayServer.RunAsync(new IPEndPoint(IPAddress.Any, 1936)));
+                relayServer1.RunAsync(new IPEndPoint(IPAddress.Any, 1936)),
+                relayServer2.RunAsync(new IPEndPoint(IPAddress.Any, 1937)));
         }
 
         private static ILiveStreamingServer CreateOriginServer()
