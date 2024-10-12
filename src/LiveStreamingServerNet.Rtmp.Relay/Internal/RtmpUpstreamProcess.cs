@@ -40,6 +40,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal
         private uint _videoTimestamp;
         private long _outstandingPacketsSize;
         private long _outstandingPacketCount;
+        private bool _isPublishStarted;
 
         public string StreamPath => _streamPath;
         public IReadOnlyDictionary<string, string> StreamArguments => _streamArguments;
@@ -162,6 +163,8 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal
                 }
                 else if (eventArgs.Code == RtmpStreamStatusCodes.PublishStart)
                 {
+                    _isPublishStarted = true;
+
                     idleChecker.Refresh();
                     _ = InitializeUpstreamAsync(rtmpStream, abortCts);
                 }
@@ -370,6 +373,9 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal
 
         public void OnReceiveMediaData(MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp, bool isSkippable)
         {
+            if (!_isPublishStarted)
+                return;
+
             EnqueueMediaData(new MediaData(mediaType, timestamp, isSkippable, rentedBuffer));
         }
 
