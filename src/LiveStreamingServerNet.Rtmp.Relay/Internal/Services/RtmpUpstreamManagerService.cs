@@ -32,10 +32,13 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Services
             _config = config.Value;
         }
 
-        private void CreateUpstreamProcessIfNeeded(string streamPath)
+        private async ValueTask CreateUpstreamProcessIfNeededAsync(string streamPath)
         {
-            if (!_config.Enabled)
+            if (!_config.Enabled || _upstreamProcessTasks.ContainsKey(streamPath) ||
+                !await VerifyConditionAsync(streamPath))
+            {
                 return;
+            }
 
             lock (_syncLock)
             {
@@ -57,17 +60,28 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Services
 
                 _upstreamProcessTasks[streamPath] = new(upstreamProcess, upstreamProcessTask, cts);
 
-                _ = upstreamProcessTask.ContinueWith(_ =>
+                _ = upstreamProcessTask.ContinueWith(async _ =>
                 {
                     lock (_syncLock)
                     {
                         _upstreamProcessTasks.TryRemove(streamPath, out var _);
                         cts.Dispose();
-
-                        CreateUpstreamProcessIfNeeded(streamPath);
                     }
+
+                    await CreateUpstreamProcessIfNeededAsync(streamPath);
                 });
             }
+        }
+
+        private async ValueTask<bool> VerifyConditionAsync(string streamPath)
+        {
+            if (_config.Condition == null)
+                return true;
+
+            var publishStreamContext = _streamManager.GetPublishStreamContext(streamPath);
+            if (publishStreamContext == null) return false;
+
+            return await _config.Condition.ShouldRelayStreamAsync(_services, streamPath, publishStreamContext.StreamArguments);
         }
 
         private void RemoveUpstreamProcessIfNeeded(string streamPath)
@@ -111,8 +125,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Services
 
         public ValueTask OnRtmpStreamPublishedAsync(IEventContext context, uint clientId, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
-            CreateUpstreamProcessIfNeeded(streamPath);
-            return ValueTask.CompletedTask;
+            return CreateUpstreamProcessIfNeededAsync(streamPath);
         }
 
         public ValueTask OnRtmpStreamUnpublishedAsync(IEventContext context, uint clientId, string streamPath)

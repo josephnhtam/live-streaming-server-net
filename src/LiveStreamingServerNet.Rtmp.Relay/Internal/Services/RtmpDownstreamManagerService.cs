@@ -5,6 +5,7 @@ using LiveStreamingServerNet.Rtmp.Server.Contracts;
 using LiveStreamingServerNet.Rtmp.Server.Internal.Services.Contracts;
 using LiveStreamingServerNet.Utilities.Contracts;
 using Microsoft.Extensions.Options;
+using System.Collections.Concurrent;
 
 namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Services
 {
@@ -15,7 +16,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Services
         private readonly IRtmpStreamManagerService _streamManager;
         private readonly RtmpDownstreamConfiguration _config;
 
-        private readonly Dictionary<string, DownstreamProcessItem> _downstreamProcessTasks = new();
+        private readonly ConcurrentDictionary<string, DownstreamProcessItem> _downstreamProcessTasks = new();
         private readonly object _syncLock = new();
 
         public RtmpDownstreamManagerService(
@@ -30,10 +31,13 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Services
             _config = config.Value;
         }
 
-        private void CreateDownstreamProcessIfNeeded(string streamPath)
+        private async ValueTask CreateDownstreamProcessIfNeededAsync(string streamPath)
         {
-            if (!_config.Enabled)
+            if (!_config.Enabled || _downstreamProcessTasks.ContainsKey(streamPath) ||
+                !await VerifyConditionAsync(streamPath))
+            {
                 return;
+            }
 
             lock (_syncLock)
             {
@@ -54,17 +58,25 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Services
 
                 _downstreamProcessTasks[streamPath] = new(downstreamProcessTask, cts);
 
-                _ = downstreamProcessTask.ContinueWith(_ =>
+                _ = downstreamProcessTask.ContinueWith(async _ =>
                 {
                     lock (_syncLock)
                     {
-                        _downstreamProcessTasks.Remove(streamPath);
+                        _downstreamProcessTasks.TryRemove(streamPath, out var _);
                         cts.Dispose();
-
-                        CreateDownstreamProcessIfNeeded(streamPath);
                     }
+
+                    await CreateDownstreamProcessIfNeededAsync(streamPath);
                 });
             }
+        }
+
+        private async ValueTask<bool> VerifyConditionAsync(string streamPath)
+        {
+            if (_config.Condition == null)
+                return true;
+
+            return await _config.Condition.ShouldRelayStreamAsync(_services, streamPath);
         }
 
         private void RemoveDownstreamProcessIfNeeded(string streamPath)
@@ -101,8 +113,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Services
 
         public ValueTask OnRtmpStreamSubscribedAsync(IEventContext context, uint clientId, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
-            CreateDownstreamProcessIfNeeded(streamPath);
-            return ValueTask.CompletedTask;
+            return CreateDownstreamProcessIfNeededAsync(streamPath);
         }
 
         public ValueTask OnRtmpStreamUnsubscribedAsync(IEventContext context, uint clientId, string streamPath)
