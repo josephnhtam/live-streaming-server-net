@@ -60,9 +60,9 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal
         public async Task RunAsync(CancellationToken cancellationToken)
         {
             var publishStreamContext = CreatePublishStreamContext();
-            var publishingResult = _streamManager.StartDirectPublishing(publishStreamContext, out _);
+            var publishingResult = await _streamManager.StartDirectPublishingAsync(publishStreamContext);
 
-            if (publishingResult != PublishingStreamResult.Succeeded)
+            if (publishingResult.Result != PublishingStreamResult.Succeeded)
                 return;
 
             try
@@ -75,9 +75,9 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal
             }
             finally
             {
-                _streamManager.StopPublishing(publishStreamContext, out var subscribers);
+                var stopPublishingResult = await _streamManager.StopPublishingAsync(publishStreamContext);
 
-                await Task.WhenAll(subscribers
+                await Task.WhenAll(stopPublishingResult.SubscribeStreamContexts
                     .Select(subscriber => subscriber.StreamContext)
                     .Select(streamContext => _streamDeletion.DeleteStreamAsync(streamContext).AsTask())
                 );

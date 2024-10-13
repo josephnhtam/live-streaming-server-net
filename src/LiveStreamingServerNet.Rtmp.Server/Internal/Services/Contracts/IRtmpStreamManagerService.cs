@@ -4,12 +4,12 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services.Contracts
 {
     internal interface IRtmpStreamManagerService
     {
-        PublishingStreamResult StartPublishing(IRtmpStreamContext streamContext, string streamPath, IReadOnlyDictionary<string, string> streamArguments, out IList<IRtmpSubscribeStreamContext> subscribeStreamContexts);
-        PublishingStreamResult StartDirectPublishing(IRtmpPublishStreamContext publishStreamContext, out IList<IRtmpSubscribeStreamContext> subscribeStreamContexts);
-        bool StopPublishing(IRtmpPublishStreamContext publishStreamContext, out IList<IRtmpSubscribeStreamContext> subscribeStreamContexts);
+        ValueTask<(PublishingStreamResult Result, IList<IRtmpSubscribeStreamContext> SubscribeStreamContexts)> StartPublishingAsync(IRtmpStreamContext streamContext, string streamPath, IReadOnlyDictionary<string, string> streamArguments);
+        ValueTask<(PublishingStreamResult Result, IList<IRtmpSubscribeStreamContext> SubscribeStreamContexts)> StartDirectPublishingAsync(IRtmpPublishStreamContext publishStreamContext);
+        ValueTask<(bool Result, IList<IRtmpSubscribeStreamContext> SubscribeStreamContexts)> StopPublishingAsync(IRtmpPublishStreamContext publishStreamContext);
 
-        SubscribingStreamResult StartSubscribing(IRtmpStreamContext streamContext, string streamPath, IReadOnlyDictionary<string, string> streamArguments, out IRtmpPublishStreamContext? publishStreamContext);
-        bool StopSubscribing(IRtmpSubscribeStreamContext subscribeStreamContext);
+        ValueTask<(SubscribingStreamResult Result, IRtmpPublishStreamContext? PublishStreamContext)> StartSubscribingAsync(IRtmpStreamContext streamContext, string streamPath, IReadOnlyDictionary<string, string> streamArguments);
+        ValueTask<bool> StopSubscribingAsync(IRtmpSubscribeStreamContext subscribeStreamContext);
 
         IReadOnlyList<string> GetStreamPaths();
         IRtmpPublishStreamContext? GetPublishStreamContext(string streamPath);

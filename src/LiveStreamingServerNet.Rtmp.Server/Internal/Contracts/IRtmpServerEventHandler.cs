@@ -17,11 +17,11 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Contracts
     {
         int GetOrder() => 0;
 
-        ValueTask OnRtmpStreamPublishedAsync(IEventContext context, IRtmpClientSessionContext clientContext, string streamPath, IReadOnlyDictionary<string, string> streamArguments);
-        ValueTask OnRtmpStreamUnpublishedAsync(IEventContext context, IRtmpClientSessionContext clientContext, string streamPath);
-        ValueTask OnRtmpStreamSubscribedAsync(IEventContext context, IRtmpClientSessionContext clientContext, string streamPath, IReadOnlyDictionary<string, string> streamArguments);
-        ValueTask OnRtmpStreamUnsubscribedAsync(IEventContext context, IRtmpClientSessionContext clientContext, string streamPath);
+        ValueTask OnRtmpStreamPublishedAsync(IEventContext context, IRtmpPublishStreamContext publishStreamContext);
+        ValueTask OnRtmpStreamUnpublishedAsync(IEventContext context, IRtmpPublishStreamContext publishStreamContext);
+        ValueTask OnRtmpStreamMetaDataReceivedAsync(IEventContext context, IRtmpPublishStreamContext publishStreamContext);
 
-        ValueTask OnRtmpStreamMetaDataReceivedAsync(IEventContext context, IRtmpClientSessionContext clientContext, string streamPath, IReadOnlyDictionary<string, object> metaData);
+        ValueTask OnRtmpStreamSubscribedAsync(IEventContext context, IRtmpSubscribeStreamContext subscribeStreamContext);
+        ValueTask OnRtmpStreamUnsubscribedAsync(IEventContext context, IRtmpSubscribeStreamContext subscribeStreamContext);
     }
 }

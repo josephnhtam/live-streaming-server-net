@@ -11,16 +11,14 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
     {
         private readonly IFixture _fixture;
         private readonly IRtmpStreamManagerService _rtmpStreamManager;
-        private readonly IRtmpServerStreamEventDispatcher _eventDispatcher;
         private readonly RtmpStreamDeletionService _rtmpStreamDeletionService;
 
         public RtmpStreamDeletionServiceTest()
         {
             _fixture = new Fixture();
             _rtmpStreamManager = Substitute.For<IRtmpStreamManagerService>();
-            _eventDispatcher = Substitute.For<IRtmpServerStreamEventDispatcher>();
 
-            _rtmpStreamDeletionService = new RtmpStreamDeletionService(_rtmpStreamManager, _eventDispatcher);
+            _rtmpStreamDeletionService = new RtmpStreamDeletionService(_rtmpStreamManager);
         }
 
         [Fact]
@@ -52,22 +50,14 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             subscriber_streamContext.StreamId.Returns(subscriber_streamId);
             subscriber_streamContext.CommandChunkStreamId.Returns(subscriber_CommandChunkStreamId);
 
-            _rtmpStreamManager.StopPublishing(publisher_publishStreamContext, out Arg.Any<IList<IRtmpSubscribeStreamContext>>()).Returns(x =>
-            {
-                x[1] = subscriber_subscribeStreamContexts;
-                return true;
-            });
+            _rtmpStreamManager.StopPublishingAsync(publisher_publishStreamContext)
+                .Returns(x => (true, subscriber_subscribeStreamContexts));
 
             // Act
             await _rtmpStreamDeletionService.DeleteStreamAsync(publisher_streamContext);
 
             // Assert
-            Received.InOrder(() =>
-            {
-                _ = _eventDispatcher.Received(1).RtmpStreamUnpublishedAsync(publisher_clientContext, streamPath);
-
-                publisher_clientContext.Received(1).RemoveStreamContext(publisher_streamId);
-            });
+            publisher_clientContext.Received(1).RemoveStreamContext(publisher_streamId);
         }
 
         [Fact]
@@ -97,14 +87,12 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             subscriber_streamContext.SubscribeContext.Returns(subscriber_subscribeStreamContext);
             subscriber_streamContext.StreamId.Returns(subscriber_streamId);
 
-            _rtmpStreamManager.StopSubscribing(subscriber_subscribeStreamContext).Returns(true);
+            _rtmpStreamManager.StopSubscribingAsync(subscriber_subscribeStreamContext).Returns(true);
 
             // Act
             await _rtmpStreamDeletionService.DeleteStreamAsync(subscriber_streamContext);
 
             // Assert
-            _ = _eventDispatcher.Received(1).RtmpStreamUnsubscribedAsync(subscriber_clientContext, streamPath);
-
             subscriber_clientContext.Received(1).RemoveStreamContext(subscriber_streamId);
         }
     }

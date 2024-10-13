@@ -33,6 +33,9 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             var interceptor1 = Substitute.For<IRtmpMediaMessageInterceptor>();
             var interceptor2 = Substitute.For<IRtmpMediaMessageInterceptor>();
 
+            interceptor1.FilterMediaMessage(streamPath, mediaType, timestamp, isSkippable).Returns(true);
+            interceptor2.FilterMediaMessage(streamPath, mediaType, timestamp, isSkippable).Returns(true);
+
             var interceptors = new List<IRtmpMediaMessageInterceptor> { interceptor1, interceptor2 };
 
             var service = new RtmpMediaMessageInterceptionService(interceptors);

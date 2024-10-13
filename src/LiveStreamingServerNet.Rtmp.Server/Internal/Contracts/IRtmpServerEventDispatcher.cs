@@ -11,11 +11,11 @@
 
     internal interface IRtmpServerStreamEventDispatcher
     {
-        ValueTask RtmpStreamPublishedAsync(IRtmpClientSessionContext clientContext, string streamPath, IReadOnlyDictionary<string, string> streamArguments);
-        ValueTask RtmpStreamUnpublishedAsync(IRtmpClientSessionContext clientContext, string streamPath);
-        ValueTask RtmpStreamSubscribedAsync(IRtmpClientSessionContext clientContext, string streamPath, IReadOnlyDictionary<string, string> streamArguments);
-        ValueTask RtmpStreamUnsubscribedAsync(IRtmpClientSessionContext clientContext, string streamPath);
+        ValueTask RtmpStreamPublishedAsync(IRtmpPublishStreamContext publishStreamContext);
+        ValueTask RtmpStreamUnpublishedAsync(IRtmpPublishStreamContext publishStreamContext);
+        ValueTask RtmpStreamMetaDataReceivedAsync(IRtmpPublishStreamContext publishStreamContext);
 
-        ValueTask RtmpStreamMetaDataReceivedAsync(IRtmpClientSessionContext clientContext, string streamPath, IReadOnlyDictionary<string, object> metaData);
+        ValueTask RtmpStreamSubscribedAsync(IRtmpSubscribeStreamContext subscribeStreamContext);
+        ValueTask RtmpStreamUnsubscribedAsync(IRtmpSubscribeStreamContext subscribeStreamContext);
     }
 }
