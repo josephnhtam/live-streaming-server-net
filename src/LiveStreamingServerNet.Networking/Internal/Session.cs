@@ -135,7 +135,11 @@ namespace LiveStreamingServerNet.Networking.Internal
 
         public void Disconnect()
         {
-            _cts.Cancel();
+            try
+            {
+                _cts.Cancel();
+            }
+            catch (ObjectDisposedException) { }
         }
 
         public async Task DisconnectAsync(CancellationToken cancellation)
