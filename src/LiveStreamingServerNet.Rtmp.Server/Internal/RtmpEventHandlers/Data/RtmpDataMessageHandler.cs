@@ -89,7 +89,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Data
 
             BroadcastMetaDataToSubscribers(chunkStreamContext, publishStreamContext);
 
-            await _eventDispatcher.RtmpStreamMetaDataReceivedAsync(clientContext, publishStreamContext.StreamPath, metaData);
+            await _eventDispatcher.RtmpStreamMetaDataReceivedAsync(publishStreamContext);
 
             return true;
         }

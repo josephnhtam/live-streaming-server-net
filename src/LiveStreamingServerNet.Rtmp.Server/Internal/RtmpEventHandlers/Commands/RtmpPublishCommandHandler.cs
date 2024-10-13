@@ -20,7 +20,6 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
     {
         private readonly IRtmpStreamManagerService _streamManager;
         private readonly IRtmpCommandMessageSenderService _commandMessageSender;
-        private readonly IRtmpServerStreamEventDispatcher _eventDispatcher;
         private readonly IStreamAuthorization _streamAuthorization;
         private readonly ILogger _logger;
 
@@ -28,13 +27,11 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
             IRtmpStreamManagerService streamManager,
             IRtmpCommandMessageSenderService commandMessageSender,
             IRtmpUserControlMessageSenderService userControlMessageSender,
-            IRtmpServerStreamEventDispatcher eventDispatcher,
             IStreamAuthorization streamAuthorization,
             ILogger<RtmpPublishCommandHandler> logger)
         {
             _streamManager = streamManager;
             _commandMessageSender = commandMessageSender;
-            _eventDispatcher = eventDispatcher;
             _streamAuthorization = streamAuthorization;
             _logger = logger;
         }
@@ -104,13 +101,12 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
             string streamPath,
             IReadOnlyDictionary<string, string> streamArguments)
         {
-            var startPublishingResult = _streamManager.StartPublishing(streamContext, streamPath, streamArguments, out _);
+            var startPublishingResult = await _streamManager.StartPublishingAsync(streamContext, streamPath, streamArguments);
 
-            switch (startPublishingResult)
+            switch (startPublishingResult.Result)
             {
                 case PublishingStreamResult.Succeeded:
                     _logger.PublishingStarted(streamContext.ClientContext.Client.Id, streamPath, command.PublishingType);
-                    await _eventDispatcher.RtmpStreamPublishedAsync(streamContext.ClientContext, streamPath, streamArguments);
                     return true;
 
                 case PublishingStreamResult.AlreadySubscribing:
@@ -126,7 +122,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
                     return false;
 
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(startPublishingResult), startPublishingResult, null);
+                    throw new ArgumentOutOfRangeException(nameof(startPublishingResult.Result), startPublishingResult.Result, null);
             }
         }
 

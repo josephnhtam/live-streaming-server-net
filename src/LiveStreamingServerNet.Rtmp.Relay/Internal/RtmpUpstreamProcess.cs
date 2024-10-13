@@ -28,7 +28,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal
         private readonly IReadOnlyDictionary<string, string> _streamArguments;
         private readonly IRtmpPublishStreamContext _publishStreamContext;
         private readonly IRtmpOriginResolver _originResolver;
-        private readonly IRtmpStreamDeletionService _streamDeletion;
+        private readonly IRtmpStreamManagerService _streamManager;
         private readonly IBufferPool _bufferPool;
         private readonly IDataBufferPool _dataBufferPool;
         private readonly RtmpUpstreamConfiguration _config;
@@ -50,7 +50,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal
         public RtmpUpstreamProcess(
             IRtmpPublishStreamContext publishStreamContext,
             IRtmpOriginResolver originResolver,
-            IRtmpStreamDeletionService streamDeletion,
+            IRtmpStreamManagerService streamManager,
             IBufferPool bufferPool,
             IDataBufferPool dataBufferPool,
             IUpstreamMediaPacketDiscarderFactory packetDiscarderFactory,
@@ -61,7 +61,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal
             _streamArguments = publishStreamContext.StreamArguments;
             _publishStreamContext = publishStreamContext;
             _originResolver = originResolver;
-            _streamDeletion = streamDeletion;
+            _streamManager = streamManager;
             _bufferPool = bufferPool;
             _dataBufferPool = dataBufferPool;
             _config = config.Value;
@@ -144,7 +144,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal
 
             try
             {
-                await _streamDeletion.DeleteStreamAsync(_publishStreamContext.StreamContext);
+                await _streamManager.StopPublishingAsync(_publishStreamContext);
                 await _publishStreamContext.StreamContext.ClientContext.Client.DisconnectAsync(abortCts.Token);
             }
             catch (OperationCanceledException) when (abortCts.IsCancellationRequested) { }

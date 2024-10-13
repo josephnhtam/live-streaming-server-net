@@ -116,6 +116,11 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Services
             return ValueTask.CompletedTask;
         }
 
+        public bool FilterMediaMessage(string streamPath, MediaType mediaType, uint timestamp, bool isSkippable)
+        {
+            return _upstreamProcessTasks.ContainsKey(streamPath);
+        }
+
         public ValueTask OnReceiveMediaMessageAsync(string streamPath, MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp, bool isSkippable)
         {
             if (_upstreamProcessTasks.TryGetValue(streamPath, out var upstreamProcessTaskItem))
@@ -128,11 +133,17 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Services
 
         public ValueTask OnRtmpStreamPublishedAsync(IEventContext context, uint clientId, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
+            if (clientId == 0)
+                return ValueTask.CompletedTask;
+
             return CreateUpstreamProcessIfNeededAsync(streamPath);
         }
 
         public ValueTask OnRtmpStreamUnpublishedAsync(IEventContext context, uint clientId, string streamPath)
         {
+            if (clientId == 0)
+                return ValueTask.CompletedTask;
+
             RemoveUpstreamProcessIfNeeded(streamPath);
             return ValueTask.CompletedTask;
         }

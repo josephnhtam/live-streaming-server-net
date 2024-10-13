@@ -14,86 +14,85 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
 
         private readonly IRtmpCommandMessageSenderService _commandMessageSender;
         private readonly IRtmpUserControlMessageSenderService _userControlMessageSender;
+        private readonly IRtmpServerStreamEventDispatcher _eventDispatcher;
 
         public RtmpStreamManagerService(
             IRtmpCommandMessageSenderService commandMessageSender,
-            IRtmpUserControlMessageSenderService userControlMessageSender)
+            IRtmpUserControlMessageSenderService userControlMessageSender,
+            IRtmpServerStreamEventDispatcher eventDispatcher)
         {
             _commandMessageSender = commandMessageSender;
             _userControlMessageSender = userControlMessageSender;
+            _eventDispatcher = eventDispatcher;
         }
 
-        public PublishingStreamResult StartPublishing(
-            IRtmpStreamContext streamContext, string streamPath, IReadOnlyDictionary<string, string> streamArguments, out IList<IRtmpSubscribeStreamContext> subscribeStreamContexts)
+        private (PublishingStreamResult Result, IList<IRtmpSubscribeStreamContext> SubscribeStreamContexts) StartPublishing(
+            IRtmpStreamContext streamContext, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
             lock (_publishingSyncLock)
             {
                 lock (_subscribingSyncLock)
                 {
-                    subscribeStreamContexts = null!;
-
                     if (streamContext.PublishContext != null)
                     {
                         SendBadPublishingConnectionMessage(streamContext, "Already publishing.");
-                        return PublishingStreamResult.AlreadyPublishing;
+                        return (PublishingStreamResult.AlreadyPublishing, new List<IRtmpSubscribeStreamContext>());
                     }
 
                     if (streamContext.SubscribeContext != null)
                     {
                         SendBadPublishingConnectionMessage(streamContext, "Already subscribing.");
-                        return PublishingStreamResult.AlreadySubscribing;
+                        return (PublishingStreamResult.AlreadySubscribing, new List<IRtmpSubscribeStreamContext>());
                     }
 
                     if (_publishStreamContexts.ContainsKey(streamPath))
                     {
                         SendAlreadyExistsMessage(streamContext);
-                        return PublishingStreamResult.AlreadyExists;
+                        return (PublishingStreamResult.AlreadyExists, new List<IRtmpSubscribeStreamContext>());
                     }
 
                     var publishStreamContext = streamContext.CreatePublishContext(streamPath, streamArguments);
                     _publishStreamContexts.Add(streamPath, publishStreamContext);
 
-                    subscribeStreamContexts = _subscribeStreamContexts.GetValueOrDefault(streamPath)?.ToList() ??
+                    var subscribeStreamContexts = _subscribeStreamContexts.GetValueOrDefault(streamPath)?.ToList() ??
                         new List<IRtmpSubscribeStreamContext>();
 
                     foreach (var subscribeStreamContext in subscribeStreamContexts)
                         subscribeStreamContext.ResetTimestamps();
 
                     SendPublishingStartedMessages(streamContext, subscribeStreamContexts);
-                    return PublishingStreamResult.Succeeded;
+                    return (PublishingStreamResult.Succeeded, subscribeStreamContexts);
                 }
             }
         }
 
-        public PublishingStreamResult StartDirectPublishing(
-            IRtmpPublishStreamContext publishStreamContext, out IList<IRtmpSubscribeStreamContext> subscribeStreamContexts)
+        private (PublishingStreamResult Result, IList<IRtmpSubscribeStreamContext> SubscribeStreamContexts) StartDirectPublishing(
+            IRtmpPublishStreamContext publishStreamContext)
         {
             lock (_publishingSyncLock)
             {
                 lock (_subscribingSyncLock)
                 {
-                    subscribeStreamContexts = null!;
-
                     var streamPath = publishStreamContext.StreamPath;
 
                     if (_publishStreamContexts.ContainsKey(streamPath))
-                        return PublishingStreamResult.AlreadyExists;
+                        return (PublishingStreamResult.AlreadyExists, new List<IRtmpSubscribeStreamContext>());
 
                     _publishStreamContexts.Add(streamPath, publishStreamContext);
 
-                    subscribeStreamContexts = _subscribeStreamContexts.GetValueOrDefault(streamPath)?.ToList() ??
+                    var subscribeStreamContexts = _subscribeStreamContexts.GetValueOrDefault(streamPath)?.ToList() ??
                         new List<IRtmpSubscribeStreamContext>();
 
                     foreach (var subscribeStreamContext in subscribeStreamContexts)
                         subscribeStreamContext.ResetTimestamps();
 
                     SendDirectPublishingStartedMessages(subscribeStreamContexts);
-                    return PublishingStreamResult.Succeeded;
+                    return (PublishingStreamResult.Succeeded, subscribeStreamContexts);
                 }
             }
         }
 
-        public bool StopPublishing(IRtmpPublishStreamContext publishStreamContext, out IList<IRtmpSubscribeStreamContext> subscribeStreamContexts)
+        private (bool Result, IList<IRtmpSubscribeStreamContext> SubscribeStreamContexts) StopPublishing(IRtmpPublishStreamContext publishStreamContext)
         {
             lock (_publishingSyncLock)
             {
@@ -106,8 +105,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
                         if (publishStreamContext.StreamContext.PublishContext != publishStreamContext ||
                             !_publishStreamContexts.Remove(streamPath))
                         {
-                            subscribeStreamContexts = new List<IRtmpSubscribeStreamContext>();
-                            return false;
+                            return (false, new List<IRtmpSubscribeStreamContext>());
                         }
 
                         publishStreamContext.StreamContext.RemovePublishContext();
@@ -116,50 +114,39 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
                     {
                         if (!_publishStreamContexts.Remove(streamPath))
                         {
-                            subscribeStreamContexts = new List<IRtmpSubscribeStreamContext>();
-                            return false;
+                            return (false, new List<IRtmpSubscribeStreamContext>());
                         }
                     }
 
-                    subscribeStreamContexts = _subscribeStreamContexts.GetValueOrDefault(streamPath)?.ToList() ??
+                    var subscribeStreamContexts = _subscribeStreamContexts.GetValueOrDefault(streamPath)?.ToList() ??
                         new List<IRtmpSubscribeStreamContext>();
 
                     SendPublishingEndedMessages(subscribeStreamContexts.AsReadOnly());
-                    return true;
+                    return (true, subscribeStreamContexts);
                 }
             }
         }
 
-        public bool IsStreamPublishing(string streamPath)
-        {
-            lock (_publishingSyncLock)
-            {
-                return _publishStreamContexts.ContainsKey(streamPath);
-            }
-        }
-
-        public SubscribingStreamResult StartSubscribing(
-            IRtmpStreamContext streamContext, string streamPath, IReadOnlyDictionary<string, string> streamArguments, out IRtmpPublishStreamContext? publishStreamContext)
+        private (SubscribingStreamResult Result, IRtmpPublishStreamContext? PublishStreamContext) StartSubscribing(
+            IRtmpStreamContext streamContext, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
             lock (_publishingSyncLock)
             {
                 lock (_subscribingSyncLock)
                 {
-                    publishStreamContext = null;
-
                     if (streamContext.PublishContext != null)
                     {
                         SendBadSubscribingConnectionMessage(streamContext, "Already publishing.");
-                        return SubscribingStreamResult.AlreadyPublishing;
+                        return (SubscribingStreamResult.AlreadyPublishing, null);
                     }
 
                     if (streamContext.SubscribeContext != null)
                     {
                         SendBadSubscribingConnectionMessage(streamContext, "Already subscribing.");
-                        return SubscribingStreamResult.AlreadySubscribing;
+                        return (SubscribingStreamResult.AlreadySubscribing, null);
                     }
 
-                    _publishStreamContexts.TryGetValue(streamPath, out publishStreamContext);
+                    _publishStreamContexts.TryGetValue(streamPath, out var publishStreamContext);
 
                     if (!_subscribeStreamContexts.TryGetValue(streamPath, out var subscribers))
                     {
@@ -171,12 +158,12 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
                     subscribers.Add(subscribeStreamContext);
 
                     SendSubscribingStartedMessages(subscribeStreamContext, publishStreamContext);
-                    return SubscribingStreamResult.Succeeded;
+                    return (SubscribingStreamResult.Succeeded, publishStreamContext);
                 }
             }
         }
 
-        public bool StopSubscribing(IRtmpSubscribeStreamContext subscribeStreamContext)
+        private bool StopSubscribing(IRtmpSubscribeStreamContext subscribeStreamContext)
         {
             lock (_subscribingSyncLock)
             {
@@ -195,6 +182,78 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
                     _subscribeStreamContexts.Remove(streamPath);
 
                 return true;
+            }
+        }
+
+        public async ValueTask<(PublishingStreamResult Result, IList<IRtmpSubscribeStreamContext> SubscribeStreamContexts)> StartPublishingAsync(
+            IRtmpStreamContext streamContext, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
+        {
+            var result = StartPublishing(streamContext, streamPath, streamArguments);
+
+            if (result.Result == PublishingStreamResult.Succeeded && streamContext.PublishContext != null)
+            {
+                await _eventDispatcher.RtmpStreamPublishedAsync(streamContext.PublishContext);
+            }
+
+            return result;
+        }
+
+        public async ValueTask<(PublishingStreamResult Result, IList<IRtmpSubscribeStreamContext> SubscribeStreamContexts)> StartDirectPublishingAsync(
+            IRtmpPublishStreamContext publishStreamContext)
+        {
+            var result = StartDirectPublishing(publishStreamContext);
+
+            if (result.Result == PublishingStreamResult.Succeeded)
+            {
+                await _eventDispatcher.RtmpStreamPublishedAsync(publishStreamContext);
+            }
+
+            return result;
+        }
+
+        public async ValueTask<(bool Result, IList<IRtmpSubscribeStreamContext> SubscribeStreamContexts)> StopPublishingAsync(
+            IRtmpPublishStreamContext publishStreamContext)
+        {
+            var result = StopPublishing(publishStreamContext);
+
+            if (result.Result)
+            {
+                await _eventDispatcher.RtmpStreamUnpublishedAsync(publishStreamContext);
+            }
+
+            return result;
+        }
+
+        public async ValueTask<(SubscribingStreamResult Result, IRtmpPublishStreamContext? PublishStreamContext)> StartSubscribingAsync(
+            IRtmpStreamContext streamContext, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
+        {
+            var result = StartSubscribing(streamContext, streamPath, streamArguments);
+
+            if (result.Result == SubscribingStreamResult.Succeeded && streamContext.SubscribeContext != null)
+            {
+                await _eventDispatcher.RtmpStreamSubscribedAsync(streamContext.SubscribeContext);
+            }
+
+            return result;
+        }
+
+        public async ValueTask<bool> StopSubscribingAsync(IRtmpSubscribeStreamContext subscribeStreamContext)
+        {
+            var result = StopSubscribing(subscribeStreamContext);
+
+            if (result)
+            {
+                await _eventDispatcher.RtmpStreamUnsubscribedAsync(subscribeStreamContext);
+            }
+
+            return result;
+        }
+
+        public bool IsStreamPublishing(string streamPath)
+        {
+            lock (_publishingSyncLock)
+            {
+                return _publishStreamContexts.ContainsKey(streamPath);
             }
         }
 

@@ -16,6 +16,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
         private readonly IFixture _fixture;
         private readonly IRtmpCommandMessageSenderService _commandMessageSender;
         private readonly IRtmpUserControlMessageSenderService _userControlMessageSender;
+        private readonly IRtmpServerStreamEventDispatcher _eventDispatcher;
         private readonly IRtmpStreamManagerService _sut;
 
         public RtmpStreamManagerServiceTest()
@@ -23,11 +24,12 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             _fixture = new Fixture();
             _commandMessageSender = Substitute.For<IRtmpCommandMessageSenderService>();
             _userControlMessageSender = Substitute.For<IRtmpUserControlMessageSenderService>();
-            _sut = new RtmpStreamManagerService(_commandMessageSender, _userControlMessageSender);
+            _eventDispatcher = Substitute.For<IRtmpServerStreamEventDispatcher>();
+            _sut = new RtmpStreamManagerService(_commandMessageSender, _userControlMessageSender, _eventDispatcher);
         }
 
         [Fact]
-        public void GetPublishStreamContext_Should_ReturnCorrectStreamContext()
+        public async Task GetPublishStreamContext_Should_ReturnCorrectStreamContext()
         {
             // Arrange
             var sessionHandle = Substitute.For<ISessionHandle>();
@@ -36,7 +38,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             var streamArguments = _fixture.Create<Dictionary<string, string>>();
 
             var streamContext = clientContext.CreateStreamContext();
-            _sut.StartPublishing(streamContext, streamPath, streamArguments, out _);
+            await _sut.StartPublishingAsync(streamContext, streamPath, streamArguments);
 
             // Act
             var result = _sut.GetPublishStreamContext(streamPath);
@@ -46,7 +48,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
         }
 
         [Fact]
-        public void StartPublishing_Should_AddPublisherAndReturnSucceeded()
+        public async Task StartPublishingAsync_Should_AddPublisherAndReturnSucceeded()
         {
             // Arrange
             var clientContext = Substitute.For<IRtmpClientSessionContext>();
@@ -59,16 +61,16 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             streamContext.SubscribeContext.Returns((IRtmpSubscribeStreamContext?)null);
 
             // Act
-            var result = _sut.StartPublishing(streamContext, streamPath, streamArguments, out _);
+            var result = await _sut.StartPublishingAsync(streamContext, streamPath, streamArguments);
 
             // Assert
-            result.Should().Be(PublishingStreamResult.Succeeded);
+            result.Result.Should().Be(PublishingStreamResult.Succeeded);
             streamContext.Received(1).CreatePublishContext(streamPath, streamArguments);
             _sut.IsStreamPublishing(streamPath).Should().BeTrue();
         }
 
         [Fact]
-        public void StartPublishing_Should_ReturnAlreadySubscribing_When_PublisherIsAlreadySubscribing()
+        public async Task StartPublishingAsync_Should_ReturnAlreadySubscribing_When_PublisherIsAlreadySubscribing()
         {
             // Arrange
             var clientContext = Substitute.For<IRtmpClientSessionContext>();
@@ -83,14 +85,14 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             subscribeStreamContext.StreamContext.Returns(streamContext);
 
             // Act
-            var result = _sut.StartPublishing(streamContext, streamPath, streamArguments, out _);
+            var result = await _sut.StartPublishingAsync(streamContext, streamPath, streamArguments);
 
             // Assert
-            result.Should().Be(PublishingStreamResult.AlreadySubscribing);
+            result.Result.Should().Be(PublishingStreamResult.AlreadySubscribing);
         }
 
         [Fact]
-        public void StartPublishing_Should_ReturnAlreadyPublishing_When_PublisherIsAlreadyPublishing()
+        public async Task StartPublishingAsync_Should_ReturnAlreadyPublishing_When_PublisherIsAlreadyPublishing()
         {
             // Arrange
             var clientContext = Substitute.For<IRtmpClientSessionContext>();
@@ -105,14 +107,14 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             publishStreamContext.StreamContext.Returns(streamContext);
 
             // Act
-            var result = _sut.StartPublishing(streamContext, streamPath, streamArguments, out _);
+            var result = await _sut.StartPublishingAsync(streamContext, streamPath, streamArguments);
 
             // Assert
-            result.Should().Be(PublishingStreamResult.AlreadyPublishing);
+            result.Result.Should().Be(PublishingStreamResult.AlreadyPublishing);
         }
 
         [Fact]
-        public void StartPublishing_Should_ReturnAlreadyExists_When_StreamPathAlreadyExists()
+        public async Task StartPublishingAsync_Should_ReturnAlreadyExists_When_StreamPathAlreadyExists()
         {
             // Arrange
             var sessionHandle1 = Substitute.For<ISessionHandle>();
@@ -126,17 +128,17 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             var streamPath = _fixture.Create<string>();
             var streamArguments = _fixture.Create<Dictionary<string, string>>();
 
-            _sut.StartPublishing(streamContext1, streamPath, streamArguments, out _);
+            await _sut.StartPublishingAsync(streamContext1, streamPath, streamArguments);
 
             // Act
-            var result = _sut.StartPublishing(streamContext2, streamPath, streamArguments, out _);
+            var result = await _sut.StartPublishingAsync(streamContext2, streamPath, streamArguments);
 
             // Assert
-            result.Should().Be(PublishingStreamResult.AlreadyExists);
+            result.Result.Should().Be(PublishingStreamResult.AlreadyExists);
         }
 
         [Fact]
-        public void StopPublishing_Should_RemovePublisherAndReturnTrue()
+        public async Task StopPublishingAsync_Should_RemovePublisherAndReturnTrue()
         {
             // Arrange
             var sessionHandle = Substitute.For<ISessionHandle>();
@@ -146,32 +148,32 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             var streamPath = _fixture.Create<string>();
             var streamArguments = _fixture.Create<Dictionary<string, string>>();
 
-            _sut.StartPublishing(streamContext, streamPath, streamArguments, out _);
+            await _sut.StartPublishingAsync(streamContext, streamPath, streamArguments);
 
             // Act
-            var result = _sut.StopPublishing(streamContext.PublishContext!, out _);
+            var result = await _sut.StopPublishingAsync(streamContext.PublishContext!);
 
             // Assert
-            result.Should().BeTrue();
+            result.Result.Should().BeTrue();
             streamContext.PublishContext.Should().BeNull();
             _sut.IsStreamPublishing(streamPath).Should().BeFalse();
         }
 
         [Fact]
-        public void StopPublishing_Should_ReturnFalse_When_PublisherDoesNotExist()
+        public async Task StopPublishingAsync_Should_ReturnFalse_When_PublisherDoesNotExist()
         {
             // Arrange
             var publishStreamContext = Substitute.For<IRtmpPublishStreamContext>();
 
             // Act
-            var result = _sut.StopPublishing(publishStreamContext, out _);
+            var result = await _sut.StopPublishingAsync(publishStreamContext);
 
             // Assert
-            result.Should().BeFalse();
+            result.Result.Should().BeFalse();
         }
 
         [Fact]
-        public void IsStreamPathPublishing_Should_ReturnTrue_When_StreamPathIsPublishing()
+        public async Task IsStreamPathPublishing_Should_ReturnTrue_When_StreamPathIsPublishing()
         {
             // Arrange
             var sessionHandle = Substitute.For<ISessionHandle>();
@@ -181,7 +183,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             var streamPath = _fixture.Create<string>();
             var streamArguments = _fixture.Create<Dictionary<string, string>>();
 
-            _sut.StartPublishing(streamContext, streamPath, streamArguments, out _);
+            await _sut.StartPublishingAsync(streamContext, streamPath, streamArguments);
 
             // Act
             var result = _sut.IsStreamPublishing(streamPath);
@@ -204,7 +206,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
         }
 
         [Fact]
-        public void StartSubscribing_Should_AddSubscriberAndReturnSucceeded()
+        public async Task StartSubscribingAsync_Should_AddSubscriberAndReturnSucceeded()
         {
             // Arrange
             var sessionHandle = Substitute.For<ISessionHandle>();
@@ -215,15 +217,15 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             var streamArguments = _fixture.Create<Dictionary<string, string>>();
 
             // Act
-            var result = _sut.StartSubscribing(streamContext, streamPath, streamArguments, out _);
+            var result = await _sut.StartSubscribingAsync(streamContext, streamPath, streamArguments);
 
             // Assert
-            result.Should().Be(SubscribingStreamResult.Succeeded);
+            result.Result.Should().Be(SubscribingStreamResult.Succeeded);
             _sut.GetSubscribeStreamContexts(streamPath).Should().Contain(streamContext.SubscribeContext!);
         }
 
         [Fact]
-        public void StartSubscribing_Should_ReturnAlreadyPublishing_When_SubscriberIsAlreadyPublishing()
+        public async Task StartSubscribingAsync_Should_ReturnAlreadyPublishing_When_SubscriberIsAlreadyPublishing()
         {
             // Arrange
             var sessionHandle = Substitute.For<ISessionHandle>();
@@ -233,17 +235,17 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             var streamPath = _fixture.Create<string>();
             var streamArguments = _fixture.Create<Dictionary<string, string>>();
 
-            _sut.StartPublishing(streamContext, streamPath, streamArguments, out _);
+            await _sut.StartPublishingAsync(streamContext, streamPath, streamArguments);
 
             // Act
-            var result = _sut.StartSubscribing(streamContext, streamPath, streamArguments, out _);
+            var result = await _sut.StartSubscribingAsync(streamContext, streamPath, streamArguments);
 
             // Assert
-            result.Should().Be(SubscribingStreamResult.AlreadyPublishing);
+            result.Result.Should().Be(SubscribingStreamResult.AlreadyPublishing);
         }
 
         [Fact]
-        public void StartSubscribing_Should_ReturnAlreadySubscribing_When_SubscriberIsAlreadySubscribing()
+        public async Task StartSubscribingAsync_Should_ReturnAlreadySubscribing_When_SubscriberIsAlreadySubscribing()
         {
             // Arrange
             var sessionHandle = Substitute.For<ISessionHandle>();
@@ -253,17 +255,17 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             var streamPath = _fixture.Create<string>();
             var streamArguments = _fixture.Create<Dictionary<string, string>>();
 
-            _sut.StartSubscribing(streamContext, streamPath, streamArguments, out _);
+            await _sut.StartSubscribingAsync(streamContext, streamPath, streamArguments);
 
             // Act
-            var result = _sut.StartSubscribing(streamContext, streamPath, streamArguments, out _);
+            var result = await _sut.StartSubscribingAsync(streamContext, streamPath, streamArguments);
 
             // Assert
-            result.Should().Be(SubscribingStreamResult.AlreadySubscribing);
+            result.Result.Should().Be(SubscribingStreamResult.AlreadySubscribing);
         }
 
         [Fact]
-        public void StopSubscribing_Should_RemoveSubscriberAndReturnTrue()
+        public async Task StopSubscribingAsync_Should_RemoveSubscriberAndReturnTrue()
         {
             // Arrange
             var sessionHandle = Substitute.For<ISessionHandle>();
@@ -273,12 +275,12 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             var streamPath = _fixture.Create<string>();
             var streamArguments = _fixture.Create<Dictionary<string, string>>();
 
-            _sut.StartSubscribing(streamContext, streamPath, streamArguments, out _);
+            await _sut.StartSubscribingAsync(streamContext, streamPath, streamArguments);
 
             var subscribeStreamContext = streamContext.SubscribeContext!;
 
             // Act
-            var result = _sut.StopSubscribing(subscribeStreamContext);
+            var result = await _sut.StopSubscribingAsync(subscribeStreamContext);
 
             // Assert
             result.Should().BeTrue();
@@ -286,20 +288,20 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
         }
 
         [Fact]
-        public void StopSubscribing_Should_ReturnFalse_When_SubscriberDoesNotExist()
+        public async Task StopSubscribingAsync_Should_ReturnFalse_When_SubscriberDoesNotExist()
         {
             // Arrange
             var subscribeStreamContext = Substitute.For<IRtmpSubscribeStreamContext>();
 
             // Act
-            var result = _sut.StopSubscribing(subscribeStreamContext);
+            var result = await _sut.StopSubscribingAsync(subscribeStreamContext);
 
             // Assert
             result.Should().BeFalse();
         }
 
         [Fact]
-        public void GetSubscribeStreamContexts_Should_ReturnCorrectSubscriberStreamContexts()
+        public async Task GetSubscribeStreamContexts_Should_ReturnCorrectSubscriberStreamContexts()
         {
             // Arrange
             var sessionHandle1 = Substitute.For<ISessionHandle>();
@@ -313,8 +315,8 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             var streamPath = _fixture.Create<string>();
             var streamArguments = _fixture.Create<Dictionary<string, string>>();
 
-            _sut.StartSubscribing(streamContext1, streamPath, streamArguments, out _);
-            _sut.StartSubscribing(streamContext2, streamPath, streamArguments, out _);
+            await _sut.StartSubscribingAsync(streamContext1, streamPath, streamArguments);
+            await _sut.StartSubscribingAsync(streamContext2, streamPath, streamArguments);
 
             // Act
             var result = _sut.GetSubscribeStreamContexts(streamPath);
@@ -326,7 +328,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
         }
 
         [Fact]
-        public void StartPublishing_Should_ReturnCorrectSubscribers()
+        public async Task StartPublishingAsync_Should_ReturnCorrectSubscribers()
         {
             // Arrange
             var sessionHandle1 = Substitute.For<ISessionHandle>();
@@ -344,11 +346,11 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             var streamPath = _fixture.Create<string>();
             var streamArguments = _fixture.Create<Dictionary<string, string>>();
 
-            _sut.StartSubscribing(streamContext1, streamPath, streamArguments, out _);
-            _sut.StartSubscribing(streamContext2, streamPath, streamArguments, out _);
+            await _sut.StartSubscribingAsync(streamContext1, streamPath, streamArguments);
+            await _sut.StartSubscribingAsync(streamContext2, streamPath, streamArguments);
 
             // Act
-            var result = _sut.StartPublishing(streamContext3, streamPath, streamArguments, out var existingSubscribers);
+            var (result, existingSubscribers) = await _sut.StartPublishingAsync(streamContext3, streamPath, streamArguments);
 
             // Assert
             result.Should().Be(PublishingStreamResult.Succeeded);
@@ -359,7 +361,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
         }
 
         [Fact]
-        public void StartPublushing_Should_SendBadConnection_If_SubscribeStreamExists()
+        public async Task StartPublushingAsync_Should_SendBadConnection_If_SubscribeStreamExists()
         {
             // Arrange
             var streamPath = _fixture.Create<string>();
@@ -379,10 +381,10 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             streamContext.CommandChunkStreamId.Returns(commandChunkStreamId);
 
             // Act
-            var result = _sut.StartPublishing(streamContext, streamPath, streamArguments, out _);
+            var result = await _sut.StartPublishingAsync(streamContext, streamPath, streamArguments);
 
             // Assert
-            result.Should().Be(PublishingStreamResult.AlreadySubscribing);
+            result.Result.Should().Be(PublishingStreamResult.AlreadySubscribing);
 
             _commandMessageSender.Received(1).SendCommandMessage(
                 clientContext, streamId, commandChunkStreamId, "onStatus", 0, null,
@@ -391,7 +393,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
         }
 
         [Fact]
-        public void StartPublushing_Should_SendBadConnection_If_PublishStreamExists()
+        public async Task StartPublushingAsync_Should_SendBadConnection_If_PublishStreamExists()
         {
             // Arrange
             var streamPath = _fixture.Create<string>();
@@ -411,10 +413,10 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             streamContext.CommandChunkStreamId.Returns(commandChunkStreamId);
 
             // Act
-            var result = _sut.StartPublishing(streamContext, streamPath, streamArguments, out _);
+            var result = await _sut.StartPublishingAsync(streamContext, streamPath, streamArguments);
 
             // Assert
-            result.Should().Be(PublishingStreamResult.AlreadyPublishing);
+            result.Result.Should().Be(PublishingStreamResult.AlreadyPublishing);
 
             _commandMessageSender.Received(1).SendCommandMessage(
                 clientContext, streamId, commandChunkStreamId, "onStatus", 0, null,
@@ -423,7 +425,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
         }
 
         [Fact]
-        public void StartPublushing_Should_SendBadName_If_PublishStreamHasBeenRegistered()
+        public async Task StartPublushingAsync_Should_SendBadName_If_PublishStreamHasBeenRegistered()
         {
             // Arrange
             var streamPath = _fixture.Create<string>();
@@ -445,13 +447,13 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             var anotherStreamContext = Substitute.For<IRtmpStreamContext>();
             anotherStreamContext.PublishContext.Returns((IRtmpPublishStreamContext?)null);
             anotherStreamContext.SubscribeContext.Returns((IRtmpSubscribeStreamContext?)null);
-            _sut.StartPublishing(anotherStreamContext, streamPath, _fixture.Create<Dictionary<string, string>>(), out _);
+            await _sut.StartPublishingAsync(anotherStreamContext, streamPath, _fixture.Create<Dictionary<string, string>>());
 
             // Act
-            var result = _sut.StartPublishing(streamContext, streamPath, streamArguments, out _);
+            var result = await _sut.StartPublishingAsync(streamContext, streamPath, streamArguments);
 
             // Assert
-            result.Should().Be(PublishingStreamResult.AlreadyExists);
+            result.Result.Should().Be(PublishingStreamResult.AlreadyExists);
 
             _commandMessageSender.Received(1).SendCommandMessage(
                 clientContext, streamId, commandChunkStreamId, "onStatus", 0, null,
@@ -460,7 +462,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
         }
 
         [Fact]
-        public void StartDirectPublushing_Should_ReturnAlreadyExists_If_PublishStreamHasBeenRegistered()
+        public async Task StartDirectPublushingAsync_Should_ReturnAlreadyExists_If_PublishStreamHasBeenRegistered()
         {
             // Arrange
             var streamPath = _fixture.Create<string>();
@@ -469,13 +471,13 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
 
             var anotherPublishStreamContext = Substitute.For<IRtmpPublishStreamContext>();
             anotherPublishStreamContext.StreamPath.Returns(streamPath);
-            _sut.StartDirectPublishing(anotherPublishStreamContext, out _);
+            await _sut.StartDirectPublishingAsync(anotherPublishStreamContext);
 
             // Act
-            var result = _sut.StartDirectPublishing(publishStreamContext, out _);
+            var result = await _sut.StartDirectPublishingAsync(publishStreamContext);
 
             // Assert
-            result.Should().Be(PublishingStreamResult.AlreadyExists);
+            result.Result.Should().Be(PublishingStreamResult.AlreadyExists);
         }
     }
 }

@@ -20,7 +20,6 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
         private readonly IRtmpStreamManagerService _streamManager;
         private readonly IRtmpCommandMessageSenderService _commandMessageSender;
         private readonly IRtmpUserControlMessageSenderService _userControlMessageSender;
-        private readonly IRtmpServerStreamEventDispatcher _eventDispatcher;
         private readonly IStreamAuthorization _streamAuthorization;
         private readonly IRtmpStreamContext _streamContext;
         private readonly IRtmpPublishStreamContext _publishStreamContext;
@@ -35,7 +34,6 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
             _streamManager = Substitute.For<IRtmpStreamManagerService>();
             _commandMessageSender = Substitute.For<IRtmpCommandMessageSenderService>();
             _userControlMessageSender = Substitute.For<IRtmpUserControlMessageSenderService>();
-            _eventDispatcher = Substitute.For<IRtmpServerStreamEventDispatcher>();
             _streamAuthorization = Substitute.For<IStreamAuthorization>();
             _streamContext = Substitute.For<IRtmpStreamContext>();
             _publishStreamContext = Substitute.For<IRtmpPublishStreamContext>();
@@ -54,7 +52,6 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
                 _streamManager,
                 _commandMessageSender,
                 _userControlMessageSender,
-                _eventDispatcher,
                 _streamAuthorization,
                 _logger
             );
@@ -148,21 +145,13 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
                     _publishStreamContext.StreamArguments.Returns(x.Arg<IReadOnlyDictionary<string, string>>());
                 });
 
-            _streamManager.StartPublishing(_streamContext, streamPath,
-                Helpers.CreateExpectedStreamArguments("password", "123456"), out Arg.Any<IList<IRtmpSubscribeStreamContext>>())
-                .Returns(x =>
-                {
-                    x[3] = new List<IRtmpSubscribeStreamContext> { subscriber_subscribeStreamContext };
-                    return PublishingStreamResult.Succeeded;
-                });
+            _streamManager.StartPublishingAsync(_streamContext, streamPath, Helpers.CreateExpectedStreamArguments("password", "123456"))
+                .Returns(x => (PublishingStreamResult.Succeeded, new List<IRtmpSubscribeStreamContext> { subscriber_subscribeStreamContext }));
 
             // Act
             var result = await _sut.HandleAsync(_chunkStreamContext, _clientContext, command, default);
 
             // Assert
-            _ = _eventDispatcher.Received(1).RtmpStreamPublishedAsync(
-                _clientContext, streamPath, Helpers.CreateExpectedStreamArguments("password", "123456"));
-
             result.Should().BeTrue();
         }
     }

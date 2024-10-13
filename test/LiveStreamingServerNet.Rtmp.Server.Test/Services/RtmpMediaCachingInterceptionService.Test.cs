@@ -32,6 +32,9 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             var interceptor1 = Substitute.For<IRtmpMediaCachingInterceptor>();
             var interceptor2 = Substitute.For<IRtmpMediaCachingInterceptor>();
 
+            interceptor1.FilterCache(streamPath, mediaType).Returns(true);
+            interceptor2.FilterCache(streamPath, mediaType).Returns(true);
+
             var interceptors = new List<IRtmpMediaCachingInterceptor> { interceptor1, interceptor2 };
 
             var sut = new RtmpMediaCachingInterceptionService(interceptors);
@@ -57,6 +60,9 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
 
             var interceptor1 = Substitute.For<IRtmpMediaCachingInterceptor>();
             var interceptor2 = Substitute.For<IRtmpMediaCachingInterceptor>();
+
+            interceptor1.FilterCache(streamPath, mediaType).Returns(true);
+            interceptor2.FilterCache(streamPath, mediaType).Returns(true);
 
             var interceptors = new List<IRtmpMediaCachingInterceptor> { interceptor1, interceptor2 };
 

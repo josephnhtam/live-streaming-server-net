@@ -6,14 +6,10 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
     internal class RtmpStreamDeletionService : IRtmpStreamDeletionService
     {
         private readonly IRtmpStreamManagerService _rtmpStreamManager;
-        private readonly IRtmpServerStreamEventDispatcher _eventDispatcher;
 
-        public RtmpStreamDeletionService(
-            IRtmpStreamManagerService rtmpStreamManager,
-            IRtmpServerStreamEventDispatcher eventDispatcher)
+        public RtmpStreamDeletionService(IRtmpStreamManagerService rtmpStreamManager)
         {
             _rtmpStreamManager = rtmpStreamManager;
-            _eventDispatcher = eventDispatcher;
         }
 
         public async ValueTask CloseStreamAsync(IRtmpStreamContext streamContext)
@@ -33,20 +29,20 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
         {
             var publishStreamContext = streamContext.PublishContext;
 
-            if (publishStreamContext == null || !_rtmpStreamManager.StopPublishing(publishStreamContext, out _))
+            if (publishStreamContext == null)
                 return;
 
-            await _eventDispatcher.RtmpStreamUnpublishedAsync(streamContext.ClientContext, publishStreamContext.StreamPath);
+            await _rtmpStreamManager.StopPublishingAsync(publishStreamContext);
         }
 
         private async ValueTask StopSubscribingStreamIfNeededAsync(IRtmpStreamContext streamContext)
         {
             var subscribeStreamContext = streamContext.SubscribeContext;
 
-            if (subscribeStreamContext == null || !_rtmpStreamManager.StopSubscribing(subscribeStreamContext))
+            if (subscribeStreamContext == null)
                 return;
 
-            await _eventDispatcher.RtmpStreamUnsubscribedAsync(streamContext.ClientContext, subscribeStreamContext.StreamPath);
+            await _rtmpStreamManager.StopSubscribingAsync(subscribeStreamContext);
         }
     }
 }

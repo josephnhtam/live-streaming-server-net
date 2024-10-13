@@ -22,7 +22,6 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
         private readonly IRtmpCommandMessageSenderService _commandMessageSender;
         private readonly IRtmpUserControlMessageSenderService _userControlMessageSender;
         private readonly IRtmpMediaMessageCacherService _mediaMessageCacher;
-        private readonly IRtmpServerStreamEventDispatcher _eventDispatcher;
         private readonly IStreamAuthorization _streamAuthorization;
         private readonly ILogger<RtmpPlayCommandHandler> _logger;
 
@@ -31,7 +30,6 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
             IRtmpCommandMessageSenderService commandMessageSender,
             IRtmpUserControlMessageSenderService userControlMessageSender,
             IRtmpMediaMessageCacherService mediaMessageCacher,
-            IRtmpServerStreamEventDispatcher eventDispatcher,
             IStreamAuthorization streamAuthorization,
             ILogger<RtmpPlayCommandHandler> logger)
         {
@@ -39,7 +37,6 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
             _commandMessageSender = commandMessageSender;
             _userControlMessageSender = userControlMessageSender;
             _mediaMessageCacher = mediaMessageCacher;
-            _eventDispatcher = eventDispatcher;
             _streamAuthorization = streamAuthorization;
             _logger = logger;
         }
@@ -110,14 +107,13 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
             string streamPath,
             IReadOnlyDictionary<string, string> streamArguments)
         {
-            var startSubscribingResult = _streamManager.StartSubscribing(streamContext, streamPath, streamArguments, out var publishStreamContext);
+            var startSubscribingResult = await _streamManager.StartSubscribingAsync(streamContext, streamPath, streamArguments);
 
-            switch (startSubscribingResult)
+            switch (startSubscribingResult.Result)
             {
                 case SubscribingStreamResult.Succeeded:
                     _logger.SubscriptionStarted(streamContext.ClientContext.Client.Id, streamPath);
-                    await _eventDispatcher.RtmpStreamSubscribedAsync(streamContext.ClientContext, streamPath, streamArguments);
-                    SendCachedStreamMessages(streamContext, chunkStreamContext, publishStreamContext);
+                    SendCachedStreamMessages(streamContext, chunkStreamContext, startSubscribingResult.PublishStreamContext);
                     CompleteSubscriptionInitialization(streamContext);
                     return true;
 
@@ -130,16 +126,14 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
                     return false;
 
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(startSubscribingResult), startSubscribingResult, null);
+                    throw new ArgumentOutOfRangeException(nameof(startSubscribingResult.Result), startSubscribingResult.Result, null);
             }
         }
 
         private void SendCachedStreamMessages(
             IRtmpStreamContext streamContext, IRtmpChunkStreamContext chunkStreamContext, IRtmpPublishStreamContext? publishStreamContext)
         {
-            Debug.Assert(streamContext.SubscribeContext != null);
-
-            if (publishStreamContext == null)
+            if (streamContext.SubscribeContext == null || publishStreamContext == null)
                 return;
 
             _mediaMessageCacher.SendCachedStreamMetaDataMessage(
@@ -158,8 +152,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
 
         private void CompleteSubscriptionInitialization(IRtmpStreamContext streamContext)
         {
-            Debug.Assert(streamContext.SubscribeContext != null);
-            streamContext.SubscribeContext.CompleteInitialization();
+            streamContext.SubscribeContext?.CompleteInitialization();
         }
 
         private async ValueTask SendAuthorizationFailedCommandMessageAsync(
