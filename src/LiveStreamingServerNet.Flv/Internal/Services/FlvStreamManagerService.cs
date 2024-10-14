@@ -69,7 +69,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
             }
         }
 
-        public SubscribingStreamResult StartSubscribingStream(IFlvClient client, string streamPath)
+        public SubscribingStreamResult StartSubscribingStream(IFlvClient client, string streamPath, bool requireReady)
         {
             lock (_publishingSyncLock)
             {
@@ -78,7 +78,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
                     if (_subscribedStreamPaths.ContainsKey(client))
                         return SubscribingStreamResult.AlreadySubscribing;
 
-                    if (!_publishingStreamContexts.TryGetValue(streamPath, out var stream) || !stream.IsReady)
+                    if (!_publishingStreamContexts.TryGetValue(streamPath, out var stream) || (requireReady && !stream.IsReady))
                         return SubscribingStreamResult.StreamDoesntExist;
 
                     if (!_subscribingClients.TryGetValue(streamPath, out var subscribers))

@@ -24,6 +24,8 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
             if (streamContext == null)
                 return;
 
+            streamContext.SetReady();
+
             var subscribers = _streamManager.GetSubscribers(streamPath);
             if (!subscribers.Any())
                 return;

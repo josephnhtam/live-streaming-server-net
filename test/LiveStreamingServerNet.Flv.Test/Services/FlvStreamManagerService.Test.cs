@@ -131,7 +131,7 @@ namespace LiveStreamingServerNet.Flv.Test.Services
             sut.StartPublishingStream(streamContext);
 
             // Act
-            var result = sut.StartSubscribingStream(flvClient, streamPath);
+            var result = sut.StartSubscribingStream(flvClient, streamPath, true);
 
             // Assert
             result.Should().Be(SubscribingStreamResult.Succeeded);
@@ -150,10 +150,10 @@ namespace LiveStreamingServerNet.Flv.Test.Services
 
             var sut = new FlvStreamManagerService();
             sut.StartPublishingStream(streamContext);
-            sut.StartSubscribingStream(flvClient, streamPath);
+            sut.StartSubscribingStream(flvClient, streamPath, true);
 
             // Act
-            var result = sut.StartSubscribingStream(flvClient, streamPath);
+            var result = sut.StartSubscribingStream(flvClient, streamPath, true);
 
             // Assert
             result.Should().Be(SubscribingStreamResult.AlreadySubscribing);
@@ -171,7 +171,7 @@ namespace LiveStreamingServerNet.Flv.Test.Services
 
             var sut = new FlvStreamManagerService();
             sut.StartPublishingStream(streamContext);
-            sut.StartSubscribingStream(flvClient, streamPath);
+            sut.StartSubscribingStream(flvClient, streamPath, true);
 
             // Act
             var result = sut.StopSubscribingStream(flvClient);
@@ -209,8 +209,8 @@ namespace LiveStreamingServerNet.Flv.Test.Services
 
             var sut = new FlvStreamManagerService();
             sut.StartPublishingStream(streamContext);
-            sut.StartSubscribingStream(flvClient1, streamPath);
-            sut.StartSubscribingStream(flvClient2, streamPath);
+            sut.StartSubscribingStream(flvClient1, streamPath, true);
+            sut.StartSubscribingStream(flvClient2, streamPath, true);
 
             // Act
             var result = sut.GetSubscribers(streamPath);
@@ -235,8 +235,8 @@ namespace LiveStreamingServerNet.Flv.Test.Services
 
             var sut = new FlvStreamManagerService();
             sut.StartPublishingStream(streamContext);
-            sut.StartSubscribingStream(flvClient1, streamPath);
-            sut.StartSubscribingStream(flvClient2, streamPath);
+            sut.StartSubscribingStream(flvClient1, streamPath, true);
+            sut.StartSubscribingStream(flvClient2, streamPath, true);
 
             // Act
             var result = sut.StopPublishingStream(streamPath, out var existingSubscribers);

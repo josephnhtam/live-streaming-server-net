@@ -10,7 +10,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services.Contracts
         bool StopPublishingStream(string streamPath, out IList<IFlvClient> existingSubscribers);
         IFlvStreamContext? GetFlvStreamContext(string streamPath);
 
-        SubscribingStreamResult StartSubscribingStream(IFlvClient client, string streamPath);
+        SubscribingStreamResult StartSubscribingStream(IFlvClient client, string streamPath, bool requireReady = true);
         bool StopSubscribingStream(IFlvClient client);
         IReadOnlyList<IFlvClient> GetSubscribers(string streamPath);
     }

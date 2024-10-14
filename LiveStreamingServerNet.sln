@@ -89,7 +89,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.Rtmp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.RtmpRelayDemo", "samples\LiveStreamingServerNet.RtmpRelayDemo\LiveStreamingServerNet.RtmpRelayDemo.csproj", "{ACA0D693-602E-4DBC-92A9-4188B86E4B45}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveStreamingServerNet.Rtmp.Relay", "src\LiveStreamingServerNet.Rtmp.Relay\LiveStreamingServerNet.Rtmp.Relay.csproj", "{D70CEDC6-7E56-4AE2-9192-3EB382397483}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveStreamingServerNet.Rtmp.Relay", "src\LiveStreamingServerNet.Rtmp.Relay\LiveStreamingServerNet.Rtmp.Relay.csproj", "{D70CEDC6-7E56-4AE2-9192-3EB382397483}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveStreamingServerNet.FlvRelayDemo", "samples\LiveStreamingServerNet.FlvRelayDemo\LiveStreamingServerNet.FlvRelayDemo.csproj", "{2601B1E7-2996-4A0A-ADEB-A17A7E18EAF1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -265,6 +267,10 @@ Global
 		{D70CEDC6-7E56-4AE2-9192-3EB382397483}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D70CEDC6-7E56-4AE2-9192-3EB382397483}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D70CEDC6-7E56-4AE2-9192-3EB382397483}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2601B1E7-2996-4A0A-ADEB-A17A7E18EAF1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2601B1E7-2996-4A0A-ADEB-A17A7E18EAF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2601B1E7-2996-4A0A-ADEB-A17A7E18EAF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2601B1E7-2996-4A0A-ADEB-A17A7E18EAF1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -292,6 +298,7 @@ Global
 		{17841723-77DF-4A42-9C24-38EB71203D39} = {45761E33-F086-403D-BB6E-8059F8CC6BA8}
 		{6887F6DF-CE3F-4D6E-8E66-6A8151CA2680} = {45761E33-F086-403D-BB6E-8059F8CC6BA8}
 		{ACA0D693-602E-4DBC-92A9-4188B86E4B45} = {45761E33-F086-403D-BB6E-8059F8CC6BA8}
+		{2601B1E7-2996-4A0A-ADEB-A17A7E18EAF1} = {45761E33-F086-403D-BB6E-8059F8CC6BA8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0A9A3928-2852-49B9-85EF-F00480E9FE7F}
