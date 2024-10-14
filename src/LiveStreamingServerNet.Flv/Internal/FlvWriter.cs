@@ -23,7 +23,7 @@ namespace LiveStreamingServerNet.Flv.Internal
         {
             try
             {
-                await _syncLock.WaitAsync(cancellationToken);
+                using var _ = await _syncLock.LockAsync(cancellationToken);
 
                 byte typeFlags = 0;
 
@@ -39,10 +39,6 @@ namespace LiveStreamingServerNet.Flv.Internal
                     }, cancellationToken);
             }
             catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { }
-            finally
-            {
-                _syncLock.Release();
-            }
         }
 
         public async ValueTask WriteTagAsync(FlvTagType tagType, uint timestamp, Action<IDataBuffer> payloadBuffer, CancellationToken cancellationToken)
