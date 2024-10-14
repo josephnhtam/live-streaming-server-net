@@ -1,7 +1,10 @@
 ﻿using AutoFixture;
+using LiveStreamingServerNet.Flv.Configurations;
 using LiveStreamingServerNet.Flv.Internal.Contracts;
 using LiveStreamingServerNet.Flv.Internal.Services;
 using LiveStreamingServerNet.Flv.Internal.Services.Contracts;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using NSubstitute;
 
 namespace LiveStreamingServerNet.Flv.Test.Services
@@ -11,6 +14,8 @@ namespace LiveStreamingServerNet.Flv.Test.Services
         private readonly IFixture _fixture;
         private readonly IFlvStreamManagerService _streamManager;
         private readonly IFlvMediaTagCacherService _mediaTagCacher;
+        private readonly MediaStreamingConfiguration _config;
+        private readonly ILogger<FlvClientHandler> _logger;
         private readonly string _streamPath;
         private readonly IFlvClient _client;
         private readonly IFlvStreamContext _streamContext;
@@ -21,6 +26,8 @@ namespace LiveStreamingServerNet.Flv.Test.Services
             _fixture = new Fixture();
             _streamManager = Substitute.For<IFlvStreamManagerService>();
             _mediaTagCacher = Substitute.For<IFlvMediaTagCacherService>();
+            _config = new MediaStreamingConfiguration();
+            _logger = Substitute.For<ILogger<FlvClientHandler>>();
 
             _streamPath = _fixture.Create<string>();
             _client = Substitute.For<IFlvClient>();
@@ -29,7 +36,7 @@ namespace LiveStreamingServerNet.Flv.Test.Services
             _streamContext = Substitute.For<IFlvStreamContext>();
             _streamManager.GetFlvStreamContext(_client.StreamPath).Returns(_streamContext);
 
-            _sut = new FlvClientHandler(_streamManager, _mediaTagCacher);
+            _sut = new FlvClientHandler(_streamManager, _mediaTagCacher, Options.Create(_config), _logger);
         }
 
         [Theory]

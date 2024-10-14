@@ -1,6 +1,7 @@
 ﻿using LiveStreamingServerNet.Flv.Internal.Contracts;
 using LiveStreamingServerNet.Utilities.Buffers;
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
+using System.Runtime.CompilerServices;
 
 namespace LiveStreamingServerNet.Flv.Internal
 {
@@ -12,7 +13,10 @@ namespace LiveStreamingServerNet.Flv.Internal
         public byte[]? VideoSequenceHeader { get; set; }
         public byte[]? AudioSequenceHeader { get; set; }
         public IGroupOfPicturesCache GroupOfPicturesCache { get; }
-        public bool IsReady => VideoSequenceHeader != null || AudioSequenceHeader != null;
+        public bool IsReady => _isReady || _readyTcs.Task.IsCompletedSuccessfully;
+
+        private bool _isReady;
+        private TaskCompletionSource _readyTcs = new();
 
         public FlvStreamContext(string streamPath, IReadOnlyDictionary<string, string> streamArguments, IBufferPool? bufferPool)
         {
@@ -21,8 +25,24 @@ namespace LiveStreamingServerNet.Flv.Internal
             GroupOfPicturesCache = new GroupOfPicturesCache(bufferPool);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void SetReady()
+        {
+            if (_isReady)
+                return;
+
+            _readyTcs.TrySetResult();
+            _isReady = true;
+        }
+
+        public Task UntilReadyAsync()
+        {
+            return _readyTcs.Task;
+        }
+
         public void Dispose()
         {
+            _readyTcs.TrySetCanceled();
             GroupOfPicturesCache.Dispose();
         }
     }

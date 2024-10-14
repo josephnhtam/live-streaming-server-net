@@ -18,5 +18,8 @@ namespace LiveStreamingServerNet.Flv.Internal.Logging
 
         [LoggerMessage(LogLevel.Debug, "End media packet discard (ClientId={ClientId}, OutstandingSize={OutstandingSize}, OutstandingCount={OutstandingCount})")]
         public static partial void EndMediaPacketDiscard(this ILogger logger, string clientId, long outstandingSize, long outstandingCount);
+
+        [LoggerMessage(LogLevel.Error, "Stream readiness timeout (StreamPath={StreamPath})")]
+        public static partial void ReadinessTimeout(this ILogger logger, string streamPath);
     }
 }
