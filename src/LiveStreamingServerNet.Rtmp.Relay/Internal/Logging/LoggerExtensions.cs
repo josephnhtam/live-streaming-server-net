@@ -15,6 +15,9 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Logging
         [LoggerMessage(LogLevel.Information, "Downstream idle timeout (StreamPath={StreamPath})")]
         public static partial void RtmpDownstreamIdleTimeout(this ILogger logger, string streamPath);
 
+        [LoggerMessage(LogLevel.Error, "The origin for the downstream could not be resolved (StreamPath={StreamPath})")]
+        public static partial void RtmpDownstreamOriginNotResolved(this ILogger logger, string streamPath);
+
         [LoggerMessage(LogLevel.Information, "Downstream origin resolved (StreamPath={StreamPath}, RtmpOrigin={Origin})")]
         public static partial void RtmpDownstreamOriginResolved(this ILogger logger, string streamPath, RtmpOrigin origin);
 
@@ -39,6 +42,9 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Logging
         [LoggerMessage(LogLevel.Information, "Upstream idle timeout (StreamPath={StreamPath})")]
         public static partial void RtmpUpstreamIdleTimeout(this ILogger logger, string streamPath);
 
+        [LoggerMessage(LogLevel.Error, "The origin for the upstream could not be resolved (StreamPath={StreamPath})")]
+        public static partial void RtmpUpstreamOriginNotResolved(this ILogger logger, string streamPath);
+
         [LoggerMessage(LogLevel.Information, "Upstream origin resolved (StreamPath={StreamPath}, RtmpOrigin={Origin})")]
         public static partial void RtmpUpstreamOriginResolved(this ILogger logger, string streamPath, RtmpOrigin origin);
 
@@ -59,5 +65,11 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Logging
 
         [LoggerMessage(LogLevel.Debug, "End upstream media packet discard (StreamPath={StreamPath}, OutstandingSize={OutstandingSize}, OutstandingCount={OutstandingCount})")]
         public static partial void EndUpstreamMediaPacketDiscard(this ILogger logger, string streamPath, long outstandingSize, long outstandingCount);
+
+        [LoggerMessage(LogLevel.Error, "An error occurred while initializing the downstream (StreamPath={StreamPath})")]
+        public static partial void RtmpDownstreamInitializationError(this ILogger logger, string streamPath, Exception ex);
+
+        [LoggerMessage(LogLevel.Error, "An error occurred while resolving the origin for the upstream (StreamPath={StreamPath})")]
+        public static partial void RtmpUpstreamOriginResolveError(this ILogger logger, string streamPath, Exception ex);
     }
 }

@@ -13,7 +13,9 @@ using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Channels;
 
 namespace LiveStreamingServerNet.Rtmp.Relay.Internal
@@ -30,6 +32,9 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal
         private readonly IDataBufferPool _dataBufferPool;
         private readonly RtmpDownstreamConfiguration _config;
         private readonly ILogger _logger;
+
+        private RtmpPublishStreamContext? _publishStreamContext;
+        private bool initialized;
 
         public string StreamPath => _streamPath;
 
@@ -57,45 +62,78 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal
             _logger = logger;
         }
 
-        public async Task RunAsync(CancellationToken cancellationToken)
+        public async ValueTask<PublishingStreamResult> InitializeAsync(CancellationToken cancellationToken)
         {
-            var publishStreamContext = CreatePublishStreamContext();
-            var publishingResult = await _streamManager.StartDirectPublishingAsync(publishStreamContext);
-
-            if (publishingResult.Result != PublishingStreamResult.Succeeded)
-                return;
+            if (initialized)
+                throw new InvalidOperationException("The process has already been initialized.");
 
             try
             {
-                await RunDownstreamAsync(publishStreamContext, cancellationToken);
+                var publishStreamContext = CreatePublishStreamContext();
+                var publishingResult = await _streamManager.StartDirectPublishingAsync(publishStreamContext);
+
+                if (publishingResult.Result == PublishingStreamResult.Succeeded)
+                {
+                    _publishStreamContext = publishStreamContext;
+                    initialized = true;
+                }
+
+                return publishingResult.Result;
             }
             catch (Exception ex)
             {
-                _logger.RtmpDownstreamError(publishStreamContext.StreamPath, ex);
+                _logger.RtmpDownstreamInitializationError(_streamPath, ex);
+                throw;
             }
-            finally
-            {
-                var stopPublishingResult = await _streamManager.StopPublishingAsync(publishStreamContext);
+        }
 
-                await Task.WhenAll(stopPublishingResult.SubscribeStreamContexts
-                    .Select(subscriber => subscriber.StreamContext)
-                    .Select(streamContext => _streamDeletion.DeleteStreamAsync(streamContext).AsTask())
-                );
+        public async Task RunAsync(CancellationToken cancellationToken)
+        {
+            if (!initialized)
+                throw new InvalidOperationException("The process has not been initialized.");
+
+            Debug.Assert(_publishStreamContext != null);
+
+            try
+            {
+                await RunDownstreamAsync(_publishStreamContext, cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                _logger.RtmpDownstreamError(_publishStreamContext.StreamPath, ex);
+            }
+        }
+
+        private async ValueTask<RtmpOrigin?> ResolveOriginAsync(CancellationToken cancellationToken)
+        {
+            try
+            {
+                var result = await _originResolver.ResolveDownstreamOriginAsync(_streamPath, cancellationToken);
+
+                if (result == null)
+                {
+                    _logger.RtmpDownstreamOriginNotResolved(_streamPath);
+                }
+                else
+                {
+                    _logger.RtmpDownstreamOriginResolved(_streamPath, result);
+                }
+
+                return result;
+            }
+            catch
+            {
+                _logger.RtmpDownstreamOriginNotResolved(_streamPath);
+                return null;
             }
         }
 
         private async Task RunDownstreamAsync(IRtmpPublishStreamContext publishStreamContext, CancellationToken stoppingToken)
         {
+            var origin = await ResolveOriginAsync(stoppingToken);
+            if (origin == null) return;
+
             using var abortCts = CancellationTokenSource.CreateLinkedTokenSource(stoppingToken);
-
-            var origin = await _originResolver.ResolveDownstreamOriginAsync(publishStreamContext.StreamPath, abortCts.Token);
-
-            if (origin == null)
-            {
-                return;
-            }
-
-            _logger.RtmpDownstreamOriginResolved(publishStreamContext.StreamPath, origin);
 
             var mediaDataChannel = CreateMediaDataChannel();
             var mediaDataProcessorTask = MediaDataProcessorTask(mediaDataChannel, publishStreamContext, abortCts);
@@ -317,6 +355,19 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal
                 AllowSynchronousContinuations = true,
                 SingleReader = true
             });
+        }
+
+        public async ValueTask DisposeAsync()
+        {
+            if (_publishStreamContext == null)
+                return;
+
+            var stopPublishingResult = await _streamManager.StopPublishingAsync(_publishStreamContext);
+
+            await Task.WhenAll(stopPublishingResult.SubscribeStreamContexts
+                .Select(subscriber => subscriber.StreamContext)
+                .Select(streamContext => _streamDeletion.DeleteStreamAsync(streamContext).AsTask())
+            );
         }
 
         private record struct MediaData(MediaType Type, uint Timestamp, IDataBuffer Payload);

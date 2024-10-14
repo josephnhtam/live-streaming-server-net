@@ -1,4 +1,5 @@
 ﻿using LiveStreamingServerNet.Rtmp.Relay.Configurations;
+using LiveStreamingServerNet.Rtmp.Relay.Contracts;
 using LiveStreamingServerNet.Rtmp.Relay.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Relay.Internal.Services.Contracts;
 using LiveStreamingServerNet.Rtmp.Server.Contracts;
@@ -17,6 +18,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Services
         private readonly RtmpDownstreamConfiguration _config;
 
         private readonly ConcurrentDictionary<string, DownstreamProcessItem> _downstreamProcessTasks = new();
+        private readonly ConcurrentDictionary<string, List<IRtmpDownstreamSubscriber>> _downstreamSubscribers = new();
         private readonly object _syncLock = new();
 
         public RtmpDownstreamManagerService(
@@ -31,54 +33,132 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Services
             _config = config.Value;
         }
 
-        private async ValueTask CreateDownstreamProcessIfNeededAsync(string streamPath)
+        public async Task<IRtmpDownstreamSubscriber?> RequestDownstreamAsync(string streamPath)
         {
-            if (!_config.Enabled || !VerifyDownstreamCreation(streamPath) || !await VerifyExtraConditionAsync(streamPath))
+            var subscriber = CreateDownstreamSubscriber(streamPath);
+
+            try
             {
-                return;
+                var result = await CreateDownstreamProcessIfNeededAsync(streamPath);
+
+                if (result == CreateDownstreamProcessResult.NotCreated)
+                    throw new Exception("Downstream process was not created.");
+
+                return subscriber;
             }
-
-            lock (_syncLock)
+            catch
             {
-                if (!VerifyDownstreamCreation(streamPath))
-                    return;
-
-                CreatetDownstreamProcessTask(streamPath);
-            }
-
-            void CreatetDownstreamProcessTask(string streamPath)
-            {
-                var cts = new CancellationTokenSource();
-                var downstreamProcessTask = DownstreamProcessTask(streamPath, cts.Token);
-
-                _downstreamProcessTasks[streamPath] = new(downstreamProcessTask, cts);
-
-                _ = downstreamProcessTask.ContinueWith(async _ =>
-                {
-                    lock (_syncLock)
-                    {
-                        _downstreamProcessTasks.TryRemove(streamPath, out var _);
-                        cts.Dispose();
-                    }
-
-                    await CreateDownstreamProcessIfNeededAsync(streamPath);
-                });
+                subscriber.Dispose();
+                return null;
             }
         }
 
-        private bool VerifyDownstreamCreation(string streamPath)
+        private IRtmpDownstreamSubscriber CreateDownstreamSubscriber(string streamPath)
         {
-            if (_downstreamProcessTasks.ContainsKey(streamPath))
+            lock (_syncLock)
+            {
+                if (!_downstreamSubscribers.TryGetValue(streamPath, out var subscribers))
+                {
+                    subscribers = new List<IRtmpDownstreamSubscriber>();
+                    _downstreamSubscribers[streamPath] = subscribers;
+                }
+
+                var subscriber = new RtmpDownstreamSubscriber(streamPath, RemoveDownstreamSubscriber);
+                subscribers.Add(subscriber);
+
+                return subscriber;
+            }
+        }
+
+        private void RemoveDownstreamSubscriber(IRtmpDownstreamSubscriber subscriber)
+        {
+            lock (_syncLock)
+            {
+                if (_downstreamSubscribers.TryGetValue(subscriber.StreamPath, out var subscribers))
+                {
+                    subscribers.Remove(subscriber);
+
+                    if (subscribers.Count == 0)
+                    {
+                        _downstreamSubscribers.TryRemove(subscriber.StreamPath, out _);
+                        RemoveDownstreamProcessIfNeeded(subscriber.StreamPath);
+                    }
+                }
+            }
+        }
+
+        private async ValueTask<CreateDownstreamProcessResult> CreateDownstreamProcessIfNeededAsync(string streamPath)
+        {
+            if (!_config.Enabled)
+                return CreateDownstreamProcessResult.NotCreated;
+
+            if (IsDownstreamProcessActive(streamPath))
+                return CreateDownstreamProcessResult.AlreadyExists;
+
+            if (!IsDownstreamNeeded(streamPath))
+                return CreateDownstreamProcessResult.NotCreated;
+
+            if (!await CheckExtraConditionAsync(streamPath))
+                return CreateDownstreamProcessResult.NotCreated;
+
+            var tcs = new TaskCompletionSource<CreateDownstreamProcessResult>();
+
+            lock (_syncLock)
+            {
+                if (IsDownstreamProcessActive(streamPath))
+                    return CreateDownstreamProcessResult.AlreadyExists;
+
+                if (!IsDownstreamNeeded(streamPath))
+                    return CreateDownstreamProcessResult.NotCreated;
+
+                CreatetDownstreamProcessTask(streamPath, tcs);
+            }
+
+            return await tcs.Task;
+
+            void CreatetDownstreamProcessTask(string streamPath, TaskCompletionSource<CreateDownstreamProcessResult> tcs)
+            {
+                var cts = new CancellationTokenSource();
+
+                var downstreamProcess = CreateDownstreamProcess(streamPath);
+                var downstreamProcessTask = DownstreamProcessTask(downstreamProcess, tcs, cts.Token);
+
+                _downstreamProcessTasks[streamPath] = new(downstreamProcessTask, cts);
+                _ = downstreamProcessTask.ContinueWith(_ => FinalizeDownstreamProcessAsync(downstreamProcess, streamPath, cts));
+            }
+        }
+
+        private async Task FinalizeDownstreamProcessAsync(IRtmpDownstreamProcess downstreamProcess, string streamPath, CancellationTokenSource cts)
+        {
+            await downstreamProcess.DisposeAsync();
+            cts.Dispose();
+
+            lock (_syncLock)
+            {
+                _downstreamProcessTasks.TryRemove(streamPath, out var _);
+            }
+
+            await CreateDownstreamProcessIfNeededAsync(streamPath);
+        }
+
+        private bool IsDownstreamProcessActive(string streamPath)
+        {
+            return _downstreamProcessTasks.ContainsKey(streamPath);
+        }
+
+        private bool IsDownstreamNeeded(string streamPath)
+        {
+            if (_streamManager.IsStreamPublishing(streamPath))
                 return false;
 
-            if (!_streamManager.IsStreamBeingSubscribed(streamPath) ||
-                _streamManager.IsStreamPublishing(streamPath))
+            if (!_streamManager.IsStreamBeingSubscribed(streamPath) &&
+                !_downstreamSubscribers.ContainsKey(streamPath))
                 return false;
 
             return true;
         }
 
-        private async ValueTask<bool> VerifyExtraConditionAsync(string streamPath)
+        private async ValueTask<bool> CheckExtraConditionAsync(string streamPath)
         {
             if (_config.Condition == null)
                 return true;
@@ -100,9 +180,46 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Services
             }
         }
 
-        private async Task DownstreamProcessTask(string streamPath, CancellationToken cancellationToken)
+        private IRtmpDownstreamProcess CreateDownstreamProcess(string streamPath)
         {
-            var downstreamProcess = _downstreamProcessFactory.Create(streamPath);
+            return _downstreamProcessFactory.Create(streamPath);
+        }
+
+        private async Task<bool> InitializeDownstreamProcessAsync(
+            IRtmpDownstreamProcess downstreamProcess, TaskCompletionSource<CreateDownstreamProcessResult> tcs, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var publishingStreamResult = await downstreamProcess.InitializeAsync(cancellationToken);
+
+                switch (publishingStreamResult)
+                {
+                    case PublishingStreamResult.Succeeded:
+                        tcs.TrySetResult(CreateDownstreamProcessResult.Created);
+                        return true;
+
+                    case PublishingStreamResult.AlreadyExists:
+                        tcs.TrySetResult(CreateDownstreamProcessResult.AlreadyExists);
+                        return false;
+
+                    default:
+                        tcs.TrySetResult(CreateDownstreamProcessResult.NotCreated);
+                        return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                tcs.TrySetException(ex);
+                return false;
+            }
+        }
+
+        private async Task DownstreamProcessTask(
+            IRtmpDownstreamProcess downstreamProcess, TaskCompletionSource<CreateDownstreamProcessResult> tcs, CancellationToken cancellationToken)
+        {
+            if (!await InitializeDownstreamProcessAsync(downstreamProcess, tcs, cancellationToken))
+                return;
+
             await downstreamProcess.RunAsync(cancellationToken);
         }
 
@@ -118,9 +235,9 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Services
             await Task.WhenAll(downstreamProcesses.Select(x => x.DownsteramProcessTask));
         }
 
-        public ValueTask OnRtmpStreamSubscribedAsync(IEventContext context, uint clientId, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
+        public async ValueTask OnRtmpStreamSubscribedAsync(IEventContext context, uint clientId, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
-            return CreateDownstreamProcessIfNeededAsync(streamPath);
+            await CreateDownstreamProcessIfNeededAsync(streamPath);
         }
 
         public ValueTask OnRtmpStreamUnsubscribedAsync(IEventContext context, uint clientId, string streamPath)
@@ -139,5 +256,12 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Services
             => ValueTask.CompletedTask;
 
         private record DownstreamProcessItem(Task DownsteramProcessTask, CancellationTokenSource Cts);
+
+        private enum CreateDownstreamProcessResult
+        {
+            Created,
+            AlreadyExists,
+            NotCreated
+        }
     }
 }

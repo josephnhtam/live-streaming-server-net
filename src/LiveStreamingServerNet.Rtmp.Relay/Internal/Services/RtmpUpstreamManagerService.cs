@@ -37,46 +37,53 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Services
 
         private async ValueTask CreateUpstreamProcessIfNeededAsync(string streamPath)
         {
-            if (!_config.Enabled || _upstreamProcessTasks.ContainsKey(streamPath) ||
-                !await VerifyExtraConditionAsync(streamPath))
+            if (!_config.Enabled || IsUpstreamProcessActive(streamPath) ||
+                !await CheckExtraConditionAsync(streamPath))
             {
                 return;
             }
 
             lock (_syncLock)
             {
-                if (_upstreamProcessTasks.ContainsKey(streamPath))
+                if (IsUpstreamProcessActive(streamPath))
                     return;
 
-                var publishStreamContext = _streamManager.GetPublishStreamContext(streamPath);
-                if (publishStreamContext == null)
-                    return;
-
-                CreatetUpstreamProcessTask(publishStreamContext);
+                CreatetUpstreamProcessTask(streamPath);
             }
 
-            void CreatetUpstreamProcessTask(IRtmpPublishStreamContext publishStreamContext)
+            void CreatetUpstreamProcessTask(string streamPath)
             {
+                var publishStreamContext = _streamManager.GetPublishStreamContext(streamPath);
+                if (publishStreamContext == null) return;
+
                 var cts = new CancellationTokenSource();
                 var upstreamProcess = CreateUpstreamProcess(publishStreamContext);
                 var upstreamProcessTask = UpstreamProcessTask(upstreamProcess, cts.Token);
 
                 _upstreamProcessTasks[streamPath] = new(upstreamProcess, upstreamProcessTask, cts);
-
-                _ = upstreamProcessTask.ContinueWith(async _ =>
-                {
-                    lock (_syncLock)
-                    {
-                        _upstreamProcessTasks.TryRemove(streamPath, out var _);
-                        cts.Dispose();
-                    }
-
-                    await CreateUpstreamProcessIfNeededAsync(streamPath);
-                });
+                _ = upstreamProcessTask.ContinueWith(_ => FinalizeUpstreamProcessAsync(streamPath, cts, upstreamProcess));
             }
         }
 
-        private async ValueTask<bool> VerifyExtraConditionAsync(string streamPath)
+        private async Task FinalizeUpstreamProcessAsync(string streamPath, CancellationTokenSource cts, IRtmpUpstreamProcess upstreamProcess)
+        {
+            await upstreamProcess.DisposeAsync();
+            cts.Dispose();
+
+            lock (_syncLock)
+            {
+                _upstreamProcessTasks.TryRemove(streamPath, out var _);
+            }
+
+            await CreateUpstreamProcessIfNeededAsync(streamPath);
+        }
+
+        private bool IsUpstreamProcessActive(string streamPath)
+        {
+            return _upstreamProcessTasks.ContainsKey(streamPath);
+        }
+
+        private async ValueTask<bool> CheckExtraConditionAsync(string streamPath)
         {
             if (_config.Condition == null)
                 return true;
