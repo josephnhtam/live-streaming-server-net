@@ -9,5 +9,6 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Contracts
 
         Task RunAsync(CancellationToken cancellationToken);
         void OnReceiveMediaData(MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp, bool isSkippable);
+        void OnReceiveMetaData(IReadOnlyDictionary<string, object> metaData);
     }
 }

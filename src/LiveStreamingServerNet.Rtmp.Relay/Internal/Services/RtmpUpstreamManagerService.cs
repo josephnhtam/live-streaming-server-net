@@ -138,6 +138,16 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Services
             return ValueTask.CompletedTask;
         }
 
+        public ValueTask OnRtmpStreamMetaDataReceivedAsync(IEventContext context, uint clientId, string streamPath, IReadOnlyDictionary<string, object> metaData)
+        {
+            if (_upstreamProcessTasks.TryGetValue(streamPath, out var upstreamProcessTaskItem))
+            {
+                upstreamProcessTaskItem.UpstreamProcess.OnReceiveMetaData(metaData);
+            }
+
+            return ValueTask.CompletedTask;
+        }
+
         public ValueTask OnRtmpStreamPublishedAsync(IEventContext context, uint clientId, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
             if (clientId == 0)
@@ -159,9 +169,6 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Services
             => ValueTask.CompletedTask;
 
         public ValueTask OnRtmpStreamUnsubscribedAsync(IEventContext context, uint clientId, string streamPath)
-            => ValueTask.CompletedTask;
-
-        public ValueTask OnRtmpStreamMetaDataReceivedAsync(IEventContext context, uint clientId, string streamPath, IReadOnlyDictionary<string, object> metaData)
             => ValueTask.CompletedTask;
 
         private record UpstreamProcessItem(IRtmpUpstreamProcess UpstreamProcess, Task UpsteramProcessTask, CancellationTokenSource Cts);
