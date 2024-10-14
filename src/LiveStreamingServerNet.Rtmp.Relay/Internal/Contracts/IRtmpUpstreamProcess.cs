@@ -2,7 +2,7 @@
 
 namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Contracts
 {
-    internal interface IRtmpUpstreamProcess
+    internal interface IRtmpUpstreamProcess : IAsyncDisposable
     {
         string StreamPath { get; }
         IReadOnlyDictionary<string, string> StreamArguments { get; }

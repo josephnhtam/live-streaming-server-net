@@ -76,7 +76,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal
         {
             try
             {
-                await RunUpstreamAsync(cancellationToken);
+                await RunUpstreamClientAsync(cancellationToken);
             }
             catch (Exception ex)
             {
@@ -84,26 +84,15 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal
             }
         }
 
-        private async Task RunUpstreamAsync(CancellationToken stoppingToken)
+        private async Task RunUpstreamClientAsync(CancellationToken cancellationToken)
         {
-            using var abortCts = CancellationTokenSource.CreateLinkedTokenSource(stoppingToken);
+            using var abortCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
 
-            var origin = await _originResolver.ResolveUpstreamOriginAsync(_streamPath, _streamArguments, abortCts.Token);
-
-            if (origin == null)
-            {
-                return;
-            }
-
-            _logger.RtmpUpstreamOriginResolved(_streamPath, origin);
-
-            await RunUpstreamClientAsync(origin, abortCts);
-        }
-
-        private async Task RunUpstreamClientAsync(RtmpOrigin origin, CancellationTokenSource abortCts)
-        {
             try
             {
+                var origin = await ResolveOriginAsync(cancellationToken);
+                if (origin == null) return;
+
                 await using var rtmpClient = CreateUpstreamClient();
                 using var _ = abortCts.Token.Register(rtmpClient.Stop);
 
@@ -134,6 +123,30 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal
                 await DisconnectPublisherAsync(abortCts);
                 _logger.RtmpUpstreamStopped(_streamPath);
                 abortCts.Cancel();
+            }
+        }
+
+        private async ValueTask<RtmpOrigin?> ResolveOriginAsync(CancellationToken cancellationToken)
+        {
+            try
+            {
+                var result = await _originResolver.ResolveUpstreamOriginAsync(_streamPath, _streamArguments, cancellationToken);
+
+                if (result == null)
+                {
+                    _logger.RtmpUpstreamOriginNotResolved(_streamPath);
+                }
+                else
+                {
+                    _logger.RtmpUpstreamOriginResolved(_streamPath, result);
+                }
+
+                return result;
+            }
+            catch
+            {
+                _logger.RtmpUpstreamOriginNotResolved(_streamPath);
+                return null;
             }
         }
 
@@ -425,6 +438,9 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal
                 SingleReader = true
             });
         }
+
+        public ValueTask DisposeAsync()
+            => ValueTask.CompletedTask;
 
         private record struct MediaData(MediaType Type, uint Timestamp, bool IsSkippable, IRentedBuffer Payload);
     }

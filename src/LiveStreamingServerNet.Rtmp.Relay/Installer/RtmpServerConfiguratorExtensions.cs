@@ -41,6 +41,8 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Installer
 
         private static void AddRtmpRelay(IServiceCollection services)
         {
+            services.TryAddSingleton<IRtmpRelayManager, RtmpRelayManager>();
+
             AddRtmpUpstreamRelay(services);
             AddRtmpDownstreamRelay(services);
         }
