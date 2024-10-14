@@ -36,7 +36,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal
 
         private readonly TaskCompletionSource _initializationComplete;
         private readonly IPacketDiscarder _packetDiscarder;
-        private readonly Channel<MediaData> _mediaDataChannel;
+        private readonly Channel<StreamData> _streamDataChannel;
 
         private uint _audioTimestamp;
         private uint _videoTimestamp;
@@ -69,7 +69,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal
 
             _initializationComplete = new TaskCompletionSource();
             _packetDiscarder = packetDiscarderFactory.Create(_streamPath);
-            _mediaDataChannel = CreateMediaDataChannel();
+            _streamDataChannel = CreateStreamDataChannel();
         }
 
         public async Task RunAsync(CancellationToken cancellationToken)
@@ -106,7 +106,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal
 
                 SubscribeToStreamEvents(rtmpStream, idleChecker, abortCts);
 
-                var mediaDataSendingTask = MediaDataSendingTask(rtmpStream, idleChecker, abortCts);
+                var mediaDataSendingTask = StreamDataSendingTask(rtmpStream, idleChecker, abortCts);
                 rtmpStream.Publish.Publish(origin.StreamName);
 
                 _logger.RtmpUpstreamCreated(_streamPath);
@@ -210,6 +210,11 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal
         {
             try
             {
+                if (_publishStreamContext.StreamMetaData != null)
+                {
+                    await SendMetaDataAsync(rtmpStream, _publishStreamContext.StreamMetaData);
+                }
+
                 if (_publishStreamContext.AudioSequenceHeader != null)
                 {
                     await SendMediaSequenceHeaderAsync(rtmpStream, MediaType.Audio, _publishStreamContext.AudioSequenceHeader);
@@ -227,7 +232,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal
                     {
                         if (UpdateTimestamp(picture.Type, picture.Timestamp))
                         {
-                            await SendMediaDataAsync(rtmpStream, new MediaData(picture.Type, picture.Timestamp, true, picture.Payload));
+                            await DoSendMediaDataAsync(rtmpStream, new MediaData(picture.Type, picture.Timestamp, true, picture.Payload));
                         }
                     }
                 }
@@ -252,7 +257,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal
                 try
                 {
                     sequenceHeader.AsSpan().CopyTo(buffer.Buffer);
-                    await SendMediaDataAsync(rtmpStream, new MediaData(mediaType, 0, false, buffer));
+                    await DoSendMediaDataAsync(rtmpStream, new MediaData(mediaType, 0, false, buffer));
                 }
                 finally
                 {
@@ -261,7 +266,12 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal
             }
         }
 
-        private async Task MediaDataSendingTask(IRtmpStream rtmpStream, IIdleChecker idleChecker, CancellationTokenSource abortCts)
+        private async Task SendMetaDataAsync(IRtmpStream rtmpStream, IReadOnlyDictionary<string, object> streamMetaData)
+        {
+            await rtmpStream.Publish.SendMetaDataAsync(streamMetaData);
+        }
+
+        private async Task StreamDataSendingTask(IRtmpStream rtmpStream, IIdleChecker idleChecker, CancellationTokenSource abortCts)
         {
             try
             {
@@ -272,26 +282,16 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal
                 {
                     isInitializationComplete = await UntilInitializationCompleteAsync(isInitializationComplete, cancellationToken);
 
-                    var mediaData = await DequeueMediaData(cancellationToken);
+                    var streamData = await DequeueStreamData(cancellationToken);
                     idleChecker.Refresh();
 
-                    try
+                    if (streamData.MediaData.HasValue)
                     {
-                        if (!UpdateTimestamp(mediaData.Type, mediaData.Timestamp) && mediaData.IsSkippable)
-                        {
-                            continue;
-                        }
-
-                        await SendMediaDataAsync(rtmpStream, mediaData);
+                        await SendMediaDataAsync(rtmpStream, streamData.MediaData.Value);
                     }
-                    catch (Exception ex)
+                    else if (streamData.MetaData.HasValue)
                     {
-                        _logger.RtmpUpstreamMediaDataSendingError(_streamPath, mediaData.Type, ex);
-                        throw;
-                    }
-                    finally
-                    {
-                        mediaData.Payload.Unclaim();
+                        await SendMetaDataAsync(rtmpStream, streamData.MetaData.Value.StreamMetaData);
                     }
                 }
             }
@@ -303,11 +303,12 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal
             finally
             {
                 abortCts.Cancel();
-                _mediaDataChannel.Writer.Complete();
+                _streamDataChannel.Writer.Complete();
 
-                while (_mediaDataChannel.Reader.TryRead(out var mediaData))
+                while (_streamDataChannel.Reader.TryRead(out var streamData))
                 {
-                    mediaData.Payload.Unclaim();
+                    if (streamData.MediaData.HasValue)
+                        streamData.MediaData.Value.Payload.Unclaim();
                 }
             }
 
@@ -325,7 +326,27 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal
             }
         }
 
-        private static async Task SendMediaDataAsync(IRtmpStream rtmpStream, MediaData mediaData)
+        private async Task SendMediaDataAsync(IRtmpStream rtmpStream, MediaData mediaData)
+        {
+            try
+            {
+                if (!UpdateTimestamp(mediaData.Type, mediaData.Timestamp) && mediaData.IsSkippable)
+                    return;
+
+                await DoSendMediaDataAsync(rtmpStream, mediaData);
+            }
+            catch (Exception ex)
+            {
+                _logger.RtmpUpstreamMediaDataSendingError(_streamPath, mediaData.Type, ex);
+                throw;
+            }
+            finally
+            {
+                mediaData.Payload.Unclaim();
+            }
+        }
+
+        private static async Task DoSendMediaDataAsync(IRtmpStream rtmpStream, MediaData mediaData)
         {
             switch (mediaData.Type)
             {
@@ -383,7 +404,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal
             {
                 mediaData.Payload.Claim();
 
-                if (!_mediaDataChannel.Writer.TryWrite(mediaData))
+                if (!_streamDataChannel.Writer.TryWrite(new StreamData(mediaData)))
                 {
                     throw new ChannelClosedException();
                 }
@@ -397,13 +418,25 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal
             }
         }
 
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private async ValueTask<MediaData> DequeueMediaData(CancellationToken cancellationToken)
+        private void EnqueueMetaData(MetaData metaData)
         {
-            var mediaData = await _mediaDataChannel.Reader.ReadAsync(cancellationToken);
-            Interlocked.Add(ref _outstandingPacketsSize, -mediaData.Payload.Size);
-            Interlocked.Decrement(ref _outstandingPacketCount);
-            return mediaData;
+            _streamDataChannel.Writer.TryWrite(new StreamData(metaData));
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private async ValueTask<StreamData> DequeueStreamData(CancellationToken cancellationToken)
+        {
+            var streamData = await _streamDataChannel.Reader.ReadAsync(cancellationToken);
+
+            if (streamData.MediaData.HasValue)
+            {
+                Interlocked.Add(ref _outstandingPacketsSize, -streamData.MediaData.Value.Payload.Size);
+                Interlocked.Decrement(ref _outstandingPacketCount);
+            }
+
+            return streamData;
         }
 
         public void OnReceiveMediaData(MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp, bool isSkippable)
@@ -412,6 +445,16 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal
                 return;
 
             EnqueueMediaData(new MediaData(mediaType, timestamp, isSkippable, rentedBuffer));
+        }
+
+        public void OnReceiveMetaData(IReadOnlyDictionary<string, object> metaData)
+        {
+            _publishStreamContext.StreamMetaData = metaData;
+
+            if (!_isPublishStarted)
+                return;
+
+            EnqueueMetaData(new MetaData(metaData));
         }
 
         private IIdleChecker CreateIdleCheck(CancellationTokenSource abortCts)
@@ -430,9 +473,9 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal
             return new RtmpPublishStreamContext(null, _streamPath, new Dictionary<string, string>(), _bufferPool);
         }
 
-        private static Channel<MediaData> CreateMediaDataChannel()
+        private static Channel<StreamData> CreateStreamDataChannel()
         {
-            return Channel.CreateUnbounded<MediaData>(new UnboundedChannelOptions
+            return Channel.CreateUnbounded<StreamData>(new UnboundedChannelOptions
             {
                 AllowSynchronousContinuations = true,
                 SingleReader = true
@@ -442,6 +485,13 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal
         public ValueTask DisposeAsync()
             => ValueTask.CompletedTask;
 
+        private record struct StreamData(MediaData? MediaData, MetaData? MetaData)
+        {
+            public StreamData(MediaData mediaData) : this(mediaData, null) { }
+            public StreamData(MetaData metaData) : this(null, metaData) { }
+        }
+
         private record struct MediaData(MediaType Type, uint Timestamp, bool IsSkippable, IRentedBuffer Payload);
+        private record struct MetaData(IReadOnlyDictionary<string, object> StreamMetaData);
     }
 }
