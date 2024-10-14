@@ -21,7 +21,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
         private readonly IRtmpStreamManagerService _streamManager;
         private readonly IRtmpCommandMessageSenderService _commandMessageSender;
         private readonly IRtmpUserControlMessageSenderService _userControlMessageSender;
-        private readonly IRtmpMediaMessageCacherService _mediaMessageCacher;
+        private readonly IRtmpCacherService _cacher;
         private readonly IStreamAuthorization _streamAuthorization;
         private readonly ILogger<RtmpPlayCommandHandler> _logger;
 
@@ -29,14 +29,14 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
             IRtmpStreamManagerService streamManager,
             IRtmpCommandMessageSenderService commandMessageSender,
             IRtmpUserControlMessageSenderService userControlMessageSender,
-            IRtmpMediaMessageCacherService mediaMessageCacher,
+            IRtmpCacherService cacher,
             IStreamAuthorization streamAuthorization,
             ILogger<RtmpPlayCommandHandler> logger)
         {
             _streamManager = streamManager;
             _commandMessageSender = commandMessageSender;
             _userControlMessageSender = userControlMessageSender;
-            _mediaMessageCacher = mediaMessageCacher;
+            _cacher = cacher;
             _streamAuthorization = streamAuthorization;
             _logger = logger;
         }
@@ -136,16 +136,16 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
             if (streamContext.SubscribeContext == null || publishStreamContext == null)
                 return;
 
-            _mediaMessageCacher.SendCachedStreamMetaDataMessage(
+            _cacher.SendCachedStreamMetaDataMessage(
                 streamContext.SubscribeContext, publishStreamContext,
                 chunkStreamContext.Timestamp);
 
-            _mediaMessageCacher.SendCachedHeaderMessages(
+            _cacher.SendCachedHeaderMessages(
                 streamContext.SubscribeContext, publishStreamContext);
 
             if (publishStreamContext.GroupOfPicturesCacheActivated)
             {
-                _mediaMessageCacher.SendCachedGroupOfPictures(
+                _cacher.SendCachedGroupOfPictures(
                     streamContext.SubscribeContext, publishStreamContext);
             }
         }

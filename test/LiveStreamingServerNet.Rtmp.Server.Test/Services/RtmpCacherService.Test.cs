@@ -17,28 +17,46 @@ using NSubstitute;
 
 namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
 {
-    public class RtmpMediaMessageCacherServiceTest
+    public class RtmpCacherServiceTest
     {
         private readonly IFixture _fixture;
         private readonly IRtmpChunkMessageSenderService _chunkMessageSender;
         private readonly IRtmpMediaCachingInterceptionService _interception;
+        private readonly IRtmpServerStreamEventDispatcher _eventDispatcher;
         private readonly MediaStreamingConfiguration _config;
-        private readonly ILogger<RtmpMediaMessageCacherService> _logger;
-        private readonly IRtmpMediaMessageCacherService _sut;
+        private readonly ILogger<RtmpCacherService> _logger;
+        private readonly IRtmpCacherService _sut;
 
-        public RtmpMediaMessageCacherServiceTest()
+        public RtmpCacherServiceTest()
         {
             _fixture = new Fixture();
             _chunkMessageSender = Substitute.For<IRtmpChunkMessageSenderService>();
             _interception = Substitute.For<IRtmpMediaCachingInterceptionService>();
+            _eventDispatcher = Substitute.For<IRtmpServerStreamEventDispatcher>();
             _config = new MediaStreamingConfiguration();
-            _logger = Substitute.For<ILogger<RtmpMediaMessageCacherService>>();
+            _logger = Substitute.For<ILogger<RtmpCacherService>>();
 
-            _sut = new RtmpMediaMessageCacherService(
+            _sut = new RtmpCacherService(
                 _chunkMessageSender,
                 _interception,
+                _eventDispatcher,
                 Options.Create(_config),
                 _logger);
+        }
+
+        [Fact]
+        public async Task CacheStreamMetaData_Should_SetStreamMetaData()
+        {
+            // Arrange
+            var publishStreamContext = Substitute.For<IRtmpPublishStreamContext>();
+            var metaData = _fixture.Create<Dictionary<string, object>>();
+
+            // Act
+            await _sut.CacheStreamMetaDataAsync(publishStreamContext, metaData);
+
+            // Assert
+            publishStreamContext.StreamMetaData.Should().BeEquivalentTo(metaData);
+            _ = _eventDispatcher.Received(1).RtmpStreamMetaDataReceivedAsync(publishStreamContext);
         }
 
         [Fact]

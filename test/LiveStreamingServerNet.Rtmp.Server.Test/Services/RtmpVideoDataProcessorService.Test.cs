@@ -18,7 +18,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Media
         private readonly IFixture _fixture;
         private readonly IRtmpClientSessionContext _clientContext;
         private readonly IRtmpStreamManagerService _streamManager;
-        private readonly IRtmpMediaMessageCacherService _mediaMessageCacher;
+        private readonly IRtmpCacherService _cacher;
         private readonly IRtmpMediaMessageBroadcasterService _mediaMessageBroadcaster;
         private readonly RtmpServerConfiguration _config;
         private readonly ILogger<RtmpVideoDataProcessorService> _logger;
@@ -30,7 +30,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Media
             _fixture = new Fixture();
             _clientContext = Substitute.For<IRtmpClientSessionContext>();
             _streamManager = Substitute.For<IRtmpStreamManagerService>();
-            _mediaMessageCacher = Substitute.For<IRtmpMediaMessageCacherService>();
+            _cacher = Substitute.For<IRtmpCacherService>();
             _mediaMessageBroadcaster = Substitute.For<IRtmpMediaMessageBroadcasterService>();
             _config = new RtmpServerConfiguration();
             _logger = Substitute.For<ILogger<RtmpVideoDataProcessorService>>();
@@ -39,7 +39,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Media
 
             _sut = new RtmpVideoDataProcessorService(
                 _streamManager,
-                _mediaMessageCacher,
+                _cacher,
                 _mediaMessageBroadcaster,
                 Options.Create(_config),
                 _logger);
@@ -112,12 +112,12 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Media
             result.Should().BeTrue();
 
             if (gopCacheActivated && frameType == VideoFrameType.KeyFrame)
-                _ = _mediaMessageCacher.Received(1).ClearGroupOfPicturesCacheAsync(publisher_publishStreamContext);
+                _ = _cacher.Received(1).ClearGroupOfPicturesCacheAsync(publisher_publishStreamContext);
 
-            _ = _mediaMessageCacher.Received(hasHeader ? 1 : 0)
+            _ = _cacher.Received(hasHeader ? 1 : 0)
                 .CacheSequenceHeaderAsync(publisher_publishStreamContext, MediaType.Video, _dataBuffer);
 
-            _ = _mediaMessageCacher.Received(gopCacheActivated && isPictureCachable ? 1 : 0)
+            _ = _cacher.Received(gopCacheActivated && isPictureCachable ? 1 : 0)
                 .CachePictureAsync(publisher_publishStreamContext, MediaType.Video, _dataBuffer, timestamp);
 
             publisher_publishStreamContext.Received(1).UpdateTimestamp(timestamp, MediaType.Video);

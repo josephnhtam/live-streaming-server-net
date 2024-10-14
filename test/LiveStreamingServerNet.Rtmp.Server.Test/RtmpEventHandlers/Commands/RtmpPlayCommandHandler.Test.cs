@@ -20,7 +20,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
         private readonly IRtmpStreamManagerService _streamManager;
         private readonly IRtmpCommandMessageSenderService _commandMessageSender;
         private readonly IRtmpUserControlMessageSenderService _userControlMessageSender;
-        private readonly IRtmpMediaMessageCacherService _mediaMessageCacher;
+        private readonly IRtmpCacherService _cacher;
         private readonly IStreamAuthorization _streamAuthorization;
         private readonly IRtmpStreamContext _streamContext;
         private readonly IRtmpSubscribeStreamContext _subscribeStreamContext;
@@ -36,7 +36,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
             _streamManager = Substitute.For<IRtmpStreamManagerService>();
             _commandMessageSender = Substitute.For<IRtmpCommandMessageSenderService>();
             _userControlMessageSender = Substitute.For<IRtmpUserControlMessageSenderService>();
-            _mediaMessageCacher = Substitute.For<IRtmpMediaMessageCacherService>();
+            _cacher = Substitute.For<IRtmpCacherService>();
             _streamAuthorization = Substitute.For<IStreamAuthorization>();
             _streamContext = Substitute.For<IRtmpStreamContext>();
             _subscribeStreamContext = Substitute.For<IRtmpSubscribeStreamContext>();
@@ -56,7 +56,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
                 _streamManager,
                 _commandMessageSender,
                 _userControlMessageSender,
-                _mediaMessageCacher,
+                _cacher,
                 _streamAuthorization,
                 _logger
             );
@@ -162,14 +162,14 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
             {
                 if (publishStreamExists)
                 {
-                    _mediaMessageCacher.Received(1).SendCachedStreamMetaDataMessage(
+                    _cacher.Received(1).SendCachedStreamMetaDataMessage(
                         _subscribeStreamContext, _publishStreamContext, timestamp);
 
-                    _mediaMessageCacher.Received(1).SendCachedHeaderMessages(
+                    _cacher.Received(1).SendCachedHeaderMessages(
                         _subscribeStreamContext, _publishStreamContext);
 
                     if (gopCacheActivated)
-                        _mediaMessageCacher.Received(1).SendCachedGroupOfPictures(
+                        _cacher.Received(1).SendCachedGroupOfPictures(
                             _subscribeStreamContext, _publishStreamContext);
                 }
 
