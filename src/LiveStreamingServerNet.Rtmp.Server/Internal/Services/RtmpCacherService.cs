@@ -12,21 +12,24 @@ using Microsoft.Extensions.Options;
 
 namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
 {
-    internal class RtmpMediaMessageCacherService : IRtmpMediaMessageCacherService
+    internal class RtmpCacherService : IRtmpCacherService
     {
         private readonly IRtmpChunkMessageSenderService _chunkMessageSender;
         private readonly IRtmpMediaCachingInterceptionService _interception;
+        private readonly IRtmpServerStreamEventDispatcher _eventDispatcher;
         private readonly MediaStreamingConfiguration _config;
         private readonly ILogger _logger;
 
-        public RtmpMediaMessageCacherService(
+        public RtmpCacherService(
             IRtmpChunkMessageSenderService chunkMessageSender,
             IRtmpMediaCachingInterceptionService interception,
+            IRtmpServerStreamEventDispatcher eventDispatcher,
             IOptions<MediaStreamingConfiguration> config,
-            ILogger<RtmpMediaMessageCacherService> logger)
+            ILogger<RtmpCacherService> logger)
         {
             _chunkMessageSender = chunkMessageSender;
             _interception = interception;
+            _eventDispatcher = eventDispatcher;
             _config = config.Value;
             _logger = logger;
         }
@@ -50,6 +53,12 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
                     publishStreamContext.AudioSequenceHeader = sequenceHeader;
                     break;
             }
+        }
+
+        public async ValueTask CacheStreamMetaDataAsync(IRtmpPublishStreamContext publishStreamContext, IReadOnlyDictionary<string, object> metaData)
+        {
+            publishStreamContext.StreamMetaData = new Dictionary<string, object>(metaData);
+            await _eventDispatcher.RtmpStreamMetaDataReceivedAsync(publishStreamContext);
         }
 
         public async ValueTask CachePictureAsync(

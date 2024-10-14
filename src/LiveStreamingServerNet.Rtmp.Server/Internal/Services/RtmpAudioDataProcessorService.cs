@@ -11,7 +11,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
     internal class RtmpAudioDataProcessorService : IRtmpAudioDataProcessorService
     {
         private readonly IRtmpStreamManagerService _streamManager;
-        private readonly IRtmpMediaMessageCacherService _mediaMessageCacher;
+        private readonly IRtmpCacherService _cacher;
         private readonly IRtmpMediaMessageBroadcasterService _mediaMessageBroadcaster;
         private readonly ILogger _logger;
 
@@ -19,13 +19,13 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
 
         public RtmpAudioDataProcessorService(
             IRtmpStreamManagerService streamManager,
-            IRtmpMediaMessageCacherService mediaMessageCacher,
+            IRtmpCacherService cacher,
             IRtmpMediaMessageBroadcasterService mediaMessageBroadcaster,
             ILogger<RtmpAudioDataProcessorService> logger,
             IFilter<AudioCodec>? audioCodecFilter = null)
         {
             _streamManager = streamManager;
-            _mediaMessageCacher = mediaMessageCacher;
+            _cacher = cacher;
             _mediaMessageBroadcaster = mediaMessageBroadcaster;
             _logger = logger;
 
@@ -124,11 +124,11 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
 
             if (aacPacketType == AACPacketType.SequenceHeader)
             {
-                await _mediaMessageCacher.CacheSequenceHeaderAsync(publishStreamContext, MediaType.Audio, payloadBuffer);
+                await _cacher.CacheSequenceHeaderAsync(publishStreamContext, MediaType.Audio, payloadBuffer);
             }
             else if (publishStreamContext.GroupOfPicturesCacheActivated)
             {
-                await _mediaMessageCacher.CachePictureAsync(publishStreamContext, MediaType.Audio, payloadBuffer, timestamp);
+                await _cacher.CachePictureAsync(publishStreamContext, MediaType.Audio, payloadBuffer, timestamp);
             }
         }
     }

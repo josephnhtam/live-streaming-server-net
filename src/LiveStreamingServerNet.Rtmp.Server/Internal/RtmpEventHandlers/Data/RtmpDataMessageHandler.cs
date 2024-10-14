@@ -17,19 +17,16 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Data
     internal class RtmpDataMessageHandler : IRtmpMessageHandler<IRtmpClientSessionContext>
     {
         private readonly IRtmpStreamManagerService _streamManager;
-        private readonly IRtmpMediaMessageCacherService _mediaMessageCacher;
-        private readonly IRtmpServerStreamEventDispatcher _eventDispatcher;
+        private readonly IRtmpMetaDataProcessorService _metaDataProcessor;
         private readonly ILogger<RtmpDataMessageHandler> _logger;
 
         public RtmpDataMessageHandler(
             IRtmpStreamManagerService streamManager,
-            IRtmpMediaMessageCacherService mediaMessageCacher,
-            IRtmpServerStreamEventDispatcher eventDispatcher,
+            IRtmpMetaDataProcessorService metaDataProcessor,
             ILogger<RtmpDataMessageHandler> logger)
         {
             _streamManager = streamManager;
-            _mediaMessageCacher = mediaMessageCacher;
-            _eventDispatcher = eventDispatcher;
+            _metaDataProcessor = metaDataProcessor;
             _logger = logger;
         }
 
@@ -85,30 +82,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Data
                 return false;
             }
 
-            CacheStreamMetaData(metaData, publishStreamContext);
-
-            BroadcastMetaDataToSubscribers(chunkStreamContext, publishStreamContext);
-
-            await _eventDispatcher.RtmpStreamMetaDataReceivedAsync(publishStreamContext);
-
-            return true;
-        }
-
-        private static void CacheStreamMetaData(IReadOnlyDictionary<string, object> metaData, IRtmpPublishStreamContext publishStreamContext)
-        {
-            publishStreamContext.StreamMetaData = new Dictionary<string, object>(metaData);
-        }
-
-        private void BroadcastMetaDataToSubscribers(
-            IRtmpChunkStreamContext chunkStreamContext,
-            IRtmpPublishStreamContext publishStreamContext)
-        {
-            var subscribeStreamContexts = _streamManager.GetSubscribeStreamContexts(publishStreamContext.StreamPath);
-
-            _mediaMessageCacher.SendCachedStreamMetaDataMessage(
-                subscribeStreamContexts,
-                publishStreamContext,
-                chunkStreamContext.Timestamp);
+            return await _metaDataProcessor.ProcessMetaDataAsync(publishStreamContext, chunkStreamContext.Timestamp, metaData);
         }
     }
 }

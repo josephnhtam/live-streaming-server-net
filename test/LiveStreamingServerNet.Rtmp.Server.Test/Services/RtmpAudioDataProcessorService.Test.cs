@@ -16,7 +16,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Media
         private readonly IFixture _fixture;
         private readonly IRtmpClientSessionContext _clientContext;
         private readonly IRtmpStreamManagerService _streamManager;
-        private readonly IRtmpMediaMessageCacherService _mediaMessageCacher;
+        private readonly IRtmpCacherService _cacher;
         private readonly IRtmpMediaMessageBroadcasterService _mediaMessageBroadcaster;
         private readonly ILogger<RtmpAudioDataProcessorService> _logger;
         private readonly IDataBuffer _dataBuffer;
@@ -27,7 +27,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Media
             _fixture = new Fixture();
             _clientContext = Substitute.For<IRtmpClientSessionContext>();
             _streamManager = Substitute.For<IRtmpStreamManagerService>();
-            _mediaMessageCacher = Substitute.For<IRtmpMediaMessageCacherService>();
+            _cacher = Substitute.For<IRtmpCacherService>();
             _mediaMessageBroadcaster = Substitute.For<IRtmpMediaMessageBroadcasterService>();
             _logger = Substitute.For<ILogger<RtmpAudioDataProcessorService>>();
 
@@ -35,7 +35,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Media
 
             _sut = new RtmpAudioDataProcessorService(
                 _streamManager,
-                _mediaMessageCacher,
+                _cacher,
                 _mediaMessageBroadcaster,
                 _logger);
         }
@@ -98,10 +98,10 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Media
             // Assert
             result.Should().BeTrue();
 
-            _ = _mediaMessageCacher.Received(hasHeader ? 1 : 0)
+            _ = _cacher.Received(hasHeader ? 1 : 0)
                 .CacheSequenceHeaderAsync(publisher_publishStreamContext, MediaType.Audio, _dataBuffer);
 
-            _ = _mediaMessageCacher.Received(gopCacheActivated && isPictureCachable ? 1 : 0)
+            _ = _cacher.Received(gopCacheActivated && isPictureCachable ? 1 : 0)
                 .CachePictureAsync(publisher_publishStreamContext, MediaType.Audio, _dataBuffer, timestamp);
 
             publisher_publishStreamContext.Received(1).UpdateTimestamp(timestamp, MediaType.Audio);

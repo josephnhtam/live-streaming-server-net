@@ -13,7 +13,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
     internal class RtmpVideoDataProcessorService : IRtmpVideoDataProcessorService
     {
         private readonly IRtmpStreamManagerService _streamManager;
-        private readonly IRtmpMediaMessageCacherService _mediaMessageCacher;
+        private readonly IRtmpCacherService _cacher;
         private readonly IRtmpMediaMessageBroadcasterService _mediaMessageBroadcaster;
         private readonly RtmpServerConfiguration _config;
         private readonly ILogger _logger;
@@ -22,14 +22,14 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
 
         public RtmpVideoDataProcessorService(
             IRtmpStreamManagerService streamManager,
-            IRtmpMediaMessageCacherService mediaMessageCacher,
+            IRtmpCacherService cacher,
             IRtmpMediaMessageBroadcasterService mediaMessageBroadcaster,
             IOptions<RtmpServerConfiguration> config,
             ILogger<RtmpVideoDataProcessorService> logger,
             IFilter<VideoCodec>? videoCodecFilter = null)
         {
             _streamManager = streamManager;
-            _mediaMessageCacher = mediaMessageCacher;
+            _cacher = cacher;
             _mediaMessageBroadcaster = mediaMessageBroadcaster;
             _config = config.Value;
             _logger = logger;
@@ -208,22 +208,22 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
 
                 if (publishStreamContext.GroupOfPicturesCacheActivated && frameType == VideoFrameType.KeyFrame)
                 {
-                    await _mediaMessageCacher.ClearGroupOfPicturesCacheAsync(publishStreamContext);
+                    await _cacher.ClearGroupOfPicturesCacheAsync(publishStreamContext);
                 }
 
                 if (frameType == VideoFrameType.KeyFrame && avcPacketType == AVCPacketType.SequenceHeader)
                 {
-                    await _mediaMessageCacher.CacheSequenceHeaderAsync(publishStreamContext, MediaType.Video, payloadBuffer);
+                    await _cacher.CacheSequenceHeaderAsync(publishStreamContext, MediaType.Video, payloadBuffer);
                 }
                 else if (publishStreamContext.GroupOfPicturesCacheActivated && avcPacketType == AVCPacketType.NALU)
                 {
-                    await _mediaMessageCacher.CachePictureAsync(publishStreamContext, MediaType.Video, payloadBuffer, timestamp);
+                    await _cacher.CachePictureAsync(publishStreamContext, MediaType.Video, payloadBuffer, timestamp);
                 }
             }
             else if (publishStreamContext.GroupOfPicturesCacheActivated)
             {
                 publishStreamContext.GroupOfPicturesCacheActivated = false;
-                await _mediaMessageCacher.ClearGroupOfPicturesCacheAsync(publishStreamContext);
+                await _cacher.ClearGroupOfPicturesCacheAsync(publishStreamContext);
             }
         }
     }

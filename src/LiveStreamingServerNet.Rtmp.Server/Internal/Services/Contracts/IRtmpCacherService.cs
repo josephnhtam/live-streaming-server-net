@@ -3,8 +3,12 @@ using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 
 namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services.Contracts
 {
-    internal interface IRtmpMediaMessageCacherService : IAsyncDisposable
+    internal interface IRtmpCacherService : IAsyncDisposable
     {
+        ValueTask CacheStreamMetaDataAsync(
+            IRtmpPublishStreamContext publishStreamContext,
+            IReadOnlyDictionary<string, object> metaData);
+
         ValueTask CacheSequenceHeaderAsync(
             IRtmpPublishStreamContext publishStreamContext,
             MediaType mediaType,

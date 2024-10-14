@@ -23,8 +23,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Data
         private readonly IRtmpStreamContext _streamContext;
         private readonly IRtmpPublishStreamContext _publishStreamContext;
         private readonly DataBuffer _payloadBuffer;
-        private readonly IRtmpMediaMessageCacherService _mediaMessageCacher;
-        private readonly IRtmpServerStreamEventDispatcher _eventDispatcher;
+        private readonly IRtmpMetaDataProcessorService _metaDataProcessor;
         private readonly ILogger<RtmpDataMessageHandler> _logger;
         private readonly IRtmpStreamManagerService _streamManager;
         private readonly RtmpDataMessageHandler _sut;
@@ -37,11 +36,10 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Data
             _streamContext = Substitute.For<IRtmpStreamContext>();
             _publishStreamContext = Substitute.For<IRtmpPublishStreamContext>();
             _payloadBuffer = new DataBuffer();
-            _mediaMessageCacher = Substitute.For<IRtmpMediaMessageCacherService>();
-            _eventDispatcher = Substitute.For<IRtmpServerStreamEventDispatcher>();
+            _metaDataProcessor = Substitute.For<IRtmpMetaDataProcessorService>();
             _logger = Substitute.For<ILogger<RtmpDataMessageHandler>>();
             _streamManager = Substitute.For<IRtmpStreamManagerService>();
-            _sut = new RtmpDataMessageHandler(_streamManager, _mediaMessageCacher, _eventDispatcher, _logger);
+            _sut = new RtmpDataMessageHandler(_streamManager, _metaDataProcessor, _logger);
 
             _streamContext.ClientContext.Returns(_clientContext);
             _publishStreamContext.StreamContext.Returns(_streamContext);
@@ -63,20 +61,27 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Data
         }
 
         [Fact]
-        public async Task HandleAsync_Should_CacheAndBroadcastMetaDatas_For_MetaDataMessage_When_PublishStreamContextExists()
+        public async Task HandleAsync_Should_ProcessMetaData_When_PublishStreamContextExists()
         {
             // Arrange
             var streamid = _fixture.Create<uint>();
+            var timestamp = _fixture.Create<uint>();
 
             _chunkStreamContext.MessageHeader.MessageStreamId.Returns(streamid);
+            _chunkStreamContext.Timestamp.Returns(timestamp);
             _clientContext.GetStreamContext(streamid).Returns(_streamContext);
             _streamContext.PublishContext.Returns(_publishStreamContext);
+
+            _metaDataProcessor.ProcessMetaDataAsync(
+                _publishStreamContext, timestamp, Helpers.CreateExpectedMetaData("framerate", 60.0))
+                .Returns(true);
 
             // Act
             var result = await _sut.HandleAsync(_chunkStreamContext, _clientContext, _payloadBuffer, default);
 
             // Assert
-            _publishStreamContext.Received(1).StreamMetaData = Helpers.CreateExpectedMetaData("framerate", 60.0);
+            _ = _metaDataProcessor.Received(1).ProcessMetaDataAsync(
+                _publishStreamContext, timestamp, Helpers.CreateExpectedMetaData("framerate", 60.0));
 
             result.Should().BeTrue();
         }

@@ -75,14 +75,15 @@ namespace LiveStreamingServerNet.Rtmp.Server.Installer
                     .AddSingleton<IRtmpProtocolControlService, RtmpProtocolControlService>()
                     .AddSingleton<IRtmpUserControlMessageSenderService, RtmpUserControlMessageSenderService>()
                     .AddSingleton<IRtmpCommandMessageSenderService, RtmpCommandMessageSenderService>()
-                    .AddSingleton<IRtmpMediaMessageCacherService, RtmpMediaMessageCacherService>()
+                    .AddSingleton<IRtmpCacherService, RtmpCacherService>()
                     .AddSingleton<IRtmpMediaMessageBroadcasterService, RtmpMediaMessageBroadcasterService>()
                     .AddSingleton<IRtmpStreamDeletionService, RtmpStreamDeletionService>()
                     .AddSingleton<IRtmpMediaMessageInterceptionService, RtmpMediaMessageInterceptionService>()
                     .AddSingleton<IRtmpMediaCachingInterceptionService, RtmpMediaCachingInterceptionService>()
                     .AddSingleton<IRtmpAcknowledgementHandlerService, RtmpAcknowledgementHandlerService>()
                     .AddSingleton<IRtmpVideoDataProcessorService, RtmpVideoDataProcessorService>()
-                    .AddSingleton<IRtmpAudioDataProcessorService, RtmpAudioDataProcessorService>();
+                    .AddSingleton<IRtmpAudioDataProcessorService, RtmpAudioDataProcessorService>()
+                    .AddSingleton<IRtmpMetaDataProcessorService, RtmpMetaDataProcessorService>();
 
             services.AddSingleton<IRtmpStreamInfoManager, RtmpStreamInfoManager>();
 
