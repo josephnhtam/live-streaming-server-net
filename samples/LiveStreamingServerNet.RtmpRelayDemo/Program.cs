@@ -10,7 +10,7 @@ namespace LiveStreamingServerNet.RtmpRelayDemo
 {
     /// <summary>
     /// Create one origin server (port 1935) and two relay servers (ports 1936, 1937).
-    /// Relay servers push published streams to the origin and pull requested streams from origin if not locally available.
+    /// Relay servers push published streams to the origin and pull requested streams from the origin if not locally available.
     /// </summary>
     public class Program
     {
