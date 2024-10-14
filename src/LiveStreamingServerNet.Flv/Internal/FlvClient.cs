@@ -58,7 +58,7 @@ namespace LiveStreamingServerNet.Flv.Internal
 
         public void CompleteInitialization()
         {
-            _initializationTcs.SetResult();
+            _initializationTcs.TrySetResult();
         }
 
         public Task UntilInitializationCompleteAsync()
