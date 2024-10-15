@@ -8,8 +8,11 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Contracts
         int ChunkType { get; set; }
         bool IsFirstChunkOfMessage { get; }
         IRtmpChunkMessageHeaderContext MessageHeader { get; }
-        IDataBuffer? PayloadBuffer { get; set; }
+        IDataBuffer? PayloadBuffer { get; }
         uint Timestamp { get; set; }
+
+        void AssignPayload(IDataBufferPool dataBufferPool);
+        void RecyclePayload(IDataBufferPool dataBufferPool);
     }
 
     internal interface IRtmpChunkMessageHeaderContext

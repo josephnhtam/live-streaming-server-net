@@ -165,7 +165,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
         {
             if (chunkStreamContext.IsFirstChunkOfMessage)
             {
-                chunkStreamContext.PayloadBuffer = _dataBufferPool.Obtain();
+                chunkStreamContext.AssignPayload(_dataBufferPool);
             }
 
             var payloadBuffer = chunkStreamContext.PayloadBuffer!;
@@ -193,11 +193,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.Services
 
         public void ResetChunkStreamContext(IRtmpChunkStreamContext chunkStreamContext)
         {
-            if (chunkStreamContext.PayloadBuffer == null)
-                return;
-
-            _dataBufferPool.Recycle(chunkStreamContext.PayloadBuffer);
-            chunkStreamContext.PayloadBuffer = null;
+            chunkStreamContext.RecyclePayload(_dataBufferPool);
         }
     }
 }

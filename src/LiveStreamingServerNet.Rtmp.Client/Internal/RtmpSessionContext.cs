@@ -3,6 +3,7 @@ using LiveStreamingServerNet.Rtmp.Client.Contracts;
 using LiveStreamingServerNet.Rtmp.Client.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal;
 using LiveStreamingServerNet.Rtmp.Internal.Contracts;
+using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using System.Collections.Concurrent;
 
 namespace LiveStreamingServerNet.Rtmp.Client.Internal
@@ -84,6 +85,12 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
         {
             _bandwidthLimit = value;
             OnBandwidthLimitUpdated?.Invoke(this, new BandwidthLimitEventArgs(value));
+        }
+
+        public void Recycle(IDataBufferPool dataBufferPool)
+        {
+            foreach (var chunkStreamContext in _chunkStreamContexts.Values)
+                chunkStreamContext.RecyclePayload(dataBufferPool);
         }
 
         public ValueTask DisposeAsync()

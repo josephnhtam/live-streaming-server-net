@@ -4,6 +4,7 @@ using LiveStreamingServerNet.Rtmp.Server.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Server.Internal.Logging;
 using LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEvents;
 using LiveStreamingServerNet.Rtmp.Server.RateLimiting.Contracts;
+using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using LiveStreamingServerNet.Utilities.Common;
 using LiveStreamingServerNet.Utilities.Common.Contracts;
 using LiveStreamingServerNet.Utilities.Mediators.Contracts;
@@ -15,6 +16,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
     {
         private readonly IRtmpClientSessionContext _clientContext;
         private readonly IMediator _mediator;
+        private readonly IDataBufferPool _dataBufferPool;
         private readonly IRtmpServerConnectionEventDispatcher _eventDispatcher;
         private readonly ILogger _logger;
         private readonly IBandwidthLimiter? _bandwidthLimiter;
@@ -23,12 +25,14 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
         public RtmpClientSessionHandler(
             IRtmpClientSessionContext clientContext,
             IMediator mediator,
+            IDataBufferPool dataBufferPool,
             IRtmpServerConnectionEventDispatcher eventDispatcher,
             ILogger<RtmpClientSessionHandler> logger,
             IBandwidthLimiterFactory? bandwidthLimiterFactory = null)
         {
             _clientContext = clientContext;
             _mediator = mediator;
+            _dataBufferPool = dataBufferPool;
             _eventDispatcher = eventDispatcher;
             _logger = logger;
             _bandwidthLimiter = bandwidthLimiterFactory?.Create();
@@ -112,6 +116,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
             if (_bandwidthLimiter != null)
                 await _bandwidthLimiter.DisposeAsync();
 
+            _clientContext.Recycle(_dataBufferPool);
             await _clientContext.DisposeAsync();
         }
 

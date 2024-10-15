@@ -79,6 +79,12 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
                 streamContext.Dispose();
         }
 
+        public void Recycle(IDataBufferPool dataBufferPool)
+        {
+            foreach (var chunkStreamContext in _chunkStreamContexts.Values)
+                chunkStreamContext.RecyclePayload(dataBufferPool);
+        }
+
         public ValueTask DisposeAsync()
         {
             foreach (var streamContext in _streamContexts.Values)
