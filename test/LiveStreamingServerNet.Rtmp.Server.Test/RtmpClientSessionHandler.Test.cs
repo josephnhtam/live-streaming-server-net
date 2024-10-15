@@ -5,6 +5,7 @@ using LiveStreamingServerNet.Rtmp.Server.Internal;
 using LiveStreamingServerNet.Rtmp.Server.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEvents;
 using LiveStreamingServerNet.Rtmp.Server.RateLimiting.Contracts;
+using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using LiveStreamingServerNet.Utilities.Mediators.Contracts;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
@@ -14,6 +15,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test
     public class RtmpClientSessionHandlerTest : IAsyncDisposable
     {
         private readonly IMediator _mediator;
+        private readonly IDataBufferPool _dataBufferPool;
         private readonly IRtmpServerConnectionEventDispatcher _eventDispatcher;
         private readonly ILogger<RtmpClientSessionHandler> _logger;
         private readonly IRtmpClientSessionContext _clientContext;
@@ -25,6 +27,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test
         public RtmpClientSessionHandlerTest()
         {
             _mediator = Substitute.For<IMediator>();
+            _dataBufferPool = Substitute.For<IDataBufferPool>();
             _eventDispatcher = Substitute.For<IRtmpServerConnectionEventDispatcher>();
             _logger = Substitute.For<ILogger<RtmpClientSessionHandler>>();
 
@@ -38,7 +41,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test
 
             _networkStream = Substitute.For<INetworkStream>();
 
-            _sut = new RtmpClientSessionHandler(_clientContext, _mediator, _eventDispatcher, _logger, _bandwidthLimiterFactory);
+            _sut = new RtmpClientSessionHandler(_clientContext, _mediator, _dataBufferPool, _eventDispatcher, _logger, _bandwidthLimiterFactory);
         }
 
         public async ValueTask DisposeAsync()

@@ -3,6 +3,7 @@ using LiveStreamingServerNet.Rtmp.Client.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Client.Internal.Logging;
 using LiveStreamingServerNet.Rtmp.Client.Internal.RtmpEvents;
 using LiveStreamingServerNet.Rtmp.Internal;
+using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using LiveStreamingServerNet.Utilities.Common;
 using LiveStreamingServerNet.Utilities.Common.Contracts;
 using LiveStreamingServerNet.Utilities.Mediators.Contracts;
@@ -15,6 +16,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
         private readonly IRtmpSessionContext _context;
         private readonly IRtmpClientContext _clientContext;
         private readonly IMediator _mediator;
+        private readonly IDataBufferPool _dataBufferPool;
         private readonly ILogger _logger;
         private readonly IPool<RtmpChunkEvent> _rtmpChunkEventPool;
 
@@ -22,11 +24,13 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
             IRtmpSessionContext context,
             IRtmpClientContext clientContext,
             IMediator mediator,
+            IDataBufferPool dataBufferPool,
             ILogger<RtmpSessionHandler> logger)
         {
             _context = context;
             _clientContext = clientContext;
             _mediator = mediator;
+            _dataBufferPool = dataBufferPool;
             _logger = logger;
             _rtmpChunkEventPool = new Pool<RtmpChunkEvent>(() => new RtmpChunkEvent());
         }
@@ -102,6 +106,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
 
         public async ValueTask DisposeAsync()
         {
+            _context.Recycle(_dataBufferPool);
             await _context.DisposeAsync();
         }
     }

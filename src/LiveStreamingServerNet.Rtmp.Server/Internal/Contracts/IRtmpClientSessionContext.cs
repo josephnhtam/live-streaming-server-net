@@ -1,6 +1,7 @@
 ﻿using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Handshakes;
+using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using System.Collections.Concurrent;
 
 namespace LiveStreamingServerNet.Rtmp.Server.Internal.Contracts
@@ -29,5 +30,6 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Contracts
         List<IRtmpStreamContext> GetStreamContexts();
         IRtmpStreamContext? GetStreamContext(uint streamId);
         void RemoveStreamContext(uint streamId);
+        void Recycle(IDataBufferPool dataBufferPool);
     }
 }
