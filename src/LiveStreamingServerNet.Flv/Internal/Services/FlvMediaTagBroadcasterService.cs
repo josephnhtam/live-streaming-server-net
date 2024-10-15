@@ -6,6 +6,7 @@ using LiveStreamingServerNet.Rtmp;
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using LiveStreamingServerNet.Utilities.PacketDiscarders.Contracts;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Concurrent;
 using System.Threading.Channels;
 
@@ -125,10 +126,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
                 _logger.FailedToSendMediaMessage(client.ClientId, ex);
             }
 
-            while (context.ReadPacket(out var packet))
-            {
-                packet.RentedPayload.Unclaim();
-            }
+            context.Cleanup();
         }
 
         private class ClientMediaContext
@@ -160,9 +158,18 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
 
             public void Stop()
             {
-                _packetChannel.Writer.Complete();
                 _cts.Cancel();
                 _cts.Dispose();
+            }
+
+            public void Cleanup()
+            {
+                _packetChannel.Writer.Complete();
+
+                while (ReadPacket(out var packet))
+                {
+                    packet.RentedPayload.Unclaim();
+                }
             }
 
             public bool AddPacket(ref ClientMediaPacket packet)
