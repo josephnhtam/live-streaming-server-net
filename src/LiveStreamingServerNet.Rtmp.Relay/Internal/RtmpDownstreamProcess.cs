@@ -69,6 +69,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal
             if (initialized)
                 throw new InvalidOperationException("The process has already been initialized.");
 
+
             try
             {
                 var publishStreamContext = CreatePublishStreamContext();
@@ -404,6 +405,8 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal
                 .Select(subscriber => subscriber.StreamContext)
                 .Select(streamContext => _streamDeletion.DeleteStreamAsync(streamContext).AsTask())
             );
+
+            _publishStreamContext.Dispose();
         }
 
         private record struct StreamData(MediaData? MediaData, MetaData? MetaData)
