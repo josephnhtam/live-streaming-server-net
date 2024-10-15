@@ -87,7 +87,7 @@ namespace LiveStreamingServerNet.Flv.Middlewares
             switch (_streamManager.StartSubscribingStream(client, streamPath, !UseRelay()))
             {
                 case SubscribingStreamResult.Succeeded:
-                    await _clientHandler.RunClientAsync(client);
+                    await _clientHandler.RunClientAsync(client, cancellation);
                     return;
                 case SubscribingStreamResult.StreamDoesntExist:
                     context.Response.StatusCode = StatusCodes.Status404NotFound;

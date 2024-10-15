@@ -56,7 +56,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Contracts
         bool IsReceivingVideo { get; set; }
 
         void CompleteInitialization();
-        Task UntilInitializationCompleteAsync();
+        Task UntilInitializationCompleteAsync(CancellationToken cancellationToken = default);
     }
 
     internal interface IGroupOfPicturesCache : IDisposable

@@ -145,7 +145,12 @@ namespace LiveStreamingServerNet.Networking.Internal
         public async Task DisconnectAsync(CancellationToken cancellation)
         {
             Disconnect();
-            await _stoppedTcs.Task.WithCancellation(cancellation);
+
+            try
+            {
+                await _stoppedTcs.Task.WithCancellation(cancellation);
+            }
+            catch (OperationCanceledException) when (cancellation.IsCancellationRequested) { }
         }
 
         private async Task DisposeAsync(IAsyncDisposable? disposable)

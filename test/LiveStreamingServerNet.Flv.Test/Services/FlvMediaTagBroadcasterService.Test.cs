@@ -83,7 +83,7 @@ namespace LiveStreamingServerNet.Flv.Test.Services
 
             Received.InOrder(() =>
             {
-                client.Received(1).UntilInitializationCompleteAsync();
+                client.Received(1).UntilInitializationCompleteAsync(Arg.Any<CancellationToken>());
                 _mediaTagSender.When(x => x.SendMediaTagAsync(
                     client, mediaType, rentedBuffer.Buffer, rentedBuffer.Size, timestamp, Arg.Any<CancellationToken>()));
             });

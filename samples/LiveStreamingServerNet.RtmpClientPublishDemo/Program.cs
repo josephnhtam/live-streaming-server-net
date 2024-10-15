@@ -60,8 +60,9 @@ namespace LiveStreamingServerNet.RtmpClientPublishDemo
 
             try
             {
-                await Task.WhenAny(SendMediaDataAsync(rtmpStream, flvReader, cts), rtmpClient.UntilStoppedAsync());
+                await Task.WhenAny(SendMediaDataAsync(rtmpStream, flvReader, cts), rtmpClient.UntilStoppedAsync(cts.Token));
             }
+            catch (OperationCanceledException) when (cts.IsCancellationRequested) { }
             finally
             {
                 cts.Cancel();

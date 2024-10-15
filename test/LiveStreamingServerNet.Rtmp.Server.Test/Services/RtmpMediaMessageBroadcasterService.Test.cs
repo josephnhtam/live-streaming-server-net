@@ -93,7 +93,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
 
             Received.InOrder(() =>
             {
-                subscriber_subscribeStreamContext.Received(1).UntilInitializationCompleteAsync();
+                subscriber_subscribeStreamContext.Received(1).UntilInitializationCompleteAsync(Arg.Any<CancellationToken>());
                 subscriber.Received(1).SendAsync(Arg.Any<IRentedBuffer>());
             });
         }

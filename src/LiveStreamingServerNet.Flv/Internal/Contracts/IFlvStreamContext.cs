@@ -12,7 +12,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Contracts
         byte[]? AudioSequenceHeader { get; set; }
         IGroupOfPicturesCache GroupOfPicturesCache { get; }
         bool IsReady { get; }
-        Task UntilReadyAsync();
+        Task UntilReadyAsync(CancellationToken cancellationToken = default);
 
         void SetReady();
     }

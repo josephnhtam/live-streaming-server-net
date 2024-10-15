@@ -54,7 +54,7 @@ namespace LiveStreamingServerNet.Flv.Test.Services
             _streamContext.VideoSequenceHeader.Returns(videoSequenceHeader);
 
             // Act
-            await _sut.RunClientAsync(_client);
+            await _sut.RunClientAsync(_client, default);
 
             // Assert
             Received.InOrder(() =>
@@ -71,10 +71,10 @@ namespace LiveStreamingServerNet.Flv.Test.Services
         public async Task RunClientAsync_Should_Stop_After_ClientIsComplete()
         {
             // Arrange
-            _client.UntilCompleteAsync().Returns(Task.CompletedTask);
+            _client.UntilCompleteAsync(Arg.Any<CancellationToken>()).Returns(Task.CompletedTask);
 
             // Act
-            await _sut.RunClientAsync(_client);
+            await _sut.RunClientAsync(_client, default);
 
             // Assert
             _streamManager.Received().StopSubscribingStream(_client);

@@ -9,6 +9,7 @@ using LiveStreamingServerNet.Rtmp.Client.Internal.Logging;
 using LiveStreamingServerNet.Rtmp.Client.Internal.Services.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal;
 using LiveStreamingServerNet.Utilities.Contracts;
+using LiveStreamingServerNet.Utilities.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Diagnostics;
@@ -226,11 +227,11 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
             catch (ObjectDisposedException) { }
         }
 
-        public async Task UntilStoppedAsync()
+        public async Task UntilStoppedAsync(CancellationToken cancellationToken)
         {
             if (_clientTask != null)
             {
-                await _clientTask;
+                await _clientTask.WithCancellation(cancellationToken);
             }
         }
 
@@ -268,9 +269,12 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
                 _clientCts.Cancel();
             }
 
-            _clientCts.Dispose();
+            if (_clientTask != null)
+            {
+                await _clientTask;
+            }
 
-            await UntilStoppedAsync();
+            _clientCts.Dispose();
         }
     }
 }

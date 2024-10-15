@@ -21,5 +21,8 @@ namespace LiveStreamingServerNet.Flv.Internal.Logging
 
         [LoggerMessage(LogLevel.Error, "Stream readiness timeout (StreamPath={StreamPath})")]
         public static partial void ReadinessTimeout(this ILogger logger, string streamPath);
+
+        [LoggerMessage(LogLevel.Error, "An error occurred while running client (StreamPath={StreamPath})")]
+        public static partial void RunClientError(this ILogger logger, string streamPath, Exception ex);
     }
 }

@@ -15,7 +15,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Contracts
         void Command(RtmpCommand command);
         Task<RtmpCommandResponse> CommandAsync(RtmpCommand command);
 
-        Task UntilStoppedAsync();
+        Task UntilStoppedAsync(CancellationToken cancellationToken = default);
         void Stop();
 
         event EventHandler<BandwidthLimitEventArgs> OnBandwidthLimitUpdated;

@@ -163,7 +163,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal
                 rtmpStream.Subscribe.Play(origin.StreamName);
 
                 _logger.RtmpDownstreamCreated(_streamPath);
-                await rtmpClient.UntilStoppedAsync();
+                await rtmpClient.UntilStoppedAsync(abortCts.Token);
             }
             catch (OperationCanceledException) when (abortCts.IsCancellationRequested) { }
             catch (Exception)

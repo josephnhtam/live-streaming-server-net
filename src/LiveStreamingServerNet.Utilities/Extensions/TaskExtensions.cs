@@ -8,9 +8,13 @@
 
             try
             {
-                await Task.WhenAny(task, Task.Delay(Timeout.Infinite, cts.Token));
+                var completedTask = await Task.WhenAny(task, Task.Delay(Timeout.Infinite, cts.Token));
+                await completedTask;
             }
-            catch (OperationCanceledException) when (cts.IsCancellationRequested) { }
+            catch (OperationCanceledException) when (cts.IsCancellationRequested)
+            {
+                throw;
+            }
             finally
             {
                 cts.Cancel();
