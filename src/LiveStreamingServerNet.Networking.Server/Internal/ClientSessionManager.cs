@@ -78,7 +78,11 @@ namespace LiveStreamingServerNet.Networking.Server.Internal
 
         public async Task WaitUntilAllClientTasksCompleteAsync(CancellationToken cancellationToken)
         {
-            await Task.WhenAll(_clientSessionTasks.Select(x => x.Value.Task)).WithCancellation(cancellationToken);
+            try
+            {
+                await Task.WhenAll(_clientSessionTasks.Select(x => x.Value.Task)).WithCancellation(cancellationToken);
+            }
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { }
         }
 
         private async Task OnClientAcceptedAsync(ITcpClient tcpClient)

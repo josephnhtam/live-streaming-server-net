@@ -1,6 +1,7 @@
 ﻿using LiveStreamingServerNet.Flv.Internal.Contracts;
 using LiveStreamingServerNet.Utilities.Buffers;
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
+using LiveStreamingServerNet.Utilities.Extensions;
 using System.Runtime.CompilerServices;
 
 namespace LiveStreamingServerNet.Flv.Internal
@@ -35,9 +36,9 @@ namespace LiveStreamingServerNet.Flv.Internal
             _isReady = true;
         }
 
-        public Task UntilReadyAsync()
+        public Task UntilReadyAsync(CancellationToken cancellationToken)
         {
-            return _readyTcs.Task;
+            return _readyTcs.Task.WithCancellation(cancellationToken);
         }
 
         public void Dispose()

@@ -2,6 +2,7 @@
 using LiveStreamingServerNet.Flv.Internal.Logging;
 using LiveStreamingServerNet.Flv.Internal.Services.Contracts;
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
+using LiveStreamingServerNet.Utilities.Extensions;
 using Microsoft.Extensions.Logging;
 
 namespace LiveStreamingServerNet.Flv.Internal
@@ -61,19 +62,23 @@ namespace LiveStreamingServerNet.Flv.Internal
             _initializationTcs.TrySetResult();
         }
 
-        public Task UntilInitializationCompleteAsync()
+        public Task UntilInitializationCompleteAsync(CancellationToken cancellationToken)
         {
-            return _initializationTask;
+            return _initializationTask.WithCancellation(cancellationToken);
         }
 
-        public Task UntilCompleteAsync()
+        public Task UntilCompleteAsync(CancellationToken cancellationToken)
         {
-            return _completeTask;
+            return _completeTask.WithCancellation(cancellationToken);
         }
 
         public void Stop()
         {
-            _stoppingCts.Cancel();
+            try
+            {
+                _stoppingCts.Cancel();
+            }
+            catch (ObjectDisposedException) { }
         }
 
         public async ValueTask DisposeAsync()

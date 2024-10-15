@@ -36,8 +36,8 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
         public void Stop()
             => _innerClient.Stop();
 
-        public Task UntilStoppedAsync()
-            => _innerClient.UntilStoppedAsync();
+        public Task UntilStoppedAsync(CancellationToken cancellationToken)
+            => _innerClient.UntilStoppedAsync(cancellationToken);
 
         public async ValueTask DisposeAsync()
             => await _serviceProvider.DisposeAsync();

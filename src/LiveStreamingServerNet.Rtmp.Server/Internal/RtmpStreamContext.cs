@@ -1,6 +1,7 @@
 ﻿using LiveStreamingServerNet.Rtmp.Server.Internal.Contracts;
 using LiveStreamingServerNet.Utilities.Buffers;
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
+using LiveStreamingServerNet.Utilities.Extensions;
 
 namespace LiveStreamingServerNet.Rtmp.Server.Internal
 {
@@ -225,9 +226,9 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
             _initializationTcs.TrySetResult();
         }
 
-        public Task UntilInitializationCompleteAsync()
+        public Task UntilInitializationCompleteAsync(CancellationToken cancellationToken)
         {
-            return _initializationTask;
+            return _initializationTask.WithCancellation(cancellationToken);
         }
 
         public override void Dispose()

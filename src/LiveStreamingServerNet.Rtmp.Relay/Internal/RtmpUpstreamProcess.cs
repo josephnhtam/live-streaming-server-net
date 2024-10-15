@@ -110,7 +110,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal
                 rtmpStream.Publish.Publish(origin.StreamName);
 
                 _logger.RtmpUpstreamCreated(_streamPath);
-                var completedTask = await Task.WhenAny(rtmpClient.UntilStoppedAsync(), mediaDataSendingTask);
+                var completedTask = await Task.WhenAny(rtmpClient.UntilStoppedAsync(abortCts.Token), mediaDataSendingTask);
                 await completedTask;
             }
             catch (OperationCanceledException) when (abortCts.IsCancellationRequested) { }
@@ -120,7 +120,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal
             }
             finally
             {
-                await DisconnectPublisherAsync(abortCts);
+                await DisconnectPublisherAsync();
                 _logger.RtmpUpstreamStopped(_streamPath);
                 abortCts.Cancel();
             }
@@ -150,7 +150,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal
             }
         }
 
-        private async Task DisconnectPublisherAsync(CancellationTokenSource abortCts)
+        private async Task DisconnectPublisherAsync()
         {
             if (_publishStreamContext.StreamContext == null)
                 return;
@@ -158,9 +158,8 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal
             try
             {
                 await _streamManager.StopPublishingAsync(_publishStreamContext);
-                await _publishStreamContext.StreamContext.ClientContext.Client.DisconnectAsync(abortCts.Token);
+                await _publishStreamContext.StreamContext.ClientContext.Client.DisconnectAsync();
             }
-            catch (OperationCanceledException) when (abortCts.IsCancellationRequested) { }
             catch (Exception ex)
             {
                 _logger.RtmpUpstreamError(_streamPath, ex);

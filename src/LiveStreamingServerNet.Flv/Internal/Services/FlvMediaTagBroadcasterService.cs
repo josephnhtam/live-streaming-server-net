@@ -89,7 +89,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
 
             try
             {
-                await client.UntilInitializationCompleteAsync();
+                await client.UntilInitializationCompleteAsync(cancellation);
 
                 while (!cancellation.IsCancellationRequested)
                 {
@@ -105,6 +105,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
                             packet.Timestamp,
                             cancellation);
                     }
+                    catch (OperationCanceledException) when (client.StoppingToken.IsCancellationRequested) { }
                     catch (OperationCanceledException) when (cancellation.IsCancellationRequested) { }
                     catch (Exception ex)
                     {
@@ -116,6 +117,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
                     }
                 }
             }
+            catch (OperationCanceledException) when (client.StoppingToken.IsCancellationRequested) { }
             catch (OperationCanceledException) when (cancellation.IsCancellationRequested) { }
             catch (ChannelClosedException) { }
             catch (Exception ex)
@@ -151,6 +153,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
 
                 _packetChannel = Channel.CreateUnbounded<ClientMediaPacket>(
                     new UnboundedChannelOptions { SingleReader = true, AllowSynchronousContinuations = true });
+
                 _cts = new CancellationTokenSource();
                 CancellationToken = _cts.Token;
             }
@@ -159,6 +162,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
             {
                 _packetChannel.Writer.Complete();
                 _cts.Cancel();
+                _cts.Dispose();
             }
 
             public bool AddPacket(ref ClientMediaPacket packet)

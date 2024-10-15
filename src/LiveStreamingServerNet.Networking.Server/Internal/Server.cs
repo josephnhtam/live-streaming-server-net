@@ -69,7 +69,7 @@ namespace LiveStreamingServerNet.Networking.Server.Internal
                 serverException = ex;
             }
 
-            await _clientSessionManager.WaitUntilAllClientTasksCompleteAsync();
+            await WaitUntilAllClientTasksCompleteAsync();
 
             StopAllTcpListeners(serverListeners);
 
@@ -77,6 +77,15 @@ namespace LiveStreamingServerNet.Networking.Server.Internal
 
             if (serverException != null)
                 throw serverException;
+        }
+
+        private async Task WaitUntilAllClientTasksCompleteAsync()
+        {
+            try
+            {
+                await _clientSessionManager.WaitUntilAllClientTasksCompleteAsync();
+            }
+            catch { }
         }
 
         private void StopAllTcpListeners(List<ServerListener> serverListeners)

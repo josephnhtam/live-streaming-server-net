@@ -59,8 +59,8 @@ namespace LiveStreamingServerNet.Networking.Server.Test
         public async Task AcceptClientAsync_Should_DispatchServerEvents_When_TcpClientIsAccepted()
         {
             // Arrange
-            var clientTcs = new TaskCompletionSource();
-            _clientSession.RunAsync(Arg.Any<CancellationToken>()).Returns(clientTcs.Task);
+            using var cts = new CancellationTokenSource();
+            _clientSession.RunAsync(Arg.Any<CancellationToken>()).Returns(Task.Delay(Timeout.InfiniteTimeSpan, cts.Token));
 
             var tcs = new TaskCompletionSource();
             _eventDispatcher.When(x => x.ClientDisconnectedAsync(_clientSession)).Do(x => tcs.SetResult());
@@ -76,9 +76,9 @@ namespace LiveStreamingServerNet.Networking.Server.Test
             });
 
             // Act
-            clientTcs.SetCanceled();
+            cts.Cancel();
 
-            await _sut.WaitUntilAllClientTasksCompleteAsync(default);
+            await _sut.WaitUntilAllClientTasksCompleteAsync(cts.Token);
             await tcs.Task;
 
             // Assert

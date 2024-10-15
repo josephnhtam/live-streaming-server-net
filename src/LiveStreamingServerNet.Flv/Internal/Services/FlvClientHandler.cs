@@ -2,7 +2,6 @@
 using LiveStreamingServerNet.Flv.Internal.Contracts;
 using LiveStreamingServerNet.Flv.Internal.Logging;
 using LiveStreamingServerNet.Flv.Internal.Services.Contracts;
-using LiveStreamingServerNet.Utilities.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -27,18 +26,25 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
             _logger = logger;
         }
 
-        public async Task RunClientAsync(IFlvClient client)
+        public async Task RunClientAsync(IFlvClient client, CancellationToken cancellationToken)
         {
             try
             {
                 var streamContext = _streamManager.GetFlvStreamContext(client.StreamPath)!;
-                await UntilReadyAsync(streamContext);
+                await UntilReadyAsync(streamContext, cancellationToken);
 
                 await SendFlvHeaderAsync(client, streamContext, client.StoppingToken);
                 await SendCachedFlvTagsAsync(client, streamContext, client.StoppingToken);
 
                 client.CompleteInitialization();
-                await client.UntilCompleteAsync();
+                await client.UntilCompleteAsync(cancellationToken);
+            }
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { }
+            catch (OperationCanceledException) when (client.StoppingToken.IsCancellationRequested) { }
+            catch (Exception ex)
+            {
+                _logger.RunClientError(client.StreamPath, ex);
+                throw;
             }
             finally
             {
@@ -46,12 +52,16 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
             }
         }
 
-        private async Task UntilReadyAsync(IFlvStreamContext streamContext)
+        private async Task UntilReadyAsync(IFlvStreamContext streamContext, CancellationToken cancellationToken)
         {
-            using var cts = new CancellationTokenSource(_config.ReadinessTimeout);
-            await streamContext.UntilReadyAsync().WithCancellation(cts.Token);
+            using var timeoutCts = new CancellationTokenSource(_config.ReadinessTimeout);
+            using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeoutCts.Token);
 
-            if (cts.IsCancellationRequested)
+            try
+            {
+                await streamContext.UntilReadyAsync(cts.Token);
+            }
+            catch (OperationCanceledException) when (timeoutCts.IsCancellationRequested)
             {
                 _logger.ReadinessTimeout(streamContext.StreamPath);
                 throw new TimeoutException();
