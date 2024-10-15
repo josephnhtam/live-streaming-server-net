@@ -30,7 +30,7 @@ namespace LiveStreamingServerNet.Networking.Internal
         public void Start(INetworkStreamWriter networkStream, CancellationToken cancellationToken)
         {
             _networkStream = networkStream;
-            _task = Task.Run(() => SendOutstandingBuffersAsync(networkStream, cancellationToken), cancellationToken);
+            _task = Task.Run(() => SendOutstandingBuffersAsync(networkStream, cancellationToken));
         }
 
         public void Send(IDataBuffer dataBuffer, Action<bool>? callback)
