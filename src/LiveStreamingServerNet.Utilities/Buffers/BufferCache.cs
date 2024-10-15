@@ -95,10 +95,16 @@ namespace LiveStreamingServerNet.Utilities.Buffers
 
         public void Dispose()
         {
-            if (_bufferPool != null)
-                _bufferPool.Return(_buffer);
-            else
-                ArrayPool<byte>.Shared.Return(_buffer);
+            lock (_syncLock)
+            {
+                if (_bufferPool != null)
+                    _bufferPool.Return(_buffer);
+                else
+                    ArrayPool<byte>.Shared.Return(_buffer);
+
+                Reset();
+                _buffer = null!;
+            }
         }
 
         private record struct BufferInfoWithSize(TBufferInfo Info, int Size);
