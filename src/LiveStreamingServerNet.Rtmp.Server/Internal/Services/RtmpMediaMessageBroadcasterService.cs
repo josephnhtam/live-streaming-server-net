@@ -185,12 +185,6 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
 
                         await SendPacketAsync(context, clientContext, packet, cancellation);
                     }
-                    catch (OperationCanceledException) when (cancellation.IsCancellationRequested) { }
-                    catch (BufferSendingException) when (!context.ClientContext.Client.IsConnected) { }
-                    catch (Exception ex)
-                    {
-                        _logger.FailedToSendMediaMessage(clientContext.Client.Id, ex);
-                    }
                     finally
                     {
                         packet.RentedPayload.Unclaim();
@@ -198,12 +192,14 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
                 }
             }
             catch (OperationCanceledException) when (cancellation.IsCancellationRequested) { }
-            catch (ChannelClosedException) { }
-
-            while (context.ReadPacket(out var packet))
+            catch (BufferSendingException) when (!context.ClientContext.Client.IsConnected) { }
+            catch (Exception ex)
             {
-                packet.RentedPayload.Unclaim();
+                _logger.FailedToSendMediaMessage(clientContext.Client.Id, ex);
             }
+
+            clientContext.Client.Disconnect();
+            context.Cleanup();
         }
 
         private async Task SendPacketAsync(ClientMediaContext context, IRtmpClientSessionContext clientContext, ClientMediaPacket packet, CancellationToken cancellation)
@@ -295,8 +291,18 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
 
             public void Stop()
             {
-                _packetChannel.Writer.Complete();
                 _cts.Cancel();
+                _cts.Dispose();
+            }
+
+            public void Cleanup()
+            {
+                _packetChannel.Writer.Complete();
+
+                while (ReadPacket(out var packet))
+                {
+                    packet.RentedPayload.Unclaim();
+                }
             }
 
             public bool AddPacket(ref ClientMediaPacket packet)
