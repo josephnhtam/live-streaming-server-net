@@ -11,10 +11,6 @@
                 var completedTask = await Task.WhenAny(task, Task.Delay(Timeout.Infinite, cts.Token));
                 await completedTask;
             }
-            catch (OperationCanceledException) when (cts.IsCancellationRequested)
-            {
-                throw;
-            }
             finally
             {
                 cts.Cancel();
