@@ -106,12 +106,6 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
                             packet.Timestamp,
                             cancellation);
                     }
-                    catch (OperationCanceledException) when (client.StoppingToken.IsCancellationRequested) { }
-                    catch (OperationCanceledException) when (cancellation.IsCancellationRequested) { }
-                    catch (Exception ex)
-                    {
-                        _logger.FailedToSendMediaMessage(client.ClientId, ex);
-                    }
                     finally
                     {
                         packet.RentedPayload.Unclaim();
@@ -126,6 +120,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
                 _logger.FailedToSendMediaMessage(client.ClientId, ex);
             }
 
+            client.Stop();
             context.Cleanup();
         }
 
