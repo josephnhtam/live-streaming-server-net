@@ -2,7 +2,6 @@
 using LiveStreamingServerNet.Utilities.Buffers;
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using LiveStreamingServerNet.Utilities.Extensions;
-using System.Runtime.CompilerServices;
 
 namespace LiveStreamingServerNet.Flv.Internal
 {
@@ -26,7 +25,6 @@ namespace LiveStreamingServerNet.Flv.Internal
             GroupOfPicturesCache = new GroupOfPicturesCache(bufferPool);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SetReady()
         {
             if (_isReady)
