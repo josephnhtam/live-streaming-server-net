@@ -1,10 +1,10 @@
 using LiveStreamingServerNet.Flv.Installer;
-using System.Net;
-using System.Text.RegularExpressions;
-using System.Text;
 using LiveStreamingServerNet.Rtmp.Relay;
 using LiveStreamingServerNet.Rtmp.Relay.Contracts;
 using LiveStreamingServerNet.Rtmp.Relay.Installer;
+using System.Net;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace LiveStreamingServerNet.FlvRelayDemo
 {
