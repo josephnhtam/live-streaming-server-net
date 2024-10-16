@@ -39,8 +39,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
                 client.CompleteInitialization();
                 await client.UntilCompleteAsync(cancellationToken);
             }
-            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { }
-            catch (OperationCanceledException) when (client.StoppingToken.IsCancellationRequested) { }
+            catch (OperationCanceledException) { }
             catch (Exception ex)
             {
                 _logger.RunClientError(client.StreamPath, ex);
