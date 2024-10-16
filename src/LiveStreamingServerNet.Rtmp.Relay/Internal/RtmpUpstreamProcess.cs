@@ -106,11 +106,11 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal
 
                 SubscribeToStreamEvents(rtmpStream, idleChecker, abortCts);
 
-                var mediaDataSendingTask = StreamDataSendingTask(rtmpStream, idleChecker, abortCts);
+                var streamDataSendingTask = StreamDataSendingTask(rtmpStream, idleChecker, abortCts);
                 rtmpStream.Publish.Publish(origin.StreamName);
 
                 _logger.RtmpUpstreamCreated(_streamPath);
-                var completedTask = await Task.WhenAny(rtmpClient.UntilStoppedAsync(abortCts.Token), mediaDataSendingTask);
+                var completedTask = await Task.WhenAny(rtmpClient.UntilStoppedAsync(abortCts.Token), streamDataSendingTask);
                 await completedTask;
             }
             catch (OperationCanceledException) when (abortCts.IsCancellationRequested) { }
