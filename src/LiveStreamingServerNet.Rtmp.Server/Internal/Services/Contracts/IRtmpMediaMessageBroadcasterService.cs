@@ -14,6 +14,6 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services.Contracts
             IDataBuffer payloadBuffer);
 
         void RegisterClient(IRtmpClientSessionContext clientContext);
-        void UnregisterClient(IRtmpClientSessionContext clientContext);
+        ValueTask UnregisterClientAsync(IRtmpClientSessionContext clientContext);
     }
 }

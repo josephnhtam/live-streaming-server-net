@@ -59,11 +59,12 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
             _ = clientTask.ContinueWith(_ => _clientTasks.TryRemove(clientContext, out var _));
         }
 
-        public void UnregisterClient(IRtmpClientSessionContext clientContext)
+        public async ValueTask UnregisterClientAsync(IRtmpClientSessionContext clientContext)
         {
             if (_clientMediaContexts.TryRemove(clientContext, out var context))
             {
                 context.Stop();
+                await context.UntilCompleteAsync();
             }
         }
 
@@ -200,6 +201,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
 
             clientContext.Client.Disconnect();
             context.Cleanup();
+            context.Complete();
         }
 
         private async Task SendPacketAsync(ClientMediaContext context, IRtmpClientSessionContext clientContext, ClientMediaPacket packet, CancellationToken cancellation)
@@ -268,24 +270,30 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
         {
             public readonly IRtmpClientSessionContext ClientContext;
             public readonly CancellationToken CancellationToken;
-            public long OutstandingPacketsSize => _outstandingPacketsSize;
-            public long OutstandingPacketsCount => _outstandingPacketCount;
 
             private readonly IPacketDiscarder _mediaPacketDiscarder;
             private readonly Channel<ClientMediaPacket> _packetChannel;
             private readonly CancellationTokenSource _cts;
+            private readonly TaskCompletionSource _tcs;
 
             private long _outstandingPacketsSize;
             private long _outstandingPacketCount;
 
+            public long OutstandingPacketsSize => _outstandingPacketsSize;
+            public long OutstandingPacketsCount => _outstandingPacketCount;
+
+
             public ClientMediaContext(IRtmpClientSessionContext clientContext, IMediaPacketDiscarderFactory mediaPacketDiscarderFactory)
             {
-                ClientContext = clientContext;
                 _mediaPacketDiscarder = mediaPacketDiscarderFactory.Create(clientContext.Client.Id);
 
                 _packetChannel = Channel.CreateUnbounded<ClientMediaPacket>(
                     new UnboundedChannelOptions { SingleReader = true, AllowSynchronousContinuations = true });
+
                 _cts = new CancellationTokenSource();
+                _tcs = new TaskCompletionSource();
+
+                ClientContext = clientContext;
                 CancellationToken = _cts.Token;
             }
 
@@ -341,6 +349,16 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
                 }
 
                 return result;
+            }
+
+            public void Complete()
+            {
+                _tcs.TrySetResult();
+            }
+
+            public Task UntilCompleteAsync()
+            {
+                return _tcs.Task;
             }
 
             private bool ShouldSkipPacket(ClientMediaContext context, bool isSkippable)
