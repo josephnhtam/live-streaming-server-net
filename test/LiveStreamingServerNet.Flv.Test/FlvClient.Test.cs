@@ -85,7 +85,7 @@ namespace LiveStreamingServerNet.Flv.Test
             await _sut.DisposeAsync();
 
             // Assert
-            _mediaTagBroadcaster.Received(1).UnregisterClient(_sut);
+            _ = _mediaTagBroadcaster.Received(1).UnregisterClientAsync(_sut);
         }
 
         [Fact]

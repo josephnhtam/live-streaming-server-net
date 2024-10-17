@@ -88,12 +88,12 @@ namespace LiveStreamingServerNet.Flv.Internal
 
             _isDisposed = true;
 
-            _mediaTagBroadcaster.UnregisterClient(this);
+            await _mediaTagBroadcaster.UnregisterClientAsync(this);
+
             _stoppingCts.Cancel();
             _stoppingCts.Dispose();
-            await _flvWriter.DisposeAsync();
 
-            GC.SuppressFinalize(this);
+            await _flvWriter.DisposeAsync();
         }
 
         public async ValueTask WriteHeaderAsync(bool allowAudioTags, bool allowVideoTags, CancellationToken cancellationToken)

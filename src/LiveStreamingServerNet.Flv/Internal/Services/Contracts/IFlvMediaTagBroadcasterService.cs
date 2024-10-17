@@ -15,6 +15,6 @@ namespace LiveStreamingServerNet.Flv.Internal.Services.Contracts
             IRentedBuffer rentedBuffer);
 
         void RegisterClient(IFlvClient client);
-        void UnregisterClient(IFlvClient client);
+        ValueTask UnregisterClientAsync(IFlvClient client);
     }
 }
