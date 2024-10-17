@@ -176,6 +176,9 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Services
                 if (_streamManager.IsStreamBeingSubscribed(streamPath))
                     return;
 
+                if (_downstreamSubscribers.ContainsKey(streamPath))
+                    return;
+
                 downstreamProcessTaskItem.Cts.Cancel();
             }
         }
