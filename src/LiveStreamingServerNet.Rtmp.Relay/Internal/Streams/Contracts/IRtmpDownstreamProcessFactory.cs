@@ -1,4 +1,4 @@
-﻿namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Contracts
+﻿namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Streams.Contracts
 {
     internal interface IRtmpDownstreamProcessFactory
     {

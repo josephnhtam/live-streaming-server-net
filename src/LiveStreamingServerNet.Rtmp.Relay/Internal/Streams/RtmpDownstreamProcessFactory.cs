@@ -1,12 +1,12 @@
 ﻿using LiveStreamingServerNet.Rtmp.Relay.Configurations;
 using LiveStreamingServerNet.Rtmp.Relay.Contracts;
-using LiveStreamingServerNet.Rtmp.Relay.Internal.Contracts;
+using LiveStreamingServerNet.Rtmp.Relay.Internal.Streams.Contracts;
 using LiveStreamingServerNet.Rtmp.Server.Internal.Services.Contracts;
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace LiveStreamingServerNet.Rtmp.Relay.Internal
+namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Streams
 {
     internal class RtmpDownstreamProcessFactory : IRtmpDownstreamProcessFactory
     {

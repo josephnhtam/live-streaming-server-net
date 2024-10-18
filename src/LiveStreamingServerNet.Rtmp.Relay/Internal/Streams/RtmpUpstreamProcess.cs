@@ -2,8 +2,8 @@
 using LiveStreamingServerNet.Rtmp.Client.Contracts;
 using LiveStreamingServerNet.Rtmp.Relay.Configurations;
 using LiveStreamingServerNet.Rtmp.Relay.Contracts;
-using LiveStreamingServerNet.Rtmp.Relay.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Relay.Internal.MediaPacketDiscarders.Contracts;
+using LiveStreamingServerNet.Rtmp.Relay.Internal.Streams.Contracts;
 using LiveStreamingServerNet.Rtmp.Relay.Internal.Utilities;
 using LiveStreamingServerNet.Rtmp.Relay.Internal.Utilities.Contracts;
 using LiveStreamingServerNet.Rtmp.Server.Internal;
@@ -20,7 +20,7 @@ using Microsoft.Extensions.Options;
 using System.Runtime.CompilerServices;
 using System.Threading.Channels;
 
-namespace LiveStreamingServerNet.Rtmp.Relay.Internal
+namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Streams
 {
     internal class RtmpUpstreamProcess : IRtmpUpstreamProcess
     {

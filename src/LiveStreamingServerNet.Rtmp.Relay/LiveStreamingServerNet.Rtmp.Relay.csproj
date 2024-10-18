@@ -16,4 +16,8 @@
     <ProjectReference Include="..\LiveStreamingServerNet.Rtmp.Server\LiveStreamingServerNet.Rtmp.Server.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Internal\Contracts\" />
+  </ItemGroup>
+
 </Project>
