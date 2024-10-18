@@ -111,18 +111,25 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
 
         public async ValueTask DisposeAsync()
         {
-            await OnRtmpClientDisposedAsync();
+            await OnRtmpClientDisposingAsync();
 
             if (_bandwidthLimiter != null)
                 await _bandwidthLimiter.DisposeAsync();
 
             _clientContext.Recycle(_dataBufferPool);
             await _clientContext.DisposeAsync();
+
+            await OnRtmpClientDisposedAsync();
         }
 
         private async ValueTask OnRtmpClientCreatedAsync()
         {
             await _eventDispatcher.RtmpClientCreatedAsync(_clientContext);
+        }
+
+        private async ValueTask OnRtmpClientDisposingAsync()
+        {
+            await _eventDispatcher.RtmpClientDisposingAsync(_clientContext);
         }
 
         private async ValueTask OnRtmpClientDisposedAsync()

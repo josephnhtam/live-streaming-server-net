@@ -23,12 +23,17 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpServerEventHandlers
             return ValueTask.CompletedTask;
         }
 
-        public async ValueTask OnRtmpClientDisposedAsync(IEventContext context, IRtmpClientSessionContext clientContext)
+        public async ValueTask OnRtmpClientDisposingAsync(IEventContext context, IRtmpClientSessionContext clientContext)
         {
             await _mediaMessageBroadcaster.UnregisterClientAsync(clientContext);
 
             foreach (var streamContext in clientContext.GetStreamContexts())
                 await _streamDeletionService.DeleteStreamAsync(streamContext);
+        }
+
+        public ValueTask OnRtmpClientDisposedAsync(IEventContext context, IRtmpClientSessionContext clientContext)
+        {
+            return ValueTask.CompletedTask;
         }
 
         public ValueTask OnRtmpClientCreatedAsync(IEventContext context, IRtmpClientSessionContext clientContext)

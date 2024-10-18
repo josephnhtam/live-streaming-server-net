@@ -33,6 +33,9 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
             await _podLifetimeManager.OnStreamUnpublishedAsync(clientId, streamPath);
         }
 
+        public ValueTask OnRtmpClientDisposingAsync(IEventContext context, uint clientId)
+            => ValueTask.CompletedTask;
+
         public ValueTask OnRtmpClientCreatedAsync(IEventContext context, ISessionControl client)
             => ValueTask.CompletedTask;
 

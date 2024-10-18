@@ -109,6 +109,9 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Logging
         [LoggerMessage(LogLevel.Error, "An error occurred while dispatching RTMP client created event (ClientId={ClientId})")]
         public static partial void DispatchingRtmpClientCreatedEventError(this ILogger logger, uint clientId, Exception ex);
 
+        [LoggerMessage(LogLevel.Error, "An error occurred while dispatching RTMP client disposing event (ClientId={ClientId})")]
+        public static partial void DispatchingRtmpClientDisposingEventError(this ILogger logger, uint clientId, Exception ex);
+
         [LoggerMessage(LogLevel.Error, "An error occurred while dispatching RTMP client disposed event (ClientId={ClientId})")]
         public static partial void DispatchingRtmpClientDisposedEventError(this ILogger logger, uint clientId, Exception ex);
 

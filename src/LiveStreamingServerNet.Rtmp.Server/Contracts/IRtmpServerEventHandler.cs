@@ -8,6 +8,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Contracts
         int GetOrder() => 0;
 
         ValueTask OnRtmpClientCreatedAsync(IEventContext context, ISessionControl client);
+        ValueTask OnRtmpClientDisposingAsync(IEventContext context, uint clientId);
         ValueTask OnRtmpClientDisposedAsync(IEventContext context, uint clientId);
 
         ValueTask OnRtmpClientHandshakeCompleteAsync(IEventContext context, uint clientId);

@@ -54,6 +54,21 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
             }
         }
 
+        public async ValueTask RtmpClientDisposingAsync(IRtmpClientSessionContext clientContext)
+        {
+            try
+            {
+                using var context = EventContext.Obtain();
+
+                foreach (var eventHandler in GetEventHandlers())
+                    await eventHandler.OnRtmpClientDisposingAsync(context, clientContext);
+            }
+            catch (Exception ex)
+            {
+                _logger.DispatchingRtmpClientDisposingEventError(clientContext.Client.Id, ex);
+            }
+        }
+
         public async ValueTask RtmpClientDisposedAsync(IRtmpClientSessionContext clientContext)
         {
             try

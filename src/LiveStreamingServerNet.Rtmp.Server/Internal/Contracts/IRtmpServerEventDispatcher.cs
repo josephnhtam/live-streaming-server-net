@@ -3,6 +3,7 @@
     internal interface IRtmpServerConnectionEventDispatcher
     {
         ValueTask RtmpClientCreatedAsync(IRtmpClientSessionContext clientContext);
+        ValueTask RtmpClientDisposingAsync(IRtmpClientSessionContext clientContext);
         ValueTask RtmpClientDisposedAsync(IRtmpClientSessionContext clientContext);
 
         ValueTask RtmpClientHandshakeCompleteAsync(IRtmpClientSessionContext clientContext);

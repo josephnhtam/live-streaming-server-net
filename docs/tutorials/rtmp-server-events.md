@@ -11,6 +11,7 @@ public interface IRtmpServerConnectionEventHandler
 {
     int GetOrder() => 0;
     ValueTask OnRtmpClientCreatedAsync(IEventContext context, ISessionControl client);
+    ValueTask OnRtmpClientDisposingAsync(IEventContext context, uint clientId);
     ValueTask OnRtmpClientDisposedAsync(IEventContext context, uint clientId);
     ValueTask OnRtmpClientHandshakeCompleteAsync(IEventContext context, uint clientId);
     ValueTask OnRtmpClientConnectedAsync(IEventContext context, uint clientId, IReadOnlyDictionary<string, object> commandObject, IReadOnlyDictionary<string, object>? arguments);
