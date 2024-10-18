@@ -8,6 +8,12 @@ using System.Text.RegularExpressions;
 
 namespace LiveStreamingServerNet.FlvRelayDemo
 {
+    /// <summary>
+    /// Create one origin server (http port 9000, rtmp port 1935) and two relay servers (http port 9001, rtmp port 1936, and http port 9002, rtmp port 1937).
+    /// Relay servers push published rtmp streams to the origin and pull requested rtmp streams from the origin if not locally available.
+    /// Additionally, when an FLV stream is requested via HTTP, a relay server will initiate pulling the corresponding RTMP stream from the origin,
+    /// enabling the FLV stream to be served locally.
+    /// </summary>
     public static class Program
     {
         public static async Task Main()
