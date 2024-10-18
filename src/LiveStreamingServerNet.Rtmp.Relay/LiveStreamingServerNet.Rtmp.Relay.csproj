@@ -6,7 +6,6 @@
     <Nullable>enable</Nullable>
     <Description>This package provides the implementation for relaying RTMP streams.</Description>
     <PackageTags>live-streaming;rtmp</PackageTags>
-    <VersionSuffix>beta</VersionSuffix>
   </PropertyGroup>
 
   <Import Project="$(SolutionDir)nuget\nuget-package.props" />
@@ -14,10 +13,6 @@
   <ItemGroup>
     <ProjectReference Include="..\LiveStreamingServerNet.Rtmp.Client\LiveStreamingServerNet.Rtmp.Client.csproj" />
     <ProjectReference Include="..\LiveStreamingServerNet.Rtmp.Server\LiveStreamingServerNet.Rtmp.Server.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Internal\Contracts\" />
   </ItemGroup>
 
 </Project>

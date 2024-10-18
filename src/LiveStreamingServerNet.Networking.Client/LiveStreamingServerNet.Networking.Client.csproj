@@ -4,7 +4,7 @@
     <TargetFrameworks>net8.0;net7.0</TargetFrameworks>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <Description>This package implements a TCP client.</Description>
+    <Description>This package provides a high-level abstraction of TCP client.</Description>
     <PackageTags>live-streaming;tcp</PackageTags>
     <VersionSuffix>beta</VersionSuffix>
   </PropertyGroup>

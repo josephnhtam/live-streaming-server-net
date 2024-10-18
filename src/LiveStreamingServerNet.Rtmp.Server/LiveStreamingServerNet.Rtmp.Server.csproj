@@ -4,7 +4,7 @@
     <TargetFrameworks>net8.0;net7.0</TargetFrameworks>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <Description>This package implements an RTMP live streaming server.</Description>
+    <Description>This package provides the implementation of RTMP server.</Description>
     <PackageTags>live-streaming;rtmp</PackageTags>
   </PropertyGroup>
 

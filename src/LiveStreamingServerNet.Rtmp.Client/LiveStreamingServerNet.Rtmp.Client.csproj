@@ -4,9 +4,8 @@
     <TargetFrameworks>net8.0;net7.0</TargetFrameworks>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <Description>This package implements an RTMP client.</Description>
+    <Description>This package provides the implementation of RTMP client.</Description>
     <PackageTags>live-streaming;rtmp</PackageTags>
-    <VersionSuffix>beta</VersionSuffix>
   </PropertyGroup>
 
   <Import Project="$(SolutionDir)nuget\nuget-package.props" />
