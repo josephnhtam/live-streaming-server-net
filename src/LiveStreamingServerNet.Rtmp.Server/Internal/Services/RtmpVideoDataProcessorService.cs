@@ -45,6 +45,8 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
 
             if (!IsVideoCodecAllowed(publishStreamContext, videoCodec)) return false;
 
+            publishStreamContext.UpdateTimestamp(timestamp, MediaType.Video);
+
             await HandleVideoPacketCachingAsync(
                 publishStreamContext,
                 timestamp,
@@ -68,17 +70,6 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
             IDataBuffer payloadBuffer)
         {
             var subscribeStreamContexts = _streamManager.GetSubscribeStreamContexts(publishStreamContext.StreamPath);
-            await BroadcastVideoMessageToSubscribersAsync(publishStreamContext, timestamp, isSkippable, payloadBuffer, subscribeStreamContexts);
-        }
-
-        private async ValueTask BroadcastVideoMessageToSubscribersAsync(
-            IRtmpPublishStreamContext publishStreamContext,
-            uint timestamp,
-            bool isSkippable,
-            IDataBuffer payloadBuffer,
-            IReadOnlyList<IRtmpSubscribeStreamContext> subscribeStreamContexts)
-        {
-            publishStreamContext.UpdateTimestamp(timestamp, MediaType.Video);
 
             await _mediaMessageBroadcaster.BroadcastMediaMessageAsync(
                 publishStreamContext,

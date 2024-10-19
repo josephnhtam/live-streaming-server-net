@@ -38,6 +38,8 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
 
             if (!IsAudioCodecAllowed(publishStreamContext, audioCodec)) return false;
 
+            publishStreamContext.UpdateTimestamp(timestamp, MediaType.Audio);
+
             await HandleAudioPacketCachingAsync(
                 publishStreamContext,
                 timestamp,
@@ -60,17 +62,6 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
             IDataBuffer payloadBuffer)
         {
             var subscribeStreamContexts = _streamManager.GetSubscribeStreamContexts(publishStreamContext.StreamPath);
-            await BroadcastAudioMessageToSubscribersAsync(publishStreamContext, timestamp, isSkippable, payloadBuffer, subscribeStreamContexts);
-        }
-
-        private async ValueTask BroadcastAudioMessageToSubscribersAsync(
-            IRtmpPublishStreamContext publishStreamContext,
-            uint timestamp,
-            bool isSkippable,
-            IDataBuffer payloadBuffer,
-            IReadOnlyList<IRtmpSubscribeStreamContext> subscribeStreamContexts)
-        {
-            publishStreamContext.UpdateTimestamp(timestamp, MediaType.Audio);
 
             await _mediaMessageBroadcaster.BroadcastMediaMessageAsync(
                 publishStreamContext,
