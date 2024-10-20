@@ -79,7 +79,20 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
         public ValueTask AddMediaPacketAsync(MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp)
         {
             rentedBuffer.Claim();
-            return _channel.Writer.WriteAsync(new PendingMediaPacket(mediaType, rentedBuffer, timestamp));
+
+            try
+            {
+                if (!_channel.Writer.TryWrite(new PendingMediaPacket(mediaType, rentedBuffer, timestamp)))
+                {
+                    throw new ChannelClosedException();
+                }
+            }
+            catch
+            {
+                rentedBuffer.Unclaim();
+            }
+
+            return ValueTask.CompletedTask;
         }
 
         private async ValueTask ProcessMediaPacketAsync(MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp)
@@ -280,6 +293,8 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
             }
             finally
             {
+                ChannelCleanup();
+
                 await PostRunAsync();
 
                 _transmuxerManager.UnregisterTransmuxer(streamPath);
@@ -288,6 +303,11 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
 
                 _logger.HlsTransmuxerEnded(Name, ContextIdentifier, _config.ManifestOutputPath, streamPath);
             }
+        }
+
+        private void ChannelCleanup()
+        {
+            _channel.Writer.Complete();
 
             while (_channel.Reader.TryRead(out var packet))
             {
