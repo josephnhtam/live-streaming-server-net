@@ -23,7 +23,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
         public async ValueTask<bool> ProcessMetaDataAsync(IRtmpPublishStreamContext publishStreamContext, uint timestamp, IReadOnlyDictionary<string, object> metaData)
         {
             await CacheMetaDataAsync(publishStreamContext, metaData);
-            BroadcastMetaDataToSubscribers(publishStreamContext, timestamp);
+            BroadcastMetaDataToSubscribers(publishStreamContext);
             return true;
         }
 
@@ -32,14 +32,13 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
             await _cacher.CacheStreamMetaDataAsync(publishStreamContext, metaData);
         }
 
-        private void BroadcastMetaDataToSubscribers(IRtmpPublishStreamContext publishStreamContext, uint timestamp)
+        private void BroadcastMetaDataToSubscribers(IRtmpPublishStreamContext publishStreamContext)
         {
             var subscribeStreamContexts = _streamManager.GetSubscribeStreamContexts(publishStreamContext.StreamPath);
 
             _cacher.SendCachedStreamMetaDataMessage(
                 subscribeStreamContexts,
-                publishStreamContext,
-                timestamp);
+                publishStreamContext);
         }
     }
 }

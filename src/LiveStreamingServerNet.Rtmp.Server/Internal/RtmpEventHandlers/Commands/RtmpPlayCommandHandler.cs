@@ -137,8 +137,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
                 return;
 
             _cacher.SendCachedStreamMetaDataMessage(
-                streamContext.SubscribeContext, publishStreamContext,
-                chunkStreamContext.Timestamp);
+                streamContext.SubscribeContext, publishStreamContext);
 
             _cacher.SendCachedHeaderMessages(
                 streamContext.SubscribeContext, publishStreamContext);

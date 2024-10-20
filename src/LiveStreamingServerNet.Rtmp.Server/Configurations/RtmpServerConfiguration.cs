@@ -7,5 +7,6 @@
         public uint WindowAcknowledgementSize { get; set; } = 250_000;
         public bool EnableGopCaching { get; set; } = true;
         public TimeSpan MediaPacketBatchWindow { get; set; } = TimeSpan.Zero;
+        public TimeSpan PublishStreamContinuationTimeout { get; set; } = TimeSpan.Zero;
     }
 }

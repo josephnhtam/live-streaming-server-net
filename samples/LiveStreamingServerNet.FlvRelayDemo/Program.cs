@@ -35,7 +35,15 @@ namespace LiveStreamingServerNet.FlvRelayDemo
 
             builder.Services.AddLiveStreamingServer(
                 new IPEndPoint(IPAddress.Any, rtmpPort),
-                options => options.AddFlv()
+                options =>
+                {
+                    options.AddFlv();
+
+                    options.Configure(options =>
+                        // Setting a non-zero timeout enables the stream to be resumed within this period,
+                        // preventing immediate notifications to subscribers if the stream is temporarily unavailable.
+                        options.PublishStreamContinuationTimeout = TimeSpan.FromSeconds(30));
+                }
             );
 
             var app = builder.Build();

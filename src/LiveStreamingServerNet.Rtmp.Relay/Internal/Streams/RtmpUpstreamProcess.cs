@@ -467,11 +467,6 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Streams
             return new IdleChecker(_config.IdleCheckingInterval, _config.MaximumIdleTime, OnIdleTimeout);
         }
 
-        private RtmpPublishStreamContext CreatePublishStreamContext()
-        {
-            return new RtmpPublishStreamContext(null, _streamPath, new Dictionary<string, string>(), _bufferPool);
-        }
-
         private static Channel<StreamData> CreateStreamDataChannel()
         {
             return Channel.CreateUnbounded<StreamData>(new UnboundedChannelOptions

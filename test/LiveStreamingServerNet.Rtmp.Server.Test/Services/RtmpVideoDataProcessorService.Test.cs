@@ -111,6 +111,8 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Media
             // Assert
             result.Should().BeTrue();
 
+            publisher_publishStreamContext.Received(1).UpdateTimestamp(timestamp, MediaType.Video);
+
             if (gopCacheActivated && frameType == VideoFrameType.KeyFrame)
                 _ = _cacher.Received(1).ClearGroupOfPicturesCacheAsync(publisher_publishStreamContext);
 
@@ -118,15 +120,13 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Media
                 .CacheSequenceHeaderAsync(publisher_publishStreamContext, MediaType.Video, _dataBuffer);
 
             _ = _cacher.Received(gopCacheActivated && isPictureCachable ? 1 : 0)
-                .CachePictureAsync(publisher_publishStreamContext, MediaType.Video, _dataBuffer, timestamp);
-
-            publisher_publishStreamContext.Received(1).UpdateTimestamp(timestamp, MediaType.Video);
+                .CachePictureAsync(publisher_publishStreamContext, MediaType.Video, _dataBuffer, publisher_publishStreamContext.VideoTimestamp);
 
             await _mediaMessageBroadcaster.Received(1).BroadcastMediaMessageAsync(
                 publisher_publishStreamContext,
                 subscriber_subscribeStreamContexts,
                 MediaType.Video,
-                timestamp,
+                publisher_publishStreamContext.VideoTimestamp,
                 isSkippable,
                 _dataBuffer
             );

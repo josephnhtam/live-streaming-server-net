@@ -2,11 +2,13 @@
 using FluentAssertions;
 using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal.Contracts;
+using LiveStreamingServerNet.Rtmp.Server.Configurations;
 using LiveStreamingServerNet.Rtmp.Server.Internal;
 using LiveStreamingServerNet.Rtmp.Server.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Server.Internal.Services;
 using LiveStreamingServerNet.Rtmp.Server.Internal.Services.Contracts;
 using LiveStreamingServerNet.Rtmp.Test.Utilities;
+using Microsoft.Extensions.Options;
 using NSubstitute;
 
 namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
@@ -17,6 +19,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
         private readonly IRtmpCommandMessageSenderService _commandMessageSender;
         private readonly IRtmpUserControlMessageSenderService _userControlMessageSender;
         private readonly IRtmpServerStreamEventDispatcher _eventDispatcher;
+        private readonly RtmpServerConfiguration _config;
         private readonly IRtmpStreamManagerService _sut;
 
         public RtmpStreamManagerServiceTest()
@@ -25,7 +28,8 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             _commandMessageSender = Substitute.For<IRtmpCommandMessageSenderService>();
             _userControlMessageSender = Substitute.For<IRtmpUserControlMessageSenderService>();
             _eventDispatcher = Substitute.For<IRtmpServerStreamEventDispatcher>();
-            _sut = new RtmpStreamManagerService(_commandMessageSender, _userControlMessageSender, _eventDispatcher);
+            _config = new RtmpServerConfiguration();
+            _sut = new RtmpStreamManagerService(_commandMessageSender, _userControlMessageSender, _eventDispatcher, Options.Create(_config));
         }
 
         [Fact]
