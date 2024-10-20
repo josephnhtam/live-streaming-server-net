@@ -98,19 +98,19 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Media
             // Assert
             result.Should().BeTrue();
 
+            publisher_publishStreamContext.Received(1).UpdateTimestamp(timestamp, MediaType.Audio);
+
             _ = _cacher.Received(hasHeader ? 1 : 0)
                 .CacheSequenceHeaderAsync(publisher_publishStreamContext, MediaType.Audio, _dataBuffer);
 
             _ = _cacher.Received(gopCacheActivated && isPictureCachable ? 1 : 0)
-                .CachePictureAsync(publisher_publishStreamContext, MediaType.Audio, _dataBuffer, timestamp);
-
-            publisher_publishStreamContext.Received(1).UpdateTimestamp(timestamp, MediaType.Audio);
+                .CachePictureAsync(publisher_publishStreamContext, MediaType.Audio, _dataBuffer, publisher_publishStreamContext.AudioTimestamp);
 
             await _mediaMessageBroadcaster.Received(1).BroadcastMediaMessageAsync(
                 publisher_publishStreamContext,
                 subscriber_subscribeStreamContexts,
                 MediaType.Audio,
-                timestamp,
+                publisher_publishStreamContext.AudioTimestamp,
                 isSkippable,
                 _dataBuffer
             );

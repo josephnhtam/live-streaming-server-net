@@ -30,6 +30,11 @@ namespace LiveStreamingServerNet.RtmpRelayDemo
         {
             return LiveStreamingServerBuilder.Create()
                 .ConfigureLogging(options => options.AddConsole())
+                .ConfigureRtmpServer(options => options.Configure(options =>
+                    // Setting a non-zero timeout enables the stream to be resumed within this period,
+                    // preventing immediate notifications to subscribers if the stream is temporarily unavailable.
+                    options.PublishStreamContinuationTimeout = TimeSpan.FromSeconds(30)
+                ))
                 .Build();
         }
 
@@ -39,7 +44,7 @@ namespace LiveStreamingServerNet.RtmpRelayDemo
                 .ConfigureRtmpServer(options =>
                 {
                     options.UseRtmpRelay<RtmpOriginResolver>()
-                        .ConfigureDownstream(options => options.MaximumIdleTime = TimeSpan.FromSeconds(15));
+                        .ConfigureDownstream(options => options.MaximumIdleTime = TimeSpan.FromSeconds(30));
                 })
                 .ConfigureLogging(options => options.AddConsole())
                 .Build();

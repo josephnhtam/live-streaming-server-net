@@ -42,6 +42,9 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Contracts
         IGroupOfPicturesCache GroupOfPicturesCache { get; }
 
         DateTime StartTime { get; }
+
+        uint TimestampOffset { get; }
+        void SetTimestampOffset(uint timestampOffset);
     }
 
     internal interface IRtmpSubscribeStreamContext : IRtmpMediaStreamContext

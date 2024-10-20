@@ -49,14 +49,12 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
 
             await HandleVideoPacketCachingAsync(
                 publishStreamContext,
-                timestamp,
                 frameType,
                 avcPacketType,
                 payloadBuffer.MoveTo(0));
 
             await BroadcastVideoMessageToSubscribersAsync(
                 publishStreamContext,
-                timestamp,
                 IsSkippable(avcPacketType),
                 payloadBuffer.MoveTo(0));
 
@@ -65,7 +63,6 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
 
         private async ValueTask BroadcastVideoMessageToSubscribersAsync(
             IRtmpPublishStreamContext publishStreamContext,
-            uint timestamp,
             bool isSkippable,
             IDataBuffer payloadBuffer)
         {
@@ -75,7 +72,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
                 publishStreamContext,
                 subscribeStreamContexts,
                 MediaType.Video,
-                timestamp,
+                publishStreamContext.VideoTimestamp,
                 isSkippable,
                 payloadBuffer);
         }
@@ -188,7 +185,6 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
 
         private async ValueTask HandleVideoPacketCachingAsync(
             IRtmpPublishStreamContext publishStreamContext,
-            uint timestamp,
             VideoFrameType frameType,
             AVCPacketType? avcPacketType,
             IDataBuffer payloadBuffer)
@@ -208,7 +204,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
                 }
                 else if (publishStreamContext.GroupOfPicturesCacheActivated && avcPacketType == AVCPacketType.NALU)
                 {
-                    await _cacher.CachePictureAsync(publishStreamContext, MediaType.Video, payloadBuffer, timestamp);
+                    await _cacher.CachePictureAsync(publishStreamContext, MediaType.Video, payloadBuffer, publishStreamContext.VideoTimestamp);
                 }
             }
             else if (publishStreamContext.GroupOfPicturesCacheActivated)

@@ -80,8 +80,8 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
         public string StreamPath { get; }
         public IReadOnlyDictionary<string, string> StreamArguments { get; }
 
-        public uint VideoTimestamp => _videoTimestamp;
-        public uint AudioTimestamp => _audioTimestamp;
+        public virtual uint VideoTimestamp => _videoTimestamp;
+        public virtual uint AudioTimestamp => _audioTimestamp;
 
         private uint _videoTimestamp;
         private uint _audioTimestamp;
@@ -136,6 +136,8 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
 
     internal class RtmpPublishStreamContext : RtmpMediaStreamContext, IRtmpPublishStreamContext
     {
+        private uint _timestampOffset;
+
         public IRtmpStreamContext? StreamContext { get; }
         public IReadOnlyDictionary<string, object>? StreamMetaData { get; set; }
         public byte[]? VideoSequenceHeader { get; set; }
@@ -144,6 +146,10 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
         public IGroupOfPicturesCache GroupOfPicturesCache { get; }
         public DateTime StartTime { get; }
 
+        public override uint VideoTimestamp => base.VideoTimestamp + _timestampOffset;
+        public override uint AudioTimestamp => base.AudioTimestamp + _timestampOffset;
+        public uint TimestampOffset => _timestampOffset;
+
         public RtmpPublishStreamContext(
             IRtmpStreamContext? streamContext, string streamPath, IReadOnlyDictionary<string, string> streamArguments, IBufferPool? bufferPool) :
             base(streamPath, streamArguments)
@@ -151,6 +157,11 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
             StreamContext = streamContext;
             GroupOfPicturesCache = new GroupOfPicturesCache(bufferPool);
             StartTime = DateTime.UtcNow;
+        }
+
+        public void SetTimestampOffset(uint timestampOffset)
+        {
+            _timestampOffset = timestampOffset;
         }
 
         public override void Dispose()

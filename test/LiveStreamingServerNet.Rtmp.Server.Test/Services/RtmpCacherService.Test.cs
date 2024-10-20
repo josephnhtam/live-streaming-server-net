@@ -322,7 +322,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             ).Do(x => x.Arg<Action<IDataBuffer>>().Invoke(metaDataBuffer));
 
             // Act
-            _sut.SendCachedStreamMetaDataMessage(subscriber_subscribeStreamContext, publisher_publishStreamContext, timestamp);
+            _sut.SendCachedStreamMetaDataMessage(subscriber_subscribeStreamContext, publisher_publishStreamContext);
 
             // Assert
             _chunkMessageSender.Received(1).Send(
@@ -369,7 +369,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
 
             // Act
             var subscribeStreamContexts = new List<IRtmpSubscribeStreamContext> { subscriber_subscribeStreamContext };
-            _sut.SendCachedStreamMetaDataMessage(subscribeStreamContexts, publisher_publishStreamContext, timestamp);
+            _sut.SendCachedStreamMetaDataMessage(subscribeStreamContexts, publisher_publishStreamContext);
 
             // Assert
             _chunkMessageSender.Received(1).Send(

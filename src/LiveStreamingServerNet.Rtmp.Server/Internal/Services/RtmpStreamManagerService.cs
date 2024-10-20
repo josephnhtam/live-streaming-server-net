@@ -1,6 +1,8 @@
-﻿using LiveStreamingServerNet.Rtmp.Server.Internal.Contracts;
+﻿using LiveStreamingServerNet.Rtmp.Server.Configurations;
+using LiveStreamingServerNet.Rtmp.Server.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Server.Internal.Services.Contracts;
 using LiveStreamingServerNet.Rtmp.Server.Internal.Services.Extensions;
+using Microsoft.Extensions.Options;
 
 namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
 {
@@ -8,6 +10,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
     {
         private readonly object _publishingSyncLock = new();
         private readonly Dictionary<string, IRtmpPublishStreamContext> _publishStreamContexts = new();
+        private readonly Dictionary<string, PublishStreamContinuationContext> _publishStreamContinuationContexts = new();
 
         private readonly object _subscribingSyncLock = new();
         private readonly Dictionary<string, List<IRtmpSubscribeStreamContext>> _subscribeStreamContexts = new();
@@ -15,15 +18,18 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
         private readonly IRtmpCommandMessageSenderService _commandMessageSender;
         private readonly IRtmpUserControlMessageSenderService _userControlMessageSender;
         private readonly IRtmpServerStreamEventDispatcher _eventDispatcher;
+        private readonly RtmpServerConfiguration _config;
 
         public RtmpStreamManagerService(
             IRtmpCommandMessageSenderService commandMessageSender,
             IRtmpUserControlMessageSenderService userControlMessageSender,
-            IRtmpServerStreamEventDispatcher eventDispatcher)
+            IRtmpServerStreamEventDispatcher eventDispatcher,
+            IOptions<RtmpServerConfiguration> config)
         {
             _commandMessageSender = commandMessageSender;
             _userControlMessageSender = userControlMessageSender;
             _eventDispatcher = eventDispatcher;
+            _config = config.Value;
         }
 
         private (PublishingStreamResult Result, IList<IRtmpSubscribeStreamContext> SubscribeStreamContexts) StartPublishing(
@@ -60,7 +66,9 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
                     foreach (var subscribeStreamContext in subscribeStreamContexts)
                         subscribeStreamContext.ResetTimestamps();
 
-                    SendPublishingStartedMessages(streamContext, subscribeStreamContexts);
+                    var startedSubscriberClientIds = HandlePublishContinuation(streamPath, publishStreamContext);
+                    SendPublishingStartedMessages(streamContext, subscribeStreamContexts, startedSubscriberClientIds);
+
                     return (PublishingStreamResult.Succeeded, subscribeStreamContexts);
                 }
             }
@@ -86,19 +94,34 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
                     foreach (var subscribeStreamContext in subscribeStreamContexts)
                         subscribeStreamContext.ResetTimestamps();
 
-                    SendDirectPublishingStartedMessages(subscribeStreamContexts);
+                    var startedSubscriberClientIds = HandlePublishContinuation(streamPath, publishStreamContext);
+                    SendDirectPublishingStartedMessages(subscribeStreamContexts, startedSubscriberClientIds);
+
                     return (PublishingStreamResult.Succeeded, subscribeStreamContexts);
                 }
             }
         }
 
-        private (bool Result, IList<IRtmpSubscribeStreamContext> SubscribeStreamContexts) StopPublishing(IRtmpPublishStreamContext publishStreamContext)
+        private List<uint> HandlePublishContinuation(string streamPath, IRtmpPublishStreamContext publishStreamContext)
+        {
+            if (!_publishStreamContinuationContexts.Remove(streamPath, out var continuationContext))
+                return new List<uint>();
+
+            publishStreamContext.SetTimestampOffset(continuationContext.Timestamp);
+
+            using var _ = continuationContext;
+            return continuationContext.SubscriberClientIds;
+        }
+
+        private (bool Result, IList<IRtmpSubscribeStreamContext> SubscribeStreamContexts) StopPublishing(
+            IRtmpPublishStreamContext publishStreamContext, bool allowContinuation)
         {
             lock (_publishingSyncLock)
             {
                 lock (_subscribingSyncLock)
                 {
                     var streamPath = publishStreamContext.StreamPath;
+                    var timestamp = Math.Max(publishStreamContext.VideoTimestamp, publishStreamContext.AudioTimestamp);
 
                     if (publishStreamContext.StreamContext != null)
                     {
@@ -121,9 +144,37 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
                     var subscribeStreamContexts = _subscribeStreamContexts.GetValueOrDefault(streamPath)?.ToList() ??
                         new List<IRtmpSubscribeStreamContext>();
 
-                    SendPublishingEndedMessages(subscribeStreamContexts.AsReadOnly());
+                    if (subscribeStreamContexts.Any())
+                    {
+                        if (allowContinuation && _config.PublishStreamContinuationTimeout > TimeSpan.Zero)
+                        {
+                            CreatePublishStreamContinuationContext(streamPath, timestamp, subscribeStreamContexts);
+                        }
+                        else
+                        {
+                            SendPublishingEndedMessages(subscribeStreamContexts);
+                        }
+                    }
+
                     return (true, subscribeStreamContexts);
                 }
+            }
+
+            void CreatePublishStreamContinuationContext(
+                string streamPath, uint timestamp, IReadOnlyList<IRtmpSubscribeStreamContext> subscribeStreamContexts)
+            {
+                var continuationContext = new PublishStreamContinuationContext(
+                    streamPath, timestamp, _config.PublishStreamContinuationTimeout, subscribeStreamContexts);
+
+                if (_publishStreamContinuationContexts.Remove(streamPath, out var existingContext))
+                {
+                    existingContext.Dispose();
+                }
+
+                _publishStreamContinuationContexts[streamPath] = continuationContext;
+
+                continuationContext.SetExpirationCallback(() =>
+                    FinalizePublishStreamContinuationContext(continuationContext));
             }
         }
 
@@ -212,9 +263,9 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
         }
 
         public async ValueTask<(bool Result, IList<IRtmpSubscribeStreamContext> SubscribeStreamContexts)> StopPublishingAsync(
-            IRtmpPublishStreamContext publishStreamContext)
+            IRtmpPublishStreamContext publishStreamContext, bool allowContinuation)
         {
-            var result = StopPublishing(publishStreamContext);
+            var result = StopPublishing(publishStreamContext, allowContinuation);
 
             if (result.Result)
             {
@@ -290,6 +341,29 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
             }
         }
 
+        private void FinalizePublishStreamContinuationContext(PublishStreamContinuationContext context)
+        {
+            lock (_publishingSyncLock)
+            {
+                lock (_subscribingSyncLock)
+                {
+                    if (_publishStreamContinuationContexts.GetValueOrDefault(context.StreamPath) != context)
+                    {
+                        return;
+                    }
+
+                    var subscribeStreamContexts = _subscribeStreamContexts.GetValueOrDefault(context.StreamPath);
+
+                    if (subscribeStreamContexts != null)
+                    {
+                        SendPublishingEndedMessages(subscribeStreamContexts);
+                    }
+
+                    _publishStreamContinuationContexts.Remove(context.StreamPath);
+                }
+            }
+        }
+
         private void SendAlreadyExistsMessage(IRtmpStreamContext publisherStreamContext)
         {
             _commandMessageSender.SendOnStatusCommandMessage(
@@ -308,7 +382,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
                 reason);
         }
 
-        private void SendPublishingEndedMessages(IList<IRtmpSubscribeStreamContext> subscribeStreamContexts)
+        private void SendPublishingEndedMessages(IReadOnlyList<IRtmpSubscribeStreamContext> subscribeStreamContexts)
         {
             var subscriberStreamContexts = subscribeStreamContexts.Select(x => x.StreamContext).ToList();
 
@@ -318,11 +392,13 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
                 RtmpStreamStatusCodes.PlayUnpublishNotify,
                 "Stream is unpublished.");
 
-            _userControlMessageSender.SendStreamEofMessage(subscribeStreamContexts.AsReadOnly());
+            _userControlMessageSender.SendStreamEofMessage(subscribeStreamContexts);
         }
 
         private void SendPublishingStartedMessages(
-            IRtmpStreamContext publisherStreamContext, IList<IRtmpSubscribeStreamContext> subscribeStreamContexts)
+            IRtmpStreamContext publisherStreamContext,
+            IReadOnlyList<IRtmpSubscribeStreamContext> subscribeStreamContexts,
+            IReadOnlyList<uint> startedSubscriberClientIds)
         {
             _commandMessageSender.SendOnStatusCommandMessage(
                 publisherStreamContext,
@@ -330,23 +406,36 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
                 RtmpStreamStatusCodes.PublishStart,
                 "Publishing started.");
 
-            SendDirectPublishingStartedMessages(subscribeStreamContexts);
+            SendDirectPublishingStartedMessages(subscribeStreamContexts, startedSubscriberClientIds);
         }
 
-        private void SendDirectPublishingStartedMessages(IList<IRtmpSubscribeStreamContext> subscribeStreamContexts)
+        private void SendDirectPublishingStartedMessages(
+            IReadOnlyList<IRtmpSubscribeStreamContext> subscribeStreamContexts, IReadOnlyList<uint> startedSubscriberClientIds)
         {
-            _userControlMessageSender.SendStreamBeginMessage(subscribeStreamContexts.AsReadOnly());
+            var newSubscribeStreamContexts = subscribeStreamContexts
+                .ExceptBy(startedSubscriberClientIds, x => x.StreamContext.ClientContext.Client.Id)
+                .ToList();
 
-            var subscriberStreamContexts = subscribeStreamContexts.Select(x => x.StreamContext).ToList();
+            SendStreamStartedMessages(subscribeStreamContexts, newSubscribeStreamContexts);
+        }
+
+        private void SendStreamStartedMessages(
+            IReadOnlyList<IRtmpSubscribeStreamContext> subscribeStreamContexts,
+            List<IRtmpSubscribeStreamContext> subscriberStream)
+        {
+            _userControlMessageSender.SendStreamBeginMessage(subscriberStream);
+
+            var streamContexts = subscribeStreamContexts
+                .Select(x => x.StreamContext).ToList();
 
             _commandMessageSender.SendOnStatusCommandMessage(
-               subscriberStreamContexts,
+               streamContexts,
                RtmpStatusLevels.Status,
                RtmpStreamStatusCodes.PlayReset,
                "Stream started.");
 
             _commandMessageSender.SendOnStatusCommandMessage(
-                subscriberStreamContexts,
+                streamContexts,
                 RtmpStatusLevels.Status,
                 RtmpStreamStatusCodes.PlayStart,
                 "Stream started.");
@@ -380,6 +469,77 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
                 RtmpStatusLevels.Error,
                 RtmpStreamStatusCodes.PlayBadConnection,
                 reason);
+        }
+
+        private class PublishStreamContinuationContext : IDisposable
+        {
+            public string StreamPath { get; }
+            public uint Timestamp { get; }
+            public List<uint> SubscriberClientIds { get; }
+
+            private readonly object _syncLock = new();
+            private readonly Timer _expirationTimer;
+
+            private bool _isExpired;
+            private bool _isDisposed;
+            private Action? _expirationCallback;
+
+            public PublishStreamContinuationContext(
+                string streamPath,
+                uint timestamp,
+                TimeSpan expiration,
+                IReadOnlyList<IRtmpSubscribeStreamContext> subscribeStreamContexts)
+            {
+                StreamPath = streamPath;
+                Timestamp = timestamp;
+                SubscriberClientIds = subscribeStreamContexts.Select(x => x.StreamContext.ClientContext.Client.Id).ToList();
+
+                _expirationTimer = new Timer(
+                    OnExpiration, null,
+                    expiration,
+                    Timeout.InfiniteTimeSpan);
+            }
+
+            private void OnExpiration(object? state)
+            {
+                lock (_syncLock)
+                {
+                    if (_isExpired || _isDisposed)
+                    {
+                        return;
+                    }
+
+                    _expirationCallback?.Invoke();
+                    _isExpired = true;
+                }
+            }
+
+            public void SetExpirationCallback(Action callback)
+            {
+                lock (_syncLock)
+                {
+                    if (_isExpired || _isDisposed)
+                    {
+                        callback();
+                        return;
+                    }
+
+                    _expirationCallback = callback;
+                }
+            }
+
+            public void Dispose()
+            {
+                lock (_syncLock)
+                {
+                    _isDisposed = true;
+
+                    if (_isDisposed)
+                        return;
+
+                    _expirationTimer.Dispose();
+                }
+            }
         }
     }
 }

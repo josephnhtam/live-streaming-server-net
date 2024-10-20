@@ -42,13 +42,11 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
 
             await HandleAudioPacketCachingAsync(
                 publishStreamContext,
-                timestamp,
                 aacPacketType,
                 payloadBuffer.MoveTo(0));
 
             await BroadcastAudioMessageToSubscribersAsync(
                 publishStreamContext,
-                timestamp,
                 IsSkippable(aacPacketType),
                 payloadBuffer.MoveTo(0));
 
@@ -57,7 +55,6 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
 
         private async ValueTask BroadcastAudioMessageToSubscribersAsync(
             IRtmpPublishStreamContext publishStreamContext,
-            uint timestamp,
             bool isSkippable,
             IDataBuffer payloadBuffer)
         {
@@ -67,7 +64,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
                 publishStreamContext,
                 subscribeStreamContexts,
                 MediaType.Audio,
-                timestamp,
+                publishStreamContext.AudioTimestamp,
                 isSkippable,
                 payloadBuffer);
         }
@@ -106,7 +103,6 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
 
         private async ValueTask HandleAudioPacketCachingAsync(
             IRtmpPublishStreamContext publishStreamContext,
-            uint timestamp,
             AACPacketType? aacPacketType,
             IDataBuffer payloadBuffer)
         {
@@ -119,7 +115,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
             }
             else if (publishStreamContext.GroupOfPicturesCacheActivated)
             {
-                await _cacher.CachePictureAsync(publishStreamContext, MediaType.Audio, payloadBuffer, timestamp);
+                await _cacher.CachePictureAsync(publishStreamContext, MediaType.Audio, payloadBuffer, publishStreamContext.AudioTimestamp);
             }
         }
     }

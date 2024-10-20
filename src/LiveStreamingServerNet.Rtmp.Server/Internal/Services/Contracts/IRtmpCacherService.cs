@@ -28,13 +28,11 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services.Contracts
 
         void SendCachedStreamMetaDataMessage(
             IRtmpSubscribeStreamContext subscribeStreamContext,
-            IRtmpPublishStreamContext publishStreamContext,
-            uint timestamp);
+            IRtmpPublishStreamContext publishStreamContext);
 
         void SendCachedStreamMetaDataMessage(
             IReadOnlyList<IRtmpSubscribeStreamContext> subscribeStreamContexts,
-            IRtmpPublishStreamContext publishStreamContext,
-            uint timestamp);
+            IRtmpPublishStreamContext publishStreamContext);
 
         void SendCachedGroupOfPictures(
             IRtmpSubscribeStreamContext subscribeStreamContext,

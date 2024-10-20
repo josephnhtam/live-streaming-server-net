@@ -6,7 +6,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services.Contracts
     {
         ValueTask<(PublishingStreamResult Result, IList<IRtmpSubscribeStreamContext> SubscribeStreamContexts)> StartPublishingAsync(IRtmpStreamContext streamContext, string streamPath, IReadOnlyDictionary<string, string> streamArguments);
         ValueTask<(PublishingStreamResult Result, IList<IRtmpSubscribeStreamContext> SubscribeStreamContexts)> StartDirectPublishingAsync(IRtmpPublishStreamContext publishStreamContext);
-        ValueTask<(bool Result, IList<IRtmpSubscribeStreamContext> SubscribeStreamContexts)> StopPublishingAsync(IRtmpPublishStreamContext publishStreamContext);
+        ValueTask<(bool Result, IList<IRtmpSubscribeStreamContext> SubscribeStreamContexts)> StopPublishingAsync(IRtmpPublishStreamContext publishStreamContext, bool allowContinuation = true);
 
         ValueTask<(SubscribingStreamResult Result, IRtmpPublishStreamContext? PublishStreamContext)> StartSubscribingAsync(IRtmpStreamContext streamContext, string streamPath, IReadOnlyDictionary<string, string> streamArguments);
         ValueTask<bool> StopSubscribingAsync(IRtmpSubscribeStreamContext subscribeStreamContext);

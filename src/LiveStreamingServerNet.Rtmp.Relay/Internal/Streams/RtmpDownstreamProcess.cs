@@ -400,7 +400,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Streams
             if (_publishStreamContext == null)
                 return;
 
-            var stopPublishingResult = await _streamManager.StopPublishingAsync(_publishStreamContext);
+            var stopPublishingResult = await _streamManager.StopPublishingAsync(_publishStreamContext, false);
 
             await Task.WhenAll(stopPublishingResult.SubscribeStreamContexts
                 .Select(subscriber => subscriber.StreamContext)

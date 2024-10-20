@@ -163,7 +163,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Commands
                 if (publishStreamExists)
                 {
                     _cacher.Received(1).SendCachedStreamMetaDataMessage(
-                        _subscribeStreamContext, _publishStreamContext, timestamp);
+                        _subscribeStreamContext, _publishStreamContext);
 
                     _cacher.Received(1).SendCachedHeaderMessages(
                         _subscribeStreamContext, _publishStreamContext);

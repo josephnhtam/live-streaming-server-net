@@ -90,23 +90,24 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
             var audioSequenceHeader = publishStreamContext.AudioSequenceHeader;
             if (audioSequenceHeader != null)
             {
-                SendMediaPacket(subscribeStreamContext, MediaType.Audio, audioSequenceHeader, audioSequenceHeader.Length, 0, true);
+                SendMediaPacket(subscribeStreamContext, MediaType.Audio, audioSequenceHeader, audioSequenceHeader.Length, publishStreamContext.TimestampOffset, true);
             }
 
             var videoSequenceHeader = publishStreamContext.VideoSequenceHeader;
             if (videoSequenceHeader != null)
             {
-                SendMediaPacket(subscribeStreamContext, MediaType.Video, videoSequenceHeader, videoSequenceHeader.Length, 0, true);
+                SendMediaPacket(subscribeStreamContext, MediaType.Video, videoSequenceHeader, videoSequenceHeader.Length, publishStreamContext.TimestampOffset, true);
             }
         }
 
         public void SendCachedStreamMetaDataMessage(
             IRtmpSubscribeStreamContext subscribeStreamContext,
-            IRtmpPublishStreamContext publishStreamContext,
-            uint timestamp)
+            IRtmpPublishStreamContext publishStreamContext)
         {
             if (publishStreamContext.StreamMetaData == null)
                 return;
+
+            var timestamp = publishStreamContext.TimestampOffset;
 
             var basicHeader = new RtmpChunkBasicHeader(0, subscribeStreamContext.DataChunkStreamId);
             var messageHeader = new RtmpChunkMessageHeaderType0(timestamp, RtmpMessageType.DataMessageAmf0, subscribeStreamContext.StreamContext.StreamId);
@@ -122,8 +123,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
 
         public void SendCachedStreamMetaDataMessage(
             IReadOnlyList<IRtmpSubscribeStreamContext> subscribeStreamContexts,
-            IRtmpPublishStreamContext publishStreamContext,
-            uint timestamp)
+            IRtmpPublishStreamContext publishStreamContext)
         {
             if (publishStreamContext.StreamMetaData == null)
                 return;
@@ -134,8 +134,9 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
                 var chunkStreamId = group.Key.DataChunkStreamId;
                 var clientContexts = group.Select(x => x.StreamContext.ClientContext).ToList();
 
-                var basicHeader = new RtmpChunkBasicHeader(0, chunkStreamId);
+                var timestamp = publishStreamContext.TimestampOffset;
 
+                var basicHeader = new RtmpChunkBasicHeader(0, chunkStreamId);
                 var messageHeader = new RtmpChunkMessageHeaderType0(timestamp, RtmpMessageType.DataMessageAmf0, streamId);
 
                 _chunkMessageSender.Send(clientContexts, basicHeader, messageHeader, (dataBuffer) =>
