@@ -24,8 +24,9 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
 
         public async ValueTask CachePictureAsync(IRtmpPublishStreamContext publishStreamContext, MediaType mediaType, IDataBuffer payloadBuffer, uint timestamp)
         {
+            var clientId = publishStreamContext.StreamContext?.ClientContext.Client.Id ?? 0;
             var streamPath = publishStreamContext.StreamPath;
-            var interceptors = GetFilteredInterceptors(streamPath, mediaType);
+            var interceptors = GetFilteredInterceptors(clientId, streamPath, mediaType);
 
             try
             {
@@ -37,7 +38,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
                 try
                 {
                     foreach (var interceptor in _interceptors)
-                        await interceptor.OnCachePictureAsync(streamPath, mediaType, rentedBuffer, timestamp);
+                        await interceptor.OnCachePictureAsync(clientId, streamPath, mediaType, rentedBuffer, timestamp);
                 }
                 finally
                 {
@@ -52,32 +53,34 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
 
         public async ValueTask CacheSequenceHeaderAsync(IRtmpPublishStreamContext publishStreamContext, MediaType mediaType, byte[] sequenceHeader)
         {
+            var clientId = publishStreamContext.StreamContext?.ClientContext.Client.Id ?? 0;
             var streamPath = publishStreamContext.StreamPath;
 
             foreach (var interceptor in _interceptors)
             {
-                if (interceptor.FilterCache(streamPath, mediaType))
+                if (interceptor.FilterCache(clientId, streamPath, mediaType))
                 {
-                    await interceptor.OnCacheSequenceHeaderAsync(streamPath, mediaType, sequenceHeader);
+                    await interceptor.OnCacheSequenceHeaderAsync(clientId, streamPath, mediaType, sequenceHeader);
                 }
             }
         }
 
         public async ValueTask ClearGroupOfPicturesCacheAsync(IRtmpPublishStreamContext publishStreamContext)
         {
+            var clientId = publishStreamContext.StreamContext?.ClientContext.Client.Id ?? 0;
             var streamPath = publishStreamContext.StreamPath;
 
             foreach (var interceptor in _interceptors)
-                await interceptor.OnClearGroupOfPicturesCacheAsync(streamPath);
+                await interceptor.OnClearGroupOfPicturesCacheAsync(clientId, streamPath);
         }
 
-        private List<IRtmpMediaCachingInterceptor> GetFilteredInterceptors(string streamPath, MediaType mediaType)
+        private List<IRtmpMediaCachingInterceptor> GetFilteredInterceptors(uint clientId, string streamPath, MediaType mediaType)
         {
             var interceptors = _interceptorListPool.Obtain();
 
             foreach (var interceptor in _interceptors)
             {
-                if (interceptor.FilterCache(streamPath, mediaType))
+                if (interceptor.FilterCache(clientId, streamPath, mediaType))
                     interceptors.Add(interceptor);
             }
 

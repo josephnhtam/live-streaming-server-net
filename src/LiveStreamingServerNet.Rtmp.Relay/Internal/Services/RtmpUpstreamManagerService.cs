@@ -127,7 +127,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Services
             return _upstreamProcessTasks.ContainsKey(streamPath);
         }
 
-        public ValueTask OnReceiveMediaMessageAsync(string streamPath, MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp, bool isSkippable)
+        public ValueTask OnReceiveMediaMessageAsync(uint clientId, string streamPath, MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp, bool isSkippable)
         {
             if (_upstreamProcessTasks.TryGetValue(streamPath, out var upstreamProcessTaskItem))
             {

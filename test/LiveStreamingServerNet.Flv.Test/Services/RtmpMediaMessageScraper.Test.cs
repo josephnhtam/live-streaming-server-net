@@ -30,6 +30,7 @@ namespace LiveStreamingServerNet.Flv.Test.Services
         public async Task OnReceiveMediaMessage_Should_BroadcastMediaTag()
         {
             // Arrange
+            var clientId = _fixture.Create<uint>();
             var streamPath = _fixture.Create<string>();
             var mediaType = _fixture.Create<MediaType>();
             var timestamp = _fixture.Create<uint>();
@@ -43,7 +44,7 @@ namespace LiveStreamingServerNet.Flv.Test.Services
             _streamManager.GetSubscribers(streamPath).Returns(subscribers);
 
             // Act
-            await _sut.OnReceiveMediaMessageAsync(streamPath, mediaType, rentedBuffer, timestamp, isSkippable);
+            await _sut.OnReceiveMediaMessageAsync(clientId, streamPath, mediaType, rentedBuffer, timestamp, isSkippable);
 
             // Assert
             await _mediaTagBroadcaster.BroadcastMediaTagAsync(streamContext, subscribers, mediaType, timestamp, isSkippable, rentedBuffer);

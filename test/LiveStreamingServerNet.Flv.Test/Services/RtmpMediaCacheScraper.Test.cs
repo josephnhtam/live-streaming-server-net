@@ -33,6 +33,7 @@ namespace LiveStreamingServerNet.Flv.Test.Services
         public async Task OnCachePicture_Should_CachePicture()
         {
             // Arrange
+            var clientId = _fixture.Create<uint>();
             var streamPath = _fixture.Create<string>();
             var mediaType = _fixture.Create<MediaType>();
             var timestamp = _fixture.Create<uint>();
@@ -42,7 +43,7 @@ namespace LiveStreamingServerNet.Flv.Test.Services
             _streamManager.GetFlvStreamContext(streamPath).Returns(streamContext);
 
             // Act
-            await _sut.OnCachePictureAsync(streamPath, mediaType, rentedBuffer, timestamp);
+            await _sut.OnCachePictureAsync(clientId, streamPath, mediaType, rentedBuffer, timestamp);
 
             // Assert
             await _mediaTagCacher.Received(1).CachePictureAsync(streamContext, mediaType, rentedBuffer, timestamp);
@@ -52,13 +53,14 @@ namespace LiveStreamingServerNet.Flv.Test.Services
         public async Task OnClearGroupOfPicturesCache_Should_ClearGroupOfPicturesCache()
         {
             // Arrange
+            var clientId = _fixture.Create<uint>();
             var streamPath = _fixture.Create<string>();
 
             var streamContext = Substitute.For<IFlvStreamContext>();
             _streamManager.GetFlvStreamContext(streamPath).Returns(streamContext);
 
             // Act
-            await _sut.OnClearGroupOfPicturesCacheAsync(streamPath);
+            await _sut.OnClearGroupOfPicturesCacheAsync(clientId, streamPath);
 
             // Assert
             await _mediaTagCacher.Received(1).ClearGroupOfPicturesCacheAsync(streamContext);
@@ -68,6 +70,7 @@ namespace LiveStreamingServerNet.Flv.Test.Services
         public async Task OnCacheSequenceHeader_Should_BroadcastSequenceHeader()
         {
             // Arrange
+            var clientId = _fixture.Create<uint>();
             var streamPath = _fixture.Create<string>();
             var mediaType = _fixture.Create<MediaType>();
             var sequenceHeader = _fixture.CreateMany<byte>().ToArray();
@@ -79,7 +82,7 @@ namespace LiveStreamingServerNet.Flv.Test.Services
             _streamManager.GetSubscribers(streamPath).Returns(subscribers);
 
             // Act
-            await _sut.OnCacheSequenceHeaderAsync(streamPath, mediaType, sequenceHeader);
+            await _sut.OnCacheSequenceHeaderAsync(clientId, streamPath, mediaType, sequenceHeader);
 
             // Assert
             await _mediaTagBroadcaster.BroadcastMediaTagAsync(streamContext, subscribers, mediaType, 0, false,

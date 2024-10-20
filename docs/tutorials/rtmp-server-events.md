@@ -29,14 +29,14 @@ public interface IRtmpServerStreamEventHandler
 
 public interface IRtmpMediaMessageInterceptor
 {
-    ValueTask OnReceiveMediaMessageAsync(string streamPath, MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp, bool isSkippable);
+    ValueTask OnReceiveMediaMessageAsync(uint clientId, string streamPath, MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp, bool isSkippable);
 }
 
 public interface IRtmpMediaCachingInterceptor
 {
-    ValueTask OnCacheSequenceHeaderAsync(string streamPath, MediaType mediaType, byte[] sequenceHeader);
-    ValueTask OnCachePictureAsync(string streamPath, MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp);
-    ValueTask OnClearGroupOfPicturesCacheAsync(string streamPath);
+    ValueTask OnCacheSequenceHeaderAsync(uint clientId, string streamPath, MediaType mediaType, byte[] sequenceHeader);
+    ValueTask OnCachePictureAsync(uint clientId, string streamPath, MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp);
+    ValueTask OnClearGroupOfPicturesCacheAsync(uint clientId, string streamPath);
 }
 ```
 

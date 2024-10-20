@@ -24,8 +24,9 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
 
         public async ValueTask ReceiveMediaMessageAsync(IRtmpPublishStreamContext publishStreamContext, MediaType mediaType, IDataBuffer payloadBuffer, uint timestamp, bool isSkippable)
         {
+            var clientId = publishStreamContext.StreamContext?.ClientContext.Client.Id ?? 0;
             var streamPath = publishStreamContext.StreamPath;
-            var interceptors = GetFilteredInterceptors(streamPath, mediaType, timestamp, isSkippable);
+            var interceptors = GetFilteredInterceptors(clientId, streamPath, mediaType, timestamp, isSkippable);
 
             try
             {
@@ -37,7 +38,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
                 try
                 {
                     foreach (var interceptor in interceptors)
-                        await interceptor.OnReceiveMediaMessageAsync(streamPath, mediaType, rentedBuffer, timestamp, isSkippable);
+                        await interceptor.OnReceiveMediaMessageAsync(clientId, streamPath, mediaType, rentedBuffer, timestamp, isSkippable);
                 }
                 finally
                 {
@@ -50,13 +51,13 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
             }
         }
 
-        private List<IRtmpMediaMessageInterceptor> GetFilteredInterceptors(string streamPath, MediaType mediaType, uint timestamp, bool isSkippable)
+        private List<IRtmpMediaMessageInterceptor> GetFilteredInterceptors(uint clientId, string streamPath, MediaType mediaType, uint timestamp, bool isSkippable)
         {
             var interceptors = _interceptorListPool.Obtain();
 
             foreach (var interceptor in _interceptors)
             {
-                if (interceptor.FilterMediaMessage(streamPath, mediaType, timestamp, isSkippable))
+                if (interceptor.FilterMediaMessage(clientId, streamPath, mediaType, timestamp, isSkippable))
                     interceptors.Add(interceptor);
             }
 

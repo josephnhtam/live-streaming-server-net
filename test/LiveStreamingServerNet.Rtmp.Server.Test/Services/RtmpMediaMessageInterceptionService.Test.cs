@@ -22,19 +22,21 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
         {
             // Arrange
             using var payloadBuffer = new DataBuffer();
+            var clientId = _fixture.Create<uint>();
             var streamPath = _fixture.Create<string>();
             var mediaType = _fixture.Create<MediaType>();
             var timestamp = _fixture.Create<uint>();
             var isSkippable = _fixture.Create<bool>();
 
             var publishStreamContext = Substitute.For<IRtmpPublishStreamContext>();
+            publishStreamContext.StreamContext!.ClientContext.Client.Id.Returns(clientId);
             publishStreamContext.StreamPath.Returns(streamPath);
 
             var interceptor1 = Substitute.For<IRtmpMediaMessageInterceptor>();
             var interceptor2 = Substitute.For<IRtmpMediaMessageInterceptor>();
 
-            interceptor1.FilterMediaMessage(streamPath, mediaType, timestamp, isSkippable).Returns(true);
-            interceptor2.FilterMediaMessage(streamPath, mediaType, timestamp, isSkippable).Returns(true);
+            interceptor1.FilterMediaMessage(clientId, streamPath, mediaType, timestamp, isSkippable).Returns(true);
+            interceptor2.FilterMediaMessage(clientId, streamPath, mediaType, timestamp, isSkippable).Returns(true);
 
             var interceptors = new List<IRtmpMediaMessageInterceptor> { interceptor1, interceptor2 };
 
@@ -44,8 +46,8 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             await service.ReceiveMediaMessageAsync(publishStreamContext, mediaType, payloadBuffer, timestamp, isSkippable);
 
             // Assert
-            await interceptor1.Received(1).OnReceiveMediaMessageAsync(streamPath, mediaType, Arg.Any<IRentedBuffer>(), timestamp, isSkippable);
-            await interceptor2.Received(1).OnReceiveMediaMessageAsync(streamPath, mediaType, Arg.Any<IRentedBuffer>(), timestamp, isSkippable);
+            await interceptor1.Received(1).OnReceiveMediaMessageAsync(clientId, streamPath, mediaType, Arg.Any<IRentedBuffer>(), timestamp, isSkippable);
+            await interceptor2.Received(1).OnReceiveMediaMessageAsync(clientId, streamPath, mediaType, Arg.Any<IRentedBuffer>(), timestamp, isSkippable);
         }
     }
 }
