@@ -16,7 +16,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Services
         private readonly IInputPathResolver _inputPathResolver;
         private readonly IStreamProcessorEventDispatcher _eventDispatcher;
         private readonly ILogger _logger;
-        private readonly ConcurrentDictionary<string, StreamProcessorTask> _processorTasks;
+        private readonly ConcurrentDictionary<uint, StreamProcessorTask> _processorTasks;
 
         public StreamProcessorManager(
             IServer server,
@@ -30,7 +30,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Services
             _inputPathResolver = inputPathResolver;
             _eventDispatcher = eventDispatcher;
             _logger = logger;
-            _processorTasks = new ConcurrentDictionary<string, StreamProcessorTask>();
+            _processorTasks = new ConcurrentDictionary<uint, StreamProcessorTask>();
         }
 
         public async Task StartProcessingStreamAsync(uint clientId, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
@@ -45,21 +45,10 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Services
             if (!streamProcessors.Any())
                 return;
 
-            await CancelAndAwaitExistingStreamProcessorsAsync(streamPath);
-
             var task = RunStreamProcessors(streamProcessors, client, streamPath, streamArguments, cts);
 
-            _processorTasks[streamPath] = new StreamProcessorTask(task, cts);
-            _ = task.ContinueWith(_ => _processorTasks.TryRemove(streamPath, out var task), TaskContinuationOptions.ExecuteSynchronously);
-
-            async ValueTask CancelAndAwaitExistingStreamProcessorsAsync(string streamPath)
-            {
-                if (!_processorTasks.TryGetValue(streamPath, out var existingTask))
-                    return;
-
-                existingTask.Cts.Cancel();
-                await existingTask.Task;
-            }
+            _processorTasks[clientId] = new StreamProcessorTask(task, cts);
+            _ = task.ContinueWith(_ => _processorTasks.TryRemove(clientId, out var task), TaskContinuationOptions.ExecuteSynchronously);
         }
 
         private async Task<IList<IStreamProcessor>> CreateStreamProcessors(ISessionHandle client, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
@@ -130,7 +119,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Services
 
         public Task StopProcessingStreamAsync(uint clientId, string streamPath)
         {
-            if (_processorTasks.TryGetValue(streamPath, out var task))
+            if (_processorTasks.TryGetValue(clientId, out var task))
                 task.Cts.Cancel();
 
             return Task.CompletedTask;
