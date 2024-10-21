@@ -197,10 +197,8 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
 
         private async Task AwaitForHandshakeAsync()
         {
-            Debug.Assert(_clientTask != null);
-
             var timeoutTask = Task.Delay(_config.HandshakeTimeout, _clientCts.Token);
-            var completedTask = await Task.WhenAny(_handshakeTcs.Task, _clientTask, timeoutTask);
+            var completedTask = await Task.WhenAny(_handshakeTcs.Task, _clientTcs.Task, timeoutTask);
 
             if (completedTask.IsCanceled)
             {
@@ -210,9 +208,9 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
             {
                 throw new TimeoutException("Handshake timeout.");
             }
-            else if (completedTask == _clientTask)
+            else if (completedTask == _clientTcs.Task)
             {
-                throw new RtmpClientConnectionException("Client connection failed.");
+                throw new RtmpClientConnectionException("Client connection failed.", completedTask.Exception);
             }
 
             await completedTask;
@@ -231,7 +229,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
         {
             if (_clientTask != null)
             {
-                await _clientTask.WithCancellation(cancellationToken);
+                await _clientTcs.Task.WithCancellation(cancellationToken);
             }
         }
 
