@@ -274,7 +274,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Streams
 
                     if (streamData.MediaData.HasValue)
                     {
-                        await ProcessMediaDataAsync(publishStreamContext, streamData.MediaData.Value);
+                        await ProcessMediaDataAsync(publishStreamContext, streamData.MediaData.Value, abortCts);
                     }
                     else if (streamData.MetaData.HasValue)
                     {
@@ -300,7 +300,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Streams
             }
         }
 
-        private async Task ProcessMediaDataAsync(IRtmpPublishStreamContext publishStreamContext, MediaData mediaData)
+        private async Task ProcessMediaDataAsync(IRtmpPublishStreamContext publishStreamContext, MediaData mediaData, CancellationTokenSource abortCts)
         {
             try
             {
@@ -318,6 +318,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Streams
                 if (!success)
                 {
                     _logger.RtmpDownstreamMediaDataProcessingError(publishStreamContext.StreamPath, mediaData.Type);
+                    abortCts.Cancel();
                     return;
                 }
             }
