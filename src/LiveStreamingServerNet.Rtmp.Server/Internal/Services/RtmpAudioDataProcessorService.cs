@@ -2,6 +2,7 @@
 using LiveStreamingServerNet.Rtmp.Server.Internal.Filtering.Contracts;
 using LiveStreamingServerNet.Rtmp.Server.Internal.Logging;
 using LiveStreamingServerNet.Rtmp.Server.Internal.Services.Contracts;
+using LiveStreamingServerNet.Rtmp.Utilities.Containers;
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using Microsoft.Extensions.Logging;
 using System.Runtime.CompilerServices;
@@ -34,7 +35,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
 
         public async ValueTask<bool> ProcessAudioDataAsync(IRtmpPublishStreamContext publishStreamContext, uint timestamp, IDataBuffer payloadBuffer)
         {
-            var (audioCodec, aacPacketType) = ParseAudioMessageProperties(payloadBuffer);
+            var (audioCodec, _, _, _, aacPacketType) = FlvParser.ParseAudioTagHeader(payloadBuffer.AsSpan());
 
             if (!IsAudioCodecAllowed(publishStreamContext, audioCodec)) return false;
 
@@ -79,20 +80,6 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
             }
 
             return true;
-        }
-
-        private (AudioCodec, AACPacketType?) ParseAudioMessageProperties(IDataBuffer payloadBuffer)
-        {
-            var firstByte = payloadBuffer.ReadByte();
-            var audioCodec = (AudioCodec)(firstByte >> 4);
-
-            if (audioCodec is AudioCodec.AAC or AudioCodec.Opus)
-            {
-                var aacPacketType = (AACPacketType)payloadBuffer.ReadByte();
-                return (audioCodec, aacPacketType);
-            }
-
-            return (audioCodec, null);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
