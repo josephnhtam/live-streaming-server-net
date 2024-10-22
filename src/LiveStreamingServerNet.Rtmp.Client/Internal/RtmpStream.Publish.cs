@@ -1,4 +1,5 @@
 ﻿using LiveStreamingServerNet.Rtmp.Client.Contracts;
+using LiveStreamingServerNet.Rtmp.Client.Exceptions;
 using LiveStreamingServerNet.Rtmp.Client.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Client.Internal.Services.Contracts;
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
@@ -58,7 +59,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
 
             private IRtmpPublishStreamContext GetPublishStreamContext()
             {
-                return _streamContext.PublishContext ?? throw new InvalidOperationException("The stream is not published.");
+                return _streamContext.PublishContext ?? throw new RtmpClientPublishStreamNotAvailableException();
             }
         }
     }
