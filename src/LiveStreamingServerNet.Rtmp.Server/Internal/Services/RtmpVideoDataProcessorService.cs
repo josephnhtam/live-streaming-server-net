@@ -3,6 +3,7 @@ using LiveStreamingServerNet.Rtmp.Server.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Server.Internal.Filtering.Contracts;
 using LiveStreamingServerNet.Rtmp.Server.Internal.Logging;
 using LiveStreamingServerNet.Rtmp.Server.Internal.Services.Contracts;
+using LiveStreamingServerNet.Rtmp.Utilities.Containers;
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -41,7 +42,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
         {
             ProcessVideoHeader(payloadBuffer);
 
-            var (frameType, videoCodec, avcPacketType) = ParseVideoMessageProperties(payloadBuffer.MoveTo(0));
+            var (frameType, videoCodec, avcPacketType, _) = FlvParser.ParseVideoTagHeader(payloadBuffer.AsSpan());
 
             if (!IsVideoCodecAllowed(publishStreamContext, videoCodec)) return false;
 
@@ -161,21 +162,6 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
             }
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static (VideoFrameType, VideoCodec, AVCPacketType?) ParseVideoMessageProperties(IDataBuffer payloadBuffer)
-        {
-            var firstByte = payloadBuffer.ReadByte();
-            var frameType = (VideoFrameType)((firstByte >> 4) & 0x7);
-            var videoCodec = (VideoCodec)(firstByte & 0x0f);
-
-            if (videoCodec is VideoCodec.AVC or VideoCodec.HEVC or VideoCodec.AV1)
-            {
-                var avcPacketType = (AVCPacketType)payloadBuffer.ReadByte();
-                return (frameType, videoCodec, avcPacketType);
-            }
-
-            return (frameType, videoCodec, null);
-        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private bool IsSkippable(AVCPacketType? avcPacketType)
