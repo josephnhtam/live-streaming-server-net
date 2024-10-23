@@ -39,6 +39,9 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Logging
         [LoggerMessage(LogLevel.Error, "An error occurred while sending the media data (StreamPath={StreamPath}, MediaType={MediaType})")]
         public static partial void RtmpUpstreamMediaDataSendingError(this ILogger logger, string streamPath, MediaType mediaType, Exception ex);
 
+        [LoggerMessage(LogLevel.Error, "An error occurred while sending the metadata (StreamPath={StreamPath})")]
+        public static partial void RtmpUpstreamMetaDataSendingError(this ILogger logger, string streamPath, Exception ex);
+
         [LoggerMessage(LogLevel.Information, "Upstream idle timeout (StreamPath={StreamPath})")]
         public static partial void RtmpUpstreamIdleTimeout(this ILogger logger, string streamPath);
 
@@ -71,5 +74,26 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Logging
 
         [LoggerMessage(LogLevel.Error, "An error occurred while resolving the origin for the upstream (StreamPath={StreamPath})")]
         public static partial void RtmpUpstreamOriginResolveError(this ILogger logger, string streamPath, Exception ex);
+
+        [LoggerMessage(LogLevel.Error, "An error occurred while processing the upstream client (StreamPath={StreamPath})")]
+        public static partial void RtmpUpstreamClientError(this ILogger logger, string streamPath, Exception ex);
+
+        [LoggerMessage(LogLevel.Information, "Reconnecting to the origin for the upstream (StreamPath={StreamPath}, RetryBackoff={RetryBackoff})")]
+        public static partial void RtmpUpstreamReconnecting(this ILogger logger, string streamPath, TimeSpan retryBackoff);
+
+        [LoggerMessage(LogLevel.Error, "The upstream reconnect limit has been reached (StreamPath={StreamPath})")]
+        public static partial void RtmpUpstreamReconnectLimitReached(this ILogger logger, string streamPath);
+
+        [LoggerMessage(LogLevel.Error, "An error occurred while processing the downstream client (StreamPath={StreamPath})")]
+        public static partial void RtmpDownstreamClientError(this ILogger logger, string streamPath, Exception ex);
+
+        [LoggerMessage(LogLevel.Information, "Reconnecting to the origin for the downstream (StreamPath={StreamPath}, RetryBackoff={RetryBackoff})")]
+        public static partial void RtmpDownstreamReconnecting(this ILogger logger, string streamPath, TimeSpan retryBackoff);
+
+        [LoggerMessage(LogLevel.Error, "The downstream reconnect limit has been reached (StreamPath={StreamPath})")]
+        public static partial void RtmpDownstreamReconnectLimitReached(this ILogger logger, string streamPath);
+
+        [LoggerMessage(LogLevel.Error, "An error occurred while sending the data (StreamPath={StreamPath})")]
+        public static partial void RtmpUpstreamDataSendingError(this ILogger logger, string streamPath, Exception ex);
     }
 }

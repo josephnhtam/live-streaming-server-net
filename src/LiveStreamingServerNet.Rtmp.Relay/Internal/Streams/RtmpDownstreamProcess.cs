@@ -9,7 +9,10 @@ using LiveStreamingServerNet.Rtmp.Server.Internal;
 using LiveStreamingServerNet.Rtmp.Server.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Server.Internal.Logging;
 using LiveStreamingServerNet.Rtmp.Server.Internal.Services.Contracts;
+using LiveStreamingServerNet.Rtmp.Utilities.Containers;
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
+using LiveStreamingServerNet.Utilities.Common;
+using LiveStreamingServerNet.Utilities.Common.Contracts;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -34,7 +37,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Streams
         private readonly ILogger _logger;
 
         private RtmpPublishStreamContext? _publishStreamContext;
-        private bool initialized;
+        private bool _initialized;
 
         public string StreamPath => _streamPath;
 
@@ -66,9 +69,8 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Streams
 
         public async ValueTask<PublishingStreamResult> InitializeAsync(CancellationToken cancellationToken)
         {
-            if (initialized)
+            if (_initialized)
                 throw new InvalidOperationException("The process has already been initialized.");
-
 
             try
             {
@@ -78,7 +80,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Streams
                 if (publishingResult.Result == PublishingStreamResult.Succeeded)
                 {
                     _publishStreamContext = publishStreamContext;
-                    initialized = true;
+                    _initialized = true;
                 }
 
                 return publishingResult.Result;
@@ -92,7 +94,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Streams
 
         public async Task RunAsync(CancellationToken cancellationToken)
         {
-            if (!initialized)
+            if (!_initialized)
                 throw new InvalidOperationException("The process has not been initialized.");
 
             Debug.Assert(_publishStreamContext != null);
@@ -133,49 +135,98 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Streams
 
         private async Task RunDownstreamAsync(IRtmpPublishStreamContext publishStreamContext, CancellationToken stoppingToken)
         {
-            var origin = await ResolveOriginAsync(stoppingToken);
-            if (origin == null) return;
-
             using var abortCts = CancellationTokenSource.CreateLinkedTokenSource(stoppingToken);
 
-            var streamDataChannel = CreateStreamDataChannel();
-            var mediaDataProcessorTask = StreamDataProcessorTask(streamDataChannel, publishStreamContext, abortCts);
-            var downstreamClientTask = RunDownstreamClientAsync(origin, streamDataChannel, abortCts);
-
-            await Task.WhenAll(downstreamClientTask, mediaDataProcessorTask);
-        }
-
-        private async Task RunDownstreamClientAsync(RtmpOrigin origin, Channel<StreamData> streamDataChannel, CancellationTokenSource abortCts)
-        {
             try
             {
-                await using var rtmpClient = CreateDownstreamClient();
-                using var _ = abortCts.Token.Register(rtmpClient.Stop);
+                var streamDataChannel = CreateStreamDataChannel();
+                var mediaDataProcessorTask = StreamDataProcessorTask(streamDataChannel, publishStreamContext, abortCts);
+                var downstreamClientTask = RunDownstreamClientAsync(streamDataChannel, publishStreamContext, abortCts);
 
-                _logger.RtmpDownstreamConnecting(_streamPath, origin.EndPoint);
-                await rtmpClient.ConnectAsync(origin.EndPoint, origin.AppName);
-
-                _logger.RtmpDownstreamCreating(_streamPath);
-                var rtmpStream = await rtmpClient.CreateStreamAsync();
-
-                using var idleChecker = CreateIdleCheck(abortCts);
-
-                SubscribeToStreamEvents(rtmpStream, idleChecker, streamDataChannel, abortCts);
-                rtmpStream.Subscribe.Play(origin.StreamName);
-
-                _logger.RtmpDownstreamCreated(_streamPath);
-                await rtmpClient.UntilStoppedAsync(abortCts.Token);
-            }
-            catch (OperationCanceledException) when (abortCts.IsCancellationRequested) { }
-            catch (Exception)
-            {
-                throw;
+                await Task.WhenAll(downstreamClientTask, mediaDataProcessorTask);
             }
             finally
             {
-                _logger.RtmpDownstreamStopped(_streamPath);
                 abortCts.Cancel();
             }
+        }
+
+        private async Task RunDownstreamClientAsync(
+            Channel<StreamData> streamDataChannel, IRtmpPublishStreamContext publishStreamContext, CancellationTokenSource abortCts)
+        {
+            var retryCounter = new RetryCounter(_config.ReconnectSettings);
+
+            using var idleChecker = CreateIdleCheck(abortCts);
+
+            while (!abortCts.IsCancellationRequested)
+            {
+                try
+                {
+                    var origin = await ResolveOriginAsync(abortCts.Token);
+                    if (origin == null) continue;
+
+                    await DoRunDownstreamClientAsync(origin, publishStreamContext, streamDataChannel, idleChecker, retryCounter, abortCts);
+                }
+                catch (OperationCanceledException) when (abortCts.IsCancellationRequested) { }
+                catch (Exception ex)
+                {
+                    _logger.RtmpDownstreamClientError(_streamPath, ex);
+                }
+                finally
+                {
+                    await HandleRetryBackoff(abortCts, retryCounter);
+                }
+            }
+
+            _logger.RtmpDownstreamStopped(_streamPath);
+        }
+
+        private async Task HandleRetryBackoff(CancellationTokenSource abortCts, IRetryCounter retryCounter)
+        {
+            if (abortCts.IsCancellationRequested)
+            {
+                return;
+            }
+
+            var retryBackoff = retryCounter.GetNextBackoff();
+
+            if (!retryBackoff.HasValue)
+            {
+                _logger.RtmpDownstreamReconnectLimitReached(_streamPath);
+                abortCts.Cancel();
+                return;
+            }
+
+            try
+            {
+                _logger.RtmpDownstreamReconnecting(_streamPath, retryBackoff.Value);
+                await Task.Delay(retryBackoff.Value, abortCts.Token);
+            }
+            catch (OperationCanceledException) { }
+        }
+
+        private async Task DoRunDownstreamClientAsync(
+            RtmpOrigin origin, IRtmpPublishStreamContext publishStreamContext, Channel<StreamData> streamDataChannel,
+            IIdleChecker idleChecker, IRetryCounter retryCounter, CancellationTokenSource abortCts)
+        {
+            var timestampBase = Math.Min(publishStreamContext.VideoTimestamp, publishStreamContext.AudioTimestamp);
+
+            await using var rtmpClient = CreateDownstreamClient();
+            using var _ = abortCts.Token.Register(rtmpClient.Stop);
+
+            _logger.RtmpDownstreamConnecting(_streamPath, origin.EndPoint);
+            await rtmpClient.ConnectAsync(origin.EndPoint, origin.AppName);
+
+            _logger.RtmpDownstreamCreating(_streamPath);
+            var rtmpStream = await rtmpClient.CreateStreamAsync();
+
+            SubscribeToStreamEvents(rtmpStream, idleChecker, streamDataChannel, abortCts, timestampBase);
+            rtmpStream.Subscribe.Play(origin.StreamName);
+
+            _logger.RtmpDownstreamCreated(_streamPath);
+            retryCounter.Reset();
+
+            await rtmpClient.UntilStoppedAsync(abortCts.Token);
         }
 
         private IRtmpClient CreateDownstreamClient()
@@ -200,25 +251,20 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Streams
         }
 
         private void SubscribeToStreamEvents(
-            IRtmpStream rtmpStream, IIdleChecker idleChecker, Channel<StreamData> streamDataChannel, CancellationTokenSource abortCts)
+            IRtmpStream rtmpStream, IIdleChecker idleChecker, Channel<StreamData> streamDataChannel,
+            CancellationTokenSource abortCts, uint timestampBase)
         {
+            uint? initialTimestamp = null;
+
             rtmpStream.Subscribe.OnStreamMetaDataReceived += (sender, eventArgs) =>
             {
                 idleChecker.Refresh();
                 EnqueueMetaData(streamDataChannel.Writer, eventArgs);
             };
 
-            rtmpStream.Subscribe.OnVideoDataReceived += (sender, eventArgs) =>
-            {
-                idleChecker.Refresh();
-                EnqueueMediaData(MediaType.Video, streamDataChannel.Writer, eventArgs);
-            };
+            rtmpStream.Subscribe.OnVideoDataReceived += OnMediaDataReceived(MediaType.Video);
 
-            rtmpStream.Subscribe.OnAudioDataReceived += (sender, eventArgs) =>
-            {
-                idleChecker.Refresh();
-                EnqueueMediaData(MediaType.Audio, streamDataChannel.Writer, eventArgs);
-            };
+            rtmpStream.Subscribe.OnAudioDataReceived += OnMediaDataReceived(MediaType.Audio);
 
             rtmpStream.OnUserControlEventReceived += (sender, eventArgs) =>
             {
@@ -259,6 +305,38 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Streams
                         break;
                 }
             };
+
+            EventHandler<MediaDataEventArgs> OnMediaDataReceived(MediaType type) => (sender, eventArgs) =>
+            {
+                idleChecker.Refresh();
+
+                var timestamp = CorrectTimestamp(type, eventArgs, timestampBase, ref initialTimestamp);
+                EnqueueMediaData(type, streamDataChannel.Writer, eventArgs.RentedBuffer, timestamp);
+            };
+        }
+
+        private static uint CorrectTimestamp(MediaType type, MediaDataEventArgs eventArgs, uint timestampBase, ref uint? initialTimestamp)
+        {
+            if (!initialTimestamp.HasValue && IsNonHeaderData(type, eventArgs.RentedBuffer.AsSpan()))
+            {
+                initialTimestamp = eventArgs.Timestamp;
+            }
+
+            return initialTimestamp.HasValue ? timestampBase + eventArgs.Timestamp - initialTimestamp.Value : 0u;
+
+            static bool IsNonHeaderData(MediaType type, ReadOnlySpan<byte> buffer)
+            {
+                if (type == MediaType.Video)
+                {
+                    return FlvParser.ParseVideoTagHeader(buffer).AVCPacketType == AVCPacketType.NALU;
+                }
+                else if (type == MediaType.Audio)
+                {
+                    return FlvParser.ParseAudioTagHeader(buffer).AACPacketType == AACPacketType.Raw;
+                }
+
+                return false;
+            }
         }
 
         private async Task StreamDataProcessorTask(
@@ -285,11 +363,11 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Streams
             catch (OperationCanceledException) when (abortCts.IsCancellationRequested) { }
             catch (Exception)
             {
+                abortCts.Cancel();
                 throw;
             }
             finally
             {
-                abortCts.Cancel();
                 channel.Writer.Complete();
 
                 while (channel.Reader.TryRead(out var streamData))
@@ -338,16 +416,16 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Streams
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void EnqueueMediaData(MediaType mediaType, ChannelWriter<StreamData> channel, MediaDataEventArgs eventArgs)
+        private void EnqueueMediaData(MediaType mediaType, ChannelWriter<StreamData> channel, IRentedBuffer rentedBuffer, uint timestamp)
         {
             var payloadBuffer = _dataBufferPool.Obtain();
 
             try
             {
-                payloadBuffer.Write(eventArgs.RentedBuffer.AsSpan());
+                payloadBuffer.Write(rentedBuffer.AsSpan());
                 payloadBuffer.MoveTo(0);
 
-                if (!channel.TryWrite(new StreamData(new MediaData(mediaType, eventArgs.Timestamp, payloadBuffer))))
+                if (!channel.TryWrite(new StreamData(new MediaData(mediaType, timestamp, payloadBuffer))))
                 {
                     throw new ChannelClosedException();
                 }
