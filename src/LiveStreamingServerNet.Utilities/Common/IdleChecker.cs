@@ -1,8 +1,8 @@
-﻿using LiveStreamingServerNet.Rtmp.Relay.Internal.Utilities.Contracts;
+﻿using LiveStreamingServerNet.Utilities.Common.Contracts;
 
-namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Utilities
+namespace LiveStreamingServerNet.Utilities.Common
 {
-    internal class IdleChecker : IIdleChecker
+    public class IdleChecker : IIdleChecker
     {
         private readonly TimeSpan _maxIdleTime;
         private readonly Action _onMaxIdleTimeExceeded;
@@ -20,7 +20,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Utilities
 
         private void PerformCheck(object? state)
         {
-            if ((DateTime.UtcNow - _lastRefreshTime) > _maxIdleTime)
+            if (DateTime.UtcNow - _lastRefreshTime > _maxIdleTime)
             {
                 _onMaxIdleTimeExceeded.Invoke();
                 _timer.Dispose();
