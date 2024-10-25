@@ -343,12 +343,12 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
 
         private void FinalizePublishStreamContinuationContext(PublishStreamContinuationContext context)
         {
-            using var _ = context;
-
             lock (_publishingSyncLock)
             {
                 lock (_subscribingSyncLock)
                 {
+                    using var _ = context;
+
                     if (_publishStreamContinuationContexts.GetValueOrDefault(context.StreamPath) != context)
                     {
                         return;

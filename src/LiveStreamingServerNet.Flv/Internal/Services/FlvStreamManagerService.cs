@@ -1,5 +1,7 @@
-﻿using LiveStreamingServerNet.Flv.Internal.Contracts;
+﻿using LiveStreamingServerNet.Flv.Configurations;
+using LiveStreamingServerNet.Flv.Internal.Contracts;
 using LiveStreamingServerNet.Flv.Internal.Services.Contracts;
+using Microsoft.Extensions.Options;
 
 namespace LiveStreamingServerNet.Flv.Internal.Services
 {
@@ -7,10 +9,18 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
     {
         private readonly object _publishingSyncLock = new();
         private readonly Dictionary<string, IFlvStreamContext> _publishingStreamContexts = new();
+        private readonly Dictionary<string, FlvStreamContinuationContext> _streamContinuationContexts = new();
 
         private readonly object _subscribingSyncLock = new();
         private readonly Dictionary<string, List<IFlvClient>> _subscribingClients = new();
         private readonly Dictionary<IFlvClient, string> _subscribedStreamPaths = new();
+
+        private readonly FlvConfiguration _config;
+
+        public FlvStreamManagerService(IOptions<FlvConfiguration> config)
+        {
+            _config = config.Value;
+        }
 
         public bool IsStreamPathPublishing(string streamPath, bool requireReady)
         {
@@ -32,9 +42,21 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
                     return PublishingStreamResult.AlreadyExists;
                 }
 
+                HandleStreamContinuation(streamPath, streamContext);
                 _publishingStreamContexts.Add(streamPath, streamContext);
                 return PublishingStreamResult.Succeeded;
             }
+        }
+
+        private void HandleStreamContinuation(string streamPath, IFlvStreamContext streamContext)
+        {
+            if (!_streamContinuationContexts.Remove(streamPath, out var continuationContext))
+            {
+                return;
+            }
+
+            streamContext.SetTimestampOffset(continuationContext.Timestamp);
+            continuationContext.Dispose();
         }
 
         public bool StopPublishingStream(string streamPath, out IList<IFlvClient> existingSubscribers)
@@ -43,21 +65,82 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
             {
                 lock (_subscribingSyncLock)
                 {
-                    existingSubscribers = null!;
-
                     if (!_publishingStreamContexts.Remove(streamPath, out var streamContext))
+                    {
+                        existingSubscribers = new List<IFlvClient>();
                         return false;
+                    }
 
-                    existingSubscribers = _subscribingClients.Remove(streamPath, out var outExistingSubscribers) ?
-                        outExistingSubscribers : new List<IFlvClient>();
+                    existingSubscribers = _subscribingClients.GetValueOrDefault(streamPath, new List<IFlvClient>());
 
-                    foreach (var subscriber in existingSubscribers)
-                        _subscribedStreamPaths.Remove(subscriber);
+                    if (existingSubscribers.Any())
+                    {
+                        if (_config.StreamContinuationTimeout > TimeSpan.Zero)
+                        {
+                            var timestamp = Math.Max(streamContext.VideoTimestamp, streamContext.AudioTimestamp);
+                            CreateStreamContinuationContext(streamPath, timestamp, existingSubscribers.AsReadOnly());
+                        }
+                        else
+                        {
+                            StopSubscribers(existingSubscribers.AsReadOnly());
+                        }
+                    }
 
                     streamContext.Dispose();
 
                     return true;
                 }
+            }
+
+            void CreateStreamContinuationContext(string streamPath, uint timestamp, IReadOnlyList<IFlvClient> subscribers)
+            {
+                var continuationContext = new FlvStreamContinuationContext(
+                    streamPath, timestamp, _config.StreamContinuationTimeout, subscribers);
+
+                if (_streamContinuationContexts.Remove(streamPath, out var existingContext))
+                {
+                    existingContext.Dispose();
+                }
+
+                _streamContinuationContexts[streamPath] = continuationContext;
+
+                continuationContext.SetExpirationCallback(() =>
+                    FinalizeStreamContinuationContext(continuationContext));
+            }
+        }
+
+        private void FinalizeStreamContinuationContext(FlvStreamContinuationContext context)
+        {
+            lock (_publishingSyncLock)
+            {
+                lock (_subscribingSyncLock)
+                {
+                    using var _ = context;
+
+                    if (_streamContinuationContexts.GetValueOrDefault(context.StreamPath) != context)
+                    {
+                        return;
+                    }
+
+                    var subscribers = _subscribingClients.GetValueOrDefault(context.StreamPath);
+
+                    if (subscribers?.Any() == true)
+                    {
+                        StopSubscribers(subscribers);
+                    }
+
+                    _streamContinuationContexts.Remove(context.StreamPath);
+                }
+            }
+        }
+
+        private void StopSubscribers(IReadOnlyList<IFlvClient> subscribers)
+        {
+            var subscriberList = subscribers.ToList();
+
+            foreach (var subscriber in subscriberList)
+            {
+                subscriber.Stop();
             }
         }
 
@@ -115,6 +198,77 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
             lock (_subscribingSyncLock)
             {
                 return _subscribingClients.GetValueOrDefault(streamPath)?.ToList() ?? new List<IFlvClient>();
+            }
+        }
+
+        private class FlvStreamContinuationContext : IDisposable
+        {
+            public string StreamPath { get; }
+            public uint Timestamp { get; }
+            public List<string> SubscriberClientIds { get; }
+
+            private readonly object _syncLock = new();
+            private readonly Timer _expirationTimer;
+
+            private bool _isExpired;
+            private bool _isDisposed;
+            private Action? _expirationCallback;
+
+            public FlvStreamContinuationContext(
+                string streamPath,
+                uint timestamp,
+                TimeSpan expiration,
+                IReadOnlyList<IFlvClient> subscribers)
+            {
+                StreamPath = streamPath;
+                Timestamp = timestamp;
+                SubscriberClientIds = subscribers.Select(x => x.ClientId).ToList();
+
+                _expirationTimer = new Timer(
+                    OnExpiration, null,
+                    expiration,
+                    Timeout.InfiniteTimeSpan);
+            }
+
+            private void OnExpiration(object? state)
+            {
+                lock (_syncLock)
+                {
+                    if (_isExpired || _isDisposed)
+                    {
+                        return;
+                    }
+
+                    _expirationCallback?.Invoke();
+                    _isExpired = true;
+                }
+            }
+
+            public void SetExpirationCallback(Action callback)
+            {
+                lock (_syncLock)
+                {
+                    if (_isExpired || _isDisposed)
+                    {
+                        callback();
+                        return;
+                    }
+
+                    _expirationCallback = callback;
+                }
+            }
+
+            public void Dispose()
+            {
+                lock (_syncLock)
+                {
+                    _isDisposed = true;
+
+                    if (_isDisposed)
+                        return;
+
+                    _expirationTimer.Dispose();
+                }
             }
         }
     }

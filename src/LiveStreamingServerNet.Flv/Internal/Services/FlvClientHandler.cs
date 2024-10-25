@@ -11,13 +11,13 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
     {
         private readonly IFlvStreamManagerService _streamManager;
         private readonly IFlvMediaTagCacherService _mediaTagCacher;
-        private readonly MediaStreamingConfiguration _config;
+        private readonly FlvConfiguration _config;
         private readonly ILogger _logger;
 
         public FlvClientHandler(
             IFlvStreamManagerService streamManager,
             IFlvMediaTagCacherService mediaTagCacher,
-            IOptions<MediaStreamingConfiguration> config,
+            IOptions<FlvConfiguration> config,
             ILogger<FlvClientHandler> logger)
         {
             _streamManager = streamManager;
@@ -77,7 +77,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
 
         private async ValueTask SendCachedFlvTagsAsync(IFlvClient client, IFlvStreamContext streamContext, CancellationToken cancellationToken)
         {
-            await _mediaTagCacher.SendCachedHeaderTagsAsync(client, streamContext, 0, cancellationToken);
+            await _mediaTagCacher.SendCachedHeaderTagsAsync(client, streamContext, streamContext.TimestampOffset, cancellationToken);
             await _mediaTagCacher.SendCachedGroupOfPicturesTagsAsync(client, streamContext, cancellationToken);
         }
     }
