@@ -121,7 +121,6 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
                 lock (_subscribingSyncLock)
                 {
                     var streamPath = publishStreamContext.StreamPath;
-                    var timestamp = Math.Max(publishStreamContext.VideoTimestamp, publishStreamContext.AudioTimestamp);
 
                     if (publishStreamContext.StreamContext != null)
                     {
@@ -148,6 +147,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
                     {
                         if (allowContinuation && _config.PublishStreamContinuationTimeout > TimeSpan.Zero)
                         {
+                            var timestamp = Math.Max(publishStreamContext.VideoTimestamp, publishStreamContext.AudioTimestamp);
                             CreatePublishStreamContinuationContext(streamPath, timestamp, subscribeStreamContexts);
                         }
                         else
@@ -343,6 +343,8 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
 
         private void FinalizePublishStreamContinuationContext(PublishStreamContinuationContext context)
         {
+            using var _ = context;
+
             lock (_publishingSyncLock)
             {
                 lock (_subscribingSyncLock)
