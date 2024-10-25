@@ -13,6 +13,7 @@ using LiveStreamingServerNet.Utilities.PacketDiscarders.Contracts;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Collections.Concurrent;
+using System.Diagnostics;
 using System.Threading.Channels;
 
 namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
@@ -81,7 +82,9 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
             bool isSkippable,
             IDataBuffer payloadBuffer)
         {
-            await _interception.ReceiveMediaMessageAsync(publishStreamContext, mediaType, payloadBuffer, timestamp, isSkippable);
+            Debug.Assert(timestamp >= publishStreamContext.TimestampOffset);
+
+            await _interception.ReceiveMediaMessageAsync(publishStreamContext, mediaType, payloadBuffer, timestamp - publishStreamContext.TimestampOffset, isSkippable);
 
             subscribeStreamContexts = subscribeStreamContexts.Where((subscriber) => FilterSubscribers(subscriber, isSkippable)).ToList();
 
