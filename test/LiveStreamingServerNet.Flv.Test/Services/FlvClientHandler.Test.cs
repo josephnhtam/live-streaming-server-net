@@ -14,7 +14,7 @@ namespace LiveStreamingServerNet.Flv.Test.Services
         private readonly IFixture _fixture;
         private readonly IFlvStreamManagerService _streamManager;
         private readonly IFlvMediaTagCacherService _mediaTagCacher;
-        private readonly MediaStreamingConfiguration _config;
+        private readonly FlvConfiguration _config;
         private readonly ILogger<FlvClientHandler> _logger;
         private readonly string _streamPath;
         private readonly IFlvClient _client;
@@ -26,7 +26,7 @@ namespace LiveStreamingServerNet.Flv.Test.Services
             _fixture = new Fixture();
             _streamManager = Substitute.For<IFlvStreamManagerService>();
             _mediaTagCacher = Substitute.For<IFlvMediaTagCacherService>();
-            _config = new MediaStreamingConfiguration();
+            _config = new FlvConfiguration();
             _logger = Substitute.For<ILogger<FlvClientHandler>>();
 
             _streamPath = _fixture.Create<string>();

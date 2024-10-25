@@ -13,6 +13,14 @@ namespace LiveStreamingServerNet.Flv.Installer
             _services = services;
         }
 
+        public IFlvConfigurator Configure(Action<FlvConfiguration>? configure)
+        {
+            if (configure != null)
+                _services.Configure(configure);
+
+            return this;
+        }
+
         public IFlvConfigurator ConfigureMediaStreaming(Action<MediaStreamingConfiguration>? configure)
         {
             if (configure != null)

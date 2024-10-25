@@ -25,12 +25,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
 
         public ValueTask OnRtmpStreamUnpublishedAsync(IEventContext context, uint clientId, string streamPath)
         {
-            if (_streamManager.StopPublishingStream(streamPath, out var existingSubscribers))
-            {
-                foreach (var subscriber in existingSubscribers)
-                    subscriber.Stop();
-            }
-
+            _streamManager.StopPublishingStream(streamPath, out _);
             return ValueTask.CompletedTask;
         }
 

@@ -23,14 +23,22 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
             var streamContext = _streamManager.GetFlvStreamContext(streamPath);
             if (streamContext == null)
                 return;
-
+            
             streamContext.SetReady();
+            streamContext.UpdateTimestamp(timestamp, mediaType);
 
             var subscribers = _streamManager.GetSubscribers(streamPath);
             if (!subscribers.Any())
                 return;
 
-            await _mediaTagBroadcaster.BroadcastMediaTagAsync(streamContext, subscribers, mediaType, timestamp, isSkippable, rentedBuffer);
+            var currentTimestamp = mediaType switch
+            {
+                MediaType.Audio => streamContext.AudioTimestamp,
+                MediaType.Video => streamContext.VideoTimestamp,
+                _ => throw new ArgumentOutOfRangeException(nameof(mediaType), mediaType, null)
+            };
+            
+            await _mediaTagBroadcaster.BroadcastMediaTagAsync(streamContext, subscribers, mediaType, currentTimestamp, isSkippable, rentedBuffer);
         }
     }
 }

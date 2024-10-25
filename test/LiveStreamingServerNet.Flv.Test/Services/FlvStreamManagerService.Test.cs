@@ -1,8 +1,10 @@
 ﻿using AutoFixture;
 using FluentAssertions;
+using LiveStreamingServerNet.Flv.Configurations;
 using LiveStreamingServerNet.Flv.Internal.Contracts;
 using LiveStreamingServerNet.Flv.Internal.Services;
 using LiveStreamingServerNet.Flv.Internal.Services.Contracts;
+using Microsoft.Extensions.Options;
 using NSubstitute;
 
 namespace LiveStreamingServerNet.Flv.Test.Services
@@ -10,10 +12,14 @@ namespace LiveStreamingServerNet.Flv.Test.Services
     public class FlvStreamManagerServiceTest
     {
         private readonly IFixture _fixture;
+        private readonly FlvConfiguration _config;
+        private readonly FlvStreamManagerService _sut;
 
         public FlvStreamManagerServiceTest()
         {
             _fixture = new Fixture();
+            _config = new FlvConfiguration();
+            _sut = new FlvStreamManagerService(Options.Create(_config));
         }
 
         [Fact]
@@ -24,14 +30,12 @@ namespace LiveStreamingServerNet.Flv.Test.Services
             var streamContext = Substitute.For<IFlvStreamContext>();
             streamContext.StreamPath.Returns(streamPath);
 
-            var sut = new FlvStreamManagerService();
-
             // Act
-            var result = sut.StartPublishingStream(streamContext);
+            var result = _sut.StartPublishingStream(streamContext);
 
             // Assert
             result.Should().Be(PublishingStreamResult.Succeeded);
-            sut.IsStreamPathPublishing(streamPath, false).Should().BeTrue();
+            _sut.IsStreamPathPublishing(streamPath, false).Should().BeTrue();
         }
 
         [Fact]
@@ -42,11 +46,10 @@ namespace LiveStreamingServerNet.Flv.Test.Services
             var streamContext = Substitute.For<IFlvStreamContext>();
             streamContext.StreamPath.Returns(streamPath);
 
-            var sut = new FlvStreamManagerService();
-            sut.StartPublishingStream(streamContext);
+            _sut.StartPublishingStream(streamContext);
 
             // Act
-            var result = sut.StartPublishingStream(streamContext);
+            var result = _sut.StartPublishingStream(streamContext);
 
             // Assert
             result.Should().Be(PublishingStreamResult.AlreadyExists);
@@ -60,15 +63,14 @@ namespace LiveStreamingServerNet.Flv.Test.Services
             var streamContext = Substitute.For<IFlvStreamContext>();
             streamContext.StreamPath.Returns(streamPath);
 
-            var sut = new FlvStreamManagerService();
-            sut.StartPublishingStream(streamContext);
+            _sut.StartPublishingStream(streamContext);
 
             // Act
-            var result = sut.StopPublishingStream(streamPath, out _);
+            var result = _sut.StopPublishingStream(streamPath, out _);
 
             // Assert
             result.Should().BeTrue();
-            sut.IsStreamPathPublishing(streamPath, false).Should().BeFalse();
+            _sut.IsStreamPathPublishing(streamPath, false).Should().BeFalse();
         }
 
         [Fact]
@@ -76,10 +78,9 @@ namespace LiveStreamingServerNet.Flv.Test.Services
         {
             // Arrange
             var streamPath = _fixture.Create<string>();
-            var sut = new FlvStreamManagerService();
 
             // Act
-            var result = sut.StopPublishingStream(streamPath, out _);
+            var result = _sut.StopPublishingStream(streamPath, out _);
 
             // Assert
             result.Should().BeFalse();
@@ -93,11 +94,10 @@ namespace LiveStreamingServerNet.Flv.Test.Services
             var streamContext = Substitute.For<IFlvStreamContext>();
             streamContext.StreamPath.Returns(streamPath);
 
-            var sut = new FlvStreamManagerService();
-            sut.StartPublishingStream(streamContext);
+            _sut.StartPublishingStream(streamContext);
 
             // Act
-            var result = sut.IsStreamPathPublishing(streamPath, false);
+            var result = _sut.IsStreamPathPublishing(streamPath, false);
 
             // Assert
             result.Should().BeTrue();
@@ -108,10 +108,9 @@ namespace LiveStreamingServerNet.Flv.Test.Services
         {
             // Arrange
             var streamPath = _fixture.Create<string>();
-            var sut = new FlvStreamManagerService();
 
             // Act
-            var result = sut.IsStreamPathPublishing(streamPath, false);
+            var result = _sut.IsStreamPathPublishing(streamPath, false);
 
             // Assert
             result.Should().BeFalse();
@@ -127,15 +126,14 @@ namespace LiveStreamingServerNet.Flv.Test.Services
             streamContext.StreamPath.Returns(streamPath);
             streamContext.IsReady.Returns(true);
 
-            var sut = new FlvStreamManagerService();
-            sut.StartPublishingStream(streamContext);
+            _sut.StartPublishingStream(streamContext);
 
             // Act
-            var result = sut.StartSubscribingStream(flvClient, streamPath, true);
+            var result = _sut.StartSubscribingStream(flvClient, streamPath, true);
 
             // Assert
             result.Should().Be(SubscribingStreamResult.Succeeded);
-            sut.GetSubscribers(streamPath).Should().Contain(flvClient);
+            _sut.GetSubscribers(streamPath).Should().Contain(flvClient);
         }
 
         [Fact]
@@ -148,12 +146,11 @@ namespace LiveStreamingServerNet.Flv.Test.Services
             streamContext.StreamPath.Returns(streamPath);
             streamContext.IsReady.Returns(true);
 
-            var sut = new FlvStreamManagerService();
-            sut.StartPublishingStream(streamContext);
-            sut.StartSubscribingStream(flvClient, streamPath, true);
+            _sut.StartPublishingStream(streamContext);
+            _sut.StartSubscribingStream(flvClient, streamPath, true);
 
             // Act
-            var result = sut.StartSubscribingStream(flvClient, streamPath, true);
+            var result = _sut.StartSubscribingStream(flvClient, streamPath, true);
 
             // Assert
             result.Should().Be(SubscribingStreamResult.AlreadySubscribing);
@@ -169,16 +166,15 @@ namespace LiveStreamingServerNet.Flv.Test.Services
             streamContext.StreamPath.Returns(streamPath);
             streamContext.IsReady.Returns(true);
 
-            var sut = new FlvStreamManagerService();
-            sut.StartPublishingStream(streamContext);
-            sut.StartSubscribingStream(flvClient, streamPath, true);
+            _sut.StartPublishingStream(streamContext);
+            _sut.StartSubscribingStream(flvClient, streamPath, true);
 
             // Act
-            var result = sut.StopSubscribingStream(flvClient);
+            var result = _sut.StopSubscribingStream(flvClient);
 
             // Assert
             result.Should().BeTrue();
-            sut.GetSubscribers(streamPath).Should().NotContain(flvClient);
+            _sut.GetSubscribers(streamPath).Should().NotContain(flvClient);
         }
 
         [Fact]
@@ -186,10 +182,9 @@ namespace LiveStreamingServerNet.Flv.Test.Services
         {
             // Arrange
             var flvClient = Substitute.For<IFlvClient>();
-            var sut = new FlvStreamManagerService();
 
             // Act
-            var result = sut.StopSubscribingStream(flvClient);
+            var result = _sut.StopSubscribingStream(flvClient);
 
             // Assert
             result.Should().BeFalse();
@@ -207,13 +202,12 @@ namespace LiveStreamingServerNet.Flv.Test.Services
             streamContext.StreamPath.Returns(streamPath);
             streamContext.IsReady.Returns(true);
 
-            var sut = new FlvStreamManagerService();
-            sut.StartPublishingStream(streamContext);
-            sut.StartSubscribingStream(flvClient1, streamPath, true);
-            sut.StartSubscribingStream(flvClient2, streamPath, true);
+            _sut.StartPublishingStream(streamContext);
+            _sut.StartSubscribingStream(flvClient1, streamPath, true);
+            _sut.StartSubscribingStream(flvClient2, streamPath, true);
 
             // Act
-            var result = sut.GetSubscribers(streamPath);
+            var result = _sut.GetSubscribers(streamPath);
 
             // Assert
             result.Should().HaveCount(2);
@@ -233,13 +227,12 @@ namespace LiveStreamingServerNet.Flv.Test.Services
             streamContext.StreamPath.Returns(streamPath);
             streamContext.IsReady.Returns(true);
 
-            var sut = new FlvStreamManagerService();
-            sut.StartPublishingStream(streamContext);
-            sut.StartSubscribingStream(flvClient1, streamPath, true);
-            sut.StartSubscribingStream(flvClient2, streamPath, true);
+            _sut.StartPublishingStream(streamContext);
+            _sut.StartSubscribingStream(flvClient1, streamPath, true);
+            _sut.StartSubscribingStream(flvClient2, streamPath, true);
 
             // Act
-            var result = sut.StopPublishingStream(streamPath, out var existingSubscribers);
+            var result = _sut.StopPublishingStream(streamPath, out var existingSubscribers);
 
             // Assert
             existingSubscribers.Should().HaveCount(2);

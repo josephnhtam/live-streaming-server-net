@@ -10,8 +10,17 @@ namespace LiveStreamingServerNet.Flv.Internal.Contracts
         IReadOnlyDictionary<string, object>? StreamMetaData { get; set; }
         byte[]? VideoSequenceHeader { get; set; }
         byte[]? AudioSequenceHeader { get; set; }
+
+        uint VideoTimestamp { get; }
+        uint AudioTimestamp { get; }
+        bool UpdateTimestamp(uint timestamp, MediaType mediaType);
+
+        uint TimestampOffset { get; }
+        void SetTimestampOffset(uint timestampOffset);
+
         IGroupOfPicturesCache GroupOfPicturesCache { get; }
         bool IsReady { get; }
+
         Task UntilReadyAsync(CancellationToken cancellationToken = default);
 
         void SetReady();

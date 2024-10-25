@@ -1,4 +1,5 @@
 ﻿using LiveStreamingServerNet.Flv.Internal.Contracts;
+using LiveStreamingServerNet.Rtmp;
 using LiveStreamingServerNet.Utilities.Buffers;
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using LiveStreamingServerNet.Utilities.Extensions;
@@ -14,6 +15,13 @@ namespace LiveStreamingServerNet.Flv.Internal
         public byte[]? AudioSequenceHeader { get; set; }
         public IGroupOfPicturesCache GroupOfPicturesCache { get; }
         public bool IsReady => _isReady || _readyTcs.Task.IsCompletedSuccessfully;
+        public uint VideoTimestamp => _videoTimestamp + _timestampOffset;
+        public uint AudioTimestamp => _audioTimestamp + _timestampOffset;
+        public uint TimestampOffset => _timestampOffset;
+
+        private uint _videoTimestamp;
+        private uint _audioTimestamp;
+        private uint _timestampOffset;
 
         private bool _isReady;
         private TaskCompletionSource _readyTcs = new();
@@ -23,6 +31,44 @@ namespace LiveStreamingServerNet.Flv.Internal
             StreamPath = streamPath;
             StreamArguments = new Dictionary<string, string>(streamArguments);
             GroupOfPicturesCache = new GroupOfPicturesCache(bufferPool);
+        }
+
+        public bool UpdateTimestamp(uint timestamp, MediaType mediaType)
+        {
+            switch (mediaType)
+            {
+                case MediaType.Video:
+                    return UpdateTimestamp(ref _videoTimestamp, timestamp);
+
+                case MediaType.Audio:
+                    return UpdateTimestamp(ref _audioTimestamp, timestamp);
+
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(mediaType), mediaType, null);
+            }
+        }
+
+        private static bool UpdateTimestamp(ref uint currentTimestamp, uint newTimestamp)
+        {
+            while (true)
+            {
+                var original = currentTimestamp;
+
+                if (newTimestamp < original)
+                {
+                    return false;
+                }
+
+                if (Interlocked.CompareExchange(ref currentTimestamp, newTimestamp, original) == original)
+                {
+                    return true;
+                }
+            }
+        }
+
+        public void SetTimestampOffset(uint timestampOffset)
+        {
+            _timestampOffset = timestampOffset;
         }
 
         public void SetReady()

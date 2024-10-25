@@ -41,7 +41,7 @@ namespace LiveStreamingServerNet.Flv.Test.Services
         }
 
         [Fact]
-        public async Task OnRtmpStreamUnpublishedAsync_Should_StopPublishingStreamAndStopSubscribers()
+        public async Task OnRtmpStreamUnpublishedAsync_Should_StopPublishingStream()
         {
             // Arrange
             var clientId = _fixture.Create<uint>();
@@ -63,8 +63,6 @@ namespace LiveStreamingServerNet.Flv.Test.Services
 
             // Assert
             _streamManager.Received(1).StopPublishingStream(streamPath, out _);
-            client1.Received(1).Stop();
-            client2.Received(1).Stop();
         }
 
         [Fact]

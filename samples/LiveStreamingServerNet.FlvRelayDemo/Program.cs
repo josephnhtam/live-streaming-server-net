@@ -37,7 +37,8 @@ namespace LiveStreamingServerNet.FlvRelayDemo
                 new IPEndPoint(IPAddress.Any, rtmpPort),
                 options =>
                 {
-                    options.AddFlv();
+                    options.AddFlv(options => options.Configure(options =>
+                        options.StreamContinuationTimeout = TimeSpan.FromSeconds(30)));
 
                     options.Configure(options =>
                         // Setting a non-zero timeout enables the stream to be resumed within this period,
