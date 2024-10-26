@@ -320,7 +320,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Streams
                 initialTimestamp = eventArgs.Timestamp;
             }
 
-            return initialTimestamp.HasValue ? timestampBase + eventArgs.Timestamp - initialTimestamp.Value : 0u;
+            return timestampBase + (initialTimestamp.HasValue ? eventArgs.Timestamp - initialTimestamp.Value : 0u);
 
             static bool IsNonHeaderData(MediaType type, ReadOnlySpan<byte> buffer)
             {
