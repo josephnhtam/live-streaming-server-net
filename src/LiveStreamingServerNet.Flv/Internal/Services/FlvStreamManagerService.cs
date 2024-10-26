@@ -77,7 +77,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
                     {
                         if (_config.StreamContinuationTimeout > TimeSpan.Zero)
                         {
-                            var timestamp = Math.Max(streamContext.VideoTimestamp, streamContext.AudioTimestamp);
+                            var timestamp = streamContext.TimestampOffset + Math.Max(streamContext.VideoTimestamp, streamContext.AudioTimestamp);
                             CreateStreamContinuationContext(streamPath, timestamp, existingSubscribers.AsReadOnly());
                         }
                         else

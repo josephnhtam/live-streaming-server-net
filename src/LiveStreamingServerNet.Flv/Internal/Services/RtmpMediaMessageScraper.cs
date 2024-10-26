@@ -23,7 +23,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
             var streamContext = _streamManager.GetFlvStreamContext(streamPath);
             if (streamContext == null)
                 return;
-            
+
             streamContext.SetReady();
             streamContext.UpdateTimestamp(timestamp, mediaType);
 
@@ -37,7 +37,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
                 MediaType.Video => streamContext.VideoTimestamp,
                 _ => throw new ArgumentOutOfRangeException(nameof(mediaType), mediaType, null)
             };
-            
+
             await _mediaTagBroadcaster.BroadcastMediaTagAsync(streamContext, subscribers, mediaType, currentTimestamp, isSkippable, rentedBuffer);
         }
     }

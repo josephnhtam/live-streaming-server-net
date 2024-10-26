@@ -147,7 +147,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
                     {
                         if (allowContinuation && _config.PublishStreamContinuationTimeout > TimeSpan.Zero)
                         {
-                            var timestamp = Math.Max(publishStreamContext.VideoTimestamp, publishStreamContext.AudioTimestamp);
+                            var timestamp = publishStreamContext.TimestampOffset + Math.Max(publishStreamContext.VideoTimestamp, publishStreamContext.AudioTimestamp);
                             CreatePublishStreamContinuationContext(streamPath, timestamp, subscribeStreamContexts);
                         }
                         else

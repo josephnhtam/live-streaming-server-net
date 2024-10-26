@@ -4,7 +4,6 @@ using LiveStreamingServerNet.Rtmp.Server.Internal.Services.Contracts;
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using LiveStreamingServerNet.Utilities.Common;
 using LiveStreamingServerNet.Utilities.Common.Contracts;
-using System.Diagnostics;
 
 namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
 {
@@ -38,10 +37,8 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
 
                 try
                 {
-                    Debug.Assert(timestamp >= publishStreamContext.TimestampOffset);
-
                     foreach (var interceptor in _interceptors)
-                        await interceptor.OnCachePictureAsync(clientId, streamPath, mediaType, rentedBuffer, timestamp - publishStreamContext.TimestampOffset);
+                        await interceptor.OnCachePictureAsync(clientId, streamPath, mediaType, rentedBuffer, timestamp);
                 }
                 finally
                 {

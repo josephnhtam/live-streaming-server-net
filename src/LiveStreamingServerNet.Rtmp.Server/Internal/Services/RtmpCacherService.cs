@@ -107,10 +107,8 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
             if (publishStreamContext.StreamMetaData == null)
                 return;
 
-            var timestamp = publishStreamContext.TimestampOffset;
-
             var basicHeader = new RtmpChunkBasicHeader(0, subscribeStreamContext.DataChunkStreamId);
-            var messageHeader = new RtmpChunkMessageHeaderType0(timestamp, RtmpMessageType.DataMessageAmf0, subscribeStreamContext.StreamContext.StreamId);
+            var messageHeader = new RtmpChunkMessageHeaderType0(publishStreamContext.TimestampOffset, RtmpMessageType.DataMessageAmf0, subscribeStreamContext.StreamContext.StreamId);
 
             _chunkMessageSender.Send(subscribeStreamContext.StreamContext.ClientContext, basicHeader, messageHeader, (dataBuffer) =>
                 dataBuffer.WriteAmf(new List<object?>
@@ -134,10 +132,8 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
                 var chunkStreamId = group.Key.DataChunkStreamId;
                 var clientContexts = group.Select(x => x.StreamContext.ClientContext).ToList();
 
-                var timestamp = publishStreamContext.TimestampOffset;
-
                 var basicHeader = new RtmpChunkBasicHeader(0, chunkStreamId);
-                var messageHeader = new RtmpChunkMessageHeaderType0(timestamp, RtmpMessageType.DataMessageAmf0, streamId);
+                var messageHeader = new RtmpChunkMessageHeaderType0(publishStreamContext.TimestampOffset, RtmpMessageType.DataMessageAmf0, streamId);
 
                 _chunkMessageSender.Send(clientContexts, basicHeader, messageHeader, (dataBuffer) =>
                     dataBuffer.WriteAmf(new List<object?>
@@ -164,7 +160,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
                         picture.Type,
                         picture.Payload.Buffer,
                         picture.Payload.Size,
-                        picture.Timestamp,
+                        picture.Timestamp + publishStreamContext.TimestampOffset,
                         false);
                 }
             }
