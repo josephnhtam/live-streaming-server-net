@@ -163,8 +163,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
             void CreatePublishStreamContinuationContext(
                 string streamPath, uint timestamp, IReadOnlyList<IRtmpSubscribeStreamContext> subscribeStreamContexts)
             {
-                var continuationContext = new PublishStreamContinuationContext(
-                    streamPath, timestamp, _config.PublishStreamContinuationTimeout, subscribeStreamContexts);
+                var continuationContext = new PublishStreamContinuationContext(streamPath, timestamp, subscribeStreamContexts);
 
                 if (_publishStreamContinuationContexts.Remove(streamPath, out var existingContext))
                 {
@@ -173,8 +172,8 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
 
                 _publishStreamContinuationContexts[streamPath] = continuationContext;
 
-                continuationContext.SetExpirationCallback(() =>
-                    FinalizePublishStreamContinuationContext(continuationContext));
+                continuationContext.SetExpirationCallback(_config.PublishStreamContinuationTimeout,
+                    () => FinalizePublishStreamContinuationContext(continuationContext));
             }
         }
 
@@ -479,52 +478,30 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
             public uint Timestamp { get; }
             public List<uint> SubscriberClientIds { get; }
 
-            private readonly Timer _expirationTimer;
-
-            private int _isExpired;
+            private readonly CancellationTokenSource _cts = new();
             private int _isDisposed;
-            private Action? _expirationCallback;
 
             public PublishStreamContinuationContext(
                 string streamPath,
                 uint timestamp,
-                TimeSpan expiration,
                 IReadOnlyList<IRtmpSubscribeStreamContext> subscribeStreamContexts)
             {
                 StreamPath = streamPath;
                 Timestamp = timestamp;
                 SubscriberClientIds = subscribeStreamContexts.Select(x => x.StreamContext.ClientContext.Client.Id).ToList();
-
-                _expirationTimer = new Timer(
-                    OnExpiration, null,
-                    expiration,
-                    Timeout.InfiniteTimeSpan);
             }
 
-            private void OnExpiration(object? state)
+            public void SetExpirationCallback(TimeSpan expiration, Action callback)
             {
-                if (_isDisposed == 1)
+                _ = Task.Run(async () =>
                 {
-                    return;
-                }
-
-                if (Interlocked.CompareExchange(ref _isExpired, 1, 0) == 1)
-                {
-                    return;
-                }
-
-                _expirationCallback?.Invoke();
-            }
-
-            public void SetExpirationCallback(Action callback)
-            {
-                if (_isExpired == 1 || _isDisposed == 1)
-                {
-                    callback();
-                    return;
-                }
-
-                _expirationCallback = callback;
+                    try
+                    {
+                        await Task.Delay(expiration, _cts.Token);
+                        callback.Invoke();
+                    }
+                    catch (OperationCanceledException) when (_cts.IsCancellationRequested) { }
+                });
             }
 
             public void Dispose()
@@ -532,7 +509,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
                 if (Interlocked.CompareExchange(ref _isDisposed, 1, 0) == 1)
                     return;
 
-                _expirationTimer.Dispose();
+                _cts.Cancel();
             }
         }
     }
