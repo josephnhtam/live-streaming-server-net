@@ -46,17 +46,17 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
                 _publishingStreamContexts.Add(streamPath, streamContext);
                 return PublishingStreamResult.Succeeded;
             }
-        }
 
-        private void HandleStreamContinuation(string streamPath, IFlvStreamContext streamContext)
-        {
-            if (!_streamContinuationContexts.Remove(streamPath, out var continuationContext))
+            void HandleStreamContinuation(string streamPath, IFlvStreamContext streamContext)
             {
-                return;
-            }
+                if (!_streamContinuationContexts.Remove(streamPath, out var continuationContext))
+                {
+                    return;
+                }
 
-            streamContext.SetTimestampOffset(continuationContext.Timestamp);
-            continuationContext.Dispose();
+                streamContext.SetTimestampOffset(continuationContext.Timestamp);
+                continuationContext.Dispose();
+            }
         }
 
         public bool StopPublishingStream(string streamPath, bool allowContinuation, out IList<IFlvClient> existingSubscribers)
@@ -71,7 +71,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
                         return false;
                     }
 
-                    existingSubscribers = _subscribingClients.GetValueOrDefault(streamPath, new List<IFlvClient>());
+                    existingSubscribers = _subscribingClients.GetValueOrDefault(streamPath)?.ToList() ?? new List<IFlvClient>();
 
                     if (existingSubscribers.Any())
                     {
