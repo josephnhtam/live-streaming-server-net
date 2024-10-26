@@ -2,6 +2,7 @@
 using LiveStreamingServerNet.Rtmp.Server.Contracts;
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using LiveStreamingServerNet.Utilities.Contracts;
+using LiveStreamingServerNet.Utilities.Extensions;
 
 namespace LiveStreamingServerNet.Flv.Internal.Services
 {
@@ -25,7 +26,8 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
 
         public ValueTask OnRtmpStreamUnpublishedAsync(IEventContext context, uint clientId, string streamPath)
         {
-            _streamManager.StopPublishingStream(streamPath, out _);
+            var allowContinuation = context.Items.GetValueOrDefault("AllowContinuation", false);
+            _streamManager.StopPublishingStream(streamPath, allowContinuation, out _);
             return ValueTask.CompletedTask;
         }
 

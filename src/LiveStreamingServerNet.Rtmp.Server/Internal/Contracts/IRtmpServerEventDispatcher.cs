@@ -13,7 +13,7 @@
     internal interface IRtmpServerStreamEventDispatcher
     {
         ValueTask RtmpStreamPublishedAsync(IRtmpPublishStreamContext publishStreamContext);
-        ValueTask RtmpStreamUnpublishedAsync(IRtmpPublishStreamContext publishStreamContext);
+        ValueTask RtmpStreamUnpublishedAsync(IRtmpPublishStreamContext publishStreamContext, bool allowContinuation);
         ValueTask RtmpStreamMetaDataReceivedAsync(IRtmpPublishStreamContext publishStreamContext);
 
         ValueTask RtmpStreamSubscribedAsync(IRtmpSubscribeStreamContext subscribeStreamContext);

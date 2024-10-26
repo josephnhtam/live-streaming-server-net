@@ -268,7 +268,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
 
             if (result.Result)
             {
-                await _eventDispatcher.RtmpStreamUnpublishedAsync(publishStreamContext);
+                await _eventDispatcher.RtmpStreamUnpublishedAsync(publishStreamContext, allowContinuation);
             }
 
             return result;
