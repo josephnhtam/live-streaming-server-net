@@ -52,9 +52,9 @@ namespace LiveStreamingServerNet.Flv.Test.Services
             var client2 = Substitute.For<IFlvClient>();
             var subscribers = new List<IFlvClient>() { client1, client2 };
 
-            _streamManager.StopPublishingStream(streamPath, false, out _).Returns(x =>
+            _streamManager.StopPublishingStream(streamPath, Arg.Any<bool>(), out _).Returns(x =>
             {
-                x[1] = subscribers;
+                x[2] = subscribers;
                 return true;
             });
 
@@ -62,7 +62,7 @@ namespace LiveStreamingServerNet.Flv.Test.Services
             await _sut.OnRtmpStreamUnpublishedAsync(_context, clientId, streamPath);
 
             // Assert
-            _streamManager.Received(1).StopPublishingStream(streamPath, false, out _);
+            _streamManager.Received(1).StopPublishingStream(streamPath, Arg.Any<bool>(), out _);
         }
 
         [Fact]
