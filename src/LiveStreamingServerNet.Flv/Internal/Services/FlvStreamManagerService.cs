@@ -94,8 +94,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
 
             void CreateStreamContinuationContext(string streamPath, uint timestamp, IReadOnlyList<IFlvClient> subscribers)
             {
-                var continuationContext = new FlvStreamContinuationContext(
-                    streamPath, timestamp, _config.StreamContinuationTimeout, subscribers);
+                var continuationContext = new FlvStreamContinuationContext(streamPath, timestamp, subscribers);
 
                 if (_streamContinuationContexts.Remove(streamPath, out var existingContext))
                 {
@@ -104,8 +103,9 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
 
                 _streamContinuationContexts[streamPath] = continuationContext;
 
-                continuationContext.SetExpirationCallback(() =>
-                    FinalizeStreamContinuationContext(continuationContext));
+                continuationContext.SetExpirationCallback(
+                     _config.StreamContinuationTimeout,
+                    () => FinalizeStreamContinuationContext(continuationContext));
             }
         }
 
@@ -207,52 +207,30 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
             public uint Timestamp { get; }
             public List<string> SubscriberClientIds { get; }
 
-            private readonly Timer _expirationTimer;
-
-            private int _isExpired;
+            private readonly CancellationTokenSource _cts = new();
             private int _isDisposed;
-            private Action? _expirationCallback;
 
             public FlvStreamContinuationContext(
                 string streamPath,
                 uint timestamp,
-                TimeSpan expiration,
                 IReadOnlyList<IFlvClient> subscribers)
             {
                 StreamPath = streamPath;
                 Timestamp = timestamp;
                 SubscriberClientIds = subscribers.Select(x => x.ClientId).ToList();
-
-                _expirationTimer = new Timer(
-                    OnExpiration, null,
-                    expiration,
-                    Timeout.InfiniteTimeSpan);
             }
 
-            private void OnExpiration(object? state)
+            public void SetExpirationCallback(TimeSpan expiration, Action callback)
             {
-                if (_isDisposed == 1)
+                _ = Task.Run(async () =>
                 {
-                    return;
-                }
-
-                if (Interlocked.CompareExchange(ref _isExpired, 1, 0) == 1)
-                {
-                    return;
-                }
-
-                _expirationCallback?.Invoke();
-            }
-
-            public void SetExpirationCallback(Action callback)
-            {
-                if (_isExpired == 1 || _isDisposed == 1)
-                {
-                    callback();
-                    return;
-                }
-
-                _expirationCallback = callback;
+                    try
+                    {
+                        await Task.Delay(expiration, _cts.Token);
+                        callback.Invoke();
+                    }
+                    catch (OperationCanceledException) when (_cts.IsCancellationRequested) { }
+                });
             }
 
             public void Dispose()
@@ -260,7 +238,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
                 if (Interlocked.CompareExchange(ref _isDisposed, 1, 0) == 1)
                     return;
 
-                _expirationTimer.Dispose();
+                _cts.Cancel();
             }
         }
     }
