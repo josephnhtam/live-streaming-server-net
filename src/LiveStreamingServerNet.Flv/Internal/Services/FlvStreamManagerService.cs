@@ -207,11 +207,10 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
             public uint Timestamp { get; }
             public List<string> SubscriberClientIds { get; }
 
-            private readonly object _syncLock = new();
             private readonly Timer _expirationTimer;
 
-            private bool _isExpired;
-            private bool _isDisposed;
+            private int _isExpired;
+            private int _isDisposed;
             private Action? _expirationCallback;
 
             public FlvStreamContinuationContext(
@@ -232,43 +231,36 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
 
             private void OnExpiration(object? state)
             {
-                lock (_syncLock)
+                if (_isDisposed == 1)
                 {
-                    if (_isExpired || _isDisposed)
-                    {
-                        return;
-                    }
-
-                    _expirationCallback?.Invoke();
-                    _isExpired = true;
+                    return;
                 }
+
+                if (Interlocked.CompareExchange(ref _isExpired, 1, 0) == 1)
+                {
+                    return;
+                }
+
+                _expirationCallback?.Invoke();
             }
 
             public void SetExpirationCallback(Action callback)
             {
-                lock (_syncLock)
+                if (_isExpired == 1 || _isDisposed == 1)
                 {
-                    if (_isExpired || _isDisposed)
-                    {
-                        callback();
-                        return;
-                    }
-
-                    _expirationCallback = callback;
+                    callback();
+                    return;
                 }
+
+                _expirationCallback = callback;
             }
 
             public void Dispose()
             {
-                lock (_syncLock)
-                {
-                    _isDisposed = true;
+                if (Interlocked.CompareExchange(ref _isDisposed, 1, 0) == 1)
+                    return;
 
-                    if (_isDisposed)
-                        return;
-
-                    _expirationTimer.Dispose();
-                }
+                _expirationTimer.Dispose();
             }
         }
     }
