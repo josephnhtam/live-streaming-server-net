@@ -5,5 +5,6 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Services.Contracts
     internal interface IRtmpDownstreamManagerService
     {
         Task<IRtmpDownstreamSubscriber?> RequestDownstreamAsync(string streamPath);
+        bool IsDownstreamRequested(string streamPath);
     }
 }

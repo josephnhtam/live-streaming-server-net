@@ -53,6 +53,14 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Services
             }
         }
 
+        public bool IsDownstreamRequested(string streamPath)
+        {
+            lock (_syncLock)
+            {
+                return _downstreamSubscribers.ContainsKey(streamPath);
+            }
+        }
+
         private IRtmpDownstreamSubscriber CreateDownstreamSubscriber(string streamPath)
         {
             lock (_syncLock)

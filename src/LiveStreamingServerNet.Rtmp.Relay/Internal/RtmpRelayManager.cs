@@ -16,5 +16,10 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal
         {
             return _downstreamManager.RequestDownstreamAsync(streamPath);
         }
+
+        public bool IsDownstreamRequested(string streamPath)
+        {
+            return _downstreamManager.IsDownstreamRequested(streamPath);
+        }
     }
 }
