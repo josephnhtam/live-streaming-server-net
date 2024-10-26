@@ -15,8 +15,8 @@ namespace LiveStreamingServerNet.Flv.Internal
         public byte[]? AudioSequenceHeader { get; set; }
         public IGroupOfPicturesCache GroupOfPicturesCache { get; }
         public bool IsReady => _isReady || _readyTcs.Task.IsCompletedSuccessfully;
-        public uint VideoTimestamp => _videoTimestamp + _timestampOffset;
-        public uint AudioTimestamp => _audioTimestamp + _timestampOffset;
+        public uint VideoTimestamp => _videoTimestamp;
+        public uint AudioTimestamp => _audioTimestamp;
         public uint TimestampOffset => _timestampOffset;
 
         private uint _videoTimestamp;

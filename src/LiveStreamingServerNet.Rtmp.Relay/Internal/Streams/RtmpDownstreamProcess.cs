@@ -207,7 +207,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Streams
             RtmpOrigin origin, IRtmpPublishStreamContext publishStreamContext, Channel<StreamData> streamDataChannel,
             IIdleChecker idleChecker, IRetryCounter retryCounter, CancellationTokenSource abortCts)
         {
-            var timestampBase = Math.Min(publishStreamContext.VideoTimestamp, publishStreamContext.AudioTimestamp);
+            var timestampBase = publishStreamContext.TimestampOffset + Math.Min(publishStreamContext.VideoTimestamp, publishStreamContext.AudioTimestamp);
 
             await using var rtmpClient = CreateDownstreamClient();
             using var _ = abortCts.Token.Register(rtmpClient.Stop);

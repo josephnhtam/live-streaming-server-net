@@ -80,8 +80,8 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
         public string StreamPath { get; }
         public IReadOnlyDictionary<string, string> StreamArguments { get; }
 
-        public virtual uint VideoTimestamp => _videoTimestamp;
-        public virtual uint AudioTimestamp => _audioTimestamp;
+        public uint VideoTimestamp => _videoTimestamp;
+        public uint AudioTimestamp => _audioTimestamp;
 
         private uint _videoTimestamp;
         private uint _audioTimestamp;
@@ -146,8 +146,6 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
         public IGroupOfPicturesCache GroupOfPicturesCache { get; }
         public DateTime StartTime { get; }
 
-        public override uint VideoTimestamp => base.VideoTimestamp + _timestampOffset;
-        public override uint AudioTimestamp => base.AudioTimestamp + _timestampOffset;
         public uint TimestampOffset => _timestampOffset;
 
         public RtmpPublishStreamContext(

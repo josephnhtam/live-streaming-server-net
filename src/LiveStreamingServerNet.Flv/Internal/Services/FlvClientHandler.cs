@@ -77,7 +77,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
 
         private async ValueTask SendCachedFlvTagsAsync(IFlvClient client, IFlvStreamContext streamContext, CancellationToken cancellationToken)
         {
-            await _mediaTagCacher.SendCachedHeaderTagsAsync(client, streamContext, streamContext.TimestampOffset, cancellationToken);
+            await _mediaTagCacher.SendCachedHeaderTagsAsync(client, streamContext, 0, cancellationToken);
             await _mediaTagCacher.SendCachedGroupOfPicturesTagsAsync(client, streamContext, cancellationToken);
         }
     }

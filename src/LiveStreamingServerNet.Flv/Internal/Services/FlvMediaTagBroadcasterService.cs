@@ -39,7 +39,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
 
             var mediaPacket = new ClientMediaPacket(
                 mediaType,
-                timestamp,
+                timestamp + streamContext.TimestampOffset,
                 rentedBuffer,
                 isSkippable);
 
