@@ -59,7 +59,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
             continuationContext.Dispose();
         }
 
-        public bool StopPublishingStream(string streamPath, out IList<IFlvClient> existingSubscribers)
+        public bool StopPublishingStream(string streamPath, bool allowContinuation, out IList<IFlvClient> existingSubscribers)
         {
             lock (_publishingSyncLock)
             {
@@ -75,7 +75,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
 
                     if (existingSubscribers.Any())
                     {
-                        if (_config.StreamContinuationTimeout > TimeSpan.Zero)
+                        if (allowContinuation && _config.StreamContinuationTimeout > TimeSpan.Zero)
                         {
                             var timestamp = streamContext.TimestampOffset + Math.Max(streamContext.VideoTimestamp, streamContext.AudioTimestamp);
                             CreateStreamContinuationContext(streamPath, timestamp, existingSubscribers.AsReadOnly());

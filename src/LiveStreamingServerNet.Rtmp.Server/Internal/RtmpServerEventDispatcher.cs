@@ -163,11 +163,12 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
             }
         }
 
-        public async ValueTask RtmpStreamUnpublishedAsync(IRtmpPublishStreamContext publishStreamContext)
+        public async ValueTask RtmpStreamUnpublishedAsync(IRtmpPublishStreamContext publishStreamContext, bool allowContinuation)
         {
             try
             {
                 using var context = EventContext.Obtain();
+                context.Items["AllowContinuation"] = allowContinuation;
 
                 foreach (var eventHandler in GetEventHandlers())
                     await eventHandler.OnRtmpStreamUnpublishedAsync(context, publishStreamContext);

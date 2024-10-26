@@ -66,7 +66,7 @@ namespace LiveStreamingServerNet.Flv.Test.Services
             _sut.StartPublishingStream(streamContext);
 
             // Act
-            var result = _sut.StopPublishingStream(streamPath, out _);
+            var result = _sut.StopPublishingStream(streamPath, false, out _);
 
             // Assert
             result.Should().BeTrue();
@@ -80,7 +80,7 @@ namespace LiveStreamingServerNet.Flv.Test.Services
             var streamPath = _fixture.Create<string>();
 
             // Act
-            var result = _sut.StopPublishingStream(streamPath, out _);
+            var result = _sut.StopPublishingStream(streamPath, false, out _);
 
             // Assert
             result.Should().BeFalse();
@@ -232,7 +232,7 @@ namespace LiveStreamingServerNet.Flv.Test.Services
             _sut.StartSubscribingStream(flvClient2, streamPath, true);
 
             // Act
-            var result = _sut.StopPublishingStream(streamPath, out var existingSubscribers);
+            var result = _sut.StopPublishingStream(streamPath, false, out var existingSubscribers);
 
             // Assert
             existingSubscribers.Should().HaveCount(2);
