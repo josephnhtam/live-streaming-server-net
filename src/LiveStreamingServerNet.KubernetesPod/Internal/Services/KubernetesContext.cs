@@ -6,6 +6,7 @@ using LiveStreamingServerNet.KubernetesPod.Utilities;
 using LiveStreamingServerNet.KubernetesPod.Utilities.Contracts;
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
+using LiveStreamingServerNet.Utilities.Common;
 
 namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
 {
@@ -88,15 +89,15 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
 
                     using var timer = new Timer(_ =>
                     {
-                        if (watcherCts.IsCancellationRequested)
+                        if (watcherCancellation.IsCancellationRequested)
                             return;
 
                         var timeSinceLastEvent = DateTime.UtcNow - lastEventReceivedTime;
                         if (timeSinceLastEvent > reconnectCheck)
                         {
                             _logger.RestartingPodWatcher(lastEventReceivedTime);
-                            watcherCts.Cancel();
-                            watcher.Dispose();
+                            ErrorBoundary.Execute(watcherCts.Cancel);
+                            ErrorBoundary.Execute(watcher.Dispose);
                         }
                     },
                     state: null,
