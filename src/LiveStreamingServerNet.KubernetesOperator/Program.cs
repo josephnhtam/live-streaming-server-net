@@ -1,6 +1,5 @@
 using KubeOps.Operator;
 using LiveStreamingServerNet.KubernetesOperator.Installer;
-using Polly;
 
 namespace LiveStreamingServerNet.KubernetesOperator
 {
