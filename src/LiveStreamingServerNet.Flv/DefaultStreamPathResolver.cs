@@ -4,6 +4,11 @@ using Microsoft.AspNetCore.WebUtilities;
 
 namespace LiveStreamingServerNet.Flv
 {
+    /// <summary>
+    /// Default implementation of IStreamPathResolver that handles standard FLV stream paths.
+    /// Expects paths ending in '.flv' and converts query parameters to stream arguments.
+    /// e.g. '/live/stream.flv?arg1=value1&arg2=value2'
+    /// </summary>
     public class DefaultStreamPathResolver : IStreamPathResolver
     {
         public bool ResolveStreamPathAndArguments(HttpContext context, out string streamPath, out IDictionary<string, string> streamArguments)

@@ -23,12 +23,40 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace LiveStreamingServerNet.Rtmp.Server.Installer
 {
+    /// <summary>
+    /// Provides extension methods for installing and configuring RTMP server services.
+    /// </summary>
     public static class RtmpServerInstaller
     {
+        /// <summary>
+        /// Adds RTMP server services to the service collection.
+        /// </summary>
+        /// <param name="services">The service collection to add services to</param>
+        /// <returns>The service collection for method chaining</returns>
+        public static IServiceCollection AddRtmpServer(this IServiceCollection services)
+            => services.AddRtmpServer(null, null);
+
+        /// <summary>
+        /// Adds RTMP server services to the service collection.
+        /// </summary>
+        /// <param name="services">The service collection to add services to</param>
+        /// <param name="configureRtmpServer">Optional callback to configure the RTMP server</param>
+        /// <returns>The service collection for method chaining</returns>
+        public static IServiceCollection AddRtmpServer(
+            this IServiceCollection services, Action<IRtmpServerConfigurator>? configureRtmpServer)
+            => services.AddRtmpServer(configureRtmpServer, null);
+
+        /// <summary>
+        /// Adds RTMP server services to the service collection.
+        /// </summary>
+        /// <param name="services">The service collection to add services to</param>
+        /// <param name="configureRtmpServer">Optional callback to configure the RTMP server</param>
+        /// <param name="configureServer">Optional callback to configure the underlying server</param>
+        /// <returns>The service collection for method chaining</returns>
         public static IServiceCollection AddRtmpServer(
             this IServiceCollection services,
-            Action<IRtmpServerConfigurator>? configureRtmpServer = null,
-            Action<IServerConfigurator>? configureServer = null)
+            Action<IRtmpServerConfigurator>? configureRtmpServer,
+            Action<IServerConfigurator>? configureServer)
         {
             services.AddRtmpCore(configureServer)
                     .AddRtmpServices()

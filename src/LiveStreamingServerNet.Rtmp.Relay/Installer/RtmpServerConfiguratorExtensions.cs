@@ -15,9 +15,17 @@ using System.Collections.Immutable;
 
 namespace LiveStreamingServerNet.Rtmp.Relay.Installer
 {
+    /// <summary>
+    /// Provides extension methods for configuring RTMP relay functionality in an RTMP server.
+    /// </summary>
     public static class RtmpServerConfiguratorExtensions
     {
-
+        /// <summary>
+        /// Configures RTMP relay functionality using the specified origin resolver type.
+        /// </summary>
+        /// <typeparam name="TRtmpOriginResolver">The type implementing IRtmpOriginResolver</typeparam>
+        /// <param name="serverConfigurator">The RTMP server configurator</param>
+        /// <returns>An RTMP relay configurator for additional relay settings</returns>
         public static IRtmpRelayConfigurator UseRtmpRelay<TRtmpOriginResolver>(this IRtmpServerConfigurator serverConfigurator)
             where TRtmpOriginResolver : class, IRtmpOriginResolver
         {
@@ -29,6 +37,13 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Installer
             return new RtmpRelayConfigurator(services);
         }
 
+        /// <summary>
+        /// Configures RTMP relay functionality using a factory method to create the origin resolver.
+        /// </summary>
+        /// <typeparam name="TRtmpOriginResolver">The type implementing IRtmpOriginResolver</typeparam>
+        /// <param name="serverConfigurator">The RTMP server configurator</param>
+        /// <param name="implementationFactory">Factory method to create the origin resolver instance</param>
+        /// <returns>An RTMP relay configurator for additional relay settings</returns>
         public static IRtmpRelayConfigurator UseRtmpRelay<TRtmpOriginResolver>(
             this IRtmpServerConfigurator serverConfigurator, Func<IServiceProvider, TRtmpOriginResolver> implementationFactory)
         {

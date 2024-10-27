@@ -12,10 +12,30 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace LiveStreamingServerNet.Networking.Server.Installer
 {
+    /// <summary>
+    /// Extension methods for registering TCP server services.
+    /// </summary>
     public static class ServerInstaller
     {
+        /// <summary>
+        /// Adds TCP server services to the service collection.
+        /// </summary>
+        /// <typeparam name="TClientSessionHandlerFactory">Type of session handler factory to use.</typeparam>
+        /// <param name="services">The service collection to add to.</param>
+        /// <returns>The service collection for chaining.</returns>
+        public static IServiceCollection AddServer<TClientSessionHandlerFactory>(this IServiceCollection services)
+            where TClientSessionHandlerFactory : class, ISessionHandlerFactory
+            => AddServer<TClientSessionHandlerFactory>(services, null);
+
+        /// <summary>
+        /// Adds TCP server services to the service collection.
+        /// </summary>
+        /// <typeparam name="TClientSessionHandlerFactory">Type of session handler factory to use.</typeparam>
+        /// <param name="services">The service collection to add to.</param>
+        /// <param name="configure">Optional server configuration.</param>
+        /// <returns>The service collection for chaining.</returns>
         public static IServiceCollection AddServer<TClientSessionHandlerFactory>(
-            this IServiceCollection services, Action<IServerConfigurator>? configure = null)
+            this IServiceCollection services, Action<IServerConfigurator>? configure)
             where TClientSessionHandlerFactory : class, ISessionHandlerFactory
         {
             services.AddLogging()

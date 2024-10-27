@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Http;
 
 namespace LiveStreamingServerNet.Standalone.EndpointFilters
 {
+    /// <summary>
+    /// Endpoint filter that catches ApiException and converts it to an appropriate JSON response.
+    /// </summary>
     public class ApiExceptionEndpointFilter : IEndpointFilter
     {
         public async ValueTask<object?> InvokeAsync(EndpointFilterInvocationContext context, EndpointFilterDelegate next)

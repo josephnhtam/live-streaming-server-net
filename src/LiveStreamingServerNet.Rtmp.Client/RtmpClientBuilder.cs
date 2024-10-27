@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 
 namespace LiveStreamingServerNet.Rtmp.Client
 {
-    public sealed class RtmpClientBuilder : IRtmpClientBuilder
+    public sealed partial class RtmpClientBuilder : IRtmpClientBuilder
     {
         private readonly IServiceCollection _builder;
 
@@ -20,11 +20,6 @@ namespace LiveStreamingServerNet.Rtmp.Client
         private RtmpClientBuilder()
         {
             _builder = new ServiceCollection();
-        }
-
-        public static RtmpClientBuilder Create()
-        {
-            return new RtmpClientBuilder();
         }
 
         public IRtmpClientBuilder ConfigureLogging(Action<ILoggingBuilder> configure)

@@ -8,13 +8,35 @@ using Microsoft.Extensions.Logging;
 
 namespace LiveStreamingServerNet.StreamProcessor.AmazonS3.Installer
 {
+    /// <summary>
+    /// Provides installation methods for Amazon S3 storage.
+    /// </summary>
     public static class HlsAmazonS3Installer
     {
+        /// <summary>
+        /// Adds Amazon S3 storage support for HLS uploads.
+        /// </summary>
+        /// <param name="configurator">The HLS uploader configurator.</param>
+        /// <param name="s3Client">The Amazon S3 client instance.</param>
+        /// <param name="bucket">The S3 bucket name for storage.</param>
+        /// <param name="configure">Optional S3 configuration.</param>
+        /// <returns>The HLS uploader configurator for chaining.</returns>
+        public static IHlsUploaderConfigurator AddAmazonS3(
+            this IHlsUploaderConfigurator configurator, IAmazonS3 s3Client, string bucket)
+            => AddAmazonS3(configurator, s3Client, bucket, null);
+
+        /// <summary>
+        /// Adds Amazon S3 storage support for HLS uploads.
+        /// </summary>
+        /// <param name="configurator">The HLS uploader configurator.</param>
+        /// <param name="s3Client">The Amazon S3 client instance.</param>
+        /// <param name="bucket">The S3 bucket name for storage.</param>
+        /// <param name="configure">Optional S3 configuration.</param>
+        /// <returns>The HLS uploader configurator for chaining.</returns>
         public static IHlsUploaderConfigurator AddAmazonS3(
             this IHlsUploaderConfigurator configurator,
-            IAmazonS3 s3Client,
-            string bucket,
-            Action<HlsAmazonS3Configuration>? configure = null)
+            IAmazonS3 s3Client, string bucket,
+            Action<HlsAmazonS3Configuration>? configure)
         {
             var services = configurator.Services;
 

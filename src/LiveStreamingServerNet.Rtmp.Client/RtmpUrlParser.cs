@@ -5,6 +5,10 @@ using System.Text.RegularExpressions;
 
 namespace LiveStreamingServerNet.Rtmp.Client
 {
+    /// <summary>
+    /// Utility class for parsing RTMP URLs into their constituent components.
+    /// Supports standard RTMP and secure RTMPS URLs.
+    /// </summary>
     public static class RtmpUrlParser
     {
         private static Regex _regex = new Regex(
@@ -12,6 +16,11 @@ namespace LiveStreamingServerNet.Rtmp.Client
             RegexOptions.IgnoreCase | RegexOptions.Compiled
         );
 
+        /// <summary>
+        /// Parses an RTMP URL string into its components and resolves the hostname to an IP address.
+        /// </summary>
+        /// <param name="rtmpUrl">The RTMP URL to parse (e.g., "rtmp://server.com:1935/app/stream")</param>
+        /// <returns>A ParsedRtmpUrl containing the server endpoint, application name, stream name, and TC URL</returns>
         public static async ValueTask<ParsedRtmpUrl> ParseAsync(string rtmpUrl)
         {
             if (string.IsNullOrWhiteSpace(rtmpUrl))
@@ -96,5 +105,12 @@ namespace LiveStreamingServerNet.Rtmp.Client
         }
     }
 
+    /// <summary>
+    /// Contains the parsed components of an RTMP URL and resolved server information.
+    /// </summary>
+    /// <param name="ServerEndPoint">The resolved server endpoint with IP address and port</param>
+    /// <param name="AppName">The application name from the RTMP URL</param>
+    /// <param name="StreamName">The stream name from the RTMP URL</param>
+    /// <param name="TcUrl">The TC URL constructed from the RTMP URL components</param>
     public record ParsedRtmpUrl(ServerEndPoint ServerEndPoint, string AppName, string StreamName, string TcUrl);
 }

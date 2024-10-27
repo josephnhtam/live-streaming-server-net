@@ -2,7 +2,11 @@
 
 namespace LiveStreamingServerNet.StreamProcessor.Hls
 {
-    internal class DefaultHlsOutputPathResolver : IHlsOutputPathResolver
+    /// <summary>
+    /// Default implementation of HLS output path resolver.
+    /// Creates a path in the format: ./output/{contextIdentifier}/output.m3u8
+    /// </summary>
+    public class DefaultHlsOutputPathResolver : IHlsOutputPathResolver
     {
         public ValueTask<string> ResolveOutputPath(
            IServiceProvider services, Guid contextIdentifier, string streamPath, IReadOnlyDictionary<string, string> streamArguments)

@@ -6,6 +6,10 @@ using System.Web;
 
 namespace LiveStreamingServerNet.StreamProcessor
 {
+    /// <summary>
+    /// Default implementation for resolving input paths for RTMP streams.
+    /// Resolves to a local RTMP/RTMPS URL in the format: rtmp://localhost:{port}/{streamPath}?code={authCode}
+    /// </summary>
     public class DefaultInputPathResolver : IInputPathResolver
     {
         private readonly IServerHandle _server;

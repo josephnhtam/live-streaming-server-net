@@ -1,7 +1,15 @@
 ﻿namespace LiveStreamingServerNet.StreamProcessor.Utilities
 {
+    /// <summary>
+    /// Provides utilities for finding executable files in the system.
+    /// </summary>
     public static class ExecutableFinder
     {
+        /// <summary>
+        /// Searches for an executable in all directories listed in the PATH environment variable and current directory.
+        /// </summary>
+        /// <param name="executableName">The name of the executable to find.</param>
+        /// <returns>The full path to the executable if found, null otherwise.</returns>
         public static string? FindExecutableFromPATH(string executableName)
         {
             foreach (string path in GetPaths())
@@ -14,6 +22,12 @@
             return null;
         }
 
+        /// <summary>
+        /// Searches for an executable in a specific directory.
+        /// </summary>
+        /// <param name="directoryPath">The directory path to search in.</param>
+        /// <param name="executableName">The name of the executable to find.</param>
+        /// <returns>FileInfo of the executable if found, null otherwise.</returns>
         public static FileInfo? FindExecutable(string directoryPath, string executableName)
         {
             if (!Directory.Exists(directoryPath))

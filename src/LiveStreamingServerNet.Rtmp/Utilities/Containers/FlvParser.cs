@@ -1,7 +1,15 @@
 ﻿namespace LiveStreamingServerNet.Rtmp.Utilities.Containers
 {
+    /// <summary>
+    /// Provides methods for parsing FLV tag headers.
+    /// </summary>
     public static class FlvParser
     {
+        /// <summary>
+        /// Parses an FLV video tag header from raw byte data.
+        /// </summary>
+        /// <param name="data">Raw byte data containing the video tag header.</param>
+        /// <returns>Parsed FLV video tag header structure.</returns>
         public static FlvVideoTagHeader ParseVideoTagHeader(ReadOnlySpan<byte> data)
         {
             var firstByte = data[0];
@@ -13,6 +21,11 @@
             return new FlvVideoTagHeader(frameType, videoCodec, packetType, compositionTime);
         }
 
+        /// <summary>
+        /// Parses an FLV audio tag header from raw byte data.
+        /// </summary>
+        /// <param name="data">Raw byte data containing the audio tag header.</param>
+        /// <returns>Parsed FLV audio tag header structure.</returns>
         public static FlvAudioTagHeader ParseAudioTagHeader(ReadOnlySpan<byte> data)
         {
             var firstByte = data[0];

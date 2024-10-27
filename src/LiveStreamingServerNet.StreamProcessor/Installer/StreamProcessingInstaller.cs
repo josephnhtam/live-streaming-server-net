@@ -10,11 +10,28 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace LiveStreamingServerNet.StreamProcessor.Installer
 {
+    /// <summary>
+    /// Provides extension methods for installing and configuring stream processing services.
+    /// </summary>
     public static class StreamProcessingInstaller
     {
+        /// <summary>
+        /// Adds stream processing to the RTMP server.
+        /// </summary>
+        /// <param name="rtmpServerConfigurator">The RTMP server configurator to add services to.</param>
+        /// <returns>A stream processing builder for further configuration.</returns>
+        public static IStreamProcessingBuilder AddStreamProcessor(this IRtmpServerConfigurator rtmpServerConfigurator)
+            => AddStreamProcessor(rtmpServerConfigurator, null);
+
+        /// <summary>
+        /// Adds stream processing to the RTMP server.
+        /// </summary>
+        /// <param name="rtmpServerConfigurator">The RTMP server configurator to add services to.</param>
+        /// <param name="configure">Optional action to configure additional stream processing settings.</param>
+        /// <returns>A stream processing builder for further configuration.</returns>
         public static IStreamProcessingBuilder AddStreamProcessor(
             this IRtmpServerConfigurator rtmpServerConfigurator,
-            Action<IStreamProcessingConfigurator>? configure = null)
+            Action<IStreamProcessingConfigurator>? configure)
         {
             var services = rtmpServerConfigurator.Services;
 
@@ -31,7 +48,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Installer
         }
     }
 
-    public class StreamProcessingBuilder : IStreamProcessingBuilder
+    internal class StreamProcessingBuilder : IStreamProcessingBuilder
     {
         public IServiceCollection Services { get; }
 

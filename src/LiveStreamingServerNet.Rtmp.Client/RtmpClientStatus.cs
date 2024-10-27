@@ -1,5 +1,8 @@
 ﻿namespace LiveStreamingServerNet.Rtmp.Client
 {
+    /// <summary>
+    /// Represents the current status of an RTMP client connection.
+    /// </summary>
     public enum RtmpClientStatus
     {
         None = 0,
