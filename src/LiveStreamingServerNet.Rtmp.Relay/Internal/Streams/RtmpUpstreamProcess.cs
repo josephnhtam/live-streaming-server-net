@@ -182,11 +182,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Streams
 
                 if (completedTask != streamDataSendingTask)
                 {
-                    try
-                    {
-                        await streamDataSendingTask;
-                    }
-                    catch { }
+                    await ErrorBoundary.ExecuteAsync(streamDataSendingTask);
                 }
             }
         }
