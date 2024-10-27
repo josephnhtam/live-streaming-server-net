@@ -2,7 +2,11 @@
 
 namespace LiveStreamingServerNet.StreamProcessor
 {
-    internal class DefaultStreamProcessorCondition : IStreamProcessorCondition
+    /// <summary>
+    /// Default implementation of stream processor condition.
+    /// Always returns true.
+    /// </summary>
+    public class DefaultStreamProcessorCondition : IStreamProcessorCondition
     {
         public ValueTask<bool> IsEnabled(IServiceProvider services, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {

@@ -1,5 +1,8 @@
 ﻿namespace LiveStreamingServerNet.Networking.Exceptions
 {
+    /// <summary>
+    /// Exception thrown when buffer sending operation fails.
+    /// </summary>
     public class BufferSendingException : Exception
     {
         public BufferSendingException() : base() { }

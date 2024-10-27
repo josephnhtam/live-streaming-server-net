@@ -16,12 +16,40 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace LiveStreamingServerNet.Rtmp.Client.Installer
 {
+    /// <summary>
+    /// Static class providing extension methods for registering RTMP client services with dependency injection.
+    /// </summary>
     public static class RtmpClientInstaller
     {
+        /// <summary>
+        /// Adds RTMP client services to the service collection.
+        /// </summary>
+        /// <param name="services">The service collection to add services to</param>
+        /// <returns>The service collection for method chaining</returns>
+        public static IServiceCollection AddRtmpClient(this IServiceCollection services)
+            => services.AddRtmpClient(null, null);
+
+        /// <summary>
+        /// Adds RTMP client services to the service collection.
+        /// </summary>
+        /// <param name="services">The service collection to add services to</param>
+        /// <param name="configureRtmpClient">Action to configure RTMP client settings</param>
+        /// <returns>The service collection for method chaining</returns>
+        public static IServiceCollection AddRtmpClient(
+            this IServiceCollection services, Action<IRtmpClientConfigurator>? configureRtmpClient)
+            => services.AddRtmpClient(configureRtmpClient, null);
+
+        /// <summary>
+        /// Adds RTMP client services to the service collection.
+        /// </summary>
+        /// <param name="services">The service collection to add services to</param>
+        /// <param name="configureRtmpClient">Action to configure RTMP client settings</param>
+        /// <param name="configureClient">Action to configure general client settings</param>
+        /// <returns>The service collection for method chaining</returns>
         public static IServiceCollection AddRtmpClient(
             this IServiceCollection services,
-            Action<IRtmpClientConfigurator>? configureRtmpClient = null,
-            Action<IClientConfigurator>? configureClient = null)
+            Action<IRtmpClientConfigurator>? configureRtmpClient,
+            Action<IClientConfigurator>? configureClient)
         {
             services.AddRtmpCore(configureClient)
                     .AddRtmpServices()

@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 
 namespace LiveStreamingServerNet
 {
-    public sealed class LiveStreamingServerBuilder : ILiveStreamingServerBuilder
+    public sealed partial class LiveStreamingServerBuilder : ILiveStreamingServerBuilder
     {
         private readonly HostApplicationBuilder _builder;
 
@@ -22,11 +22,6 @@ namespace LiveStreamingServerNet
         private LiveStreamingServerBuilder()
         {
             _builder = Host.CreateEmptyApplicationBuilder(default);
-        }
-
-        public static ILiveStreamingServerBuilder Create()
-        {
-            return new LiveStreamingServerBuilder();
         }
 
         public ILiveStreamingServerBuilder ConfigureLogging(Action<ILoggingBuilder> configure)

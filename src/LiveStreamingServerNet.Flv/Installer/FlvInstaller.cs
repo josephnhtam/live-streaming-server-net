@@ -17,9 +17,26 @@ using Microsoft.Extensions.Options;
 
 namespace LiveStreamingServerNet.Flv.Installer
 {
+    /// <summary>
+    /// Static class providing extension methods for installing and configuring FLV streaming capabilities.
+    /// </summary>
     public static class FlvInstaller
     {
-        public static IRtmpServerConfigurator AddFlv(this IRtmpServerConfigurator configurator, Action<IFlvConfigurator>? configure = null)
+        /// <summary>
+        /// Adds FLV streaming support to the RTMP server configuration.
+        /// </summary>
+        /// <param name="configurator">The RTMP server configurator.</param>
+        /// <returns>The RTMP server configurator for method chaining.</returns>
+        public static IRtmpServerConfigurator AddFlv(this IRtmpServerConfigurator configurator)
+            => AddFlv(configurator, null);
+
+        /// <summary>
+        /// Adds FLV streaming support to the RTMP server configuration.
+        /// </summary>
+        /// <param name="configurator">The RTMP server configurator.</param>
+        /// <param name="configure">Optional action to configure FLV-specific settings.</param>
+        /// <returns>The RTMP server configurator for method chaining.</returns>
+        public static IRtmpServerConfigurator AddFlv(this IRtmpServerConfigurator configurator, Action<IFlvConfigurator>? configure)
         {
             var services = configurator.Services;
 
@@ -46,7 +63,23 @@ namespace LiveStreamingServerNet.Flv.Installer
             return configurator;
         }
 
-        public static IApplicationBuilder UseHttpFlv(this IApplicationBuilder app, IServer liveStreamingServer, HttpFlvOptions? options = null)
+        /// <summary>
+        /// Adds HTTP-FLV streaming middleware with a specified streaming server.
+        /// </summary>
+        /// <param name="app">The application builder.</param>
+        /// <param name="liveStreamingServer">The live streaming server instance.</param>
+        /// <returns>The application builder for method chaining.</returns>
+        public static IApplicationBuilder UseHttpFlv(this IApplicationBuilder app, IServer liveStreamingServer)
+            => UseHttpFlv(app, liveStreamingServer, null);
+
+        /// <summary>
+        /// Adds HTTP-FLV streaming middleware with a specified streaming server.
+        /// </summary>
+        /// <param name="app">The application builder.</param>
+        /// <param name="liveStreamingServer">The live streaming server instance.</param>
+        /// <param name="options">Optional HTTP-FLV configuration options.</param>
+        /// <returns>The application builder for method chaining.</returns>
+        public static IApplicationBuilder UseHttpFlv(this IApplicationBuilder app, IServer liveStreamingServer, HttpFlvOptions? options)
         {
             if (options == null)
                 app.UseMiddleware<HttpFlvMiddleware>(liveStreamingServer);
@@ -56,7 +89,21 @@ namespace LiveStreamingServerNet.Flv.Installer
             return app;
         }
 
-        public static IApplicationBuilder UseHttpFlv(this IApplicationBuilder app, HttpFlvOptions? options = null)
+        /// <summary>
+        /// Adds HTTP-FLV streaming middleware.
+        /// </summary>
+        /// <param name="app">The application builder.</param>
+        /// <returns>The application builder for method chaining.</returns>
+        public static IApplicationBuilder UseHttpFlv(this IApplicationBuilder app)
+            => UseHttpFlv(app, options: null);
+
+        /// <summary>
+        /// Adds HTTP-FLV streaming middleware.
+        /// </summary>
+        /// <param name="app">The application builder.</param>
+        /// <param name="options">Optional HTTP-FLV configuration options.</param>
+        /// <returns>The application builder for method chaining.</returns>
+        public static IApplicationBuilder UseHttpFlv(this IApplicationBuilder app, HttpFlvOptions? options)
         {
             if (options == null)
                 app.UseMiddleware<HttpFlvMiddleware>();
@@ -66,7 +113,23 @@ namespace LiveStreamingServerNet.Flv.Installer
             return app;
         }
 
-        public static IApplicationBuilder UseWebSocketFlv(this IApplicationBuilder app, IServer liveStreamingServer, WebSocketFlvOptions? options = null)
+        /// <summary>
+        /// Adds WebSocket-FLV streaming middleware with a specified streaming server.
+        /// </summary>
+        /// <param name="app">The application builder.</param>
+        /// <param name="liveStreamingServer">The live streaming server instance.</param>
+        /// <returns>The application builder for method chaining.</returns>
+        public static IApplicationBuilder UseWebSocketFlv(this IApplicationBuilder app, IServer liveStreamingServer)
+            => UseWebSocketFlv(app, liveStreamingServer, null);
+
+        /// <summary>
+        /// Adds WebSocket-FLV streaming middleware with a specified streaming server.
+        /// </summary>
+        /// <param name="app">The application builder.</param>
+        /// <param name="liveStreamingServer">The live streaming server instance.</param>
+        /// <param name="options">Optional WebSocket-FLV configuration options.</param>
+        /// <returns>The application builder for method chaining.</returns>
+        public static IApplicationBuilder UseWebSocketFlv(this IApplicationBuilder app, IServer liveStreamingServer, WebSocketFlvOptions? options)
         {
             if (options == null)
                 app.UseMiddleware<WebSocketFlvMiddleware>(liveStreamingServer);
@@ -76,6 +139,20 @@ namespace LiveStreamingServerNet.Flv.Installer
             return app;
         }
 
+        /// <summary>
+        /// Adds WebSocket-FLV streaming middleware.
+        /// </summary>
+        /// <param name="app">The application builder.</param>
+        /// <returns>The application builder for method chaining.</returns>
+        public static IApplicationBuilder UseWebSocketFlv(this IApplicationBuilder app)
+            => UseWebSocketFlv(app, options: null);
+
+        /// <summary>
+        /// Adds WebSocket-FLV streaming middleware.
+        /// </summary>
+        /// <param name="app">The application builder.</param>
+        /// <param name="options">Optional WebSocket-FLV configuration options.</param>
+        /// <returns>The application builder for method chaining.</returns>
         public static IApplicationBuilder UseWebSocketFlv(this IApplicationBuilder app, WebSocketFlvOptions? options = null)
         {
             if (options == null)

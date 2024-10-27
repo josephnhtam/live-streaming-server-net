@@ -18,9 +18,26 @@ using Microsoft.Extensions.Logging;
 
 namespace LiveStreamingServerNet.StreamProcessor.Installer
 {
+    /// <summary>
+    /// Provides extension methods for installing and configuring HLS transmuxing services.
+    /// </summary>
     public static class HlsTransmuxerInstaller
     {
-        public static IStreamProcessingBuilder AddHlsTransmuxer(this IStreamProcessingBuilder builder, Action<HlsTransmuxerConfiguration>? configure = null)
+        /// <summary>
+        /// Adds HLS transmuxing to the stream processing.
+        /// </summary>
+        /// <param name="builder">The stream processing builder to add services to.</param>
+        /// <returns>The stream processing builder for method chaining.</returns>
+        public static IStreamProcessingBuilder AddHlsTransmuxer(this IStreamProcessingBuilder builder)
+            => AddHlsTransmuxer(builder, null);
+
+        /// <summary>
+        /// Adds HLS transmuxing to the stream processing.
+        /// </summary>
+        /// <param name="builder">The stream processing builder to add services to.</param>
+        /// <param name="configure">Optional action to configure the HLS transmuxer.</param>
+        /// <returns>The stream processing builder for method chaining.</returns>
+        public static IStreamProcessingBuilder AddHlsTransmuxer(this IStreamProcessingBuilder builder, Action<HlsTransmuxerConfiguration>? configure)
         {
             var services = builder.Services;
 

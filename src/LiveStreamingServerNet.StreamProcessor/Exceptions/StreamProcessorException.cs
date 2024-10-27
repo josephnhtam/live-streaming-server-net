@@ -1,5 +1,8 @@
 ﻿namespace LiveStreamingServerNet.StreamProcessor.Exceptions
 {
+    /// <summary>
+    /// Exception thrown when stream processing operations fail.
+    /// </summary>
     public class StreamProcessorException : Exception
     {
         public StreamProcessorException()

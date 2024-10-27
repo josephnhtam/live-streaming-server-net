@@ -3,12 +3,18 @@ using System.Text;
 
 namespace LiveStreamingServerNet.Rtmp
 {
+    /// <summary>
+    /// Types of media.
+    /// </summary>
     public enum MediaType
     {
         Video,
         Audio
     }
 
+    /// <summary>
+    /// Types of video frames.
+    /// </summary>
     public enum VideoFrameType : byte
     {
         KeyFrame = 1,
@@ -18,6 +24,9 @@ namespace LiveStreamingServerNet.Rtmp
         VideoInfoOrCommandFrame = 5
     }
 
+    /// <summary>
+    /// Video codecs.
+    /// </summary>
     public enum VideoCodec : byte
     {
         SorensonH263 = 2,
@@ -30,6 +39,9 @@ namespace LiveStreamingServerNet.Rtmp
         AV1 = 13
     }
 
+    /// <summary>
+    /// Types of video packets.
+    /// </summary>
     public enum VideoPacketType : byte
     {
         SequenceStart = 0,
@@ -40,6 +52,9 @@ namespace LiveStreamingServerNet.Rtmp
         MPEG2TSSequenceStart = 5
     }
 
+    /// <summary>
+    /// Types of AVC packets.
+    /// </summary>
     public enum AVCPacketType : byte
     {
         SequenceHeader = 0,
@@ -47,6 +62,9 @@ namespace LiveStreamingServerNet.Rtmp
         EndOfSequence = 2
     }
 
+    /// <summary>
+    /// Audio codecs.
+    /// </summary>
     public enum AudioCodec
     {
         LinearPCMPlatformEndian = 0,
@@ -66,18 +84,29 @@ namespace LiveStreamingServerNet.Rtmp
         DeviceSpecificSound = 15
     }
 
+    /// <summary>
+    /// Types of AAC packets.
+    /// </summary>
     public enum AACPacketType
     {
         SequenceHeader = 0,
         Raw = 1
     }
 
+    /// <summary>
+    /// FourCC codes for video formats.
+    /// </summary>
     public static class VideoFourCC
     {
+        /// <summary>FourCC code for AV1 codec.</summary>
         public readonly static uint AV1 = BinaryPrimitives.ReadUInt32BigEndian(Encoding.ASCII.GetBytes("av01"));
+        /// <summary>FourCC code for HEVC codec.</summary>
         public readonly static uint HEVC = BinaryPrimitives.ReadUInt32BigEndian(Encoding.ASCII.GetBytes("hvc1"));
     }
 
+    /// <summary>
+    /// Standard argument names used in RTMP messages.
+    /// </summary>
     public static class RtmpArguments
     {
         public const string Level = "level";
@@ -88,12 +117,18 @@ namespace LiveStreamingServerNet.Rtmp
         public const string ObjectEncoding = "objectEncoding";
     }
 
+    /// <summary>
+    /// Status codes for RTMP connection operations.
+    /// </summary>
     public static class RtmpConnectionStatusCodes
     {
         public const string ConnectSuccess = "NetConnection.Connect.Success";
         public const string ConnectRejected = "NetConnection.Connect.Rejected";
     }
 
+    /// <summary>
+    /// Status codes for RTMP stream operations.
+    /// </summary>
     public static class RtmpStreamStatusCodes
     {
         public const string PauseNotify = "NetStream.Pause.Notify";
@@ -111,12 +146,18 @@ namespace LiveStreamingServerNet.Rtmp
         public const string PlayUnpublishNotify = "NetStream.Play.UnpublishNotify";
     }
 
+    /// <summary>
+    /// Status level indicators for RTMP messages.
+    /// </summary>
     public static class RtmpStatusLevels
     {
         public const string Error = "error";
         public const string Status = "status";
     }
 
+    /// <summary>
+    /// Types of AMF encoding.
+    /// </summary>
     public enum AmfEncodingType
     {
         Amf0,

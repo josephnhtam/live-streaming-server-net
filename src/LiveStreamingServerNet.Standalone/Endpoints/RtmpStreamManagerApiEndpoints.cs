@@ -11,8 +11,17 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace LiveStreamingServerNet.Standalone.Endpoints
 {
+    /// <summary>
+    /// Defines API endpoints for managing RTMP streams.
+    /// </summary>
     public static class RtmpStreamManagerApiEndpoints
     {
+        /// <summary>
+        /// Maps RTMP stream management endpoints to the specified route builder.
+        /// </summary>
+        /// <param name="builder">The endpoint route builder</param>
+        /// <param name="server">The server instance</param>
+        /// <returns>The endpoint route builder for method chaining</returns>
         public static IEndpointRouteBuilder MapRtmpStreamManagerApiEndpoints(this IEndpointRouteBuilder builder, IServer server)
         {
             var group = builder
@@ -25,6 +34,11 @@ namespace LiveStreamingServerNet.Standalone.Endpoints
             return builder;
         }
 
+        /// <summary>
+        /// Creates an endpoint handler that retrieves active streams.
+        /// </summary>
+        /// <param name="server">The server instance</param>
+        /// <returns>An endpoint handler that returns stream information</returns>
         public static Delegate GetStreams(IServer server) =>
             async Task<Ok<GetStreamsResponse>> ([AsParameters] GetStreamsRequest request) =>
             {
@@ -32,6 +46,11 @@ namespace LiveStreamingServerNet.Standalone.Endpoints
                 return TypedResults.Ok(await apiService.GetStreamsAsync(request));
             };
 
+        /// <summary>
+        /// Creates an endpoint handler that deletes a stream.
+        /// </summary>
+        /// <param name="server">The server instance</param>
+        /// <returns>An endpoint handler that deletes the specified stream</returns>
         public static Delegate DeleteStream(IServer server) =>
             async Task<Ok> ([FromQuery] string streamId) =>
             {

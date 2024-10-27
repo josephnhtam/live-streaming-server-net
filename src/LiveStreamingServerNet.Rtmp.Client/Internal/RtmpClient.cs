@@ -206,7 +206,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
             }
             else if (completedTask == timeoutTask)
             {
-                throw new TimeoutException("Handshake timeout.");
+                throw new RtmpClientConnectionException("Handshake timeout.");
             }
             else if (completedTask == _clientTcs.Task)
             {
