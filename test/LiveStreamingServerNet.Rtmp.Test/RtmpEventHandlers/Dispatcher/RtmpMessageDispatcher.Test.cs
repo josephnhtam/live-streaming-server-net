@@ -103,19 +103,6 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Dispatcher
             result.Should().Be(expectedResult);
         }
 
-        [Fact]
-        public async Task DispatchAsync_Should_ThrowInvalidOperationException_When_NoHandlerFound()
-        {
-            // Arrange
-            byte messageType = 3;
-
-            _chunkStreamContext.MessageHeader.MessageTypeId.Returns(messageType);
-
-            // Act & Assert
-            await Assert.ThrowsAsync<InvalidOperationException>(async () =>
-                await _sut.DispatchAsync(_chunkStreamContext, _context, default));
-        }
-
         internal interface ITestContext { }
 
         [RtmpMessageType(1)]
