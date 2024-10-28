@@ -7,6 +7,7 @@ using LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Dispatcher.Contract
 using LiveStreamingServerNet.Utilities.Buffers;
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using NSubstitute;
 
 namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Dispatcher
@@ -19,6 +20,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Dispatcher
         private readonly ITestContext _context;
         private readonly DataBuffer _payloadBuffer;
         private readonly IRtmpMessageDispatcher<ITestContext> _sut;
+        private readonly ILogger<RtmpMessageDispatcher<ITestContext>> _logger;
         private IRtmpChunkStreamContext _chunkStreamContext;
 
         public RtmpMessageDispatcherTest()
@@ -36,6 +38,8 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Dispatcher
             _chunkStreamContext = Substitute.For<IRtmpChunkStreamContext>();
             _chunkStreamContext.PayloadBuffer.Returns(_payloadBuffer);
 
+            _logger = Substitute.For<ILogger<RtmpMessageDispatcher<ITestContext>>>();
+
             var map = new RtmpMessageHandlerMap(new Dictionary<byte, Type> {
                 { 1, typeof(TestHandler) },
                 { 2, typeof(Test2Handler) },
@@ -45,7 +49,7 @@ namespace LiveStreamingServerNet.Rtmp.Test.RtmpEventHandlers.Dispatcher
             services.AddSingleton(_testHandler)
                     .AddSingleton(_test2Handler)
                     .AddSingleton<IRtmpMessageDispatcher<ITestContext>>(svc =>
-                        new RtmpMessageDispatcher<ITestContext>(svc, map));
+                        new RtmpMessageDispatcher<ITestContext>(svc, map, _logger));
 
             _sut = services.BuildServiceProvider().GetRequiredService<IRtmpMessageDispatcher<ITestContext>>();
         }
