@@ -8,7 +8,7 @@ namespace LiveStreamingServerNet.StreamProcessor
 {
     /// <summary>
     /// Default implementation for resolving input paths for RTMP streams.
-    /// Resolves to a local RTMP/RTMPS URL in the format: rtmp://localhost:{port}/{streamPath}?code={authCode}
+    /// Resolves to a local RTMP/RTMPS URL in the format: rtmp://{ipAddress}:{port}/{streamPath}?code={authCode}
     /// </summary>
     public class DefaultInputPathResolver : IInputPathResolver
     {
@@ -36,7 +36,7 @@ namespace LiveStreamingServerNet.StreamProcessor
         {
             var localServerEndPoint = GetLocalServerEndPoint();
             var scheme = localServerEndPoint.IsSecure ? "rtmps" : "rtmp";
-            return new Uri($"{scheme}://localhost:{localServerEndPoint.IPEndPoint.Port}");
+            return new Uri($"{scheme}://{localServerEndPoint.IPEndPoint.Address.ToString()}:{localServerEndPoint.IPEndPoint.Port}");
         }
 
         private ServerEndPoint GetLocalServerEndPoint()
