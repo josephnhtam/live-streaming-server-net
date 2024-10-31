@@ -2,6 +2,7 @@
 using LiveStreamingServerNet.Networking.Server.Contracts;
 using LiveStreamingServerNet.Rtmp.Server.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Contracts;
+using System.Net;
 using System.Web;
 
 namespace LiveStreamingServerNet.StreamProcessor
@@ -36,7 +37,10 @@ namespace LiveStreamingServerNet.StreamProcessor
         {
             var localServerEndPoint = GetLocalServerEndPoint();
             var scheme = localServerEndPoint.IsSecure ? "rtmps" : "rtmp";
-            return new Uri($"{scheme}://{localServerEndPoint.IPEndPoint.Address.ToString()}:{localServerEndPoint.IPEndPoint.Port}");
+            var ipEndPointAddress = localServerEndPoint.IPEndPoint.Address.Equals(IPAddress.Any) ?
+                "localhost" : localServerEndPoint.IPEndPoint.Address.ToString();
+
+            return new Uri($"{scheme}://{ipEndPointAddress}:{localServerEndPoint.IPEndPoint.Port}");
         }
 
         private ServerEndPoint GetLocalServerEndPoint()
