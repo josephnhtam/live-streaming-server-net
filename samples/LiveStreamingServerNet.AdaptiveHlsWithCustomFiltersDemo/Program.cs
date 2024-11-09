@@ -1,12 +1,10 @@
 using LiveStreamingServerNet.StreamProcessor.AspNetCore.Installer;
-using LiveStreamingServerNet.StreamProcessor.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Hls.Configurations;
 using LiveStreamingServerNet.StreamProcessor.Installer;
 using LiveStreamingServerNet.StreamProcessor.Utilities;
-using LiveStreamingServerNet.Utilities.Contracts;
 using System.Net;
 
-namespace LiveStreamingServerNet.AdaptiveHlsDemo
+namespace LiveStreamingServerNet.AdaptiveHlsWithCustomFiltersDemo
 {
     public static class Program
     {
@@ -41,16 +39,25 @@ namespace LiveStreamingServerNet.AdaptiveHlsDemo
                 new IPEndPoint(IPAddress.Any, 1935),
                 options => options
                     .Configure(options => options.EnableGopCaching = false)
-                    .AddStreamProcessor(options =>
-                    {
-                        options.AddStreamProcessorEventHandler(svc =>
-                            new StreamProcessorEventListener(
-                                svc.GetRequiredService<ILogger<StreamProcessorEventListener>>()));
-                    })
+                    .AddStreamProcessor()
                     .AddAdaptiveHlsTranscoder(options =>
                     {
                         options.FFmpegPath = ExecutableFinder.FindExecutableFromPATH("ffmpeg")!;
                         options.FFprobePath = ExecutableFinder.FindExecutableFromPATH("ffprobe")!;
+
+                        // Add an icon as the second input to the FFmpeg command
+                        options.AdditionalInputs = [Path.Combine(Directory.GetCurrentDirectory(), "icon.png")];
+
+                        // Add custom complex filters to scale the icon to different sizes
+                        options.AdditionalComplexFilters = [
+                            "[1:v]scale=-2:64[icon360]",
+                            "[1:v]scale=-2:85[icon480]",
+                            "[1:v]scale=-2:128[icon720]",
+                            "[1:v]scale=-2:128[icon720t]"
+                        ];
+
+                        // Add custom audio filters to reduce the volume by half
+                        options.AudioFilters = ["volume=0.5"];
 
                         options.DownsamplingFilters =
                         [
@@ -58,51 +65,40 @@ namespace LiveStreamingServerNet.AdaptiveHlsDemo
                                 Name: "360p",
                                 Height: 360,
                                 MaxVideoBitrate: "600k",
-                                MaxAudioBitrate: "64k"
+                                MaxAudioBitrate: "64k",
+                                // Overlay the icon360 on the video
+                                VideoFilter: ["[icon360]overlay"]
                             ),
 
                             new DownsamplingFilter(
                                 Name: "480p",
                                 Height: 480,
                                 MaxVideoBitrate: "1500k",
-                                MaxAudioBitrate: "128k"
+                                MaxAudioBitrate: "128k",
+                                // Overlay the icon480 on the video
+                                VideoFilter: ["[icon480]overlay"]
                             ),
 
                             new DownsamplingFilter(
                                 Name: "720p",
                                 Height: 720,
                                 MaxVideoBitrate: "3000k",
-                                MaxAudioBitrate: "256k"
-                            )
-                        ];
+                                MaxAudioBitrate: "256k",
+                                // Overlay the icon720 on the video
+                                VideoFilter: ["[icon720]overlay"]
+                            ),
 
-                        // Hardware acceleration 
-                        // options.VideoDecodingArguments = "-hwaccel auto -c:v h264_cuvid";
-                        // options.VideoEncodingArguments = "-c:v h264_nvenc -g 30";
+                            new DownsamplingFilter(
+                                Name: "720p_rotated",
+                                Height: 720,
+                                MaxVideoBitrate: "3000k",
+                                MaxAudioBitrate: "256k",
+                                // Overlay the icon720t on the video, and rotate the video 90 degrees
+                                VideoFilter: ["[icon720t]overlay", "transpose=1"]
+                            ),
+                        ];
                     })
             );
-        }
-
-        private class StreamProcessorEventListener : IStreamProcessorEventHandler
-        {
-            private readonly ILogger _logger;
-
-            public StreamProcessorEventListener(ILogger<StreamProcessorEventListener> logger)
-            {
-                _logger = logger;
-            }
-
-            public Task OnStreamProcessorStartedAsync(IEventContext context, string processor, Guid identifier, uint clientId, string inputPath, string outputPath, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
-            {
-                _logger.LogInformation($"[{identifier}] Streaming processor {processor} started: {inputPath} -> {outputPath}");
-                return Task.CompletedTask;
-            }
-
-            public Task OnStreamProcessorStoppedAsync(IEventContext context, string processor, Guid identifier, uint clientId, string inputPath, string outputPath, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
-            {
-                _logger.LogInformation($"[{identifier}] Streaming processor {processor} stopped: {inputPath} -> {outputPath}");
-                return Task.CompletedTask;
-            }
         }
     }
 }
