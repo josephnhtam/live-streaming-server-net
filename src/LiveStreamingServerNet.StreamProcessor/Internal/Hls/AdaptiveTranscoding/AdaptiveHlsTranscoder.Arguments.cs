@@ -222,15 +222,15 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.AdaptiveTranscodin
                 for (int i = 0; i < downsamplingFilters.Count; i++)
                 {
                     var filter = downsamplingFilters[i];
-                    sb.Append($"[vout{i}-0]scale=-2:{filter.Height}[vout{i}-1];");
 
-                    int index = 1;
-                    foreach (var videoFilter in downsamplingFilters[i].VideoFilter ?? Enumerable.Empty<string>())
+                    var videoFilters = new List<string> { $"scale=-2:{filter.Height}" };
+                    videoFilters.AddRange(filter.VideoFilter ?? Enumerable.Empty<string>());
+
+                    foreach (var (videoFilter, index) in videoFilters.Select((vf, idx) => (vf, idx)))
                     {
                         sb.Append($"[vout{i}-{index}]");
                         sb.Append(videoFilter);
                         sb.Append($"[vout{i}-{index + 1}];");
-                        index++;
                     }
                 }
             }
@@ -253,14 +253,12 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.AdaptiveTranscodin
             {
                 for (int i = 0; i < downsamplingFilters.Count; i++)
                 {
-                    int index = 0;
-
-                    foreach (var audioFilter in downsamplingFilters[i].AudioFilter ?? Enumerable.Empty<string>())
+                    var audioFilters = downsamplingFilters[i].AudioFilter ?? Enumerable.Empty<string>();
+                    foreach (var (audioFilter, index) in audioFilters.Select((af, idx) => (af, idx)))
                     {
                         sb.Append($"[aout{i}-{index}]");
                         sb.Append(audioFilter);
                         sb.Append($"[aout{i}-{index + 1}];");
-                        index++;
                     }
                 }
             }
