@@ -70,7 +70,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Hls.Configurations
         /// Gets or sets the array of downsampling filters for adaptive streaming.
         /// Default: 360p (600k/64k), 480p (1500k/128k), 720p (3000k/256k).
         /// </summary>
-        public DownsamplingFilter[] DownsamplingFilters { get; set; } = {
+        public IList<DownsamplingFilter> DownsamplingFilters { get; set; } = new[] {
             new DownsamplingFilter("360p", 360, "600k", "64k"),
             new DownsamplingFilter("480p", 480, "1500k", "128k"),
             new DownsamplingFilter("720p", 720, "3000k", "256k"),
@@ -78,18 +78,20 @@ namespace LiveStreamingServerNet.StreamProcessor.Hls.Configurations
 
         /// <summary>
         /// Gets or sets FFmpeg arguments for video encoding.
+        /// e.g. "-c:v h264_nvenc -g 30" for hardware-accelerated encoding.
         /// Default: "-c:v libx264 -preset ultrafast -tune zerolatency -crf 23 -g 30".
         /// </summary>
-        public string VideoEncodingArguments { get; set; } = "-c:v libx264 -preset ultrafast -tune zerolatency -crf 23 -g 30";
+        public string? VideoEncodingArguments { get; set; } = "-c:v libx264 -preset ultrafast -tune zerolatency -crf 23 -g 30";
 
         /// <summary>
         /// Gets or sets FFmpeg arguments for audio encoding.
         /// Default: "-c:a aac".
         /// </summary>
-        public string AudioEncodingArguments { get; set; } = "-c:a aac";
+        public string? AudioEncodingArguments { get; set; } = "-c:a aac";
 
         /// <summary>
         /// Gets or sets optional FFmpeg arguments for video decoding.
+        /// e.g. "-hwaccel auto -c:v h264_cuvid" for hardware-accelerated decoding.
         /// Default: null.
         /// </summary>
         public string? VideoDecodingArguments { get; set; }
@@ -99,6 +101,13 @@ namespace LiveStreamingServerNet.StreamProcessor.Hls.Configurations
         /// Default: null.
         /// </summary>
         public string? AudioDecodingArguments { get; set; }
+
+        /// <summary>
+        /// Gets or sets additional input paths for FFmpeg.
+        /// RTMP stream input is automatically added as the first input.
+        /// Default: null.
+        /// </summary>
+        public IList<string>? AdditionalInputs { get; set; } = null;
 
         /// <summary>
         /// Gets or sets the delay before cleaning up transcoded files.
@@ -119,21 +128,23 @@ namespace LiveStreamingServerNet.StreamProcessor.Hls.Configurations
     /// <summary>
     /// Performance-related options for transcoding operations.
     /// </summary>
-    /// <param name="Threads">Number of threads to use for transcoding. Default: 1</param>
-    /// <param name="ExtraArguments">Additional performance-related arguments. Default: null</param>
+    /// <param name="Threads">Number of threads to use for transcoding. Default: 1.</param>
+    /// <param name="MaxMuxingQueueSize">Maximum number of packets in the muxing queue. Default: 1024.</param>
+    /// <param name="ExtraArguments">Additional performance-related arguments. Default: null.</param>
     public record PerformanceOptions(
         int Threads,
+        int? MaxMuxingQueueSize = 1024,
         string? ExtraArguments = null
     );
 
     /// <summary>
     /// Configuration options specific to HLS output.
     /// </summary>
-    /// <param name="SegmentLength">Duration of each HLS segment. Default: 1 second</param>
-    /// <param name="SegmentListSize">Number of segments to keep in the playlist. Default: 20</param>
-    /// <param name="DeleteOutdatedSegments">Whether to delete segments not in the playlist. Default: true</param>
-    /// <param name="Flags">Additional HLS flags. Default: null</param>
-    /// <param name="ExtraArguments">Additional HLS-specific arguments. Default: null</param>
+    /// <param name="SegmentLength">Duration of each HLS segment. Default: 1 second.</param>
+    /// <param name="SegmentListSize">Number of segments to keep in the playlist. Default: 2.0</param>
+    /// <param name="DeleteOutdatedSegments">Whether to delete segments not in the playlist. Default: true.</param>
+    /// <param name="Flags">Additional HLS flags. Default: null.</param>
+    /// <param name="ExtraArguments">Additional HLS-specific arguments. Default: null.</param>
     public record HlsOptions(
         TimeSpan SegmentLength,
         int SegmentListSize,
@@ -143,20 +154,21 @@ namespace LiveStreamingServerNet.StreamProcessor.Hls.Configurations
     );
 
     /// <summary>
-    /// Delegate for generating additional filter arguments based on stream index.
+    /// Delegate for generating encoding arguments based on stream index.
     /// </summary>
-    public delegate string ExtraFilterArguments(int streamIndex);
+    public delegate string EncodingArgument(int streamIndex);
 
     /// <summary>
     /// Defines parameters for video/audio downsampling in adaptive streaming.
     /// </summary>
-    /// <param name="Name">Identifier for this filter configuration</param>
-    /// <param name="Height">Target video height in pixels</param>
-    /// <param name="MaxVideoBitrate">Maximum video bitrate (e.g., "600k")</param>
-    /// <param name="MaxAudioBitrate">Maximum audio bitrate (e.g., "64k")</param>
-    /// <param name="VideoFilter">Additional video filters to apply. Default: null</param>
-    /// <param name="AudioFilter">Additional audio filters to apply. Default: null</param>
-    /// <param name="ExtraArguments">Function to generate additional filter arguments. Default: null</param>
+    /// <param name="Name">Identifier for this filter configuration.</param>
+    /// <param name="Height">Target video height in pixels.</param>
+    /// <param name="MaxVideoBitrate">Maximum video bitrate (e.g., "600k").</param>
+    /// <param name="MaxAudioBitrate">Maximum audio bitrate (e.g., "64k").</param>
+    /// <param name="VideoFilter">Additional video filters to apply. Default: null.</param>
+    /// <param name="AudioFilter">Additional audio filters to apply. Default: null.</param>
+    /// <param name="VideoEncodingArgument">Optional delegate for generating video encoding arguments. Default: null.</param>
+    /// <param name="AudioEncodingArgument">Optional delegate for generating audio encoding arguments. Default: null.</param>
     public record DownsamplingFilter(
         string Name,
         int Height,
@@ -164,5 +176,6 @@ namespace LiveStreamingServerNet.StreamProcessor.Hls.Configurations
         string MaxAudioBitrate,
         IEnumerable<string>? VideoFilter = null,
         IEnumerable<string>? AudioFilter = null,
-        ExtraFilterArguments? ExtraArguments = null);
+        EncodingArgument? VideoEncodingArgument = null,
+        EncodingArgument? AudioEncodingArgument = null);
 }

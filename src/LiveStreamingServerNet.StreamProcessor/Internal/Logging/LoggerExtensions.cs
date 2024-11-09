@@ -69,5 +69,8 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Logging
 
         [LoggerMessage(LogLevel.Error, "An error occurred while scheduling HLS cleanup (ManifestPath={ManifestPath})")]
         public static partial void SchedulingHlsCleanupError(this ILogger logger, string manifestPath, Exception ex);
+
+        [LoggerMessage(LogLevel.Information, "Starting FFmpeg process (Arguments={Arguments})")]
+        public static partial void StartingFFmpegProcess(this ILogger logger, string arguments);
     }
 }

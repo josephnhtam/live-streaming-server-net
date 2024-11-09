@@ -103,7 +103,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.AdaptiveTranscodin
                     GracefulTerminationSeconds = _config.FFmpegGracefulTerminationSeconds
                 };
 
-                var ffmpegProcess = new FFmpegProcess(ffmpegConfig);
+                var ffmpegProcess = new FFmpegProcess(ffmpegConfig, _logger);
                 await ffmpegProcess.RunAsync(inputPath, streamPath, streamArguments, onStarted, onEnded, cancellation);
             }
             finally

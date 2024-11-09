@@ -3,6 +3,7 @@ using LiveStreamingServerNet.StreamProcessor.FFmpeg.Configurations;
 using LiveStreamingServerNet.StreamProcessor.Installer.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.FFmpeg;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace LiveStreamingServerNet.StreamProcessor.Installer
 {
@@ -30,7 +31,8 @@ namespace LiveStreamingServerNet.StreamProcessor.Installer
             var config = new FFmpegProcessConfiguration();
             configure?.Invoke(config);
 
-            builder.Services.AddSingleton<IStreamProcessorFactory>(svc => new FFmpegProcessFactory(svc, config));
+            builder.Services.AddSingleton<IStreamProcessorFactory>(svc =>
+                new FFmpegProcessFactory(svc, config, svc.GetRequiredService<ILogger<FFmpegProcess>>()));
 
             return builder;
         }

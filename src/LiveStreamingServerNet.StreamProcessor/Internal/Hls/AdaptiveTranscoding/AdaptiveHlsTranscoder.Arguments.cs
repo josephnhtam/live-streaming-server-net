@@ -13,19 +13,30 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.AdaptiveTranscodin
 
             var arguments = new List<string>();
 
-            AddOptionalArgument(arguments, _config.VideoDecodingArguments);
-            AddOptionalArgument(arguments, _config.AudioDecodingArguments);
+            AddDecodingArguments(arguments);
 
-            arguments.Add("-i {inputPath}");
+            AddInputs(arguments);
 
-            arguments.Add($"-threads {_config.PerformanceOptions.Threads}");
-            AddOptionalArgument(arguments, _config.PerformanceOptions.ExtraArguments);
+            AddPerformanceOptions(arguments);
 
-            arguments.Add($"{_config.VideoEncodingArguments.Trim()}");
-            arguments.Add($"{_config.AudioEncodingArguments.Trim()}");
+            AddEncodingArguments(arguments);
 
-            AddDownsamplingFilters(downsamplingFilters, arguments);
+            AddStreamMappings(downsamplingFilters, arguments);
 
+            AddHlsConfiguration(downsamplingFilters, arguments);
+
+            AddMasterManifest(masterManifestName, manifestPath, arguments);
+
+            return string.Join(' ', arguments);
+        }
+
+        private static void AddMasterManifest(string masterManifestName, string manifestPath, List<string> arguments)
+        {
+            arguments.Add($"-master_pl_name {masterManifestName} {manifestPath}");
+        }
+
+        private void AddHlsConfiguration(IList<DownsamplingFilter> downsamplingFilters, List<string> arguments)
+        {
             arguments.Add("-f hls");
             arguments.Add($"-hls_list_size {_config.HlsOptions.SegmentListSize}");
             arguments.Add($"-hls_time {_config.HlsOptions.SegmentLength.TotalSeconds}");
@@ -36,9 +47,41 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.AdaptiveTranscodin
             AddOptionalArgument(arguments, _config.HlsOptions.ExtraArguments);
 
             arguments.Add($"-var_stream_map \"{string.Join(' ', CreateStreamMap(downsamplingFilters))}\"");
-            arguments.Add($"-master_pl_name {masterManifestName} {manifestPath}");
+        }
 
-            return string.Join(' ', arguments);
+        private void AddEncodingArguments(List<string> arguments)
+        {
+            AddOptionalArgument(arguments, _config.VideoEncodingArguments?.Trim());
+            AddOptionalArgument(arguments, _config.AudioEncodingArguments?.Trim());
+        }
+
+        private void AddInputs(List<string> arguments)
+        {
+            arguments.Add("-i {inputPath}");
+
+            if (_config.AdditionalInputs?.Any() == true)
+            {
+                foreach (var input in _config.AdditionalInputs)
+                {
+                    arguments.Add($"-i {input}");
+                }
+            }
+        }
+
+        private void AddDecodingArguments(List<string> arguments)
+        {
+            AddOptionalArgument(arguments, _config.VideoDecodingArguments);
+            AddOptionalArgument(arguments, _config.AudioDecodingArguments);
+        }
+
+        private void AddPerformanceOptions(List<string> arguments)
+        {
+            arguments.Add($"-threads {_config.PerformanceOptions.Threads}");
+
+            if (_config.PerformanceOptions.MaxMuxingQueueSize.HasValue)
+                arguments.Add($"-max_muxing_queue_size {_config.PerformanceOptions.MaxMuxingQueueSize.Value}");
+
+            AddOptionalArgument(arguments, _config.PerformanceOptions.ExtraArguments);
         }
 
         private static void AddOptionalArgument(IList<string> arguments, string? optionalArgument)
@@ -76,24 +119,35 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.AdaptiveTranscodin
             return result.Any() ? result : downsamplingFilters.Take(1).ToList();
         }
 
-        private static void AddDownsamplingFilters(IList<DownsamplingFilter> downsamplingFilters, List<string> arguments)
+        private static void AddStreamMappings(IList<DownsamplingFilter> downsamplingFilters, List<string> arguments)
         {
             for (int i = 0; i < downsamplingFilters.Count; i++)
             {
                 var filter = downsamplingFilters[i];
+                MapVideoStream(arguments, i, filter);
+                MapAudioStream(arguments, i, filter);
+            }
 
-                arguments.Add("-map 0:v:0");
-                arguments.Add("-map 0:a:0");
+            static void MapVideoStream(List<string> arguments, int i, DownsamplingFilter filter)
+            {
+                arguments.Add($"-map 0:v:0");
 
-                arguments.Add($"-filter:v:{i} {CreateVideoFilter(filter)}");
+                AddOptionalArgument(arguments, filter.VideoEncodingArgument?.Invoke(i));
                 arguments.Add($"-maxrate:v:{i} {filter.MaxVideoBitrate}");
 
-                var audioFilter = CreateAudioFilter(filter);
-                if (audioFilter != null) arguments.Add($"-filter:a:{i} {audioFilter}");
+                var videoFilter = CreateVideoFilter(filter);
+                arguments.Add($"-filter:v:{i} \"{videoFilter}\"");
+            }
 
+            static void MapAudioStream(List<string> arguments, int i, DownsamplingFilter filter)
+            {
+                arguments.Add("-map 0:a:0");
+
+                AddOptionalArgument(arguments, filter.AudioEncodingArgument?.Invoke(i));
                 arguments.Add($"-b:a:{i} {filter.MaxAudioBitrate}");
 
-                AddOptionalArgument(arguments, filter.ExtraArguments?.Invoke(i));
+                var audioFilter = CreateAudioFilter(filter);
+                if (audioFilter != null) arguments.Add($"-filter:a:{i} \"{audioFilter}\"");
             }
 
             static string CreateVideoFilter(DownsamplingFilter filter)

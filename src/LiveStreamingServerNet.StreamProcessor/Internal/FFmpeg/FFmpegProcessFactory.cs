@@ -1,6 +1,7 @@
 ﻿using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Contracts;
 using LiveStreamingServerNet.StreamProcessor.FFmpeg.Configurations;
+using Microsoft.Extensions.Logging;
 
 namespace LiveStreamingServerNet.StreamProcessor.Internal.FFmpeg
 {
@@ -8,11 +9,13 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.FFmpeg
     {
         private readonly IServiceProvider _services;
         private readonly FFmpegProcessConfiguration _config;
+        private readonly ILogger<FFmpegProcess> _logger;
 
-        public FFmpegProcessFactory(IServiceProvider services, FFmpegProcessConfiguration config)
+        public FFmpegProcessFactory(IServiceProvider services, FFmpegProcessConfiguration config, ILogger<FFmpegProcess> logger)
         {
             _services = services;
             _config = config;
+            _logger = logger;
         }
 
         public async Task<IStreamProcessor?> CreateAsync(ISessionHandle client, Guid contextIdentifier, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
@@ -32,7 +35,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.FFmpeg
                 outputPath
             );
 
-            return new FFmpegProcess(config);
+            return new FFmpegProcess(config, _logger);
         }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using LiveStreamingServerNet.StreamProcessor.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Exceptions;
+using LiveStreamingServerNet.StreamProcessor.Internal.Logging;
 using LiveStreamingServerNet.Utilities.Common;
+using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 
 namespace LiveStreamingServerNet.StreamProcessor.Internal.FFmpeg
@@ -8,15 +10,17 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.FFmpeg
     internal partial class FFmpegProcess : IStreamProcessor
     {
         private readonly Configuration _config;
+        private readonly ILogger _logger;
 
         public string Name { get; }
         public Guid ContextIdentifier { get; }
 
-        public FFmpegProcess(Configuration config)
+        public FFmpegProcess(Configuration config, ILogger logger)
         {
             Name = config.Name;
             ContextIdentifier = config.ContextIdentifier;
             _config = config;
+            _logger = logger;
         }
 
         public async Task RunAsync(
@@ -36,6 +40,8 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.FFmpeg
             var arguments = _config.Arguments
                 .Replace("{inputPath}", inputPath, StringComparison.InvariantCultureIgnoreCase)
                 .Replace("{outputPath}", outputPath, StringComparison.InvariantCultureIgnoreCase);
+
+            _logger.StartingFFmpegProcess(arguments);
 
             using var process = new Process();
 

@@ -17,13 +17,15 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.AdaptiveTranscodin
 
             HlsOptions HlsOptions,
             PerformanceOptions PerformanceOptions,
-            DownsamplingFilter[] DownsamplingFilters,
+            IList<DownsamplingFilter> DownsamplingFilters,
 
-            string VideoEncodingArguments,
-            string AudioEncodingArguments,
+            string? VideoEncodingArguments,
+            string? AudioEncodingArguments,
 
             string? VideoDecodingArguments = null,
             string? AudioDecodingArguments = null,
+
+            IList<string>? AdditionalInputs = null,
 
             TimeSpan? CleanupDelay = null
         );
