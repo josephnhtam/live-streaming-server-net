@@ -61,7 +61,11 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.AdaptiveTranscodin
                     VideoDecodingArguments: _config.VideoDecodingArguments,
                     AudioDecodingArguments: _config.AudioDecodingArguments,
 
+                    VideoFilters: _config.VideoFilters?.ToArray(),
+                    AudioFilters: _config.AudioFilters?.ToArray(),
+
                     AdditionalInputs: _config.AdditionalInputs?.ToArray(),
+                    AdditionalComplexFilters: _config.AdditionalComplexFilters?.ToArray(),
 
                     CleanupDelay: _config.HlsOptions.DeleteOutdatedSegments ? _config.CleanupDelay : null
                 );

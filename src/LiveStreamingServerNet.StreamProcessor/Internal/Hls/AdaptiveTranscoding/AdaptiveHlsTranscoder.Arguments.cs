@@ -1,5 +1,6 @@
 ﻿using LiveStreamingServerNet.StreamProcessor.Exceptions;
 using LiveStreamingServerNet.StreamProcessor.Hls.Configurations;
+using System.Text;
 using System.Text.Json;
 
 namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.AdaptiveTranscoding
@@ -18,6 +19,8 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.AdaptiveTranscodin
             AddInputs(arguments);
 
             AddPerformanceOptions(arguments);
+
+            AddComplexFilter(downsamplingFilters, arguments);
 
             AddEncodingArguments(arguments);
 
@@ -112,11 +115,155 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.AdaptiveTranscodin
 
         private static IList<DownsamplingFilter> GetDownsamplingFilters(
             JsonDocument streamInfo,
-            IList<DownsamplingFilter> downsamplingFilters)
+            IEnumerable<DownsamplingFilter> downsamplingFilters)
         {
             var videoHeight = GetVideoHeight(streamInfo);
             var result = downsamplingFilters.Where(x => x.Height <= videoHeight).ToList();
             return result.Any() ? result : downsamplingFilters.Take(1).ToList();
+        }
+
+        private void AddComplexFilter(IList<DownsamplingFilter> downsamplingFilters, List<string> arguments)
+        {
+            arguments.Add($"-filter_complex \"{BuildComplexFilter(downsamplingFilters)}\"");
+        }
+
+        private string BuildComplexFilter(IList<DownsamplingFilter> downsamplingFilters)
+        {
+            var sb = new StringBuilder();
+
+            AppendAdditionalFilters(sb);
+
+            var videoSrc = AppendPreSplitVideoFilters(sb);
+            AppendVideoSplit(downsamplingFilters, sb, videoSrc);
+            AppendVideoFilters(downsamplingFilters, sb);
+
+            var audioSrc = AppendPreSplitAudioFilters(sb);
+            AppendAudioSplit(downsamplingFilters, sb, audioSrc);
+            AppendAudioFilters(downsamplingFilters, sb);
+
+            return sb.ToString();
+
+            void AppendAdditionalFilters(StringBuilder sb)
+            {
+                if (_config.AdditionalComplexFilters?.Any() != true)
+                    return;
+
+                foreach (var filter in _config.AdditionalComplexFilters)
+                {
+                    sb.Append(filter);
+                    sb.Append(";");
+                }
+            }
+
+            string AppendPreSplitVideoFilters(StringBuilder sb)
+            {
+                var src = "0:v";
+
+                if (_config.VideoFilters?.Any() == true)
+                {
+                    string next = src;
+
+                    var filters = _config.VideoFilters.ToList();
+                    for (int i = 0; i < filters.Count; i++)
+                    {
+                        sb.Append($"[{next}]");
+                        sb.Append(filters[i]);
+
+                        next = $"vsrc-{i}";
+                        sb.Append($"[{next}];");
+                    }
+
+                    return next;
+                }
+
+                return src;
+            }
+
+            string AppendPreSplitAudioFilters(StringBuilder sb)
+            {
+                var src = "0:a";
+
+                if (_config.AudioFilters?.Any() == true)
+                {
+                    string next = src;
+
+                    var filters = _config.AudioFilters.ToList();
+                    for (int i = 0; i < filters.Count; i++)
+                    {
+                        sb.Append($"[{next}]");
+                        sb.Append(filters[i]);
+
+                        next = $"asrc-{i}";
+                        sb.Append($"[{next}];");
+                    }
+
+                    return next;
+                }
+
+                return src;
+            }
+
+            static void AppendVideoSplit(IList<DownsamplingFilter> downsamplingFilters, StringBuilder sb, string src)
+            {
+                sb.Append($"[{src}]split=");
+                sb.Append(downsamplingFilters.Count);
+
+                for (int i = 0; i < downsamplingFilters.Count; i++)
+                {
+                    var filter = downsamplingFilters[i];
+                    sb.Append($"[vout{i}-0]");
+                }
+
+                sb.Append(";");
+            }
+
+            static void AppendVideoFilters(IList<DownsamplingFilter> downsamplingFilters, StringBuilder sb)
+            {
+                for (int i = 0; i < downsamplingFilters.Count; i++)
+                {
+                    var filter = downsamplingFilters[i];
+                    sb.Append($"[vout{i}-0]scale=-2:{filter.Height}[vout{i}-1];");
+
+                    int index = 1;
+                    foreach (var videoFilter in downsamplingFilters[i].VideoFilter ?? Enumerable.Empty<string>())
+                    {
+                        sb.Append($"[vout{i}-{index}]");
+                        sb.Append(videoFilter);
+                        sb.Append($"[vout{i}-{index + 1}];");
+                        index++;
+                    }
+                }
+            }
+
+            static void AppendAudioSplit(IList<DownsamplingFilter> downsamplingFilters, StringBuilder sb, string src)
+            {
+                sb.Append($"[{src}]asplit=");
+                sb.Append(downsamplingFilters.Count);
+
+                for (int i = 0; i < downsamplingFilters.Count; i++)
+                {
+                    var filter = downsamplingFilters[i];
+                    sb.Append($"[aout{i}-0]");
+                }
+
+                sb.Append(";");
+            }
+
+            static void AppendAudioFilters(IList<DownsamplingFilter> downsamplingFilters, StringBuilder sb)
+            {
+                for (int i = 0; i < downsamplingFilters.Count; i++)
+                {
+                    int index = 0;
+
+                    foreach (var audioFilter in downsamplingFilters[i].AudioFilter ?? Enumerable.Empty<string>())
+                    {
+                        sb.Append($"[aout{i}-{index}]");
+                        sb.Append(audioFilter);
+                        sb.Append($"[aout{i}-{index + 1}];");
+                        index++;
+                    }
+                }
+            }
         }
 
         private static void AddStreamMappings(IList<DownsamplingFilter> downsamplingFilters, List<string> arguments)
@@ -130,42 +277,20 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.AdaptiveTranscodin
 
             static void MapVideoStream(List<string> arguments, int i, DownsamplingFilter filter)
             {
-                arguments.Add($"-map 0:v:0");
+                var lastIndex = 1 + (filter.VideoFilter?.Count() ?? 0);
+                arguments.Add($"-map \"[vout{i}-{lastIndex}]\"");
 
                 AddOptionalArgument(arguments, filter.VideoEncodingArgument?.Invoke(i));
                 arguments.Add($"-maxrate:v:{i} {filter.MaxVideoBitrate}");
-
-                var videoFilter = CreateVideoFilter(filter);
-                arguments.Add($"-filter:v:{i} \"{videoFilter}\"");
             }
 
             static void MapAudioStream(List<string> arguments, int i, DownsamplingFilter filter)
             {
-                arguments.Add("-map 0:a:0");
+                var lastIndex = filter.AudioFilter?.Count() ?? 0;
+                arguments.Add($"-map \"[aout{i}-{lastIndex}]\"");
 
                 AddOptionalArgument(arguments, filter.AudioEncodingArgument?.Invoke(i));
                 arguments.Add($"-b:a:{i} {filter.MaxAudioBitrate}");
-
-                var audioFilter = CreateAudioFilter(filter);
-                if (audioFilter != null) arguments.Add($"-filter:a:{i} \"{audioFilter}\"");
-            }
-
-            static string CreateVideoFilter(DownsamplingFilter filter)
-            {
-                var videoFilters = new List<string> { $"scale=-2:{filter.Height}" };
-
-                if (filter.VideoFilter != null)
-                    videoFilters.AddRange(filter.VideoFilter);
-
-                return string.Join(",", videoFilters);
-            }
-
-            static string? CreateAudioFilter(DownsamplingFilter filter)
-            {
-                if (filter.AudioFilter != null)
-                    return string.Join(",", filter.AudioFilter);
-
-                return null;
             }
         }
 

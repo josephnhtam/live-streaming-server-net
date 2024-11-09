@@ -70,7 +70,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Hls.Configurations
         /// Gets or sets the array of downsampling filters for adaptive streaming.
         /// Default: 360p (600k/64k), 480p (1500k/128k), 720p (3000k/256k).
         /// </summary>
-        public IList<DownsamplingFilter> DownsamplingFilters { get; set; } = new[] {
+        public IEnumerable<DownsamplingFilter> DownsamplingFilters { get; set; } = new[] {
             new DownsamplingFilter("360p", 360, "600k", "64k"),
             new DownsamplingFilter("480p", 480, "1500k", "128k"),
             new DownsamplingFilter("720p", 720, "3000k", "256k"),
@@ -103,11 +103,32 @@ namespace LiveStreamingServerNet.StreamProcessor.Hls.Configurations
         public string? AudioDecodingArguments { get; set; }
 
         /// <summary>
+        /// Gets or sets additional video filters to apply.
+        /// e.g. ["transpose=1"] for rotating video 90 degrees.
+        /// Default: null.
+        /// </summary>
+        public IEnumerable<string>? VideoFilters { get; set; } = null;
+
+        /// <summary>
+        /// Gets or sets additional audio filters to apply.
+        /// e.g. ["volume=0.5"] for reducing audio volume by half.
+        /// Default: null.
+        /// </summary>
+        public IEnumerable<string>? AudioFilters { get; set; } = null;
+
+        /// <summary>
         /// Gets or sets additional input paths for FFmpeg.
         /// RTMP stream input is automatically added as the first input.
         /// Default: null.
         /// </summary>
-        public IList<string>? AdditionalInputs { get; set; } = null;
+        public IEnumerable<string>? AdditionalInputs { get; set; } = null;
+
+        /// <summary>
+        /// Gets or sets additional complex filters to apply.
+        /// e.g. ["[1:v]scale=128:128[icon]"] for scaling an overlay image.
+        /// Default: null.
+        /// </summary>
+        public IEnumerable<string>? AdditionalComplexFilters { get; set; } = null;
 
         /// <summary>
         /// Gets or sets the delay before cleaning up transcoded files.
@@ -149,7 +170,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Hls.Configurations
         TimeSpan SegmentLength,
         int SegmentListSize,
         bool DeleteOutdatedSegments,
-        IList<string>? Flags = null,
+        IEnumerable<string>? Flags = null,
         string? ExtraArguments = null
     );
 
