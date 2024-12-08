@@ -1,39 +1,19 @@
 import { Box, Modal, ModalClose, Sheet, Typography } from "@mui/joy";
 import { useCallback, useContext, useEffect, useState } from "react";
-import { StreamPreviewContext } from "../context/StreamPreviewContext";
+import {
+  PreviewInfo,
+  PreviewType,
+  StreamPreviewContext,
+} from "../context/StreamPreviewContext";
 import flvjs from "flv.js";
+import Hls from "hls.js";
 
 export default function StreamPreview() {
-  const { flvPreviewUri, opened, close } = useContext(StreamPreviewContext);
+  const { previewInfo, opened, close } = useContext(StreamPreviewContext);
   const [video, setVideo] = useState<HTMLVideoElement | null>(null);
-  const [flvPlayer, setFlvPlayer] = useState<flvjs.Player | null>(null);
+  const refCallback = useCallback((ref: HTMLVideoElement) => setVideo(ref), []);
 
-  const refCallback = useCallback((ref: HTMLVideoElement) => {
-    setVideo(ref);
-  }, []);
-
-  useEffect(() => {
-    if (!video || !flvjs.isSupported) return;
-
-    const flvPlayer = flvjs.createPlayer({
-      type: "flv",
-      url: flvPreviewUri,
-      isLive: true,
-      cors: true,
-    });
-
-    flvPlayer.attachMediaElement(video);
-    flvPlayer.load();
-    flvPlayer.play();
-
-    setFlvPlayer(flvPlayer);
-  }, [video, flvPreviewUri]);
-
-  useEffect(() => {
-    if (opened || !flvPlayer) return;
-
-    flvPlayer.destroy();
-  }, [flvPlayer, opened]);
+  useVideoMounting(opened, video, previewInfo);
 
   return (
     <>
@@ -62,12 +42,72 @@ export default function StreamPreview() {
           <Box className="w-[1280px] max-w-[70vw] aspect-video flex justify-center">
             <video
               className="w-full h-full"
-              ref={refCallback}
               controls={false}
+              ref={refCallback}
             />
           </Box>
         </Sheet>
       </Modal>
     </>
   );
+}
+
+function useVideoMounting(
+  opened: boolean,
+  video: HTMLVideoElement | null,
+  previewInfo?: PreviewInfo
+) {
+  useEffect(() => {
+    if (!opened || !video || !previewInfo) {
+      return;
+    }
+
+    switch (previewInfo.previewType) {
+      case PreviewType.HttpFlv: {
+        const flvPlayer = mountFlvPlayer(previewInfo.previewUri, video);
+        return () => flvPlayer?.destroy();
+      }
+      case PreviewType.Hls: {
+        const hlsPlayer = mountHlsPlayer(previewInfo.previewUri, video);
+        return () => hlsPlayer?.destroy();
+      }
+    }
+  }, [opened, video, previewInfo]);
+}
+
+function mountFlvPlayer(previewUri: string, video: HTMLVideoElement) {
+  if (!flvjs.isSupported) return null;
+
+  const flvPlayer = flvjs.createPlayer({
+    type: "flv",
+    url: previewUri,
+    isLive: true,
+    cors: true,
+  });
+
+  flvPlayer.attachMediaElement(video);
+  flvPlayer.load();
+  flvPlayer.play();
+
+  return flvPlayer;
+}
+
+function mountHlsPlayer(previewUri: string, video: HTMLVideoElement) {
+  if (!Hls.isSupported()) return null;
+
+  const hls = new Hls({
+    enableWorker: true,
+    lowLatencyMode: true,
+    liveSyncDurationCount: 4,
+    liveMaxLatencyDurationCount: 8,
+  });
+
+  hls.attachMedia(video);
+
+  hls.on(Hls.Events.MEDIA_ATTACHED, (event, data) => {
+    hls.loadSource(previewUri);
+    video.play();
+  });
+
+  return hls;
 }

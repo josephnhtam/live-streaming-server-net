@@ -5,6 +5,9 @@ interface EnvConfig {
 
   HAS_HTTP_FLV_PREVIEW: boolean;
   HTTP_FLV_URI_PATTERN: string;
+
+  HAS_HLS_PREVIEW: boolean;
+  HLS_URI_PATTERN: string;
 }
 
 export const getEnvConfig = () => (window as any)._env as EnvConfig;

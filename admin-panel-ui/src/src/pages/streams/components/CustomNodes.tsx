@@ -16,7 +16,7 @@ import { Stream } from "../../../store/features/streams";
 import moment from "moment";
 import { IStreamTableContext } from "../context/StreamTableContext";
 import { getEnvConfig } from "../../../common/env";
-import { StreamPreviewContext } from "../context/StreamPreviewContext";
+import { PreviewType } from "../context/StreamPreviewContext";
 
 export function StreamPathColumn(stream: Stream) {
   return (
@@ -62,13 +62,27 @@ export function StreamOptionsColumn(
   const options: React.ReactNode[] = [];
 
   if (envConfig.HAS_HTTP_FLV_PREVIEW) {
-    const uri = envConfig.HTTP_FLV_URI_PATTERN.replace(
-      "{streamPath}",
+    const uri = injectStreamPath(
+      envConfig.HTTP_FLV_URI_PATTERN,
       stream.streamPath
     );
+
     options.push(
-      <MenuItem key="http-flv" onClick={() => openPreview(uri)}>
+      <MenuItem
+        key="http-flv"
+        onClick={() => openPreview(PreviewType.HttpFlv, uri)}
+      >
         Watch via HTTP-FLV
+      </MenuItem>
+    );
+  }
+
+  if (envConfig.HAS_HLS_PREVIEW) {
+    const uri = injectStreamPath(envConfig.HLS_URI_PATTERN, stream.streamPath);
+
+    options.push(
+      <MenuItem key="hls" onClick={() => openPreview(PreviewType.Hls, uri)}>
+        Watch via HLS
       </MenuItem>
     );
   }
@@ -94,4 +108,10 @@ export function StreamOptionsColumn(
       </Menu>
     </Dropdown>
   );
+}
+
+function injectStreamPath(uri: string, streamPath: string) {
+  return uri
+    .replace("/{streamPath}", streamPath)
+    .replace("{streamPath}", streamPath);
 }

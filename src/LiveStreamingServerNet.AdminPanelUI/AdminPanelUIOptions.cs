@@ -33,6 +33,17 @@ namespace LiveStreamingServerNet.AdminPanelUI
         public string HttpFlvUriPattern { get; set; } = "{streamPath}.flv";
 
         /// <summary>
+        /// Indicates whether HLS preview functionality is enabled.
+        /// </summary>
+        public bool HasHlsPreview { get; set; }
+
+        /// <summary>
+        /// URI pattern for HLS streams.
+        /// Default: "{streamPath}/output.m3u8".
+        /// </summary>
+        public string HlsUriPattern { get; set; } = "{streamPath}/output.m3u8";
+
+        /// <summary>
         /// File provider for serving static files.
         /// </summary>
         public IFileProvider? FileProvider { get; set; }
@@ -74,6 +85,8 @@ namespace LiveStreamingServerNet.AdminPanelUI
                 ["STREAMS_BASE_URI"] = StreamsBaseUri,
                 ["HAS_HTTP_FLV_PREVIEW"] = HasHttpFlvPreview,
                 ["HTTP_FLV_URI_PATTERN"] = HttpFlvUriPattern,
+                ["HAS_HLS_PREVIEW"] = HasHlsPreview,
+                ["HLS_URI_PATTERN"] = HlsUriPattern
             };
         }
     }

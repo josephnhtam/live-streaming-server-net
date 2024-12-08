@@ -1,22 +1,35 @@
 import { createContext, useState } from "react";
 
 interface IStreamPreviewContext {
-  flvPreviewUri?: string;
+  previewInfo?: PreviewInfo;
   opened: boolean;
-  open: (flvPreviewUri: string) => void;
+  open: (previewType: PreviewType, previewUri: string) => void;
   close: () => void;
+}
+
+export enum PreviewType {
+  HttpFlv,
+  Hls,
+}
+
+export interface PreviewInfo {
+  previewType: PreviewType;
+  previewUri: string;
 }
 
 export const StreamPreviewContext = createContext<IStreamPreviewContext>(null!);
 
 export function useStreamPreviewContext() {
   const [opened, setOpened] = useState(false);
-  const [flvPreviewUri, setFlvPreviewUri] = useState<string | undefined>(
+  const [previewInfo, setPreviewInfo] = useState<PreviewInfo | undefined>(
     undefined
   );
 
-  const open = (flvPreviewUri: string) => {
-    setFlvPreviewUri(flvPreviewUri);
+  const open = (previewType: PreviewType, previewUri: string) => {
+    setPreviewInfo({
+      previewType: previewType,
+      previewUri: previewUri,
+    });
     setOpened(true);
   };
 
@@ -25,7 +38,7 @@ export function useStreamPreviewContext() {
   };
 
   const value: IStreamPreviewContext = {
-    flvPreviewUri,
+    previewInfo,
     opened,
     open,
     close,

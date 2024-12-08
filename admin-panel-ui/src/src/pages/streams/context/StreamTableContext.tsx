@@ -14,13 +14,13 @@ import {
   StreamsThunkActions,
 } from "../../../store/features/streams";
 import { StreamsTablePageSize } from "../../../common/constants";
-import { StreamPreviewContext } from "./StreamPreviewContext";
+import { PreviewType, StreamPreviewContext } from "./StreamPreviewContext";
 
 interface ExtraStreamTableContext {
   filter: string;
   setFilter: (filter: string) => void;
   deleteStream: (streamId: string) => void;
-  openPreview: (flvPreviewUri: string) => void;
+  openPreview: (previewType: PreviewType, previewUri: string) => void;
 }
 
 export type IStreamTableContext = TableContext<Stream> &
@@ -66,8 +66,8 @@ export function useStreamTableContext() {
     [dispatch]
   );
 
-  const openPreview = (flvPreviewUri: string) => {
-    streamPreviewContext.open(flvPreviewUri);
+  const openPreview = (previewType: PreviewType, previewUri: string) => {
+    streamPreviewContext.open(previewType, previewUri);
   };
 
   useEffect(() => refetch(), [revision]);
