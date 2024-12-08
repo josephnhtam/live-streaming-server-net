@@ -5,8 +5,8 @@ import {
   PreviewType,
   StreamPreviewContext,
 } from "../context/StreamPreviewContext";
-import flvjs from "flv.js";
 import Hls from "hls.js";
+import mpegts from "mpegts.js";
 
 export default function StreamPreview() {
   const { previewInfo, opened, close } = useContext(StreamPreviewContext);
@@ -76,9 +76,9 @@ function useVideoMounting(
 }
 
 function mountFlvPlayer(previewUri: string, video: HTMLVideoElement) {
-  if (!flvjs.isSupported) return null;
+  if (!mpegts.isSupported) return null;
 
-  const flvPlayer = flvjs.createPlayer({
+  const flvPlayer = mpegts.createPlayer({
     type: "flv",
     url: previewUri,
     isLive: true,
