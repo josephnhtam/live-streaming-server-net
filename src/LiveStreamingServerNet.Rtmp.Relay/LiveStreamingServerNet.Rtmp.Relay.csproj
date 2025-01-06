@@ -15,4 +15,9 @@
     <ProjectReference Include="..\LiveStreamingServerNet.Rtmp.Server\LiveStreamingServerNet.Rtmp.Server.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
+    <InternalsVisibleTo Include="LiveStreamingServerNet.Rtmp.Relay.Test" />
+  </ItemGroup>
+
 </Project>
