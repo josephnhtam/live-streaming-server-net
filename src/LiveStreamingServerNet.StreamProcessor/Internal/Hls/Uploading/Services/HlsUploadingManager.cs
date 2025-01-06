@@ -24,7 +24,8 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Uploading.Services
             {
                 var uploaderTask = uploader.RunAsync(cts.Token);
                 _uploaderTasks[context.OutputPath] = new UploaderTask(uploaderTask, cts);
-                _ = uploaderTask.ContinueWith(_ => _uploaderTasks.TryRemove(context.OutputPath, out var _));
+                _ = uploaderTask.ContinueWith(_ =>
+                    _uploaderTasks.TryRemove(context.OutputPath, out var _), TaskContinuationOptions.ExecuteSynchronously);
             }
         }
 

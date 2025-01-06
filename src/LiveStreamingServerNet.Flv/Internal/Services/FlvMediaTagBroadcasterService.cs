@@ -66,7 +66,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
 
             var clientTask = Task.Run(() => ClientTask(context));
             _clientTasks[client] = clientTask;
-            _ = clientTask.ContinueWith(_ => _clientTasks.TryRemove(client, out var _));
+            _ = clientTask.ContinueWith(_ => _clientTasks.TryRemove(client, out var _), TaskContinuationOptions.ExecuteSynchronously);
         }
 
         public async ValueTask UnregisterClientAsync(IFlvClient client)

@@ -56,7 +56,8 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
 
             var clientTask = Task.Run(() => ClientTask(clientContext));
             _clientTasks[clientContext] = clientTask;
-            _ = clientTask.ContinueWith(_ => _clientTasks.TryRemove(clientContext, out var _));
+            _ = clientTask.ContinueWith(_ =>
+                _clientTasks.TryRemove(clientContext, out var _), TaskContinuationOptions.ExecuteSynchronously);
         }
 
         public async ValueTask UnregisterClientAsync(IRtmpClientSessionContext clientContext)

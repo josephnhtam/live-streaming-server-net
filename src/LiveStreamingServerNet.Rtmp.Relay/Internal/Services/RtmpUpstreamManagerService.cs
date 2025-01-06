@@ -60,7 +60,8 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Services
                 var upstreamProcessTask = UpstreamProcessTask(upstreamProcess, cts.Token);
 
                 _upstreamProcessTasks[streamPath] = new(upstreamProcess, upstreamProcessTask, cts);
-                _ = upstreamProcessTask.ContinueWith(_ => FinalizeUpstreamProcessAsync(streamPath, cts, upstreamProcess));
+                _ = upstreamProcessTask.ContinueWith(_ =>
+                    FinalizeUpstreamProcessAsync(streamPath, cts, upstreamProcess), TaskContinuationOptions.ExecuteSynchronously);
             }
         }
 

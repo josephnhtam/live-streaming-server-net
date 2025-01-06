@@ -65,7 +65,8 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Services
                 var cleanupTask = CleanupAsync(manifestPath, files, cleanupDelay, delayCts.Token);
 
                 _pendingCleanups[manifestPath] = new PendingCleanup(manifestPath, files, cleanupTask, delayCts);
-                _ = cleanupTask.ContinueWith(_ => _pendingCleanups.TryRemove(manifestPath, out var _), TaskContinuationOptions.ExecuteSynchronously);
+                _ = cleanupTask.ContinueWith(_ =>
+                    _pendingCleanups.TryRemove(manifestPath, out var _), TaskContinuationOptions.ExecuteSynchronously);
             }
             finally
             {

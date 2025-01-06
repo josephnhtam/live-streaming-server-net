@@ -132,7 +132,9 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Services
                 var downstreamProcessTask = DownstreamProcessTask(downstreamProcess, tcs, cts.Token);
 
                 _downstreamProcessTasks[streamPath] = new(downstreamProcessTask, cts);
-                _ = downstreamProcessTask.ContinueWith(_ => FinalizeDownstreamProcessAsync(downstreamProcess, streamPath, cts));
+                _ = downstreamProcessTask.ContinueWith(_ =>
+                    FinalizeDownstreamProcessAsync(downstreamProcess, streamPath, cts),
+                    TaskContinuationOptions.ExecuteSynchronously);
             }
         }
 

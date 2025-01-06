@@ -115,7 +115,8 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
 
             var task = Task.Run(() => StreamKeepaliveTask(context));
             _streamKeepaliveTasks[context] = task;
-            _ = task.ContinueWith(_ => _streamKeepaliveTasks.TryRemove(context, out var _));
+            _ = task.ContinueWith(_ =>
+                _streamKeepaliveTasks.TryRemove(context, out var _), TaskContinuationOptions.ExecuteSynchronously);
         }
 
         private async Task StreamKeepaliveTask(StreamContext context)

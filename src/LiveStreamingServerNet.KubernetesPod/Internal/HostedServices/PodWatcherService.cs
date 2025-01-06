@@ -57,7 +57,8 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.HostedServices
                         else
                         {
                             reconilationTask = reconilationTask.ContinueWith(async _ =>
-                                await _lifetimeManager.ReconcileAsync(labels.AsReadOnly(), annotataions.AsReadOnly(), stoppingToken)
+                                await _lifetimeManager.ReconcileAsync(labels.AsReadOnly(), annotataions.AsReadOnly(), stoppingToken),
+                                TaskContinuationOptions.ExecuteSynchronously
                             );
                         }
                     }

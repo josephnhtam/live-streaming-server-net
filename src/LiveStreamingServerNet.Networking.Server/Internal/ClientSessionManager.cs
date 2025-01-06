@@ -53,7 +53,7 @@ namespace LiveStreamingServerNet.Networking.Server.Internal
 
                 await clientSession.DisposeAsync();
                 _logger.ClientDisconnected(clientId);
-            });
+            }, TaskContinuationOptions.ExecuteSynchronously);
         }
 
         private uint GetNextClientId()
