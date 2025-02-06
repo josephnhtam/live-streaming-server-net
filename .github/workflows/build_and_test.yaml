@@ -24,10 +24,10 @@ jobs:
       - name: Build
         run: dotnet build --configuration Release
       - name: Test
-        run: dotnet test --configuration Release --logger trx --results-directory test-results --no-build
+        run: dotnet test --configuration Release --logger trx --results-directory test-results/${{ matrix.os }} --no-build
       - name: Upload test results
         uses: actions/upload-artifact@v4
         with:
-          name: test-results
-          path: ./test-results
+          name: test-results-${{ matrix.os }}
+          path: ./test-results/${{ matrix.os }}
         if: ${{ always() }}
