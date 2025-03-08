@@ -182,7 +182,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
 
                 if (tsSegment.HasValue)
                 {
-                    await AddSegmentsAsync(tsSegment.Value);
+                    await AddSegmentAsync(tsSegment.Value);
                     await WriteManifestAsync();
                 }
 
@@ -227,7 +227,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
             return tsSegment;
         }
 
-        private ValueTask AddSegmentsAsync(TsSegment newSegment)
+        private ValueTask AddSegmentAsync(TsSegment newSegment)
         {
             _segments.Enqueue(newSegment);
 
@@ -324,8 +324,8 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
 
         private async ValueTask PostRunAsync()
         {
-            UnregisterHlsOutputPath();
             await ScheduleCleanupAsync();
+            UnregisterHlsOutputPath();
         }
 
         private void RegisterHlsOutputPath()
