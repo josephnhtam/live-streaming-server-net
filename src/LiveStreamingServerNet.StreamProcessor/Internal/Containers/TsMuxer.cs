@@ -361,8 +361,8 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Containers
         {
             Debug.Assert(_segmentTimestamp.HasValue);
 
-            var duration = (int)(timestamp - _segmentTimestamp);
-            var segment = new TsSegment(path, _sequenceNumber, duration);
+            var duration = timestamp - _segmentTimestamp.Value;
+            var segment = new TsSegment(path, _sequenceNumber, timestamp, duration);
 
             _sequenceNumber++;
             _segmentTimestamp = null;

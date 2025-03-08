@@ -214,7 +214,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
             var tsSegment = await _tsMuxer.FlushAsync(timestamp);
 
             if (tsSegment.HasValue)
-                _logger.TsSegmentFlushed(Name, ContextIdentifier, StreamPath, tsSegment.Value.FilePath, tsSegment.Value.SequenceNumber, tsSegment.Value.Duration);
+                _logger.TsSegmentFlushed(Name, ContextIdentifier, StreamPath, tsSegment.Value.FilePath, tsSegment.Value.SequenceNumber, tsSegment.Value.Timestamp, tsSegment.Value.Duration);
 
             return tsSegment;
         }
