@@ -4,6 +4,7 @@
     {
         public record struct Configuration(
             Guid ContextIdentifier,
+            string StreamPath,
             string TransmuxerName,
             string ManifestOutputPath,
             string TsSegmentOutputPath,

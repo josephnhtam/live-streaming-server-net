@@ -7,6 +7,7 @@ using LiveStreamingServerNet.StreamProcessor.Internal.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Services;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Services.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing;
+using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing.M3u8;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing.M3u8.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing.Services;
@@ -50,14 +51,15 @@ namespace LiveStreamingServerNet.StreamProcessor.Installer
             services.TryAddSingleton<IManifestWriter, ManifestWriter>();
             services.TryAddSingleton<IHlsTransmuxerManager, HlsTransmuxerManager>();
             services.TryAddSingleton<IHlsCleanupManager, HlsCleanupManager>();
+            services.TryAddSingleton<IHlsOutputHandlerFactory, HlsOutputHandlerFactory>();
+
             services.AddSingleton<IRtmpMediaMessageInterceptor, HlsRtmpMediaMessageScraper>();
 
             services.AddSingleton<IStreamProcessorFactory>(svc =>
                 new HlsTransmuxerFactory(
                     svc,
                     svc.GetRequiredService<IHlsTransmuxerManager>(),
-                    svc.GetRequiredService<IHlsCleanupManager>(),
-                    svc.GetRequiredService<IManifestWriter>(),
+                    svc.GetRequiredService<IHlsOutputHandlerFactory>(),
                     svc.GetRequiredService<IHlsPathRegistry>(),
                     config,
                     svc.GetRequiredService<ILogger<HlsTransmuxer>>(),

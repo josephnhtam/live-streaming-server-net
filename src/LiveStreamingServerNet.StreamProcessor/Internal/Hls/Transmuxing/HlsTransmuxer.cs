@@ -5,9 +5,7 @@ using LiveStreamingServerNet.StreamProcessor.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Containers;
 using LiveStreamingServerNet.StreamProcessor.Internal.Containers.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Contracts;
-using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Services.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing.Contracts;
-using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing.M3u8.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing.Services.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Logging;
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
@@ -21,32 +19,28 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
     {
         private readonly ISessionHandle _client;
         private readonly IHlsTransmuxerManager _transmuxerManager;
-        private readonly IHlsCleanupManager _cleanupManager;
-        private readonly IManifestWriter _manifestWriter;
+        private readonly IHlsOutputHandler _outputHandler;
         private readonly IHlsPathRegistry _pathRegistry;
         private readonly ITsMuxer _tsMuxer;
 
         private readonly Configuration _config;
         private readonly ILogger _logger;
 
-        private readonly Queue<TsSegment> _segments;
         private readonly Channel<PendingMediaPacket> _channel;
 
         private bool _hasVideo;
         private bool _hasAudio;
 
-        private string _streamPath = string.Empty;
         private bool _registeredHlsOutputPath;
 
         public string Name { get; }
         public Guid ContextIdentifier { get; }
+        public string StreamPath { get; }
 
         public HlsTransmuxer(
-            string streamPath,
             ISessionHandle client,
             IHlsTransmuxerManager transmuxerManager,
-            IHlsCleanupManager cleanupManager,
-            IManifestWriter manifestWriter,
+            IHlsOutputHandler outputHandler,
             IHlsPathRegistry pathRegistry,
             ITsMuxer tsMuxer,
             Configuration config,
@@ -56,23 +50,22 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
 
             Name = config.TransmuxerName;
             ContextIdentifier = config.ContextIdentifier;
+            StreamPath = config.StreamPath;
 
             _client = client;
             _transmuxerManager = transmuxerManager;
-            _cleanupManager = cleanupManager;
-            _manifestWriter = manifestWriter;
+            _outputHandler = outputHandler;
             _pathRegistry = pathRegistry;
             _tsMuxer = tsMuxer;
 
             _config = config;
             _logger = logger;
 
-            _segments = new Queue<TsSegment>();
             _channel = Channel.CreateUnbounded<PendingMediaPacket>(new UnboundedChannelOptions { SingleReader = true, AllowSynchronousContinuations = true });
 
-            if (!_transmuxerManager.RegisterTransmuxer(streamPath, this))
+            if (!_transmuxerManager.RegisterTransmuxer(StreamPath, this))
             {
-                _logger.RegisteringHlsTransmuxerFailed(streamPath);
+                _logger.RegisteringHlsTransmuxerFailed(StreamPath);
                 throw new InvalidOperationException("A HLS transmuxer of the same stream path is already registered");
             }
         }
@@ -182,8 +175,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
 
                 if (tsSegment.HasValue)
                 {
-                    await AddSegmentAsync(tsSegment.Value);
-                    await WriteManifestAsync();
+                    await _outputHandler.AddSegmentAsync(tsSegment.Value);
                 }
 
                 return true;
@@ -214,7 +206,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
             var tsSegmentPartial = await _tsMuxer.FlushPartialAsync();
 
             if (tsSegmentPartial.HasValue)
-                _logger.TsSegmentFlushedPartially(Name, ContextIdentifier, _streamPath, tsSegmentPartial.Value.FilePath, tsSegmentPartial.Value.SequenceNumber);
+                _logger.TsSegmentFlushedPartially(Name, ContextIdentifier, StreamPath, tsSegmentPartial.Value.FilePath, tsSegmentPartial.Value.SequenceNumber);
         }
 
         private async ValueTask<TsSegment?> FlushTsMuxerAsync(uint timestamp)
@@ -222,36 +214,9 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
             var tsSegment = await _tsMuxer.FlushAsync(timestamp);
 
             if (tsSegment.HasValue)
-                _logger.TsSegmentFlushed(Name, ContextIdentifier, _streamPath, tsSegment.Value.FilePath, tsSegment.Value.SequenceNumber, tsSegment.Value.Duration);
+                _logger.TsSegmentFlushed(Name, ContextIdentifier, StreamPath, tsSegment.Value.FilePath, tsSegment.Value.SequenceNumber, tsSegment.Value.Duration);
 
             return tsSegment;
-        }
-
-        private ValueTask AddSegmentAsync(TsSegment newSegment)
-        {
-            _segments.Enqueue(newSegment);
-
-            if (_segments.Count > _config.SegmentListSize)
-            {
-                var removedSegment = _segments.Dequeue();
-
-                if (_config.DeleteOutdatedSegments)
-                    DeleteOutdatedSegments(removedSegment);
-            }
-
-            return ValueTask.CompletedTask;
-        }
-
-        private void DeleteOutdatedSegments(TsSegment removedSegment)
-        {
-            File.Delete(removedSegment.FilePath);
-            _logger.OutdatedTsSegmentDeleted(Name, ContextIdentifier, _streamPath, removedSegment.FilePath);
-        }
-
-        private async Task WriteManifestAsync()
-        {
-            await _manifestWriter.WriteAsync(_config.ManifestOutputPath, _segments);
-            _logger.HlsManifestUpdated(Name, ContextIdentifier, _config.ManifestOutputPath, _streamPath);
         }
 
         public async Task RunAsync(
@@ -262,8 +227,6 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
             OnStreamProcessorEnded? onEnded,
             CancellationToken cancellation)
         {
-            _streamPath = streamPath;
-
             try
             {
                 await PreRunAsync();
@@ -319,12 +282,12 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
         private async ValueTask PreRunAsync()
         {
             RegisterHlsOutputPath();
-            await ExecuteCleanupAsync();
+            await _outputHandler.ExecuteCleanupAsync();
         }
 
         private async ValueTask PostRunAsync()
         {
-            await ScheduleCleanupAsync();
+            await _outputHandler.ScheduleCleanupAsync();
             UnregisterHlsOutputPath();
         }
 
@@ -332,7 +295,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
         {
             var outputPath = Path.GetDirectoryName(_config.ManifestOutputPath) ?? string.Empty;
 
-            if (!_pathRegistry.RegisterHlsOutputPath(_streamPath, outputPath))
+            if (!_pathRegistry.RegisterHlsOutputPath(StreamPath, outputPath))
                 throw new InvalidOperationException("A HLS output path of the same stream path is already registered");
 
             _registeredHlsOutputPath = true;
@@ -343,45 +306,8 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
             if (!_registeredHlsOutputPath)
                 return;
 
-            _pathRegistry.UnregisterHlsOutputPath(_streamPath);
+            _pathRegistry.UnregisterHlsOutputPath(StreamPath);
             _registeredHlsOutputPath = false;
-        }
-
-        private async Task ExecuteCleanupAsync()
-        {
-            if (!_config.CleanupDelay.HasValue)
-                return;
-
-            await _cleanupManager.ExecuteCleanupAsync(_config.ManifestOutputPath);
-        }
-
-        private async ValueTask ScheduleCleanupAsync()
-        {
-            if (!_config.CleanupDelay.HasValue)
-                return;
-
-            try
-            {
-                var segments = _segments.ToList();
-                var cleanupDelay = CalculateCleanupDelay(segments, _config.CleanupDelay.Value);
-
-                var files = new List<string> { _config.ManifestOutputPath };
-                files.AddRange(segments.Select(x => x.FilePath));
-
-                await _cleanupManager.ScheduleCleanupAsync(_config.ManifestOutputPath, files, cleanupDelay);
-            }
-            catch (Exception ex)
-            {
-                _logger.SchedulingHlsCleanupError(_config.ManifestOutputPath, ex);
-            }
-        }
-
-        private static TimeSpan CalculateCleanupDelay(IList<TsSegment> tsSegments, TimeSpan cleanupDelay)
-        {
-            if (!tsSegments.Any())
-                return TimeSpan.Zero;
-
-            return TimeSpan.FromMilliseconds(tsSegments.Count * tsSegments.Max(x => x.Duration)) + cleanupDelay;
         }
 
         private record struct PendingMediaPacket(MediaType MediaType, IRentedBuffer RentedBuffer, uint Timestamp);
