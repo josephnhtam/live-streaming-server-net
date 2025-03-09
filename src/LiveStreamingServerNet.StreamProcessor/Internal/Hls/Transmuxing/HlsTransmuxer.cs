@@ -92,6 +92,8 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
 
         private async ValueTask ProcessMediaPacketAsync(MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp)
         {
+            await _outputHandler.InterceptMediaPacketAsync(mediaType, rentedBuffer, timestamp);
+
             switch (mediaType)
             {
                 case MediaType.Video:

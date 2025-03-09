@@ -1,8 +1,10 @@
-﻿using LiveStreamingServerNet.StreamProcessor.Internal.Containers;
+﻿using LiveStreamingServerNet.Rtmp;
+using LiveStreamingServerNet.StreamProcessor.Internal.Containers;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Services.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing.M3u8.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Logging;
+using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using Microsoft.Extensions.Logging;
 using static LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing.HlsTransmuxer;
 
@@ -97,6 +99,11 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
             {
                 _logger.SchedulingHlsCleanupError(_config.ManifestOutputPath, ex);
             }
+        }
+
+        public ValueTask InterceptMediaPacketAsync(MediaType mediaType, IRentedBuffer buffer, uint timestamp)
+        {
+            return ValueTask.CompletedTask;
         }
 
         private static TimeSpan CalculateCleanupDelay(IList<TsSegment> tsSegments, TimeSpan cleanupDelay)
