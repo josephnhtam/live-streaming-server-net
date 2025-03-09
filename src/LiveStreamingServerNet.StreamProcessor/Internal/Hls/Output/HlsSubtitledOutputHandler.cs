@@ -10,24 +10,29 @@ using static LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing.Hls
 
 namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
 {
-    internal class HlsOutputHandler : IHlsOutputHandler
+    internal class HlsSubtitledOutputHandler : IHlsOutputHandler
     {
         private readonly IMediaManifestWriter _manifestWriter;
         private readonly IHlsCleanupManager _cleanupManager;
         private readonly Configuration _config;
-        private readonly ILogger<HlsOutputHandler> _logger;
+        private readonly ILogger<HlsSubtitledOutputHandler> _logger;
         private readonly Queue<SeqSegment> _segments;
+        private readonly CancellationTokenSource _cts;
+        private readonly List<ISubtitleTranscriber> _subtitleTranscribers;
+
+        private Task? _transcriptionResultConsumingTask;
 
         public string Name { get; }
         public Guid ContextIdentifier { get; }
         public string StreamPath { get; }
 
-        public HlsOutputHandler(
+        public HlsSubtitledOutputHandler(
             IDataBufferPool bufferPool,
             IMediaManifestWriter manifestWriter,
             IHlsCleanupManager cleanupManager,
+            IReadOnlyList<SubtitleTranscriptionStreamFactory> subtitleStreamFactories,
             Configuration config,
-            ILogger<HlsOutputHandler> logger)
+            ILogger<HlsSubtitledOutputHandler> logger)
         {
             Name = config.TransmuxerName;
             ContextIdentifier = config.ContextIdentifier;
@@ -37,12 +42,20 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
             _cleanupManager = cleanupManager;
             _config = config;
             _logger = logger;
+
             _segments = new Queue<SeqSegment>();
+            _cts = new CancellationTokenSource();
+
+            var inputStreamWriterFactory = new FlvAudioStreamWriterFactory(bufferPool);
+            _subtitleTranscribers = subtitleStreamFactories.Select(x =>
+                new SubtitleTranscriber(x.Options, x.Factory.Create(inputStreamWriterFactory, x.Options)) as ISubtitleTranscriber
+            ).ToList();
         }
 
-        public ValueTask InitializeAsync()
+        public async ValueTask InitializeAsync()
         {
-            return ValueTask.CompletedTask;
+            await Task.WhenAll(_subtitleTranscribers.Select(x => x.StartAsync().AsTask()));
+            _transcriptionResultConsumingTask = ConsumeTranscriptionResultsAsync(_cts.Token);
         }
 
         public async ValueTask AddSegmentAsync(SeqSegment segment)
@@ -107,22 +120,59 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
             }
         }
 
-        public ValueTask InterceptMediaPacketAsync(MediaType mediaType, IRentedBuffer buffer, uint timestamp)
+        public async ValueTask InterceptMediaPacketAsync(MediaType mediaType, IRentedBuffer buffer, uint timestamp)
         {
-            return ValueTask.CompletedTask;
+            if (mediaType != MediaType.Audio)
+            {
+                return;
+            }
+
+            foreach (var transcriber in _subtitleTranscribers)
+            {
+                await transcriber.EnqueueAudioBufferAsync(buffer, timestamp);
+            }
         }
 
-        public ValueTask DisposeAsync()
+        private async Task ConsumeTranscriptionResultsAsync(CancellationToken cancellationToken)
         {
-            return ValueTask.CompletedTask;
+            await Task.WhenAll(_subtitleTranscribers.Select(x => ConsumeTranscriptionResultsAsync(x, cancellationToken)));
         }
 
-        private static TimeSpan CalculateCleanupDelay(IList<SeqSegment> segments, TimeSpan cleanupDelay)
+        private async Task ConsumeTranscriptionResultsAsync(ISubtitleTranscriber transcriber, CancellationToken cancellationToken)
         {
-            if (!segments.Any())
+            try
+            {
+                while (!cancellationToken.IsCancellationRequested)
+                {
+                    await transcriber.ReceiveTranscriptionResultAsync(cancellationToken);
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+        }
+
+        public async ValueTask DisposeAsync()
+        {
+            _cts.Cancel();
+
+            foreach (var transcriber in _subtitleTranscribers)
+            {
+                await transcriber.DisposeAsync();
+            }
+
+            if (_transcriptionResultConsumingTask != null)
+            {
+                await _transcriptionResultConsumingTask;
+            }
+        }
+
+        private static TimeSpan CalculateCleanupDelay(IList<SeqSegment> tsSegments, TimeSpan cleanupDelay)
+        {
+            if (!tsSegments.Any())
                 return TimeSpan.Zero;
 
-            return TimeSpan.FromMilliseconds(segments.Count * segments.Max(x => x.Duration)) + cleanupDelay;
+            return TimeSpan.FromMilliseconds(tsSegments.Count * tsSegments.Max(x => x.Duration)) + cleanupDelay;
         }
     }
 }
