@@ -4,7 +4,7 @@ using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 
 namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output.Contracts
 {
-    internal interface IHlsOutputHandler
+    internal interface IHlsOutputHandler : IAsyncDisposable
     {
         string Name { get; }
         Guid ContextIdentifier { get; }
