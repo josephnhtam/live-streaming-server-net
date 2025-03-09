@@ -1,12 +1,12 @@
 ﻿using LiveStreamingServerNet.StreamProcessor.Internal.Containers;
+using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Services.Contracts;
-using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing.M3u8.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Logging;
 using Microsoft.Extensions.Logging;
 using static LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing.HlsTransmuxer;
 
-namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
+namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
 {
     internal class HlsOutputHandler : IHlsOutputHandler
     {

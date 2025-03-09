@@ -5,6 +5,7 @@ using LiveStreamingServerNet.StreamProcessor.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Containers;
 using LiveStreamingServerNet.StreamProcessor.Internal.Containers.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Contracts;
+using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing.Services.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Logging;

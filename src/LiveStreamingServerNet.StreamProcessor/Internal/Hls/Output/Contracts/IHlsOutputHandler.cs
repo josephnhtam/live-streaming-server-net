@@ -1,6 +1,6 @@
 ﻿using LiveStreamingServerNet.StreamProcessor.Internal.Containers;
 
-namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing.Contracts
+namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output.Contracts
 {
     internal interface IHlsOutputHandler
     {
