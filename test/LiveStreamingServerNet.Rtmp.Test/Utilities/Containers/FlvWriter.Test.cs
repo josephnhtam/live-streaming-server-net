@@ -1,11 +1,11 @@
 ﻿using AutoFixture;
-using LiveStreamingServerNet.Flv.Internal;
-using LiveStreamingServerNet.Flv.Internal.Contracts;
+using LiveStreamingServerNet.Rtmp.Utilities.Containers;
 using LiveStreamingServerNet.Utilities.Buffers;
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
+using LiveStreamingServerNet.Utilities.Contracts;
 using NSubstitute;
 
-namespace LiveStreamingServerNet.Flv.Test
+namespace LiveStreamingServerNet.Rtmp.Test.Utilities.Containers
 {
     public class FlvWriterTest
     {
