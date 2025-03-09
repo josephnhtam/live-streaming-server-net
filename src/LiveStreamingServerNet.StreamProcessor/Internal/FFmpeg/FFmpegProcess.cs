@@ -14,18 +14,19 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.FFmpeg
 
         public string Name { get; }
         public Guid ContextIdentifier { get; }
+        public string StreamPath { get; }
 
-        public FFmpegProcess(Configuration config, ILogger logger)
+        public FFmpegProcess(string streamPath, Configuration config, ILogger logger)
         {
             Name = config.Name;
             ContextIdentifier = config.ContextIdentifier;
+            StreamPath = streamPath;
             _config = config;
             _logger = logger;
         }
 
         public async Task RunAsync(
             string inputPath,
-            string streamPath,
             IReadOnlyDictionary<string, string> streamArguments,
             OnStreamProcessorStarted? onStarted,
             OnStreamProcessorEnded? onEnded,

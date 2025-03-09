@@ -35,7 +35,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.FFmpeg
                 outputPath
             );
 
-            return new FFmpegProcess(config, _logger);
+            return new FFmpegProcess(streamPath, config, _logger);
         }
     }
 }

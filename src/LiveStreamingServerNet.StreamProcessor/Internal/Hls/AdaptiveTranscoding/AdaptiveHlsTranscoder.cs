@@ -19,13 +19,14 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.AdaptiveTranscodin
         private readonly Configuration _config;
         private readonly ILogger _logger;
 
-        private string _streamPath = string.Empty;
         private bool _registeredHlsOutputPath;
 
         public string Name { get; }
         public Guid ContextIdentifier { get; }
+        public string StreamPath { get; }
 
         public AdaptiveHlsTranscoder(
+            string streamPath,
             IHlsCleanupManager cleanupManager,
             IHlsPathRegistry pathRegistry,
             Configuration config,
@@ -35,6 +36,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.AdaptiveTranscodin
 
             Name = config.Name;
             ContextIdentifier = config.ContextIdentifier;
+            StreamPath = streamPath;
 
             _cleanupManager = cleanupManager;
             _pathRegistry = pathRegistry;
@@ -44,14 +46,13 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.AdaptiveTranscodin
 
         public async Task RunAsync(
             string inputPath,
-            string streamPath,
             IReadOnlyDictionary<string, string> streamArguments,
             OnStreamProcessorStarted? onStarted,
             OnStreamProcessorEnded? onEnded,
             CancellationToken cancellation)
         {
             var streamInfo = await ObtainStreamInformation(inputPath, cancellation);
-            await StartTranscoding(inputPath, streamPath, streamArguments, streamInfo, onStarted, onEnded, cancellation);
+            await StartTranscoding(inputPath, streamArguments, streamInfo, onStarted, onEnded, cancellation);
         }
 
         private async Task<JsonDocument> ObtainStreamInformation(string inputPath, CancellationToken cancellation)
@@ -78,15 +79,12 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.AdaptiveTranscodin
 
         private async Task StartTranscoding(
             string inputPath,
-            string streamPath,
             IReadOnlyDictionary<string, string> streamArguments,
             JsonDocument streamInfo,
             OnStreamProcessorStarted? onStarted,
             OnStreamProcessorEnded? onEnded,
             CancellationToken cancellation)
         {
-            _streamPath = streamPath;
-
             try
             {
                 await PreRunAsync();
@@ -103,8 +101,8 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.AdaptiveTranscodin
                     GracefulTerminationSeconds = _config.FFmpegGracefulTerminationSeconds
                 };
 
-                var ffmpegProcess = new FFmpegProcess(ffmpegConfig, _logger);
-                await ffmpegProcess.RunAsync(inputPath, streamPath, streamArguments, onStarted, onEnded, cancellation);
+                var ffmpegProcess = new FFmpegProcess(StreamPath, ffmpegConfig, _logger);
+                await ffmpegProcess.RunAsync(inputPath, streamArguments, onStarted, onEnded, cancellation);
             }
             finally
             {
@@ -128,7 +126,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.AdaptiveTranscodin
         {
             var outputPath = Path.GetDirectoryName(_config.ManifestOutputPath) ?? string.Empty;
 
-            if (!_pathRegistry.RegisterHlsOutputPath(_streamPath, outputPath))
+            if (!_pathRegistry.RegisterHlsOutputPath(StreamPath, outputPath))
                 throw new InvalidOperationException("A HLS output path of the same stream path is already registered");
 
             _registeredHlsOutputPath = true;
@@ -139,7 +137,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.AdaptiveTranscodin
             if (!_registeredHlsOutputPath)
                 return;
 
-            _pathRegistry.UnregisterHlsOutputPath(_streamPath);
+            _pathRegistry.UnregisterHlsOutputPath(StreamPath);
             _registeredHlsOutputPath = false;
         }
 

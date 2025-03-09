@@ -70,7 +70,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.AdaptiveTranscodin
                     CleanupDelay: _config.HlsOptions.DeleteOutdatedSegments ? _config.CleanupDelay : null
                 );
 
-                return new AdaptiveHlsTranscoder(_cleanupManager, _pathRegistry, config, _logger);
+                return new AdaptiveHlsTranscoder(streamPath, _cleanupManager, _pathRegistry, config, _logger);
             }
             catch
             {

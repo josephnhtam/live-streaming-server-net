@@ -16,6 +16,11 @@
         Guid ContextIdentifier { get; }
 
         /// <summary>
+        /// Gets the stream path of the stream being processed.
+        /// </summary>
+        string StreamPath { get; }
+
+        /// <summary>
         /// Runs the stream processing operation.
         /// </summary>
         /// <param name="inputPath">The input path of the stream to process</param>
@@ -26,7 +31,6 @@
         /// <param name="cancellation">Token to cancel the processing operation</param>
         Task RunAsync(
             string inputPath,
-            string streamPath,
             IReadOnlyDictionary<string, string> streamArguments,
             OnStreamProcessorStarted? onStarted,
             OnStreamProcessorEnded? onEnded,

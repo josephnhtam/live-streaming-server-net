@@ -221,7 +221,6 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
 
         public async Task RunAsync(
             string inputPath,
-            string streamPath,
             IReadOnlyDictionary<string, string> streamArguments,
             OnStreamProcessorStarted? onStarted,
             OnStreamProcessorEnded? onEnded,
@@ -231,7 +230,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
             {
                 await PreRunAsync();
 
-                _logger.HlsTransmuxerStarted(Name, ContextIdentifier, _config.ManifestOutputPath, streamPath);
+                _logger.HlsTransmuxerStarted(Name, ContextIdentifier, _config.ManifestOutputPath, StreamPath);
 
                 onStarted?.Invoke(_config.ManifestOutputPath);
 
@@ -252,7 +251,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
             catch (OperationCanceledException) when (cancellation.IsCancellationRequested) { }
             catch (Exception ex)
             {
-                _logger.ProcessingHlsTransmuxingError(Name, ContextIdentifier, _config.ManifestOutputPath, streamPath, ex);
+                _logger.ProcessingHlsTransmuxingError(Name, ContextIdentifier, _config.ManifestOutputPath, StreamPath, ex);
                 await _client.DisconnectAsync();
             }
             finally
@@ -261,11 +260,11 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
 
                 await PostRunAsync();
 
-                _transmuxerManager.UnregisterTransmuxer(streamPath);
+                _transmuxerManager.UnregisterTransmuxer(StreamPath);
                 onEnded?.Invoke(_config.ManifestOutputPath);
                 _tsMuxer?.Dispose();
 
-                _logger.HlsTransmuxerEnded(Name, ContextIdentifier, _config.ManifestOutputPath, streamPath);
+                _logger.HlsTransmuxerEnded(Name, ContextIdentifier, _config.ManifestOutputPath, StreamPath);
             }
         }
 

@@ -45,7 +45,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Services
             if (!streamProcessors.Any())
                 return;
 
-            var task = RunStreamProcessors(streamProcessors, client, streamPath, streamArguments, cts);
+            var task = RunStreamProcessors(streamProcessors, client, streamArguments, cts);
 
             _processorTasks[clientId] = new StreamProcessorTask(task, cts);
             _ = task.ContinueWith(_ => _processorTasks.TryRemove(clientId, out var task), TaskContinuationOptions.ExecuteSynchronously);
@@ -70,14 +70,13 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Services
         private async Task RunStreamProcessors(
             IList<IStreamProcessor> streamProcessors,
             ISessionHandle client,
-            string streamPath,
             IReadOnlyDictionary<string, string> streamArguments,
             CancellationTokenSource cts)
         {
             var tasks = new List<Task>();
 
             foreach (var streamProcessor in streamProcessors)
-                tasks.Add(Task.Run(() => RunStreamProcessor(streamProcessor, client, streamPath, streamArguments, cts)));
+                tasks.Add(Task.Run(() => RunStreamProcessor(streamProcessor, client, streamArguments, cts)));
 
             await Task.WhenAll(tasks);
         }
@@ -85,17 +84,18 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Services
         private async Task RunStreamProcessor(
             IStreamProcessor streamProcessor,
             ISessionHandle client,
-            string streamPath,
             IReadOnlyDictionary<string, string> streamArguments,
             CancellationTokenSource cts)
         {
             var streamProcessorName = streamProcessor.Name;
             var contextIdentifier = streamProcessor.ContextIdentifier;
+            var streamPath = streamProcessor.StreamPath;
+
             var inputPath = await _inputPathResolver.ResolveInputPathAsync(streamPath, streamArguments);
 
             try
             {
-                await streamProcessor.RunAsync(inputPath, streamPath, streamArguments, StreamProcessorStarted, StreamProcessorStopped, cts.Token);
+                await streamProcessor.RunAsync(inputPath, streamArguments, StreamProcessorStarted, StreamProcessorStopped, cts.Token);
             }
             catch (OperationCanceledException) when (cts.IsCancellationRequested) { }
             catch (Exception ex)
