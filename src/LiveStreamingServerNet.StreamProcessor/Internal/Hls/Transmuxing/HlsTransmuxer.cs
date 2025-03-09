@@ -262,6 +262,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
                 ChannelCleanup();
 
                 await PostRunAsync();
+                await _outputHandler.DisposeAsync();
 
                 _transmuxerManager.UnregisterTransmuxer(StreamPath);
                 onEnded?.Invoke(_config.ManifestOutputPath);

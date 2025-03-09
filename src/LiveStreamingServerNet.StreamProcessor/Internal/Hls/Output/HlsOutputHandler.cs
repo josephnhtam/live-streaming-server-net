@@ -106,6 +106,11 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
             return ValueTask.CompletedTask;
         }
 
+        public ValueTask DisposeAsync()
+        {
+            return ValueTask.CompletedTask;
+        }
+
         private static TimeSpan CalculateCleanupDelay(IList<TsSegment> tsSegments, TimeSpan cleanupDelay)
         {
             if (!tsSegments.Any())
