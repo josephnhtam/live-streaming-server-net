@@ -1,6 +1,6 @@
 ﻿using AutoFixture;
-using LiveStreamingServerNet.Flv.Internal.Contracts;
 using LiveStreamingServerNet.Flv.Internal.HttpClients;
+using LiveStreamingServerNet.Utilities.Contracts;
 using Microsoft.AspNetCore.Http;
 using NSubstitute;
 

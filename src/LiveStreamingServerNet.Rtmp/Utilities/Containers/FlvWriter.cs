@@ -1,10 +1,14 @@
-﻿using LiveStreamingServerNet.Flv.Internal.Contracts;
+﻿using LiveStreamingServerNet.Rtmp.Utilities.Containers.Contracts;
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
+using LiveStreamingServerNet.Utilities.Contracts;
 using Nito.AsyncEx;
 
-namespace LiveStreamingServerNet.Flv.Internal
+namespace LiveStreamingServerNet.Rtmp.Utilities.Containers
 {
-    internal class FlvWriter : IFlvWriter
+    /// <summary>
+    /// Represents a FLV writer.
+    /// </summary>
+    public class FlvWriter : IFlvWriter
     {
         private readonly IStreamWriter _streamWriter;
         private readonly IDataBufferPool _dataBufferPool;

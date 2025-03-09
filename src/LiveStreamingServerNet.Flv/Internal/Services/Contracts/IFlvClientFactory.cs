@@ -1,4 +1,5 @@
 ﻿using LiveStreamingServerNet.Flv.Internal.Contracts;
+using LiveStreamingServerNet.Utilities.Contracts;
 
 namespace LiveStreamingServerNet.Flv.Internal.Services.Contracts
 {
