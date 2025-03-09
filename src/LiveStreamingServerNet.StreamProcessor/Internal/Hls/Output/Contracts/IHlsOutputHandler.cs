@@ -10,6 +10,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output.Contracts
         Guid ContextIdentifier { get; }
         string StreamPath { get; }
 
+        ValueTask InitializeAsync();
         ValueTask AddSegmentAsync(SeqSegment segment);
         ValueTask ExecuteCleanupAsync();
         ValueTask ScheduleCleanupAsync();

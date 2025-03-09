@@ -56,7 +56,7 @@ namespace LiveStreamingServerNet.HlsDemo
                         options.AddStreamProcessorEventHandler(svc =>
                                 new StreamProcessorEventListener(outputDir, svc.GetRequiredService<ILogger<StreamProcessorEventListener>>()));
                     })
-                    .AddHlsTransmuxer(options => options.OutputPathResolver = new HlsOutputPathResolver(outputDir))
+                    .AddHlsTransmuxer(options => options.Configure(config => config.OutputPathResolver = new HlsOutputPathResolver(outputDir)))
             );
         }
 
