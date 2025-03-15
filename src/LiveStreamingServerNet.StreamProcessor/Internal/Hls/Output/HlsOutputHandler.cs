@@ -1,8 +1,8 @@
 ﻿using LiveStreamingServerNet.Rtmp;
 using LiveStreamingServerNet.StreamProcessor.Internal.Containers;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output.Contracts;
+using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output.Writers.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Services.Contracts;
-using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing.M3u8.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Logging;
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using Microsoft.Extensions.Logging;
@@ -12,7 +12,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
 {
     internal class HlsOutputHandler : IHlsOutputHandler
     {
-        private readonly IManifestWriter _manifestWriter;
+        private readonly IMediaManifestWriter _manifestWriter;
         private readonly IHlsCleanupManager _cleanupManager;
         private readonly Configuration _config;
         private readonly ILogger<HlsOutputHandler> _logger;
@@ -23,7 +23,8 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
         public string StreamPath { get; }
 
         public HlsOutputHandler(
-            IManifestWriter manifestWriter,
+            IDataBufferPool bufferPool,
+            IMediaManifestWriter manifestWriter,
             IHlsCleanupManager cleanupManager,
             Configuration config,
             ILogger<HlsOutputHandler> logger)
@@ -54,13 +55,13 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
                 var removedSegment = _segments.Dequeue();
 
                 if (_config.DeleteOutdatedSegments)
-                    DeleteOutdatedSegments(removedSegment);
+                    DeleteOutdatedSegment(removedSegment);
             }
 
             return ValueTask.CompletedTask;
         }
 
-        private void DeleteOutdatedSegments(TsSegment removedSegment)
+        private void DeleteOutdatedSegment(TsSegment removedSegment)
         {
             File.Delete(removedSegment.FilePath);
             _logger.OutdatedTsSegmentDeleted(Name, ContextIdentifier, StreamPath, removedSegment.FilePath);

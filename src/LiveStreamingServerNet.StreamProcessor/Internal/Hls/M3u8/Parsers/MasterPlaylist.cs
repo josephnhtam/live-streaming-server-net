@@ -1,7 +1,7 @@
 ﻿using LiveStreamingServerNet.StreamProcessor.Hls;
-using LiveStreamingServerNet.StreamProcessor.Internal.Hls.M3u8Parsing.Contracts;
+using LiveStreamingServerNet.StreamProcessor.Internal.Hls.M3u8.Parsers.Contracts;
 
-namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.M3u8Parsing
+namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.M3u8.Parsers
 {
     internal class MasterPlaylist : IPlaylist
     {
