@@ -1,6 +1,7 @@
 ﻿using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output.Contracts;
+using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output.Writers.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Services.Contracts;
-using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing.M3u8.Contracts;
+using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using Microsoft.Extensions.Logging;
 using static LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing.HlsTransmuxer;
 
@@ -8,15 +9,18 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
 {
     internal class HlsOutputHandlerFactory : IHlsOutputHandlerFactory
     {
+        private readonly IDataBufferPool _bufferPool;
         private readonly IHlsCleanupManager _cleanupManager;
-        private readonly IManifestWriter _manifestWriter;
+        private readonly IMediaManifestWriter _manifestWriter;
         private readonly ILogger<HlsOutputHandler> _logger;
 
         public HlsOutputHandlerFactory(
+            IDataBufferPool bufferPool,
             IHlsCleanupManager cleanupManager,
-            IManifestWriter manifestWriter,
+            IMediaManifestWriter manifestWriter,
             ILogger<HlsOutputHandler> logger)
         {
+            _bufferPool = bufferPool;
             _cleanupManager = cleanupManager;
             _manifestWriter = manifestWriter;
             _logger = logger;
@@ -24,7 +28,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
 
         public IHlsOutputHandler Create(Configuration config)
         {
-            return new HlsOutputHandler(_manifestWriter, _cleanupManager, config, _logger);
+            return new HlsOutputHandler(_bufferPool, _manifestWriter, _cleanupManager, config, _logger);
         }
     }
 }

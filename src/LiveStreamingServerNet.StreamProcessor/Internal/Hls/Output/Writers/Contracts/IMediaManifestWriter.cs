@@ -1,8 +1,8 @@
 ﻿using LiveStreamingServerNet.StreamProcessor.Internal.Containers;
 
-namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing.M3u8.Contracts
+namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output.Writers.Contracts
 {
-    internal interface IManifestWriter
+    internal interface IMediaManifestWriter
     {
         Task WriteAsync(string ManifestOutputPath, IEnumerable<TsSegment> segments, CancellationToken cancellationToken = default);
     }

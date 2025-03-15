@@ -2,8 +2,8 @@
 using LiveStreamingServerNet.StreamProcessor.Hls;
 using LiveStreamingServerNet.StreamProcessor.Hls.Configurations;
 using LiveStreamingServerNet.StreamProcessor.Hls.Contracts;
-using LiveStreamingServerNet.StreamProcessor.Internal.Hls.M3u8Parsing;
-using LiveStreamingServerNet.StreamProcessor.Internal.Hls.M3u8Parsing.Contracts;
+using LiveStreamingServerNet.StreamProcessor.Internal.Hls.M3u8.Parsers;
+using LiveStreamingServerNet.StreamProcessor.Internal.Hls.M3u8.Parsers.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Uploading.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Uploading.Services.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Logging;

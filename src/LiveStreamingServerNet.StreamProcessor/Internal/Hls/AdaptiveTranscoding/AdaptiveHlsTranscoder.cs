@@ -3,7 +3,7 @@ using LiveStreamingServerNet.StreamProcessor.Hls;
 using LiveStreamingServerNet.StreamProcessor.Internal.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.FFmpeg;
 using LiveStreamingServerNet.StreamProcessor.Internal.FFprobe;
-using LiveStreamingServerNet.StreamProcessor.Internal.Hls.M3u8Parsing;
+using LiveStreamingServerNet.StreamProcessor.Internal.Hls.M3u8.Parsers;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Services.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Logging;
 using LiveStreamingServerNet.Utilities.Common;
