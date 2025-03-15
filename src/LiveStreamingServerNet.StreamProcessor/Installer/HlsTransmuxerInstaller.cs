@@ -6,11 +6,11 @@ using LiveStreamingServerNet.StreamProcessor.Installer.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output.Contracts;
+using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output.Writers;
+using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output.Writers.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Services;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Services.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing;
-using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing.M3u8;
-using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing.M3u8.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing.Services;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing.Services.Contracts;
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
@@ -49,7 +49,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Installer
             services.TryAddSingleton<IHlsPathRegistry, HlsPathRegistry>();
             services.TryAddSingleton<IHlsPathMapper>(svc => svc.GetRequiredService<IHlsPathRegistry>());
 
-            services.TryAddSingleton<IManifestWriter, ManifestWriter>();
+            services.TryAddSingleton<IMediaManifestWriter, MediaManifestWriter>();
             services.TryAddSingleton<IHlsTransmuxerManager, HlsTransmuxerManager>();
             services.TryAddSingleton<IHlsCleanupManager, HlsCleanupManager>();
             services.TryAddSingleton<IHlsOutputHandlerFactory, HlsOutputHandlerFactory>();
