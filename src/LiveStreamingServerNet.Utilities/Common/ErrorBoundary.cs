@@ -71,22 +71,18 @@ namespace LiveStreamingServerNet.Utilities.Common
             => ExecuteAsync<Exception>(action, onException);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task ExecuteAsync<TException>(Func<Task> action, Func<TException, Task>? onException = null)
+        public static async Task ExecuteAsync<TException>(Func<Task> action, Func<TException, Task>? onException = null)
           where TException : Exception
         {
             try
             {
-                return action();
+                await action();
             }
             catch (TException ex)
             {
                 if (onException != null)
                 {
-                    return onException(ex);
-                }
-                else
-                {
-                    return Task.CompletedTask;
+                    await onException(ex);
                 }
             }
         }
@@ -96,23 +92,21 @@ namespace LiveStreamingServerNet.Utilities.Common
             => ExecuteAsync<TReturn, Exception>(action, onException);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<TReturn?> ExecuteAsync<TReturn, TException>(Func<Task<TReturn?>> action, Func<TException, Task<TReturn?>>? onException = null)
+        public static async Task<TReturn?> ExecuteAsync<TReturn, TException>(Func<Task<TReturn?>> action, Func<TException, Task<TReturn?>>? onException = null)
           where TException : Exception
         {
             try
             {
-                return action();
+                return await action();
             }
             catch (TException ex)
             {
                 if (onException != null)
                 {
-                    return onException(ex);
+                    return await onException(ex);
                 }
-                else
-                {
-                    return Task.FromResult(default(TReturn));
-                }
+
+                return default(TReturn);
             }
         }
     }
