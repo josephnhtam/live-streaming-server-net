@@ -1,11 +1,14 @@
 ﻿using LiveStreamingServerNet.Rtmp;
 using LiveStreamingServerNet.StreamProcessor.Contracts;
+using LiveStreamingServerNet.StreamProcessor.FFmpeg.Exceptions;
+using LiveStreamingServerNet.StreamProcessor.Internal.Logging;
 using LiveStreamingServerNet.StreamProcessor.Transcriptions.Configurations;
 using LiveStreamingServerNet.Utilities.Buffers;
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using LiveStreamingServerNet.Utilities.Common;
 using LiveStreamingServerNet.Utilities.Common.Contracts;
 using LiveStreamingServerNet.Utilities.Contracts;
+using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 using System.Threading.Channels;
 
@@ -16,6 +19,7 @@ namespace LiveStreamingServerNet.StreamProcessor.FFmpeg
         private readonly Process _process;
         private readonly IMediaStreamWriter _inputStreamWriter;
         private readonly IDataBufferPool _dataBufferPool;
+        private readonly ILogger _logger;
 
         private readonly Channel<MediaBuffer> _sendBufferChannel;
         private readonly CancellationTokenSource _cts;
@@ -36,11 +40,13 @@ namespace LiveStreamingServerNet.StreamProcessor.FFmpeg
         public FFmpegTranscodingStream(
             IDataBufferPool dataBufferPool,
             IMediaStreamWriterFactory inputStreamWriterFactory,
-            FFmpegTranscodingStreamConfiguration config)
+            FFmpegTranscodingStreamConfiguration config,
+            ILogger<FFmpegTranscodingStream> logger)
         {
             _process = CreateFFmpegProcess(config);
             _inputStreamWriter = inputStreamWriterFactory.Create(new StandardInputStreamWriter(_process));
             _dataBufferPool = dataBufferPool;
+            _logger = logger;
 
             _sendBufferChannel = Channel.CreateUnbounded<MediaBuffer>(new() { AllowSynchronousContinuations = true });
             _cts = new CancellationTokenSource();
@@ -71,10 +77,27 @@ namespace LiveStreamingServerNet.StreamProcessor.FFmpeg
                 return ValueTask.CompletedTask;
             }
 
-            _process.Start();
-            TranscodingStarted?.Invoke(this, new TranscodingStartedEventArgs(_process.Id));
+            try
+            {
+                _logger.StartingFFmpegProcess(_process.StartInfo.Arguments);
 
-            _transcodingTask = ProcessTranscodingAsync(_cts.Token);
+                if (!_process.Start())
+                {
+                    throw new FFmpegProcessException("Error starting FFmpeg process");
+                }
+
+                _logger.FFmpegProcessStarted(_process.Id);
+
+                TranscodingStarted?.Invoke(this, new TranscodingStartedEventArgs(_process.Id));
+
+                _transcodingTask = ProcessTranscodingAsync(_cts.Token);
+            }
+            catch (Exception ex)
+            {
+                _logger.StartingFFmpegProcessError(ex);
+                throw;
+            }
+
             return ValueTask.CompletedTask;
         }
 
@@ -87,14 +110,24 @@ namespace LiveStreamingServerNet.StreamProcessor.FFmpeg
 
             try
             {
+                _logger.FFmpegProcessStopping(_process.Id);
+
                 _cts.Cancel();
 
                 if (!_process.HasExited)
+                {
+                    _logger.KillingFFmpegProcess(_process.Id);
                     _process.Kill();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.StoppingProcessError(_process.Id, ex);
+                throw;
             }
             finally
             {
-                TranscodingStopped?.Invoke(this, new(_process.Id));
+                TranscodingStopped?.Invoke(this, new TranscodingStoppedEventArgs(_process.Id));
             }
 
             return ValueTask.CompletedTask;
@@ -102,9 +135,11 @@ namespace LiveStreamingServerNet.StreamProcessor.FFmpeg
 
         private async Task ProcessTranscodingAsync(CancellationToken cancellationToken)
         {
+            _logger.TranscodingProcessStarted();
+
             try
             {
-                var groupCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+                using var groupCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
 
                 await Task.WhenAll(
                     WriteBufferAsync(groupCts),
@@ -113,10 +148,12 @@ namespace LiveStreamingServerNet.StreamProcessor.FFmpeg
             }
             catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
             {
+                _logger.TranscodingProcessCanceled();
                 TranscodingCanceled?.Invoke(this, new TranscodingCanceledEventArgs(null));
             }
             catch (Exception ex)
             {
+                _logger.TranscodingProcessError(ex);
                 TranscodingCanceled?.Invoke(this, new TranscodingCanceledEventArgs(ex));
             }
         }
@@ -127,11 +164,15 @@ namespace LiveStreamingServerNet.StreamProcessor.FFmpeg
 
             try
             {
+                _logger.ReceiveTranscodedBufferAsyncStarted();
+
                 int bytesRead;
                 var buffer = new byte[4096];
 
                 while ((bytesRead = await _process.StandardOutput.BaseStream.ReadAsync(buffer, 0, buffer.Length, cancellationToken)) > 0)
                 {
+                    _logger.BytesReadFromOutput(bytesRead);
+
                     var rentedBuffer = new RentedBuffer(_dataBufferPool.BufferPool, bytesRead);
                     buffer.AsSpan(0, bytesRead).CopyTo(rentedBuffer.Buffer);
 
@@ -147,11 +188,18 @@ namespace LiveStreamingServerNet.StreamProcessor.FFmpeg
 
                 if (_process.HasExited && _process.ExitCode != 0)
                 {
-                    throw new Exception($"FFmpeg process exited with code {_process.ExitCode}");
+                    _logger.LogError("FFmpeg process exited with non-zero exit code: {ExitCode}", _process.ExitCode);
+                    throw new FFmpegProcessException(_process.ExitCode);
                 }
+            }
+            catch (Exception ex) when (!cts.IsCancellationRequested)
+            {
+                _logger.ReceiveTranscodedBufferAsyncError(ex);
+                throw;
             }
             finally
             {
+                _logger.ReceiveTranscodedBufferAsyncEnding();
                 cts.Cancel();
             }
         }
@@ -162,12 +210,13 @@ namespace LiveStreamingServerNet.StreamProcessor.FFmpeg
 
             try
             {
+                _logger.WriteBufferAsyncStarted();
+
                 await foreach (var mediaBuffer in _sendBufferChannel.Reader.ReadAllAsync(cancellationToken))
                 {
                     try
                     {
                         await SendHeaderIfNeededAsync(cancellationToken);
-
                         await _inputStreamWriter.WriteBufferAsync(
                             mediaBuffer.MediaType, mediaBuffer.RentedBuffer, mediaBuffer.Timestamp, cancellationToken);
                     }
@@ -177,8 +226,14 @@ namespace LiveStreamingServerNet.StreamProcessor.FFmpeg
                     }
                 }
             }
+            catch (Exception ex) when (!cts.IsCancellationRequested)
+            {
+                _logger.WriteMediaBufferError(ex);
+                throw;
+            }
             finally
             {
+                _logger.WriteBufferAsyncEnding();
                 cts.Cancel();
             }
         }
@@ -191,8 +246,9 @@ namespace LiveStreamingServerNet.StreamProcessor.FFmpeg
             {
                 await _sendBufferChannel.Writer.WriteAsync(new MediaBuffer(mediaType, rentedBuffer, timestamp), cancellationToken);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.WriteMediaBufferError(ex);
                 rentedBuffer.Unclaim();
                 throw;
             }
@@ -203,6 +259,7 @@ namespace LiveStreamingServerNet.StreamProcessor.FFmpeg
             if (Interlocked.CompareExchange(ref _isHeaderWritten, 1, 0) == 0)
             {
                 await _inputStreamWriter.WriteHeaderAsync(cancellationToken);
+                _logger.HeaderSentToFFmpeg();
             }
         }
 
@@ -234,7 +291,11 @@ namespace LiveStreamingServerNet.StreamProcessor.FFmpeg
                     await ErrorBoundary.ExecuteAsync(_transcodingTask);
                 }
 
-                await _process.StandardInput.DisposeAsync();
+                if (_process.StandardInput != null)
+                {
+                    await _process.StandardInput.DisposeAsync();
+                }
+
                 _process.StandardOutput.Dispose();
                 _process.Dispose();
             }
@@ -246,6 +307,8 @@ namespace LiveStreamingServerNet.StreamProcessor.FFmpeg
 
         private void ReleaseBuffers()
         {
+            _logger.ReleasingBuffers();
+
             while (_sendBufferChannel.Reader.TryRead(out var mediaBuffer))
             {
                 mediaBuffer.RentedBuffer.Unclaim();
