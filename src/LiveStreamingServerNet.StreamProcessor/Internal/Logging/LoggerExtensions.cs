@@ -72,5 +72,56 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Logging
 
         [LoggerMessage(LogLevel.Information, "Starting FFmpeg process (Arguments={Arguments})")]
         public static partial void StartingFFmpegProcess(this ILogger logger, string arguments);
+
+        [LoggerMessage(LogLevel.Information, "FFmpeg process started with Process ID {ProcessId}")]
+        public static partial void FFmpegProcessStarted(this ILogger logger, int processId);
+
+        [LoggerMessage(Level = LogLevel.Debug, Message = "FFmpeg process stopping with Process ID {ProcessId}")]
+        public static partial void FFmpegProcessStopping(this ILogger logger, int processId);
+
+        [LoggerMessage(Level = LogLevel.Debug, Message = "Killing FFmpeg process with Process ID {ProcessId}")]
+        public static partial void KillingFFmpegProcess(this ILogger logger, int processId);
+
+        [LoggerMessage(Level = LogLevel.Debug, Message = "FFmpegTranscodingStream transcoding process started")]
+        public static partial void TranscodingProcessStarted(this ILogger logger);
+
+        [LoggerMessage(Level = LogLevel.Information, Message = "Transcoding process was canceled")]
+        public static partial void TranscodingProcessCanceled(this ILogger logger);
+
+        [LoggerMessage(Level = LogLevel.Error, Message = "An error occurred during the transcoding process")]
+        public static partial void TranscodingProcessError(this ILogger logger, Exception ex);
+
+        [LoggerMessage(Level = LogLevel.Debug, Message = "Starting WriteBufferAsync")]
+        public static partial void WriteBufferAsyncStarted(this ILogger logger);
+
+        [LoggerMessage(Level = LogLevel.Debug, Message = "Exiting WriteBufferAsync")]
+        public static partial void WriteBufferAsyncEnding(this ILogger logger);
+
+        [LoggerMessage(Level = LogLevel.Debug, Message = "Starting ReceiveTranscodedBufferAsync")]
+        public static partial void ReceiveTranscodedBufferAsyncStarted(this ILogger logger);
+
+        [LoggerMessage(Level = LogLevel.Debug, Message = "Exiting ReceiveTranscodedBufferAsync")]
+        public static partial void ReceiveTranscodedBufferAsyncEnding(this ILogger logger);
+
+        [LoggerMessage(Level = LogLevel.Trace, Message = "Read {BytesRead} bytes from FFmpeg output stream.")]
+        public static partial void BytesReadFromOutput(this ILogger logger, int bytesRead);
+
+        [LoggerMessage(Level = LogLevel.Error, Message = "Error occurred in ReceiveTranscodedBufferAsync.")]
+        public static partial void ReceiveTranscodedBufferAsyncError(this ILogger logger, Exception ex);
+
+        [LoggerMessage(Level = LogLevel.Error, Message = "An error occurred while writing media buffer to FFmpegTranscodingStream.")]
+        public static partial void WriteMediaBufferError(this ILogger logger, Exception ex);
+
+        [LoggerMessage(Level = LogLevel.Trace, Message = "Header sent to FFmpeg process.")]
+        public static partial void HeaderSentToFFmpeg(this ILogger logger);
+
+        [LoggerMessage(Level = LogLevel.Debug, Message = "Releasing remaining buffers from send buffer channel.")]
+        public static partial void ReleasingBuffers(this ILogger logger);
+
+        [LoggerMessage(Level = LogLevel.Error, Message = "An error occurred while starting the FFmpeg process.")]
+        public static partial void StartingFFmpegProcessError(this ILogger logger, Exception ex);
+
+        [LoggerMessage(Level = LogLevel.Error, Message = "An error occurred while stopping the FFmpeg process with Process ID {ProcessId}.")]
+        public static partial void StoppingProcessError(this ILogger logger, int processId, Exception ex);
     }
 }
