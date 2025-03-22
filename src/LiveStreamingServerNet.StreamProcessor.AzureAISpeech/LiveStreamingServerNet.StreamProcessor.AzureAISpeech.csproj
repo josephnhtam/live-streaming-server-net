@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net8.0;net7.0</TargetFrameworks>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <Description>This package provides the capability of audio transcription with Azure AI Speech.</Description>
+    <PackageTags>live-streaming;rtmp;transmuxer;transcoder;hls;transcription;azure;ai</PackageTags>
+  </PropertyGroup>
+
+  <Import Project="$(SolutionDir)nuget\nuget-package.props" />
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CognitiveServices.Speech" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LiveStreamingServerNet.StreamProcessor\LiveStreamingServerNet.StreamProcessor.csproj" />
+  </ItemGroup>
+
+</Project>
