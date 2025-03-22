@@ -1,0 +1,52 @@
+﻿using LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Internal.Contracts;
+using LiveStreamingServerNet.StreamProcessor.Contracts;
+using LiveStreamingServerNet.StreamProcessor.FFmpeg;
+using LiveStreamingServerNet.StreamProcessor.Transcriptions;
+using LiveStreamingServerNet.StreamProcessor.Transcriptions.Configurations;
+using LiveStreamingServerNet.StreamProcessor.Transcriptions.Contracts;
+using LiveStreamingServerNet.Utilities.Buffers.Contracts;
+using Microsoft.Extensions.Logging;
+
+namespace LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Internal
+{
+    internal class AzureSpeechTranscriptionStreamFactory : ITranscriptionStreamFactory
+    {
+        private readonly IDataBufferPool _dataBufferPool;
+        private readonly ISpeechRecognizerFactory _speechRecognizerFactory;
+        private readonly AzureSpeechTranscriptionConfiguration _config;
+        private readonly ILogger<AzureSpeechTranscriptionStream> _transcriptionStreamLogger;
+        private readonly ILogger<FFmpegTranscodingStream> _transcodingStreamLogger;
+
+        public AzureSpeechTranscriptionStreamFactory(
+            IDataBufferPool dataBufferPool,
+            ISpeechRecognizerFactory speechRecognizerFactory,
+            AzureSpeechTranscriptionConfiguration config,
+            ILogger<AzureSpeechTranscriptionStream> transcriptionStreamLogger,
+            ILogger<FFmpegTranscodingStream> transcodingStreamLogger)
+        {
+            _dataBufferPool = dataBufferPool;
+            _speechRecognizerFactory = speechRecognizerFactory;
+            _config = config;
+
+            _transcriptionStreamLogger = transcriptionStreamLogger;
+            _transcodingStreamLogger = transcodingStreamLogger;
+        }
+
+        public ITranscriptionStream Create(IMediaStreamWriterFactory inputStreamWriterFactory, SubtitleTrackOptions options)
+        {
+            var transcodingStreamFactory = CreateTranscodingStreamFactory(inputStreamWriterFactory);
+
+            return new AzureSpeechTranscriptionStream(
+                _speechRecognizerFactory,
+                transcodingStreamFactory,
+                _transcriptionStreamLogger
+            );
+        }
+
+        private ITranscodingStreamFactory CreateTranscodingStreamFactory(IMediaStreamWriterFactory inputStreamWriterFactory)
+        {
+            var transcodingConfig = FFmpegTranscodingStreamConfiguration.PCM16MonoTranscoding(_config.FFmpegPath);
+            return new FFmpegTranscodingStreamFactory(_dataBufferPool, inputStreamWriterFactory, transcodingConfig, _transcodingStreamLogger);
+        }
+    }
+}
