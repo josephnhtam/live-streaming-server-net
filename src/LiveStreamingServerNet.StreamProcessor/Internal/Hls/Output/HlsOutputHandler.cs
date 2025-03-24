@@ -16,7 +16,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
         private readonly IHlsCleanupManager _cleanupManager;
         private readonly Configuration _config;
         private readonly ILogger<HlsOutputHandler> _logger;
-        private readonly Queue<TsSegment> _segments;
+        private readonly Queue<Segment> _segments;
 
         public string Name { get; }
         public Guid ContextIdentifier { get; }
@@ -37,16 +37,16 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
             _cleanupManager = cleanupManager;
             _config = config;
             _logger = logger;
-            _segments = new Queue<TsSegment>();
+            _segments = new Queue<Segment>();
         }
 
-        public async ValueTask AddSegmentAsync(TsSegment segment)
+        public async ValueTask AddSegmentAsync(Segment segment)
         {
             await DoAddSegmentAsync(segment);
             await WriteManifestAsync();
         }
 
-        private ValueTask DoAddSegmentAsync(TsSegment segment)
+        private ValueTask DoAddSegmentAsync(Segment segment)
         {
             _segments.Enqueue(segment);
 
@@ -61,7 +61,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
             return ValueTask.CompletedTask;
         }
 
-        private void DeleteOutdatedSegment(TsSegment removedSegment)
+        private void DeleteOutdatedSegment(Segment removedSegment)
         {
             File.Delete(removedSegment.FilePath);
             _logger.OutdatedTsSegmentDeleted(Name, ContextIdentifier, StreamPath, removedSegment.FilePath);
@@ -112,12 +112,12 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
             return ValueTask.CompletedTask;
         }
 
-        private static TimeSpan CalculateCleanupDelay(IList<TsSegment> tsSegments, TimeSpan cleanupDelay)
+        private static TimeSpan CalculateCleanupDelay(IList<Segment> segments, TimeSpan cleanupDelay)
         {
-            if (!tsSegments.Any())
+            if (!segments.Any())
                 return TimeSpan.Zero;
 
-            return TimeSpan.FromMilliseconds(tsSegments.Count * tsSegments.Max(x => x.Duration)) + cleanupDelay;
+            return TimeSpan.FromMilliseconds(segments.Count * segments.Max(x => x.Duration)) + cleanupDelay;
         }
     }
 }
