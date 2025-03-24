@@ -49,8 +49,8 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Logging
         [LoggerMessage(LogLevel.Trace, "Ts segment is flushed partially (Transmuxer={Transmuxer}, Identifier={Identifier}, StreamPath={StreamPath}, Path={Path}, SequenceNumber={SequenceNumber})")]
         public static partial void TsSegmentFlushedPartially(this ILogger logger, string transmuxer, Guid identifier, string streamPath, string path, uint sequenceNumber);
 
-        [LoggerMessage(LogLevel.Trace, "Ts segment is flushed (Transmuxer={Transmuxer}, Identifier={Identifier}, StreamPath={StreamPath}, Path={Path}, SequenceNumber={SequenceNumber}, Timestamp={Timestamp}, Duration={Duration})")]
-        public static partial void TsSegmentFlushed(this ILogger logger, string transmuxer, Guid identifier, string streamPath, string path, uint sequenceNumber, uint timestamp, uint duration);
+        [LoggerMessage(LogLevel.Trace, "Ts segment is flushed (Transmuxer={Transmuxer}, Identifier={Identifier}, StreamPath={StreamPath}, Path={Path}, SequenceNumber={SequenceNumber}, Duration={Duration})")]
+        public static partial void TsSegmentFlushed(this ILogger logger, string transmuxer, Guid identifier, string streamPath, string path, uint sequenceNumber, uint duration);
 
         [LoggerMessage(LogLevel.Trace, "An outdated ts segment is deleted (Transmuxer={Transmuxer}, Identifier={Identifier}, StreamPath={StreamPath}, Path={Path})")]
         public static partial void OutdatedTsSegmentDeleted(this ILogger logger, string transmuxer, Guid identifier, string streamPath, string path);
