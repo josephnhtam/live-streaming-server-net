@@ -4,6 +4,7 @@
 [![Nuget](https://img.shields.io/nuget/v/LiveStreamingServerNet)](https://www.nuget.org/packages/LiveStreamingServerNet/)
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![JetBrains OSS](https://img.shields.io/badge/JetBrains-OSS-yellow.svg)](https://www.jetbrains.com/community/opensource)
+[![libs.tech recommends](https://libs.tech/project/737077511/badge.svg)](https://libs.tech/project/737077511/live-streaming-server-net)
 
 Live-Streaming-Server-Net is a high-performance and flexible toolset that allows you to build your own live streaming server using .NET.
 
