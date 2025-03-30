@@ -20,7 +20,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output.Writers
             foreach (var segment in segments)
             {
                 var relativePath = PathHelper.GetRelativePath(segment.FilePath, manifestDirPath);
-                manifestBuilder.AddSegment(new MediaSegment(relativePath, TimeSpan.FromMilliseconds(segment.Duration)));
+                manifestBuilder.AddSegment(new MediaSegment(relativePath, TimeSpan.FromMilliseconds(segment.Timestamp), TimeSpan.FromMilliseconds(segment.Duration)));
             }
 
             var manifest = manifestBuilder.Build();

@@ -6,6 +6,7 @@
         IMediaManifestBuilder SetMediaSequence(uint sequenceNumber);
         IMediaManifestBuilder SetAllowCache(bool allowCache);
         IMediaManifestBuilder SetIndependentSegments(bool includeIndependentSegments);
+        IMediaManifestBuilder SetInitialProgramDateTime(DateTime programDateTime);
         IMediaManifestBuilder AddSegment(MediaSegment segment);
     }
 }
