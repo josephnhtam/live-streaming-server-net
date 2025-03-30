@@ -11,6 +11,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.M3u8.Builders
         private bool _includeIndependentSegments = true;
         private uint _mediaSequence = 0;
         private TimeSpan? _targetDuration;
+        private DateTime? _initialProgramDateTime;
 
         public virtual IMediaManifestBuilder SetTargetDuration(TimeSpan targetDuration)
         {
@@ -33,6 +34,12 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.M3u8.Builders
         public IMediaManifestBuilder SetIndependentSegments(bool includeIndependentSegments)
         {
             _includeIndependentSegments = includeIndependentSegments;
+            return this;
+        }
+
+        public IMediaManifestBuilder SetInitialProgramDateTime(DateTime programDateTime)
+        {
+            _initialProgramDateTime = programDateTime;
             return this;
         }
 
@@ -64,6 +71,12 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.M3u8.Builders
 
             foreach (var segment in _segments)
             {
+                if (_initialProgramDateTime.HasValue)
+                {
+                    var segmentProgramDateTime = _initialProgramDateTime.Value + segment.Timestamp;
+                    sb.AppendLine($"#EXT-X-PROGRAM-DATE-TIME:{segmentProgramDateTime.ToString("o")}");
+                }
+
                 sb.AppendLine($"#EXTINF:{segment.Duration.TotalSeconds:F1}, {segment.Title ?? ""}");
                 sb.AppendLine(segment.Uri);
             }
