@@ -32,7 +32,8 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.FFmpeg
             OnStreamProcessorEnded? onEnded,
             CancellationToken cancellation)
         {
-            DirectoryUtility.CreateDirectoryIfNotExists(Path.GetDirectoryName(_config.OutputPath));
+            if (!Uri.IsWellFormedUriString(inputPath, UriKind.Absolute))
+                DirectoryUtility.CreateDirectoryIfNotExists(Path.GetDirectoryName(_config.OutputPath));
             await RunProcessAsync(inputPath, _config.OutputPath, onStarted, onEnded, cancellation);
         }
 
