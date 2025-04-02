@@ -32,9 +32,37 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.FFmpeg
             OnStreamProcessorEnded? onEnded,
             CancellationToken cancellation)
         {
-            if (!Uri.IsWellFormedUriString(inputPath, UriKind.Absolute))
-                DirectoryUtility.CreateDirectoryIfNotExists(Path.GetDirectoryName(_config.OutputPath));
+            EnsureOutputDirectoryExists(_config.OutputPath);
+            CleanOutputFile(_config.OutputPath);
+
             await RunProcessAsync(inputPath, _config.OutputPath, onStarted, onEnded, cancellation);
+        }
+
+        private void EnsureOutputDirectoryExists(string outputPath)
+        {
+            ErrorBoundary.Execute(() =>
+            {
+                if (IsNonUriOutputPath(outputPath))
+                {
+                    DirectoryUtility.CreateDirectoryIfNotExists(Path.GetDirectoryName(_config.OutputPath));
+                }
+            });
+        }
+
+        private static void CleanOutputFile(string outputPath)
+        {
+            ErrorBoundary.Execute(() =>
+            {
+                if (IsNonUriOutputPath(outputPath))
+                {
+                    File.Delete(outputPath);
+                }
+            });
+        }
+
+        private static bool IsNonUriOutputPath(string outputPath)
+        {
+            return !string.IsNullOrWhiteSpace(outputPath) && !Uri.IsWellFormedUriString(outputPath, UriKind.Absolute);
         }
 
         private async Task RunProcessAsync(string inputPath, string outputPath, OnStreamProcessorStarted? onStarted, OnStreamProcessorEnded? onEnded, CancellationToken cancellation)
@@ -49,9 +77,6 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.FFmpeg
 
             try
             {
-                if (!string.IsNullOrWhiteSpace(outputPath))
-                    File.Delete(outputPath);
-
                 process.StartInfo = new ProcessStartInfo
                 {
                     FileName = _config.FFmpegPath,
@@ -86,7 +111,6 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.FFmpeg
                     await onEnded.Invoke(outputPath);
             }
         }
-
         private static async Task WaitForProcessTerminatingGracefully(Process process, int gracefulPeriod)
         {
             if (!process.HasExited)
