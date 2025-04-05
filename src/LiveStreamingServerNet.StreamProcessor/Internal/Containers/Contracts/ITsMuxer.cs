@@ -7,8 +7,8 @@
         uint SequenceNumber { get; }
         uint? SegmentTimestamp { get; }
 
-        ValueTask<SegmentPartial?> FlushPartialAsync();
-        ValueTask<Segment?> FlushAsync(uint timestamp);
+        ValueTask<SeqSegmentPartial?> FlushPartialAsync();
+        ValueTask<SeqSegment?> FlushAsync(uint timestamp);
         void SetAACSequenceHeader(AACSequenceHeader aacSequenceHeader);
         void SetAVCSequenceHeader(AVCSequenceHeader avcSequenceHeader);
         void SetHEVCSequenceHeader(HEVCSequenceHeader hevcSequenceHeader);

@@ -212,7 +212,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
                 _logger.TsSegmentFlushedPartially(Name, ContextIdentifier, StreamPath, tsSegmentPartial.Value.FilePath, tsSegmentPartial.Value.SequenceNumber);
         }
 
-        private async ValueTask<Segment?> FlushTsMuxerAsync(uint timestamp)
+        private async ValueTask<SeqSegment?> FlushTsMuxerAsync(uint timestamp)
         {
             var tsSegment = await _tsMuxer.FlushAsync(timestamp);
 
