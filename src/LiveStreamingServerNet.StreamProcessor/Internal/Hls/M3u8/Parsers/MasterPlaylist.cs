@@ -26,7 +26,18 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.M3u8.Parsers
         {
             Manifest = content;
             MediaPlaylists = mediaPlaylists;
-            Segments = mediaPlaylists.SelectMany(x => x.Segments).Distinct().ToList();
+            Segments = CollectSegments(mediaPlaylists);
+        }
+
+        private List<Segment> CollectSegments(List<MediaPlaylist> mediaPlaylists)
+        {
+            return mediaPlaylists
+                .Select(mediaPlaylist => (mediaPlaylist, dirPath: Path.GetDirectoryName(mediaPlaylist.Manifest.Name)))
+                .SelectMany(x =>
+                  x.mediaPlaylist.Segments.Select(segment =>
+                      segment with { FileName = NormalizePath(Path.Combine(x.dirPath ?? string.Empty, segment.FileName)) }))
+                .Distinct()
+                .ToList();
         }
 
         public static MasterPlaylist Parse(Manifest content, string filePath)
@@ -51,6 +62,11 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.M3u8.Parsers
             }
 
             return new MasterPlaylist(content, mediaPlaylists);
+        }
+
+        private static string NormalizePath(string path)
+        {
+            return path.Replace('\\', '/');
         }
     }
 }
