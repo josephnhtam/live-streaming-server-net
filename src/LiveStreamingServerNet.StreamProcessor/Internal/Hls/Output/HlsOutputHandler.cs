@@ -64,7 +64,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
         private void DeleteOutdatedSegment(Segment removedSegment)
         {
             File.Delete(removedSegment.FilePath);
-            _logger.OutdatedTsSegmentDeleted(Name, ContextIdentifier, StreamPath, removedSegment.FilePath);
+            _logger.OutdatedSegmentDeleted(Name, ContextIdentifier, StreamPath, removedSegment.FilePath);
         }
 
         private async Task WriteManifestAsync()

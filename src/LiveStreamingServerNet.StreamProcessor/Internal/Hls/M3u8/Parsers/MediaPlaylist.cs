@@ -7,7 +7,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.M3u8.Parsers
     {
         public bool IsMaster => false;
         public Manifest Manifest { get; }
-        public IReadOnlyList<ManifestTsSegment> TsSegments { get; }
+        public IReadOnlyList<Segment> Segments { get; }
 
         private Dictionary<string, Manifest>? _manifests;
         public IReadOnlyDictionary<string, Manifest> Manifests
@@ -21,15 +21,15 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.M3u8.Parsers
             }
         }
 
-        private MediaPlaylist(Manifest content, List<ManifestTsSegment> tsSegments)
+        private MediaPlaylist(Manifest content, List<Segment> segments)
         {
             Manifest = content;
-            TsSegments = tsSegments;
+            Segments = segments;
         }
 
         public static MediaPlaylist Parse(Manifest content)
         {
-            List<ManifestTsSegment> tsSegments = new List<ManifestTsSegment>();
+            List<Segment> segments = new List<Segment>();
 
             using var stringReader = new StringReader(content.Content);
 
@@ -44,11 +44,11 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.M3u8.Parsers
                     var duration = GetDuration(line);
 
                     if ((line = stringReader.ReadLine()) != null)
-                        tsSegments.Add(new ManifestTsSegment(content.Name, line, duration));
+                        segments.Add(new Segment(content.Name, line, duration));
                 }
             }
 
-            return new MediaPlaylist(content, new List<ManifestTsSegment>(tsSegments));
+            return new MediaPlaylist(content, new List<Segment>(segments));
 
             static float GetDuration(string line)
             {
