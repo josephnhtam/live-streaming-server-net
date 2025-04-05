@@ -25,8 +25,8 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Logging
         [LoggerMessage(LogLevel.Error, "An error occurred while uploading HLS to store (StreamProcessor={StreamProcessor}, Identifier={Identifier}, InputPath={InputPath}, OutputPath={OutputPath}, StreamPath={StreamPath})")]
         public static partial void UploadingHlsToStoreError(this ILogger logger, string streamProcessor, Guid identifier, string inputPath, string outputPath, string streamPath, Exception ex);
 
-        [LoggerMessage(LogLevel.Error, "An error occurred while delete outdated TS segments (StreamProcessor={StreamProcessor}, Identifier={Identifier}, InputPath={InputPath}, OutputPath={OutputPath}, StreamPath={StreamPath})")]
-        public static partial void DeletingOutdatedTsSegmentsError(this ILogger logger, string streamProcessor, Guid identifier, string inputPath, string outputPath, string streamPath, Exception ex);
+        [LoggerMessage(LogLevel.Error, "An error occurred while delete outdated segments (StreamProcessor={StreamProcessor}, Identifier={Identifier}, InputPath={InputPath}, OutputPath={OutputPath}, StreamPath={StreamPath})")]
+        public static partial void DeletingOutdatedSegmentsError(this ILogger logger, string streamProcessor, Guid identifier, string inputPath, string outputPath, string streamPath, Exception ex);
 
         [LoggerMessage(LogLevel.Error, "An error occurred while dispatching HLS files stored event (StreamProcessor={StreamProcessor}, Identifier={Identifier}, InputPath={InputPath}, OutputPath={OutputPath}, StreamPath={StreamPath})")]
         public static partial void DispatchingHlsFilesStoredEventError(this ILogger logger, string streamProcessor, Guid identifier, string inputPath, string outputPath, string streamPath, Exception ex);
@@ -52,8 +52,8 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Logging
         [LoggerMessage(LogLevel.Trace, "Ts segment is flushed (Transmuxer={Transmuxer}, Identifier={Identifier}, StreamPath={StreamPath}, Path={Path}, SequenceNumber={SequenceNumber}, Duration={Duration})")]
         public static partial void TsSegmentFlushed(this ILogger logger, string transmuxer, Guid identifier, string streamPath, string path, uint sequenceNumber, uint duration);
 
-        [LoggerMessage(LogLevel.Trace, "An outdated ts segment is deleted (Transmuxer={Transmuxer}, Identifier={Identifier}, StreamPath={StreamPath}, Path={Path})")]
-        public static partial void OutdatedTsSegmentDeleted(this ILogger logger, string transmuxer, Guid identifier, string streamPath, string path);
+        [LoggerMessage(LogLevel.Trace, "An outdated segment is deleted (Transmuxer={Transmuxer}, Identifier={Identifier}, StreamPath={StreamPath}, Path={Path})")]
+        public static partial void OutdatedSegmentDeleted(this ILogger logger, string transmuxer, Guid identifier, string streamPath, string path);
 
         [LoggerMessage(LogLevel.Trace, "HLS manifest is updated (Transmuxer={Transmuxer}, Identifier={Identifier}, StreamPath={StreamPath}, Path={Path})")]
         public static partial void HlsManifestUpdated(this ILogger logger, string transmuxer, Guid identifier, string streamPath, string path);
