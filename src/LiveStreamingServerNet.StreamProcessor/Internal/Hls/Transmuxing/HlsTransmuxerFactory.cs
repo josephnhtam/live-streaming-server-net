@@ -48,10 +48,6 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
 
                 var manifestOutputPath = await _config.OutputPathResolver.ResolveOutputPath(_services, contextIdentifier, streamPath, streamArguments);
                 var tsSegmentOutputPath = GetTsSegmentOutputPath(manifestOutputPath);
-
-                if (string.IsNullOrEmpty(tsSegmentOutputPath))
-                    return null;
-
                 var tsMuxer = new TsMuxer(tsSegmentOutputPath, _bufferPool);
 
                 var config = new HlsTransmuxer.Configuration(
@@ -78,15 +74,10 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
             }
         }
 
-        private static string? GetTsSegmentOutputPath(string manifestOutputPath)
+        private static string GetTsSegmentOutputPath(string manifestOutputPath)
         {
-            var directory = Path.GetDirectoryName(manifestOutputPath);
-            var fileName = Path.GetFileNameWithoutExtension(manifestOutputPath);
-
-            if (string.IsNullOrEmpty(directory) || string.IsNullOrEmpty(fileName))
-                return null;
-
-            return Path.Combine(directory, fileName + "{seqNum}.ts");
+            var directory = Path.GetDirectoryName(manifestOutputPath) ?? string.Empty;
+            return Path.Combine(directory, "{seqNum}.ts");
         }
     }
 }

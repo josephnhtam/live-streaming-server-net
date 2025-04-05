@@ -16,7 +16,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
         private readonly IHlsCleanupManager _cleanupManager;
         private readonly Configuration _config;
         private readonly ILogger<HlsOutputHandler> _logger;
-        private readonly Queue<Segment> _segments;
+        private readonly Queue<SeqSegment> _segments;
 
         public string Name { get; }
         public Guid ContextIdentifier { get; }
@@ -37,16 +37,16 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
             _cleanupManager = cleanupManager;
             _config = config;
             _logger = logger;
-            _segments = new Queue<Segment>();
+            _segments = new Queue<SeqSegment>();
         }
 
-        public async ValueTask AddSegmentAsync(Segment segment)
+        public async ValueTask AddSegmentAsync(SeqSegment segment)
         {
             await DoAddSegmentAsync(segment);
             await WriteManifestAsync();
         }
 
-        private ValueTask DoAddSegmentAsync(Segment segment)
+        private ValueTask DoAddSegmentAsync(SeqSegment segment)
         {
             _segments.Enqueue(segment);
 
@@ -61,7 +61,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
             return ValueTask.CompletedTask;
         }
 
-        private void DeleteOutdatedSegment(Segment removedSegment)
+        private void DeleteOutdatedSegment(SeqSegment removedSegment)
         {
             File.Delete(removedSegment.FilePath);
             _logger.OutdatedSegmentDeleted(Name, ContextIdentifier, StreamPath, removedSegment.FilePath);
@@ -112,7 +112,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
             return ValueTask.CompletedTask;
         }
 
-        private static TimeSpan CalculateCleanupDelay(IList<Segment> segments, TimeSpan cleanupDelay)
+        private static TimeSpan CalculateCleanupDelay(IList<SeqSegment> segments, TimeSpan cleanupDelay)
         {
             if (!segments.Any())
                 return TimeSpan.Zero;
