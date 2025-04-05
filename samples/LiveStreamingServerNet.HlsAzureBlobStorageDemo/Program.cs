@@ -60,7 +60,7 @@ namespace LiveStreamingServerNet.HlsAzureBlobStorageDemo
             StreamProcessingContext context,
             bool initial,
             IReadOnlyList<StoredManifest> storedManifests,
-            IReadOnlyList<StoredTsSegment> storedTsSegments)
+            IReadOnlyList<StoredSegment> storedSegments)
         {
             if (!initial)
                 return Task.CompletedTask;

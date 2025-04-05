@@ -27,14 +27,14 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Uploading.Services
             return _eventHandlers;
         }
 
-        public async Task HlsFilesStoredAsync(StreamProcessingContext context, bool initial, IReadOnlyList<StoredManifest> storedManifests, IReadOnlyList<StoredTsSegment> storedTsSegments)
+        public async Task HlsFilesStoredAsync(StreamProcessingContext context, bool initial, IReadOnlyList<StoredManifest> storedManifests, IReadOnlyList<StoredSegment> storedSegments)
         {
             using var eventContext = EventContext.Obtain();
 
             try
             {
                 foreach (var handler in GetEventHandlers())
-                    await handler.OnHlsFilesStoredAsync(eventContext, context, initial, storedManifests, storedTsSegments);
+                    await handler.OnHlsFilesStoredAsync(eventContext, context, initial, storedManifests, storedSegments);
             }
             catch (Exception ex)
             {

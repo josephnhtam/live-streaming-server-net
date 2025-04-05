@@ -160,11 +160,11 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.AdaptiveTranscodin
                 var dirPath = Path.GetDirectoryName(manifestOutputPath) ?? string.Empty;
 
                 var playlist = ManifestParser.Parse(manifestOutputPath);
-                var cleanupDelay = CalculateCleanupDelay(playlist.TsSegments.ToList(), _config.CleanupDelay.Value);
+                var cleanupDelay = CalculateCleanupDelay(playlist.Segments.ToList(), _config.CleanupDelay.Value);
 
                 var files = new List<string> { manifestOutputPath };
                 files.AddRange(playlist.Manifests.Values.Select(x => Path.Combine(dirPath, x.Name)));
-                files.AddRange(playlist.TsSegments.Select(x => Path.Combine(dirPath, x.FileName)));
+                files.AddRange(playlist.Segments.Select(x => Path.Combine(dirPath, x.FileName)));
 
                 await _cleanupManager.ScheduleCleanupAsync(manifestOutputPath, files, cleanupDelay);
             }
@@ -174,12 +174,12 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.AdaptiveTranscodin
             }
         }
 
-        private static TimeSpan CalculateCleanupDelay(IList<ManifestTsSegment> tsSegments, TimeSpan cleanupDelay)
+        private static TimeSpan CalculateCleanupDelay(IList<Segment> segments, TimeSpan cleanupDelay)
         {
-            if (!tsSegments.Any())
+            if (!segments.Any())
                 return TimeSpan.Zero;
 
-            var (count, maxDuration) = tsSegments
+            var (count, maxDuration) = segments
                 .GroupBy(x => x.ManifestName)
                 .Select(x => (Count: x.Count(), MaxDuration: x.ToList().Max(x => x.Duration)))
                 .MaxBy(x => x.MaxDuration);
