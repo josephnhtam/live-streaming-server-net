@@ -85,7 +85,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Logging
         [LoggerMessage(Level = LogLevel.Debug, Message = "FFmpegTranscodingStream transcoding process started")]
         public static partial void TranscodingProcessStarted(this ILogger logger);
 
-        [LoggerMessage(Level = LogLevel.Information, Message = "Transcoding process was canceled")]
+        [LoggerMessage(Level = LogLevel.Debug, Message = "Transcoding process was canceled")]
         public static partial void TranscodingProcessCanceled(this ILogger logger);
 
         [LoggerMessage(Level = LogLevel.Error, Message = "An error occurred during the transcoding process")]

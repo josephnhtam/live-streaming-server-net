@@ -25,13 +25,13 @@ namespace LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Internal.Logging
         [LoggerMessage(Level = LogLevel.Information, Message = "Audio streaming to transcoder stopped.")]
         public static partial void AudioStreamingStopped(this ILogger logger);
 
-        [LoggerMessage(Level = LogLevel.Warning, Message = "Transcoding canceled")]
+        [LoggerMessage(Level = LogLevel.Debug, Message = "Transcoding canceled")]
         public static partial void TranscodingCanceledLog(this ILogger logger);
 
         [LoggerMessage(Level = LogLevel.Information, Message = "Transcoding stopped")]
         public static partial void TranscodingStoppedLog(this ILogger logger);
 
-        [LoggerMessage(Level = LogLevel.Warning, Message = "Transcription canceled")]
+        [LoggerMessage(Level = LogLevel.Debug, Message = "Transcription canceled")]
         public static partial void TranscriptionCanceledLog(this ILogger logger);
 
         [LoggerMessage(Level = LogLevel.Information, Message = "Recognizer session started (ID: {SessionId})")]
