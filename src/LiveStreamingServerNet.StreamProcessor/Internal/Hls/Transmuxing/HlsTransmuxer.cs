@@ -293,6 +293,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
 
         private async ValueTask PostRunAsync()
         {
+            await _outputHandler.CompleteAsync();
             await _outputHandler.ScheduleCleanupAsync();
             UnregisterHlsOutputPath();
         }

@@ -9,6 +9,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output.Contracts
         string StreamPath { get; }
 
         ValueTask InitializeAsync();
+        ValueTask CompleteAsync();
         ValueTask AddSegmentAsync(SeqSegment segment);
         ValueTask ExecuteCleanupAsync();
         ValueTask ScheduleCleanupAsync();
