@@ -4,6 +4,12 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output.Writers.Con
 {
     internal interface IMediaManifestWriter
     {
-        Task WriteAsync(string manifestOutputPath, IEnumerable<SeqSegment> segments, CancellationToken cancellationToken = default);
+        Task WriteAsync(
+            string manifestOutputPath,
+            IEnumerable<SeqSegment> segments,
+            ITargetDuration tagetDuration,
+            DateTime? initialProgramDateTime,
+            CancellationToken cancellationToken = default
+        );
     }
 }

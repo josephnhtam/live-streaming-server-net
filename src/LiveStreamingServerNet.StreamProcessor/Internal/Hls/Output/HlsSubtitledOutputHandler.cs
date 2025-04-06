@@ -1,26 +1,31 @@
-﻿using LiveStreamingServerNet.Rtmp;
-using LiveStreamingServerNet.StreamProcessor.Internal.Containers;
+﻿using LiveStreamingServerNet.StreamProcessor.Internal.Containers;
+using LiveStreamingServerNet.StreamProcessor.Internal.Hls.M3u8.Builders;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output.Contracts;
+using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output.Writers;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output.Writers.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Services.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Logging;
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
+using LiveStreamingServerNet.Utilities.Common;
 using Microsoft.Extensions.Logging;
-using static LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing.HlsTransmuxer;
 
 namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
 {
-    internal class HlsSubtitledOutputHandler : IHlsOutputHandler
+    internal partial class HlsSubtitledOutputHandler : IHlsOutputHandler
     {
-        private readonly IMediaManifestWriter _manifestWriter;
+        private readonly IMasterManifestWriter _masterManifestWriter;
+        private readonly IMediaManifestWriter _mediaManifestWriter;
         private readonly IHlsCleanupManager _cleanupManager;
         private readonly Configuration _config;
         private readonly ILogger<HlsSubtitledOutputHandler> _logger;
+
         private readonly Queue<SeqSegment> _segments;
         private readonly CancellationTokenSource _cts;
-        private readonly List<ISubtitleTranscriber> _subtitleTranscribers;
+        private readonly DateTime _initialProgramDateTime;
+        private readonly IReadOnlyList<ISubtitleTranscriber> _subtitleTranscribers;
+        private readonly ITargetDuration _targetDuration;
 
-        private Task? _transcriptionResultConsumingTask;
+        private int _masterManifestCreated;
 
         public string Name { get; }
         public Guid ContextIdentifier { get; }
@@ -28,9 +33,11 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
 
         public HlsSubtitledOutputHandler(
             IDataBufferPool bufferPool,
-            IMediaManifestWriter manifestWriter,
+            IMasterManifestWriter masterManifestWriter,
+            IMediaManifestWriter mediaManifestWriter,
             IHlsCleanupManager cleanupManager,
-            IReadOnlyList<SubtitleTranscriptionStreamFactory> subtitleStreamFactories,
+            IReadOnlyList<ISubtitleTranscriber> subtitleTranscribers,
+            DateTime initialProgramDateTime,
             Configuration config,
             ILogger<HlsSubtitledOutputHandler> logger)
         {
@@ -38,30 +45,33 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
             ContextIdentifier = config.ContextIdentifier;
             StreamPath = config.StreamPath;
 
-            _manifestWriter = manifestWriter;
+            _masterManifestWriter = masterManifestWriter;
+            _mediaManifestWriter = mediaManifestWriter;
             _cleanupManager = cleanupManager;
+            _subtitleTranscribers = subtitleTranscribers;
+            _initialProgramDateTime = initialProgramDateTime;
             _config = config;
             _logger = logger;
 
             _segments = new Queue<SeqSegment>();
             _cts = new CancellationTokenSource();
+            _targetDuration = new MaximumTargetDuration();
 
-            var inputStreamWriterFactory = new FlvAudioStreamWriterFactory(bufferPool);
-            _subtitleTranscribers = subtitleStreamFactories.Select(x =>
-                new SubtitleTranscriber(x.Options, x.Factory.Create(inputStreamWriterFactory, x.Options)) as ISubtitleTranscriber
-            ).ToList();
+            DirectoryUtility.CreateDirectoryIfNotExists(Path.GetDirectoryName(config.MasterManifestOutputPath));
+            DirectoryUtility.CreateDirectoryIfNotExists(Path.GetDirectoryName(config.MediaManifestOutputPath));
         }
 
         public async ValueTask InitializeAsync()
         {
             await Task.WhenAll(_subtitleTranscribers.Select(x => x.StartAsync().AsTask()));
-            _transcriptionResultConsumingTask = ConsumeTranscriptionResultsAsync(_cts.Token);
         }
 
         public async ValueTask AddSegmentAsync(SeqSegment segment)
         {
             await DoAddSegmentAsync(segment);
-            await WriteManifestAsync();
+
+            await WriteMediaManifestAsync();
+            await WriteMasterManifestAsync();
         }
 
         private ValueTask DoAddSegmentAsync(SeqSegment segment)
@@ -85,10 +95,63 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
             _logger.OutdatedSegmentDeleted(Name, ContextIdentifier, StreamPath, removedSegment.FilePath);
         }
 
-        private async Task WriteManifestAsync()
+        private async Task WriteMediaManifestAsync()
         {
-            await _manifestWriter.WriteAsync(_config.ManifestOutputPath, _segments);
-            _logger.HlsManifestUpdated(Name, ContextIdentifier, _config.ManifestOutputPath, StreamPath);
+            await _mediaManifestWriter.WriteAsync(_config.MediaManifestOutputPath, _segments, _targetDuration, _initialProgramDateTime);
+            _logger.HlsManifestUpdated(Name, ContextIdentifier, StreamPath, _config.MediaManifestOutputPath);
+
+            if (Interlocked.Exchange(ref _masterManifestCreated, 1) == 0)
+            {
+                var variantStreams = new List<VariantStream> { new(
+                    _config.MediaManifestOutputPath,
+                    ExtraAttributes: new Dictionary<string, string>{
+                        ["SUBTITLES"] = "SUBS"
+                    }
+                ) };
+
+                var alternateMedia = _subtitleTranscribers.Select(x =>
+                    new AlternateMedia(
+                        x.SubtitleManifestPath,
+                        x.Options.Name ?? "DEFAULT",
+                        "SUBTITLES",
+                        "SUBS",
+                        x.Options.Language,
+                        x.Options.IsDefault,
+                        x.Options.AutoSelect
+                    )
+                ).ToList();
+
+                await _masterManifestWriter.WriteAsync(_config.MasterManifestOutputPath, variantStreams, alternateMedia);
+                _logger.HlsManifestUpdated(Name, ContextIdentifier, StreamPath, _config.MasterManifestOutputPath);
+            }
+        }
+
+        private async Task WriteMasterManifestAsync()
+        {
+            if (Interlocked.Exchange(ref _masterManifestCreated, 1) != 0)
+                return;
+
+            var variantStreams = new List<VariantStream> { new(
+                    _config.MediaManifestOutputPath,
+                    ExtraAttributes: new Dictionary<string, string>{
+                        ["SUBTITLES"] = "SUBS"
+                    }
+                ) };
+
+            var alternateMedia = _subtitleTranscribers.Select(x =>
+                new AlternateMedia(
+                    x.SubtitleManifestPath,
+                    x.Options.Name ?? "DEFAULT",
+                    "SUBTITLES",
+                    "SUBS",
+                    x.Options.Language,
+                    x.Options.IsDefault,
+                    x.Options.AutoSelect
+                )
+            ).ToList();
+
+            await _masterManifestWriter.WriteAsync(_config.MasterManifestOutputPath, variantStreams, alternateMedia);
+            _logger.HlsManifestUpdated(Name, ContextIdentifier, StreamPath, _config.MasterManifestOutputPath);
         }
 
         public async ValueTask ExecuteCleanupAsync()
@@ -96,7 +159,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
             if (!_config.CleanupDelay.HasValue)
                 return;
 
-            await _cleanupManager.ExecuteCleanupAsync(_config.ManifestOutputPath);
+            await _cleanupManager.ExecuteCleanupAsync(_config.MasterManifestOutputPath);
         }
 
         public async ValueTask ScheduleCleanupAsync()
@@ -109,46 +172,14 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
                 var segments = _segments.ToList();
                 var cleanupDelay = CalculateCleanupDelay(segments, _config.CleanupDelay.Value);
 
-                var files = new List<string> { _config.ManifestOutputPath };
+                var files = new List<string> { _config.MasterManifestOutputPath };
                 files.AddRange(segments.Select(x => x.FilePath));
 
-                await _cleanupManager.ScheduleCleanupAsync(_config.ManifestOutputPath, files, cleanupDelay);
+                await _cleanupManager.ScheduleCleanupAsync(_config.MasterManifestOutputPath, files, cleanupDelay);
             }
             catch (Exception ex)
             {
-                _logger.SchedulingHlsCleanupError(_config.ManifestOutputPath, ex);
-            }
-        }
-
-        public async ValueTask InterceptMediaPacketAsync(MediaType mediaType, IRentedBuffer buffer, uint timestamp)
-        {
-            if (mediaType != MediaType.Audio)
-            {
-                return;
-            }
-
-            foreach (var transcriber in _subtitleTranscribers)
-            {
-                await transcriber.EnqueueAudioBufferAsync(buffer, timestamp);
-            }
-        }
-
-        private async Task ConsumeTranscriptionResultsAsync(CancellationToken cancellationToken)
-        {
-            await Task.WhenAll(_subtitleTranscribers.Select(x => ConsumeTranscriptionResultsAsync(x, cancellationToken)));
-        }
-
-        private async Task ConsumeTranscriptionResultsAsync(ISubtitleTranscriber transcriber, CancellationToken cancellationToken)
-        {
-            try
-            {
-                while (!cancellationToken.IsCancellationRequested)
-                {
-                    await transcriber.ReceiveTranscriptionResultAsync(cancellationToken);
-                }
-            }
-            catch (Exception ex)
-            {
+                _logger.SchedulingHlsCleanupError(_config.MasterManifestOutputPath, ex);
             }
         }
 
@@ -160,19 +191,14 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
             {
                 await transcriber.DisposeAsync();
             }
-
-            if (_transcriptionResultConsumingTask != null)
-            {
-                await _transcriptionResultConsumingTask;
-            }
         }
 
-        private static TimeSpan CalculateCleanupDelay(IList<SeqSegment> tsSegments, TimeSpan cleanupDelay)
+        private static TimeSpan CalculateCleanupDelay(IList<SeqSegment> segments, TimeSpan cleanupDelay)
         {
-            if (!tsSegments.Any())
+            if (!segments.Any())
                 return TimeSpan.Zero;
 
-            return TimeSpan.FromMilliseconds(tsSegments.Count * tsSegments.Max(x => x.Duration)) + cleanupDelay;
+            return TimeSpan.FromMilliseconds(segments.Count * segments.Max(x => x.Duration)) + cleanupDelay;
         }
     }
 }

@@ -34,9 +34,9 @@ namespace LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Internal
         private uint _lastTimestamp;
         private uint _timestampOffset;
 
-        public event EventHandler<TranscriptingStartedEventArgs>? TranscriptingStarted;
-        public event EventHandler<TranscriptingStoppedEventArgs>? TranscriptingStopped;
-        public event EventHandler<TranscriptingCanceledEventArgs>? TranscriptingCanceled;
+        public event EventHandler<TranscriptionStartedEventArgs>? TranscriptionStarted;
+        public event EventHandler<TranscriptionStoppedEventArgs>? TranscriptionStopped;
+        public event EventHandler<TranscriptionCanceledEventArgs>? TranscriptionCanceled;
         public event EventHandler<TranscriptionResultReceivedEventArgs>? TranscriptionResultReceived;
 
         private static int _nextId;
@@ -63,7 +63,7 @@ namespace LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Internal
             }
 
             _logger.TranscriptionStreamStarted(_id);
-            TranscriptingStarted?.Invoke(this, new TranscriptingStartedEventArgs(_id));
+            TranscriptionStarted?.Invoke(this, new TranscriptionStartedEventArgs(_id));
             _transcriptionTask = RunTranscriptionAsync();
             return ValueTask.CompletedTask;
         }
@@ -78,7 +78,7 @@ namespace LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Internal
             try
             {
                 _cts.Cancel();
-                TranscriptingCanceled?.Invoke(this, new TranscriptingCanceledEventArgs(null));
+                TranscriptionCanceled?.Invoke(this, new TranscriptionCanceledEventArgs(null));
 
                 if (_transcriptionTask != null)
                 {
@@ -87,7 +87,7 @@ namespace LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Internal
             }
             finally
             {
-                TranscriptingStopped?.Invoke(this, new TranscriptingStoppedEventArgs(_id));
+                TranscriptionStopped?.Invoke(this, new TranscriptionStoppedEventArgs(_id));
                 _logger.TranscriptionStreamStopped(_id);
             }
         }

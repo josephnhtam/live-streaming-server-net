@@ -20,10 +20,10 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
     {
         private readonly ISessionHandle _client;
         private readonly IHlsTransmuxerManager _transmuxerManager;
-        private readonly IHlsOutputHandler _outputHandler;
         private readonly IHlsPathRegistry _pathRegistry;
         private readonly ITsMuxer _tsMuxer;
-
+        private readonly IHlsOutputHandler _outputHandler;
+        private readonly IHlsMediaPacketInterceptor? _mediaPacketInterceptor;
         private readonly Configuration _config;
         private readonly ILogger _logger;
 
@@ -41,9 +41,10 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
         public HlsTransmuxer(
             ISessionHandle client,
             IHlsTransmuxerManager transmuxerManager,
-            IHlsOutputHandler outputHandler,
             IHlsPathRegistry pathRegistry,
             ITsMuxer tsMuxer,
+            IHlsOutputHandler outputHandler,
+            IHlsMediaPacketInterceptor? mediaPacketInterceptor,
             Configuration config,
             ILogger<HlsTransmuxer> logger)
         {
@@ -55,10 +56,10 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
 
             _client = client;
             _transmuxerManager = transmuxerManager;
-            _outputHandler = outputHandler;
             _pathRegistry = pathRegistry;
             _tsMuxer = tsMuxer;
-
+            _outputHandler = outputHandler;
+            _mediaPacketInterceptor = mediaPacketInterceptor;
             _config = config;
             _logger = logger;
 
@@ -92,7 +93,8 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
 
         private async ValueTask ProcessMediaPacketAsync(MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp)
         {
-            await _outputHandler.InterceptMediaPacketAsync(mediaType, rentedBuffer, timestamp);
+            if (_mediaPacketInterceptor != null)
+                await _mediaPacketInterceptor.InterceptMediaPacketAsync(mediaType, rentedBuffer, timestamp);
 
             switch (mediaType)
             {

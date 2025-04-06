@@ -103,25 +103,46 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Logging
         [LoggerMessage(Level = LogLevel.Debug, Message = "Exiting ReceiveTranscodedBufferAsync")]
         public static partial void ReceiveTranscodedBufferAsyncEnding(this ILogger logger);
 
-        [LoggerMessage(Level = LogLevel.Trace, Message = "Read {BytesRead} bytes from FFmpeg output stream.")]
+        [LoggerMessage(Level = LogLevel.Trace, Message = "Read {BytesRead} bytes from FFmpeg output stream")]
         public static partial void BytesReadFromOutput(this ILogger logger, int bytesRead);
 
-        [LoggerMessage(Level = LogLevel.Error, Message = "Error occurred in ReceiveTranscodedBufferAsync.")]
+        [LoggerMessage(Level = LogLevel.Error, Message = "Error occurred in ReceiveTranscodedBufferAsync")]
         public static partial void ReceiveTranscodedBufferAsyncError(this ILogger logger, Exception ex);
 
-        [LoggerMessage(Level = LogLevel.Error, Message = "An error occurred while writing media buffer to FFmpegTranscodingStream.")]
+        [LoggerMessage(Level = LogLevel.Error, Message = "An error occurred while writing media buffer to FFmpegTranscodingStream")]
         public static partial void WriteMediaBufferError(this ILogger logger, Exception ex);
 
-        [LoggerMessage(Level = LogLevel.Trace, Message = "Header sent to FFmpeg process.")]
+        [LoggerMessage(Level = LogLevel.Trace, Message = "Header sent to FFmpeg process")]
         public static partial void HeaderSentToFFmpeg(this ILogger logger);
 
-        [LoggerMessage(Level = LogLevel.Debug, Message = "Releasing remaining buffers from send buffer channel.")]
+        [LoggerMessage(Level = LogLevel.Debug, Message = "Releasing remaining buffers from send buffer channel")]
         public static partial void ReleasingBuffers(this ILogger logger);
 
-        [LoggerMessage(Level = LogLevel.Error, Message = "An error occurred while starting the FFmpeg process.")]
+        [LoggerMessage(Level = LogLevel.Error, Message = "An error occurred while starting the FFmpeg process")]
         public static partial void StartingFFmpegProcessError(this ILogger logger, Exception ex);
 
-        [LoggerMessage(Level = LogLevel.Error, Message = "An error occurred while stopping the FFmpeg process with Process ID {ProcessId}.")]
+        [LoggerMessage(Level = LogLevel.Error, Message = "An error occurred while stopping the FFmpeg process with Process ID {ProcessId}")]
         public static partial void StoppingProcessError(this ILogger logger, int processId, Exception ex);
+
+        [LoggerMessage(Level = LogLevel.Information, Message = "Subtitle transcriber started (Transmuxer={Transmuxer}, Identifier={Identifier}, StreamPath={StreamPath})")]
+        public static partial void SubtitleTranscriberStarted(this ILogger logger, string transmuxer, Guid identifier, string streamPath);
+
+        [LoggerMessage(Level = LogLevel.Information, Message = "Subtitle transcriber is stopping (Transmuxer={Transmuxer}, Identifier={Identifier}, StreamPath={StreamPath})")]
+        public static partial void SubtitleTranscriberStopping(this ILogger logger, string transmuxer, Guid identifier, string streamPath);
+
+        [LoggerMessage(Level = LogLevel.Trace, Message = "Subtitle segment created (Transmuxer={Transmuxer}, Identifier={Identifier}, StreamPath={StreamPath}, SequenceNumber={SequenceNumber}, Path={OutputPath}, Timestamp={Timestamp}ms, Duration={Duration}ms)")]
+        public static partial void SubtitleSegmentCreated(this ILogger logger, string transmuxer, Guid identifier, string streamPath, uint sequenceNumber, string outputPath, uint timestamp, uint duration);
+
+        [LoggerMessage(Level = LogLevel.Information, Message = "Audio publishing started (Transmuxer={Transmuxer}, Identifier={Identifier}, StreamPath={StreamPath})")]
+        public static partial void AudioPublishingStarted(this ILogger logger, string transmuxer, Guid identifier, string streamPath);
+
+        [LoggerMessage(Level = LogLevel.Information, Message = "Transcription processing started (Transmuxer={Transmuxer}, Identifier={Identifier}, StreamPath={StreamPath})")]
+        public static partial void TranscriptionProcessingStarted(this ILogger logger, string transmuxer, Guid identifier, string streamPath);
+
+        [LoggerMessage(Level = LogLevel.Error, Message = "An error occurred while publishing audio (Transmuxer={Transmuxer}, Identifier={Identifier}, StreamPath={StreamPath})")]
+        public static partial void AudioPublishingError(this ILogger logger, string transmuxer, Guid identifier, string streamPath, Exception ex);
+
+        [LoggerMessage(Level = LogLevel.Error, Message = "An error occurred while processing transcription results (Transmuxer={Transmuxer}, Identifier={Identifier}, StreamPath={StreamPath})")]
+        public static partial void TranscriptionProcessingError(this ILogger logger, string transmuxer, Guid identifier, string streamPath, Exception ex);
     }
 }

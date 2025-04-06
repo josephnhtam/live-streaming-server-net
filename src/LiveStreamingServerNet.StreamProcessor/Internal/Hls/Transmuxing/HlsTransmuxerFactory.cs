@@ -3,9 +3,12 @@ using LiveStreamingServerNet.StreamProcessor.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Hls.Configurations;
 using LiveStreamingServerNet.StreamProcessor.Internal.Containers;
 using LiveStreamingServerNet.StreamProcessor.Internal.Contracts;
-using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output.Contracts;
+using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output;
+using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output.Writers.Contracts;
+using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Services.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing.Services.Contracts;
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
@@ -13,29 +16,36 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
     internal class HlsTransmuxerFactory : IStreamProcessorFactory
     {
         private readonly IServiceProvider _services;
-        private readonly IHlsTransmuxerManager _transmuxerManager;
-        private readonly IHlsOutputHandlerFactory _outputHandlerFactory;
-        private readonly IHlsPathRegistry _pathRegistry;
         private readonly HlsTransmuxerConfiguration _config;
-        private readonly ILogger<HlsTransmuxer> _logger;
+
         private readonly IBufferPool? _bufferPool;
+
+        private readonly IHlsTransmuxerManager _transmuxerManager;
+        private readonly IHlsPathRegistry _pathRegistry;
+        private readonly ILogger<HlsTransmuxer> _transmuxerLogger;
+
+        private readonly IDataBufferPool _dataBufferPool;
+        private readonly IMediaManifestWriter _mediaManifestWriter;
+        private readonly IHlsCleanupManager _cleanupManager;
+        private readonly ILogger<HlsOutputHandler> _outputHandlerLogger;
 
         public HlsTransmuxerFactory(
             IServiceProvider services,
-            IHlsTransmuxerManager transmuxerManager,
-            IHlsOutputHandlerFactory outputHandlerFactory,
-            IHlsPathRegistry pathRegistry,
-            HlsTransmuxerConfiguration config,
-            ILogger<HlsTransmuxer> logger,
-            IBufferPool? bufferPool)
+            HlsTransmuxerConfiguration config)
         {
             _services = services;
-            _transmuxerManager = transmuxerManager;
-            _outputHandlerFactory = outputHandlerFactory;
-            _pathRegistry = pathRegistry;
             _config = config;
-            _logger = logger;
-            _bufferPool = bufferPool;
+
+            _bufferPool = _services.GetService<IBufferPool>();
+
+            _transmuxerManager = _services.GetRequiredService<IHlsTransmuxerManager>();
+            _pathRegistry = _services.GetRequiredService<IHlsPathRegistry>();
+            _transmuxerLogger = _services.GetRequiredService<ILogger<HlsTransmuxer>>();
+
+            _dataBufferPool = _services.GetRequiredService<IDataBufferPool>();
+            _mediaManifestWriter = _services.GetRequiredService<IMediaManifestWriter>();
+            _cleanupManager = _services.GetRequiredService<IHlsCleanupManager>();
+            _outputHandlerLogger = _services.GetRequiredService<ILogger<HlsOutputHandler>>();
         }
 
         public async Task<IStreamProcessor?> CreateAsync(
@@ -48,25 +58,47 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
 
                 var manifestOutputPath = await _config.OutputPathResolver.ResolveOutputPath(_services, contextIdentifier, streamPath, streamArguments);
                 var tsSegmentOutputPath = GetTsSegmentOutputPath(manifestOutputPath);
-                var tsMuxer = new TsMuxer(tsSegmentOutputPath, _bufferPool);
 
-                var config = new HlsTransmuxer.Configuration(
+                var outputHandlerConfig = new HlsOutputHandler.Configuration(
+                    contextIdentifier,
+                    streamPath,
+                    _config.Name,
+                    manifestOutputPath,
+                    _config.SegmentListSize,
+                    _config.DeleteOutdatedSegments,
+                    _config.DeleteOutdatedSegments ? _config.CleanupDelay : null
+                );
+
+                var transmuxerConfig = new HlsTransmuxer.Configuration(
                     contextIdentifier,
                     streamPath,
                     _config.Name,
                     manifestOutputPath,
                     tsSegmentOutputPath,
-                    _config.SegmentListSize,
-                    _config.DeleteOutdatedSegments,
                     _config.MaxSegmentSize,
                     _config.MaxSegmentBufferSize,
                     _config.MinSegmentLength,
-                    _config.AudioOnlySegmentLength,
-                    _config.DeleteOutdatedSegments ? _config.CleanupDelay : null
+                    _config.AudioOnlySegmentLength
                 );
 
-                var outputHandler = _outputHandlerFactory.Create(config);
-                return new HlsTransmuxer(client, _transmuxerManager, outputHandler, _pathRegistry, tsMuxer, config, _logger);
+                var tsMuxer = new TsMuxer(tsSegmentOutputPath, _bufferPool);
+
+                var outputHandler = new HlsOutputHandler(
+                    bufferPool: _dataBufferPool,
+                    manifestWriter: _mediaManifestWriter,
+                    cleanupManager: _cleanupManager,
+                    config: outputHandlerConfig,
+                    logger: _outputHandlerLogger);
+
+                return new HlsTransmuxer(
+                    client: client,
+                    transmuxerManager: _transmuxerManager,
+                    pathRegistry: _pathRegistry,
+                    tsMuxer: tsMuxer,
+                    outputHandler: outputHandler,
+                    mediaPacketInterceptor: null,
+                    config: transmuxerConfig,
+                    logger: _transmuxerLogger);
             }
             catch
             {
