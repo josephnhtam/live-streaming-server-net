@@ -5,6 +5,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output.Contracts
 {
     internal interface ISubtitleTranscriber : IAsyncDisposable
     {
+        string SubtitleManifestPath { get; }
         SubtitleTrackOptions Options { get; }
         ValueTask StartAsync();
         ValueTask EnqueueAudioBufferAsync(IRentedBuffer rentedBuffer, uint timestamp);

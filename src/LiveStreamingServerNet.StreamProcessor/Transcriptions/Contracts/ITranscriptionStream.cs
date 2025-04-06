@@ -8,14 +8,14 @@ namespace LiveStreamingServerNet.StreamProcessor.Transcriptions.Contracts
         ValueTask StopAsync(CancellationToken cancellationToken);
         ValueTask SendAsync(IRentedBuffer rentedBuffer, uint timestamp, CancellationToken cancellationToken);
 
-        event EventHandler<TranscriptingStartedEventArgs> TranscriptingStarted;
-        event EventHandler<TranscriptingStoppedEventArgs> TranscriptingStopped;
-        event EventHandler<TranscriptingCanceledEventArgs> TranscriptingCanceled;
+        event EventHandler<TranscriptionStartedEventArgs> TranscriptionStarted;
+        event EventHandler<TranscriptionStoppedEventArgs> TranscriptionStopped;
+        event EventHandler<TranscriptionCanceledEventArgs> TranscriptionCanceled;
         event EventHandler<TranscriptionResultReceivedEventArgs> TranscriptionResultReceived;
     }
 
-    public record struct TranscriptingStartedEventArgs(int Id);
-    public record struct TranscriptingStoppedEventArgs(int Id);
-    public record struct TranscriptingCanceledEventArgs(Exception? Exception);
+    public record struct TranscriptionStartedEventArgs(int Id);
+    public record struct TranscriptionStoppedEventArgs(int Id);
+    public record struct TranscriptionCanceledEventArgs(Exception? Exception);
     public record struct TranscriptionResultReceivedEventArgs(TranscriptionResult Result);
 }

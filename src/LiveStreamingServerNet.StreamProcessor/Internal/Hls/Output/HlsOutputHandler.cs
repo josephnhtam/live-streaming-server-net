@@ -1,22 +1,22 @@
-﻿using LiveStreamingServerNet.Rtmp;
-using LiveStreamingServerNet.StreamProcessor.Internal.Containers;
+﻿using LiveStreamingServerNet.StreamProcessor.Internal.Containers;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output.Contracts;
+using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output.Writers;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output.Writers.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Services.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Logging;
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using Microsoft.Extensions.Logging;
-using static LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing.HlsTransmuxer;
 
 namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
 {
-    internal class HlsOutputHandler : IHlsOutputHandler
+    internal partial class HlsOutputHandler : IHlsOutputHandler
     {
         private readonly IMediaManifestWriter _manifestWriter;
         private readonly IHlsCleanupManager _cleanupManager;
         private readonly Configuration _config;
         private readonly ILogger<HlsOutputHandler> _logger;
         private readonly Queue<SeqSegment> _segments;
+        private readonly ITargetDuration _targetDuration;
 
         public string Name { get; }
         public Guid ContextIdentifier { get; }
@@ -38,6 +38,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
             _config = config;
             _logger = logger;
             _segments = new Queue<SeqSegment>();
+            _targetDuration = new MaximumTargetDuration();
         }
 
         public ValueTask InitializeAsync()
@@ -74,8 +75,8 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
 
         private async Task WriteManifestAsync()
         {
-            await _manifestWriter.WriteAsync(_config.ManifestOutputPath, _segments);
-            _logger.HlsManifestUpdated(Name, ContextIdentifier, _config.ManifestOutputPath, StreamPath);
+            await _manifestWriter.WriteAsync(_config.ManifestOutputPath, _segments, _targetDuration, null);
+            _logger.HlsManifestUpdated(Name, ContextIdentifier, StreamPath, _config.ManifestOutputPath);
         }
 
         public async ValueTask ExecuteCleanupAsync()
@@ -105,11 +106,6 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
             {
                 _logger.SchedulingHlsCleanupError(_config.ManifestOutputPath, ex);
             }
-        }
-
-        public ValueTask InterceptMediaPacketAsync(MediaType mediaType, IRentedBuffer buffer, uint timestamp)
-        {
-            return ValueTask.CompletedTask;
         }
 
         public ValueTask DisposeAsync()

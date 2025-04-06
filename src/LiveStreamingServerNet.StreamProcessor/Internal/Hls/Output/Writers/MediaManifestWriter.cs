@@ -7,15 +7,25 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output.Writers
 {
     internal class MediaManifestWriter : IMediaManifestWriter
     {
-        public async Task WriteAsync(string manifestOutputPath, IEnumerable<SeqSegment> segments, CancellationToken cancellationToken)
+        public async Task WriteAsync(
+            string manifestOutputPath,
+            IEnumerable<SeqSegment> segments,
+            ITargetDuration tagetDuration,
+            DateTime? initialProgramDateTime,
+            CancellationToken cancellationToken)
         {
             var manifestDirPath = Path.GetDirectoryName(manifestOutputPath) ?? string.Empty;
 
             var manifestBuilder = new MediaManifestBuilder()
                .SetAllowCache(false)
                .SetIndependentSegments(true)
-               .SetTargetDuration(CalculateTargetDuration(segments))
+               .SetTargetDuration(tagetDuration.Calculate(segments))
                .SetMediaSequence(segments.FirstOrDefault().SequenceNumber);
+
+            if (initialProgramDateTime.HasValue)
+            {
+                manifestBuilder = manifestBuilder.SetInitialProgramDateTime(initialProgramDateTime.Value);
+            }
 
             foreach (var segment in segments)
             {
@@ -26,11 +36,6 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output.Writers
             var manifest = manifestBuilder.Build();
 
             await FileHelper.WriteToFileAsync(manifestOutputPath, manifest);
-        }
-
-        private static TimeSpan CalculateTargetDuration(IEnumerable<SeqSegment> segments)
-        {
-            return TimeSpan.FromMilliseconds(segments.Max(s => s.Duration));
         }
     }
 }

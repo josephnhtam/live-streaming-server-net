@@ -1,6 +1,4 @@
-﻿using LiveStreamingServerNet.Rtmp;
-using LiveStreamingServerNet.StreamProcessor.Internal.Containers;
-using LiveStreamingServerNet.Utilities.Buffers.Contracts;
+﻿using LiveStreamingServerNet.StreamProcessor.Internal.Containers;
 
 namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output.Contracts
 {
@@ -14,6 +12,5 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output.Contracts
         ValueTask AddSegmentAsync(SeqSegment segment);
         ValueTask ExecuteCleanupAsync();
         ValueTask ScheduleCleanupAsync();
-        ValueTask InterceptMediaPacketAsync(MediaType mediaType, IRentedBuffer buffer, uint timestamp);
     }
 }
