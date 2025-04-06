@@ -9,6 +9,8 @@ using LiveStreamingServerNet.StreamProcessor.Transcriptions.Contracts;
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using LiveStreamingServerNet.Utilities.Common;
 using Microsoft.Extensions.Logging;
+using System.Collections.Concurrent;
+using System.Runtime.CompilerServices;
 using System.Threading.Channels;
 
 namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
@@ -26,7 +28,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
         private readonly CancellationTokenSource _cts;
         private readonly Channel<AudioBuffer> _audioBufferChannel;
         private readonly Channel<TranscriptionResult> _transcriptionResults;
-        private readonly Queue<SeqSegment> _segments;
+        private readonly ConcurrentQueue<SeqSegment> _segments;
         private readonly TimeSpan _flushInterval;
         private readonly ITargetDuration _targetDuration;
 
@@ -34,6 +36,9 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
         private Task? _audioPublishingTask;
         private Task? _transcriptionProcessingTask;
 
+        public string Name { get; }
+        public Guid ContextIdentifier { get; }
+        public string StreamPath { get; }
         public SubtitleTrackOptions Options { get; }
         public string SubtitleManifestPath => _config.SubtitleManifestOutputPath;
 
@@ -44,6 +49,9 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
             DateTime initialProgramDateTime,
             ILogger<SubtitleTranscriber> logger)
         {
+            Name = config.TransmuxerName;
+            ContextIdentifier = config.ContextIdentifier;
+            StreamPath = config.StreamPath;
             Options = options;
 
             _config = config;
@@ -57,7 +65,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
             _cts = new CancellationTokenSource();
             _audioBufferChannel = Channel.CreateUnbounded<AudioBuffer>(new() { AllowSynchronousContinuations = true });
             _transcriptionResults = Channel.CreateUnbounded<TranscriptionResult>(new() { AllowSynchronousContinuations = true });
-            _segments = new Queue<SeqSegment>();
+            _segments = new ConcurrentQueue<SeqSegment>();
 
             _flushInterval = TimeSpan.FromSeconds(1);
             _targetDuration = new FixedTargetDuration(_flushInterval);
@@ -76,13 +84,32 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
 
         public async ValueTask StartAsync()
         {
-            _logger.SubtitleTranscriberStarted(_config.TransmuxerName, _config.ContextIdentifier, _config.StreamPath);
+            _logger.SubtitleTranscriberStarted(Name, ContextIdentifier, StreamPath);
 
             await WriteManifestAsync(Enumerable.Empty<SeqSegment>(), CancellationToken.None);
             await _stream.StartAsync();
 
             _audioPublishingTask = PublishAudioBufferAsync(_cts.Token);
             _transcriptionProcessingTask = ProcessTranscriptionResultsAsync(_cts.Token);
+        }
+
+        public async ValueTask StopAsync()
+        {
+            _logger.SubtitleTranscriberStopping(Name, ContextIdentifier, StreamPath);
+
+            _cts.Cancel();
+
+            if (_audioPublishingTask != null)
+            {
+                await _audioPublishingTask;
+            }
+
+            if (_transcriptionProcessingTask != null)
+            {
+                await _transcriptionProcessingTask;
+            }
+
+            _logger.SubtitleTranscriberStopped(Name, ContextIdentifier, StreamPath);
         }
 
         public async ValueTask EnqueueAudioBufferAsync(IRentedBuffer rentedBuffer, uint timestamp)
@@ -106,7 +133,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
 
         private async Task ProcessTranscriptionResultsAsync(CancellationToken cancellationToken)
         {
-            _logger.TranscriptionProcessingStarted(_config.TransmuxerName, _config.ContextIdentifier, _config.StreamPath);
+            _logger.TranscriptionProcessingStarted(Name, ContextIdentifier, StreamPath);
 
             var segmentStart = TimeSpan.Zero;
             var cues = new List<SubtitleCue>();
@@ -130,7 +157,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
             catch (OperationCanceledException) { }
             catch (Exception ex)
             {
-                _logger.TranscriptionProcessingError(_config.TransmuxerName, _config.ContextIdentifier, _config.StreamPath, ex);
+                _logger.TranscriptionProcessingError(Name, ContextIdentifier, StreamPath, ex);
             }
             finally
             {
@@ -141,7 +168,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
         private async Task<SeqSegment> CreateWebVttSegment(
             uint sequenceNumber, TimeSpan segmentStart, List<SubtitleCue> cues, TimeSpan segmentEnd, CancellationToken cancellationToken)
         {
-            var outputPath = _config.SubtitleSegmentOutputPath.Replace("{seqNum}", sequenceNumber.ToString());
+            var outputPath = GetSegmentOutputPath(sequenceNumber);
             await _webVttWriter.WriteAsync(outputPath, cues, cancellationToken);
 
             var timestamp = (uint)segmentStart.TotalMilliseconds;
@@ -150,10 +177,16 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
             var segment = new SeqSegment(outputPath, sequenceNumber, timestamp, duration);
 
             _logger.SubtitleSegmentCreated(
-                _config.TransmuxerName, _config.ContextIdentifier, _config.StreamPath,
+                Name, ContextIdentifier, StreamPath,
                 _sequenceNumber, segment.FilePath, segment.Timestamp, segment.Duration);
 
             return segment;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private string GetSegmentOutputPath(uint sequenceNumber)
+        {
+            return _config.SubtitleSegmentOutputPath.Replace("{seqNum}", sequenceNumber.ToString());
         }
 
         private async Task WriteManifestAsync(IEnumerable<SeqSegment> segments, CancellationToken cancellationToken)
@@ -185,7 +218,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
 
         private async Task PublishAudioBufferAsync(CancellationToken cancellationToken)
         {
-            _logger.AudioPublishingStarted(_config.TransmuxerName, _config.ContextIdentifier, _config.StreamPath);
+            _logger.AudioPublishingStarted(Name, ContextIdentifier, StreamPath);
 
             try
             {
@@ -204,7 +237,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
             catch (OperationCanceledException) { }
             catch (Exception ex)
             {
-                _logger.AudioPublishingError(_config.TransmuxerName, _config.ContextIdentifier, _config.StreamPath, ex);
+                _logger.AudioPublishingError(Name, ContextIdentifier, StreamPath, ex);
             }
             finally
             {
@@ -219,20 +252,37 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
 
         public async ValueTask DisposeAsync()
         {
-            _logger.SubtitleTranscriberStopping(_config.TransmuxerName, _config.ContextIdentifier, _config.StreamPath);
-            _cts.Cancel();
-
-            if (_audioPublishingTask != null)
-            {
-                await _audioPublishingTask;
-            }
-
-            if (_transcriptionProcessingTask != null)
-            {
-                await _transcriptionProcessingTask;
-            }
-
             await _stream.DisposeAsync();
+        }
+
+        public ValueTask ClearExpiredSegmentsAsync(uint oldestTimestamp)
+        {
+            while (_segments.TryPeek(out var segment) &&
+                IsSegmentOutdated(segment, oldestTimestamp) &&
+                _segments.TryDequeue(out var removedSegment) &&
+                _config.DeleteOutdatedSegments)
+            {
+                DeleteOutdatedSegment(removedSegment);
+            }
+
+            return ValueTask.CompletedTask;
+        }
+
+        public List<SeqSegment> GetSegments()
+        {
+            return _segments.ToList();
+        }
+
+        private void DeleteOutdatedSegment(SeqSegment removedSegment)
+        {
+            File.Delete(removedSegment.FilePath);
+            _logger.OutdatedSegmentDeleted(Name, ContextIdentifier, StreamPath, removedSegment.FilePath);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private bool IsSegmentOutdated(SeqSegment segment, uint oldestTimestamp)
+        {
+            return (segment.Timestamp + segment.Duration) < oldestTimestamp;
         }
 
         private record struct AudioBuffer(IRentedBuffer Buffer, uint Timestamp);

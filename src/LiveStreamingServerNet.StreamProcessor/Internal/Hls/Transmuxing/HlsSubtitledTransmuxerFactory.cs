@@ -155,7 +155,8 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
                     streamPath,
                     _config.Name,
                     subtitleManifestOutputPath,
-                    subtitleSegmentOutputPath
+                    subtitleSegmentOutputPath,
+                    _config.DeleteOutdatedSegments
                 );
 
                 return subtitleTranscriberFactory.Create(

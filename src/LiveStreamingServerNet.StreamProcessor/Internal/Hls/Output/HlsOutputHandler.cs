@@ -46,6 +46,11 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
             return ValueTask.CompletedTask;
         }
 
+        public ValueTask CompleteAsync()
+        {
+            return ValueTask.CompletedTask;
+        }
+
         public async ValueTask AddSegmentAsync(SeqSegment segment)
         {
             await DoAddSegmentAsync(segment);

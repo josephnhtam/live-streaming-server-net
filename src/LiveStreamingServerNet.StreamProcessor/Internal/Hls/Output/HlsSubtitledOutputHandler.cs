@@ -20,7 +20,6 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
         private readonly ILogger<HlsSubtitledOutputHandler> _logger;
 
         private readonly Queue<SeqSegment> _segments;
-        private readonly CancellationTokenSource _cts;
         private readonly DateTime _initialProgramDateTime;
         private readonly IReadOnlyList<ISubtitleTranscriber> _subtitleTranscribers;
         private readonly ITargetDuration _targetDuration;
@@ -54,7 +53,6 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
             _logger = logger;
 
             _segments = new Queue<SeqSegment>();
-            _cts = new CancellationTokenSource();
             _targetDuration = new MaximumTargetDuration();
 
             DirectoryUtility.CreateDirectoryIfNotExists(Path.GetDirectoryName(config.MasterManifestOutputPath));
@@ -66,6 +64,11 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
             await Task.WhenAll(_subtitleTranscribers.Select(x => x.StartAsync().AsTask()));
         }
 
+        public async ValueTask CompleteAsync()
+        {
+            await Task.WhenAll(_subtitleTranscribers.Select(x => x.StopAsync().AsTask()));
+        }
+
         public async ValueTask AddSegmentAsync(SeqSegment segment)
         {
             await DoAddSegmentAsync(segment);
@@ -74,7 +77,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
             await WriteMasterManifestAsync();
         }
 
-        private ValueTask DoAddSegmentAsync(SeqSegment segment)
+        private async ValueTask DoAddSegmentAsync(SeqSegment segment)
         {
             _segments.Enqueue(segment);
 
@@ -84,9 +87,9 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
 
                 if (_config.DeleteOutdatedSegments)
                     DeleteOutdatedSegment(removedSegment);
-            }
 
-            return ValueTask.CompletedTask;
+                await CleanUpSubtitleSegmentAsync();
+            }
         }
 
         private void DeleteOutdatedSegment(SeqSegment removedSegment)
@@ -95,35 +98,19 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
             _logger.OutdatedSegmentDeleted(Name, ContextIdentifier, StreamPath, removedSegment.FilePath);
         }
 
+        private async ValueTask CleanUpSubtitleSegmentAsync()
+        {
+            if (!_segments.Any())
+                return;
+
+            var oldestTimestamp = _segments.First().Timestamp;
+            await Task.WhenAll(_subtitleTranscribers.Select(x => x.ClearExpiredSegmentsAsync(oldestTimestamp).AsTask()));
+        }
+
         private async Task WriteMediaManifestAsync()
         {
             await _mediaManifestWriter.WriteAsync(_config.MediaManifestOutputPath, _segments, _targetDuration, _initialProgramDateTime);
             _logger.HlsManifestUpdated(Name, ContextIdentifier, StreamPath, _config.MediaManifestOutputPath);
-
-            if (Interlocked.Exchange(ref _masterManifestCreated, 1) == 0)
-            {
-                var variantStreams = new List<VariantStream> { new(
-                    _config.MediaManifestOutputPath,
-                    ExtraAttributes: new Dictionary<string, string>{
-                        ["SUBTITLES"] = "SUBS"
-                    }
-                ) };
-
-                var alternateMedia = _subtitleTranscribers.Select(x =>
-                    new AlternateMedia(
-                        x.SubtitleManifestPath,
-                        x.Options.Name ?? "DEFAULT",
-                        "SUBTITLES",
-                        "SUBS",
-                        x.Options.Language,
-                        x.Options.IsDefault,
-                        x.Options.AutoSelect
-                    )
-                ).ToList();
-
-                await _masterManifestWriter.WriteAsync(_config.MasterManifestOutputPath, variantStreams, alternateMedia);
-                _logger.HlsManifestUpdated(Name, ContextIdentifier, StreamPath, _config.MasterManifestOutputPath);
-            }
         }
 
         private async Task WriteMasterManifestAsync()
@@ -172,8 +159,14 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
                 var segments = _segments.ToList();
                 var cleanupDelay = CalculateCleanupDelay(segments, _config.CleanupDelay.Value);
 
-                var files = new List<string> { _config.MasterManifestOutputPath };
+                var files = new List<string> { _config.MasterManifestOutputPath, _config.MediaManifestOutputPath };
                 files.AddRange(segments.Select(x => x.FilePath));
+
+                foreach (var transcriber in _subtitleTranscribers)
+                {
+                    files.Add(transcriber.SubtitleManifestPath);
+                    files.AddRange(transcriber.GetSegments().Select(x => x.FilePath));
+                }
 
                 await _cleanupManager.ScheduleCleanupAsync(_config.MasterManifestOutputPath, files, cleanupDelay);
             }
@@ -185,8 +178,6 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
 
         public async ValueTask DisposeAsync()
         {
-            _cts.Cancel();
-
             foreach (var transcriber in _subtitleTranscribers)
             {
                 await transcriber.DisposeAsync();

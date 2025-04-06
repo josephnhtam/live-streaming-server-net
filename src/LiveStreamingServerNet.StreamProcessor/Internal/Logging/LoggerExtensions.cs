@@ -130,6 +130,9 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Logging
         [LoggerMessage(Level = LogLevel.Information, Message = "Subtitle transcriber is stopping (Transmuxer={Transmuxer}, Identifier={Identifier}, StreamPath={StreamPath})")]
         public static partial void SubtitleTranscriberStopping(this ILogger logger, string transmuxer, Guid identifier, string streamPath);
 
+        [LoggerMessage(Level = LogLevel.Information, Message = "Subtitle transcriber stopped (Transmuxer={Transmuxer}, Identifier={Identifier}, StreamPath={StreamPath})")]
+        public static partial void SubtitleTranscriberStopped(this ILogger logger, string transmuxer, Guid identifier, string streamPath);
+
         [LoggerMessage(Level = LogLevel.Trace, Message = "Subtitle segment created (Transmuxer={Transmuxer}, Identifier={Identifier}, StreamPath={StreamPath}, SequenceNumber={SequenceNumber}, Path={OutputPath}, Timestamp={Timestamp}ms, Duration={Duration}ms)")]
         public static partial void SubtitleSegmentCreated(this ILogger logger, string transmuxer, Guid identifier, string streamPath, uint sequenceNumber, string outputPath, uint timestamp, uint duration);
 

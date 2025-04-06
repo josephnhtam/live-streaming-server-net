@@ -5,6 +5,7 @@
         string StreamPath,
         string TransmuxerName,
         string SubtitleManifestOutputPath,
-        string SubtitleSegmentOutputPath
+        string SubtitleSegmentOutputPath,
+        bool DeleteOutdatedSegments
     );
 }
