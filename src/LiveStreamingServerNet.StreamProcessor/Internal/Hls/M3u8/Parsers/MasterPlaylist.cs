@@ -53,7 +53,18 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.M3u8.Parsers
 
             while ((line = stringReader.ReadLine()) != null)
             {
-                if (line.StartsWith("#EXT-X-STREAM-INF") && (line = stringReader.ReadLine()) != null)
+                if (line.StartsWith("#EXT-X-MEDIA:") && line.Contains("TYPE=SUBTITLES"))
+                {
+                    var attributes = ParseAttributes(line);
+
+                    if (attributes.TryGetValue("URI", out var uri))
+                    {
+                        var subtitleManifestPath = Path.Combine(dirPath, uri);
+                        var subtitleContent = File.ReadAllText(subtitleManifestPath);
+                        mediaPlaylists.Add(MediaPlaylist.Parse(new Manifest(subtitleManifestPath, subtitleContent)));
+                    }
+                }
+                else if (line.StartsWith("#EXT-X-STREAM-INF") && (line = stringReader.ReadLine()) != null)
                 {
                     var subManifestPath = Path.Combine(dirPath, line);
                     var mediaPlaylistContent = File.ReadAllText(subManifestPath);
@@ -62,6 +73,30 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.M3u8.Parsers
             }
 
             return new MasterPlaylist(content, mediaPlaylists);
+        }
+
+        private static Dictionary<string, string> ParseAttributes(string line)
+        {
+            var attributes = new Dictionary<string, string>();
+
+            int colonIndex = line.IndexOf(':');
+            if (colonIndex >= 0 && colonIndex < line.Length - 1)
+            {
+                var attributesPart = line.Substring(colonIndex + 1);
+                var pairs = attributesPart.Split(',');
+
+                foreach (var pair in pairs)
+                {
+                    var kv = pair.Split('=', 2);
+
+                    if (kv.Length == 2)
+                    {
+                        attributes[kv[0].Trim()] = kv[1].Trim().Trim('"');
+                    }
+                }
+            }
+
+            return attributes;
         }
 
         private static string NormalizePath(string path)
