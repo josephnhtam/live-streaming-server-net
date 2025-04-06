@@ -207,9 +207,10 @@ namespace LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Internal
         {
             transcodingStream.TranscodingCanceled += (s, e) =>
             {
+                _logger.TranscodingCanceledLog();
+
                 if (e.Exception != null)
                 {
-                    _logger.TranscodingCanceledLog();
                     transcodingTcs.TrySetException(e.Exception);
                 }
 
