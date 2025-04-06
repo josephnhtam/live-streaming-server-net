@@ -13,10 +13,8 @@ using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Services.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing.Services;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing.Services.Contracts;
-using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Logging;
 
 namespace LiveStreamingServerNet.StreamProcessor.Installer
 {
@@ -51,39 +49,26 @@ namespace LiveStreamingServerNet.StreamProcessor.Installer
             services.TryAddSingleton<IHlsPathRegistry, HlsPathRegistry>();
             services.TryAddSingleton<IHlsPathMapper>(svc => svc.GetRequiredService<IHlsPathRegistry>());
 
+            services.TryAddSingleton<IMasterManifestWriter, MasterManifestWriter>();
             services.TryAddSingleton<IMediaManifestWriter, MediaManifestWriter>();
             services.TryAddSingleton<IHlsTransmuxerManager, HlsTransmuxerManager>();
             services.TryAddSingleton<IHlsCleanupManager, HlsCleanupManager>();
+            services.TryAddSingleton<ISubtitleTranscriberFactory, SubtitleTranscriberFactory>();
 
             services.AddSingleton<IRtmpMediaMessageInterceptor, HlsRtmpMediaMessageScraper>();
 
             services.AddSingleton<IStreamProcessorFactory>(svc =>
             {
-                IHlsOutputHandlerFactory outputHandlerFactory;
-
                 if (subtitleStreamFactoryConfigs.Any())
                 {
                     var subtitleTranscriptionStreamFactories = subtitleStreamFactoryConfigs.Select(x =>
                         new SubtitleTranscriptionStreamFactory(x.Options, x.Factory.Invoke(svc))
                     ).ToList();
 
-                    outputHandlerFactory = ActivatorUtilities.CreateInstance<HlsSubtitledOutputHandlerFactory>(
-                        svc, subtitleTranscriptionStreamFactories);
-                }
-                else
-                {
-                    outputHandlerFactory = ActivatorUtilities.CreateInstance<HlsOutputHandlerFactory>(svc);
+                    return new HlsSubtitledTransmuxerFactory(svc, subtitleTranscriptionStreamFactories, config);
                 }
 
-                return new HlsTransmuxerFactory(
-                    svc,
-                    svc.GetRequiredService<IHlsTransmuxerManager>(),
-                    outputHandlerFactory,
-                    svc.GetRequiredService<IHlsPathRegistry>(),
-                    config,
-                    svc.GetRequiredService<ILogger<HlsTransmuxer>>(),
-                    svc.GetService<IBufferPool>()
-                );
+                return new HlsTransmuxerFactory(svc, config);
             });
 
             return builder;
