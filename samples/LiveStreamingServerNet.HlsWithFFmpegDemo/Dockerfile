@@ -9,6 +9,10 @@ EXPOSE 1935
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
+COPY ["Directory.Packages.props", "."]
+COPY ["Directory.Build.props", "."]
+COPY ["Directory.Build.targets", "."]
+COPY ["nuget.config", "."]
 COPY ["samples/LiveStreamingServerNet.HlsWithFFmpegDemo/LiveStreamingServerNet.HlsWithFFmpegDemo.csproj", "samples/LiveStreamingServerNet.HlsWithFFmpegDemo/"]
 RUN dotnet restore "./samples/LiveStreamingServerNet.HlsWithFFmpegDemo/LiveStreamingServerNet.HlsWithFFmpegDemo.csproj"
 COPY . .
