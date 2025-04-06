@@ -2,12 +2,14 @@
 using LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Internal.Contracts;
 using LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Internal.Logging;
 using LiveStreamingServerNet.StreamProcessor.Contracts;
+using LiveStreamingServerNet.StreamProcessor.Transcriptions;
 using LiveStreamingServerNet.StreamProcessor.Transcriptions.Contracts;
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using LiveStreamingServerNet.Utilities.Common;
 using LiveStreamingServerNet.Utilities.Extensions;
 using Microsoft.CognitiveServices.Speech;
 using Microsoft.CognitiveServices.Speech.Audio;
+using Microsoft.CognitiveServices.Speech.Transcription;
 using Microsoft.Extensions.Logging;
 using System.Threading.Channels;
 
@@ -15,7 +17,7 @@ namespace LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Internal
 {
     internal class AzureSpeechTranscriptionStream : ITranscriptionStream
     {
-        private readonly ISpeechRecognizerFactory _speechRecognizerFactory;
+        private readonly IConversationTranscriberFactory _transcriberFactory;
         private readonly ITranscodingStreamFactory _transcodingStreamFactory;
         private readonly ILogger _logger;
 
@@ -28,6 +30,10 @@ namespace LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Internal
         private int _isDisposed;
         private Task? _transcriptionTask;
 
+        private uint? _initialTimestamp;
+        private uint _lastTimestamp;
+        private uint _timestampOffset;
+
         public event EventHandler<TranscriptingStartedEventArgs>? TranscriptingStarted;
         public event EventHandler<TranscriptingStoppedEventArgs>? TranscriptingStopped;
         public event EventHandler<TranscriptingCanceledEventArgs>? TranscriptingCanceled;
@@ -36,11 +42,11 @@ namespace LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Internal
         private static int _nextId;
 
         public AzureSpeechTranscriptionStream(
-            ISpeechRecognizerFactory speechRecognizerFactory,
+            IConversationTranscriberFactory transcriberFactory,
             ITranscodingStreamFactory transcodingStreamFactory,
             ILogger<AzureSpeechTranscriptionStream> logger)
         {
-            _speechRecognizerFactory = speechRecognizerFactory;
+            _transcriberFactory = transcriberFactory;
             _transcodingStreamFactory = transcodingStreamFactory;
             _logger = logger;
 
@@ -106,6 +112,8 @@ namespace LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Internal
 
         private async Task DoRunTranscriptionAsync(ITranscodingStream transcodingStream, CancellationToken stoppingToken)
         {
+            AdjustTimestampOffset();
+
             var transcodingTcs = new TaskCompletionSource();
             var transcriptingTcs = new TaskCompletionSource();
 
@@ -115,11 +123,11 @@ namespace LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Internal
             using var pushStream = AudioInputStream.CreatePushStream();
             using var audioInput = AudioConfig.FromStreamInput(pushStream);
 
-            using var recognizer = _speechRecognizerFactory.Create(audioInput);
+            using var transcriber = _transcriberFactory.Create(audioInput);
 
-            ConfigureEvents(transcodingStream, recognizer, pushStream, transcriptionCts, transcodingTcs, transcriptingTcs);
+            ConfigureEvents(transcodingStream, transcriber, pushStream, transcriptionCts, transcodingTcs, transcriptingTcs);
 
-            await recognizer.StartContinuousRecognitionAsync();
+            await transcriber.StartTranscribingAsync();
             await transcodingStream.StartAsync();
 
             _logger.SpeechRecognitionStarted();
@@ -140,11 +148,19 @@ namespace LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Internal
             finally
             {
                 await ErrorBoundary.ExecuteAsync(async () => await transcodingStream.StopAsync(stoppingToken));
-                await ErrorBoundary.ExecuteAsync(recognizer.StopContinuousRecognitionAsync);
+                await ErrorBoundary.ExecuteAsync(transcriber.StartTranscribingAsync);
                 _logger.SpeechRecognitionStopped();
             }
 
             await Task.WhenAll(transcodingTcs.Task, transcriptingTcs.Task);
+        }
+
+        private void AdjustTimestampOffset()
+        {
+            if (!_initialTimestamp.HasValue)
+                return;
+
+            _timestampOffset = _lastTimestamp - _initialTimestamp.Value;
         }
 
         private async Task StreamAudioToTranscoderAsync(ITranscodingStream transcodingStream, CancellationToken cancellationToken)
@@ -155,6 +171,9 @@ namespace LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Internal
                 {
                     try
                     {
+                        _initialTimestamp ??= audioBuffer.Timestamp;
+                        _lastTimestamp = audioBuffer.Timestamp;
+
                         await transcodingStream.WriteAsync(MediaType.Audio, audioBuffer.RentedBuffer, audioBuffer.Timestamp, cancellationToken);
                     }
                     finally
@@ -180,7 +199,7 @@ namespace LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Internal
 
         private void ConfigureEvents(
             ITranscodingStream transcodingStream,
-            SpeechRecognizer recognizer,
+            ConversationTranscriber transcriber,
             PushAudioInputStream pushStream,
             CancellationTokenSource transcriptionCts,
             TaskCompletionSource transcodingTcs,
@@ -210,19 +229,19 @@ namespace LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Internal
                 return Task.CompletedTask;
             });
 
-            recognizer.SessionStarted += (s, e) =>
+            transcriber.SessionStarted += (s, e) =>
             {
                 _logger.RecognizerSessionStarted(e.SessionId);
             };
 
-            recognizer.SessionStopped += (s, e) =>
+            transcriber.SessionStopped += (s, e) =>
             {
                 _logger.RecognizerSessionStopped(e.SessionId);
                 transcriptionCts.Cancel();
                 transcriptingTcs.TrySetResult();
             };
 
-            recognizer.Canceled += (s, e) =>
+            transcriber.Canceled += (s, e) =>
             {
                 _logger.RecognizerCanceled(e.ErrorCode.ToString(), e.ErrorDetails);
 
@@ -234,25 +253,30 @@ namespace LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Internal
                 transcriptionCts.Cancel();
             };
 
-            recognizer.Recognizing += (s, e) =>
-            {
-                var text = e.Result.Text;
-                var timestamp = TimeSpan.FromTicks(e.Result.OffsetInTicks).ToString();
-                var duration = TimeSpan.FromTicks(e.Result.Duration.Ticks).ToString();
-
+            transcriber.Transcribing += (s, e) =>
                 ErrorBoundary.Execute(() =>
-                    TranscriptionResultReceived?.Invoke(this, new TranscriptionResultReceivedEventArgs(
-                        new(text, TimeSpan.FromTicks(e.Result.OffsetInTicks), TimeSpan.FromTicks(e.Result.Duration.Ticks)))));
+                {
+                    var baseTimestamp = _initialTimestamp.HasValue ?
+                        TimeSpan.FromMilliseconds(_initialTimestamp.Value + _timestampOffset) :
+                        TimeSpan.Zero;
 
-                _logger.RecognizingText(text, timestamp, duration);
-            };
+                    var text = e.Result.Text;
+                    var timestamp = baseTimestamp + TimeSpan.FromTicks(e.Result.OffsetInTicks);
+                    var duration = TimeSpan.FromTicks(e.Result.Duration.Ticks);
+
+                    TranscriptionResultReceived?.Invoke(this, new TranscriptionResultReceivedEventArgs(
+                        new TranscriptionResult(text, timestamp, duration)));
+
+                    _logger.RecognizingText(text, timestamp, duration);
+                });
         }
 
         public async ValueTask SendAsync(IRentedBuffer rentedBuffer, uint timestamp, CancellationToken cancellationToken)
         {
+            rentedBuffer.Claim();
+
             try
             {
-                rentedBuffer.Claim();
                 await _audioBufferChannel.Writer.WriteAsync(new AudioBuffer(rentedBuffer, timestamp), cancellationToken);
             }
             catch (OperationCanceledException)

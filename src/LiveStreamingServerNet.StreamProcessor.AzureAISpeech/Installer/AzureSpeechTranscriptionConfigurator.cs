@@ -19,12 +19,6 @@ namespace LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Installer
             return this;
         }
 
-        public IAzureSpeechTranscriptionConfigurator WithLanguage(string language)
-        {
-            _config = _config with { Language = language };
-            return this;
-        }
-
         public IAzureSpeechTranscriptionConfigurator WithSourceLanguageConfig(SourceLanguageConfig config)
         {
             _config = _config with { SourceLanguageConfig = config };

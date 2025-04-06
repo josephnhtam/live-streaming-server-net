@@ -30,7 +30,7 @@ namespace LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Installer
             configure?.Invoke(transcriptionConfigurator);
 
             var transcriptionConfig = transcriptionConfigurator.Build();
-            var speechRecognizerFactory = new SpeechRecognizerFactory(transcriptionConfig);
+            var speechRecognizerFactory = new ConversationTranscriberFactory(transcriptionConfig);
 
             return configurator.AddSubtitleTranscriptionStreamFactory(
                 svc =>
