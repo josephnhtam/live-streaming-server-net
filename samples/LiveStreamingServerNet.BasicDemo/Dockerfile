@@ -6,6 +6,10 @@ EXPOSE 1935
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
+COPY ["Directory.Packages.props", "."]
+COPY ["Directory.Build.props", "."]
+COPY ["Directory.Build.targets", "."]
+COPY ["nuget.config", "."]
 COPY ["samples/LiveStreamingServerNet.BasicDemo/LiveStreamingServerNet.BasicDemo.csproj", "samples/LiveStreamingServerNet.BasicDemo/"]
 COPY ["src/LiveStreamingServerNet/LiveStreamingServerNet.csproj", "src/LiveStreamingServerNet/"]
 COPY ["src/LiveStreamingServerNet.Rtmp/LiveStreamingServerNet.Rtmp.csproj", "src/LiveStreamingServerNet.Rtmp/"]

@@ -7,6 +7,10 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
+COPY ["Directory.Packages.props", "."]
+COPY ["Directory.Build.props", "."]
+COPY ["Directory.Build.targets", "."]
+COPY ["nuget.config", "."]
 COPY ["src/LiveStreamingServerNet.KubernetesOperator/LiveStreamingServerNet.KubernetesOperator.csproj", "src/LiveStreamingServerNet.KubernetesOperator/"]
 RUN dotnet restore "./src/LiveStreamingServerNet.KubernetesOperator/./LiveStreamingServerNet.KubernetesOperator.csproj"
 COPY . .
