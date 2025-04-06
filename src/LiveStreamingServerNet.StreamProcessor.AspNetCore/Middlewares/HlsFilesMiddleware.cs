@@ -55,7 +55,11 @@ namespace LiveStreamingServerNet.StreamProcessor.AspNetCore.Middlewares
         private static FileExtensionContentTypeProvider CreateContentTypeProvider()
         {
             var contentTypeProvider = new FileExtensionContentTypeProvider();
+
+            contentTypeProvider.Mappings.Clear();
             contentTypeProvider.Mappings[".m3u8"] = "application/x-mpegURL";
+            contentTypeProvider.Mappings[".vtt"] = "text/vtt";
+            contentTypeProvider.Mappings[".ts"] = "video/vnd.dlna.mpeg-tts";
 
             return contentTypeProvider;
         }
