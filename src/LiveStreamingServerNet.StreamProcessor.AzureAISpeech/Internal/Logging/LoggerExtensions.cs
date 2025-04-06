@@ -44,6 +44,6 @@ namespace LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Internal.Logging
         public static partial void RecognizerCanceled(this ILogger logger, string errorCode, string errorDetails);
 
         [LoggerMessage(Level = LogLevel.Debug, Message = "Recognizing text: '{Text}', Timestamp: {Timestamp}, Duration: {Duration}")]
-        public static partial void RecognizingText(this ILogger logger, string text, string timestamp, string duration);
+        public static partial void RecognizingText(this ILogger logger, string text, TimeSpan timestamp, TimeSpan duration);
     }
 }

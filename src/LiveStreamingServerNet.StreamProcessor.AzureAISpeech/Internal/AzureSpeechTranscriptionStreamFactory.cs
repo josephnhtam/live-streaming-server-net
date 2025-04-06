@@ -12,20 +12,20 @@ namespace LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Internal
     internal class AzureSpeechTranscriptionStreamFactory : ITranscriptionStreamFactory
     {
         private readonly IDataBufferPool _dataBufferPool;
-        private readonly ISpeechRecognizerFactory _speechRecognizerFactory;
+        private readonly IConversationTranscriberFactory _transcriberFactory;
         private readonly AzureSpeechTranscriptionConfiguration _config;
         private readonly ILogger<AzureSpeechTranscriptionStream> _transcriptionStreamLogger;
         private readonly ILogger<FFmpegTranscodingStream> _transcodingStreamLogger;
 
         public AzureSpeechTranscriptionStreamFactory(
             IDataBufferPool dataBufferPool,
-            ISpeechRecognizerFactory speechRecognizerFactory,
+            IConversationTranscriberFactory transcriberFactory,
             AzureSpeechTranscriptionConfiguration config,
             ILogger<AzureSpeechTranscriptionStream> transcriptionStreamLogger,
             ILogger<FFmpegTranscodingStream> transcodingStreamLogger)
         {
             _dataBufferPool = dataBufferPool;
-            _speechRecognizerFactory = speechRecognizerFactory;
+            _transcriberFactory = transcriberFactory;
             _config = config;
 
             _transcriptionStreamLogger = transcriptionStreamLogger;
@@ -37,7 +37,7 @@ namespace LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Internal
             var transcodingStreamFactory = CreateTranscodingStreamFactory(inputStreamWriterFactory);
 
             return new AzureSpeechTranscriptionStream(
-                _speechRecognizerFactory,
+                _transcriberFactory,
                 transcodingStreamFactory,
                 _transcriptionStreamLogger
             );
