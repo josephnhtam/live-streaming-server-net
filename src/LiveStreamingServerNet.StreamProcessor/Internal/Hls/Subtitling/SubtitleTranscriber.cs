@@ -32,7 +32,6 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Subtitling
         private readonly CancellationTokenSource _cts;
         private readonly Channel<AudioBuffer> _audioBufferChannel;
         private readonly ConcurrentQueue<SeqSegment> _segments;
-        private readonly TimeSpan _flushInterval;
         private readonly ITargetDuration _targetDuration;
 
         private uint _sequenceNumber;
@@ -70,9 +69,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Subtitling
             _cts = new CancellationTokenSource();
             _audioBufferChannel = Channel.CreateUnbounded<AudioBuffer>(new() { AllowSynchronousContinuations = true });
             _segments = new ConcurrentQueue<SeqSegment>();
-
-            _flushInterval = TimeSpan.FromSeconds(1);
-            _targetDuration = new FixedTargetDuration(_flushInterval);
+            _targetDuration = new FixedTargetDuration(_config.MinSegmentInterval);
 
             DirectoryUtility.CreateDirectoryIfNotExists(Path.GetDirectoryName(_config.SubtitleManifestOutputPath));
             DirectoryUtility.CreateDirectoryIfNotExists(Path.GetDirectoryName(_config.SubtitleSegmentOutputPath));
@@ -150,7 +147,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Subtitling
             {
                 while (!cancellationToken.IsCancellationRequested)
                 {
-                    await Task.Delay(_flushInterval, cancellationToken);
+                    await Task.Delay(_config.MinSegmentInterval, cancellationToken);
 
                     if (!_subtitleCueExtractor.TryExtractSubtitleCues(segmentStart, ref cues, out var segmentEnd))
                     {
