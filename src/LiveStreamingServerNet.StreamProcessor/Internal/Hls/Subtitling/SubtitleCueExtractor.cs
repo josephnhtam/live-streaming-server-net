@@ -7,22 +7,22 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Subtitling
 {
     internal class SubtitleCueExtractor : ISubtitleCueExtractor
     {
-        private readonly Channel<TranscribingResult> _transcriptionResults;
+        private readonly Channel<TranscriptionResult> _transcriptionResults;
 
         public bool RequireTranscribingResult => true;
         public bool RequireTranscribedResult => false;
 
         public SubtitleCueExtractor()
         {
-            _transcriptionResults = Channel.CreateUnbounded<TranscribingResult>(new() { AllowSynchronousContinuations = true });
+            _transcriptionResults = Channel.CreateUnbounded<TranscriptionResult>(new() { AllowSynchronousContinuations = true });
         }
 
-        public void ReceiveTranscribingResult(TranscribingResult result)
+        public void ReceiveTranscribingResult(TranscriptionResult result)
         {
             _transcriptionResults.Writer.TryWrite(result);
         }
 
-        public void ReceiveTranscribedResult(TranscribedResult result) { }
+        public void ReceiveTranscribedResult(TranscriptionResult result) { }
 
         public bool TryExtractSubtitleCues(TimeSpan segmentStart, ref List<SubtitleCue> cues, out TimeSpan segmentEnd)
         {

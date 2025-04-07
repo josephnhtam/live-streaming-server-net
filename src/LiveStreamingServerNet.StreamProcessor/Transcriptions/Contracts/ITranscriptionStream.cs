@@ -18,6 +18,6 @@ namespace LiveStreamingServerNet.StreamProcessor.Transcriptions.Contracts
     public record struct TranscriptionStartedEventArgs(int Id);
     public record struct TranscriptionStoppedEventArgs(int Id);
     public record struct TranscriptionCanceledEventArgs(Exception? Exception);
-    public record struct TranscribingResultReceivedEventArgs(TranscribingResult Result);
-    public record struct TranscribedResultReceivedEventArgs(TranscribedResult Result);
+    public record struct TranscribingResultReceivedEventArgs(TranscriptionResult Result);
+    public record struct TranscribedResultReceivedEventArgs(TranscriptionResult Result);
 }
