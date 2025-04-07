@@ -18,7 +18,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
     internal class HlsSubtitledTransmuxerFactory : IStreamProcessorFactory
     {
         private readonly IServiceProvider _services;
-        private readonly IReadOnlyList<SubtitleTranscriptionStreamFactory> _subtitleTranscriptionStreamFactory;
+        private readonly IReadOnlyList<SubtitleTranscriptionConfiguration> _subtitleTranscriptionConfigs;
         private readonly HlsTransmuxerConfiguration _config;
 
         private readonly IBufferPool? _bufferPool;
@@ -37,11 +37,11 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
 
         public HlsSubtitledTransmuxerFactory(
             IServiceProvider services,
-            IReadOnlyList<SubtitleTranscriptionStreamFactory> subtitleTranscriptionStreamFactory,
+            IReadOnlyList<SubtitleTranscriptionConfiguration> subtitleTranscriptionConfigs,
             HlsTransmuxerConfiguration config)
         {
             _services = services;
-            _subtitleTranscriptionStreamFactory = subtitleTranscriptionStreamFactory;
+            _subtitleTranscriptionConfigs = subtitleTranscriptionConfigs;
             _config = config;
 
             _bufferPool = _services.GetService<IBufferPool>();
@@ -103,7 +103,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
                     masterManifestOutputPath,
                     _dataBufferPool,
                     _subtitleTranscriberFactory,
-                    _subtitleTranscriptionStreamFactory,
+                    _subtitleTranscriptionConfigs,
                     initialProgramDateTime);
 
                 var meidaPacketInterceptor = new HlsSubtitledMediaPacketInterceptor(subtitleTranscribers);
@@ -140,7 +140,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
             string masterManifestOutputPath,
             IDataBufferPool bufferPool,
             ISubtitleTranscriberFactory subtitleTranscriberFactory,
-            IReadOnlyList<SubtitleTranscriptionStreamFactory> subtitleStreamFactories,
+            IReadOnlyList<SubtitleTranscriptionConfiguration> subtitleStreamFactories,
             DateTime initialProgramDateTime)
         {
             var inputStreamWriterFactory = new FlvAudioStreamWriterFactory(bufferPool);
@@ -160,10 +160,16 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
                     _config.DeleteOutdatedSegments
                 );
 
+                var transcriptionStreamFactory = x.TranscriptionStreamFactory.Invoke(_services);
+
+                var subtitleCueExtractorFactory = x.SubtitleCueExtractorFactory?.Invoke(_services) ??
+                    new SubtitleCueExtractorFactory();
+
                 return subtitleTranscriberFactory.Create(
                     options: x.Options,
                     config: config,
-                    transcriptionStream: x.Factory.Create(inputStreamWriterFactory, x.Options),
+                    transcriptionStream: transcriptionStreamFactory.Create(inputStreamWriterFactory),
+                    subtitleCueExtractor: subtitleCueExtractorFactory.Create(),
                     initialProgramDateTime: initialProgramDateTime
                 );
             }).ToList();

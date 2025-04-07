@@ -1,5 +1,6 @@
 ﻿using LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Installer.Contracts;
 using LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Internal;
+using LiveStreamingServerNet.StreamProcessor.Hls.Subtitling.Contracts;
 using Microsoft.CognitiveServices.Speech;
 
 namespace LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Installer
@@ -28,6 +29,12 @@ namespace LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Installer
         public IAzureSpeechTranscriptionConfigurator WithAutoDetectLanguageConfig(AutoDetectSourceLanguageConfig config)
         {
             _config = _config with { AutoDetectLanguageConfig = config };
+            return this;
+        }
+
+        public IAzureSpeechTranscriptionConfigurator WithSubtitleCueExtractor(Func<IServiceProvider, ISubtitleCueExtractorFactory> factory)
+        {
+            _config = _config with { SubtitleCueExtractorFactory = factory };
             return this;
         }
 

@@ -1,5 +1,5 @@
-﻿using LiveStreamingServerNet.StreamProcessor.Internal.Containers;
-using LiveStreamingServerNet.StreamProcessor.Transcriptions;
+﻿using LiveStreamingServerNet.StreamProcessor.Hls.Subtitling;
+using LiveStreamingServerNet.StreamProcessor.Internal.Containers;
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 
 namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Subtitling.Contracts

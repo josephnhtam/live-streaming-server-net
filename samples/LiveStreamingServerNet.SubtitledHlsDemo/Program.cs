@@ -3,8 +3,8 @@ using LiveStreamingServerNet.StreamProcessor.AspNetCore.Configurations;
 using LiveStreamingServerNet.StreamProcessor.AspNetCore.Installer;
 using LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Installer;
 using LiveStreamingServerNet.StreamProcessor.Hls.Contracts;
+using LiveStreamingServerNet.StreamProcessor.Hls.Subtitling;
 using LiveStreamingServerNet.StreamProcessor.Installer;
-using LiveStreamingServerNet.StreamProcessor.Transcriptions;
 using LiveStreamingServerNet.StreamProcessor.Utilities;
 using Microsoft.CognitiveServices.Speech;
 using System.Net;
@@ -67,7 +67,7 @@ namespace LiveStreamingServerNet.SubtitledHlsDemo
                             config.OutputPathResolver = new HlsOutputPathResolver(outputDir);
                         });
 
-                        var subtitleTrackOptions = new SubtitleTrackOptions();
+                        var subtitleTrackOptions = new SubtitleTrackOptions("Subtitle");
                         var speechConfig = SpeechConfig.FromSubscription(speechKey, speechRegion);
                         var autoDetectLanguageConfig = AutoDetectSourceLanguageConfig.FromLanguages(new[] { "en-US", "ja-JP" });
 

@@ -42,8 +42,9 @@ namespace LiveStreamingServerNet.StreamProcessor.Installer
             var services = builder.Services;
 
             var config = new HlsTransmuxerConfiguration();
-            var subtitleStreamFactoryConfigs = new List<SubtitleTranscriptionStreamFactoryConfiguration>();
-            var configurator = new HlsTransmuxerConfigurator(services, config, subtitleStreamFactoryConfigs);
+            var subtitleTranscriptionConfigs = new List<SubtitleTranscriptionConfiguration>();
+
+            var configurator = new HlsTransmuxerConfigurator(services, config, subtitleTranscriptionConfigs);
             configure?.Invoke(configurator);
 
             services.TryAddSingleton<IHlsPathRegistry, HlsPathRegistry>();
@@ -59,13 +60,9 @@ namespace LiveStreamingServerNet.StreamProcessor.Installer
 
             services.AddSingleton<IStreamProcessorFactory>(svc =>
             {
-                if (subtitleStreamFactoryConfigs.Any())
+                if (subtitleTranscriptionConfigs.Any())
                 {
-                    var subtitleTranscriptionStreamFactories = subtitleStreamFactoryConfigs.Select(x =>
-                        new SubtitleTranscriptionStreamFactory(x.Options, x.Factory.Invoke(svc))
-                    ).ToList();
-
-                    return new HlsSubtitledTransmuxerFactory(svc, subtitleTranscriptionStreamFactories, config);
+                    return new HlsSubtitledTransmuxerFactory(svc, subtitleTranscriptionConfigs, config);
                 }
 
                 return new HlsTransmuxerFactory(svc, config);

@@ -1,8 +1,9 @@
 ﻿using LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Installer.Contracts;
 using LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Internal;
 using LiveStreamingServerNet.StreamProcessor.FFmpeg;
+using LiveStreamingServerNet.StreamProcessor.Hls.Subtitling;
 using LiveStreamingServerNet.StreamProcessor.Installer.Contracts;
-using LiveStreamingServerNet.StreamProcessor.Transcriptions;
+using LiveStreamingServerNet.StreamProcessor.Transcriptions.Contracts;
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using Microsoft.CognitiveServices.Speech;
 using Microsoft.Extensions.DependencyInjection;
@@ -32,16 +33,19 @@ namespace LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Installer
             var transcriptionConfig = transcriptionConfigurator.Build();
             var speechRecognizerFactory = new ConversationTranscriberFactory(transcriptionConfig);
 
-            return configurator.AddSubtitleTranscriptionStreamFactory(
-                svc =>
-                {
-                    var dataBufferPool = svc.GetRequiredService<IDataBufferPool>();
-                    var transcriptionStreamLogger = svc.GetRequiredService<ILogger<AzureSpeechTranscriptionStream>>();
-                    var transcodingStreamLogger = svc.GetRequiredService<ILogger<FFmpegTranscodingStream>>();
+            Func<IServiceProvider, ITranscriptionStreamFactory> transcriptionStreamFactory = svc =>
+            {
+                var dataBufferPool = svc.GetRequiredService<IDataBufferPool>();
+                var transcriptionStreamLogger = svc.GetRequiredService<ILogger<AzureSpeechTranscriptionStream>>();
+                var transcodingStreamLogger = svc.GetRequiredService<ILogger<FFmpegTranscodingStream>>();
 
-                    return new AzureSpeechTranscriptionStreamFactory(
-                        dataBufferPool, speechRecognizerFactory, transcriptionConfig, transcriptionStreamLogger, transcodingStreamLogger);
-                }, options);
+                return new AzureSpeechTranscriptionStreamFactory(
+                    dataBufferPool, speechRecognizerFactory, transcriptionConfig, transcriptionStreamLogger, transcodingStreamLogger);
+            };
+
+            return transcriptionConfig.SubtitleCueExtractorFactory == null ?
+                configurator.AddSubtitleTranscriptionStreamFactory(options, transcriptionStreamFactory) :
+                configurator.AddSubtitleTranscriptionStreamFactory(options, transcriptionStreamFactory, transcriptionConfig.SubtitleCueExtractorFactory);
         }
     }
 }
