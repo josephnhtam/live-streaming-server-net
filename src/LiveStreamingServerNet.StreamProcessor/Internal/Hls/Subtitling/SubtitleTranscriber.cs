@@ -210,7 +210,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Subtitling
                 {
                     try
                     {
-                        await _stream.SendAsync(audioBuffer.Buffer, audioBuffer.Timestamp, cancellationToken);
+                        await _stream.WriteAsync(audioBuffer.Buffer, audioBuffer.Timestamp, cancellationToken);
                     }
                     finally
                     {
