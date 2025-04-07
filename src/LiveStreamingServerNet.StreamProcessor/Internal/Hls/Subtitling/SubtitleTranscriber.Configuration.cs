@@ -6,6 +6,7 @@
         string TransmuxerName,
         string SubtitleManifestOutputPath,
         string SubtitleSegmentOutputPath,
-        bool DeleteOutdatedSegments
+        bool DeleteOutdatedSegments,
+        TimeSpan MinSegmentInterval
     );
 }

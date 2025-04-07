@@ -157,7 +157,8 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
                     _config.Name,
                     subtitleManifestOutputPath,
                     subtitleSegmentOutputPath,
-                    _config.DeleteOutdatedSegments
+                    _config.DeleteOutdatedSegments,
+                    TimeSpan.FromSeconds(1)
                 );
 
                 var transcriptionStreamFactory = x.TranscriptionStreamFactory.Invoke(_services);
