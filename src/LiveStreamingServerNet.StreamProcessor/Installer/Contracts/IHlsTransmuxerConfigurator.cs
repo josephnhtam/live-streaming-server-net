@@ -1,5 +1,6 @@
 ﻿using LiveStreamingServerNet.StreamProcessor.Hls.Configurations;
-using LiveStreamingServerNet.StreamProcessor.Transcriptions;
+using LiveStreamingServerNet.StreamProcessor.Hls.Subtitling;
+using LiveStreamingServerNet.StreamProcessor.Hls.Subtitling.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Transcriptions.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -25,10 +26,23 @@ namespace LiveStreamingServerNet.StreamProcessor.Installer.Contracts
         /// <summary>
         /// Registers a transcription stream factory for a subtitle track.
         /// </summary>
-        /// <param name="factory">Factory method to create the transcription stream.</param>
-        /// <param name="options">Optional options for the subtitle track.</param>
+        /// <param name="options">Options for the subtitle track.</param>
+        /// <param name="transcriptionStreamFactory">Factory method to create the transcription stream.</param>
         /// <returns>The configurator instance for method chaining.</returns>
         IHlsTransmuxerConfigurator AddSubtitleTranscriptionStreamFactory(
-            Func<IServiceProvider, ITranscriptionStreamFactory> factory, SubtitleTrackOptions? options = null);
+            SubtitleTrackOptions options,
+            Func<IServiceProvider, ITranscriptionStreamFactory> transcriptionStreamFactory);
+
+        /// <summary>
+        /// Registers a transcription stream factory for a subtitle track.
+        /// </summary>
+        /// <param name="options">Options for the subtitle track.</param>
+        /// <param name="factory">Factory method to create the transcription stream.</param>
+        /// <param name="subtitleCueExtractorFactory">Factory method to create the subtitle cue extractor.</param>
+        /// <returns>The configurator instance for method chaining.</returns>
+        IHlsTransmuxerConfigurator AddSubtitleTranscriptionStreamFactory(
+            SubtitleTrackOptions options,
+            Func<IServiceProvider, ITranscriptionStreamFactory> transcriptionStreamFactory,
+            Func<IServiceProvider, ISubtitleCueExtractorFactory> subtitleCueExtractorFactory);
     }
 }

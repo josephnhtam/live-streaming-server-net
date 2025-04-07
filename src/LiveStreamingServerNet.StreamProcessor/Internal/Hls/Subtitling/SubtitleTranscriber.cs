@@ -1,4 +1,6 @@
-﻿using LiveStreamingServerNet.StreamProcessor.Internal.Containers;
+﻿using LiveStreamingServerNet.StreamProcessor.Hls.Subtitling;
+using LiveStreamingServerNet.StreamProcessor.Hls.Subtitling.Contracts;
+using LiveStreamingServerNet.StreamProcessor.Internal.Containers;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output.Writers;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output.Writers.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Subtitling.Contracts;
@@ -6,7 +8,6 @@ using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Subtitling.Writers;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Subtitling.Writers.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.WebVtt;
 using LiveStreamingServerNet.StreamProcessor.Internal.Logging;
-using LiveStreamingServerNet.StreamProcessor.Transcriptions;
 using LiveStreamingServerNet.StreamProcessor.Transcriptions.Contracts;
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using LiveStreamingServerNet.Utilities.Common;
@@ -21,6 +22,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Subtitling
     {
         private readonly SubtitleTranscriberConfiguration _config;
         private readonly ITranscriptionStream _stream;
+        private readonly ISubtitleCueExtractor _subtitleCueExtractor;
         private readonly DateTime _initialProgramDateTime;
         private readonly ILogger _logger;
 
@@ -32,7 +34,6 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Subtitling
         private readonly ConcurrentQueue<SeqSegment> _segments;
         private readonly TimeSpan _flushInterval;
         private readonly ITargetDuration _targetDuration;
-        private readonly ISubtitleCueExtractor _subtitleCueExtractor;
 
         private uint _sequenceNumber;
         private Task? _audioPublishingTask;
@@ -48,6 +49,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Subtitling
             SubtitleTrackOptions options,
             SubtitleTranscriberConfiguration config,
             ITranscriptionStream stream,
+            ISubtitleCueExtractor subtitleCueExtractor,
             DateTime initialProgramDateTime,
             ILogger<SubtitleTranscriber> logger)
         {
@@ -58,6 +60,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Subtitling
 
             _config = config;
             _stream = stream;
+            _subtitleCueExtractor = subtitleCueExtractor;
             _initialProgramDateTime = initialProgramDateTime;
             _logger = logger;
 
@@ -70,8 +73,6 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Subtitling
 
             _flushInterval = TimeSpan.FromSeconds(1);
             _targetDuration = new FixedTargetDuration(_flushInterval);
-
-            _subtitleCueExtractor = new SubtitleCueExtractor();
 
             DirectoryUtility.CreateDirectoryIfNotExists(Path.GetDirectoryName(_config.SubtitleManifestOutputPath));
             DirectoryUtility.CreateDirectoryIfNotExists(Path.GetDirectoryName(_config.SubtitleSegmentOutputPath));
