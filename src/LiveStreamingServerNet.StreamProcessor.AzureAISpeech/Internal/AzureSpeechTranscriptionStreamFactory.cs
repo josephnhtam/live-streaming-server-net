@@ -3,6 +3,7 @@ using LiveStreamingServerNet.StreamProcessor.Contracts;
 using LiveStreamingServerNet.StreamProcessor.FFmpeg;
 using LiveStreamingServerNet.StreamProcessor.FFmpeg.Configurations;
 using LiveStreamingServerNet.StreamProcessor.Transcriptions.Contracts;
+using LiveStreamingServerNet.StreamProcessor.Utilities;
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using Microsoft.Extensions.Logging;
 
@@ -44,8 +45,19 @@ namespace LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Internal
 
         private ITranscodingStreamFactory CreateTranscodingStreamFactory(IMediaStreamWriterFactory inputStreamWriterFactory)
         {
-            var transcodingConfig = FFmpegTranscodingStreamConfiguration.PCM16MonoTranscoding(_config.FFmpegPath);
+            var transcodingConfig = CreatePCM16MonoTranscodingConfig(_config.FFmpegPath);
             return new FFmpegTranscodingStreamFactory(_dataBufferPool, inputStreamWriterFactory, transcodingConfig, _transcodingStreamLogger);
+        }
+
+        private static FFmpegTranscodingStreamConfiguration CreatePCM16MonoTranscodingConfig(string? ffmpegPath = null)
+        {
+            return new FFmpegTranscodingStreamConfiguration
+            {
+                FFmpegPath = ffmpegPath ?? ExecutableFinder.FindExecutableFromPATH("ffmpeg") ??
+                    throw new ArgumentException("FFmpeg executable not found"),
+
+                FFmpegArguments = "-i pipe:0 -vn -f s16le -acodec pcm_s16le -ac 1 -ar 16000 pipe:1"
+            };
         }
     }
 }
