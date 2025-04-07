@@ -7,7 +7,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output.Writers
 {
     public class WebVttWriter : IWebVttWriter
     {
-        public Task WriteAsync(string webVttOutputPath, IEnumerable<SubtitleCue> cues, CancellationToken cancellationToken = default)
+        public Task WriteAsync(string webVttOutputPath, IReadOnlyList<SubtitleCue> cues, CancellationToken cancellationToken = default)
         {
             var webVttBuilder = new WebVttBuilder();
 

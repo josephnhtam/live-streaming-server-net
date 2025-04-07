@@ -37,7 +37,8 @@ namespace LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Internal
         public event EventHandler<TranscriptionStartedEventArgs>? TranscriptionStarted;
         public event EventHandler<TranscriptionStoppedEventArgs>? TranscriptionStopped;
         public event EventHandler<TranscriptionCanceledEventArgs>? TranscriptionCanceled;
-        public event EventHandler<TranscriptionResultReceivedEventArgs>? TranscriptionResultReceived;
+        public event EventHandler<TranscribingResultReceivedEventArgs>? TranscribingResultReceived;
+        public event EventHandler<TranscribedResultReceivedEventArgs>? TranscribedResultReceived;
 
         private static int _nextId;
 
@@ -257,19 +258,53 @@ namespace LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Internal
             transcriber.Transcribing += (s, e) =>
                 ErrorBoundary.Execute(() =>
                 {
-                    var baseTimestamp = _initialTimestamp.HasValue ?
-                        TimeSpan.FromMilliseconds(_initialTimestamp.Value + _timestampOffset) :
-                        TimeSpan.Zero;
+                    if (TranscribingResultReceived == null)
+                    {
+                        return;
+                    }
+
+                    var baseTimestamp = GetBaseTimestamp();
 
                     var text = e.Result.Text;
                     var timestamp = baseTimestamp + TimeSpan.FromTicks(e.Result.OffsetInTicks);
-                    var duration = TimeSpan.FromTicks(e.Result.Duration.Ticks);
+                    var duration = e.Result.Duration;
 
-                    TranscriptionResultReceived?.Invoke(this, new TranscriptionResultReceivedEventArgs(
-                        new TranscriptionResult(text, timestamp, duration)));
+                    TranscribingResultReceived.Invoke(this, new TranscribingResultReceivedEventArgs(
+                        new TranscribingResult(text, timestamp, duration)));
 
                     _logger.RecognizingText(text, timestamp, duration);
                 });
+
+            transcriber.Transcribed += (s, e) =>
+                ErrorBoundary.Execute(() =>
+                {
+                    if (TranscribedResultReceived == null)
+                    {
+                        return;
+                    }
+
+                    var baseTimestamp = GetBaseTimestamp();
+
+                    var text = e.Result.Text;
+                    var timestamp = baseTimestamp + TimeSpan.FromTicks(e.Result.OffsetInTicks);
+                    var duration = e.Result.Duration;
+
+                    var words = e.Result.Best()?.FirstOrDefault()?.Words.Select(x =>
+                        new TranscribedWord(x.Word, baseTimestamp + TimeSpan.FromTicks(x.Offset), TimeSpan.FromTicks(x.Duration))
+                    ).ToList();
+
+                    TranscribedResultReceived.Invoke(this, new TranscribedResultReceivedEventArgs(
+                        new TranscribedResult(text, timestamp, duration, words)));
+
+                    _logger.RecognizedText(text, timestamp, duration);
+                });
+        }
+
+        private TimeSpan GetBaseTimestamp()
+        {
+            return _initialTimestamp.HasValue ?
+                TimeSpan.FromMilliseconds(_initialTimestamp.Value + _timestampOffset) :
+                TimeSpan.Zero;
         }
 
         public async ValueTask SendAsync(IRentedBuffer rentedBuffer, uint timestamp, CancellationToken cancellationToken)

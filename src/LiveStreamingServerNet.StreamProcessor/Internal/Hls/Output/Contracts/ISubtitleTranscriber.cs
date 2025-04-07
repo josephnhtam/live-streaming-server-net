@@ -14,7 +14,6 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output.Contracts
         ValueTask StartAsync();
         ValueTask StopAsync();
         ValueTask EnqueueAudioBufferAsync(IRentedBuffer rentedBuffer, uint timestamp);
-        ValueTask<TranscriptionResult> ReceiveTranscriptionResultAsync(CancellationToken cancellationToken);
         ValueTask ClearExpiredSegmentsAsync(uint oldestTimestamp);
         List<SeqSegment> GetSegments();
     }

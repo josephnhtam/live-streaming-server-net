@@ -11,11 +11,13 @@ namespace LiveStreamingServerNet.StreamProcessor.Transcriptions.Contracts
         event EventHandler<TranscriptionStartedEventArgs> TranscriptionStarted;
         event EventHandler<TranscriptionStoppedEventArgs> TranscriptionStopped;
         event EventHandler<TranscriptionCanceledEventArgs> TranscriptionCanceled;
-        event EventHandler<TranscriptionResultReceivedEventArgs> TranscriptionResultReceived;
+        event EventHandler<TranscribingResultReceivedEventArgs> TranscribingResultReceived;
+        event EventHandler<TranscribedResultReceivedEventArgs> TranscribedResultReceived;
     }
 
     public record struct TranscriptionStartedEventArgs(int Id);
     public record struct TranscriptionStoppedEventArgs(int Id);
     public record struct TranscriptionCanceledEventArgs(Exception? Exception);
-    public record struct TranscriptionResultReceivedEventArgs(TranscriptionResult Result);
+    public record struct TranscribingResultReceivedEventArgs(TranscribingResult Result);
+    public record struct TranscribedResultReceivedEventArgs(TranscribedResult Result);
 }
