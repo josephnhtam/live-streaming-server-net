@@ -307,7 +307,7 @@ namespace LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Internal
                 TimeSpan.Zero;
         }
 
-        public async ValueTask SendAsync(IRentedBuffer rentedBuffer, uint timestamp, CancellationToken cancellationToken)
+        public async ValueTask WriteAsync(IRentedBuffer rentedBuffer, uint timestamp, CancellationToken cancellationToken)
         {
             rentedBuffer.Claim();
 

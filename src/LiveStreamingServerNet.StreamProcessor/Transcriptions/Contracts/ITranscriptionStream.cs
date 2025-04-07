@@ -6,7 +6,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Transcriptions.Contracts
     {
         ValueTask StartAsync();
         ValueTask StopAsync(CancellationToken cancellationToken);
-        ValueTask SendAsync(IRentedBuffer rentedBuffer, uint timestamp, CancellationToken cancellationToken);
+        ValueTask WriteAsync(IRentedBuffer rentedBuffer, uint timestamp, CancellationToken cancellationToken);
 
         event EventHandler<TranscriptionStartedEventArgs> TranscriptionStarted;
         event EventHandler<TranscriptionStoppedEventArgs> TranscriptionStopped;
