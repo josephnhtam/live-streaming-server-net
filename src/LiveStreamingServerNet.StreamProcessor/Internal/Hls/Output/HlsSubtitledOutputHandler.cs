@@ -4,6 +4,7 @@ using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output.Writers;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output.Writers.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Services.Contracts;
+using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Subtitling.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Logging;
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using LiveStreamingServerNet.Utilities.Common;

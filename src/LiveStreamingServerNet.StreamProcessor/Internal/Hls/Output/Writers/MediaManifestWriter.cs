@@ -1,7 +1,7 @@
 ﻿using LiveStreamingServerNet.StreamProcessor.Internal.Containers;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.M3u8.Builders;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output.Writers.Contracts;
-using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output.Writers.Utilities;
+using LiveStreamingServerNet.StreamProcessor.Internal.Utilities;
 
 namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output.Writers
 {

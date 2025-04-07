@@ -1,4 +1,4 @@
-﻿namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
+﻿namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Subtitling
 {
     internal record struct SubtitleTranscriberConfiguration(
         Guid ContextIdentifier,

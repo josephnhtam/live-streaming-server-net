@@ -1,9 +1,9 @@
-﻿using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output.Contracts;
+﻿using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Subtitling.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Transcriptions;
 using LiveStreamingServerNet.StreamProcessor.Transcriptions.Contracts;
 using Microsoft.Extensions.Logging;
 
-namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
+namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Subtitling
 {
     internal class SubtitleTranscriberFactory : ISubtitleTranscriberFactory
     {

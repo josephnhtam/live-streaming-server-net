@@ -1,4 +1,4 @@
-﻿namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output.Writers.Utilities
+﻿namespace LiveStreamingServerNet.StreamProcessor.Internal.Utilities
 {
     internal static class PathHelper
     {

@@ -1,9 +1,9 @@
-﻿using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output.Contracts;
+﻿using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Subtitling.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.WebVtt;
 using LiveStreamingServerNet.StreamProcessor.Transcriptions;
 using System.Threading.Channels;
 
-namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
+namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Subtitling
 {
     internal class SubtitleCueExtractor : ISubtitleCueExtractor
     {

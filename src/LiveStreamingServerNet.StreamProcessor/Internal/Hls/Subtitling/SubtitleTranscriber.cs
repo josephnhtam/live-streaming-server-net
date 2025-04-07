@@ -1,7 +1,9 @@
 ﻿using LiveStreamingServerNet.StreamProcessor.Internal.Containers;
-using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output.Writers;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output.Writers.Contracts;
+using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Subtitling.Contracts;
+using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Subtitling.Writers;
+using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Subtitling.Writers.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.WebVtt;
 using LiveStreamingServerNet.StreamProcessor.Internal.Logging;
 using LiveStreamingServerNet.StreamProcessor.Transcriptions;
@@ -13,7 +15,7 @@ using System.Collections.Concurrent;
 using System.Runtime.CompilerServices;
 using System.Threading.Channels;
 
-namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
+namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Subtitling
 {
     internal partial class SubtitleTranscriber : ISubtitleTranscriber
     {
@@ -264,7 +266,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private bool IsSegmentOutdated(SeqSegment segment, uint oldestTimestamp)
         {
-            return (segment.Timestamp + segment.Duration) < oldestTimestamp;
+            return segment.Timestamp + segment.Duration < oldestTimestamp;
         }
 
         private record struct AudioBuffer(IRentedBuffer Buffer, uint Timestamp);

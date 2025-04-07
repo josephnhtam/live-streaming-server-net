@@ -1,5 +1,5 @@
 ﻿using LiveStreamingServerNet.Rtmp;
-using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output.Contracts;
+using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Subtitling.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing.Contracts;
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 
