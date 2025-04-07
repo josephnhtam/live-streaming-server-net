@@ -11,7 +11,7 @@ using Microsoft.Extensions.Options;
 using NSubstitute;
 using NSubstitute.ReceivedExtensions;
 
-namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Media
+namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
 {
     public class RtmpVideoDataProcessorServiceTest : IDisposable
     {
@@ -95,12 +95,12 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Media
             _dataBuffer.MoveTo(0);
 
             var hasHeader =
-                (videoCodec is VideoCodec.AVC or VideoCodec.HEVC or VideoCodec.AV1) &&
+                videoCodec is VideoCodec.AVC or VideoCodec.HEVC or VideoCodec.AV1 &&
                 avcPacketType is AVCPacketType.SequenceHeader &&
                 frameType is VideoFrameType.KeyFrame;
 
             var isPictureCachable =
-                (videoCodec is VideoCodec.AVC or VideoCodec.HEVC or VideoCodec.AV1) &&
+                videoCodec is VideoCodec.AVC or VideoCodec.HEVC or VideoCodec.AV1 &&
                 avcPacketType is AVCPacketType.NALU;
 
             var isSkippable = !hasHeader;

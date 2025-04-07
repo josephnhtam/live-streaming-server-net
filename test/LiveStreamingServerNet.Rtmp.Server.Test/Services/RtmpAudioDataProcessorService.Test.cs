@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NSubstitute.ReceivedExtensions;
 
-namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Media
+namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
 {
     public class RtmpAudioDataProcessorServiceTest : IDisposable
     {
@@ -85,10 +85,10 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.RtmpEventHandlers.Media
             _dataBuffer.MoveTo(0);
 
             var hasHeader =
-                (audioCodec is AudioCodec.AAC or AudioCodec.Opus) &&
+                audioCodec is AudioCodec.AAC or AudioCodec.Opus &&
                 aacPacketType is AACPacketType.SequenceHeader;
 
-            bool isPictureCachable = (audioCodec is AudioCodec.AAC or AudioCodec.Opus) && aacPacketType is not AACPacketType.SequenceHeader;
+            bool isPictureCachable = audioCodec is AudioCodec.AAC or AudioCodec.Opus && aacPacketType is not AACPacketType.SequenceHeader;
 
             var isSkippable = !hasHeader;
 
