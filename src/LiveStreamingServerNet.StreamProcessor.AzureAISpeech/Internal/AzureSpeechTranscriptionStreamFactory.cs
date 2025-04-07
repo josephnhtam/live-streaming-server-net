@@ -1,7 +1,7 @@
 ﻿using LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Internal.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Contracts;
 using LiveStreamingServerNet.StreamProcessor.FFmpeg;
-using LiveStreamingServerNet.StreamProcessor.Transcriptions.Configurations;
+using LiveStreamingServerNet.StreamProcessor.FFmpeg.Configurations;
 using LiveStreamingServerNet.StreamProcessor.Transcriptions.Contracts;
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using Microsoft.Extensions.Logging;
