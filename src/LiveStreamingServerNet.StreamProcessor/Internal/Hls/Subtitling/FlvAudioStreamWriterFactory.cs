@@ -2,9 +2,9 @@
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using LiveStreamingServerNet.Utilities.Contracts;
 
-namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
+namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Subtitling
 {
-    public class FlvAudioStreamWriterFactory : IMediaStreamWriterFactory
+    internal class FlvAudioStreamWriterFactory : IMediaStreamWriterFactory
     {
         private readonly IDataBufferPool _dataBufferPool;
 

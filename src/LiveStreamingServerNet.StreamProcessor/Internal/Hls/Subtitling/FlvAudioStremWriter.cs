@@ -5,9 +5,9 @@ using LiveStreamingServerNet.StreamProcessor.Contracts;
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using LiveStreamingServerNet.Utilities.Contracts;
 
-namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
+namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Subtitling
 {
-    public class FlvAudioStremWriter : IMediaStreamWriter
+    internal class FlvAudioStremWriter : IMediaStreamWriter
     {
         private readonly IFlvWriter _flvWriter;
 
