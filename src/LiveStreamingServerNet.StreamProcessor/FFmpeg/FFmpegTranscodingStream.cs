@@ -1,8 +1,8 @@
 ﻿using LiveStreamingServerNet.Rtmp;
 using LiveStreamingServerNet.StreamProcessor.Contracts;
+using LiveStreamingServerNet.StreamProcessor.FFmpeg.Configurations;
 using LiveStreamingServerNet.StreamProcessor.FFmpeg.Exceptions;
 using LiveStreamingServerNet.StreamProcessor.Internal.Logging;
-using LiveStreamingServerNet.StreamProcessor.Transcriptions.Configurations;
 using LiveStreamingServerNet.Utilities.Buffers;
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using LiveStreamingServerNet.Utilities.Common;

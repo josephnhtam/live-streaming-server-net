@@ -1,5 +1,5 @@
 ﻿using LiveStreamingServerNet.StreamProcessor.Contracts;
-using LiveStreamingServerNet.StreamProcessor.Transcriptions.Configurations;
+using LiveStreamingServerNet.StreamProcessor.FFmpeg.Configurations;
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using Microsoft.Extensions.Logging;
 

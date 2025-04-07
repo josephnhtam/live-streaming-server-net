@@ -1,6 +1,6 @@
 ﻿using LiveStreamingServerNet.StreamProcessor.Utilities;
 
-namespace LiveStreamingServerNet.StreamProcessor.Transcriptions.Configurations
+namespace LiveStreamingServerNet.StreamProcessor.FFmpeg.Configurations
 {
     public class FFmpegTranscodingStreamConfiguration
     {
