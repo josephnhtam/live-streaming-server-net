@@ -1,4 +1,5 @@
-﻿using Microsoft.CognitiveServices.Speech;
+﻿using LiveStreamingServerNet.StreamProcessor.Hls.Subtitling.Contracts;
+using Microsoft.CognitiveServices.Speech;
 
 namespace LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Internal
 {
@@ -7,5 +8,6 @@ namespace LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Internal
         public string? FFmpegPath { get; init; }
         public SourceLanguageConfig? SourceLanguageConfig { get; init; }
         public AutoDetectSourceLanguageConfig? AutoDetectLanguageConfig { get; init; }
+        public Func<IServiceProvider, ISubtitleCueExtractorFactory>? SubtitleCueExtractorFactory { get; init; }
     };
 }

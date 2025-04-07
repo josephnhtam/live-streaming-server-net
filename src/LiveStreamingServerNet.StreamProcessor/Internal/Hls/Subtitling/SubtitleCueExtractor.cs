@@ -1,4 +1,4 @@
-﻿using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Subtitling.Contracts;
+﻿using LiveStreamingServerNet.StreamProcessor.Hls.Subtitling.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.WebVtt;
 using LiveStreamingServerNet.StreamProcessor.Transcriptions;
 using System.Threading.Channels;

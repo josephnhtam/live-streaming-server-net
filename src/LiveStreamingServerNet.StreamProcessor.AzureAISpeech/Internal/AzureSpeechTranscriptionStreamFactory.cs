@@ -1,7 +1,6 @@
 ﻿using LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Internal.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Contracts;
 using LiveStreamingServerNet.StreamProcessor.FFmpeg;
-using LiveStreamingServerNet.StreamProcessor.Transcriptions;
 using LiveStreamingServerNet.StreamProcessor.Transcriptions.Configurations;
 using LiveStreamingServerNet.StreamProcessor.Transcriptions.Contracts;
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
@@ -32,7 +31,7 @@ namespace LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Internal
             _transcodingStreamLogger = transcodingStreamLogger;
         }
 
-        public ITranscriptionStream Create(IMediaStreamWriterFactory inputStreamWriterFactory, SubtitleTrackOptions options)
+        public ITranscriptionStream Create(IMediaStreamWriterFactory inputStreamWriterFactory)
         {
             var transcodingStreamFactory = CreateTranscodingStreamFactory(inputStreamWriterFactory);
 

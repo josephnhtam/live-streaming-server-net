@@ -129,7 +129,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
             var alternateMedia = _subtitleTranscribers.Select(x =>
                 new AlternateMedia(
                     x.SubtitleManifestPath,
-                    x.Options.Name ?? "DEFAULT",
+                    x.Options.Name,
                     "SUBTITLES",
                     "SUBS",
                     x.Options.Language,
