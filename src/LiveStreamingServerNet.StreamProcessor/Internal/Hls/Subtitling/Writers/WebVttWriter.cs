@@ -1,11 +1,11 @@
-﻿using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output.Writers.Contracts;
-using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output.Writers.Utilities;
+﻿using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Subtitling.Writers.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.WebVtt;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.WebVtt.Builders;
+using LiveStreamingServerNet.StreamProcessor.Internal.Utilities;
 
-namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output.Writers
+namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Subtitling.Writers
 {
-    public class WebVttWriter : IWebVttWriter
+    internal class WebVttWriter : IWebVttWriter
     {
         public Task WriteAsync(string webVttOutputPath, IReadOnlyList<SubtitleCue> cues, CancellationToken cancellationToken = default)
         {

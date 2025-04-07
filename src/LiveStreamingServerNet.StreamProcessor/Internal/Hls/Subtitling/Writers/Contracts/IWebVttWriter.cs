@@ -1,6 +1,6 @@
 ﻿using LiveStreamingServerNet.StreamProcessor.Internal.Hls.WebVtt;
 
-namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output.Writers.Contracts
+namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Subtitling.Writers.Contracts
 {
     internal interface IWebVttWriter
     {
