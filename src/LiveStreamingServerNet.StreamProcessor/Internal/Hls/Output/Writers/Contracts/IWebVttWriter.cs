@@ -4,6 +4,6 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output.Writers.Con
 {
     internal interface IWebVttWriter
     {
-        Task WriteAsync(string webVttOutputPath, IEnumerable<SubtitleCue> cues, CancellationToken cancellationToken = default);
+        Task WriteAsync(string webVttOutputPath, IReadOnlyList<SubtitleCue> cues, CancellationToken cancellationToken = default);
     }
 }

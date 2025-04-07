@@ -27,10 +27,10 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
 
         private readonly CancellationTokenSource _cts;
         private readonly Channel<AudioBuffer> _audioBufferChannel;
-        private readonly Channel<TranscriptionResult> _transcriptionResults;
         private readonly ConcurrentQueue<SeqSegment> _segments;
         private readonly TimeSpan _flushInterval;
         private readonly ITargetDuration _targetDuration;
+        private readonly ISubtitleCueExtractor _subtitleCueExtractor;
 
         private uint _sequenceNumber;
         private Task? _audioPublishingTask;
@@ -64,11 +64,12 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
 
             _cts = new CancellationTokenSource();
             _audioBufferChannel = Channel.CreateUnbounded<AudioBuffer>(new() { AllowSynchronousContinuations = true });
-            _transcriptionResults = Channel.CreateUnbounded<TranscriptionResult>(new() { AllowSynchronousContinuations = true });
             _segments = new ConcurrentQueue<SeqSegment>();
 
             _flushInterval = TimeSpan.FromSeconds(1);
             _targetDuration = new FixedTargetDuration(_flushInterval);
+
+            _subtitleCueExtractor = new SubtitleCueExtractor();
 
             DirectoryUtility.CreateDirectoryIfNotExists(Path.GetDirectoryName(_config.SubtitleManifestOutputPath));
             DirectoryUtility.CreateDirectoryIfNotExists(Path.GetDirectoryName(_config.SubtitleSegmentOutputPath));
@@ -78,8 +79,17 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
 
         private void ConfigureTranscriptionEvents()
         {
-            _stream.TranscriptionResultReceived += (_, e) =>
-                ErrorBoundary.Execute(() => _transcriptionResults.Writer.TryWrite(e.Result));
+            if (_subtitleCueExtractor.RequireTranscribingResult)
+            {
+                _stream.TranscribingResultReceived += (_, e) =>
+                    _subtitleCueExtractor.ReceiveTranscribingResult(e.Result);
+            }
+
+            if (_subtitleCueExtractor.RequireTranscribedResult)
+            {
+                _stream.TranscribedResultReceived += (_, e) =>
+                    _subtitleCueExtractor.ReceiveTranscribedResult(e.Result);
+            }
         }
 
         public async ValueTask StartAsync()
@@ -126,11 +136,6 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
             }
         }
 
-        public ValueTask<TranscriptionResult> ReceiveTranscriptionResultAsync(CancellationToken cancellationToken)
-        {
-            return _transcriptionResults.Reader.ReadAsync(cancellationToken);
-        }
-
         private async Task ProcessTranscriptionResultsAsync(CancellationToken cancellationToken)
         {
             _logger.TranscriptionProcessingStarted(Name, ContextIdentifier, StreamPath);
@@ -144,8 +149,10 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
                 {
                     await Task.Delay(_flushInterval, cancellationToken);
 
-                    if (!TryExtractSubtitleCues(segmentStart, ref cues, out var segmentEnd))
+                    if (!_subtitleCueExtractor.TryExtractSubtitleCues(segmentStart, ref cues, out var segmentEnd))
+                    {
                         continue;
+                    }
 
                     var segment = await CreateWebVttSegment(++_sequenceNumber, segmentStart, cues, segmentEnd, cancellationToken);
                     _segments.Enqueue(segment);
@@ -159,14 +166,10 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
             {
                 _logger.TranscriptionProcessingError(Name, ContextIdentifier, StreamPath, ex);
             }
-            finally
-            {
-                _transcriptionResults.Writer.Complete();
-            }
         }
 
         private async Task<SeqSegment> CreateWebVttSegment(
-            uint sequenceNumber, TimeSpan segmentStart, List<SubtitleCue> cues, TimeSpan segmentEnd, CancellationToken cancellationToken)
+            uint sequenceNumber, TimeSpan segmentStart, IReadOnlyList<SubtitleCue> cues, TimeSpan segmentEnd, CancellationToken cancellationToken)
         {
             var outputPath = GetSegmentOutputPath(sequenceNumber);
             await _webVttWriter.WriteAsync(outputPath, cues, cancellationToken);
@@ -192,28 +195,6 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
         private async Task WriteManifestAsync(IEnumerable<SeqSegment> segments, CancellationToken cancellationToken)
         {
             await _manifestWriter.WriteAsync(_config.SubtitleManifestOutputPath, segments, _targetDuration, _initialProgramDateTime, cancellationToken);
-        }
-
-        private bool TryExtractSubtitleCues(TimeSpan segmentStart, ref List<SubtitleCue> cues, out TimeSpan segmentEnd)
-        {
-            cues.Clear();
-            var nextCueTimestamp = segmentStart;
-
-            while (_transcriptionResults.Reader.TryRead(out var transcription))
-            {
-                var transcriptionEnd = transcription.Timestamp + transcription.Duration;
-                var cueStart = transcription.Timestamp > nextCueTimestamp ? transcription.Timestamp : nextCueTimestamp;
-                var cueDuration = transcriptionEnd - cueStart;
-
-                if (cueDuration <= TimeSpan.Zero)
-                    continue;
-
-                cues.Add(new SubtitleCue(transcription.Text, cueStart, cueDuration));
-                nextCueTimestamp = cueStart + cueDuration;
-            }
-
-            segmentEnd = nextCueTimestamp;
-            return cues.Count > 0;
         }
 
         private async Task PublishAudioBufferAsync(CancellationToken cancellationToken)
@@ -253,6 +234,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
         public async ValueTask DisposeAsync()
         {
             await _stream.DisposeAsync();
+            await _subtitleCueExtractor.DisposeAsync();
         }
 
         public ValueTask ClearExpiredSegmentsAsync(uint oldestTimestamp)
