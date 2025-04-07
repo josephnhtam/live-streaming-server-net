@@ -8,8 +8,8 @@ namespace LiveStreamingServerNet.StreamProcessor.Hls.Subtitling.Contracts
         bool RequireTranscribingResult { get; }
         bool RequireTranscribedResult { get; }
 
-        void ReceiveTranscribingResult(TranscribingResult result);
-        void ReceiveTranscribedResult(TranscribedResult result);
+        void ReceiveTranscribingResult(TranscriptionResult result);
+        void ReceiveTranscribedResult(TranscriptionResult result);
         bool TryExtractSubtitleCues(TimeSpan segmentStart, ref List<SubtitleCue> cues, out TimeSpan segmentEnd);
     }
 }

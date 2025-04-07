@@ -270,7 +270,7 @@ namespace LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Internal
                     var duration = e.Result.Duration;
 
                     TranscribingResultReceived.Invoke(this, new TranscribingResultReceivedEventArgs(
-                        new TranscribingResult(text, timestamp, duration)));
+                        new TranscriptionResult(text, timestamp, duration, null)));
 
                     _logger.RecognizingText(text, timestamp, duration);
                 });
@@ -294,7 +294,7 @@ namespace LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Internal
                     ).ToList();
 
                     TranscribedResultReceived.Invoke(this, new TranscribedResultReceivedEventArgs(
-                        new TranscribedResult(text, timestamp, duration, words)));
+                        new TranscriptionResult(text, timestamp, duration, words)));
 
                     _logger.RecognizedText(text, timestamp, duration);
                 });
