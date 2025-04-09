@@ -1,6 +1,5 @@
 ﻿using LiveStreamingServerNet.StreamProcessor.Hls.Configurations;
 using LiveStreamingServerNet.StreamProcessor.Hls.Subtitling;
-using LiveStreamingServerNet.StreamProcessor.Hls.Subtitling.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Installer.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Subtitling;
 using LiveStreamingServerNet.StreamProcessor.Transcriptions.Contracts;
@@ -31,23 +30,23 @@ namespace LiveStreamingServerNet.StreamProcessor.Installer
             return this;
         }
 
-        public IHlsTransmuxerConfigurator AddSubtitleTranscriptionStreamFactory(
+        public IHlsTransmuxerConfigurator AddSubtitleTranscription(
             SubtitleTrackOptions options,
             Func<IServiceProvider, ITranscriptionStreamFactory> factory)
         {
-            _subtitleTranscriptionConfigs.Add(new SubtitleTranscriptionConfiguration(
-                options, factory));
-
-            return this;
+            return AddSubtitleTranscription(options, factory, null);
         }
 
-        public IHlsTransmuxerConfigurator AddSubtitleTranscriptionStreamFactory(
+        public IHlsTransmuxerConfigurator AddSubtitleTranscription(
             SubtitleTrackOptions options,
             Func<IServiceProvider, ITranscriptionStreamFactory> factory,
-            Func<IServiceProvider, ISubtitleCueExtractorFactory> subtitleCueExtractorFactory)
+            Action<ISubtitleTranscriptionConfigurator>? configure)
         {
-            _subtitleTranscriptionConfigs.Add(new SubtitleTranscriptionConfiguration(
-                options, factory, subtitleCueExtractorFactory));
+            var configurator = new SubtitleTranscriptionConfigurator(options, factory);
+            configure?.Invoke(configurator);
+
+            var config = configurator.Build();
+            _subtitleTranscriptionConfigs.Add(config);
 
             return this;
         }
