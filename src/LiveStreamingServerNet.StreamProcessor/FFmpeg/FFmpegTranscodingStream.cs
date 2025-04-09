@@ -14,6 +14,9 @@ using System.Threading.Channels;
 
 namespace LiveStreamingServerNet.StreamProcessor.FFmpeg
 {
+    /// <summary>
+    /// Represents a transcoding stream using FFmpeg.
+    /// </summary>
     public class FFmpegTranscodingStream : ITranscodingStream
     {
         private readonly Process _process;
