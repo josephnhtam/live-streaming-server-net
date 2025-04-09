@@ -11,24 +11,61 @@ using Microsoft.Extensions.Logging;
 
 namespace LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Installer
 {
+    /// <summary>
+    /// Provides extension methods for configuring Azure Speech Transcription within the HLS transmuxer.
+    /// </summary>
     public static class AzureSpeechTranscriptionInstaller
     {
+        /// <summary>
+        /// Adds Azure Speech Transcription to the HLS transmuxer configurator using the specified subtitle track options and speech configuration.
+        /// </summary>
+        /// <param name="configurator">The HLS transmuxer configurator instance.</param>
+        /// <param name="options">Subtitle track options for the transcription.</param>
+        /// <param name="speechConfig">The speech configuration for Azure Speech.</param>
+        /// <returns>The updated HLS transmuxer configurator instance.</returns>
         public static IHlsTransmuxerConfigurator AddAzureSpeechTranscription(
             this IHlsTransmuxerConfigurator configurator,
             SubtitleTrackOptions options,
             SpeechConfig speechConfig)
         {
-            return AddAzureSpeechTranscription(configurator, options, speechConfig, null);
+            return AddAzureSpeechTranscription(configurator, options, speechConfig, configureAzureSpeech: null, configureSubtitleTranscription: null);
         }
 
+        /// <summary>
+        /// Adds Azure Speech Transcription to the HLS transmuxer configurator with additional configuration for Azure Speech Transcription.
+        /// </summary>
+        /// <param name="configurator">The HLS transmuxer configurator instance.</param>
+        /// <param name="options">Subtitle track options for the transcription.</param>
+        /// <param name="speechConfig">The speech configuration for Azure Speech.</param>
+        /// <param name="configure">An action to configure the Azure Speech Transcription.</param>
+        /// <returns>The updated HLS transmuxer configurator instance.</returns>
+        public static IHlsTransmuxerConfigurator AddAzureSpeechTranscription(
+           this IHlsTransmuxerConfigurator configurator,
+           SubtitleTrackOptions options,
+           SpeechConfig speechConfig,
+           Action<IAzureSpeechTranscriptionConfigurator>? configure)
+        {
+            return AddAzureSpeechTranscription(configurator, options, speechConfig, configureAzureSpeech: configure, configureSubtitleTranscription: null);
+        }
+
+        /// <summary>
+        /// Adds Azure Speech Transcription to the HLS transmuxer configurator with additional configurations for both Azure Speech Transcription and Subtitle Transcription.
+        /// </summary>
+        /// <param name="configurator">The HLS transmuxer configurator instance.</param>
+        /// <param name="options">Subtitle track options for the transcription.</param>
+        /// <param name="speechConfig">The speech configuration for Azure Speech.</param>
+        /// <param name="configureAzureSpeech">An action to configure Azure Speech Transcription.</param>
+        /// <param name="configureSubtitleTranscription">An action to configure Subtitle Transcription.</param>
+        /// <returns>The updated HLS transmuxer configurator instance.</returns>
         public static IHlsTransmuxerConfigurator AddAzureSpeechTranscription(
             this IHlsTransmuxerConfigurator configurator,
             SubtitleTrackOptions options,
             SpeechConfig speechConfig,
-            Action<IAzureSpeechTranscriptionConfigurator>? configure)
+            Action<IAzureSpeechTranscriptionConfigurator>? configureAzureSpeech,
+            Action<ISubtitleTranscriptionConfigurator>? configureSubtitleTranscription)
         {
             var transcriptionConfigurator = new AzureSpeechTranscriptionConfigurator(speechConfig);
-            configure?.Invoke(transcriptionConfigurator);
+            configureAzureSpeech?.Invoke(transcriptionConfigurator);
 
             var transcriptionConfig = transcriptionConfigurator.Build();
             var speechRecognizerFactory = new ConversationTranscriberFactory(transcriptionConfig);
@@ -43,9 +80,7 @@ namespace LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Installer
                     dataBufferPool, speechRecognizerFactory, transcriptionConfig, transcriptionStreamLogger, transcodingStreamLogger);
             };
 
-            return transcriptionConfig.SubtitleCueExtractorFactory == null ?
-                configurator.AddSubtitleTranscriptionStreamFactory(options, transcriptionStreamFactory) :
-                configurator.AddSubtitleTranscriptionStreamFactory(options, transcriptionStreamFactory, transcriptionConfig.SubtitleCueExtractorFactory);
+            return configurator.AddSubtitleTranscription(options, transcriptionStreamFactory, configureSubtitleTranscription);
         }
     }
 }

@@ -8,6 +8,5 @@ namespace LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Internal
         public string? FFmpegPath { get; init; }
         public SourceLanguageConfig? SourceLanguageConfig { get; init; }
         public AutoDetectSourceLanguageConfig? AutoDetectLanguageConfig { get; init; }
-        public Func<IServiceProvider, ISubtitleCueExtractorFactory>? SubtitleCueExtractorFactory { get; init; }
     };
 }
