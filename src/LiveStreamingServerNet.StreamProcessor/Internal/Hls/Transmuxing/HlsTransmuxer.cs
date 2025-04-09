@@ -20,10 +20,10 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
     {
         private readonly ISessionHandle _client;
         private readonly IHlsTransmuxerManager _transmuxerManager;
-        private readonly IHlsOutputHandler _outputHandler;
         private readonly IHlsPathRegistry _pathRegistry;
         private readonly ITsMuxer _tsMuxer;
-
+        private readonly IHlsOutputHandler _outputHandler;
+        private readonly IHlsMediaPacketInterceptor? _mediaPacketInterceptor;
         private readonly Configuration _config;
         private readonly ILogger _logger;
 
@@ -41,9 +41,10 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
         public HlsTransmuxer(
             ISessionHandle client,
             IHlsTransmuxerManager transmuxerManager,
-            IHlsOutputHandler outputHandler,
             IHlsPathRegistry pathRegistry,
             ITsMuxer tsMuxer,
+            IHlsOutputHandler outputHandler,
+            IHlsMediaPacketInterceptor? mediaPacketInterceptor,
             Configuration config,
             ILogger<HlsTransmuxer> logger)
         {
@@ -55,10 +56,10 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
 
             _client = client;
             _transmuxerManager = transmuxerManager;
-            _outputHandler = outputHandler;
             _pathRegistry = pathRegistry;
             _tsMuxer = tsMuxer;
-
+            _outputHandler = outputHandler;
+            _mediaPacketInterceptor = mediaPacketInterceptor;
             _config = config;
             _logger = logger;
 
@@ -92,6 +93,9 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
 
         private async ValueTask ProcessMediaPacketAsync(MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp)
         {
+            if (_mediaPacketInterceptor != null)
+                await _mediaPacketInterceptor.InterceptMediaPacketAsync(mediaType, rentedBuffer, timestamp);
+
             switch (mediaType)
             {
                 case MediaType.Video:
@@ -210,12 +214,12 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
                 _logger.TsSegmentFlushedPartially(Name, ContextIdentifier, StreamPath, tsSegmentPartial.Value.FilePath, tsSegmentPartial.Value.SequenceNumber);
         }
 
-        private async ValueTask<TsSegment?> FlushTsMuxerAsync(uint timestamp)
+        private async ValueTask<SeqSegment?> FlushTsMuxerAsync(uint timestamp)
         {
             var tsSegment = await _tsMuxer.FlushAsync(timestamp);
 
             if (tsSegment.HasValue)
-                _logger.TsSegmentFlushed(Name, ContextIdentifier, StreamPath, tsSegment.Value.FilePath, tsSegment.Value.SequenceNumber, tsSegment.Value.Timestamp, tsSegment.Value.Duration);
+                _logger.TsSegmentFlushed(Name, ContextIdentifier, StreamPath, tsSegment.Value.FilePath, tsSegment.Value.SequenceNumber, tsSegment.Value.Duration);
 
             return tsSegment;
         }
@@ -260,6 +264,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
                 ChannelCleanup();
 
                 await PostRunAsync();
+                await _outputHandler.DisposeAsync();
 
                 _transmuxerManager.UnregisterTransmuxer(StreamPath);
                 onEnded?.Invoke(_config.ManifestOutputPath);
@@ -282,11 +287,13 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
         private async ValueTask PreRunAsync()
         {
             RegisterHlsOutputPath();
+            await _outputHandler.InitializeAsync();
             await _outputHandler.ExecuteCleanupAsync();
         }
 
         private async ValueTask PostRunAsync()
         {
+            await _outputHandler.CompleteAsync();
             await _outputHandler.ScheduleCleanupAsync();
             UnregisterHlsOutputPath();
         }

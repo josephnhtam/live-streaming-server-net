@@ -8,13 +8,10 @@
             string TransmuxerName,
             string ManifestOutputPath,
             string TsSegmentOutputPath,
-            int SegmentListSize,
-            bool DeleteOutdatedSegments,
             int MaxSegmentSize,
             int MaxSegmentBufferSize,
             TimeSpan MinSegmentLength,
-            TimeSpan AudioOnlySegmentLength,
-            TimeSpan? CleanupDelay
+            TimeSpan AudioOnlySegmentLength
         );
     }
 }

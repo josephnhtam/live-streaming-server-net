@@ -15,10 +15,10 @@ namespace LiveStreamingServerNet.StreamProcessor.GoogleCloudStorage.Configuratio
         public UploadObjectOptions ManifestsUploadObjectOptions { get; set; } = new UploadObjectOptions();
 
         /// <summary>
-        /// Gets or sets the upload options for TS segment files (.ts).
+        /// Gets or sets the upload options for segment files.
         /// Default: new UploadObjectOptions()
         /// </summary>
-        public UploadObjectOptions TsSegmentsUploadObjectOptions { get; set; } = new UploadObjectOptions();
+        public UploadObjectOptions SegmentsUploadObjectOptions { get; set; } = new UploadObjectOptions();
 
         /// <summary>
         /// Gets or sets the Cache-Control header value for manifest files.
@@ -27,10 +27,10 @@ namespace LiveStreamingServerNet.StreamProcessor.GoogleCloudStorage.Configuratio
         public string ManifestsCacheControl { get; set; } = "no-cache,no-store,max-age=0";
 
         /// <summary>
-        /// Gets or sets the Cache-Control header value for TS segment files.
+        /// Gets or sets the Cache-Control header value for segment files.
         /// Default: empty string
         /// </summary>
-        public string TsSegmentsCacheControl { get; set; } = string.Empty;
+        public string SegmentsCacheControl { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the resolver for object storage paths.

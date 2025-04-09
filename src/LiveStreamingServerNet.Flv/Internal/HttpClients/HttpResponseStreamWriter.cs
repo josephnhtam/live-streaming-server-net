@@ -1,4 +1,4 @@
-﻿using LiveStreamingServerNet.Flv.Internal.Contracts;
+﻿using LiveStreamingServerNet.Utilities.Contracts;
 using Microsoft.AspNetCore.Http;
 
 namespace LiveStreamingServerNet.Flv.Internal.HttpClients

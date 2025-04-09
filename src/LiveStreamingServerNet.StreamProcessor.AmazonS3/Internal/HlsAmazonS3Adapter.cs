@@ -31,50 +31,50 @@ namespace LiveStreamingServerNet.StreamProcessor.AmazonS3.Internal
         public async Task<StoringResult> StoreAsync(
             StreamProcessingContext context,
             IReadOnlyList<Manifest> manifests,
-            IReadOnlyList<ManifestTsSegment> tsSegments,
+            IReadOnlyList<Segment> segments,
             CancellationToken cancellationToken)
         {
-            var storedTsSegments = await UploadTsSegmentsAsync(context, tsSegments, cancellationToken);
+            var storedSegments = await UploadSegmentsAsync(context, segments, cancellationToken);
             var storedManifestFiles = await UploadManifestFilesAsync(context, manifests, cancellationToken);
-            return new StoringResult(storedManifestFiles, storedTsSegments);
+            return new StoringResult(storedManifestFiles, storedSegments);
         }
 
-        private async Task<IReadOnlyList<StoredTsSegment>> UploadTsSegmentsAsync(
+        private async Task<IReadOnlyList<StoredSegment>> UploadSegmentsAsync(
             StreamProcessingContext context,
-            IReadOnlyList<ManifestTsSegment> tsSegments,
+            IReadOnlyList<Segment> segments,
             CancellationToken cancellationToken)
         {
             var dirPath = Path.GetDirectoryName(context.OutputPath) ?? string.Empty;
 
-            var tasks = new List<Task<StoredTsSegment>>();
+            var tasks = new List<Task<StoredSegment>>();
 
-            foreach (var tsSegment in tsSegments)
+            foreach (var segment in segments)
             {
-                var tsSegmentPath = Path.Combine(dirPath, tsSegment.FileName);
-                tasks.Add(UploadTsSegmentAsync(tsSegment.FileName, tsSegmentPath, cancellationToken));
+                var segmentPath = Path.Combine(dirPath, segment.FileName);
+                tasks.Add(UploadSegmentAsync(segment.FileName, segmentPath, cancellationToken));
             }
 
             return await Task.WhenAll(tasks);
 
-            async Task<StoredTsSegment> UploadTsSegmentAsync
-                (string tsSegmentName, string tsSegmentPath, CancellationToken cancellationToken)
+            async Task<StoredSegment> UploadSegmentAsync
+                (string segmentName, string segmentPath, CancellationToken cancellationToken)
             {
                 try
                 {
-                    using var fileStream = File.OpenRead(tsSegmentPath);
+                    using var fileStream = File.OpenRead(segmentPath);
 
-                    var objectPath = _config.ObjectPathResolver.ResolveObjectPath(context, tsSegmentName);
+                    var objectPath = _config.ObjectPathResolver.ResolveObjectPath(context, segmentName);
 
                     var request = new PutObjectRequest
                     {
                         BucketName = _bucket,
                         Key = objectPath,
-                        FilePath = tsSegmentPath
+                        FilePath = segmentPath
                     };
 
                     var response = await _s3Client.PutObjectAsync(request, cancellationToken);
 
-                    return new StoredTsSegment(tsSegmentName, _config.ObjectUriResolver.ResolveObjectUri(_bucket, objectPath));
+                    return new StoredSegment(segmentName, _config.ObjectUriResolver.ResolveObjectUri(_bucket, objectPath));
                 }
                 catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
                 {
@@ -82,10 +82,10 @@ namespace LiveStreamingServerNet.StreamProcessor.AmazonS3.Internal
                 }
                 catch (Exception ex)
                 {
-                    _logger.UploadingTsSegmentError(
-                        context.Processor, context.Identifier, context.InputPath, context.OutputPath, context.StreamPath, tsSegmentPath, ex);
+                    _logger.UploadingSegmentError(
+                        context.Processor, context.Identifier, context.InputPath, context.OutputPath, context.StreamPath, segmentPath, ex);
 
-                    return new StoredTsSegment(tsSegmentName, null);
+                    return new StoredSegment(segmentName, null);
                 }
             }
         }
@@ -138,23 +138,23 @@ namespace LiveStreamingServerNet.StreamProcessor.AmazonS3.Internal
             }
         }
 
-        public async Task DeleteAsync(StreamProcessingContext context, IReadOnlyList<ManifestTsSegment> tsSegments, CancellationToken cancellationToken)
+        public async Task DeleteAsync(StreamProcessingContext context, IReadOnlyList<Segment> segments, CancellationToken cancellationToken)
         {
             var tasks = new List<Task>();
 
-            foreach (var tsSegment in tsSegments)
+            foreach (var segment in segments)
             {
-                tasks.Add(DeleteTsSegmentAsync(tsSegment.FileName, cancellationToken));
+                tasks.Add(DeleteSegmentAsync(segment.FileName, cancellationToken));
             }
 
             await Task.WhenAll(tasks);
 
-            async Task DeleteTsSegmentAsync
-                (string tsSegmentName, CancellationToken cancellationToken)
+            async Task DeleteSegmentAsync
+                (string segmentName, CancellationToken cancellationToken)
             {
                 try
                 {
-                    var objectPath = _config.ObjectPathResolver.ResolveObjectPath(context, tsSegmentName);
+                    var objectPath = _config.ObjectPathResolver.ResolveObjectPath(context, segmentName);
 
                     await _s3Client.DeleteObjectAsync(_bucket, objectPath, cancellationToken: cancellationToken);
                 }
@@ -164,7 +164,7 @@ namespace LiveStreamingServerNet.StreamProcessor.AmazonS3.Internal
                 }
                 catch (Exception ex)
                 {
-                    _logger.DeletingTsSegmentError(
+                    _logger.DeletingSegmentError(
                         context.Processor, context.Identifier, context.InputPath, context.OutputPath, context.StreamPath, ex);
                 }
             }

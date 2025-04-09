@@ -302,7 +302,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Containers
             WritePMTPacket(tsBuffer);
         }
 
-        public async ValueTask<TsSegmentPartial?> FlushPartialAsync()
+        public async ValueTask<SeqSegmentPartial?> FlushPartialAsync()
         {
             if (_payloadBuffer.Size == 0)
                 return null;
@@ -310,10 +310,10 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Containers
             var path = GetOutputPath();
             await FlushAsyncCore(path);
 
-            return new TsSegmentPartial(path, SequenceNumber);
+            return new SeqSegmentPartial(path, SequenceNumber);
         }
 
-        public async ValueTask<TsSegment?> FlushAsync(uint timestamp)
+        public async ValueTask<SeqSegment?> FlushAsync(uint timestamp)
         {
             if (_payloadBuffer.Size == 0 && _flushedCount == 0)
                 return null;
@@ -357,12 +357,12 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Containers
             _flushedCount++;
         }
 
-        private TsSegment CompleteFlushing(uint timestamp, string path)
+        private SeqSegment CompleteFlushing(uint timestamp, string path)
         {
             Debug.Assert(_segmentTimestamp.HasValue);
 
             var duration = timestamp - _segmentTimestamp.Value;
-            var segment = new TsSegment(path, _sequenceNumber, timestamp, duration);
+            var segment = new SeqSegment(path, _sequenceNumber, timestamp, duration);
 
             _sequenceNumber++;
             _segmentTimestamp = null;

@@ -9,7 +9,6 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.AdaptiveTranscodin
     {
         private string BuildFFmpegArguments(JsonDocument streamInfo)
         {
-            GetManifestPath(_config.ManifestOutputPath, out var masterManifestName, out var manifestPath);
             var downsamplingFilters = GetDownsamplingFilters(streamInfo, _config.DownsamplingFilters);
 
             var arguments = new List<string>();
@@ -28,14 +27,20 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.AdaptiveTranscodin
 
             AddHlsConfiguration(downsamplingFilters, arguments);
 
-            AddMasterManifest(masterManifestName, manifestPath, arguments);
+            AddOutput(arguments);
 
             return string.Join(' ', arguments);
         }
 
-        private static void AddMasterManifest(string masterManifestName, string manifestPath, List<string> arguments)
+        private void AddOutput(List<string> arguments)
         {
-            arguments.Add($"-master_pl_name {masterManifestName} {manifestPath}");
+            var dir = Path.GetDirectoryName(_config.ManifestOutputPath) ?? string.Empty;
+
+            var masterManifestName = Path.GetFileName(_config.ManifestOutputPath);
+            var mediaManifestPath = Path.Combine(dir, "%v.m3u8");
+            var mediaSegmentPath = Path.Combine(dir, "%v_d.ts");
+
+            arguments.Add($"-hls_segment_filename {mediaSegmentPath} -master_pl_name {masterManifestName} {mediaManifestPath}");
         }
 
         private void AddHlsConfiguration(IList<DownsamplingFilter> downsamplingFilters, List<string> arguments)
@@ -316,16 +321,6 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.AdaptiveTranscodin
                 hlsFlags.AddRange(hlsSettings.Flags);
 
             return hlsFlags;
-        }
-
-        private static void GetManifestPath(string outputPath, out string masterManifestName, out string manifestPath)
-        {
-            var dir = Path.GetDirectoryName(outputPath) ?? string.Empty;
-            var outputName = Path.GetFileNameWithoutExtension(outputPath);
-            var outputExtension = Path.GetExtension(outputPath);
-
-            masterManifestName = outputName + outputExtension;
-            manifestPath = Path.Combine(dir, $"{outputName}_%v{outputExtension}");
         }
     }
 }
