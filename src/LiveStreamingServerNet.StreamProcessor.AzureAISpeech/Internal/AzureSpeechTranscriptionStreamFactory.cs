@@ -52,12 +52,12 @@ namespace LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Internal
         private static FFmpegTranscodingStreamConfiguration CreatePCM16MonoTranscodingConfig(string? ffmpegPath = null)
         {
             return new FFmpegTranscodingStreamConfiguration
-            {
-                FFmpegPath = ffmpegPath ?? ExecutableFinder.FindExecutableFromPATH("ffmpeg") ??
+            (
+                ffmpegPath: ffmpegPath ?? ExecutableFinder.FindExecutableFromPATH("ffmpeg") ??
                     throw new ArgumentException("FFmpeg executable not found"),
 
-                FFmpegArguments = "-i pipe:0 -vn -f s16le -acodec pcm_s16le -ac 1 -ar 16000 pipe:1"
-            };
+                ffmpegArguments: "-i pipe:0 -vn -f s16le -acodec pcm_s16le -ac 1 -ar 16000 pipe:1"
+            );
         }
     }
 }

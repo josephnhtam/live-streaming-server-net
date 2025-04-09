@@ -5,6 +5,9 @@ using Microsoft.Extensions.Logging;
 
 namespace LiveStreamingServerNet.StreamProcessor.FFmpeg
 {
+    /// <summary>
+    /// Factory class for creating FFmpeg transcoding streams.
+    /// </summary>
     public class FFmpegTranscodingStreamFactory : ITranscodingStreamFactory
     {
         private readonly IDataBufferPool _dataBufferPool;
