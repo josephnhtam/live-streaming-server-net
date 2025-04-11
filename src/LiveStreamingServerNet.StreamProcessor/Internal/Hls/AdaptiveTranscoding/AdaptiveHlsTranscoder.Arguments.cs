@@ -141,7 +141,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.AdaptiveTranscodin
             AppendAudioSplit(downsamplingFilters, sb, audioSrc);
             AppendAudioFilters(downsamplingFilters, sb);
 
-            return sb.ToString();
+            return sb.ToString().TrimEnd(';');
 
             void AppendAdditionalFilters(StringBuilder sb)
             {
