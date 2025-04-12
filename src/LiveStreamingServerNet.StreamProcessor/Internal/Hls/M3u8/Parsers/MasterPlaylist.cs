@@ -61,14 +61,14 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.M3u8.Parsers
                     {
                         var subtitleManifestPath = Path.Combine(dirPath, uri);
                         var subtitleContent = File.ReadAllText(subtitleManifestPath);
-                        mediaPlaylists.Add(MediaPlaylist.Parse(new Manifest(subtitleManifestPath, subtitleContent)));
+                        mediaPlaylists.Add(MediaPlaylist.Parse(new Manifest(uri, subtitleContent)));
                     }
                 }
                 else if (line.StartsWith("#EXT-X-STREAM-INF") && (line = stringReader.ReadLine()) != null)
                 {
                     var subManifestPath = Path.Combine(dirPath, line);
                     var mediaPlaylistContent = File.ReadAllText(subManifestPath);
-                    mediaPlaylists.Add(MediaPlaylist.Parse(new(line, mediaPlaylistContent)));
+                    mediaPlaylists.Add(MediaPlaylist.Parse(new Manifest(line, mediaPlaylistContent)));
                 }
             }
 
