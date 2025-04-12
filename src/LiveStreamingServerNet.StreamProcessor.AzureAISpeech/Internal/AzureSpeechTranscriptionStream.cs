@@ -149,7 +149,7 @@ namespace LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Internal
             finally
             {
                 await ErrorBoundary.ExecuteAsync(async () => await transcodingStream.StopAsync(stoppingToken));
-                await ErrorBoundary.ExecuteAsync(transcriber.StartTranscribingAsync);
+                await ErrorBoundary.ExecuteAsync(transcriber.StopTranscribingAsync);
                 _logger.TranscriptionStopped();
             }
 
