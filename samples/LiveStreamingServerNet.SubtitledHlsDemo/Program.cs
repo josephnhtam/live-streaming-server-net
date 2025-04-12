@@ -1,8 +1,9 @@
-﻿using LiveStreamingServerNet.Rtmp;
+﻿using Azure.Storage.Blobs;
+using LiveStreamingServerNet.Rtmp;
 using LiveStreamingServerNet.StreamProcessor.AspNetCore.Configurations;
 using LiveStreamingServerNet.StreamProcessor.AspNetCore.Installer;
 using LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Installer;
-using LiveStreamingServerNet.StreamProcessor.Hls.Contracts;
+using LiveStreamingServerNet.StreamProcessor.AzureBlobStorage.Installer;
 using LiveStreamingServerNet.StreamProcessor.Hls.Subtitling;
 using LiveStreamingServerNet.StreamProcessor.Installer;
 using LiveStreamingServerNet.StreamProcessor.Utilities;
@@ -15,18 +16,15 @@ namespace LiveStreamingServerNet.SubtitledHlsDemo
     {
         public static async Task Main(string[] args)
         {
-            var speechKey = Environment.GetEnvironmentVariable("AZURE_SPEECH_KEY") ??
-                throw new InvalidOperationException("AZURE_SPEECH_KEY environment variable is not set.");
-
-            var speechRegion = Environment.GetEnvironmentVariable("AZURE_SPEECH_REGION") ??
-                throw new InvalidOperationException("AZURE_SPEECH_REGION environment variable is not set.");
+            var azureSpeechConfig = AzureSpeechConfig.FromEnvironment();
+            var azureBlobStorageConfig = AzureBlobStorageConfig.FromEnvironment();
 
             var outputDir = Path.Combine(Directory.GetCurrentDirectory(), "hls-output");
             new DirectoryInfo(outputDir).Create();
 
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddLiveStreamingServer(speechKey, speechRegion, outputDir);
+            builder.Services.AddLiveStreamingServer(azureSpeechConfig, azureBlobStorageConfig, outputDir);
 
             builder.Services.AddCors(options =>
                 options.AddDefaultPolicy(policy =>
@@ -51,7 +49,8 @@ namespace LiveStreamingServerNet.SubtitledHlsDemo
             await app.RunAsync();
         }
 
-        private static IServiceCollection AddLiveStreamingServer(this IServiceCollection services, string speechKey, string speechRegion, string outputDir)
+        private static IServiceCollection AddLiveStreamingServer(
+            this IServiceCollection services, AzureSpeechConfig? azureSpeechConfig, AzureBlobStorageConfig? azureBlobStorageConfig, string outputDir)
         {
             return services.AddLiveStreamingServer(
                 new IPEndPoint(IPAddress.Any, 1935),
@@ -59,38 +58,65 @@ namespace LiveStreamingServerNet.SubtitledHlsDemo
                     .Configure(options => options.EnableGopCaching = false)
                     .AddVideoCodecFilter(builder => builder.Include(VideoCodec.AVC).Include(VideoCodec.HEVC))
                     .AddAudioCodecFilter(builder => builder.Include(AudioCodec.AAC))
-                    .AddStreamProcessor()
+                    .AddStreamProcessor(options =>
+                    {
+                        if (azureBlobStorageConfig != null)
+                        {
+                            var blobContainerClient = new BlobContainerClient(
+                                azureBlobStorageConfig.ConnectionString, azureBlobStorageConfig.ContainerName);
+
+                            options.AddHlsUploader(uploaderOptions =>
+                            {
+                                uploaderOptions.AddAzureBlobStorage(blobContainerClient);
+                            });
+                        }
+                    })
                     .AddHlsTransmuxer(options =>
                     {
-                        options.Configure(config =>
+                        if (azureSpeechConfig != null)
                         {
-                            config.OutputPathResolver = new HlsOutputPathResolver(outputDir);
-                        });
+                            var subtitleTrackOptions = new SubtitleTrackOptions("Subtitle");
+                            var speechConfig = SpeechConfig.FromSubscription(azureSpeechConfig.Key, azureSpeechConfig.Region);
+                            var autoDetectLanguageConfig = AutoDetectSourceLanguageConfig.FromLanguages(new[] { "en-US", "ja-JP" });
 
-                        var subtitleTrackOptions = new SubtitleTrackOptions("Subtitle");
-                        var speechConfig = SpeechConfig.FromSubscription(speechKey, speechRegion);
-                        var autoDetectLanguageConfig = AutoDetectSourceLanguageConfig.FromLanguages(new[] { "en-US", "ja-JP" });
-
-                        options.AddAzureSpeechTranscription(subtitleTrackOptions, speechConfig, configure =>
-                            configure.WithFFmpegPath(ExecutableFinder.FindExecutableFromPATH("ffmpeg")!)
-                                     .WithAutoDetectLanguageConfig(autoDetectLanguageConfig)
-                        );
+                            options.AddAzureSpeechTranscription(subtitleTrackOptions, speechConfig, configure =>
+                                configure.WithFFmpegPath(ExecutableFinder.FindExecutableFromPATH("ffmpeg")!)
+                                         .WithAutoDetectLanguageConfig(autoDetectLanguageConfig)
+                            );
+                        }
                     })
             );
         }
 
-        private class HlsOutputPathResolver : IHlsOutputPathResolver
+        private record AzureSpeechConfig(string Key, string Region)
         {
-            private readonly string _outputDir;
-
-            public HlsOutputPathResolver(string outputDir)
+            public static AzureSpeechConfig? FromEnvironment()
             {
-                _outputDir = outputDir;
+                var key = Environment.GetEnvironmentVariable("AZURE_SPEECH_KEY");
+                var region = Environment.GetEnvironmentVariable("AZURE_SPEECH_REGION");
+
+                if (string.IsNullOrEmpty(key) || string.IsNullOrEmpty(region))
+                {
+                    return null;
+                }
+
+                return new AzureSpeechConfig(key, region);
             }
+        }
 
-            public ValueTask<string> ResolveOutputPath(IServiceProvider services, Guid contextIdentifier, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
+        private record AzureBlobStorageConfig(string ConnectionString, string ContainerName)
+        {
+            public static AzureBlobStorageConfig? FromEnvironment()
             {
-                return ValueTask.FromResult(Path.Combine(_outputDir, contextIdentifier.ToString(), "output.m3u8"));
+                var connectionString = Environment.GetEnvironmentVariable("AZURE_BLOB_STORAGE_CONNECTION_STRING");
+                var containerName = Environment.GetEnvironmentVariable("AZURE_BLOB_CONTAINER");
+
+                if (string.IsNullOrEmpty(connectionString) || string.IsNullOrEmpty(containerName))
+                {
+                    return null;
+                }
+
+                return new AzureBlobStorageConfig(connectionString, containerName);
             }
         }
     }
