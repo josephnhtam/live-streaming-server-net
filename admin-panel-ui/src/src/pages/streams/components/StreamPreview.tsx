@@ -42,7 +42,7 @@ export default function StreamPreview() {
           <Box className="w-[1280px] max-w-[70vw] aspect-video flex justify-center">
             <video
               className="w-full h-full"
-              controls={false}
+              controls={true}
               ref={refCallback}
             />
           </Box>
@@ -76,7 +76,7 @@ function useVideoMounting(
 }
 
 function mountFlvPlayer(previewUri: string, video: HTMLVideoElement) {
-  if (!mpegts.isSupported) return null;
+  if (!mpegts.isSupported()) return null;
 
   const flvPlayer = mpegts.createPlayer({
     type: "flv",
@@ -99,7 +99,6 @@ function mountHlsPlayer(previewUri: string, video: HTMLVideoElement) {
     enableWorker: true,
     lowLatencyMode: true,
     liveSyncDurationCount: 4,
-    liveMaxLatencyDurationCount: 8,
   });
 
   hls.attachMedia(video);
