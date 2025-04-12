@@ -2,7 +2,7 @@ name: Build and Test
 
 on:
   push:
-    branches: [main, develop, features/**]
+    branches: [master, develop, features/**]
   pull_request:
     types: [assigned, opened, synchronize, reopened]
 
