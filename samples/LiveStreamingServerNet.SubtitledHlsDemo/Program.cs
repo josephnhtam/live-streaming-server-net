@@ -1,12 +1,16 @@
 ﻿using Azure.Storage.Blobs;
 using LiveStreamingServerNet.Rtmp;
+using LiveStreamingServerNet.StreamProcessor;
 using LiveStreamingServerNet.StreamProcessor.AspNetCore.Configurations;
 using LiveStreamingServerNet.StreamProcessor.AspNetCore.Installer;
 using LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Installer;
 using LiveStreamingServerNet.StreamProcessor.AzureBlobStorage.Installer;
+using LiveStreamingServerNet.StreamProcessor.Hls;
+using LiveStreamingServerNet.StreamProcessor.Hls.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Hls.Subtitling;
 using LiveStreamingServerNet.StreamProcessor.Installer;
 using LiveStreamingServerNet.StreamProcessor.Utilities;
+using LiveStreamingServerNet.Utilities.Contracts;
 using Microsoft.CognitiveServices.Speech;
 using System.Net;
 
@@ -67,7 +71,8 @@ namespace LiveStreamingServerNet.SubtitledHlsDemo
 
                             options.AddHlsUploader(uploaderOptions =>
                             {
-                                uploaderOptions.AddAzureBlobStorage(blobContainerClient);
+                                uploaderOptions.AddHlsStorageEventHandler<HlsStorageEventListener>()
+                                               .AddAzureBlobStorage(blobContainerClient);
                             });
                         }
                     })
@@ -86,6 +91,40 @@ namespace LiveStreamingServerNet.SubtitledHlsDemo
                         }
                     })
             );
+        }
+
+        public class HlsStorageEventListener : IHlsStorageEventHandler
+        {
+            private readonly ILogger _logger;
+
+            public HlsStorageEventListener(ILogger<HlsStorageEventListener> logger)
+            {
+                _logger = logger;
+            }
+
+            public Task OnHlsFilesStoredAsync(
+                IEventContext eventContext,
+                StreamProcessingContext context,
+                bool initial,
+                IReadOnlyList<StoredManifest> storedManifests,
+                IReadOnlyList<StoredSegment> storedSegments)
+            {
+                if (!initial)
+                    return Task.CompletedTask;
+
+                var mainManifestName = Path.GetFileName(context.OutputPath);
+                var mainManifest = storedManifests.FirstOrDefault(x => x.Name.Equals(mainManifestName));
+
+                if (mainManifest != default)
+                    _logger.LogInformation($"Main manifest {mainManifestName} stored at {mainManifest.Uri}");
+
+                return Task.CompletedTask;
+            }
+
+            public Task OnHlsFilesStoringCompleteAsync(IEventContext eventContext, StreamProcessingContext context)
+            {
+                return Task.CompletedTask;
+            }
         }
 
         private record AzureSpeechConfig(string Key, string Region)
