@@ -13,11 +13,11 @@ namespace LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Internal.Logging
         [LoggerMessage(Level = LogLevel.Error, Message = "Error running transcription")]
         public static partial void ErrorRunningTranscription(this ILogger logger, Exception ex);
 
-        [LoggerMessage(Level = LogLevel.Information, Message = "Speech recognition started.")]
-        public static partial void SpeechRecognitionStarted(this ILogger logger);
+        [LoggerMessage(Level = LogLevel.Information, Message = "Transcription started.")]
+        public static partial void TranscriptionStarted(this ILogger logger);
 
-        [LoggerMessage(Level = LogLevel.Information, Message = "Speech recognition stopped.")]
-        public static partial void SpeechRecognitionStopped(this ILogger logger);
+        [LoggerMessage(Level = LogLevel.Information, Message = "Transcription stopped.")]
+        public static partial void TranscriptionStopped(this ILogger logger);
 
         [LoggerMessage(Level = LogLevel.Error, Message = "Error streaming audio to transcoder")]
         public static partial void ErrorStreamingAudioToTranscoder(this ILogger logger, Exception ex);

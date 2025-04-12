@@ -131,7 +131,7 @@ namespace LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Internal
             await transcriber.StartTranscribingAsync();
             await transcodingStream.StartAsync();
 
-            _logger.SpeechRecognitionStarted();
+            _logger.TranscriptionStarted();
 
             try
             {
@@ -150,7 +150,7 @@ namespace LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Internal
             {
                 await ErrorBoundary.ExecuteAsync(async () => await transcodingStream.StopAsync(stoppingToken));
                 await ErrorBoundary.ExecuteAsync(transcriber.StartTranscribingAsync);
-                _logger.SpeechRecognitionStopped();
+                _logger.TranscriptionStopped();
             }
 
             await Task.WhenAll(transcodingTcs.Task, transcriptingTcs.Task);
