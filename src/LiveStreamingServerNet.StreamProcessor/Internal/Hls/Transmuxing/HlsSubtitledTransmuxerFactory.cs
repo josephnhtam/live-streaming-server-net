@@ -62,76 +62,69 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
         public async Task<IStreamProcessor?> CreateAsync(
             ISessionHandle client, Guid contextIdentifier, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
-            try
-            {
-                if (!await _config.Condition.IsEnabled(_services, streamPath, streamArguments))
-                    return null;
-
-                var initialProgramDateTime = DateTime.UtcNow;
-                var masterManifestOutputPath = await _config.OutputPathResolver.ResolveOutputPath(_services, contextIdentifier, streamPath, streamArguments);
-                string mediaManifestOutputPath = GetMediaManifestOutputPath(masterManifestOutputPath);
-                var tsSegmentOutputPath = GetTsSegmentOutputPath(masterManifestOutputPath);
-
-                var outputHandlerConfig = new HlsSubtitledOutputHandler.Configuration(
-                    contextIdentifier,
-                    streamPath,
-                    _config.Name,
-                    masterManifestOutputPath,
-                    mediaManifestOutputPath,
-                    _config.SegmentListSize,
-                    _config.DeleteOutdatedSegments,
-                    _config.DeleteOutdatedSegments ? _config.CleanupDelay : null
-                );
-
-                var transmuxerConfig = new HlsTransmuxer.Configuration(
-                    contextIdentifier,
-                    streamPath,
-                    _config.Name,
-                    masterManifestOutputPath,
-                    tsSegmentOutputPath,
-                    _config.MaxSegmentSize,
-                    _config.MaxSegmentBufferSize,
-                    _config.MinSegmentLength,
-                    _config.AudioOnlySegmentLength
-                );
-
-                var tsMuxer = new TsMuxer(tsSegmentOutputPath, _bufferPool);
-
-                var subtitleTranscribers = CreateSubtitleTranscribers(
-                    contextIdentifier,
-                    streamPath,
-                    masterManifestOutputPath,
-                    _dataBufferPool,
-                    _subtitleTranscriberFactory,
-                    _subtitleTranscriptionConfigs,
-                    initialProgramDateTime);
-
-                var meidaPacketInterceptor = new HlsSubtitledMediaPacketInterceptor(subtitleTranscribers);
-
-                var outputHandler = new HlsSubtitledOutputHandler(
-                    bufferPool: _dataBufferPool,
-                    masterManifestWriter: _masterManifestWriter,
-                    mediaManifestWriter: _mediaManifestWriter,
-                    cleanupManager: _cleanupManager,
-                    subtitleTranscribers: subtitleTranscribers,
-                    initialProgramDateTime: initialProgramDateTime,
-                    config: outputHandlerConfig,
-                    logger: _outputHandlerLogger);
-
-                return new HlsTransmuxer(
-                    client: client,
-                    transmuxerManager: _transmuxerManager,
-                    pathRegistry: _pathRegistry,
-                    tsMuxer: tsMuxer,
-                    outputHandler: outputHandler,
-                    mediaPacketInterceptor: meidaPacketInterceptor,
-                    config: transmuxerConfig,
-                    logger: _transmuxerLogger);
-            }
-            catch
-            {
+            if (!await _config.Condition.IsEnabled(_services, streamPath, streamArguments))
                 return null;
-            }
+
+            var initialProgramDateTime = DateTime.UtcNow;
+            var masterManifestOutputPath = await _config.OutputPathResolver.ResolveOutputPath(_services, contextIdentifier, streamPath, streamArguments);
+            string mediaManifestOutputPath = GetMediaManifestOutputPath(masterManifestOutputPath);
+            var tsSegmentOutputPath = GetTsSegmentOutputPath(masterManifestOutputPath);
+
+            var outputHandlerConfig = new HlsSubtitledOutputHandler.Configuration(
+                contextIdentifier,
+                streamPath,
+                _config.Name,
+                masterManifestOutputPath,
+                mediaManifestOutputPath,
+                _config.SegmentListSize,
+                _config.DeleteOutdatedSegments,
+                _config.DeleteOutdatedSegments ? _config.CleanupDelay : null
+            );
+
+            var transmuxerConfig = new HlsTransmuxer.Configuration(
+                contextIdentifier,
+                streamPath,
+                _config.Name,
+                masterManifestOutputPath,
+                tsSegmentOutputPath,
+                _config.MaxSegmentSize,
+                _config.MaxSegmentBufferSize,
+                _config.MinSegmentLength,
+                _config.AudioOnlySegmentLength
+            );
+
+            var tsMuxer = new TsMuxer(tsSegmentOutputPath, _bufferPool);
+
+            var subtitleTranscribers = CreateSubtitleTranscribers(
+                contextIdentifier,
+                streamPath,
+                masterManifestOutputPath,
+                _dataBufferPool,
+                _subtitleTranscriberFactory,
+                _subtitleTranscriptionConfigs,
+                initialProgramDateTime);
+
+            var meidaPacketInterceptor = new HlsSubtitledMediaPacketInterceptor(subtitleTranscribers);
+
+            var outputHandler = new HlsSubtitledOutputHandler(
+                bufferPool: _dataBufferPool,
+                masterManifestWriter: _masterManifestWriter,
+                mediaManifestWriter: _mediaManifestWriter,
+                cleanupManager: _cleanupManager,
+                subtitleTranscribers: subtitleTranscribers,
+                initialProgramDateTime: initialProgramDateTime,
+                config: outputHandlerConfig,
+                logger: _outputHandlerLogger);
+
+            return new HlsTransmuxer(
+                client: client,
+                transmuxerManager: _transmuxerManager,
+                pathRegistry: _pathRegistry,
+                tsMuxer: tsMuxer,
+                outputHandler: outputHandler,
+                mediaPacketInterceptor: meidaPacketInterceptor,
+                config: transmuxerConfig,
+                logger: _transmuxerLogger);
         }
 
         private List<ISubtitleTranscriber> CreateSubtitleTranscribers(

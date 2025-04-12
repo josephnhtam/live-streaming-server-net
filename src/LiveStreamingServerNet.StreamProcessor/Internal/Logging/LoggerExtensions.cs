@@ -10,6 +10,9 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Logging
         [LoggerMessage(LogLevel.Information, "Stream processor stopped (StreamProcessor={StreamProcessor}, Identifier={Identifier}, InputPath={InputPath}, OutputPath={OutputPath}, StreamPath={StreamPath})")]
         public static partial void StreamProcessorStopped(this ILogger logger, string streamProcessor, Guid identifier, string inputPath, string outputPath, string streamPath);
 
+        [LoggerMessage(LogLevel.Error, "An error occurred while creating stream processor (StreamPath={StreamPath})")]
+        public static partial void StreamProcessorCreationError(this ILogger logger, string streamPath, Exception exception);
+
         [LoggerMessage(LogLevel.Error, "Stream processor error (InputPath={InputPath}, StreamPath={StreamPath})")]
         public static partial void StreamProcessorError(this ILogger logger, string inputPath, string streamPath, Exception exception);
 

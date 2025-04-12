@@ -51,59 +51,52 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
         public async Task<IStreamProcessor?> CreateAsync(
             ISessionHandle client, Guid contextIdentifier, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
-            try
-            {
-                if (!await _config.Condition.IsEnabled(_services, streamPath, streamArguments))
-                    return null;
-
-                var manifestOutputPath = await _config.OutputPathResolver.ResolveOutputPath(_services, contextIdentifier, streamPath, streamArguments);
-                var tsSegmentOutputPath = GetTsSegmentOutputPath(manifestOutputPath);
-
-                var outputHandlerConfig = new HlsOutputHandler.Configuration(
-                    contextIdentifier,
-                    streamPath,
-                    _config.Name,
-                    manifestOutputPath,
-                    _config.SegmentListSize,
-                    _config.DeleteOutdatedSegments,
-                    _config.DeleteOutdatedSegments ? _config.CleanupDelay : null
-                );
-
-                var transmuxerConfig = new HlsTransmuxer.Configuration(
-                    contextIdentifier,
-                    streamPath,
-                    _config.Name,
-                    manifestOutputPath,
-                    tsSegmentOutputPath,
-                    _config.MaxSegmentSize,
-                    _config.MaxSegmentBufferSize,
-                    _config.MinSegmentLength,
-                    _config.AudioOnlySegmentLength
-                );
-
-                var tsMuxer = new TsMuxer(tsSegmentOutputPath, _bufferPool);
-
-                var outputHandler = new HlsOutputHandler(
-                    bufferPool: _dataBufferPool,
-                    manifestWriter: _mediaManifestWriter,
-                    cleanupManager: _cleanupManager,
-                    config: outputHandlerConfig,
-                    logger: _outputHandlerLogger);
-
-                return new HlsTransmuxer(
-                    client: client,
-                    transmuxerManager: _transmuxerManager,
-                    pathRegistry: _pathRegistry,
-                    tsMuxer: tsMuxer,
-                    outputHandler: outputHandler,
-                    mediaPacketInterceptor: null,
-                    config: transmuxerConfig,
-                    logger: _transmuxerLogger);
-            }
-            catch
-            {
+            if (!await _config.Condition.IsEnabled(_services, streamPath, streamArguments))
                 return null;
-            }
+
+            var manifestOutputPath = await _config.OutputPathResolver.ResolveOutputPath(_services, contextIdentifier, streamPath, streamArguments);
+            var tsSegmentOutputPath = GetTsSegmentOutputPath(manifestOutputPath);
+
+            var outputHandlerConfig = new HlsOutputHandler.Configuration(
+                contextIdentifier,
+                streamPath,
+                _config.Name,
+                manifestOutputPath,
+                _config.SegmentListSize,
+                _config.DeleteOutdatedSegments,
+                _config.DeleteOutdatedSegments ? _config.CleanupDelay : null
+            );
+
+            var transmuxerConfig = new HlsTransmuxer.Configuration(
+                contextIdentifier,
+                streamPath,
+                _config.Name,
+                manifestOutputPath,
+                tsSegmentOutputPath,
+                _config.MaxSegmentSize,
+                _config.MaxSegmentBufferSize,
+                _config.MinSegmentLength,
+                _config.AudioOnlySegmentLength
+            );
+
+            var tsMuxer = new TsMuxer(tsSegmentOutputPath, _bufferPool);
+
+            var outputHandler = new HlsOutputHandler(
+                bufferPool: _dataBufferPool,
+                manifestWriter: _mediaManifestWriter,
+                cleanupManager: _cleanupManager,
+                config: outputHandlerConfig,
+                logger: _outputHandlerLogger);
+
+            return new HlsTransmuxer(
+                client: client,
+                transmuxerManager: _transmuxerManager,
+                pathRegistry: _pathRegistry,
+                tsMuxer: tsMuxer,
+                outputHandler: outputHandler,
+                mediaPacketInterceptor: null,
+                config: transmuxerConfig,
+                logger: _transmuxerLogger);
         }
 
         private static string GetTsSegmentOutputPath(string manifestOutputPath)
