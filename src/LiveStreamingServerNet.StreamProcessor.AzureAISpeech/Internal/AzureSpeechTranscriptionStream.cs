@@ -233,19 +233,19 @@ namespace LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Internal
 
             transcriber.SessionStarted += (s, e) =>
             {
-                _logger.RecognizerSessionStarted(e.SessionId);
+                _logger.TranscriberSessionStarted(e.SessionId);
             };
 
             transcriber.SessionStopped += (s, e) =>
             {
-                _logger.RecognizerSessionStopped(e.SessionId);
+                _logger.TranscriberSessionStopped(e.SessionId);
                 transcriptionCts.Cancel();
                 transcriptingTcs.TrySetResult();
             };
 
             transcriber.Canceled += (s, e) =>
             {
-                _logger.RecognizerCanceled(e.ErrorCode.ToString(), e.ErrorDetails);
+                _logger.TranscriberCanceled(e.ErrorCode.ToString(), e.ErrorDetails);
 
                 if (e.Reason == CancellationReason.Error)
                 {
@@ -265,14 +265,16 @@ namespace LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Internal
 
                     var baseTimestamp = GetBaseTimestamp();
 
+                    var resultId = e.Result.ResultId;
+                    var speakerId = e.Result.SpeakerId;
                     var text = e.Result.Text;
                     var timestamp = baseTimestamp + TimeSpan.FromTicks(e.Result.OffsetInTicks);
                     var duration = e.Result.Duration;
 
                     TranscribingResultReceived.Invoke(this, new TranscribingResultReceivedEventArgs(
-                        new TranscriptionResult(text, timestamp, duration, null)));
+                        new TranscriptionResult(resultId, speakerId, text, timestamp, duration, null)));
 
-                    _logger.RecognizingText(text, timestamp, duration);
+                    _logger.TranscribingText(resultId, speakerId, text, timestamp, duration);
                 });
 
             transcriber.Transcribed += (s, e) =>
@@ -285,6 +287,8 @@ namespace LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Internal
 
                     var baseTimestamp = GetBaseTimestamp();
 
+                    var resultId = e.Result.ResultId;
+                    var speakerId = e.Result.SpeakerId;
                     var text = e.Result.Text;
                     var timestamp = baseTimestamp + TimeSpan.FromTicks(e.Result.OffsetInTicks);
                     var duration = e.Result.Duration;
@@ -294,9 +298,9 @@ namespace LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Internal
                     ).ToList();
 
                     TranscribedResultReceived.Invoke(this, new TranscribedResultReceivedEventArgs(
-                        new TranscriptionResult(text, timestamp, duration, words)));
+                        new TranscriptionResult(resultId, speakerId, text, timestamp, duration, words)));
 
-                    _logger.RecognizedText(text, timestamp, duration);
+                    _logger.TranscribedText(resultId, speakerId, text, timestamp, duration);
                 });
         }
 

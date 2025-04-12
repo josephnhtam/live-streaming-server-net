@@ -34,19 +34,19 @@ namespace LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Internal.Logging
         [LoggerMessage(Level = LogLevel.Debug, Message = "Transcription canceled")]
         public static partial void TranscriptionCanceledLog(this ILogger logger);
 
-        [LoggerMessage(Level = LogLevel.Information, Message = "Recognizer session started (ID: {SessionId})")]
-        public static partial void RecognizerSessionStarted(this ILogger logger, string sessionId);
+        [LoggerMessage(Level = LogLevel.Information, Message = "Transcriber session started (ID: {SessionId})")]
+        public static partial void TranscriberSessionStarted(this ILogger logger, string sessionId);
 
-        [LoggerMessage(Level = LogLevel.Information, Message = "Recognizer session stopped (ID: {SessionId})")]
-        public static partial void RecognizerSessionStopped(this ILogger logger, string sessionId);
+        [LoggerMessage(Level = LogLevel.Information, Message = "Transcriber session stopped (ID: {SessionId})")]
+        public static partial void TranscriberSessionStopped(this ILogger logger, string sessionId);
 
-        [LoggerMessage(Level = LogLevel.Error, Message = "Recognizer canceled: ErrorCode={ErrorCode}, ErrorDetails={ErrorDetails}")]
-        public static partial void RecognizerCanceled(this ILogger logger, string errorCode, string errorDetails);
+        [LoggerMessage(Level = LogLevel.Error, Message = "Transcriber canceled (ErrorCode={ErrorCode}, ErrorDetails={ErrorDetails})")]
+        public static partial void TranscriberCanceled(this ILogger logger, string errorCode, string errorDetails);
 
-        [LoggerMessage(Level = LogLevel.Debug, Message = "Recognizing text: '{Text}', Timestamp: {Timestamp}, Duration: {Duration}")]
-        public static partial void RecognizingText(this ILogger logger, string text, TimeSpan timestamp, TimeSpan duration);
+        [LoggerMessage(Level = LogLevel.Debug, Message = "Transcribing text: '{Text}' (ResultId: {ResultId}, SpeakerId: {SpeakerId}, Timestamp: {Timestamp}, Duration: {Duration})")]
+        public static partial void TranscribingText(this ILogger logger, string resultId, string speakerId, string text, TimeSpan timestamp, TimeSpan duration);
 
-        [LoggerMessage(Level = LogLevel.Debug, Message = "Recognized text: '{Text}', Timestamp: {Timestamp}, Duration: {Duration}")]
-        public static partial void RecognizedText(this ILogger logger, string text, TimeSpan timestamp, TimeSpan duration);
+        [LoggerMessage(Level = LogLevel.Debug, Message = "Transcribed text: '{Text}' (ResultId: {ResultId}, SpeakerId: {SpeakerId}, Timestamp: {Timestamp}, Duration: {Duration})")]
+        public static partial void TranscribedText(this ILogger logger, string resultId, string speakerId, string text, TimeSpan timestamp, TimeSpan duration);
     }
 }
