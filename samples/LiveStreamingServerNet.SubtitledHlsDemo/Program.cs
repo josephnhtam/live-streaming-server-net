@@ -1,7 +1,9 @@
 ﻿using Azure.Storage.Blobs;
+using LiveStreamingServerNet.AdminPanelUI;
 using LiveStreamingServerNet.Rtmp;
+using LiveStreamingServerNet.Standalone;
+using LiveStreamingServerNet.Standalone.Installer;
 using LiveStreamingServerNet.StreamProcessor;
-using LiveStreamingServerNet.StreamProcessor.AspNetCore.Configurations;
 using LiveStreamingServerNet.StreamProcessor.AspNetCore.Installer;
 using LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Installer;
 using LiveStreamingServerNet.StreamProcessor.AzureBlobStorage.Installer;
@@ -23,12 +25,9 @@ namespace LiveStreamingServerNet.SubtitledHlsDemo
             var azureSpeechConfig = AzureSpeechConfig.FromEnvironment();
             var azureBlobStorageConfig = AzureBlobStorageConfig.FromEnvironment();
 
-            var outputDir = Path.Combine(Directory.GetCurrentDirectory(), "hls-output");
-            new DirectoryInfo(outputDir).Create();
-
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddLiveStreamingServer(azureSpeechConfig, azureBlobStorageConfig, outputDir);
+            builder.Services.AddLiveStreamingServer(azureSpeechConfig, azureBlobStorageConfig);
 
             builder.Services.AddCors(options =>
                 options.AddDefaultPolicy(policy =>
@@ -42,28 +41,36 @@ namespace LiveStreamingServerNet.SubtitledHlsDemo
 
             app.UseCors();
 
-            // Given that the scheme is https, the port is 7138, and the stream path is live/demo,
-            // the HLS stream will be available at https://localhost:7138/hls/live/demo/output.m3u8
-            app.UseHlsFiles(new HlsServingOptions
+            app.UseHlsFiles();
+
+            app.UseAdminPanelUI(new AdminPanelUIOptions
             {
-                Root = outputDir,
-                RequestPath = "/hls"
+                // The Admin Panel UI will be available at https://localhost:7000/ui
+                BasePath = "/ui",
+
+                // The Admin Panel UI will access HLS streams at https://localhost:7000/{streamPath}/output.m3u8
+                HasHlsPreview = true,
+                HlsUriPattern = "{streamPath}/output.m3u8"
             });
+
+            app.MapStandaloneServerApiEndPoints();
 
             await app.RunAsync();
         }
 
         private static IServiceCollection AddLiveStreamingServer(
-            this IServiceCollection services, AzureSpeechConfig? azureSpeechConfig, AzureBlobStorageConfig? azureBlobStorageConfig, string outputDir)
+            this IServiceCollection services, AzureSpeechConfig? azureSpeechConfig, AzureBlobStorageConfig? azureBlobStorageConfig)
         {
             return services.AddLiveStreamingServer(
                 new IPEndPoint(IPAddress.Any, 1935),
                 options => options
+                    .AddStandaloneServices()
                     .Configure(options => options.EnableGopCaching = false)
                     .AddVideoCodecFilter(builder => builder.Include(VideoCodec.AVC).Include(VideoCodec.HEVC))
                     .AddAudioCodecFilter(builder => builder.Include(AudioCodec.AAC))
                     .AddStreamProcessor(options =>
                     {
+                        // Upload HLS files (including m3u8, ts, webvtt) to Azure Blob Storage if it is configured
                         if (azureBlobStorageConfig != null)
                         {
                             var blobContainerClient = new BlobContainerClient(
@@ -78,6 +85,7 @@ namespace LiveStreamingServerNet.SubtitledHlsDemo
                     })
                     .AddHlsTransmuxer(options =>
                     {
+                        // Add subtitle transcription with Azure AI Speech if it is configured
                         if (azureSpeechConfig != null)
                         {
                             var subtitleTrackOptions = new SubtitleTrackOptions("Subtitle");
