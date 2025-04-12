@@ -148,8 +148,16 @@ namespace LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Internal
             }
             finally
             {
-                await ErrorBoundary.ExecuteAsync(async () => await transcodingStream.StopAsync(stoppingToken));
-                await ErrorBoundary.ExecuteAsync(transcriber.StopTranscribingAsync);
+                await ErrorBoundary.ExecuteAsync(
+                    async () => await transcodingStream.StopAsync(stoppingToken),
+                    (ex) => { transcodingTcs.SetException(ex); return Task.CompletedTask; }
+                );
+
+                await ErrorBoundary.ExecuteAsync(
+                    transcriber.StopTranscribingAsync,
+                    (ex) => { transcriptingTcs.SetException(ex); return Task.CompletedTask; }
+                );
+
                 _logger.TranscriptionStopped();
             }
 
