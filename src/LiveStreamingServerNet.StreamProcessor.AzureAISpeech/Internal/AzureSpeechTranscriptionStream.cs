@@ -148,20 +148,40 @@ namespace LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Internal
             }
             finally
             {
-                await ErrorBoundary.ExecuteAsync(
-                    async () => await transcodingStream.StopAsync(stoppingToken),
-                    (ex) => { transcodingTcs.SetException(ex); return Task.CompletedTask; }
-                );
-
-                await ErrorBoundary.ExecuteAsync(
-                    transcriber.StopTranscribingAsync,
-                    (ex) => { transcriptingTcs.SetException(ex); return Task.CompletedTask; }
-                );
+                await StopTranscriptionStream(transcriptingTcs, transcriber);
+                await StopTranscodingStream(transcodingStream, transcodingTcs, stoppingToken);
 
                 _logger.TranscriptionStopped();
             }
 
             await Task.WhenAll(transcodingTcs.Task, transcriptingTcs.Task);
+        }
+
+        private static async Task StopTranscriptionStream(TaskCompletionSource transcriptingTcs, ConversationTranscriber transcriber)
+        {
+            try
+            {
+                await transcriber.StopTranscribingAsync();
+                transcriptingTcs.TrySetResult();
+            }
+            catch (Exception ex)
+            {
+                transcriptingTcs.SetException(ex);
+            }
+        }
+
+        private static async Task StopTranscodingStream(
+            ITranscodingStream transcodingStream, TaskCompletionSource transcodingTcs, CancellationToken stoppingToken)
+        {
+            try
+            {
+                await transcodingStream.StopAsync(stoppingToken);
+                transcodingTcs.TrySetResult();
+            }
+            catch (Exception ex)
+            {
+                transcodingTcs.SetException(ex);
+            }
         }
 
         private void AdjustTimestampOffset()
@@ -230,7 +250,6 @@ namespace LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Internal
             {
                 _logger.TranscodingStoppedLog();
                 transcriptionCts.Cancel();
-                transcodingTcs.TrySetResult();
             };
 
             transcodingStream.TranscodedBufferReceived.Register((s, e) =>
@@ -248,7 +267,6 @@ namespace LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Internal
             {
                 _logger.TranscriberSessionStopped(e.SessionId);
                 transcriptionCts.Cancel();
-                transcriptingTcs.TrySetResult();
             };
 
             transcriber.Canceled += (s, e) =>
