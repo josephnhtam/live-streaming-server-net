@@ -20,9 +20,9 @@ namespace LiveStreamingServerNet.StreamProcessor.Hls.Contracts
         /// <param name="context">The context containing information about the stream being processed.</param>
         /// <param name="initial">Indicates whether this is the initial storage operation.</param>
         /// <param name="storedManifests">The list of manifests that were stored.</param>
-        /// <param name="storedTsSegments">The list of transport stream segments that were stored.</param>
+        /// <param name="storedSegments">The list of segments that were stored.</param>
         /// <returns>A task representing the event handling operation.</returns>
-        Task OnHlsFilesStoredAsync(IEventContext eventContext, StreamProcessingContext context, bool initial, IReadOnlyList<StoredManifest> storedManifests, IReadOnlyList<StoredTsSegment> storedTsSegments);
+        Task OnHlsFilesStoredAsync(IEventContext eventContext, StreamProcessingContext context, bool initial, IReadOnlyList<StoredManifest> storedManifests, IReadOnlyList<StoredSegment> storedSegments);
 
         /// <summary>
         /// Handles the event when all HLS files have been completely stored.

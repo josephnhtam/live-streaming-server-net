@@ -118,6 +118,7 @@ ClientBin
 *.m3u8
 *.ts
 *.mp4
+*.vtt
 Generated_Code #added for RIA/Silverlight projects
 
 # Backup & report files from converting an old project file to a newer

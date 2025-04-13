@@ -1,4 +1,4 @@
-﻿using LiveStreamingServerNet.Flv.Internal.Contracts;
+﻿using LiveStreamingServerNet.Utilities.Contracts;
 using System.Net.WebSockets;
 
 namespace LiveStreamingServerNet.Flv.Internal.WebSocketClients

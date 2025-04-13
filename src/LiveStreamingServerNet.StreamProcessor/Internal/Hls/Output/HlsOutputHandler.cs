@@ -1,27 +1,30 @@
 ﻿using LiveStreamingServerNet.StreamProcessor.Internal.Containers;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output.Contracts;
+using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output.Writers;
+using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output.Writers.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Services.Contracts;
-using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing.M3u8.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Logging;
+using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using Microsoft.Extensions.Logging;
-using static LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing.HlsTransmuxer;
 
 namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
 {
-    internal class HlsOutputHandler : IHlsOutputHandler
+    internal partial class HlsOutputHandler : IHlsOutputHandler
     {
-        private readonly IManifestWriter _manifestWriter;
+        private readonly IMediaManifestWriter _manifestWriter;
         private readonly IHlsCleanupManager _cleanupManager;
         private readonly Configuration _config;
         private readonly ILogger<HlsOutputHandler> _logger;
-        private readonly Queue<TsSegment> _segments;
+        private readonly Queue<SeqSegment> _segments;
+        private readonly ITargetDuration _targetDuration;
 
         public string Name { get; }
         public Guid ContextIdentifier { get; }
         public string StreamPath { get; }
 
         public HlsOutputHandler(
-            IManifestWriter manifestWriter,
+            IDataBufferPool bufferPool,
+            IMediaManifestWriter manifestWriter,
             IHlsCleanupManager cleanupManager,
             Configuration config,
             ILogger<HlsOutputHandler> logger)
@@ -34,16 +37,27 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
             _cleanupManager = cleanupManager;
             _config = config;
             _logger = logger;
-            _segments = new Queue<TsSegment>();
+            _segments = new Queue<SeqSegment>();
+            _targetDuration = new MaximumTargetDuration();
         }
 
-        public async ValueTask AddSegmentAsync(TsSegment segment)
+        public ValueTask InitializeAsync()
+        {
+            return ValueTask.CompletedTask;
+        }
+
+        public ValueTask CompleteAsync()
+        {
+            return ValueTask.CompletedTask;
+        }
+
+        public async ValueTask AddSegmentAsync(SeqSegment segment)
         {
             await DoAddSegmentAsync(segment);
             await WriteManifestAsync();
         }
 
-        private ValueTask DoAddSegmentAsync(TsSegment segment)
+        private ValueTask DoAddSegmentAsync(SeqSegment segment)
         {
             _segments.Enqueue(segment);
 
@@ -52,22 +66,22 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
                 var removedSegment = _segments.Dequeue();
 
                 if (_config.DeleteOutdatedSegments)
-                    DeleteOutdatedSegments(removedSegment);
+                    DeleteOutdatedSegment(removedSegment);
             }
 
             return ValueTask.CompletedTask;
         }
 
-        private void DeleteOutdatedSegments(TsSegment removedSegment)
+        private void DeleteOutdatedSegment(SeqSegment removedSegment)
         {
             File.Delete(removedSegment.FilePath);
-            _logger.OutdatedTsSegmentDeleted(Name, ContextIdentifier, StreamPath, removedSegment.FilePath);
+            _logger.OutdatedSegmentDeleted(Name, ContextIdentifier, StreamPath, removedSegment.FilePath);
         }
 
         private async Task WriteManifestAsync()
         {
-            await _manifestWriter.WriteAsync(_config.ManifestOutputPath, _segments);
-            _logger.HlsManifestUpdated(Name, ContextIdentifier, _config.ManifestOutputPath, StreamPath);
+            await _manifestWriter.WriteAsync(_config.ManifestOutputPath, _segments, _targetDuration, null);
+            _logger.HlsManifestUpdated(Name, ContextIdentifier, StreamPath, _config.ManifestOutputPath);
         }
 
         public async ValueTask ExecuteCleanupAsync()
@@ -99,12 +113,17 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
             }
         }
 
-        private static TimeSpan CalculateCleanupDelay(IList<TsSegment> tsSegments, TimeSpan cleanupDelay)
+        public ValueTask DisposeAsync()
         {
-            if (!tsSegments.Any())
+            return ValueTask.CompletedTask;
+        }
+
+        private static TimeSpan CalculateCleanupDelay(IList<SeqSegment> segments, TimeSpan cleanupDelay)
+        {
+            if (!segments.Any())
                 return TimeSpan.Zero;
 
-            return TimeSpan.FromMilliseconds(tsSegments.Count * tsSegments.Max(x => x.Duration)) + cleanupDelay;
+            return TimeSpan.FromMilliseconds(segments.Count * segments.Max(x => x.Duration)) + cleanupDelay;
         }
     }
 }

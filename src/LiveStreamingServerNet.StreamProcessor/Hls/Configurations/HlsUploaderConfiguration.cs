@@ -6,10 +6,10 @@
     public class HlsUploaderConfiguration
     {
         /// <summary>
-        /// Gets or sets whether to delete transport stream segments that are no longer referenced in the playlist.
+        /// Gets or sets whether to delete media segments that are no longer referenced in the playlist.
         /// Default: true.
         /// </summary>
-        public bool DeleteOutdatedTsSegments { get; set; } = true;
+        public bool DeleteOutdatedSegments { get; set; } = true;
 
         /// <summary>
         /// Gets or sets the interval between polling for new segments.

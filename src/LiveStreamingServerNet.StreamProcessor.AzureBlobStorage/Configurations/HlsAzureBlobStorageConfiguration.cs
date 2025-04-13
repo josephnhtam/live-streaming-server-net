@@ -14,9 +14,9 @@ namespace LiveStreamingServerNet.StreamProcessor.AzureBlobStorage.Configurations
         public BlobUploadOptions ManifestsUploadOptions { get; set; } = new BlobUploadOptions();
 
         /// <summary>
-        /// Gets or sets the upload options for TS segment files (.ts).
+        /// Gets or sets the upload options for segment files.
         /// </summary>
-        public BlobUploadOptions TsSegmentsUploadOptions { get; set; } = new BlobUploadOptions();
+        public BlobUploadOptions SegmentsUploadOptions { get; set; } = new BlobUploadOptions();
 
         /// <summary>
         /// Gets or sets the resolver for blob storage paths.

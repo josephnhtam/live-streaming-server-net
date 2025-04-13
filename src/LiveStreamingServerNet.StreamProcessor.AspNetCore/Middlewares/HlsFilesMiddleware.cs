@@ -55,7 +55,11 @@ namespace LiveStreamingServerNet.StreamProcessor.AspNetCore.Middlewares
         private static FileExtensionContentTypeProvider CreateContentTypeProvider()
         {
             var contentTypeProvider = new FileExtensionContentTypeProvider();
+
+            contentTypeProvider.Mappings.Clear();
             contentTypeProvider.Mappings[".m3u8"] = "application/x-mpegURL";
+            contentTypeProvider.Mappings[".vtt"] = "text/vtt";
+            contentTypeProvider.Mappings[".ts"] = "video/vnd.dlna.mpeg-tts";
 
             return contentTypeProvider;
         }
@@ -95,7 +99,7 @@ namespace LiveStreamingServerNet.StreamProcessor.AspNetCore.Middlewares
         private (string StreamPath, PathString FileSubPath) ResolvePaths(PathString subPath)
         {
             var streamPath = NormalizePath(Path.GetDirectoryName(subPath.Value)) ?? string.Empty;
-            var outputPath = _pathMapper.GetHlsOutputPath(streamPath);
+            var outputPath = ResolveOutputPathRecursively(streamPath, streamPath);
 
             if (string.IsNullOrEmpty(outputPath))
                 return (streamPath, PathString.Empty);
@@ -109,6 +113,24 @@ namespace LiveStreamingServerNet.StreamProcessor.AspNetCore.Middlewares
             {
                 return (streamPath, PathString.Empty);
             }
+        }
+
+        private string ResolveOutputPathRecursively(string currentPath, string originalPath)
+        {
+            var mappedOutputPath = _pathMapper.GetHlsOutputPath(currentPath);
+
+            if (!string.IsNullOrEmpty(mappedOutputPath))
+            {
+                return currentPath.Equals(originalPath, StringComparison.OrdinalIgnoreCase)
+                    ? mappedOutputPath : Path.Combine(mappedOutputPath, Path.GetRelativePath(currentPath, originalPath));
+            }
+
+            var parent = NormalizePath(Path.GetDirectoryName(currentPath));
+
+            if (string.IsNullOrEmpty(parent) || parent == currentPath)
+                return string.Empty;
+
+            return ResolveOutputPathRecursively(parent, originalPath);
         }
 
         private bool ValidatePath(HttpContext context, PathString matchUrl, out string streamPath, out PathString fileSubPath)

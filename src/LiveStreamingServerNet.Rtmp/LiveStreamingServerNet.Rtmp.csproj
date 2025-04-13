@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>net8.0;net7.0</TargetFrameworks>
@@ -9,9 +9,10 @@
   </PropertyGroup>
 
   <Import Project="$(SolutionDir)nuget\nuget-package.props" />
-  
+
   <ItemGroup>
     <PackageReference Include="mtanksl.ActionMessageFormat" />
+    <PackageReference Include="Nito.AsyncEx.Coordination" />
   </ItemGroup>
 
   <ItemGroup>

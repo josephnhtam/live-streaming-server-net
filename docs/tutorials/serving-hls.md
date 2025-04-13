@@ -40,7 +40,9 @@ builder.Services.AddLiveStreamingServer(
     new IPEndPoint(IPAddress.Any, 1935),
     options => options
         .AddStreamProcessor(options => options.AddStreamProcessorEventHandler<HlsTransmuxerEventListener>())
-        .AddHlsTransmuxer(options => options.OutputPathResolver = new HlsTransmuxerOutputPathResolver(outputDir))
+        .AddHlsTransmuxer(options.Configure(config =>
+            config.OutputPathResolver = new HlsTransmuxerOutputPathResolver(outputDir)
+        ))
 );
 
 var app = builder.Build();
@@ -144,8 +146,9 @@ And add it to the `HlsTransmuxerConfiguration`:
 var liveStreamingServer = LiveStreamingServerBuilder.Create()
     .ConfigureRtmpServer(options => options
         .AddStreamProcessor()
-        .AddHlsTransmuxer(hlsTransmuxerConfig =>
-            hlsTransmuxerConfig.Condition = new HlsTransmuxingCondition())
+        .AddHlsTransmuxer(options => options.Configure(config =>
+            config.Condition = new HlsTransmuxingCondition()
+        ))
     )
     .Build();
 ```

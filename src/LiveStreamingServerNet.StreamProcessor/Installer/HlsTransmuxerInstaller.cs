@@ -4,19 +4,17 @@ using LiveStreamingServerNet.StreamProcessor.Hls.Configurations;
 using LiveStreamingServerNet.StreamProcessor.Hls.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Installer.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Contracts;
-using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output;
-using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output.Contracts;
+using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output.Writers;
+using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output.Writers.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Services;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Services.Contracts;
+using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Subtitling;
+using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Subtitling.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing;
-using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing.M3u8;
-using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing.M3u8.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing.Services;
 using LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing.Services.Contracts;
-using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Logging;
 
 namespace LiveStreamingServerNet.StreamProcessor.Installer
 {
@@ -39,34 +37,36 @@ namespace LiveStreamingServerNet.StreamProcessor.Installer
         /// <param name="builder">The stream processing builder to add services to.</param>
         /// <param name="configure">Optional action to configure the HLS transmuxer.</param>
         /// <returns>The stream processing builder for method chaining.</returns>
-        public static IStreamProcessingBuilder AddHlsTransmuxer(this IStreamProcessingBuilder builder, Action<HlsTransmuxerConfiguration>? configure)
+        public static IStreamProcessingBuilder AddHlsTransmuxer(this IStreamProcessingBuilder builder, Action<IHlsTransmuxerConfigurator>? configure)
         {
             var services = builder.Services;
 
             var config = new HlsTransmuxerConfiguration();
-            configure?.Invoke(config);
+            var subtitleTranscriptionConfigs = new List<SubtitleTranscriptionConfiguration>();
+
+            var configurator = new HlsTransmuxerConfigurator(services, config, subtitleTranscriptionConfigs);
+            configure?.Invoke(configurator);
 
             services.TryAddSingleton<IHlsPathRegistry, HlsPathRegistry>();
             services.TryAddSingleton<IHlsPathMapper>(svc => svc.GetRequiredService<IHlsPathRegistry>());
 
-            services.TryAddSingleton<IManifestWriter, ManifestWriter>();
+            services.TryAddSingleton<IMasterManifestWriter, MasterManifestWriter>();
+            services.TryAddSingleton<IMediaManifestWriter, MediaManifestWriter>();
             services.TryAddSingleton<IHlsTransmuxerManager, HlsTransmuxerManager>();
             services.TryAddSingleton<IHlsCleanupManager, HlsCleanupManager>();
-            services.TryAddSingleton<IHlsOutputHandlerFactory, HlsOutputHandlerFactory>();
+            services.TryAddSingleton<ISubtitleTranscriberFactory, SubtitleTranscriberFactory>();
 
             services.AddSingleton<IRtmpMediaMessageInterceptor, HlsRtmpMediaMessageScraper>();
 
             services.AddSingleton<IStreamProcessorFactory>(svc =>
-                new HlsTransmuxerFactory(
-                    svc,
-                    svc.GetRequiredService<IHlsTransmuxerManager>(),
-                    svc.GetRequiredService<IHlsOutputHandlerFactory>(),
-                    svc.GetRequiredService<IHlsPathRegistry>(),
-                    config,
-                    svc.GetRequiredService<ILogger<HlsTransmuxer>>(),
-                    svc.GetService<IBufferPool>()
-                )
-            );
+            {
+                if (subtitleTranscriptionConfigs.Any())
+                {
+                    return new HlsSubtitledTransmuxerFactory(svc, subtitleTranscriptionConfigs, config);
+                }
+
+                return new HlsTransmuxerFactory(svc, config);
+            });
 
             return builder;
         }

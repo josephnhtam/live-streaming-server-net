@@ -1,6 +1,6 @@
 ﻿using AutoFixture;
-using LiveStreamingServerNet.Flv.Internal.Contracts;
 using LiveStreamingServerNet.Flv.Internal.WebSocketClients;
+using LiveStreamingServerNet.Utilities.Contracts;
 using NSubstitute;
 using System.Net.WebSockets;
 

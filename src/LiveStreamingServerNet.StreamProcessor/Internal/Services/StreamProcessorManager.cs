@@ -42,7 +42,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Services
 
             var streamProcessors = await CreateStreamProcessors(client, streamPath, streamArguments);
 
-            if (!streamProcessors.Any())
+            if (streamProcessors?.Any() != true)
                 return;
 
             var task = RunStreamProcessors(streamProcessors, client, streamArguments, cts);
@@ -51,20 +51,29 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Services
             _ = task.ContinueWith(_ => _processorTasks.TryRemove(clientId, out var task), TaskContinuationOptions.ExecuteSynchronously);
         }
 
-        private async Task<IList<IStreamProcessor>> CreateStreamProcessors(ISessionHandle client, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
+        private async Task<IList<IStreamProcessor>?> CreateStreamProcessors(ISessionHandle client, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
-            var streamProcessors = new List<IStreamProcessor>();
-
-            foreach (var processorFactory in _processorFactories)
+            try
             {
-                var contextIdentifier = Guid.NewGuid();
-                var streamProcessor = await processorFactory.CreateAsync(client, contextIdentifier, streamPath, streamArguments);
+                var streamProcessors = new List<IStreamProcessor>();
 
-                if (streamProcessor != null)
-                    streamProcessors.Add(streamProcessor);
+                foreach (var processorFactory in _processorFactories)
+                {
+                    var contextIdentifier = Guid.NewGuid();
+                    var streamProcessor = await processorFactory.CreateAsync(client, contextIdentifier, streamPath, streamArguments);
+
+                    if (streamProcessor != null)
+                        streamProcessors.Add(streamProcessor);
+                }
+
+                return streamProcessors;
             }
-
-            return streamProcessors;
+            catch (Exception ex)
+            {
+                _logger.StreamProcessorCreationError(streamPath, ex);
+                client.Disconnect();
+                return null;
+            }
         }
 
         private async Task RunStreamProcessors(
