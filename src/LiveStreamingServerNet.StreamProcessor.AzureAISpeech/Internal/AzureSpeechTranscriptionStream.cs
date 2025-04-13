@@ -126,7 +126,8 @@ namespace LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Internal
 
             using var transcriber = _transcriberFactory.Create(audioInput);
 
-            ConfigureEvents(transcodingStream, transcriber, pushStream, transcriptionCts, transcodingTcs, transcriptingTcs);
+            ConfigureTranscodingEvents(transcodingStream, pushStream, transcriptionCts, transcodingTcs);
+            ConfigureTranscribingEvents(transcriber, transcriptionCts, transcriptingTcs);
 
             await transcriber.StartTranscribingAsync();
             await transcodingStream.StartAsync();
@@ -226,13 +227,11 @@ namespace LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Internal
             }
         }
 
-        private void ConfigureEvents(
+        private void ConfigureTranscodingEvents(
             ITranscodingStream transcodingStream,
-            ConversationTranscriber transcriber,
             PushAudioInputStream pushStream,
             CancellationTokenSource transcriptionCts,
-            TaskCompletionSource transcodingTcs,
-            TaskCompletionSource transcriptingTcs)
+            TaskCompletionSource transcodingTcs)
         {
             transcodingStream.TranscodingCanceled += (s, e) =>
             {
@@ -257,7 +256,13 @@ namespace LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Internal
                 pushStream.Write(e.RentedBuffer.Buffer, e.RentedBuffer.Size);
                 return Task.CompletedTask;
             });
+        }
 
+        private void ConfigureTranscribingEvents(
+           ConversationTranscriber transcriber,
+           CancellationTokenSource transcriptionCts,
+           TaskCompletionSource transcriptingTcs)
+        {
             transcriber.SessionStarted += (s, e) =>
             {
                 _logger.TranscriberSessionStarted(e.SessionId);
