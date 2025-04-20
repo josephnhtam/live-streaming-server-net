@@ -130,3 +130,6 @@ src/.vs/config/applicationhost.config
 
 # JetBrains Rider's auto generated files
 .idea/
+
+# MacOS
+.DS_Store
