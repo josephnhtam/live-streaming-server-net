@@ -38,7 +38,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.AdaptiveTranscodin
 
             var masterManifestName = Path.GetFileName(_config.ManifestOutputPath);
             var mediaManifestPath = Path.Combine(dir, "%v.m3u8");
-            var mediaSegmentPath = Path.Combine(dir, "%v_d.ts");
+            var mediaSegmentPath = Path.Combine(dir, "%v_%d.ts");
 
             arguments.Add($"-hls_segment_filename {mediaSegmentPath} -master_pl_name {masterManifestName} {mediaManifestPath}");
         }
