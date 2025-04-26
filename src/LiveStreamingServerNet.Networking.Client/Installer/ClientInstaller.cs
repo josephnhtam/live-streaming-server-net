@@ -15,7 +15,7 @@ namespace LiveStreamingServerNet.Networking.Client.Installer
     /// <summary>
     /// Extension methods for registering TCP client services.
     /// </summary>
-    public static class ServerInstaller
+    public static class ClientInstaller
     {
         /// <summary>
         /// Adds TCP client services to the service collection.
