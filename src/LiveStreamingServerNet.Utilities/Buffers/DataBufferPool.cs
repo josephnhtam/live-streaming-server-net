@@ -11,37 +11,35 @@ namespace LiveStreamingServerNet.Utilities.Buffers
         private readonly IBufferPool? _bufferPool;
         private readonly int _initialCapacity;
         private readonly int _maxPoolSize;
-        private int _poolSize;
 
         public IBufferPool? BufferPool => _bufferPool;
 
         public DataBufferPool(IOptions<DataBufferPoolConfiguration> config, IBufferPool? bufferPool = null)
         {
-            _pool = new Pool<IDataBuffer>(CreateDataBuffer);
             _bufferPool = bufferPool;
             _initialCapacity = config.Value.BufferInitialCapacity;
             _maxPoolSize = config.Value.MaxPoolSize;
+            _pool = new Pool<IDataBuffer>(CreateDataBuffer);
         }
 
         private IDataBuffer CreateDataBuffer()
         {
-            var dataBuffer = new DataBuffer(_bufferPool, _initialCapacity);
-            Interlocked.Increment(ref _poolSize);
-            return dataBuffer;
+            return new DataBuffer(_bufferPool, _initialCapacity);
         }
 
         public IDataBuffer Obtain()
         {
-            if (_maxPoolSize >= 0 && _poolSize >= _maxPoolSize && _pool.GetPooledCount() == 0)
-                return new DataBuffer(_bufferPool, _initialCapacity);
-
-            var dataBuffer = _pool.Obtain();
-            dataBuffer.Reset();
-            return dataBuffer;
+            return _pool.Obtain();
         }
 
         public void Recycle(IDataBuffer dataBuffer)
         {
+            if (_pool.GetPooledCount() >= _maxPoolSize)
+            {
+                dataBuffer.Dispose();
+                return;
+            }
+
             _pool.Recycle(dataBuffer);
         }
     }

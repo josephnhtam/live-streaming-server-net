@@ -375,6 +375,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Containers
 
         public void Dispose()
         {
+            _headerBuffer.Dispose();
             _payloadBuffer.Dispose();
         }
     }
