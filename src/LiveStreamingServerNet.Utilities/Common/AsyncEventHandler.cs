@@ -5,6 +5,7 @@ namespace LiveStreamingServerNet.Utilities.Common
     public class AsyncEventHandler<TEventArgs> : IAsyncEventHandler<TEventArgs>
     {
         private readonly List<AsyncEventHandlerDelegate<TEventArgs>> _handlers = new();
+        private readonly List<AsyncEventHandlerDelegate<TEventArgs>> _currentHandlers = new();
         private readonly object _lock = new();
 
         public void Register(AsyncEventHandlerDelegate<TEventArgs> handler)
@@ -25,14 +26,13 @@ namespace LiveStreamingServerNet.Utilities.Common
 
         public async ValueTask InvokeAsync(object? sender, TEventArgs e)
         {
-            AsyncEventHandlerDelegate<TEventArgs>[] handlers;
-
             lock (_lock)
             {
-                handlers = _handlers.ToArray();
+                _currentHandlers.Clear();
+                _currentHandlers.AddRange(_handlers);
             }
 
-            await Task.WhenAll(handlers.Select(async h =>
+            await Task.WhenAll(_currentHandlers.Select(async h =>
             {
                 try
                 {
@@ -42,6 +42,4 @@ namespace LiveStreamingServerNet.Utilities.Common
             }));
         }
     }
-
-    public delegate Task AsyncEventHandlerDelegate<TEventArgs>(object? sender, TEventArgs e);
 }
