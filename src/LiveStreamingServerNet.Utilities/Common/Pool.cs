@@ -23,9 +23,16 @@ namespace LiveStreamingServerNet.Utilities.Common
             TObject obtained;
 
             if (_pool.TryDequeue(out var obj))
+            {
                 obtained = obj;
+
+                if (obtained is IPoolObject po)
+                    po.OnObtained();
+            }
             else
+            {
                 obtained = _objectFactory();
+            }
 
             _obtainCallback?.Invoke(obtained);
             return obtained;
@@ -33,6 +40,9 @@ namespace LiveStreamingServerNet.Utilities.Common
 
         public void Recycle(TObject obj)
         {
+            if (obj is IPoolObject po)
+                po.OnReturned();
+
             _recycleCallback?.Invoke(obj);
             _pool.Enqueue(obj);
         }

@@ -1,12 +1,15 @@
 ﻿using LiveStreamingServerNet.Utilities.Buffers.Contracts;
+using LiveStreamingServerNet.Utilities.Common.Contracts;
 using System.Buffers;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
 namespace LiveStreamingServerNet.Utilities.Buffers
 {
-    public partial class DataBuffer : IDataBuffer
+    public partial class DataBuffer : IDataBuffer, IPoolObject
     {
         private readonly IBufferPool? _bufferPool;
+        private readonly int _initialCapacity;
 
         private byte[] _buffer;
         private int _startIndex;
@@ -44,13 +47,31 @@ namespace LiveStreamingServerNet.Utilities.Buffers
         public DataBuffer(IBufferPool? bufferPool, int initialCapacity)
         {
             _bufferPool = bufferPool;
+            _initialCapacity = initialCapacity;
+
+            RentBuffer(initialCapacity);
+            Debug.Assert(_buffer != null);
+        }
+
+        private void RentBuffer(int initialCapacity)
+        {
             _buffer = _bufferPool?.Rent(initialCapacity) ?? ArrayPool<byte>.Shared.Rent(initialCapacity);
+        }
+
+        private void ReturnBuffer()
+        {
+            if (_bufferPool != null)
+                _bufferPool.Return(_buffer);
+            else
+                ArrayPool<byte>.Shared.Return(_buffer);
+
+            _buffer = null!;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void EnsureCapacity(int capacity)
         {
-            if ((_startIndex + capacity) < Capacity)
+            if ((_startIndex + capacity) <= Capacity)
                 return;
 
             if (capacity < Capacity)
@@ -279,13 +300,18 @@ namespace LiveStreamingServerNet.Utilities.Buffers
                 return;
 
             _isDisposed = true;
+            ReturnBuffer();
+        }
 
-            if (_bufferPool != null)
-                _bufferPool.Return(_buffer);
-            else
-                ArrayPool<byte>.Shared.Return(_buffer);
+        void IPoolObject.OnObtained()
+        {
+            RentBuffer(_initialCapacity);
+            Reset();
+        }
 
-            _buffer = null!;
+        void IPoolObject.OnReturned()
+        {
+            ReturnBuffer();
         }
     }
 }
