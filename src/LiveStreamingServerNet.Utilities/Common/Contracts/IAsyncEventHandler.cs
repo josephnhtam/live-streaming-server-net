@@ -5,4 +5,6 @@
         void Register(AsyncEventHandlerDelegate<TEventArgs> handler);
         void Unregister(AsyncEventHandlerDelegate<TEventArgs> handler);
     }
+
+    public delegate Task AsyncEventHandlerDelegate<TEventArgs>(object? sender, TEventArgs e);
 }
