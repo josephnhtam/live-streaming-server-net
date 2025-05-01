@@ -54,10 +54,10 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Uploading
                 {
                     lastPollingTime = await DelayAsync(lastPollingTime, cancellationToken);
 
-                    if (!File.Exists(_context.OutputPath))
+                    var playlist = ParsePlaylist();
+                    if (playlist == null)
                         continue;
 
-                    var playlist = ManifestParser.Parse(_context.OutputPath);
                     lastSegments = await PerformDeltaUploadAsync(playlist, lastSegments, cancellationToken);
                 }
             }
@@ -80,6 +80,21 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Uploading
                         await _eventDispatcher.HlsFilesStoringCompleteAsync(_context);
                     }
                 ));
+            }
+        }
+
+        private IPlaylist? ParsePlaylist()
+        {
+            try
+            {
+                if (!File.Exists(_context.OutputPath))
+                    return null;
+
+                return ManifestParser.Parse(_context.OutputPath);
+            }
+            catch (IOException)
+            {
+                return null;
             }
         }
 
