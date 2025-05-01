@@ -12,7 +12,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Utilities
             try
             {
                 await File.WriteAllTextAsync(tempPath, content, cancellationToken);
-                File.Move(tempPath, outputPath, true);
+                File.Replace(tempPath, outputPath, null);
             }
             catch
             {
