@@ -1,5 +1,4 @@
-﻿using LiveStreamingServerNet.StreamProcessor.Hls.Subtitling.Contracts;
-using Microsoft.CognitiveServices.Speech;
+﻿using Microsoft.CognitiveServices.Speech;
 
 namespace LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Internal
 {
