@@ -21,6 +21,7 @@ Please check the [documentation](https://josephnhtam.github.io/live-streaming-se
 - **Custom authorization**: Enables you to implement custom authorization mechanisms for accessing live streams.
 - **Admin panel**: Includes an admin panel that provides an user interface for managing and monitoring the live streaming server.
 - **Cloud Storage Integration**: Enabling real-time uploading of HLS files to cloud storage services like Azure Blob Storage, Google Cloud Storage, and AWS S3, which ensures scalable and efficient HLS stream distribution through CDN.
+- **Realtime HLS Subtitle Transcription**: Integrates with Azure AI Speech to provide real-time transcription of HLS streams, automatically generating WebVTT subtitle files.
 - **Codecs**: Supports AVC/H.264, HEVC/H.265, AAC, and MP3 codecs.
 
 ## Quick Start
