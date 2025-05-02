@@ -79,6 +79,7 @@ nav:
     - Stream Processing:
       - Serving HLS Live Streams: tutorials/serving-hls.md
       - Serving HLS Live Streams via Cloud Storage: tutorials/serving-hls-cloud-storage.md
+      - HLS Subtitle Transcription: tutorials/hls-subtitle-transcription.md
       - Adaptive Bitrate HLS: tutorials/adaptive-hls.md
       - Custom FFmpeg Process: tutorials/custom-ffmpeg-process.md
     - Deployment:

@@ -27,12 +27,8 @@ Live-Streaming-Server-Net is a high-performance and flexible toolset which allow
 - **Custom authorization**: Enables you to implement custom authorization mechanisms for accessing live streams.
 - **Admin panel**: Includes an admin panel that provides an user interface for managing and monitoring the live streaming server.
 - **Cloud Storage Integration**: Enabling real-time uploading of HLS files to cloud storage services like Azure Blob Storage, Google Cloud Storage, and AWS S3, which ensures scalable and efficient HLS stream distribution through CDN.
+- **Realtime HLS Subtitle Transcription**: Integrates with Azure AI Speech to provide real-time transcription of HLS streams, automatically generating WebVTT subtitle files.
 - **Codecs**: Supports AVC/H.264, HEVC/H.265, AAC, and MP3 codecs.
-
-## In-Progress
-
-- **Custom Kubernetes Operator and Kubernetes Integration**: The objective is to achieve horizontal autoscaling by scaling out the pods when more streams are published, and scaling in the pods when streams are deleted, all without affecting the existing connections.
-- **Redis Integration**: Integrate with Redis to share stream information among pods in the fleet.
 
 ## NuGet Packages
 
@@ -99,6 +95,10 @@ Live-Streaming-Server-Net is a high-performance and flexible toolset which allow
     <tr>
       <td><b>LiveStreamingServerNet.StreamProcessor.AspNetCore</b></td>
       <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet.StreamProcessor.AspNetCore"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.StreamProcessor.AspNetCore.svg?logo=nuget"></a></td>
+    </tr>
+    <tr>
+      <td><b>LiveStreamingServerNet.StreamProcessor.AzureAISpeech</b></td>
+      <td><a href="https://www.nuget.org/packages/LiveStreamingServerNet.StreamProcessor.AzureAISpeech"><img src="https://img.shields.io/nuget/v/LiveStreamingServerNet.StreamProcessor.AzureAISpeech.svg?logo=nuget"></a></td>
     </tr>
     <tr>
       <td><b>LiveStreamingServerNet.StreamProcessor.AzureBlobStorage</b></td>
