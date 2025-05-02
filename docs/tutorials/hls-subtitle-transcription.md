@@ -8,7 +8,7 @@ To enable the HLS subtitle transcription, [FFmpeg](https://ffmpeg.org/) must be 
 
 By default, the `FFmpeg` and `FFprobe` executables are located using the helper function `ExecutableFinder.FindExecutableFromPATH`, which first searches through all the directories defined in the `PATH` environment variable and then the current directory.
 
-## Quick Setup Guide for Your Live Streaming Server with HLS Subtitle Transcription
+## HLS Subtitle Transcription
 
 This section will guide you through setting up an HLS transmuxer to convert RTMP streams into HLS streams, enable HLS subtitle transcription for real-time subtitle generation, and serve these live HLS streams using ASP.NET Core.
 
