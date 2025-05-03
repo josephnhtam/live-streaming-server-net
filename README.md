@@ -157,7 +157,7 @@ https://localhost:8080/live/demo.flv
 wss://localhost:8080/live/demo.flv
 ```
 
-#### Remux RTMP Streams into HLS Streams with FFmpeg
+#### Remux RTMP Streams into HLS Streams
 
 Please refer to the [LiveStreamServerNet.HlsDemo](https://github.com/josephnhtam/live-streaming-server-net/tree/master/samples/LiveStreamingServerNet.HlsDemo)
 
