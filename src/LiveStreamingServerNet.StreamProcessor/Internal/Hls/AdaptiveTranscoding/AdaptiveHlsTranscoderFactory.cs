@@ -42,29 +42,21 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.AdaptiveTranscodin
                 ContextIdentifier: contextIdentifier,
                 Name: _config.Name,
                 ManifestOutputPath: outputPath,
-
                 FFmpegPath: _config.FFmpegPath,
                 FFprobeGracefulShutdownTimeoutSeconds: _config.FFmpegGracefulShutdownTimeoutSeconds,
-
                 FFprobePath: _config.FFprobePath,
                 FFmpegGracefulTerminationSeconds: _config.FFprobeGracefulShutdownTimeoutSeconds,
-
                 HlsOptions: _config.HlsOptions,
                 PerformanceOptions: _config.PerformanceOptions,
                 DownsamplingFilters: _config.DownsamplingFilters.ToArray(),
-
                 VideoEncodingArguments: _config.VideoEncodingArguments,
                 AudioEncodingArguments: _config.AudioEncodingArguments,
-
                 VideoDecodingArguments: _config.VideoDecodingArguments,
                 AudioDecodingArguments: _config.AudioDecodingArguments,
-
                 VideoFilters: _config.VideoFilters?.ToArray(),
                 AudioFilters: _config.AudioFilters?.ToArray(),
-
                 AdditionalInputs: _config.AdditionalInputs?.ToArray(),
                 AdditionalComplexFilters: _config.AdditionalComplexFilters?.ToArray(),
-
                 CleanupDelay: _config.HlsOptions.DeleteOutdatedSegments ? _config.CleanupDelay : null
             );
 

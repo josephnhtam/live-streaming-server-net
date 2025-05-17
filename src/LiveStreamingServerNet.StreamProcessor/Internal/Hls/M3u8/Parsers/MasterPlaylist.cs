@@ -34,8 +34,8 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.M3u8.Parsers
             return mediaPlaylists
                 .Select(mediaPlaylist => (mediaPlaylist, dirPath: Path.GetDirectoryName(mediaPlaylist.Manifest.Name)))
                 .SelectMany(x =>
-                  x.mediaPlaylist.Segments.Select(segment =>
-                      segment with { FileName = NormalizePath(Path.Combine(x.dirPath ?? string.Empty, segment.FileName)) }))
+                    x.mediaPlaylist.Segments.Select(segment =>
+                        segment with { FileName = NormalizePath(Path.Combine(x.dirPath ?? string.Empty, segment.FileName)) }))
                 .Distinct()
                 .ToList();
         }

@@ -36,7 +36,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Installer
             var services = rtmpServerConfigurator.Services;
 
             services.AddSingleton<IStreamProcessorEventDispatcher, StreamProcessorEventDispatcher>()
-                    .AddSingleton<IStreamProcessorManager, StreamProcessorManager>();
+                .AddSingleton<IStreamProcessorManager, StreamProcessorManager>();
 
             rtmpServerConfigurator.AddStreamEventHandler<RtmpServerStreamEventListener>();
 

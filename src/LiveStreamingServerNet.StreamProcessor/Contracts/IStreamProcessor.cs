@@ -24,7 +24,6 @@
         /// Runs the stream processing operation.
         /// </summary>
         /// <param name="inputPath">The input path of the stream to process</param>
-        /// <param name="streamPath">The original stream path</param>
         /// <param name="streamArguments">Additional arguments for stream processing</param>
         /// <param name="onStarted">Callback invoked when processing starts</param>
         /// <param name="onEnded">Callback invoked when processing ends</param>

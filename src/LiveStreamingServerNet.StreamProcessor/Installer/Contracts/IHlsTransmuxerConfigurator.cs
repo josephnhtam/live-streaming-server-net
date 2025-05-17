@@ -1,6 +1,5 @@
 ﻿using LiveStreamingServerNet.StreamProcessor.Hls.Configurations;
 using LiveStreamingServerNet.StreamProcessor.Hls.Subtitling;
-using LiveStreamingServerNet.StreamProcessor.Hls.Subtitling.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Transcriptions.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 

@@ -71,8 +71,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Uploading
             }
             finally
             {
-                await Task.WhenAll(_storageAdapters.Select(
-                    async adapter =>
+                await Task.WhenAll(_storageAdapters.Select(async adapter =>
                     {
                         if (!_uploadedOnce.ContainsKey(adapter))
                             return;

@@ -70,7 +70,8 @@ namespace LiveStreamingServerNet.StreamProcessor.Hls.Configurations
         /// Gets or sets the array of downsampling filters for adaptive streaming.
         /// Default: 360p (600k/64k), 480p (1500k/128k), 720p (3000k/256k).
         /// </summary>
-        public IEnumerable<DownsamplingFilter> DownsamplingFilters { get; set; } = new[] {
+        public IEnumerable<DownsamplingFilter> DownsamplingFilters { get; set; } = new[]
+        {
             new DownsamplingFilter("360p", 360, "600k", "64k"),
             new DownsamplingFilter("480p", 480, "1500k", "128k"),
             new DownsamplingFilter("720p", 720, "3000k", "256k"),

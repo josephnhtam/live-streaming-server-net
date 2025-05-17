@@ -24,8 +24,8 @@ namespace LiveStreamingServerNet.StreamProcessor.Installer
             var services = configurator.Services;
 
             services.AddSingleton<IHlsUploaderFactory, HlsUploaderFactory>()
-                    .AddSingleton<IHlsUploadingManager, HlsUploadingManager>()
-                    .AddSingleton<IHlsStorageEventDispatcher, HlsStorageEventDispatcher>();
+                .AddSingleton<IHlsUploadingManager, HlsUploadingManager>()
+                .AddSingleton<IHlsStorageEventDispatcher, HlsStorageEventDispatcher>();
 
             configurator.AddStreamProcessorEventHandler<HlsStreamProcessorEventListener>();
 
