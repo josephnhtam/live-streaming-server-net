@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace LiveStreamingServerNet.StreamProcessor.Transcriptions
+﻿namespace LiveStreamingServerNet.StreamProcessor.Transcriptions
 {
     /// <summary>
     /// Represents a transcription result containing details of recognized speech,

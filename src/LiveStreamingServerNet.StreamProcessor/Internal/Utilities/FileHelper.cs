@@ -5,7 +5,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Utilities
     internal static class FileHelper
     {
         public static async Task WriteToFileAsync(
-           string outputPath, string content, CancellationToken cancellationToken = default)
+            string outputPath, string content, CancellationToken cancellationToken = default)
         {
             var tempPath = $"{outputPath}.tmp";
 

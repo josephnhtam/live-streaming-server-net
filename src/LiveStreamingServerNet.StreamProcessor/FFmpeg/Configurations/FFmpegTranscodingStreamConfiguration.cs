@@ -1,6 +1,4 @@
-﻿using LiveStreamingServerNet.StreamProcessor.Utilities;
-
-namespace LiveStreamingServerNet.StreamProcessor.FFmpeg.Configurations
+﻿namespace LiveStreamingServerNet.StreamProcessor.FFmpeg.Configurations
 {
     /// <summary>
     /// Represents configuration settings for an FFmpeg transcoding stream.

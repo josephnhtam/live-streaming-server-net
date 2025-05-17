@@ -18,7 +18,8 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.M3u8.Builders
 
             foreach (var variant in _variantStreams)
             {
-                var attributes = new List<string>(){
+                var attributes = new List<string>()
+                {
                     $"NAME=\"{variant.Name}\""
                 };
 

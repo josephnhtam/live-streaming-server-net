@@ -150,5 +150,8 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Logging
 
         [LoggerMessage(Level = LogLevel.Error, Message = "An error occurred while processing transcription results (Transmuxer={Transmuxer}, Identifier={Identifier}, StreamPath={StreamPath})")]
         public static partial void TranscriptionProcessingError(this ILogger logger, string transmuxer, Guid identifier, string streamPath, Exception ex);
+
+        [LoggerMessage(Level = LogLevel.Error, Message = "An error occurred while capturing straem (StreamPath={StreamPath}, StreamArguments={StreamArguments}, OutputPath={OutputPath}, FFmpegArguments={FFmpegArguments})")]
+        public static partial void StreamCapturingError(this ILogger logger, string streamPath, IReadOnlyDictionary<string, string> streamArguments, string outputPath, string ffmpegArguments, Exception ex);
     }
 }

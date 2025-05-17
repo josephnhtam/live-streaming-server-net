@@ -17,10 +17,10 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output.Writers
             var manifestDirPath = Path.GetDirectoryName(manifestOutputPath) ?? string.Empty;
 
             var manifestBuilder = new MediaManifestBuilder()
-               .SetAllowCache(false)
-               .SetIndependentSegments(true)
-               .SetTargetDuration(tagetDuration.Calculate(segments))
-               .SetMediaSequence(segments.FirstOrDefault().SequenceNumber);
+                .SetAllowCache(false)
+                .SetIndependentSegments(true)
+                .SetTargetDuration(tagetDuration.Calculate(segments))
+                .SetMediaSequence(segments.FirstOrDefault().SequenceNumber);
 
             if (initialProgramDateTime.HasValue)
             {

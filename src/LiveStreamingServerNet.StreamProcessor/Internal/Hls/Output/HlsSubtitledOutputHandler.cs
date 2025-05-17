@@ -119,12 +119,16 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
             if (Interlocked.Exchange(ref _masterManifestCreated, 1) != 0)
                 return;
 
-            var variantStreams = new List<VariantStream> { new(
+            var variantStreams = new List<VariantStream>
+            {
+                new(
                     _config.MediaManifestOutputPath,
-                    ExtraAttributes: new Dictionary<string, string>{
+                    ExtraAttributes: new Dictionary<string, string>
+                    {
                         ["SUBTITLES"] = "SUBS"
                     }
-                ) };
+                )
+            };
 
             var alternateMedia = _subtitleTranscribers.Select(x =>
                 new AlternateMedia(

@@ -70,15 +70,19 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Containers
             var generalProfileSpace = (byte)(data[pos] >> 6);
             var generalTierFlag = (byte)((data[pos] >> 5) & 0x01);
             var generalProfileIdc = (byte)(data[pos++] & 0x1f);
-            var generalProfileCompatibilityFlags = (uint)data.Slice(pos).ReadInt32BigEndian(); pos += 4;
-            var generalConstraintIndicatorFlags = (uint)data.Slice(pos).ReadInt48BigEndian(); pos += 6;
+            var generalProfileCompatibilityFlags = (uint)data.Slice(pos).ReadInt32BigEndian();
+            pos += 4;
+            var generalConstraintIndicatorFlags = (uint)data.Slice(pos).ReadInt48BigEndian();
+            pos += 6;
             var generalLevelIdc = data[pos++];
-            var minSpatialSegmentationIdc = (uint)(data.Slice(pos).ReadInt16BigEndian() & 0x0fff); pos += 2;
+            var minSpatialSegmentationIdc = (uint)(data.Slice(pos).ReadInt16BigEndian() & 0x0fff);
+            pos += 2;
             var parallelismType = (byte)(data[pos++] & 0x03);
             var chromaFormat = (byte)(data[pos++] >> 5);
             var bitDepthLumaMinus8 = (byte)(data[pos++] & 0x07);
             var bitDepthChromaMinus8 = (byte)(data[pos++] & 0x07);
-            var avgFrameRate = (ushort)data.Slice(pos).ReadInt16BigEndian(); pos += 2;
+            var avgFrameRate = (ushort)data.Slice(pos).ReadInt16BigEndian();
+            pos += 2;
             var constantFrameRate = (byte)(data[pos] >> 6);
             var numTemporalLayers = (byte)((data[pos] >> 3) & 0x07);
             var temporalIdNested = (byte)((data[pos] >> 2) & 0x01);
@@ -89,7 +93,8 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Containers
             for (int i = 0; i < numOfArrays; i++)
             {
                 var naluType = (NALUType)(data[pos++] & 0x3f);
-                var numNalus = (ushort)data.Slice(pos).ReadInt16BigEndian(); pos += 2;
+                var numNalus = (ushort)data.Slice(pos).ReadInt16BigEndian();
+                pos += 2;
 
                 for (int j = 0; j < numNalus; j++)
                 {
