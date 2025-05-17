@@ -21,7 +21,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Subtitling
             return _flvWriter.WriteHeaderAsync(true, false, cancellationToken);
         }
 
-        public ValueTask WriteBufferAsync(MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp, CancellationToken cancellationToken)
+        public async ValueTask WriteBufferAsync(MediaType mediaType, IRentedBuffer rentedBuffer, uint timestamp, CancellationToken cancellationToken)
         {
             if (mediaType != MediaType.Audio)
             {
@@ -32,7 +32,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Subtitling
 
             try
             {
-                return _flvWriter.WriteTagAsync(FlvTagType.Audio, timestamp,
+                await _flvWriter.WriteTagAsync(FlvTagType.Audio, timestamp,
                     buffer => buffer.Write(rentedBuffer.AsSpan()), cancellationToken);
             }
             finally
