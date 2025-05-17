@@ -7,11 +7,11 @@ using LiveStreamingServerNet.Utilities.Contracts;
 
 namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Subtitling
 {
-    internal class FlvAudioStremWriter : IMediaStreamWriter
+    internal class FlvAudioStreamWriter : IMediaStreamWriter
     {
         private readonly IFlvWriter _flvWriter;
 
-        public FlvAudioStremWriter(IStreamWriter streamWriter, IDataBufferPool dataBufferPool)
+        public FlvAudioStreamWriter(IStreamWriter streamWriter, IDataBufferPool dataBufferPool)
         {
             _flvWriter = new FlvWriter(streamWriter, dataBufferPool);
         }
@@ -41,9 +41,9 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Subtitling
             }
         }
 
-        public ValueTask DisposeAsync()
+        public async ValueTask DisposeAsync()
         {
-            return ValueTask.CompletedTask;
+            await _flvWriter.DisposeAsync();
         }
     }
 }
