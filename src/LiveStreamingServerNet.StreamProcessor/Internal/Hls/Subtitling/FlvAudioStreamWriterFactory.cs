@@ -15,7 +15,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Subtitling
 
         public IMediaStreamWriter Create(IStreamWriter dstStreamWriter)
         {
-            return new FlvAudioStremWriter(dstStreamWriter, _dataBufferPool);
+            return new FlvAudioStreamWriter(dstStreamWriter, _dataBufferPool);
         }
     }
 }
