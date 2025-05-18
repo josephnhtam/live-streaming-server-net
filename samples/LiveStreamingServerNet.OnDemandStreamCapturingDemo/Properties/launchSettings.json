@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "LiveStreamingServerNet.OnDemandStreamCapturing": {
+      "commandName": "Project"
+    },
+    "Container (Dockerfile)": {
+      "commandName": "Docker"
+    }
+  }
+}
