@@ -61,6 +61,9 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Logging
         [LoggerMessage(LogLevel.Trace, "Acknowledgement received (ClientId={ClientId})")]
         public static partial void AcknowledgementReceived(this ILogger logger, uint clientId);
 
+        [LoggerMessage(LogLevel.Warning, "Maximum in-chunk size exceeded (ClientId={ClientId}, InChunkSize={InChunkSize}, MaxInChunkSize={MaxInChunkSize})")]
+        public static partial void MaxInChunkSizeExceeded(this ILogger logger, uint clientId, uint inChunkSize, uint maxInChunkSize);
+
         [LoggerMessage(LogLevel.Debug, "SetChunkSize (ClientId={ClientId}, InChunkSize={InChunkSize})")]
         public static partial void SetChunkSize(this ILogger logger, uint clientId, uint inChunkSize);
 
