@@ -1,4 +1,5 @@
 ﻿using LiveStreamingServerNet.Utilities.Buffers.Contracts;
+using LiveStreamingServerNet.Utilities.Common;
 using System.Buffers;
 
 namespace LiveStreamingServerNet.Utilities.Buffers
@@ -72,7 +73,7 @@ namespace LiveStreamingServerNet.Utilities.Buffers
 
         private void EnsureCapacity(int capacity)
         {
-            if (capacity < _buffer.Length)
+            if (capacity <= _buffer.Length)
                 return;
 
             byte[] buffer;

@@ -1,5 +1,6 @@
 ﻿using LiveStreamingServerNet.Utilities.Buffers.Configurations;
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
+using LiveStreamingServerNet.Utilities.Common;
 using Microsoft.Extensions.Options;
 using System.Buffers;
 using System.Runtime.CompilerServices;
@@ -20,6 +21,11 @@ namespace LiveStreamingServerNet.Utilities.Buffers
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public byte[] Rent(int minimumLength)
         {
+            if (minimumLength >= _config.MaxBufferSize)
+            {
+                minimumLength = MathUtility.NextPowerOfTwo(minimumLength);
+            }
+
             return _pool.Rent(Math.Max(_config.MinBufferSize, minimumLength));
         }
 
