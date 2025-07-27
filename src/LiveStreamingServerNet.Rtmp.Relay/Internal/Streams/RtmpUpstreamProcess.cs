@@ -74,7 +74,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Streams
         {
             try
             {
-                await RunUpstreamClientAsync(cancellationToken);
+                await RunUpstreamClientAsync(cancellationToken).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -93,10 +93,10 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Streams
             {
                 try
                 {
-                    var origin = await ResolveOriginAsync(abortCts.Token);
+                    var origin = await ResolveOriginAsync(abortCts.Token).ConfigureAwait(false);
                     if (origin == null) continue;
 
-                    await DoRunUpstreamClientAsync(origin, idleChecker, retryCounter, abortCts);
+                    await DoRunUpstreamClientAsync(origin, idleChecker, retryCounter, abortCts).ConfigureAwait(false);
                 }
                 catch (OperationCanceledException) when (abortCts.IsCancellationRequested) { }
                 catch (Exception ex)
@@ -105,12 +105,12 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Streams
                 }
                 finally
                 {
-                    await HandleRetryBackoff(retryCounter, abortCts);
+                    await HandleRetryBackoff(retryCounter, abortCts).ConfigureAwait(false);
                 }
             }
 
             StreamDataChannelCleanup();
-            await DisconnectPublisherAsync();
+            await DisconnectPublisherAsync().ConfigureAwait(false);
 
             _logger.RtmpUpstreamStopped(_streamPath);
         }
@@ -134,7 +134,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Streams
             try
             {
                 _logger.RtmpUpstreamReconnecting(_streamPath, retryBackoff.Value);
-                await Task.Delay(retryBackoff.Value, abortCts.Token);
+                await Task.Delay(retryBackoff.Value, abortCts.Token).ConfigureAwait(false);
             }
             catch (OperationCanceledException) { }
         }
@@ -146,34 +146,37 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Streams
             using var streamingCts = CancellationTokenSource.CreateLinkedTokenSource(clientCts.Token);
             var initializationTcs = new TaskCompletionSource();
 
-            await using var rtmpClient = CreateUpstreamClient();
-            using var _ = clientCts.Token.Register(rtmpClient.Stop);
+            var rtmpClient = CreateUpstreamClient();
+            await using (rtmpClient.ConfigureAwait(false))
+            {
+                using var _ = clientCts.Token.Register(rtmpClient.Stop);
 
-            _logger.RtmpUpstreamConnecting(_streamPath, origin.EndPoint);
-            await rtmpClient.ConnectAsync(origin.EndPoint, origin.AppName);
+                _logger.RtmpUpstreamConnecting(_streamPath, origin.EndPoint);
+                await rtmpClient.ConnectAsync(origin.EndPoint, origin.AppName).ConfigureAwait(false);
 
-            _logger.RtmpUpstreamCreating(_streamPath);
-            var rtmpStream = await rtmpClient.CreateStreamAsync();
+                _logger.RtmpUpstreamCreating(_streamPath);
+                var rtmpStream = await rtmpClient.CreateStreamAsync().ConfigureAwait(false);
 
-            SubscribeToStreamEvents(rtmpStream, idleChecker, initializationTcs, clientCts);
+                SubscribeToStreamEvents(rtmpStream, idleChecker, initializationTcs, clientCts);
 
-            var streamDataSendingTask = StreamDataSendingTask(rtmpStream, idleChecker, initializationTcs.Task, streamingCts.Token);
-            rtmpStream.Publish.Publish(origin.StreamName);
+                var streamDataSendingTask = StreamDataSendingTask(rtmpStream, idleChecker, initializationTcs.Task, streamingCts.Token);
+                rtmpStream.Publish.Publish(origin.StreamName);
 
-            _logger.RtmpUpstreamCreated(_streamPath);
-            retryCounter.Reset();
+                _logger.RtmpUpstreamCreated(_streamPath);
+                retryCounter.Reset();
 
-            var clientTask = rtmpClient.UntilStoppedAsync(clientCts.Token);
-            var completedTask = await Task.WhenAny(clientTask, streamDataSendingTask);
+                var clientTask = rtmpClient.UntilStoppedAsync(clientCts.Token);
+                var completedTask = await Task.WhenAny(clientTask, streamDataSendingTask).ConfigureAwait(false);
 
-            await HandleCompletedTaskAsync(completedTask, streamDataSendingTask, clientCts);
+                await HandleCompletedTaskAsync(completedTask, streamDataSendingTask, clientCts).ConfigureAwait(false);
+            }
         }
 
         private async Task HandleCompletedTaskAsync(Task completedTask, Task streamDataSendingTask, CancellationTokenSource clientCts)
         {
             try
             {
-                await completedTask;
+                await completedTask.ConfigureAwait(false);
             }
             finally
             {
@@ -182,7 +185,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Streams
 
                 if (completedTask != streamDataSendingTask)
                 {
-                    await ErrorBoundary.ExecuteAsync(streamDataSendingTask);
+                    await ErrorBoundary.ExecuteAsync(streamDataSendingTask).ConfigureAwait(false);
                 }
             }
         }
@@ -191,7 +194,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Streams
         {
             try
             {
-                var result = await _originResolver.ResolveUpstreamOriginAsync(_streamPath, _streamArguments, cancellationToken);
+                var result = await _originResolver.ResolveUpstreamOriginAsync(_streamPath, _streamArguments, cancellationToken).ConfigureAwait(false);
 
                 if (result == null)
                 {
@@ -218,8 +221,8 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Streams
 
             try
             {
-                await _streamManager.StopPublishingAsync(_publishStreamContext);
-                await _publishStreamContext.StreamContext.ClientContext.Client.DisconnectAsync();
+                await _streamManager.StopPublishingAsync(_publishStreamContext).ConfigureAwait(false);
+                await _publishStreamContext.StreamContext.ClientContext.Client.DisconnectAsync().ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -272,17 +275,17 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Streams
             {
                 if (_publishStreamContext.StreamMetaData != null)
                 {
-                    await SendMetaDataAsync(rtmpStream, _publishStreamContext.StreamMetaData);
+                    await SendMetaDataAsync(rtmpStream, _publishStreamContext.StreamMetaData).ConfigureAwait(false);
                 }
 
                 if (_publishStreamContext.AudioSequenceHeader != null)
                 {
-                    await SendMediaSequenceHeaderAsync(rtmpStream, MediaType.Audio, _publishStreamContext.AudioSequenceHeader);
+                    await SendMediaSequenceHeaderAsync(rtmpStream, MediaType.Audio, _publishStreamContext.AudioSequenceHeader).ConfigureAwait(false);
                 }
 
                 if (_publishStreamContext.VideoSequenceHeader != null)
                 {
-                    await SendMediaSequenceHeaderAsync(rtmpStream, MediaType.Video, _publishStreamContext.VideoSequenceHeader);
+                    await SendMediaSequenceHeaderAsync(rtmpStream, MediaType.Video, _publishStreamContext.VideoSequenceHeader).ConfigureAwait(false);
                 }
 
                 var pictures = _publishStreamContext.GroupOfPicturesCache.Get();
@@ -292,7 +295,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Streams
                     {
                         if (UpdateTimestamp(picture.Type, picture.Timestamp))
                         {
-                            await DoSendMediaDataAsync(rtmpStream, new MediaData(picture.Type, picture.Timestamp, true, picture.Payload));
+                            await DoSendMediaDataAsync(rtmpStream, new MediaData(picture.Type, picture.Timestamp, true, picture.Payload)).ConfigureAwait(false);
                         }
                     }
                 }
@@ -317,7 +320,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Streams
                 try
                 {
                     sequenceHeader.AsSpan().CopyTo(buffer.Buffer);
-                    await DoSendMediaDataAsync(rtmpStream, new MediaData(mediaType, 0, false, buffer));
+                    await DoSendMediaDataAsync(rtmpStream, new MediaData(mediaType, 0, false, buffer)).ConfigureAwait(false);
                 }
                 finally
                 {
@@ -330,7 +333,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Streams
         {
             try
             {
-                await rtmpStream.Publish.SendMetaDataAsync(streamMetaData);
+                await rtmpStream.Publish.SendMetaDataAsync(streamMetaData).ConfigureAwait(false);
             }
             catch (RtmpClientPublishStreamNotAvailableException) { }
             catch (Exception ex)
@@ -349,18 +352,18 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Streams
 
                 while (!cancellationToken.IsCancellationRequested)
                 {
-                    isInitializationComplete = await UntilInitializationCompleteAsync(isInitializationComplete, initializationTask, cancellationToken);
+                    isInitializationComplete = await UntilInitializationCompleteAsync(isInitializationComplete, initializationTask, cancellationToken).ConfigureAwait(false);
 
-                    var streamData = await DequeueStreamData(cancellationToken);
+                    var streamData = await DequeueStreamData(cancellationToken).ConfigureAwait(false);
                     idleChecker.Refresh();
 
                     if (streamData.MediaData.HasValue)
                     {
-                        await SendMediaDataAsync(rtmpStream, streamData.MediaData.Value);
+                        await SendMediaDataAsync(rtmpStream, streamData.MediaData.Value).ConfigureAwait(false);
                     }
                     else if (streamData.MetaData.HasValue)
                     {
-                        await SendMetaDataAsync(rtmpStream, streamData.MetaData.Value.StreamMetaData);
+                        await SendMetaDataAsync(rtmpStream, streamData.MetaData.Value.StreamMetaData).ConfigureAwait(false);
                     }
                 }
             }
@@ -377,7 +380,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Streams
             {
                 if (!isInitializationComplete)
                 {
-                    await initializationTask.WithCancellation(cancellationToken);
+                    await initializationTask.WithCancellation(cancellationToken).ConfigureAwait(false);
                     isInitializationComplete = true;
                 }
 
@@ -403,7 +406,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Streams
                 if (!UpdateTimestamp(mediaData.Type, mediaData.Timestamp) && mediaData.IsSkippable)
                     return;
 
-                await DoSendMediaDataAsync(rtmpStream, mediaData);
+                await DoSendMediaDataAsync(rtmpStream, mediaData).ConfigureAwait(false);
             }
             catch (RtmpClientPublishStreamNotAvailableException) { }
             catch (Exception ex)
@@ -422,11 +425,11 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Streams
             switch (mediaData.Type)
             {
                 case MediaType.Audio:
-                    await rtmpStream.Publish.SendAudioDataAsync(mediaData.Payload, mediaData.Timestamp);
+                    await rtmpStream.Publish.SendAudioDataAsync(mediaData.Payload, mediaData.Timestamp).ConfigureAwait(false);
                     break;
 
                 case MediaType.Video:
-                    await rtmpStream.Publish.SendVideoDataAsync(mediaData.Payload, mediaData.Timestamp);
+                    await rtmpStream.Publish.SendVideoDataAsync(mediaData.Payload, mediaData.Timestamp).ConfigureAwait(false);
                     break;
 
                 default:
@@ -499,7 +502,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Streams
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private async ValueTask<StreamData> DequeueStreamData(CancellationToken cancellationToken)
         {
-            var streamData = await _streamDataChannel.Reader.ReadAsync(cancellationToken);
+            var streamData = await _streamDataChannel.Reader.ReadAsync(cancellationToken).ConfigureAwait(false);
 
             if (streamData.MediaData.HasValue)
             {

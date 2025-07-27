@@ -21,7 +21,7 @@ namespace LiveStreamingServerNet.Networking.Server.Internal
         {
             if (serverEndPoint.IsSecure)
             {
-                var sslStream = await _sslStreamFactory.CreateAsync(tcpClient, cancellationToken);
+                var sslStream = await _sslStreamFactory.CreateAsync(tcpClient, cancellationToken).ConfigureAwait(false);
 
                 if (sslStream != null)
                     return CreateNetworkStream(clientId, sslStream);

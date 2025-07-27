@@ -14,7 +14,7 @@ namespace LiveStreamingServerNet.Flv.Internal.HttpClients
 
         public async ValueTask WriteAsync(ReadOnlyMemory<byte> buffer, CancellationToken cancellationToken)
         {
-            await _response.BodyWriter.WriteAsync(buffer, cancellationToken);
+            await _response.BodyWriter.WriteAsync(buffer, cancellationToken).ConfigureAwait(false);
         }
     }
 }

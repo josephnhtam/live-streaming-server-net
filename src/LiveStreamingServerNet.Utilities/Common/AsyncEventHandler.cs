@@ -36,7 +36,7 @@ namespace LiveStreamingServerNet.Utilities.Common
             {
                 try
                 {
-                    await h.Invoke(sender, e);
+                    await h.Invoke(sender, e).ConfigureAwait(false);
                 }
                 catch { }
             }));

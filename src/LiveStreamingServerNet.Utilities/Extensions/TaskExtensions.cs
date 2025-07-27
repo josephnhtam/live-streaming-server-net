@@ -8,8 +8,8 @@
 
             try
             {
-                var completedTask = await Task.WhenAny(task, Task.Delay(Timeout.Infinite, cts.Token));
-                await completedTask;
+                var completedTask = await Task.WhenAny(task, Task.Delay(Timeout.Infinite, cts.Token)).ConfigureAwait(false);
+                await completedTask.ConfigureAwait(false);
             }
             finally
             {

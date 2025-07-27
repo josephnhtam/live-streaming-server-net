@@ -34,9 +34,9 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.RtmpEventHandlers
         public async ValueTask<RtmpEventConsumingResult> Handle(RtmpChunkEvent @event, CancellationToken cancellationToken)
         {
             var aggregationResult = await _chunkMessageAggregator.AggregateChunkMessagesAsync(
-                @event.NetworkStream, @event.Context, cancellationToken);
+                @event.NetworkStream, @event.Context, cancellationToken).ConfigureAwait(false);
 
-            if (aggregationResult.IsComplete && !await HandleRtmpMessageAsync(@event, aggregationResult, cancellationToken))
+            if (aggregationResult.IsComplete && !await HandleRtmpMessageAsync(@event, aggregationResult, cancellationToken).ConfigureAwait(false))
             {
                 return new RtmpEventConsumingResult(false, aggregationResult.ChunkMessageSize);
             }
@@ -51,7 +51,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.RtmpEventHandlers
         {
             try
             {
-                return await DispatchRtmpMessageAsync(aggregationResult.ChunkStreamContext, @event.Context, cancellationToken);
+                return await DispatchRtmpMessageAsync(aggregationResult.ChunkStreamContext, @event.Context, cancellationToken).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -68,7 +68,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.RtmpEventHandlers
             IRtmpChunkStreamContext chunkStreamContext, IRtmpSessionContext clientContext, CancellationToken cancellationToken)
         {
             Debug.Assert(chunkStreamContext.PayloadBuffer != null);
-            return await _dispatcher.DispatchAsync(chunkStreamContext, clientContext, cancellationToken);
+            return await _dispatcher.DispatchAsync(chunkStreamContext, clientContext, cancellationToken).ConfigureAwait(false);
         }
     }
 }

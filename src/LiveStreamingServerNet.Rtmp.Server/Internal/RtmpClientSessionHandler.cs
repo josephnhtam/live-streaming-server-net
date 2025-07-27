@@ -41,7 +41,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
 
         public async ValueTask<bool> InitializeAsync(CancellationToken cancellationToken)
         {
-            await OnRtmpClientCreatedAsync();
+            await OnRtmpClientCreatedAsync().ConfigureAwait(false);
             return true;
         }
 
@@ -51,10 +51,10 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
             {
                 var result = _clientContext.State switch
                 {
-                    RtmpClientSessionState.HandshakeC0 => await HandleHandshakeC0Async(_clientContext, networkStream, cancellationToken),
-                    RtmpClientSessionState.HandshakeC1 => await HandleHandshakeC1Async(_clientContext, networkStream, cancellationToken),
-                    RtmpClientSessionState.HandshakeC2 => await HandleHandshakeC2Async(_clientContext, networkStream, cancellationToken),
-                    _ => await HandleChunkAsync(_clientContext, networkStream, cancellationToken),
+                    RtmpClientSessionState.HandshakeC0 => await HandleHandshakeC0Async(_clientContext, networkStream, cancellationToken).ConfigureAwait(false),
+                    RtmpClientSessionState.HandshakeC1 => await HandleHandshakeC1Async(_clientContext, networkStream, cancellationToken).ConfigureAwait(false),
+                    RtmpClientSessionState.HandshakeC2 => await HandleHandshakeC2Async(_clientContext, networkStream, cancellationToken).ConfigureAwait(false),
+                    _ => await HandleChunkAsync(_clientContext, networkStream, cancellationToken).ConfigureAwait(false),
                 };
 
                 if (result.Succeeded && _bandwidthLimiter != null && !_bandwidthLimiter.ConsumeBandwidth(result.ConsumedBytes))
@@ -79,17 +79,17 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
 
         private async ValueTask<RtmpEventConsumingResult> HandleHandshakeC0Async(IRtmpClientSessionContext clientContext, INetworkStreamReader networkStream, CancellationToken cancellationToken)
         {
-            return await _mediator.Send(new RtmpHandshakeC0Event(clientContext, networkStream), cancellationToken);
+            return await _mediator.Send(new RtmpHandshakeC0Event(clientContext, networkStream), cancellationToken).ConfigureAwait(false);
         }
 
         private async ValueTask<RtmpEventConsumingResult> HandleHandshakeC1Async(IRtmpClientSessionContext clientContext, INetworkStreamReader networkStream, CancellationToken cancellationToken)
         {
-            return await _mediator.Send(new RtmpHandshakeC1Event(clientContext, networkStream), cancellationToken);
+            return await _mediator.Send(new RtmpHandshakeC1Event(clientContext, networkStream), cancellationToken).ConfigureAwait(false);
         }
 
         private async ValueTask<RtmpEventConsumingResult> HandleHandshakeC2Async(IRtmpClientSessionContext clientContext, INetworkStreamReader networkStream, CancellationToken cancellationToken)
         {
-            return await _mediator.Send(new RtmpHandshakeC2Event(clientContext, networkStream), cancellationToken);
+            return await _mediator.Send(new RtmpHandshakeC2Event(clientContext, networkStream), cancellationToken).ConfigureAwait(false);
         }
 
         private async ValueTask<RtmpEventConsumingResult> HandleChunkAsync(IRtmpClientSessionContext clientContext, INetworkStreamReader networkStream, CancellationToken cancellationToken)
@@ -101,7 +101,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
                 @event.ClientContext = clientContext;
                 @event.NetworkStream = networkStream;
 
-                return await _mediator.Send(@event, cancellationToken);
+                return await _mediator.Send(@event, cancellationToken).ConfigureAwait(false);
             }
             finally
             {
@@ -111,30 +111,30 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
 
         public async ValueTask DisposeAsync()
         {
-            await OnRtmpClientDisposingAsync();
+            await OnRtmpClientDisposingAsync().ConfigureAwait(false);
 
             if (_bandwidthLimiter != null)
-                await _bandwidthLimiter.DisposeAsync();
+                await _bandwidthLimiter.DisposeAsync().ConfigureAwait(false);
 
             _clientContext.Recycle(_dataBufferPool);
-            await _clientContext.DisposeAsync();
+            await _clientContext.DisposeAsync().ConfigureAwait(false);
 
-            await OnRtmpClientDisposedAsync();
+            await OnRtmpClientDisposedAsync().ConfigureAwait(false);
         }
 
         private async ValueTask OnRtmpClientCreatedAsync()
         {
-            await _eventDispatcher.RtmpClientCreatedAsync(_clientContext);
+            await _eventDispatcher.RtmpClientCreatedAsync(_clientContext).ConfigureAwait(false);
         }
 
         private async ValueTask OnRtmpClientDisposingAsync()
         {
-            await _eventDispatcher.RtmpClientDisposingAsync(_clientContext);
+            await _eventDispatcher.RtmpClientDisposingAsync(_clientContext).ConfigureAwait(false);
         }
 
         private async ValueTask OnRtmpClientDisposedAsync()
         {
-            await _eventDispatcher.RtmpClientDisposedAsync(_clientContext);
+            await _eventDispatcher.RtmpClientDisposedAsync(_clientContext).ConfigureAwait(false);
         }
     }
 }

@@ -18,7 +18,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.RtmpEventHandlers
         public async ValueTask<RtmpEventConsumingResult> Handle(RtmpHandshakeS0Event @event, CancellationToken cancellationToken)
         {
             var payload = new byte[1];
-            await @event.NetworkStream.ReadExactlyAsync(payload, 0, 1, cancellationToken);
+            await @event.NetworkStream.ReadExactlyAsync(payload, 0, 1, cancellationToken).ConfigureAwait(false);
 
             @event.Context.State = RtmpSessionState.HandshakeS1;
             _logger.HandshakeS0Handled(@event.Context.Session.Id);

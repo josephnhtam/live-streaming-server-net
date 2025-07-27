@@ -33,7 +33,7 @@ namespace LiveStreamingServerNet.Networking.Server.Internal
                 EncryptionPolicy = EncryptionPolicy.RequireEncryption,
             };
 
-            await sslStream.AuthenticateAsServerAsync(options, cancellationToken);
+            await sslStream.AuthenticateAsServerAsync(options, cancellationToken).ConfigureAwait(false);
 
             return sslStream;
         }

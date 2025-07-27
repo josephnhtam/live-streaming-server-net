@@ -14,7 +14,7 @@ namespace LiveStreamingServerNet.Flv.Internal.WebSocketClients
 
         public async ValueTask WriteAsync(ReadOnlyMemory<byte> buffer, CancellationToken cancellationToken)
         {
-            await _webSocket.SendAsync(buffer, WebSocketMessageType.Binary, true, cancellationToken);
+            await _webSocket.SendAsync(buffer, WebSocketMessageType.Binary, true, cancellationToken).ConfigureAwait(false);
         }
     }
 }

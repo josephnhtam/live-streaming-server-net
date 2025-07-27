@@ -52,12 +52,12 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
                 publishStreamContext,
                 frameType,
                 avcPacketType,
-                payloadBuffer.MoveTo(0));
+                payloadBuffer.MoveTo(0)).ConfigureAwait(false);
 
             await BroadcastVideoMessageToSubscribersAsync(
                 publishStreamContext,
                 IsSkippable(avcPacketType),
-                payloadBuffer.MoveTo(0));
+                payloadBuffer.MoveTo(0)).ConfigureAwait(false);
 
             return true;
         }
@@ -75,7 +75,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
                 MediaType.Video,
                 publishStreamContext.VideoTimestamp,
                 isSkippable,
-                payloadBuffer);
+                payloadBuffer).ConfigureAwait(false);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -181,22 +181,22 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
 
                 if (publishStreamContext.GroupOfPicturesCacheActivated && frameType == VideoFrameType.KeyFrame)
                 {
-                    await _cacher.ClearGroupOfPicturesCacheAsync(publishStreamContext);
+                    await _cacher.ClearGroupOfPicturesCacheAsync(publishStreamContext).ConfigureAwait(false);
                 }
 
                 if (frameType == VideoFrameType.KeyFrame && avcPacketType == AVCPacketType.SequenceHeader)
                 {
-                    await _cacher.CacheSequenceHeaderAsync(publishStreamContext, MediaType.Video, payloadBuffer);
+                    await _cacher.CacheSequenceHeaderAsync(publishStreamContext, MediaType.Video, payloadBuffer).ConfigureAwait(false);
                 }
                 else if (publishStreamContext.GroupOfPicturesCacheActivated && avcPacketType == AVCPacketType.NALU)
                 {
-                    await _cacher.CachePictureAsync(publishStreamContext, MediaType.Video, payloadBuffer, publishStreamContext.VideoTimestamp);
+                    await _cacher.CachePictureAsync(publishStreamContext, MediaType.Video, payloadBuffer, publishStreamContext.VideoTimestamp).ConfigureAwait(false);
                 }
             }
             else if (publishStreamContext.GroupOfPicturesCacheActivated)
             {
                 publishStreamContext.GroupOfPicturesCacheActivated = false;
-                await _cacher.ClearGroupOfPicturesCacheAsync(publishStreamContext);
+                await _cacher.ClearGroupOfPicturesCacheAsync(publishStreamContext).ConfigureAwait(false);
             }
         }
     }

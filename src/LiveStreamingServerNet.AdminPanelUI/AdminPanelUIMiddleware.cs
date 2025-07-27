@@ -15,16 +15,16 @@ namespace LiveStreamingServerNet.AdminPanelUI
 
         public async Task InvokeAsync(HttpContext context)
         {
-            if (Validate(context) && await TryServeAdminPanelUI(context))
+            if (Validate(context) && await TryServeAdminPanelUI(context).ConfigureAwait(false))
                 return;
 
-            await _next.Invoke(context);
+            await _next.Invoke(context).ConfigureAwait(false);
         }
 
         private async Task<bool> TryServeAdminPanelUI(HttpContext context)
         {
             var fileContext = new AdminPanelUIFileContext(_options);
-            return await fileContext.ServeAdminPanelUI(context);
+            return await fileContext.ServeAdminPanelUI(context).ConfigureAwait(false);
         }
 
         private bool Validate(HttpContext context)

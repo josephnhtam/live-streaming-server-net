@@ -31,13 +31,13 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
             try
             {
                 var streamContext = _streamManager.GetFlvStreamContext(client.StreamPath)!;
-                await UntilReadyAsync(streamContext, cancellationToken);
+                await UntilReadyAsync(streamContext, cancellationToken).ConfigureAwait(false);
 
-                await SendFlvHeaderAsync(client, streamContext, client.StoppingToken);
-                await SendCachedFlvTagsAsync(client, streamContext, client.StoppingToken);
+                await SendFlvHeaderAsync(client, streamContext, client.StoppingToken).ConfigureAwait(false);
+                await SendCachedFlvTagsAsync(client, streamContext, client.StoppingToken).ConfigureAwait(false);
 
                 client.CompleteInitialization();
-                await client.UntilCompleteAsync(cancellationToken);
+                await client.UntilCompleteAsync(cancellationToken).ConfigureAwait(false);
             }
             catch (OperationCanceledException) { }
             catch (Exception ex)
@@ -58,7 +58,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
 
             try
             {
-                await streamContext.UntilReadyAsync(cts.Token);
+                await streamContext.UntilReadyAsync(cts.Token).ConfigureAwait(false);
             }
             catch (OperationCanceledException) when (timeoutCts.IsCancellationRequested)
             {
@@ -72,13 +72,13 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
             var hasAudio = streamContext.AudioSequenceHeader != null;
             var hasVideo = streamContext.VideoSequenceHeader != null;
 
-            await client.WriteHeaderAsync(hasAudio, hasVideo, cancellationToken);
+            await client.WriteHeaderAsync(hasAudio, hasVideo, cancellationToken).ConfigureAwait(false);
         }
 
         private async ValueTask SendCachedFlvTagsAsync(IFlvClient client, IFlvStreamContext streamContext, CancellationToken cancellationToken)
         {
-            await _mediaTagCacher.SendCachedHeaderTagsAsync(client, streamContext, 0, cancellationToken);
-            await _mediaTagCacher.SendCachedGroupOfPicturesTagsAsync(client, streamContext, cancellationToken);
+            await _mediaTagCacher.SendCachedHeaderTagsAsync(client, streamContext, 0, cancellationToken).ConfigureAwait(false);
+            await _mediaTagCacher.SendCachedGroupOfPicturesTagsAsync(client, streamContext, cancellationToken).ConfigureAwait(false);
         }
     }
 }

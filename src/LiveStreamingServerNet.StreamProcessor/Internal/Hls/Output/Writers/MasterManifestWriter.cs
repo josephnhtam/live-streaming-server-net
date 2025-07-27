@@ -30,7 +30,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output.Writers
 
             var manifest = manifestBuilder.Build();
 
-            await FileHelper.WriteToFileAsync(manifestOutputPath, manifest);
+            await FileHelper.WriteToFileAsync(manifestOutputPath, manifest).ConfigureAwait(false);
         }
     }
 }

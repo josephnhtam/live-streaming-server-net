@@ -18,7 +18,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Uploading.Services
         public async Task StartUploading(StreamProcessingContext context)
         {
             var cts = new CancellationTokenSource();
-            var uploader = await _uploaderFactory.CreateAsync(context);
+            var uploader = await _uploaderFactory.CreateAsync(context).ConfigureAwait(false);
 
             if (uploader != null)
             {
@@ -39,7 +39,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Uploading.Services
 
         public async ValueTask DisposeAsync()
         {
-            await Task.WhenAll(_uploaderTasks.Values.Select(t => t.Task));
+            await Task.WhenAll(_uploaderTasks.Values.Select(t => t.Task)).ConfigureAwait(false);
         }
 
         private record UploaderTask(Task Task, CancellationTokenSource Cts);

@@ -42,7 +42,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
             var sequenceHeader = payloadBuffer.MoveTo(0).ReadBytes(payloadBuffer.Size);
             payloadBuffer.MoveTo(0);
 
-            await _interception.CacheSequenceHeaderAsync(publishStreamContext, mediaType, sequenceHeader);
+            await _interception.CacheSequenceHeaderAsync(publishStreamContext, mediaType, sequenceHeader).ConfigureAwait(false);
 
             switch (mediaType)
             {
@@ -58,7 +58,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
         public async ValueTask CacheStreamMetaDataAsync(IRtmpPublishStreamContext publishStreamContext, IReadOnlyDictionary<string, object> metaData)
         {
             publishStreamContext.StreamMetaData = new Dictionary<string, object>(metaData);
-            await _eventDispatcher.RtmpStreamMetaDataReceivedAsync(publishStreamContext);
+            await _eventDispatcher.RtmpStreamMetaDataReceivedAsync(publishStreamContext).ConfigureAwait(false);
         }
 
         public async ValueTask CachePictureAsync(
@@ -70,16 +70,16 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
             if (publishStreamContext.GroupOfPicturesCache.Size >= _config.MaxGroupOfPicturesCacheSize)
             {
                 _logger.ReachedMaxGopCacheSize(publishStreamContext.StreamPath);
-                await ClearGroupOfPicturesCacheAsync(publishStreamContext);
+                await ClearGroupOfPicturesCacheAsync(publishStreamContext).ConfigureAwait(false);
             }
 
-            await _interception.CachePictureAsync(publishStreamContext, mediaType, payloadBuffer, timestamp);
+            await _interception.CachePictureAsync(publishStreamContext, mediaType, payloadBuffer, timestamp).ConfigureAwait(false);
             publishStreamContext.GroupOfPicturesCache.Add(new PictureCacheInfo(mediaType, timestamp), payloadBuffer);
         }
 
         public async ValueTask ClearGroupOfPicturesCacheAsync(IRtmpPublishStreamContext publishStreamContext)
         {
-            await _interception.ClearGroupOfPicturesCacheAsync(publishStreamContext);
+            await _interception.ClearGroupOfPicturesCacheAsync(publishStreamContext).ConfigureAwait(false);
             publishStreamContext.GroupOfPicturesCache.Clear();
         }
 

@@ -20,11 +20,11 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.FFmpeg
 
         public async Task<IStreamProcessor?> CreateAsync(ISessionHandle client, Guid contextIdentifier, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
-            if (!await _config.Condition.IsEnabled(_services, streamPath, streamArguments))
+            if (!await _config.Condition.IsEnabled(_services, streamPath, streamArguments).ConfigureAwait(false))
                 return null;
 
             var outputPath = await _config.OutputPathResolver.ResolveOutputPath(
-                _services, contextIdentifier, streamPath, streamArguments);
+                _services, contextIdentifier, streamPath, streamArguments).ConfigureAwait(false);
 
             var config = new FFmpegProcess.Configuration(
                 contextIdentifier,

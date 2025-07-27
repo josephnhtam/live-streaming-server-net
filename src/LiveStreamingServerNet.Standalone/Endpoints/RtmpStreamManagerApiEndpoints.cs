@@ -43,7 +43,7 @@ namespace LiveStreamingServerNet.Standalone.Endpoints
             async Task<Ok<GetStreamsResponse>> ([AsParameters] GetStreamsRequest request) =>
             {
                 var apiService = server.Services.GetRequiredService<IRtmpStreamManagerApiService>();
-                return TypedResults.Ok(await apiService.GetStreamsAsync(request));
+                return TypedResults.Ok(await apiService.GetStreamsAsync(request).ConfigureAwait(false));
             };
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace LiveStreamingServerNet.Standalone.Endpoints
             async Task<Ok> ([FromQuery] string streamId) =>
             {
                 var apiService = server.Services.GetRequiredService<IRtmpStreamManagerApiService>();
-                await apiService.DeleteStreamAsync(streamId);
+                await apiService.DeleteStreamAsync(streamId).ConfigureAwait(false);
                 return TypedResults.Ok();
             };
     }

@@ -33,7 +33,7 @@ namespace LiveStreamingServerNet
         public async Task RunAsync(IReadOnlyList<ServerEndPoint> serverEndPoints, CancellationToken cancellationToken = default)
         {
             _serverService.ConfigureEndPoints(serverEndPoints);
-            await _host.RunAsync(cancellationToken);
+            await _host.RunAsync(cancellationToken).ConfigureAwait(false);
         }
 
         public void Dispose()

@@ -22,7 +22,7 @@ namespace LiveStreamingServerNet.Networking.Client.Internal
         public async Task<SslStream> CreateAsync(ITcpClientInternal tcpClient, CancellationToken cancellationToken)
         {
             var sslStream = new SslStream(tcpClient.GetStream(), false, ValidateServerCertificate);
-            await sslStream.AuthenticateAsClientAsync(_config.AuthenticationOptions ?? new(), cancellationToken);
+            await sslStream.AuthenticateAsClientAsync(_config.AuthenticationOptions ?? new(), cancellationToken).ConfigureAwait(false);
 
             return sslStream;
         }

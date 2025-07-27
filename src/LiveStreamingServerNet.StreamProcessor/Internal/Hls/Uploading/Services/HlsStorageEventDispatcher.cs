@@ -34,7 +34,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Uploading.Services
             try
             {
                 foreach (var handler in GetEventHandlers())
-                    await handler.OnHlsFilesStoredAsync(eventContext, context, initial, storedManifests, storedSegments);
+                    await handler.OnHlsFilesStoredAsync(eventContext, context, initial, storedManifests, storedSegments).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -50,7 +50,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Uploading.Services
             try
             {
                 foreach (var handler in GetEventHandlers())
-                    await handler.OnHlsFilesStoringCompleteAsync(eventContext, context);
+                    await handler.OnHlsFilesStoringCompleteAsync(eventContext, context).ConfigureAwait(false);
             }
             catch (Exception ex)
             {

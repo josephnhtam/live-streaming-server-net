@@ -52,13 +52,13 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Uploading
             {
                 while (!cancellationToken.IsCancellationRequested)
                 {
-                    lastPollingTime = await DelayAsync(lastPollingTime, cancellationToken);
+                    lastPollingTime = await DelayAsync(lastPollingTime, cancellationToken).ConfigureAwait(false);
 
                     var playlist = ParsePlaylist();
                     if (playlist == null)
                         continue;
 
-                    lastSegments = await PerformDeltaUploadAsync(playlist, lastSegments, cancellationToken);
+                    lastSegments = await PerformDeltaUploadAsync(playlist, lastSegments, cancellationToken).ConfigureAwait(false);
                 }
             }
             catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { }
@@ -76,9 +76,9 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Uploading
                         if (!_uploadedOnce.ContainsKey(adapter))
                             return;
 
-                        await _eventDispatcher.HlsFilesStoringCompleteAsync(_context);
+                        await _eventDispatcher.HlsFilesStoringCompleteAsync(_context).ConfigureAwait(false);
                     }
-                ));
+                )).ConfigureAwait(false);
             }
         }
 
@@ -108,12 +108,12 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Uploading
             var addedSegments = segments.Except(lastSegments).ToList();
             var updatedManifests = addedSegments.Select(x => x.ManifestName).Distinct().Select(x => manifests[x]).ToList();
 
-            await Task.WhenAll(_storageAdapters.Select(adapter => StoreAsync(adapter, updatedManifests, addedSegments)));
+            await Task.WhenAll(_storageAdapters.Select(adapter => StoreAsync(adapter, updatedManifests, addedSegments))).ConfigureAwait(false);
 
             if (_config.DeleteOutdatedSegments)
             {
                 var removedSegments = lastSegments.Except(segments).ToList();
-                await Task.WhenAll(_storageAdapters.Select(adapter => DeleteOutdatedAsync(adapter, removedSegments)));
+                await Task.WhenAll(_storageAdapters.Select(adapter => DeleteOutdatedAsync(adapter, removedSegments))).ConfigureAwait(false);
             }
 
             return new List<Segment>(segments);
@@ -135,11 +135,11 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Uploading
                     }
 
                     var (storedManifests, storedSegments) =
-                        await adapter.StoreAsync(_context, manifestsToUpload, addedSegments, cancellationToken);
+                        await adapter.StoreAsync(_context, manifestsToUpload, addedSegments, cancellationToken).ConfigureAwait(false);
 
                     _uploadedOnce[adapter] = true;
 
-                    await _eventDispatcher.HlsFilesStoredAsync(_context, isInitial, storedManifests, storedSegments);
+                    await _eventDispatcher.HlsFilesStoredAsync(_context, isInitial, storedManifests, storedSegments).ConfigureAwait(false);
                 }
                 catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { }
                 catch (Exception ex)
@@ -153,7 +153,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Uploading
             {
                 try
                 {
-                    await adapter.DeleteAsync(_context, removedSegments, cancellationToken);
+                    await adapter.DeleteAsync(_context, removedSegments, cancellationToken).ConfigureAwait(false);
                 }
                 catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { }
                 catch (Exception ex)
@@ -169,7 +169,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Uploading
             var delay = lastPollingTime + _config.PollingInterval - DateTime.UtcNow;
 
             if (delay > TimeSpan.Zero)
-                await Task.Delay(delay, cancellationToken);
+                await Task.Delay(delay, cancellationToken).ConfigureAwait(false);
 
             lastPollingTime = DateTime.UtcNow;
 

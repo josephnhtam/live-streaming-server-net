@@ -35,7 +35,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.FFmpeg
             EnsureOutputDirectoryExists(_config.OutputPath);
             CleanOutputFile(_config.OutputPath);
 
-            await RunProcessAsync(inputPath, _config.OutputPath, onStarted, onEnded, cancellation);
+            await RunProcessAsync(inputPath, _config.OutputPath, onStarted, onEnded, cancellation).ConfigureAwait(false);
         }
 
         private void EnsureOutputDirectoryExists(string outputPath)
@@ -89,16 +89,16 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.FFmpeg
                     throw new StreamProcessorException("Error starting FFmpeg process");
 
                 if (onStarted != null)
-                    await onStarted.Invoke(outputPath);
+                    await onStarted.Invoke(outputPath).ConfigureAwait(false);
 
-                await process.WaitForExitAsync(cancellation);
+                await process.WaitForExitAsync(cancellation).ConfigureAwait(false);
 
                 if (process.ExitCode != 0)
                     throw new StreamProcessorException($"FFmpeg process exited with code {process.ExitCode}");
             }
             catch (Exception ex)
             {
-                await WaitForProcessTerminatingGracefully(process, _config.GracefulTerminationSeconds);
+                await WaitForProcessTerminatingGracefully(process, _config.GracefulTerminationSeconds).ConfigureAwait(false);
 
                 if (ex is OperationCanceledException && cancellation.IsCancellationRequested)
                     throw;
@@ -108,7 +108,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.FFmpeg
             finally
             {
                 if (onEnded != null)
-                    await onEnded.Invoke(outputPath);
+                    await onEnded.Invoke(outputPath).ConfigureAwait(false);
             }
         }
         private static async Task WaitForProcessTerminatingGracefully(Process process, int gracefulPeriod)
@@ -118,7 +118,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.FFmpeg
                 using var shutdownCts = new CancellationTokenSource(TimeSpan.FromSeconds(gracefulPeriod));
                 try
                 {
-                    await process.WaitForExitAsync(shutdownCts.Token);
+                    await process.WaitForExitAsync(shutdownCts.Token).ConfigureAwait(false);
                 }
                 catch (OperationCanceledException) { }
                 catch (Exception shutdownEx)

@@ -31,7 +31,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Services
             var filterArg = BuildVideoFilters(BuildScalingFilter(height));
             var arguments = $"-y -i {{inputPath}} {filterArg} -vframes 1 {{outputPath}}";
 
-            await DoCaptureAsync(streamPath, streamArguments, outputPath, arguments, cancellationToken);
+            await DoCaptureAsync(streamPath, streamArguments, outputPath, arguments, cancellationToken).ConfigureAwait(false);
         }
 
         public async Task CaptureClipAsync(
@@ -46,7 +46,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Services
             var audioOptions = BuildAudioOptions(options.AudioFrequency, options.AudioChannels);
             var arguments = $"-y -t {durationSeconds} -i {{inputPath}} {filterArg} {audioOptions} -loop 0 {{outputPath}}";
 
-            await DoCaptureAsync(streamPath, streamArguments, outputPath, arguments, cancellationToken);
+            await DoCaptureAsync(streamPath, streamArguments, outputPath, arguments, cancellationToken).ConfigureAwait(false);
         }
 
         private static string BuildScalingFilter(int? height)
@@ -79,7 +79,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Services
             try
             {
                 var contextIdentifier = Guid.NewGuid();
-                var inputPath = await _inputPathResolver.ResolveInputPathAsync(streamPath, streamArguments);
+                var inputPath = await _inputPathResolver.ResolveInputPathAsync(streamPath, streamArguments).ConfigureAwait(false);
 
                 var ffmpegConfig = new FFmpegProcess.Configuration
                 {
@@ -92,7 +92,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Services
                 };
 
                 var ffmpegProcess = new FFmpegProcess(streamPath, ffmpegConfig, _logger);
-                await ffmpegProcess.RunAsync(inputPath, streamArguments, null, null, cancellation);
+                await ffmpegProcess.RunAsync(inputPath, streamArguments, null, null, cancellation).ConfigureAwait(false);
             }
             catch (Exception ex)
             {

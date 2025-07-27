@@ -15,12 +15,12 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Services
 
         public async ValueTask OnRtmpStreamPublishedAsync(IEventContext context, uint clientId, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
-            await _streamProcessorManager.StartProcessingStreamAsync(clientId, streamPath, streamArguments);
+            await _streamProcessorManager.StartProcessingStreamAsync(clientId, streamPath, streamArguments).ConfigureAwait(false);
         }
 
         public async ValueTask OnRtmpStreamUnpublishedAsync(IEventContext context, uint clientId, string streamPath)
         {
-            await _streamProcessorManager.StopProcessingStreamAsync(clientId, streamPath);
+            await _streamProcessorManager.StopProcessingStreamAsync(clientId, streamPath).ConfigureAwait(false);
         }
 
         public ValueTask OnRtmpStreamMetaDataReceivedAsync(IEventContext context, uint clientId, string streamPath, IReadOnlyDictionary<string, object> metaData)

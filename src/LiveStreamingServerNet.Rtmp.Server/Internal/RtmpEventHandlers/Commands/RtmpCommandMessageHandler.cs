@@ -21,7 +21,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
 
         public async ValueTask<bool> HandleAsync(IRtmpChunkStreamContext chunkStreamContext, IRtmpClientSessionContext clientContext, IDataBuffer payloadBuffer, CancellationToken cancellationToken)
         {
-            return await _dispatcher.DispatchAsync(chunkStreamContext, clientContext, payloadBuffer, cancellationToken);
+            return await _dispatcher.DispatchAsync(chunkStreamContext, clientContext, payloadBuffer, cancellationToken).ConfigureAwait(false);
         }
     }
 }

@@ -87,7 +87,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
             try
             {
                 _clientTask = RunClientAsync(endPoint);
-                return await ConnectAfterHandshakeAsync(appName, information);
+                return await ConnectAfterHandshakeAsync(appName, information).ConfigureAwait(false);
             }
             catch
             {
@@ -122,14 +122,14 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
                     createStreamTcs.TrySetException(new RtmpClientCommandException("Create stream failed."))
             );
 
-            return await createStreamTcs.Task;
+            return await createStreamTcs.Task.ConfigureAwait(false);
         }
 
         private async Task RunClientAsync(ServerEndPoint endPoint)
         {
             try
             {
-                await _client.RunAsync(endPoint, _clientCts.Token);
+                await _client.RunAsync(endPoint, _clientCts.Token).ConfigureAwait(false);
                 _clientTcs.TrySetResult();
             }
             catch (Exception ex)
@@ -144,7 +144,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
 
         private async Task<ConnectResponse> ConnectAfterHandshakeAsync(string appName, IDictionary<string, object> connectInformation)
         {
-            await AwaitForHandshakeAsync();
+            await AwaitForHandshakeAsync().ConfigureAwait(false);
 
             var connectTcs = new TaskCompletionSource<ConnectResponse>();
 
@@ -170,7 +170,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
                     connectTcs.TrySetException(new RtmpClientConnectionException())
             );
 
-            return await connectTcs.Task;
+            return await connectTcs.Task.ConfigureAwait(false);
         }
 
         public void Command(RtmpCommand command)
@@ -192,13 +192,13 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
                 cancellationCallback: () => tcs.TrySetCanceled()
             );
 
-            return await tcs.Task;
+            return await tcs.Task.ConfigureAwait(false);
         }
 
         private async Task AwaitForHandshakeAsync()
         {
             var timeoutTask = Task.Delay(_config.HandshakeTimeout, _clientCts.Token);
-            var completedTask = await Task.WhenAny(_handshakeTcs.Task, _clientTcs.Task, timeoutTask);
+            var completedTask = await Task.WhenAny(_handshakeTcs.Task, _clientTcs.Task, timeoutTask).ConfigureAwait(false);
 
             if (completedTask.IsCanceled)
             {
@@ -213,7 +213,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
                 throw new RtmpClientConnectionException("Client connection failed.", completedTask.Exception);
             }
 
-            await completedTask;
+            await completedTask.ConfigureAwait(false);
         }
 
         public void Stop()
@@ -229,7 +229,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
         {
             if (_clientTask != null)
             {
-                await _clientTcs.Task.WithCancellation(cancellationToken);
+                await _clientTcs.Task.WithCancellation(cancellationToken).ConfigureAwait(false);
             }
         }
 
@@ -269,7 +269,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
 
             if (_clientTask != null)
             {
-                await _clientTask;
+                await _clientTask.ConfigureAwait(false);
             }
 
             _clientCts.Dispose();

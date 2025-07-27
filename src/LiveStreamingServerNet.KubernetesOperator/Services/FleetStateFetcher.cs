@@ -32,7 +32,7 @@ namespace LiveStreamingServerNet.KubernetesOperator.Services
                     labelSelector: $"{PodConstants.TypeLabel}={PodConstants.TypeValue}",
                     limit: PodChunkSize,
                     continueParameter: continuationToken,
-                    cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
 
                 pods.AddRange(
                     podList.Items

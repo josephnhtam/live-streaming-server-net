@@ -33,7 +33,7 @@ namespace LiveStreamingServerNet.Networking.Client.Internal
                 using var context = EventContext.Obtain();
 
                 foreach (var serverEventHandler in GetEventHandlers())
-                    await serverEventHandler.OnClientConnectedAsync(context, client);
+                    await serverEventHandler.OnClientConnectedAsync(context, client).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -48,7 +48,7 @@ namespace LiveStreamingServerNet.Networking.Client.Internal
                 using var context = EventContext.Obtain();
 
                 foreach (var serverEventHandler in GetEventHandlers())
-                    await serverEventHandler.OnClientStoppedAsync(context);
+                    await serverEventHandler.OnClientStoppedAsync(context).ConfigureAwait(false);
             }
             catch (Exception ex)
             {

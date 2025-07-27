@@ -57,7 +57,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
                 cancellationCallback: () => tcs.TrySetCanceled()
             );
 
-            return await tcs.Task;
+            return await tcs.Task.ConfigureAwait(false);
         }
 
         public void CloseStream()

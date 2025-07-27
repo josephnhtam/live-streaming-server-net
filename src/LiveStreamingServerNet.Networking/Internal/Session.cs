@@ -58,19 +58,19 @@ namespace LiveStreamingServerNet.Networking.Internal
 
             try
             {
-                networkStream = await CreateNetworkStreamAsync(cancellationToken);
+                networkStream = await CreateNetworkStreamAsync(cancellationToken).ConfigureAwait(false);
                 _bufferSender.Start(networkStream, cancellationToken);
 
                 handler = CreateSessionHandler();
 
-                if (!await handler.InitializeAsync(cancellationToken))
+                if (!await handler.InitializeAsync(cancellationToken).ConfigureAwait(false))
                 {
                     return;
                 }
 
                 while (_tcpClient.Connected && !cancellationToken.IsCancellationRequested)
                 {
-                    if (!await handler.HandleSessionLoopAsync(networkStream, cancellationToken))
+                    if (!await handler.HandleSessionLoopAsync(networkStream, cancellationToken).ConfigureAwait(false))
                         return;
                 }
             }
@@ -84,9 +84,9 @@ namespace LiveStreamingServerNet.Networking.Internal
             {
                 linkedCts.Cancel();
 
-                await DisposeAsync(handler);
-                await DisposeAsync(_bufferSender);
-                await DisposeAsync(networkStream);
+                await DisposeAsync(handler).ConfigureAwait(false);
+                await DisposeAsync(_bufferSender).ConfigureAwait(false);
+                await DisposeAsync(networkStream).ConfigureAwait(false);
                 CloseTcpClient();
 
                 _stoppedTcs.TrySetResult();
@@ -100,7 +100,7 @@ namespace LiveStreamingServerNet.Networking.Internal
 
         private async Task<INetworkStream> CreateNetworkStreamAsync(CancellationToken cancellationToken)
         {
-            return await _networkStreamFactory.CreateNetworkStreamAsync(Id, _tcpClient, _serverEndPoint, cancellationToken);
+            return await _networkStreamFactory.CreateNetworkStreamAsync(Id, _tcpClient, _serverEndPoint, cancellationToken).ConfigureAwait(false);
         }
 
         public void Send(IDataBuffer dataBuffer, Action<bool>? callback)
@@ -148,7 +148,7 @@ namespace LiveStreamingServerNet.Networking.Internal
 
             try
             {
-                await _stoppedTcs.Task.WithCancellation(cancellation);
+                await _stoppedTcs.Task.WithCancellation(cancellation).ConfigureAwait(false);
             }
             catch (OperationCanceledException) when (cancellation.IsCancellationRequested) { }
         }
@@ -159,7 +159,7 @@ namespace LiveStreamingServerNet.Networking.Internal
             {
                 if (disposable != null)
                 {
-                    await disposable.DisposeAsync();
+                    await disposable.DisposeAsync().ConfigureAwait(false);
                 }
             }
             catch (Exception ex)

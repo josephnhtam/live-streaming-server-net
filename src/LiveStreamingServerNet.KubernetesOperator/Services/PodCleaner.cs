@@ -39,7 +39,7 @@ namespace LiveStreamingServerNet.KubernetesOperator.Services
                             await _client.CoreV1.DeleteNamespacedPodAsync(
                                 name: pod.PodName,
                                 namespaceParameter: _podNamespace,
-                                cancellationToken: cancellationToken)
+                                cancellationToken: cancellationToken).ConfigureAwait(false)
                         );
                     }
                     catch (Exception ex)

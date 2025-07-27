@@ -33,13 +33,13 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers
 
             try
             {
-                await incomingBuffer.FromStreamData(@event.NetworkStream, HandshakeC2Size, cancellationToken);
+                await incomingBuffer.FromStreamData(@event.NetworkStream, HandshakeC2Size, cancellationToken).ConfigureAwait(false);
 
                 @event.ClientContext.State = RtmpClientSessionState.HandshakeDone;
 
                 _logger.HandshakeC2Handled(@event.ClientContext.Client.Id);
 
-                await _eventDispatcher.RtmpClientHandshakeCompleteAsync(@event.ClientContext);
+                await _eventDispatcher.RtmpClientHandshakeCompleteAsync(@event.ClientContext).ConfigureAwait(false);
 
                 return new RtmpEventConsumingResult(true, HandshakeC2Size);
             }

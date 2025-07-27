@@ -55,9 +55,9 @@ namespace LiveStreamingServerNet.Networking.Server.Internal
 
             try
             {
-                serverListeners = await StartServerListeners(new List<ServerEndPoint>(serverEndPoints));
-                await OnServerStartedAsync();
-                await RunServerLoopsAsync(serverListeners, cancellationToken);
+                serverListeners = await StartServerListeners(new List<ServerEndPoint>(serverEndPoints)).ConfigureAwait(false);
+                await OnServerStartedAsync().ConfigureAwait(false);
+                await RunServerLoopsAsync(serverListeners, cancellationToken).ConfigureAwait(false);
             }
             catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
             {
@@ -69,11 +69,11 @@ namespace LiveStreamingServerNet.Networking.Server.Internal
                 serverException = ex;
             }
 
-            await WaitUntilAllClientTasksCompleteAsync();
+            await WaitUntilAllClientTasksCompleteAsync().ConfigureAwait(false);
 
             StopAllTcpListeners(serverListeners);
 
-            await OnServerStoppedAsync();
+            await OnServerStoppedAsync().ConfigureAwait(false);
 
             if (serverException != null)
                 throw serverException;
@@ -83,7 +83,7 @@ namespace LiveStreamingServerNet.Networking.Server.Internal
         {
             try
             {
-                await _clientSessionManager.WaitUntilAllClientTasksCompleteAsync();
+                await _clientSessionManager.WaitUntilAllClientTasksCompleteAsync().ConfigureAwait(false);
             }
             catch { }
         }
@@ -99,7 +99,7 @@ namespace LiveStreamingServerNet.Networking.Server.Internal
             using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
 
             await Task.WhenAll(serverListeners
-                .Select(x => RunServerLoopAsync(x.TcpListener, x.ServerEndPoint, cts)));
+                .Select(x => RunServerLoopAsync(x.TcpListener, x.ServerEndPoint, cts))).ConfigureAwait(false);
         }
 
         private async Task<List<ServerListener>> StartServerListeners(IReadOnlyList<ServerEndPoint> serverEndPoints)
@@ -108,7 +108,7 @@ namespace LiveStreamingServerNet.Networking.Server.Internal
 
             foreach (var serverEndPoint in serverEndPoints)
             {
-                var tcpListener = await CreateTcpListenerAsync(serverEndPoint.IPEndPoint);
+                var tcpListener = await CreateTcpListenerAsync(serverEndPoint.IPEndPoint).ConfigureAwait(false);
                 serverListeners.Add(new(tcpListener, serverEndPoint));
                 tcpListener.Start();
 
@@ -126,7 +126,7 @@ namespace LiveStreamingServerNet.Networking.Server.Internal
             {
                 try
                 {
-                    await _clientSessionManager.AcceptClientAsync(tcpListener, serverEndPoint, cancellationToken);
+                    await _clientSessionManager.AcceptClientAsync(tcpListener, serverEndPoint, cancellationToken).ConfigureAwait(false);
                 }
                 catch (SocketException ex)
                 {
@@ -156,24 +156,24 @@ namespace LiveStreamingServerNet.Networking.Server.Internal
         private async Task<ITcpListenerInternal> CreateTcpListenerAsync(IPEndPoint localEndPoint)
         {
             var listener = _tcpListenerFactory.Create(localEndPoint);
-            await OnListenerCreatedAsync(listener);
+            await OnListenerCreatedAsync(listener).ConfigureAwait(false);
             return listener;
         }
 
         private async Task OnListenerCreatedAsync(ITcpListener tcpListener)
         {
-            await _eventDispatcher.ListenerCreatedAsync(tcpListener);
+            await _eventDispatcher.ListenerCreatedAsync(tcpListener).ConfigureAwait(false);
         }
 
         private async Task OnServerStartedAsync()
         {
-            await _eventDispatcher.ServerStartedAsync();
+            await _eventDispatcher.ServerStartedAsync().ConfigureAwait(false);
             _logger.ServerStarted();
         }
 
         private async Task OnServerStoppedAsync()
         {
-            await _eventDispatcher.ServerStoppedAsync();
+            await _eventDispatcher.ServerStoppedAsync().ConfigureAwait(false);
             _logger.ServerStopped();
         }
 

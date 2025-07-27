@@ -28,7 +28,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
             var streamContext = clientContext.GetStreamContext(streamId);
 
             if (streamContext != null)
-                await _streamDeletionService.DeleteStreamAsync(streamContext);
+                await _streamDeletionService.DeleteStreamAsync(streamContext).ConfigureAwait(false);
 
             return true;
         }

@@ -22,14 +22,14 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
 
         public async ValueTask<bool> ProcessMetaDataAsync(IRtmpPublishStreamContext publishStreamContext, uint timestamp, IReadOnlyDictionary<string, object> metaData)
         {
-            await CacheMetaDataAsync(publishStreamContext, metaData);
+            await CacheMetaDataAsync(publishStreamContext, metaData).ConfigureAwait(false);
             BroadcastMetaDataToSubscribers(publishStreamContext);
             return true;
         }
 
         private async Task CacheMetaDataAsync(IRtmpPublishStreamContext publishStreamContext, IReadOnlyDictionary<string, object> metaData)
         {
-            await _cacher.CacheStreamMetaDataAsync(publishStreamContext, metaData);
+            await _cacher.CacheStreamMetaDataAsync(publishStreamContext, metaData).ConfigureAwait(false);
         }
 
         private void BroadcastMetaDataToSubscribers(IRtmpPublishStreamContext publishStreamContext)

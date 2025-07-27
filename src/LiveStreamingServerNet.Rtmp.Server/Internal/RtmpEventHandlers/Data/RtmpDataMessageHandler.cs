@@ -47,7 +47,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Data
 
             return commandName switch
             {
-                RtmpDataMessageConstants.SetDataFrame => await HandleSetDataFrameAsync(clientContext, chunkStreamContext, amfData),
+                RtmpDataMessageConstants.SetDataFrame => await HandleSetDataFrameAsync(clientContext, chunkStreamContext, amfData).ConfigureAwait(false),
                 _ => true
             };
         }
@@ -62,7 +62,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Data
             {
                 case RtmpDataMessageConstants.OnMetaData:
                     var metaData = amfData[2] as IDictionary<string, object>;
-                    return metaData != null ? await HandleOnMetaDataAsync(clientContext, chunkStreamContext, metaData.AsReadOnly()) : true;
+                    return metaData == null || await HandleOnMetaDataAsync(clientContext, chunkStreamContext, metaData.AsReadOnly()).ConfigureAwait(false);
                 default:
                     return true;
             }
@@ -82,7 +82,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Data
                 return false;
             }
 
-            return await _metaDataProcessor.ProcessMetaDataAsync(publishStreamContext, chunkStreamContext.Timestamp, metaData);
+            return await _metaDataProcessor.ProcessMetaDataAsync(publishStreamContext, chunkStreamContext.Timestamp, metaData).ConfigureAwait(false);
         }
     }
 }

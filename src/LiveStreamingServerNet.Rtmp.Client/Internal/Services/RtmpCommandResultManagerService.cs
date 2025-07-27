@@ -41,7 +41,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.Services
         public async ValueTask<bool> HandleCommandResultAsync(IRtmpSessionContext context, RtmpCommandResponse response)
         {
             if (_commandCallbacks.TryRemove(response.TransactionId, out var callback))
-                return await callback.Callback(context, response);
+                return await callback.Callback(context, response).ConfigureAwait(false);
 
             return true;
         }

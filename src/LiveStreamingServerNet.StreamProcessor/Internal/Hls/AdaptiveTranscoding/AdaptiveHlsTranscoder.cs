@@ -51,8 +51,8 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.AdaptiveTranscodin
             OnStreamProcessorEnded? onEnded,
             CancellationToken cancellation)
         {
-            var streamInfo = await ObtainStreamInformation(inputPath, cancellation);
-            await StartTranscoding(inputPath, streamArguments, streamInfo, onStarted, onEnded, cancellation);
+            var streamInfo = await ObtainStreamInformation(inputPath, cancellation).ConfigureAwait(false);
+            await StartTranscoding(inputPath, streamArguments, streamInfo, onStarted, onEnded, cancellation).ConfigureAwait(false);
         }
 
         private async Task<JsonDocument> ObtainStreamInformation(string inputPath, CancellationToken cancellation)
@@ -67,7 +67,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.AdaptiveTranscodin
             try
             {
                 var ffprobeProcess = new FFprobeProcess(config);
-                var output = await ffprobeProcess.ExecuteAsync(inputPath, cancellation);
+                var output = await ffprobeProcess.ExecuteAsync(inputPath, cancellation).ConfigureAwait(false);
                 return JsonDocument.Parse(output);
             }
             catch (Exception ex)
@@ -87,7 +87,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.AdaptiveTranscodin
         {
             try
             {
-                await PreRunAsync();
+                await PreRunAsync().ConfigureAwait(false);
 
                 var arguments = BuildFFmpegArguments(streamInfo);
 
@@ -102,24 +102,24 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.AdaptiveTranscodin
                 };
 
                 var ffmpegProcess = new FFmpegProcess(StreamPath, ffmpegConfig, _logger);
-                await ffmpegProcess.RunAsync(inputPath, streamArguments, onStarted, onEnded, cancellation);
+                await ffmpegProcess.RunAsync(inputPath, streamArguments, onStarted, onEnded, cancellation).ConfigureAwait(false);
             }
             finally
             {
-                await PostRunAsync();
+                await PostRunAsync().ConfigureAwait(false);
             }
         }
 
         private async ValueTask PreRunAsync()
         {
             RegisterHlsOutputPath();
-            await ExecuteCleanupAsync();
+            await ExecuteCleanupAsync().ConfigureAwait(false);
         }
 
         private async ValueTask PostRunAsync()
         {
             UnregisterHlsOutputPath();
-            await ScheduleCleanupAsync();
+            await ScheduleCleanupAsync().ConfigureAwait(false);
         }
 
         private void RegisterHlsOutputPath()
@@ -146,7 +146,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.AdaptiveTranscodin
             if (!_config.CleanupDelay.HasValue)
                 return;
 
-            await _cleanupManager.ExecuteCleanupAsync(_config.ManifestOutputPath);
+            await _cleanupManager.ExecuteCleanupAsync(_config.ManifestOutputPath).ConfigureAwait(false);
         }
 
         private async ValueTask ScheduleCleanupAsync()
@@ -166,7 +166,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.AdaptiveTranscodin
                 files.AddRange(playlist.Manifests.Values.Select(x => Path.Combine(dirPath, x.Name)));
                 files.AddRange(playlist.Segments.Select(x => Path.Combine(dirPath, x.FileName)));
 
-                await _cleanupManager.ScheduleCleanupAsync(manifestOutputPath, files, cleanupDelay);
+                await _cleanupManager.ScheduleCleanupAsync(manifestOutputPath, files, cleanupDelay).ConfigureAwait(false);
             }
             catch (Exception ex)
             {

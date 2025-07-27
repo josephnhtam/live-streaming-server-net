@@ -42,7 +42,7 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
             }
 
             _isPendingStop = bool.TryParse(isPendingStopStr, out var result) && result;
-            await StopPodIfConditionMetAsync();
+            await StopPodIfConditionMetAsync().ConfigureAwait(false);
         }
 
         private async Task UpdatePodAsync()
@@ -50,7 +50,7 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
             await _kubernetesContext.PatchPodAsync(builder =>
                 builder.SetAnnotation(PodConstants.StreamsCountAnnotation, _streamsCount.ToString())
                        .SetLabel(PodConstants.StreamsLimitReachedLabel, IsStreamsLimitReached.ToString().ToLower())
-            );
+            ).ConfigureAwait(false);
         }
 
         private ValueTask StopPodIfConditionMetAsync()
@@ -68,19 +68,19 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
 
         public async ValueTask OnClientDisposedAsync(uint clientId)
         {
-            await StopPodIfConditionMetAsync();
+            await StopPodIfConditionMetAsync().ConfigureAwait(false);
         }
 
         public async ValueTask OnStreamPublishedAsync(uint clientId, string streamIdentifier)
         {
             Interlocked.Increment(ref _streamsCount);
-            await UpdatePodAsync();
+            await UpdatePodAsync().ConfigureAwait(false);
         }
 
         public async ValueTask OnStreamUnpublishedAsync(uint clientId, string streamIdentifier)
         {
             Interlocked.Decrement(ref _streamsCount);
-            await UpdatePodAsync();
+            await UpdatePodAsync().ConfigureAwait(false);
         }
     }
 }

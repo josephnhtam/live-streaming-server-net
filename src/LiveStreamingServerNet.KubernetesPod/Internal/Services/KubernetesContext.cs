@@ -51,7 +51,7 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
                 namespaceParameter: PodNamespace,
                 fieldSelector: $"metadata.name={PodName}",
                 cancellationToken: cancellationToken
-            )).Items.FirstOrDefault() ??
+            ).ConfigureAwait(false)).Items.FirstOrDefault() ??
                 throw new InvalidOperationException($"Failed to get the pod '{PodName} in {PodNamespace}");
         }
 
@@ -104,7 +104,7 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
                     dueTime: reconnectCheck / 2,
                     period: reconnectCheck / 2);
 
-                    await watcherCompletionSource.Task;
+                    await watcherCompletionSource.Task.ConfigureAwait(false);
                 }
                 catch (OperationCanceledException)
                 {
@@ -113,7 +113,7 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
                 catch (Exception ex)
                 {
                     _logger.WatchingPodError(ex, retryDelay);
-                    await Task.Delay(retryDelay, stoppingToken);
+                    await Task.Delay(retryDelay, stoppingToken).ConfigureAwait(false);
                 }
             }
         }
@@ -146,14 +146,14 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
         {
             var builder = PodPatcherBuilder.Create();
             configureBuilder.Invoke(builder);
-            await PatchPodAsync(builder.Build());
+            await PatchPodAsync(builder.Build()).ConfigureAwait(false);
         }
 
         private async Task PatchPodAsync(V1Patch patch)
         {
             try
             {
-                await KubernetesClient.CoreV1.PatchNamespacedPodAsync(patch, PodName, PodNamespace);
+                await KubernetesClient.CoreV1.PatchNamespacedPodAsync(patch, PodName, PodNamespace).ConfigureAwait(false);
             }
             catch (Exception ex)
             {

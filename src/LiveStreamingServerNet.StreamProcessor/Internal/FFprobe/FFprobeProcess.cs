@@ -34,9 +34,9 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.FFprobe
                     throw new StreamProbeException("Error starting FFprobe process");
 
                 using var streamReader = new StreamReader(process.StandardOutput.BaseStream);
-                var output = await streamReader.ReadToEndAsync(cancellation);
+                var output = await streamReader.ReadToEndAsync(cancellation).ConfigureAwait(false);
 
-                await process.WaitForExitAsync(cancellation);
+                await process.WaitForExitAsync(cancellation).ConfigureAwait(false);
 
                 if (process.ExitCode != 0)
                     throw new StreamProbeException($"FFprobe process exited with code {process.ExitCode}");
@@ -45,7 +45,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.FFprobe
             }
             catch (Exception ex)
             {
-                await WaitForProcessTerminatingGracefully(process, _config.GracefulTerminationSeconds);
+                await WaitForProcessTerminatingGracefully(process, _config.GracefulTerminationSeconds).ConfigureAwait(false);
 
                 if (ex is OperationCanceledException && cancellation.IsCancellationRequested)
                     throw;
@@ -61,7 +61,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.FFprobe
                 using var shutdownCts = new CancellationTokenSource(TimeSpan.FromSeconds(gracefulPeriod));
                 try
                 {
-                    await process.WaitForExitAsync(shutdownCts.Token);
+                    await process.WaitForExitAsync(shutdownCts.Token).ConfigureAwait(false);
                 }
                 catch { }
             }

@@ -62,11 +62,11 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
         public async Task<IStreamProcessor?> CreateAsync(
             ISessionHandle client, Guid contextIdentifier, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
-            if (!await _config.Condition.IsEnabled(_services, streamPath, streamArguments))
+            if (!await _config.Condition.IsEnabled(_services, streamPath, streamArguments).ConfigureAwait(false))
                 return null;
 
             var initialProgramDateTime = DateTime.UtcNow;
-            var masterManifestOutputPath = await _config.OutputPathResolver.ResolveOutputPath(_services, contextIdentifier, streamPath, streamArguments);
+            var masterManifestOutputPath = await _config.OutputPathResolver.ResolveOutputPath(_services, contextIdentifier, streamPath, streamArguments).ConfigureAwait(false);
             string mediaManifestOutputPath = GetMediaManifestOutputPath(masterManifestOutputPath);
             var tsSegmentOutputPath = GetTsSegmentOutputPath(masterManifestOutputPath);
 

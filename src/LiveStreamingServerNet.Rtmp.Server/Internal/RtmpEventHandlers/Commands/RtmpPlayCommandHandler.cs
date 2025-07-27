@@ -60,7 +60,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
 
             var (streamPath, streamArguments) = ParseSubscriptionContext(command, clientContext);
 
-            var authorizationResult = await AuthorizeAsync(streamContext, command, chunkStreamContext, streamPath, streamArguments);
+            var authorizationResult = await AuthorizeAsync(streamContext, command, chunkStreamContext, streamPath, streamArguments).ConfigureAwait(false);
 
             if (!authorizationResult.IsAuthorized)
                 return false;
@@ -68,7 +68,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
             streamPath = authorizationResult.StreamPathOverride ?? streamPath;
             streamArguments = authorizationResult.StreamArgumentsOverride ?? streamArguments;
 
-            await StartSubscribingAsync(streamContext, command, chunkStreamContext, streamPath, streamArguments);
+            await StartSubscribingAsync(streamContext, command, chunkStreamContext, streamPath, streamArguments).ConfigureAwait(false);
             return true;
         }
 
@@ -89,12 +89,12 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
             string streamPath,
             IReadOnlyDictionary<string, string> streamArguments)
         {
-            var result = await _streamAuthorization.AuthorizeSubscribingAsync(streamContext.ClientContext, streamPath, streamArguments);
+            var result = await _streamAuthorization.AuthorizeSubscribingAsync(streamContext.ClientContext, streamPath, streamArguments).ConfigureAwait(false);
 
             if (!result.IsAuthorized)
             {
                 _logger.AuthorizationFailed(streamContext.ClientContext.Client.Id, streamPath, result.Reason ?? "Unknown");
-                await SendAuthorizationFailedCommandMessageAsync(streamContext, chunkStreamContext, result.Reason ?? "Unknown");
+                await SendAuthorizationFailedCommandMessageAsync(streamContext, chunkStreamContext, result.Reason ?? "Unknown").ConfigureAwait(false);
             }
 
             return result;
@@ -107,7 +107,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
             string streamPath,
             IReadOnlyDictionary<string, string> streamArguments)
         {
-            var startSubscribingResult = await _streamManager.StartSubscribingAsync(streamContext, streamPath, streamArguments);
+            var startSubscribingResult = await _streamManager.StartSubscribingAsync(streamContext, streamPath, streamArguments).ConfigureAwait(false);
 
             switch (startSubscribingResult.Result)
             {
@@ -161,7 +161,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
                 streamContext,
                 RtmpStatusLevels.Error,
                 RtmpStreamStatusCodes.PlayFailed,
-                reason);
+                reason).ConfigureAwait(false);
         }
     }
 }

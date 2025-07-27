@@ -25,10 +25,10 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpServerEventHandlers
 
         public async ValueTask OnRtmpClientDisposingAsync(IEventContext context, IRtmpClientSessionContext clientContext)
         {
-            await _mediaMessageBroadcaster.UnregisterClientAsync(clientContext);
+            await _mediaMessageBroadcaster.UnregisterClientAsync(clientContext).ConfigureAwait(false);
 
             foreach (var streamContext in clientContext.GetStreamContexts())
-                await _streamDeletionService.DeleteStreamAsync(streamContext);
+                await _streamDeletionService.DeleteStreamAsync(streamContext).ConfigureAwait(false);
         }
 
         public ValueTask OnRtmpClientDisposedAsync(IEventContext context, IRtmpClientSessionContext clientContext)

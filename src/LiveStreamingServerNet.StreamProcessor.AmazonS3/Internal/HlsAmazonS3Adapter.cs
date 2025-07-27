@@ -34,8 +34,8 @@ namespace LiveStreamingServerNet.StreamProcessor.AmazonS3.Internal
             IReadOnlyList<Segment> segments,
             CancellationToken cancellationToken)
         {
-            var storedSegments = await UploadSegmentsAsync(context, segments, cancellationToken);
-            var storedManifestFiles = await UploadManifestFilesAsync(context, manifests, cancellationToken);
+            var storedSegments = await UploadSegmentsAsync(context, segments, cancellationToken).ConfigureAwait(false);
+            var storedManifestFiles = await UploadManifestFilesAsync(context, manifests, cancellationToken).ConfigureAwait(false);
             return new StoringResult(storedManifestFiles, storedSegments);
         }
 
@@ -54,7 +54,7 @@ namespace LiveStreamingServerNet.StreamProcessor.AmazonS3.Internal
                 tasks.Add(UploadSegmentAsync(segment.FileName, segmentPath, cancellationToken));
             }
 
-            return await Task.WhenAll(tasks);
+            return await Task.WhenAll(tasks).ConfigureAwait(false);
 
             async Task<StoredSegment> UploadSegmentAsync
                 (string segmentName, string segmentPath, CancellationToken cancellationToken)
@@ -72,7 +72,7 @@ namespace LiveStreamingServerNet.StreamProcessor.AmazonS3.Internal
                         FilePath = segmentPath
                     };
 
-                    var response = await _s3Client.PutObjectAsync(request, cancellationToken);
+                    var response = await _s3Client.PutObjectAsync(request, cancellationToken).ConfigureAwait(false);
 
                     return new StoredSegment(segmentName, _config.ObjectUriResolver.ResolveObjectUri(_bucket, objectPath));
                 }
@@ -102,7 +102,7 @@ namespace LiveStreamingServerNet.StreamProcessor.AmazonS3.Internal
                 tasks.Add(UploadManifestAsync(manifest.Name, manifest.Content, cancellationToken));
             }
 
-            return await Task.WhenAll(tasks);
+            return await Task.WhenAll(tasks).ConfigureAwait(false);
 
             async Task<StoredManifest> UploadManifestAsync
                 (string name, string content, CancellationToken cancellationToken)
@@ -120,7 +120,7 @@ namespace LiveStreamingServerNet.StreamProcessor.AmazonS3.Internal
                         InputStream = contentStream
                     };
 
-                    var response = await _s3Client.PutObjectAsync(request, cancellationToken);
+                    var response = await _s3Client.PutObjectAsync(request, cancellationToken).ConfigureAwait(false);
 
                     return new StoredManifest(name, _config.ObjectUriResolver.ResolveObjectUri(_bucket, objectPath));
                 }
@@ -147,7 +147,7 @@ namespace LiveStreamingServerNet.StreamProcessor.AmazonS3.Internal
                 tasks.Add(DeleteSegmentAsync(segment.FileName, cancellationToken));
             }
 
-            await Task.WhenAll(tasks);
+            await Task.WhenAll(tasks).ConfigureAwait(false);
 
             async Task DeleteSegmentAsync
                 (string segmentName, CancellationToken cancellationToken)
@@ -156,7 +156,7 @@ namespace LiveStreamingServerNet.StreamProcessor.AmazonS3.Internal
                 {
                     var objectPath = _config.ObjectPathResolver.ResolveObjectPath(context, segmentName);
 
-                    await _s3Client.DeleteObjectAsync(_bucket, objectPath, cancellationToken: cancellationToken);
+                    await _s3Client.DeleteObjectAsync(_bucket, objectPath, cancellationToken: cancellationToken).ConfigureAwait(false);
                 }
                 catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
                 {

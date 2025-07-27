@@ -80,11 +80,11 @@ namespace LiveStreamingServerNet.StreamProcessor.AspNetCore.Middlewares
                 !ValidateMethod(context) ||
                 !ValidatePath(context, _options.RequestPath, out var streamPath, out var fileSubPath))
             {
-                await _next.Invoke(context);
+                await _next.Invoke(context).ConfigureAwait(false);
                 return;
             }
 
-            await _options.OnProcessRequestAsync.Invoke(new HlsFileRequestContext(context, streamPath, fileSubPath));
+            await _options.OnProcessRequestAsync.Invoke(new HlsFileRequestContext(context, streamPath, fileSubPath)).ConfigureAwait(false);
 
             if (context.Response.HasStarted)
                 return;
@@ -93,7 +93,7 @@ namespace LiveStreamingServerNet.StreamProcessor.AspNetCore.Middlewares
             context.Items["OriginalPath"] = context.Request.Path;
             context.Request.Path = _hlsServingPath.Add(fileSubPath);
 
-            await _staticFile.Invoke(context);
+            await _staticFile.Invoke(context).ConfigureAwait(false);
         }
 
         private (string StreamPath, PathString FileSubPath) ResolvePaths(PathString subPath)

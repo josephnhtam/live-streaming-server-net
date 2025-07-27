@@ -226,7 +226,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
                 {
                     try
                     {
-                        await Task.Delay(expiration, _cts.Token);
+                        await Task.Delay(expiration, _cts.Token).ConfigureAwait(false);
                         callback.Invoke();
                     }
                     catch (OperationCanceledException) when (_cts.IsCancellationRequested) { }

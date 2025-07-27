@@ -27,7 +27,7 @@ namespace LiveStreamingServerNet.Rtmp.Utilities.Containers
         {
             try
             {
-                using var _ = await _syncLock.LockAsync(cancellationToken);
+                using var _ = await _syncLock.LockAsync(cancellationToken).ConfigureAwait(false);
 
                 byte typeFlags = 0;
 
@@ -40,7 +40,7 @@ namespace LiveStreamingServerNet.Rtmp.Utilities.Containers
                 await _streamWriter.WriteAsync(
                     new byte[] {
                         0x46, 0x4c, 0x56, 0x01, typeFlags, 0x00, 0x00, 0x00, 0x09, 0x00, 0x00, 0x00, 0x00
-                    }, cancellationToken);
+                    }, cancellationToken).ConfigureAwait(false);
             }
             catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { }
         }
@@ -49,7 +49,7 @@ namespace LiveStreamingServerNet.Rtmp.Utilities.Containers
         {
             try
             {
-                using var _ = await _syncLock.LockAsync(cancellationToken);
+                using var _ = await _syncLock.LockAsync(cancellationToken).ConfigureAwait(false);
 
                 var dataBuffer = _dataBufferPool.Obtain();
 
@@ -66,7 +66,7 @@ namespace LiveStreamingServerNet.Rtmp.Utilities.Containers
                     var header = new FlvTagHeader(tagType, payloadSize, timestamp);
                     header.Write(dataBuffer.MoveTo(0));
 
-                    await _streamWriter.WriteAsync(dataBuffer.AsMemory(), cancellationToken);
+                    await _streamWriter.WriteAsync(dataBuffer.AsMemory(), cancellationToken).ConfigureAwait(false);
                 }
                 finally
                 {
@@ -81,7 +81,7 @@ namespace LiveStreamingServerNet.Rtmp.Utilities.Containers
             if (_isDisposed)
                 return;
 
-            using var _ = await _syncLock.LockAsync();
+            using var _ = await _syncLock.LockAsync().ConfigureAwait(false);
 
             _isDisposed = true;
             GC.SuppressFinalize(this);

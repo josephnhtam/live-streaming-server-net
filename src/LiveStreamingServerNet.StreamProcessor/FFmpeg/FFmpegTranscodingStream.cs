@@ -147,7 +147,7 @@ namespace LiveStreamingServerNet.StreamProcessor.FFmpeg
                 await Task.WhenAll(
                     WriteBufferAsync(groupCts),
                     ReceiveTranscodedBufferAsync(groupCts)
-                );
+                ).ConfigureAwait(false);
             }
             catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
             {
@@ -172,7 +172,7 @@ namespace LiveStreamingServerNet.StreamProcessor.FFmpeg
                 int bytesRead;
                 var buffer = new byte[4096];
 
-                while ((bytesRead = await _process.StandardOutput.BaseStream.ReadAsync(buffer, 0, buffer.Length, cancellationToken)) > 0)
+                while ((bytesRead = await _process.StandardOutput.BaseStream.ReadAsync(buffer, 0, buffer.Length, cancellationToken).ConfigureAwait(false)) > 0)
                 {
                     _logger.BytesReadFromOutput(bytesRead);
 
@@ -181,7 +181,7 @@ namespace LiveStreamingServerNet.StreamProcessor.FFmpeg
 
                     try
                     {
-                        await _transcodedBufferReceived.InvokeAsync(this, new TranscodedBufferReceivedEventArgs(rentedBuffer));
+                        await _transcodedBufferReceived.InvokeAsync(this, new TranscodedBufferReceivedEventArgs(rentedBuffer)).ConfigureAwait(false);
                     }
                     finally
                     {
@@ -219,9 +219,9 @@ namespace LiveStreamingServerNet.StreamProcessor.FFmpeg
                 {
                     try
                     {
-                        await SendHeaderIfNeededAsync(cancellationToken);
+                        await SendHeaderIfNeededAsync(cancellationToken).ConfigureAwait(false);
                         await _inputStreamWriter.WriteBufferAsync(
-                            mediaBuffer.MediaType, mediaBuffer.RentedBuffer, mediaBuffer.Timestamp, cancellationToken);
+                            mediaBuffer.MediaType, mediaBuffer.RentedBuffer, mediaBuffer.Timestamp, cancellationToken).ConfigureAwait(false);
                     }
                     finally
                     {
@@ -247,7 +247,7 @@ namespace LiveStreamingServerNet.StreamProcessor.FFmpeg
 
             try
             {
-                await _sendBufferChannel.Writer.WriteAsync(new MediaBuffer(mediaType, rentedBuffer, timestamp), cancellationToken);
+                await _sendBufferChannel.Writer.WriteAsync(new MediaBuffer(mediaType, rentedBuffer, timestamp), cancellationToken).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -261,7 +261,7 @@ namespace LiveStreamingServerNet.StreamProcessor.FFmpeg
         {
             if (Interlocked.CompareExchange(ref _isHeaderWritten, 1, 0) == 0)
             {
-                await _inputStreamWriter.WriteHeaderAsync(cancellationToken);
+                await _inputStreamWriter.WriteHeaderAsync(cancellationToken).ConfigureAwait(false);
                 _logger.HeaderSentToFFmpeg();
             }
         }
@@ -283,7 +283,7 @@ namespace LiveStreamingServerNet.StreamProcessor.FFmpeg
                 return;
             }
 
-            await ErrorBoundary.ExecuteAsync(async () => await StopAsync(default));
+            await ErrorBoundary.ExecuteAsync(async () => await StopAsync(default).ConfigureAwait(false)).ConfigureAwait(false);
 
             _sendBufferChannel.Writer.Complete();
 
@@ -291,12 +291,12 @@ namespace LiveStreamingServerNet.StreamProcessor.FFmpeg
             {
                 if (_transcodingTask != null)
                 {
-                    await ErrorBoundary.ExecuteAsync(_transcodingTask);
+                    await ErrorBoundary.ExecuteAsync(_transcodingTask).ConfigureAwait(false);
                 }
 
                 if (_process.StandardInput != null)
                 {
-                    await _process.StandardInput.DisposeAsync();
+                    await _process.StandardInput.DisposeAsync().ConfigureAwait(false);
                 }
 
                 _process.StandardOutput.Dispose();
@@ -305,7 +305,7 @@ namespace LiveStreamingServerNet.StreamProcessor.FFmpeg
 
             ReleaseBuffers();
 
-            await _inputStreamWriter.DisposeAsync();
+            await _inputStreamWriter.DisposeAsync().ConfigureAwait(false);
         }
 
         private void ReleaseBuffers()
