@@ -5,7 +5,6 @@ using LiveStreamingServerNet.StreamProcessor.AzureBlobStorage.Installer;
 using LiveStreamingServerNet.StreamProcessor.Hls;
 using LiveStreamingServerNet.StreamProcessor.Hls.Contracts;
 using LiveStreamingServerNet.StreamProcessor.Installer;
-using LiveStreamingServerNet.StreamProcessor.Utilities;
 using LiveStreamingServerNet.Utilities.Contracts;
 using Microsoft.Extensions.Logging;
 using System.Net;
@@ -25,6 +24,7 @@ namespace LiveStreamingServerNet.HlsAzureBlobStorageDemo
         {
             return LiveStreamingServerBuilder.Create()
                 .ConfigureRtmpServer(options => options
+                    .Configure(config => config.EnableGopCaching = false)
                     .AddStreamProcessor(options =>
                     {
                         var blobContainerClient = new BlobContainerClient(
@@ -37,9 +37,7 @@ namespace LiveStreamingServerNet.HlsAzureBlobStorageDemo
                                            .AddAzureBlobStorage(blobContainerClient);
                         });
                     })
-                    .AddFFmpeg(options =>
-                        options.FFmpegPath = ExecutableFinder.FindExecutableFromPATH("ffmpeg")!
-                    )
+                    .AddHlsTransmuxer()
                 )
                 .ConfigureLogging(options => options.AddConsole())
                 .Build();
