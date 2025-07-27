@@ -4,7 +4,7 @@
 [![Nuget](https://img.shields.io/nuget/v/LiveStreamingServerNet)](https://www.nuget.org/packages/LiveStreamingServerNet/)
 [![GitHub issues](https://img.shields.io/github/issues/josephnhtam/live-streaming-server-net.svg)](https://github.com/josephnhtam/live-streaming-server-net/issues)
 [![GitHub closed issues](https://img.shields.io/github/issues-closed/josephnhtam/live-streaming-server-net.svg)](https://github.com/josephnhtam/live-streaming-server-net/issues?q=is%3Aissue+is%3Aclosed)
-[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/josephnhtam/live-streaming-server-net/blob/master/LICENSE)
 
 [![JetBrains OSS](https://img.shields.io/badge/JetBrains-OSS-yellow.svg)](https://www.jetbrains.com/community/opensource)
 [![libs.tech recommends](https://libs.tech/project/737077511/badge.svg)](https://libs.tech/project/737077511/live-streaming-server-net)
