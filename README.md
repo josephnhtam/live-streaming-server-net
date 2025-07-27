@@ -1,6 +1,6 @@
 # Live-Streaming-Server-Net
 
-![Build and Test](https://github.com/josephnhtam/live-streaming-server-net/actions/workflows/build_and_test.yaml/badge.svg)
+[![Build and Test](https://github.com/josephnhtam/live-streaming-server-net/actions/workflows/build_and_test.yaml/badge.svg)](https://github.com/josephnhtam/live-streaming-server-net/actions/workflows/build_and_test.yaml)
 [![Nuget](https://img.shields.io/nuget/v/LiveStreamingServerNet)](https://www.nuget.org/packages/LiveStreamingServerNet/)
 [![GitHub issues](https://img.shields.io/github/issues/josephnhtam/live-streaming-server-net.svg)](https://github.com/josephnhtam/live-streaming-server-net/issues)
 [![GitHub closed issues](https://img.shields.io/github/issues-closed/josephnhtam/live-streaming-server-net.svg)](https://github.com/josephnhtam/live-streaming-server-net/issues?q=is%3Aissue+is%3Aclosed)
