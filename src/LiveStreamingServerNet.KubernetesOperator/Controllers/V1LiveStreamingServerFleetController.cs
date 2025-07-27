@@ -31,7 +31,7 @@ namespace LiveStreamingServerNet.KubernetesOperator.Controllers
             try
             {
                 var feleetScaler = _fleetScalerResolver.Resolve(entity);
-                await feleetScaler.ScaleFleetAsync(entity, cancellationToken);
+                await feleetScaler.ScaleFleetAsync(entity, cancellationToken).ConfigureAwait(false);
             }
             catch (Exception ex)
             {

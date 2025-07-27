@@ -21,7 +21,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
 
             foreach (var transcriber in _subtitleTranscribers)
             {
-                await transcriber.EnqueueAudioBufferAsync(buffer, timestamp);
+                await transcriber.EnqueueAudioBufferAsync(buffer, timestamp).ConfigureAwait(false);
             }
         }
     }

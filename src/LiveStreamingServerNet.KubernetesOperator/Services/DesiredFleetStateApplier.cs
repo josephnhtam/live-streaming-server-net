@@ -45,8 +45,8 @@ namespace LiveStreamingServerNet.KubernetesOperator.Services
             DesiredFleetStateChange desiredStateChange,
             CancellationToken cancellationToken)
         {
-            await ApplyPodStateChangesAsync(desiredStateChange.PodStateChanges, cancellationToken);
-            await CreateNewPodsAsync(entity, desiredStateChange.PodsIncrement, cancellationToken);
+            await ApplyPodStateChangesAsync(desiredStateChange.PodStateChanges, cancellationToken).ConfigureAwait(false);
+            await CreateNewPodsAsync(entity, desiredStateChange.PodsIncrement, cancellationToken).ConfigureAwait(false);
         }
 
         private async Task CreateNewPodsAsync(V1LiveStreamingServerFleet entity, uint podsIncrement, CancellationToken cancellationToken)
@@ -85,16 +85,16 @@ namespace LiveStreamingServerNet.KubernetesOperator.Services
 
                 try
                 {
-                    await _pipeline.ExecuteAsync(async (cancellationToken) =>
-                        await _client.CoreV1.CreateNamespacedPodAsync(pod, _podNamespace, cancellationToken: cancellationToken),
+                    await _pipeline.ExecuteAsync(async cancellationToken =>
+                        await _client.CoreV1.CreateNamespacedPodAsync(pod, _podNamespace, cancellationToken: cancellationToken).ConfigureAwait(false),
                         cancellationToken
-                    );
+                    ).ConfigureAwait(false);
                 }
                 catch (Exception ex)
                 {
                     _logger.CreatingPodError(ex);
                 }
-            }));
+            })).ConfigureAwait(false);
         }
 
         private async Task ApplyPodStateChangesAsync(IReadOnlyList<PodStateChange> podStateChanges, CancellationToken cancellationToken)
@@ -113,15 +113,15 @@ namespace LiveStreamingServerNet.KubernetesOperator.Services
                             name: podStateChange.PodName,
                             namespaceParameter: _podNamespace,
                             cancellationToken: cancellationToken
-                        ),
+                        ).ConfigureAwait(false),
                         cancellationToken
-                    );
+                    ).ConfigureAwait(false);
                 }
                 catch (Exception ex)
                 {
                     _logger.PatchingPodError(podStateChange.PodName, ex);
                 }
-            }));
+            })).ConfigureAwait(false);
         }
     }
 }

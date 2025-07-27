@@ -40,7 +40,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Media
                 return false;
             }
 
-            return await _audioDataProcessor.ProcessAudioDataAsync(publishStreamContext, timestamp, payloadBuffer);
+            return await _audioDataProcessor.ProcessAudioDataAsync(publishStreamContext, timestamp, payloadBuffer).ConfigureAwait(false);
         }
     }
 }

@@ -28,7 +28,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Authorization
             foreach (var authorizationHandler in _services.GetServices<IAuthorizationHandler>().OrderBy(x => x.GetOrder()))
             {
                 var result = await authorizationHandler.AuthorizePublishingAsync(
-                    clientContext.Client, streamPath, streamArguments, publishingType);
+                    clientContext.Client, streamPath, streamArguments, publishingType).ConfigureAwait(false);
 
                 if (!result.IsAuthorized)
                     return result;
@@ -48,7 +48,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Authorization
             foreach (var authorizationHandler in _services.GetServices<IAuthorizationHandler>().OrderBy(x => x.GetOrder()))
             {
                 var result = await authorizationHandler.AuthorizeSubscribingAsync(
-                    clientContext.Client, streamPath, streamArguments);
+                    clientContext.Client, streamPath, streamArguments).ConfigureAwait(false);
 
                 if (!result.IsAuthorized)
                     return result;

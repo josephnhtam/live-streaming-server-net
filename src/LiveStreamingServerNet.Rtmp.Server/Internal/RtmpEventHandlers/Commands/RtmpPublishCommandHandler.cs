@@ -55,7 +55,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
 
             var (streamPath, streamArguments) = ParsePublishContext(command, clientContext);
 
-            var authorizationResult = await AuthorizeAsync(streamContext, command, streamPath, streamArguments);
+            var authorizationResult = await AuthorizeAsync(streamContext, command, streamPath, streamArguments).ConfigureAwait(false);
 
             if (!authorizationResult.IsAuthorized)
                 return false;
@@ -63,7 +63,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
             streamPath = authorizationResult.StreamPathOverride ?? streamPath;
             streamArguments = authorizationResult.StreamArgumentsOverride ?? streamArguments;
 
-            await StartPublishingAsync(streamContext, command, streamPath, streamArguments);
+            await StartPublishingAsync(streamContext, command, streamPath, streamArguments).ConfigureAwait(false);
             return true;
         }
 
@@ -84,12 +84,12 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
             IReadOnlyDictionary<string, string> streamArguments)
         {
             var result = await _streamAuthorization.AuthorizePublishingAsync(
-                streamContext.ClientContext, streamPath, command.PublishingType, streamArguments);
+                streamContext.ClientContext, streamPath, command.PublishingType, streamArguments).ConfigureAwait(false);
 
             if (!result.IsAuthorized)
             {
                 _logger.AuthorizationFailed(streamContext.ClientContext.Client.Id, streamPath, command.PublishingType, result.Reason ?? "Unknown");
-                await SendAuthorizationFailedCommandMessageAsync(streamContext, result.Reason ?? "Unknown");
+                await SendAuthorizationFailedCommandMessageAsync(streamContext, result.Reason ?? "Unknown").ConfigureAwait(false);
             }
 
             return result;
@@ -101,7 +101,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
             string streamPath,
             IReadOnlyDictionary<string, string> streamArguments)
         {
-            var startPublishingResult = await _streamManager.StartPublishingAsync(streamContext, streamPath, streamArguments);
+            var startPublishingResult = await _streamManager.StartPublishingAsync(streamContext, streamPath, streamArguments).ConfigureAwait(false);
 
             switch (startPublishingResult.Result)
             {
@@ -132,7 +132,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
                 streamContext,
                 RtmpStatusLevels.Error,
                 RtmpStreamStatusCodes.PublishUnauthorized,
-                reason);
+                reason).ConfigureAwait(false);
         }
     }
 }

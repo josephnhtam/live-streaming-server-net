@@ -12,7 +12,7 @@ namespace LiveStreamingServerNet.Standalone.EndpointFilters
         {
             try
             {
-                return await next.Invoke(context);
+                return await next.Invoke(context).ConfigureAwait(false);
             }
             catch (ApiException ex)
             {

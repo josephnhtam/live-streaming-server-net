@@ -33,7 +33,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal
             try
             {
                 foreach (var handler in GetEventHandlers())
-                    await handler.OnStreamProcessorStartedAsync(context, processor, identifier, clientId, inputPath, outputPath, streamPath, streamArguments);
+                    await handler.OnStreamProcessorStartedAsync(context, processor, identifier, clientId, inputPath, outputPath, streamPath, streamArguments).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -48,7 +48,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal
             try
             {
                 foreach (var handler in GetEventHandlers())
-                    await handler.OnStreamProcessorStoppedAsync(context, processor, identifier, clientId, inputPath, outputPath, streamPath, streamArguments);
+                    await handler.OnStreamProcessorStoppedAsync(context, processor, identifier, clientId, inputPath, outputPath, streamPath, streamArguments).ConfigureAwait(false);
             }
             catch (Exception ex)
             {

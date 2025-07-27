@@ -65,7 +65,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Commands
 
             RespondToClient(clientContext, command);
 
-            await _eventDispatcher.RtmpClientConnectedAsync(clientContext, command.CommandObject.AsReadOnly(), command.Arguments?.AsReadOnly());
+            await _eventDispatcher.RtmpClientConnectedAsync(clientContext, command.CommandObject.AsReadOnly(), command.Arguments?.AsReadOnly()).ConfigureAwait(false);
 
             return true;
         }

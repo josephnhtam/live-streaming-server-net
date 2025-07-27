@@ -33,8 +33,8 @@ namespace LiveStreamingServerNet.StreamProcessor.GoogleCloudStorage.Internal
             IReadOnlyList<Segment> segments,
             CancellationToken cancellationToken)
         {
-            var storedSegments = await UploadSegmentsAsync(context, segments, cancellationToken);
-            var storedManifestFiles = await UploadManifestFilesAsync(context, manifests, cancellationToken);
+            var storedSegments = await UploadSegmentsAsync(context, segments, cancellationToken).ConfigureAwait(false);
+            var storedManifestFiles = await UploadManifestFilesAsync(context, manifests, cancellationToken).ConfigureAwait(false);
             return new StoringResult(storedManifestFiles, storedSegments);
         }
 
@@ -53,7 +53,7 @@ namespace LiveStreamingServerNet.StreamProcessor.GoogleCloudStorage.Internal
                 tasks.Add(UploadSegmentAsync(segment.FileName, segmentPath, cancellationToken));
             }
 
-            return await Task.WhenAll(tasks);
+            return await Task.WhenAll(tasks).ConfigureAwait(false);
 
             async Task<StoredSegment> UploadSegmentAsync
                 (string segmentName, string segmentPath, CancellationToken cancellationToken)
@@ -72,7 +72,7 @@ namespace LiveStreamingServerNet.StreamProcessor.GoogleCloudStorage.Internal
                     var result = await _storageClient.UploadObjectAsync(
                         @object, fileStream,
                         options: _config.SegmentsUploadObjectOptions,
-                        cancellationToken: cancellationToken);
+                        cancellationToken: cancellationToken).ConfigureAwait(false);
 
                     return new StoredSegment(segmentName, _config.ObjectUriResolver.ResolveObjectUri(result));
                 }
@@ -102,7 +102,7 @@ namespace LiveStreamingServerNet.StreamProcessor.GoogleCloudStorage.Internal
                 tasks.Add(UploadManifestAsync(manifest.Name, manifest.Content, cancellationToken));
             }
 
-            return await Task.WhenAll(tasks);
+            return await Task.WhenAll(tasks).ConfigureAwait(false);
 
             async Task<StoredManifest> UploadManifestAsync
                 (string name, string content, CancellationToken cancellationToken)
@@ -121,7 +121,7 @@ namespace LiveStreamingServerNet.StreamProcessor.GoogleCloudStorage.Internal
                     var result = await _storageClient.UploadObjectAsync(
                         @object, contentStream,
                         options: _config.ManifestsUploadObjectOptions,
-                        cancellationToken: cancellationToken);
+                        cancellationToken: cancellationToken).ConfigureAwait(false);
 
                     return new StoredManifest(name, _config.ObjectUriResolver.ResolveObjectUri(result));
                 }
@@ -148,7 +148,7 @@ namespace LiveStreamingServerNet.StreamProcessor.GoogleCloudStorage.Internal
                 tasks.Add(DeleteSegmentAsync(segment.FileName, cancellationToken));
             }
 
-            await Task.WhenAll(tasks);
+            await Task.WhenAll(tasks).ConfigureAwait(false);
 
             async Task DeleteSegmentAsync
                 (string segmentName, CancellationToken cancellationToken)
@@ -157,7 +157,7 @@ namespace LiveStreamingServerNet.StreamProcessor.GoogleCloudStorage.Internal
                 {
                     var objectPath = _config.ObjectPathResolver.ResolveObjectPath(context, segmentName);
 
-                    await _storageClient.DeleteObjectAsync(_bucket, objectPath, cancellationToken: cancellationToken);
+                    await _storageClient.DeleteObjectAsync(_bucket, objectPath, cancellationToken: cancellationToken).ConfigureAwait(false);
                 }
                 catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
                 {

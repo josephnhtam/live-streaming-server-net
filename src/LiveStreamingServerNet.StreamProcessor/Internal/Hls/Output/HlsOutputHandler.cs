@@ -53,8 +53,8 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
 
         public async ValueTask AddSegmentAsync(SeqSegment segment)
         {
-            await DoAddSegmentAsync(segment);
-            await WriteManifestAsync();
+            await DoAddSegmentAsync(segment).ConfigureAwait(false);
+            await WriteManifestAsync().ConfigureAwait(false);
         }
 
         private ValueTask DoAddSegmentAsync(SeqSegment segment)
@@ -80,7 +80,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
 
         private async Task WriteManifestAsync()
         {
-            await _manifestWriter.WriteAsync(_config.ManifestOutputPath, _segments, _targetDuration, null);
+            await _manifestWriter.WriteAsync(_config.ManifestOutputPath, _segments, _targetDuration, null).ConfigureAwait(false);
             _logger.HlsManifestUpdated(Name, ContextIdentifier, StreamPath, _config.ManifestOutputPath);
         }
 
@@ -89,7 +89,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
             if (!_config.CleanupDelay.HasValue)
                 return;
 
-            await _cleanupManager.ExecuteCleanupAsync(_config.ManifestOutputPath);
+            await _cleanupManager.ExecuteCleanupAsync(_config.ManifestOutputPath).ConfigureAwait(false);
         }
 
         public async ValueTask ScheduleCleanupAsync()
@@ -105,7 +105,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
                 var files = new List<string> { _config.ManifestOutputPath };
                 files.AddRange(segments.Select(x => x.FilePath));
 
-                await _cleanupManager.ScheduleCleanupAsync(_config.ManifestOutputPath, files, cleanupDelay);
+                await _cleanupManager.ScheduleCleanupAsync(_config.ManifestOutputPath, files, cleanupDelay).ConfigureAwait(false);
             }
             catch (Exception ex)
             {

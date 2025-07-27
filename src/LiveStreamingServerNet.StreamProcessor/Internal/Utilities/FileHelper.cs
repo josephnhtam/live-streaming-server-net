@@ -11,13 +11,13 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Utilities
 
             try
             {
-                await File.WriteAllTextAsync(tempPath, content, cancellationToken);
+                await File.WriteAllTextAsync(tempPath, content, cancellationToken).ConfigureAwait(false);
                 File.Replace(tempPath, outputPath, null);
             }
             catch
             {
                 ErrorBoundary.Execute(() => File.Delete(tempPath));
-                await File.WriteAllTextAsync(outputPath, content, cancellationToken);
+                await File.WriteAllTextAsync(outputPath, content, cancellationToken).ConfigureAwait(false);
             }
         }
     }

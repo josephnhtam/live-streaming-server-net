@@ -54,7 +54,7 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
                     _kubernetesContext.PodNamespace,
                     _kubernetesContext.PodName,
                     streamPath,
-                    streamArguments);
+                    streamArguments).ConfigureAwait(false);
 
                 if (!result.Successful)
                 {
@@ -85,7 +85,7 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
 
             try
             {
-                await _streamStore.UnregsiterStreamAsync(streamPath);
+                await _streamStore.UnregsiterStreamAsync(streamPath).ConfigureAwait(false);
                 _logger.StreamUnregistered(context.Client.Id, streamPath);
             }
             catch (Exception ex)
@@ -106,7 +106,7 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
             if (checkLocalOnly)
                 return false;
 
-            return await _streamStore.IsStreamRegisteredAsync(streamPath);
+            return await _streamStore.IsStreamRegisteredAsync(streamPath).ConfigureAwait(false);
         }
 
         private void CreateKeepaliveTask(StreamContext context)
@@ -139,10 +139,10 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
 
                 try
                 {
-                    await Task.Delay(delay, cancellationToken);
+                    await Task.Delay(delay, cancellationToken).ConfigureAwait(false);
 
                     var revlidationTime = DateTime.UtcNow;
-                    var result = await _streamStore.RevalidateStreamAsync(context.StreamPath, cancellationToken);
+                    var result = await _streamStore.RevalidateStreamAsync(context.StreamPath, cancellationToken).ConfigureAwait(false);
 
                     if (result.Successful)
                     {
@@ -181,7 +181,7 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
 
         public async ValueTask DisposeAsync()
         {
-            await Task.WhenAll(_streamKeepaliveTasks.Values);
+            await Task.WhenAll(_streamKeepaliveTasks.Values).ConfigureAwait(false);
         }
 
         private class StreamContext

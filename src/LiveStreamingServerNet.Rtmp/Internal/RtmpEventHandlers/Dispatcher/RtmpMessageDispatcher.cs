@@ -18,7 +18,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Dispatcher
             var handler = _handlerCache.GetValueOrDefault(chunkStreamContext.MessageHeader.MessageTypeId) ??
                 throw new InvalidOperationException($"No handler found for message type {chunkStreamContext.MessageHeader.MessageTypeId}");
 
-            return await handler.HandleAsync(chunkStreamContext, context, chunkStreamContext.PayloadBuffer!, cancellationToken);
+            return await handler.HandleAsync(chunkStreamContext, context, chunkStreamContext.PayloadBuffer!, cancellationToken).ConfigureAwait(false);
         }
 
         private IReadOnlyDictionary<byte, IRtmpMessageHandler<TContext>> CreateHandlerCache(

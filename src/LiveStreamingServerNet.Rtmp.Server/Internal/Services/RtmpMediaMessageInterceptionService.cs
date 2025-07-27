@@ -38,7 +38,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
                 try
                 {
                     foreach (var interceptor in interceptors)
-                        await interceptor.OnReceiveMediaMessageAsync(clientId, streamPath, mediaType, rentedBuffer, timestamp, isSkippable);
+                        await interceptor.OnReceiveMediaMessageAsync(clientId, streamPath, mediaType, rentedBuffer, timestamp, isSkippable).ConfigureAwait(false);
                 }
                 finally
                 {

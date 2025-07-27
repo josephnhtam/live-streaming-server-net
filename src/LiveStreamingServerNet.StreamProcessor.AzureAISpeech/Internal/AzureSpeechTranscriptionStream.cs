@@ -83,7 +83,7 @@ namespace LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Internal
 
                 if (_transcriptionTask != null)
                 {
-                    await _transcriptionTask.WithCancellation(cancellationToken);
+                    await _transcriptionTask.WithCancellation(cancellationToken).ConfigureAwait(false);
                 }
             }
             finally
@@ -101,8 +101,11 @@ namespace LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Internal
             {
                 try
                 {
-                    await using var transcodingStream = _transcodingStreamFactory.Create();
-                    await DoRunTranscriptionAsync(transcodingStream, cancellationToken);
+                    var transcodingStream = _transcodingStreamFactory.Create();
+                    await using (transcodingStream.ConfigureAwait(false))
+                    {
+                        await DoRunTranscriptionAsync(transcodingStream, cancellationToken).ConfigureAwait(false);
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -129,14 +132,14 @@ namespace LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Internal
             ConfigureTranscodingEvents(transcodingStream, pushStream, transcriptionCts, transcodingTcs);
             ConfigureTranscribingEvents(transcriber, transcriptionCts, transcribingTcs);
 
-            await transcriber.StartTranscribingAsync();
-            await transcodingStream.StartAsync();
+            await transcriber.StartTranscribingAsync().ConfigureAwait(false);
+            await transcodingStream.StartAsync().ConfigureAwait(false);
 
             _logger.TranscriptionStarted(_id);
 
             try
             {
-                await StreamAudioToTranscoderAsync(transcodingStream, transcriptionCancellation);
+                await StreamAudioToTranscoderAsync(transcodingStream, transcriptionCancellation).ConfigureAwait(false);
             }
             catch (OperationCanceledException) when (transcriptionCancellation.IsCancellationRequested)
             {
@@ -149,20 +152,20 @@ namespace LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Internal
             }
             finally
             {
-                await StopTranscriptionStream(transcribingTcs, transcriber);
-                await StopTranscodingStream(transcodingStream, transcodingTcs, stoppingToken);
+                await StopTranscriptionStream(transcribingTcs, transcriber).ConfigureAwait(false);
+                await StopTranscodingStream(transcodingStream, transcodingTcs, stoppingToken).ConfigureAwait(false);
 
                 _logger.TranscriptionStopped(_id);
             }
 
-            await Task.WhenAll(transcodingTcs.Task, transcribingTcs.Task);
+            await Task.WhenAll(transcodingTcs.Task, transcribingTcs.Task).ConfigureAwait(false);
         }
 
         private static async Task StopTranscriptionStream(TaskCompletionSource transcribingTcs, ConversationTranscriber transcriber)
         {
             try
             {
-                await transcriber.StopTranscribingAsync();
+                await transcriber.StopTranscribingAsync().ConfigureAwait(false);
                 transcribingTcs.TrySetResult();
             }
             catch (Exception ex)
@@ -176,7 +179,7 @@ namespace LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Internal
         {
             try
             {
-                await transcodingStream.StopAsync(stoppingToken);
+                await transcodingStream.StopAsync(stoppingToken).ConfigureAwait(false);
                 transcodingTcs.TrySetResult();
             }
             catch (Exception ex)
@@ -197,14 +200,14 @@ namespace LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Internal
         {
             try
             {
-                await foreach (var audioBuffer in _audioBufferChannel.Reader.ReadAllAsync(cancellationToken))
+                await foreach (var audioBuffer in _audioBufferChannel.Reader.ReadAllAsync(cancellationToken).ConfigureAwait(false))
                 {
                     try
                     {
                         _initialTimestamp ??= audioBuffer.Timestamp;
                         _lastTimestamp = audioBuffer.Timestamp;
 
-                        await transcodingStream.WriteAsync(MediaType.Audio, audioBuffer.RentedBuffer, audioBuffer.Timestamp, cancellationToken);
+                        await transcodingStream.WriteAsync(MediaType.Audio, audioBuffer.RentedBuffer, audioBuffer.Timestamp, cancellationToken).ConfigureAwait(false);
                     }
                     finally
                     {
@@ -343,7 +346,7 @@ namespace LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Internal
 
             try
             {
-                await _audioBufferChannel.Writer.WriteAsync(new AudioBuffer(rentedBuffer, timestamp), cancellationToken);
+                await _audioBufferChannel.Writer.WriteAsync(new AudioBuffer(rentedBuffer, timestamp), cancellationToken).ConfigureAwait(false);
             }
             catch (OperationCanceledException)
             {
@@ -371,13 +374,13 @@ namespace LiveStreamingServerNet.StreamProcessor.AzureAISpeech.Internal
                 return;
             }
 
-            await ErrorBoundary.ExecuteAsync(async () => await StopAsync(default));
+            await ErrorBoundary.ExecuteAsync(async () => await StopAsync(default).ConfigureAwait(false)).ConfigureAwait(false);
 
             _audioBufferChannel.Writer.Complete();
 
             if (_transcriptionTask != null)
             {
-                await _transcriptionTask;
+                await _transcriptionTask.ConfigureAwait(false);
             }
 
             ReleaseBuffers();

@@ -33,7 +33,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Subtitling
             try
             {
                 await _flvWriter.WriteTagAsync(FlvTagType.Audio, timestamp,
-                    buffer => buffer.Write(rentedBuffer.AsSpan()), cancellationToken);
+                    buffer => buffer.Write(rentedBuffer.AsSpan()), cancellationToken).ConfigureAwait(false);
             }
             finally
             {
@@ -43,7 +43,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Subtitling
 
         public async ValueTask DisposeAsync()
         {
-            await _flvWriter.DisposeAsync();
+            await _flvWriter.DisposeAsync().ConfigureAwait(false);
         }
     }
 }

@@ -10,7 +10,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpHeaders
 
         public static async ValueTask<RtmpChunkExtendedTimestampHeader> ReadAsync(IDataBuffer dataBuffer, INetworkStreamReader networkStream, CancellationToken cancellationToken)
         {
-            await dataBuffer.FromStreamData(networkStream, kSize, cancellationToken);
+            await dataBuffer.FromStreamData(networkStream, kSize, cancellationToken).ConfigureAwait(false);
 
             var extendedTimestamp = dataBuffer.ReadUInt32BigEndian();
 

@@ -24,7 +24,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Uploading.Services
                 return;
 
             var streamProcessingContext = new StreamProcessingContext(processor, identifier, clientId, inputPath, outputPath, streamPath, streamArguments);
-            await _uploadingManager.StartUploading(streamProcessingContext);
+            await _uploadingManager.StartUploading(streamProcessingContext).ConfigureAwait(false);
         }
 
         public async Task OnStreamProcessorStoppedAsync(IEventContext context, string processor, Guid identifier, uint clientId, string inputPath, string outputPath, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
@@ -33,7 +33,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Uploading.Services
                 return;
 
             var streamProcessingContext = new StreamProcessingContext(processor, identifier, clientId, inputPath, outputPath, streamPath, streamArguments);
-            await _uploadingManager.StopUploading(streamProcessingContext);
+            await _uploadingManager.StopUploading(streamProcessingContext).ConfigureAwait(false);
         }
     }
 }

@@ -65,13 +65,13 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
             if (_clientMediaContexts.TryRemove(clientContext, out var context))
             {
                 context.Stop();
-                await context.UntilCompleteAsync();
+                await context.UntilCompleteAsync().ConfigureAwait(false);
             }
         }
 
         public async ValueTask DisposeAsync()
         {
-            await Task.WhenAll(_clientTasks.Values);
+            await Task.WhenAll(_clientTasks.Values).ConfigureAwait(false);
         }
 
         public async ValueTask BroadcastMediaMessageAsync(
@@ -82,7 +82,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
             bool isSkippable,
             IDataBuffer payloadBuffer)
         {
-            await _interception.ReceiveMediaMessageAsync(publishStreamContext, mediaType, payloadBuffer, timestamp, isSkippable);
+            await _interception.ReceiveMediaMessageAsync(publishStreamContext, mediaType, payloadBuffer, timestamp, isSkippable).ConfigureAwait(false);
 
             subscribeStreamContexts = subscribeStreamContexts.Where((subscriber) => FilterSubscribers(subscriber, isSkippable)).ToList();
 
@@ -175,17 +175,17 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
             {
                 while (!cancellation.IsCancellationRequested)
                 {
-                    var packet = await context.ReadPacketAsync(cancellation);
+                    var packet = await context.ReadPacketAsync(cancellation).ConfigureAwait(false);
 
                     try
                     {
                         if (!subscriptionInitialized)
                         {
-                            await packet.StreamContext.UntilInitializationCompleteAsync(cancellation);
+                            await packet.StreamContext.UntilInitializationCompleteAsync(cancellation).ConfigureAwait(false);
                             subscriptionInitialized = true;
                         }
 
-                        await SendPacketAsync(context, clientContext, packet, cancellation);
+                        await SendPacketAsync(context, clientContext, packet, cancellation).ConfigureAwait(false);
                     }
                     finally
                     {
@@ -213,14 +213,14 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
                 return;
 
             if (_config.MediaPacketBatchWindow > TimeSpan.Zero)
-                await BatchAndSendPacketAsync(context, clientContext, packet, cancellation);
+                await BatchAndSendPacketAsync(context, clientContext, packet, cancellation).ConfigureAwait(false);
             else
-                await clientContext.Client.SendAsync(packet.RentedPayload);
+                await clientContext.Client.SendAsync(packet.RentedPayload).ConfigureAwait(false);
         }
 
         private async Task BatchAndSendPacketAsync(ClientMediaContext context, IRtmpClientSessionContext clientContext, ClientMediaPacket firstPacket, CancellationToken cancellation)
         {
-            await Task.Delay(_config.MediaPacketBatchWindow, cancellation);
+            await Task.Delay(_config.MediaPacketBatchWindow, cancellation).ConfigureAwait(false);
 
             var packets = new List<ClientMediaPacket>() { firstPacket };
 
@@ -232,7 +232,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
                     packet.RentedPayload.Unclaim();
             }
 
-            await FlushAsync(clientContext, packets);
+            await FlushAsync(clientContext, packets).ConfigureAwait(false);
         }
 
         private async Task FlushAsync(IRtmpClientSessionContext clientContext, List<ClientMediaPacket> packets)
@@ -253,7 +253,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
                         offset += bufferSize;
                     }
 
-                    await clientContext.Client.SendAsync(tempBuffer);
+                    await clientContext.Client.SendAsync(tempBuffer).ConfigureAwait(false);
                 }
                 finally
                 {
@@ -333,7 +333,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
 
             public async ValueTask<ClientMediaPacket> ReadPacketAsync(CancellationToken cancellation)
             {
-                var packet = await _packetChannel.Reader.ReadAsync(cancellation);
+                var packet = await _packetChannel.Reader.ReadAsync(cancellation).ConfigureAwait(false);
                 Interlocked.Add(ref _outstandingPacketsSize, -packet.RentedPayload.Size);
                 Interlocked.Decrement(ref _outstandingPacketCount);
                 return packet;

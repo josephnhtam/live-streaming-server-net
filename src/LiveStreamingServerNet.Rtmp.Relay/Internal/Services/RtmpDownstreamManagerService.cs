@@ -39,7 +39,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Services
 
             try
             {
-                var result = await CreateDownstreamProcessIfNeededAsync(streamPath);
+                var result = await CreateDownstreamProcessIfNeededAsync(streamPath).ConfigureAwait(false);
 
                 if (result == CreateDownstreamProcessResult.NotCreated)
                     throw new Exception("Downstream process was not created.");
@@ -106,7 +106,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Services
             if (!IsDownstreamNeeded(streamPath))
                 return CreateDownstreamProcessResult.NotCreated;
 
-            if (!await CheckExtraConditionAsync(streamPath))
+            if (!await CheckExtraConditionAsync(streamPath).ConfigureAwait(false))
                 return CreateDownstreamProcessResult.NotCreated;
 
             var tcs = new TaskCompletionSource<CreateDownstreamProcessResult>();
@@ -122,7 +122,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Services
                 CreatetDownstreamProcessTask(streamPath, tcs);
             }
 
-            return await tcs.Task;
+            return await tcs.Task.ConfigureAwait(false);
 
             void CreatetDownstreamProcessTask(string streamPath, TaskCompletionSource<CreateDownstreamProcessResult> tcs)
             {
@@ -140,7 +140,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Services
 
         private async Task FinalizeDownstreamProcessAsync(IRtmpDownstreamProcess downstreamProcess, string streamPath, CancellationTokenSource cts)
         {
-            await downstreamProcess.DisposeAsync();
+            await downstreamProcess.DisposeAsync().ConfigureAwait(false);
             cts.Dispose();
 
             lock (_syncLock)
@@ -148,7 +148,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Services
                 _downstreamProcessTasks.TryRemove(streamPath, out var _);
             }
 
-            await CreateDownstreamProcessIfNeededAsync(streamPath);
+            await CreateDownstreamProcessIfNeededAsync(streamPath).ConfigureAwait(false);
         }
 
         private bool IsDownstreamProcessActive(string streamPath)
@@ -173,7 +173,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Services
             if (_config.Condition == null)
                 return true;
 
-            return await _config.Condition.ShouldRelayStreamAsync(_services, streamPath);
+            return await _config.Condition.ShouldRelayStreamAsync(_services, streamPath).ConfigureAwait(false);
         }
 
         private void RemoveDownstreamProcessIfNeeded(string streamPath)
@@ -203,7 +203,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Services
         {
             try
             {
-                var publishingStreamResult = await downstreamProcess.InitializeAsync(cancellationToken);
+                var publishingStreamResult = await downstreamProcess.InitializeAsync(cancellationToken).ConfigureAwait(false);
 
                 switch (publishingStreamResult)
                 {
@@ -230,10 +230,10 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Services
         private async Task DownstreamProcessTask(
             IRtmpDownstreamProcess downstreamProcess, TaskCompletionSource<CreateDownstreamProcessResult> tcs, CancellationToken cancellationToken)
         {
-            if (!await InitializeDownstreamProcessAsync(downstreamProcess, tcs, cancellationToken))
+            if (!await InitializeDownstreamProcessAsync(downstreamProcess, tcs, cancellationToken).ConfigureAwait(false))
                 return;
 
-            await downstreamProcess.RunAsync(cancellationToken);
+            await downstreamProcess.RunAsync(cancellationToken).ConfigureAwait(false);
         }
 
         public async ValueTask DisposeAsync()
@@ -245,12 +245,12 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Services
                 downstreamProcess.Cts.Cancel();
             }
 
-            await Task.WhenAll(downstreamProcesses.Select(x => x.DownsteramProcessTask));
+            await Task.WhenAll(downstreamProcesses.Select(x => x.DownsteramProcessTask)).ConfigureAwait(false);
         }
 
         public async ValueTask OnRtmpStreamSubscribedAsync(IEventContext context, uint clientId, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
-            await CreateDownstreamProcessIfNeededAsync(streamPath);
+            await CreateDownstreamProcessIfNeededAsync(streamPath).ConfigureAwait(false);
         }
 
         public ValueTask OnRtmpStreamUnsubscribedAsync(IEventContext context, uint clientId, string streamPath)

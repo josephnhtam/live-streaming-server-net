@@ -139,11 +139,11 @@ namespace LiveStreamingServerNet.Networking.Internal
             {
                 while (!cancellationToken.IsCancellationRequested)
                 {
-                    var (rentedBuffer, callback) = await _pendingBufferChannel.Reader.ReadAsync(cancellationToken);
+                    var (rentedBuffer, callback) = await _pendingBufferChannel.Reader.ReadAsync(cancellationToken).ConfigureAwait(false);
 
                     try
                     {
-                        await networkStream.WriteAsync(rentedBuffer.Buffer, 0, rentedBuffer.Size, cancellationToken);
+                        await networkStream.WriteAsync(rentedBuffer.Buffer, 0, rentedBuffer.Size, cancellationToken).ConfigureAwait(false);
                         InvokeCallback(callback, true);
                     }
                     catch (Exception ex)
@@ -192,7 +192,7 @@ namespace LiveStreamingServerNet.Networking.Internal
             try
             {
                 if (_task != null)
-                    await _task;
+                    await _task.ConfigureAwait(false);
             }
             catch (Exception ex)
             {

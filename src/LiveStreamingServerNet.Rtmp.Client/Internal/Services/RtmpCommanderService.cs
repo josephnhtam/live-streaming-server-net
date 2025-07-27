@@ -71,15 +71,15 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.Services
                 {
                     if (codeString == RtmpConnectionStatusCodes.ConnectSuccess)
                     {
-                        await (callback?.Invoke(true, result.CommandObject, result.Parameters) ?? ValueTask.CompletedTask);
+                        await (callback?.Invoke(true, result.CommandObject, result.Parameters) ?? ValueTask.CompletedTask).ConfigureAwait(false);
                         return true;
                     }
 
-                    await (callback?.Invoke(false, result.CommandObject, result.Parameters) ?? ValueTask.CompletedTask);
+                    await (callback?.Invoke(false, result.CommandObject, result.Parameters) ?? ValueTask.CompletedTask).ConfigureAwait(false);
                     return false;
                 }
 
-                await (callback?.Invoke(true, result.CommandObject, result.Parameters) ?? ValueTask.CompletedTask);
+                await (callback?.Invoke(true, result.CommandObject, result.Parameters) ?? ValueTask.CompletedTask).ConfigureAwait(false);
                 return true;
             }, cancellationCallback);
         }
@@ -106,12 +106,12 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.Services
                     var streamId = (uint)streamIdNumber;
                     var streamContext = context.CreateStreamContext(streamId);
 
-                    await (callback?.Invoke(true, streamContext) ?? ValueTask.CompletedTask);
+                    await (callback?.Invoke(true, streamContext) ?? ValueTask.CompletedTask).ConfigureAwait(false);
                     return true;
                 }
                 catch
                 {
-                    await (callback?.Invoke(false, null) ?? ValueTask.CompletedTask);
+                    await (callback?.Invoke(false, null) ?? ValueTask.CompletedTask).ConfigureAwait(false);
                     return false;
                 }
             }, cancellationCallback);

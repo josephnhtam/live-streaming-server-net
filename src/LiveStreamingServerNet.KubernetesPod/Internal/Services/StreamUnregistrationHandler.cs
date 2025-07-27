@@ -18,7 +18,7 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
 
         public async ValueTask OnRtmpStreamUnpublishedAsync(IEventContext context, uint clientId, string streamPath)
         {
-            await _streamRegistry.UnregsiterStreamAsync(streamPath);
+            await _streamRegistry.UnregsiterStreamAsync(streamPath).ConfigureAwait(false);
         }
 
         public ValueTask OnRtmpStreamPublishedAsync(IEventContext context, uint clientId, string streamPath, IReadOnlyDictionary<string, string> streamArguments)

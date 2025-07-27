@@ -28,7 +28,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.RtmpEventHandlers
 
             try
             {
-                await incomingBuffer.FromStreamData(@event.NetworkStream, HandshakeS1Size, cancellationToken);
+                await incomingBuffer.FromStreamData(@event.NetworkStream, HandshakeS1Size, cancellationToken).ConfigureAwait(false);
 
                 if (HandleHandshake(@event, incomingBuffer, outgoingBuffer))
                 {

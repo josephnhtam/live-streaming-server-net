@@ -20,17 +20,17 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
 
         public async ValueTask OnRtmpClientDisposedAsync(IEventContext context, uint clientId)
         {
-            await _podLifetimeManager.OnClientDisposedAsync(clientId);
+            await _podLifetimeManager.OnClientDisposedAsync(clientId).ConfigureAwait(false);
         }
 
         public async ValueTask OnRtmpStreamPublishedAsync(IEventContext context, uint clientId, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
-            await _podLifetimeManager.OnStreamPublishedAsync(clientId, streamPath);
+            await _podLifetimeManager.OnStreamPublishedAsync(clientId, streamPath).ConfigureAwait(false);
         }
 
         public async ValueTask OnRtmpStreamUnpublishedAsync(IEventContext context, uint clientId, string streamPath)
         {
-            await _podLifetimeManager.OnStreamUnpublishedAsync(clientId, streamPath);
+            await _podLifetimeManager.OnStreamUnpublishedAsync(clientId, streamPath).ConfigureAwait(false);
         }
 
         public ValueTask OnRtmpClientDisposingAsync(IEventContext context, uint clientId)

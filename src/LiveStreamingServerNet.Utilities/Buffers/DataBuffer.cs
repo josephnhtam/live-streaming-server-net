@@ -140,7 +140,7 @@ namespace LiveStreamingServerNet.Utilities.Buffers
 
         public async Task FlushAsync(Stream output)
         {
-            await output.WriteAsync(_buffer, _startIndex, _size);
+            await output.WriteAsync(_buffer, _startIndex, _size).ConfigureAwait(false);
             Reset();
         }
 

@@ -45,16 +45,16 @@ namespace LiveStreamingServerNet.Flv.Middlewares
                 !context.ValidateGetOrHeadMethod() ||
                 !_streamPathResolver.ResolveStreamPathAndArguments(context, out var streamPath, out var streamArguments))
             {
-                await _next.Invoke(context);
+                await _next.Invoke(context).ConfigureAwait(false);
                 return;
             }
 
             WriteResponseHeader(context);
 
-            if (_onPrepareResponse != null && !await _onPrepareResponse(new FlvStreamContext(context, streamPath, streamArguments.AsReadOnly())))
+            if (_onPrepareResponse != null && !await _onPrepareResponse(new FlvStreamContext(context, streamPath, streamArguments.AsReadOnly())).ConfigureAwait(false))
                 return;
 
-            await TryServeHttpFlv(context, streamPath, streamArguments.AsReadOnly());
+            await TryServeHttpFlv(context, streamPath, streamArguments.AsReadOnly()).ConfigureAwait(false);
         }
 
         private static void WriteResponseHeader(HttpContext context)
@@ -70,7 +70,7 @@ namespace LiveStreamingServerNet.Flv.Middlewares
                 return;
             }
 
-            await SubscribeToStreamAsync(context, streamPath, streamArguments);
+            await SubscribeToStreamAsync(context, streamPath, streamArguments).ConfigureAwait(false);
         }
 
         private IFlvClient CreateClient(HttpContext context, string streamPath, CancellationToken cancellation)
@@ -82,19 +82,22 @@ namespace LiveStreamingServerNet.Flv.Middlewares
         {
             var cancellation = context.RequestAborted;
 
-            await using var client = CreateClient(context, streamPath, cancellation);
-            using var relaySubscriber = await RequestDownstreamAsync(streamPath, cancellation);
-
-            switch (_streamManager.StartSubscribingStream(client, streamPath, !UseRelay()))
+            var client = CreateClient(context, streamPath, cancellation);
+            await using (client.ConfigureAwait(false))
             {
-                case SubscribingStreamResult.Succeeded:
-                    await _clientHandler.RunClientAsync(client, cancellation);
-                    return;
-                case SubscribingStreamResult.StreamDoesntExist:
-                    context.Response.StatusCode = StatusCodes.Status404NotFound;
-                    return;
-                case SubscribingStreamResult.AlreadySubscribing:
-                    throw new InvalidOperationException("Already subscribing");
+                using var relaySubscriber = await RequestDownstreamAsync(streamPath, cancellation).ConfigureAwait(false);
+
+                switch (_streamManager.StartSubscribingStream(client, streamPath, !UseRelay()))
+                {
+                    case SubscribingStreamResult.Succeeded:
+                        await _clientHandler.RunClientAsync(client, cancellation).ConfigureAwait(false);
+                        return;
+                    case SubscribingStreamResult.StreamDoesntExist:
+                        context.Response.StatusCode = StatusCodes.Status404NotFound;
+                        return;
+                    case SubscribingStreamResult.AlreadySubscribing:
+                        throw new InvalidOperationException("Already subscribing");
+                }
             }
         }
 
@@ -104,7 +107,7 @@ namespace LiveStreamingServerNet.Flv.Middlewares
                 return null;
 
             Debug.Assert(_relayManager != null);
-            return await _relayManager.RequestDownstreamAsync(streamPath, cancellationToken);
+            return await _relayManager.RequestDownstreamAsync(streamPath, cancellationToken).ConfigureAwait(false);
         }
 
         private bool UseRelay()

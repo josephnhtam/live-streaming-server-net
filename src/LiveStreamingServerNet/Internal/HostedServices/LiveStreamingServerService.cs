@@ -23,7 +23,7 @@ namespace LiveStreamingServerNet.Internal.HostedServices
         {
             try
             {
-                await _server.RunAsync(_serverEndPoints, stoppingToken);
+                await _server.RunAsync(_serverEndPoints, stoppingToken).ConfigureAwait(false);
             }
             catch (Exception ex)
             {

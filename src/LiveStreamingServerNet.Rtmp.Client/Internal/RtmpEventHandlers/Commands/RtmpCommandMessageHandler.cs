@@ -25,7 +25,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.RtmpEventHandlers.Commands
             IDataBuffer payloadBuffer,
             CancellationToken cancellationToken)
         {
-            return await _dispatcher.DispatchAsync(chunkStreamContext, context, payloadBuffer, cancellationToken);
+            return await _dispatcher.DispatchAsync(chunkStreamContext, context, payloadBuffer, cancellationToken).ConfigureAwait(false);
         }
     }
 }

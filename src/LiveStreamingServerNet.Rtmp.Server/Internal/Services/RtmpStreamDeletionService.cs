@@ -14,13 +14,13 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
 
         public async ValueTask CloseStreamAsync(IRtmpStreamContext streamContext)
         {
-            await StopPublishingStreamIfNeededAsync(streamContext);
-            await StopSubscribingStreamIfNeededAsync(streamContext);
+            await StopPublishingStreamIfNeededAsync(streamContext).ConfigureAwait(false);
+            await StopSubscribingStreamIfNeededAsync(streamContext).ConfigureAwait(false);
         }
 
         public async ValueTask DeleteStreamAsync(IRtmpStreamContext streamContext)
         {
-            await CloseStreamAsync(streamContext);
+            await CloseStreamAsync(streamContext).ConfigureAwait(false);
 
             streamContext.ClientContext.RemoveStreamContext(streamContext.StreamId);
         }
@@ -32,7 +32,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
             if (publishStreamContext == null)
                 return;
 
-            await _rtmpStreamManager.StopPublishingAsync(publishStreamContext);
+            await _rtmpStreamManager.StopPublishingAsync(publishStreamContext).ConfigureAwait(false);
         }
 
         private async ValueTask StopSubscribingStreamIfNeededAsync(IRtmpStreamContext streamContext)
@@ -42,7 +42,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
             if (subscribeStreamContext == null)
                 return;
 
-            await _rtmpStreamManager.StopSubscribingAsync(subscribeStreamContext);
+            await _rtmpStreamManager.StopSubscribingAsync(subscribeStreamContext).ConfigureAwait(false);
         }
     }
 }

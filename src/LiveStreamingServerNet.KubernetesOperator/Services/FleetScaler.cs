@@ -35,17 +35,17 @@ namespace LiveStreamingServerNet.KubernetesOperator.Services
         {
             try
             {
-                var currentState = await _fleetStateFetcher.GetFleetStateAsync(entity, cancellationToken);
+                var currentState = await _fleetStateFetcher.GetFleetStateAsync(entity, cancellationToken).ConfigureAwait(false);
                 _logger.LogCurrentState(currentState);
 
-                var desiredStateChange = await _desiredFleetStateCalculator.CalculateDesiredStateChange(entity, currentState, cancellationToken);
+                var desiredStateChange = await _desiredFleetStateCalculator.CalculateDesiredStateChange(entity, currentState, cancellationToken).ConfigureAwait(false);
                 _logger.LogDesiredFleetStateChange(desiredStateChange);
 
-                await _desiredFleetStateApplier.ApplyDesiredStateAsync(entity, currentState, desiredStateChange, cancellationToken);
+                await _desiredFleetStateApplier.ApplyDesiredStateAsync(entity, currentState, desiredStateChange, cancellationToken).ConfigureAwait(false);
 
-                await _podCleaner.PerformPodCleanupAsync(currentState, cancellationToken);
+                await _podCleaner.PerformPodCleanupAsync(currentState, cancellationToken).ConfigureAwait(false);
 
-                await UpdateStatusAsync(entity, currentState, cancellationToken);
+                await UpdateStatusAsync(entity, currentState, cancellationToken).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -63,7 +63,7 @@ namespace LiveStreamingServerNet.KubernetesOperator.Services
                 TotalStreams = currentState.TotalStreams,
             };
 
-            await _client.UpdateStatusAsync(entity, cancellationToken);
+            await _client.UpdateStatusAsync(entity, cancellationToken).ConfigureAwait(false);
         }
     }
 }

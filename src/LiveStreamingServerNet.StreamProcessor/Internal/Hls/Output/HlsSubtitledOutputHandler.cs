@@ -62,20 +62,20 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
 
         public async ValueTask InitializeAsync()
         {
-            await Task.WhenAll(_subtitleTranscribers.Select(x => x.StartAsync().AsTask()));
+            await Task.WhenAll(_subtitleTranscribers.Select(x => x.StartAsync().AsTask())).ConfigureAwait(false);
         }
 
         public async ValueTask CompleteAsync()
         {
-            await Task.WhenAll(_subtitleTranscribers.Select(x => x.StopAsync().AsTask()));
+            await Task.WhenAll(_subtitleTranscribers.Select(x => x.StopAsync().AsTask())).ConfigureAwait(false);
         }
 
         public async ValueTask AddSegmentAsync(SeqSegment segment)
         {
-            await DoAddSegmentAsync(segment);
+            await DoAddSegmentAsync(segment).ConfigureAwait(false);
 
-            await WriteMediaManifestAsync();
-            await WriteMasterManifestAsync();
+            await WriteMediaManifestAsync().ConfigureAwait(false);
+            await WriteMasterManifestAsync().ConfigureAwait(false);
         }
 
         private async ValueTask DoAddSegmentAsync(SeqSegment segment)
@@ -89,7 +89,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
                 if (_config.DeleteOutdatedSegments)
                     DeleteOutdatedSegment(removedSegment);
 
-                await CleanUpSubtitleSegmentAsync();
+                await CleanUpSubtitleSegmentAsync().ConfigureAwait(false);
             }
         }
 
@@ -105,12 +105,12 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
                 return;
 
             var oldestTimestamp = _segments.First().Timestamp;
-            await Task.WhenAll(_subtitleTranscribers.Select(x => x.ClearExpiredSegmentsAsync(oldestTimestamp).AsTask()));
+            await Task.WhenAll(_subtitleTranscribers.Select(x => x.ClearExpiredSegmentsAsync(oldestTimestamp).AsTask())).ConfigureAwait(false);
         }
 
         private async Task WriteMediaManifestAsync()
         {
-            await _mediaManifestWriter.WriteAsync(_config.MediaManifestOutputPath, _segments, _targetDuration, _initialProgramDateTime);
+            await _mediaManifestWriter.WriteAsync(_config.MediaManifestOutputPath, _segments, _targetDuration, _initialProgramDateTime).ConfigureAwait(false);
             _logger.HlsManifestUpdated(Name, ContextIdentifier, StreamPath, _config.MediaManifestOutputPath);
         }
 
@@ -142,7 +142,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
                 )
             ).ToList();
 
-            await _masterManifestWriter.WriteAsync(_config.MasterManifestOutputPath, variantStreams, alternateMedia);
+            await _masterManifestWriter.WriteAsync(_config.MasterManifestOutputPath, variantStreams, alternateMedia).ConfigureAwait(false);
             _logger.HlsManifestUpdated(Name, ContextIdentifier, StreamPath, _config.MasterManifestOutputPath);
         }
 
@@ -151,7 +151,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
             if (!_config.CleanupDelay.HasValue)
                 return;
 
-            await _cleanupManager.ExecuteCleanupAsync(_config.MasterManifestOutputPath);
+            await _cleanupManager.ExecuteCleanupAsync(_config.MasterManifestOutputPath).ConfigureAwait(false);
         }
 
         public async ValueTask ScheduleCleanupAsync()
@@ -173,7 +173,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
                     files.AddRange(transcriber.GetSegments().Select(x => x.FilePath));
                 }
 
-                await _cleanupManager.ScheduleCleanupAsync(_config.MasterManifestOutputPath, files, cleanupDelay);
+                await _cleanupManager.ScheduleCleanupAsync(_config.MasterManifestOutputPath, files, cleanupDelay).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -185,7 +185,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Output
         {
             foreach (var transcriber in _subtitleTranscribers)
             {
-                await transcriber.DisposeAsync();
+                await transcriber.DisposeAsync().ConfigureAwait(false);
             }
         }
 

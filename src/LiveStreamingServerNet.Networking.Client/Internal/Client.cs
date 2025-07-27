@@ -37,7 +37,7 @@ namespace LiveStreamingServerNet.Networking.Client.Internal
             if (Interlocked.CompareExchange(ref _started, 1, 0) == 1)
                 throw new InvalidOperationException("The client has already been started.");
 
-            await DoRunAsync(serverEndPoint, cancellationToken);
+            await DoRunAsync(serverEndPoint, cancellationToken).ConfigureAwait(false);
         }
 
         private async Task DoRunAsync(ServerEndPoint serverEndPoint, CancellationToken stoppingToken)
@@ -46,12 +46,12 @@ namespace LiveStreamingServerNet.Networking.Client.Internal
 
             try
             {
-                var tcpClient = await ConnectAsync(serverEndPoint, stoppingToken);
+                var tcpClient = await ConnectAsync(serverEndPoint, stoppingToken).ConfigureAwait(false);
 
                 var session = _sessionFactory.Create(0, tcpClient, serverEndPoint);
-                await OnClientConnectedAsync(session);
+                await OnClientConnectedAsync(session).ConfigureAwait(false);
 
-                await session.RunAsync(stoppingToken);
+                await session.RunAsync(stoppingToken).ConfigureAwait(false);
             }
             catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested)
             {
@@ -63,7 +63,7 @@ namespace LiveStreamingServerNet.Networking.Client.Internal
                 clientException = ex;
             }
 
-            await OnClientStoppedAsync();
+            await OnClientStoppedAsync().ConfigureAwait(false);
 
             if (clientException != null)
                 throw clientException;
@@ -75,7 +75,7 @@ namespace LiveStreamingServerNet.Networking.Client.Internal
 
             try
             {
-                await tcpClient.Client.ConnectAsync(serverEndPoint.IPEndPoint, cancellationToken);
+                await tcpClient.Client.ConnectAsync(serverEndPoint.IPEndPoint, cancellationToken).ConfigureAwait(false);
             }
             catch
             {
@@ -89,13 +89,13 @@ namespace LiveStreamingServerNet.Networking.Client.Internal
 
         private async Task OnClientConnectedAsync(ISessionHandle session)
         {
-            await _eventDispatcher.ClientConnectedAsync(session);
+            await _eventDispatcher.ClientConnectedAsync(session).ConfigureAwait(false);
             _logger.ClientConnected();
         }
 
         private async Task OnClientStoppedAsync()
         {
-            await _eventDispatcher.ClientStoppedAsync();
+            await _eventDispatcher.ClientStoppedAsync().ConfigureAwait(false);
             _logger.ClientStopped();
         }
 

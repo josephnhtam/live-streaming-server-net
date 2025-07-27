@@ -41,7 +41,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.RtmpEventHandlers.Commands
                             command.CommandObject,
                             command.Parameters
                         )
-                    );
+                    ).ConfigureAwait(false);
                 }
             }
             catch (Exception ex)

@@ -38,7 +38,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
                 _ => throw new ArgumentOutOfRangeException(nameof(mediaType), mediaType, null)
             };
 
-            await _mediaTagBroadcaster.BroadcastMediaTagAsync(streamContext, subscribers, mediaType, currentTimestamp, isSkippable, rentedBuffer);
+            await _mediaTagBroadcaster.BroadcastMediaTagAsync(streamContext, subscribers, mediaType, currentTimestamp, isSkippable, rentedBuffer).ConfigureAwait(false);
         }
     }
 }

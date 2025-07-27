@@ -23,7 +23,7 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
             IReadOnlyDictionary<string, string> streamArguments,
             string publishingType)
         {
-            var result = await _streamRegistry.RegisterStreamAsync(client, streamPath, streamArguments);
+            var result = await _streamRegistry.RegisterStreamAsync(client, streamPath, streamArguments).ConfigureAwait(false);
 
             if (result.Successful)
                 return AuthorizationResult.Authorized();
@@ -36,7 +36,7 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.Services
             string streamPath,
             IReadOnlyDictionary<string, string> streamArguments)
         {
-            if (await _streamRegistry.IsStreamRegisteredAsync(streamPath, true))
+            if (await _streamRegistry.IsStreamRegisteredAsync(streamPath, true).ConfigureAwait(false))
                 return AuthorizationResult.Authorized();
 
             return AuthorizationResult.Unauthorized("Stream not registered.");
