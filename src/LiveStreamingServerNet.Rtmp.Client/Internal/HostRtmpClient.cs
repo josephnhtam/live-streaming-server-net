@@ -40,7 +40,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
             => _innerClient.UntilStoppedAsync(cancellationToken);
 
         public async ValueTask DisposeAsync()
-            => await _serviceProvider.DisposeAsync();
+            => await _serviceProvider.DisposeAsync().ConfigureAwait(false);
 
         public void Command(RtmpCommand command)
             => _innerClient.Command(command);

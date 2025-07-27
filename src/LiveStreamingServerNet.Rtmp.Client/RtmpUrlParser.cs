@@ -50,7 +50,7 @@ namespace LiveStreamingServerNet.Rtmp.Client
                 _ => int.TryParse(portStr, out var p) ? p : throw new ArgumentException("Invalid port number in RTMP URL.")
             };
 
-            var ipAddress = await GetIpAddressAsync(hostname);
+            var ipAddress = await GetIpAddressAsync(hostname).ConfigureAwait(false);
             var serverEndPoint = new ServerEndPoint(new IPEndPoint(ipAddress, port), scheme == RtmpScheme.RTMPS);
             var tcUrl = $"{schemeRaw}://{hostname}:{port}/{appName}";
             return new ParsedRtmpUrl(serverEndPoint, appName, streamName, tcUrl);
@@ -69,14 +69,14 @@ namespace LiveStreamingServerNet.Rtmp.Client
             if (IPAddress.TryParse(hostname, out var ipAddress) && ipAddress != null)
                 return ipAddress;
 
-            return await ResolveHostnameToIpAddressAsync(hostname);
+            return await ResolveHostnameToIpAddressAsync(hostname).ConfigureAwait(false);
         }
 
         private static async Task<IPAddress> ResolveHostnameToIpAddressAsync(string hostname)
         {
             try
             {
-                var addresses = await Dns.GetHostAddressesAsync(hostname);
+                var addresses = await Dns.GetHostAddressesAsync(hostname).ConfigureAwait(false);
 
                 foreach (var address in addresses)
                 {

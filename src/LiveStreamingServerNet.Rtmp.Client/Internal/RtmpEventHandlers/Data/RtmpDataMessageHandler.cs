@@ -38,7 +38,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.RtmpEventHandlers.Data
 
             return commandName switch
             {
-                RtmpDataMessageConstants.OnMetaData => await HandleOnMetaDataAsync(context, chunkStreamContext, amfData),
+                RtmpDataMessageConstants.OnMetaData => await HandleOnMetaDataAsync(context, chunkStreamContext, amfData).ConfigureAwait(false),
                 _ => true
             };
         }

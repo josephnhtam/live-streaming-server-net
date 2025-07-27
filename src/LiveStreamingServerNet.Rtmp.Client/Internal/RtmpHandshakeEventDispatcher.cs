@@ -31,7 +31,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal
                 using var context = EventContext.Obtain();
 
                 foreach (var eventHandler in GetEventHandlers())
-                    await eventHandler.OnRtmpHandshakeCompleteAsync(context);
+                    await eventHandler.OnRtmpHandshakeCompleteAsync(context).ConfigureAwait(false);
             }
             catch (Exception ex)
             {

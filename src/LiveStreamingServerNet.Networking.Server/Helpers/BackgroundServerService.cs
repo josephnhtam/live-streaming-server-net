@@ -18,7 +18,7 @@ namespace LiveStreamingServerNet.Networking.Server.Helpers
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            await _server.RunAsync(_serverEndPoints, stoppingToken);
+            await _server.RunAsync(_serverEndPoints, stoppingToken).ConfigureAwait(false);
             _lifetime.StopApplication();
         }
     }

@@ -40,7 +40,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Services
 
             var cts = new CancellationTokenSource();
 
-            var streamProcessors = await CreateStreamProcessors(client, streamPath, streamArguments);
+            var streamProcessors = await CreateStreamProcessors(client, streamPath, streamArguments).ConfigureAwait(false);
 
             if (streamProcessors?.Any() != true)
                 return;
@@ -60,7 +60,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Services
                 foreach (var processorFactory in _processorFactories)
                 {
                     var contextIdentifier = Guid.NewGuid();
-                    var streamProcessor = await processorFactory.CreateAsync(client, contextIdentifier, streamPath, streamArguments);
+                    var streamProcessor = await processorFactory.CreateAsync(client, contextIdentifier, streamPath, streamArguments).ConfigureAwait(false);
 
                     if (streamProcessor != null)
                         streamProcessors.Add(streamProcessor);
@@ -87,7 +87,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Services
             foreach (var streamProcessor in streamProcessors)
                 tasks.Add(Task.Run(() => RunStreamProcessor(streamProcessor, client, streamArguments, cts)));
 
-            await Task.WhenAll(tasks);
+            await Task.WhenAll(tasks).ConfigureAwait(false);
         }
 
         private async Task RunStreamProcessor(
@@ -100,11 +100,11 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Services
             var contextIdentifier = streamProcessor.ContextIdentifier;
             var streamPath = streamProcessor.StreamPath;
 
-            var inputPath = await _inputPathResolver.ResolveInputPathAsync(streamPath, streamArguments);
+            var inputPath = await _inputPathResolver.ResolveInputPathAsync(streamPath, streamArguments).ConfigureAwait(false);
 
             try
             {
-                await streamProcessor.RunAsync(inputPath, streamArguments, StreamProcessorStarted, StreamProcessorStopped, cts.Token);
+                await streamProcessor.RunAsync(inputPath, streamArguments, StreamProcessorStarted, StreamProcessorStopped, cts.Token).ConfigureAwait(false);
             }
             catch (OperationCanceledException) when (cts.IsCancellationRequested) { }
             catch (Exception ex)
@@ -116,13 +116,13 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Services
             async Task StreamProcessorStarted(string outputPath)
             {
                 _logger.StreamProcessorStarted(streamProcessorName, contextIdentifier, inputPath, outputPath, streamPath);
-                await _eventDispatcher.StreamProcssorStartedAsync(streamProcessorName, contextIdentifier, client.Id, inputPath, outputPath, streamPath, streamArguments);
+                await _eventDispatcher.StreamProcssorStartedAsync(streamProcessorName, contextIdentifier, client.Id, inputPath, outputPath, streamPath, streamArguments).ConfigureAwait(false);
             }
 
             async Task StreamProcessorStopped(string outputPath)
             {
                 _logger.StreamProcessorStopped(streamProcessorName, contextIdentifier, inputPath, outputPath, streamPath);
-                await _eventDispatcher.StreamProcessorStoppedAsync(streamProcessorName, contextIdentifier, client.Id, inputPath, outputPath, streamPath, streamArguments);
+                await _eventDispatcher.StreamProcessorStoppedAsync(streamProcessorName, contextIdentifier, client.Id, inputPath, outputPath, streamPath, streamArguments).ConfigureAwait(false);
             }
         }
 
@@ -136,7 +136,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Services
 
         public async ValueTask DisposeAsync()
         {
-            await Task.WhenAll(_processorTasks.Values.Select(x => x.Task));
+            await Task.WhenAll(_processorTasks.Values.Select(x => x.Task)).ConfigureAwait(false);
         }
 
         private record StreamProcessorTask(Task Task, CancellationTokenSource Cts);

@@ -38,7 +38,7 @@ namespace LiveStreamingServerNet.KubernetesPod.Redis.Internal.Services
         public async Task<bool> IsStreamRegisteredAsync(string streamPath, CancellationToken cancellationToken = default)
         {
             var key = ResolveStreamKey(streamPath);
-            return await _database.KeyExistsAsync(key);
+            return await _database.KeyExistsAsync(key).ConfigureAwait(false);
         }
 
         public async Task<StreamRegistrationResult> RegisterStreamAsync(
@@ -67,7 +67,7 @@ namespace LiveStreamingServerNet.KubernetesPod.Redis.Internal.Services
                     JsonSerializer.Serialize(streamInfo),
                     expiry: _config.KeepaliveTimeout + _config.KeepaliveTolerance,
                     when: When.NotExists
-                );
+                ).ConfigureAwait(false);
 
                 if (set)
                     _streamInfos[key] = streamInfo;
@@ -89,7 +89,7 @@ namespace LiveStreamingServerNet.KubernetesPod.Redis.Internal.Services
             {
                 var key = ResolveStreamKey(streamPath);
 
-                var value = await _database.StringGetAsync(key);
+                var value = await _database.StringGetAsync(key).ConfigureAwait(false);
 
                 if (!value.HasValue)
                     return StreamRevalidationResult.Failure(false, "Stream not found.");
@@ -122,7 +122,7 @@ namespace LiveStreamingServerNet.KubernetesPod.Redis.Internal.Services
                 transaction.AddCondition(Condition.StringEqual(key, value));
                 _ = transaction.KeyExpireAsync(key, _config.KeepaliveTimeout + _config.KeepaliveTolerance);
 
-                var success = await transaction.ExecuteAsync();
+                var success = await transaction.ExecuteAsync().ConfigureAwait(false);
 
                 return success ?
                     StreamRevalidationResult.Success() :
@@ -141,7 +141,7 @@ namespace LiveStreamingServerNet.KubernetesPod.Redis.Internal.Services
             {
                 var key = ResolveStreamKey(streamPath);
 
-                var value = await _database.StringGetAsync(key);
+                var value = await _database.StringGetAsync(key).ConfigureAwait(false);
 
                 if (!value.HasValue || !_streamInfos.TryGetValue(key, out var localStreamInfo))
                     return;
@@ -169,7 +169,7 @@ namespace LiveStreamingServerNet.KubernetesPod.Redis.Internal.Services
                 transaction.AddCondition(Condition.StringEqual(key, value));
                 _ = transaction.KeyDeleteAsync(key);
 
-                await transaction.ExecuteAsync();
+                await transaction.ExecuteAsync().ConfigureAwait(false);
             }
             catch (Exception ex)
             {

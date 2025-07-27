@@ -27,7 +27,7 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.HostedServices
         {
             try
             {
-                await WatchPod(stoppingToken);
+                await WatchPod(stoppingToken).ConfigureAwait(false);
             }
             catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested) { }
             catch (Exception ex)
@@ -57,17 +57,17 @@ namespace LiveStreamingServerNet.KubernetesPod.Internal.HostedServices
                         else
                         {
                             reconilationTask = reconilationTask.ContinueWith(async _ =>
-                                await _lifetimeManager.ReconcileAsync(labels.AsReadOnly(), annotataions.AsReadOnly(), stoppingToken),
+                                await _lifetimeManager.ReconcileAsync(labels.AsReadOnly(), annotataions.AsReadOnly(), stoppingToken).ConfigureAwait(false),
                                 TaskContinuationOptions.ExecuteSynchronously
                             );
                         }
                     }
                 },
                 stoppingToken: stoppingToken
-            );
+            ).ConfigureAwait(false);
 
             if (reconilationTask != null && !reconilationTask.IsCompleted)
-                await reconilationTask;
+                await reconilationTask.ConfigureAwait(false);
         }
     }
 }

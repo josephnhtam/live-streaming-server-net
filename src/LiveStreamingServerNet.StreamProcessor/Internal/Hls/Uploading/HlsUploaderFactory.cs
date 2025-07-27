@@ -35,7 +35,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Uploading
 
         public async Task<IHlsUploader?> CreateAsync(StreamProcessingContext context)
         {
-            if (!await ShouldUploadAsync(context))
+            if (!await ShouldUploadAsync(context).ConfigureAwait(false))
                 return null;
 
             return new HlsUploader(context, _server, _eventDispatcher, _storageAdapters, _logger, _config);
@@ -45,7 +45,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Uploading
         {
             foreach (var condition in _conditions)
             {
-                if (!await condition.ShouldUploadAsync(context))
+                if (!await condition.ShouldUploadAsync(context).ConfigureAwait(false))
                     return false;
             }
 

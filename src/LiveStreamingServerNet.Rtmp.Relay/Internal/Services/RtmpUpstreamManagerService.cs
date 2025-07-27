@@ -37,7 +37,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Services
         private async ValueTask CreateUpstreamProcessIfNeededAsync(string streamPath)
         {
             if (!_config.Enabled || IsUpstreamProcessActive(streamPath) ||
-                !await CheckExtraConditionAsync(streamPath))
+                !await CheckExtraConditionAsync(streamPath).ConfigureAwait(false))
             {
                 return;
             }
@@ -67,7 +67,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Services
 
         private async Task FinalizeUpstreamProcessAsync(string streamPath, CancellationTokenSource cts, IRtmpUpstreamProcess upstreamProcess)
         {
-            await upstreamProcess.DisposeAsync();
+            await upstreamProcess.DisposeAsync().ConfigureAwait(false);
             cts.Dispose();
 
             lock (_syncLock)
@@ -75,7 +75,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Services
                 _upstreamProcessTasks.TryRemove(streamPath, out var _);
             }
 
-            await CreateUpstreamProcessIfNeededAsync(streamPath);
+            await CreateUpstreamProcessIfNeededAsync(streamPath).ConfigureAwait(false);
         }
 
         private bool IsUpstreamProcessActive(string streamPath)
@@ -91,7 +91,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Services
             var publishStreamContext = _streamManager.GetPublishStreamContext(streamPath);
             if (publishStreamContext == null) return false;
 
-            return await _config.Condition.ShouldRelayStreamAsync(_services, streamPath, publishStreamContext.StreamArguments);
+            return await _config.Condition.ShouldRelayStreamAsync(_services, streamPath, publishStreamContext.StreamArguments).ConfigureAwait(false);
         }
 
         private void RemoveUpstreamProcessIfNeeded(string streamPath)
@@ -115,7 +115,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Services
 
         private async Task UpstreamProcessTask(IRtmpUpstreamProcess upstreamProcess, CancellationToken cancellationToken)
         {
-            await upstreamProcess.RunAsync(cancellationToken);
+            await upstreamProcess.RunAsync(cancellationToken).ConfigureAwait(false);
         }
 
         public ValueTask DisposeAsync()

@@ -43,7 +43,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpHeaders
 
         public static async ValueTask<RtmpChunkMessageHeaderType0> ReadAsync(IDataBuffer dataBuffer, INetworkStreamReader networkStream, CancellationToken cancellationToken)
         {
-            await dataBuffer.FromStreamData(networkStream, kSize, cancellationToken);
+            await dataBuffer.FromStreamData(networkStream, kSize, cancellationToken).ConfigureAwait(false);
             var timestampDelta = dataBuffer.ReadUInt24BigEndian();
             var messageLength = (int)dataBuffer.ReadUInt24BigEndian();
             var messageTypeId = dataBuffer.ReadByte();
@@ -104,7 +104,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpHeaders
 
         public static async ValueTask<RtmpChunkMessageHeaderType1> ReadAsync(IDataBuffer dataBuffer, INetworkStreamReader networkStream, CancellationToken cancellationToken)
         {
-            await dataBuffer.FromStreamData(networkStream, kSize, cancellationToken);
+            await dataBuffer.FromStreamData(networkStream, kSize, cancellationToken).ConfigureAwait(false);
 
             var timestampDelta = dataBuffer.ReadUInt24BigEndian();
             var messageLength = (int)dataBuffer.ReadUInt24BigEndian();
@@ -152,7 +152,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpHeaders
 
         public static async ValueTask<RtmpChunkMessageHeaderType2> ReadAsync(IDataBuffer dataBuffer, INetworkStreamReader networkStream, CancellationToken cancellationToken)
         {
-            await dataBuffer.FromStreamData(networkStream, kSize, cancellationToken);
+            await dataBuffer.FromStreamData(networkStream, kSize, cancellationToken).ConfigureAwait(false);
 
             var timestampDelta = dataBuffer.ReadUInt24BigEndian();
 

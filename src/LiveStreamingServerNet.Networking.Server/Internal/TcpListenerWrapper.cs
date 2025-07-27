@@ -26,7 +26,7 @@ namespace LiveStreamingServerNet.Networking.Server.Internal
 
         public async ValueTask<ITcpClientInternal> AcceptTcpClientAsync(CancellationToken cancellationToken)
         {
-            var tcpClient = await _tcpListener.AcceptTcpClientAsync(cancellationToken);
+            var tcpClient = await _tcpListener.AcceptTcpClientAsync(cancellationToken).ConfigureAwait(false);
 
             if (_config.PreferInlineCompletionsOnNonWindows && Environment.OSVersion.Platform != PlatformID.Win32NT)
             {

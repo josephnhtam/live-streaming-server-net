@@ -58,7 +58,7 @@ namespace LiveStreamingServerNet.Utilities.Common
         {
             try
             {
-                await task;
+                await task.ConfigureAwait(false);
             }
             catch (TException ex)
             {
@@ -76,13 +76,13 @@ namespace LiveStreamingServerNet.Utilities.Common
         {
             try
             {
-                await action();
+                await action().ConfigureAwait(false);
             }
             catch (TException ex)
             {
                 if (onException != null)
                 {
-                    await onException(ex);
+                    await onException(ex).ConfigureAwait(false);
                 }
             }
         }
@@ -97,13 +97,13 @@ namespace LiveStreamingServerNet.Utilities.Common
         {
             try
             {
-                return await action();
+                return await action().ConfigureAwait(false);
             }
             catch (TException ex)
             {
                 if (onException != null)
                 {
-                    return await onException(ex);
+                    return await onException(ex).ConfigureAwait(false);
                 }
 
                 return default(TReturn);

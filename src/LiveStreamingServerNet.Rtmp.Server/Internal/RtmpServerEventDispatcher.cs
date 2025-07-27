@@ -31,7 +31,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
                 using var context = EventContext.Obtain();
 
                 foreach (var eventHandler in GetEventHandlers())
-                    await eventHandler.OnRtmpClientConnectedAsync(context, clientContext, commandObject, arguments);
+                    await eventHandler.OnRtmpClientConnectedAsync(context, clientContext, commandObject, arguments).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -46,7 +46,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
                 using var context = EventContext.Obtain();
 
                 foreach (var eventHandler in GetEventHandlers())
-                    await eventHandler.OnRtmpClientCreatedAsync(context, clientContext);
+                    await eventHandler.OnRtmpClientCreatedAsync(context, clientContext).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -61,7 +61,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
                 using var context = EventContext.Obtain();
 
                 foreach (var eventHandler in GetEventHandlers())
-                    await eventHandler.OnRtmpClientDisposingAsync(context, clientContext);
+                    await eventHandler.OnRtmpClientDisposingAsync(context, clientContext).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -76,7 +76,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
                 using var context = EventContext.Obtain();
 
                 foreach (var eventHandler in GetEventHandlers())
-                    await eventHandler.OnRtmpClientDisposedAsync(context, clientContext);
+                    await eventHandler.OnRtmpClientDisposedAsync(context, clientContext).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -91,7 +91,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
                 using var context = EventContext.Obtain();
 
                 foreach (var eventHandler in GetEventHandlers())
-                    await eventHandler.OnRtmpClientHandshakeCompleteAsync(context, clientContext);
+                    await eventHandler.OnRtmpClientHandshakeCompleteAsync(context, clientContext).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -125,7 +125,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
                 using var context = EventContext.Obtain();
 
                 foreach (var eventHandler in GetEventHandlers())
-                    await eventHandler.OnRtmpStreamMetaDataReceivedAsync(context, publishStreamContext);
+                    await eventHandler.OnRtmpStreamMetaDataReceivedAsync(context, publishStreamContext).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -140,7 +140,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
                 using var context = EventContext.Obtain();
 
                 foreach (var eventHandler in GetEventHandlers())
-                    await eventHandler.OnRtmpStreamPublishedAsync(context, publishStreamContext);
+                    await eventHandler.OnRtmpStreamPublishedAsync(context, publishStreamContext).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -155,7 +155,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
                 using var context = EventContext.Obtain();
 
                 foreach (var eventHandler in GetEventHandlers())
-                    await eventHandler.OnRtmpStreamSubscribedAsync(context, subscribeStreamContext);
+                    await eventHandler.OnRtmpStreamSubscribedAsync(context, subscribeStreamContext).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -171,7 +171,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
                 context.Items["AllowContinuation"] = allowContinuation;
 
                 foreach (var eventHandler in GetEventHandlers())
-                    await eventHandler.OnRtmpStreamUnpublishedAsync(context, publishStreamContext);
+                    await eventHandler.OnRtmpStreamUnpublishedAsync(context, publishStreamContext).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -186,7 +186,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
                 using var context = EventContext.Obtain();
 
                 foreach (var eventHandler in GetEventHandlers())
-                    await eventHandler.OnRtmpStreamUnsubscribedAsync(context, subscribeStreamContext);
+                    await eventHandler.OnRtmpStreamUnsubscribedAsync(context, subscribeStreamContext).ConfigureAwait(false);
             }
             catch (Exception ex)
             {

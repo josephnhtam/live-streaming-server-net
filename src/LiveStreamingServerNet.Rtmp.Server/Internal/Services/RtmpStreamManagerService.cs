@@ -242,7 +242,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
 
             if (result.Result == PublishingStreamResult.Succeeded && streamContext.PublishContext != null)
             {
-                await _eventDispatcher.RtmpStreamPublishedAsync(streamContext.PublishContext);
+                await _eventDispatcher.RtmpStreamPublishedAsync(streamContext.PublishContext).ConfigureAwait(false);
             }
 
             return result;
@@ -255,7 +255,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
 
             if (result.Result == PublishingStreamResult.Succeeded)
             {
-                await _eventDispatcher.RtmpStreamPublishedAsync(publishStreamContext);
+                await _eventDispatcher.RtmpStreamPublishedAsync(publishStreamContext).ConfigureAwait(false);
             }
 
             return result;
@@ -268,7 +268,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
 
             if (result.Result)
             {
-                await _eventDispatcher.RtmpStreamUnpublishedAsync(publishStreamContext, allowContinuation);
+                await _eventDispatcher.RtmpStreamUnpublishedAsync(publishStreamContext, allowContinuation).ConfigureAwait(false);
             }
 
             return result;
@@ -281,7 +281,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
 
             if (result.Result == SubscribingStreamResult.Succeeded && streamContext.SubscribeContext != null)
             {
-                await _eventDispatcher.RtmpStreamSubscribedAsync(streamContext.SubscribeContext);
+                await _eventDispatcher.RtmpStreamSubscribedAsync(streamContext.SubscribeContext).ConfigureAwait(false);
             }
 
             return result;
@@ -293,7 +293,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
 
             if (result)
             {
-                await _eventDispatcher.RtmpStreamUnsubscribedAsync(subscribeStreamContext);
+                await _eventDispatcher.RtmpStreamUnsubscribedAsync(subscribeStreamContext).ConfigureAwait(false);
             }
 
             return result;
@@ -497,7 +497,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
                 {
                     try
                     {
-                        await Task.Delay(expiration, _cts.Token);
+                        await Task.Delay(expiration, _cts.Token).ConfigureAwait(false);
                         callback.Invoke();
                     }
                     catch (OperationCanceledException) when (_cts.IsCancellationRequested) { }

@@ -90,19 +90,19 @@ namespace LiveStreamingServerNet.Flv.Internal
 
             _isDisposed = true;
 
-            await _mediaTagBroadcaster.UnregisterClientAsync(this);
+            await _mediaTagBroadcaster.UnregisterClientAsync(this).ConfigureAwait(false);
 
             _stoppingCts.Cancel();
             _stoppingCts.Dispose();
 
-            await _flvWriter.DisposeAsync();
+            await _flvWriter.DisposeAsync().ConfigureAwait(false);
         }
 
         public async ValueTask WriteHeaderAsync(bool allowAudioTags, bool allowVideoTags, CancellationToken cancellationToken)
         {
             try
             {
-                await _flvWriter.WriteHeaderAsync(allowAudioTags, allowVideoTags, cancellationToken);
+                await _flvWriter.WriteHeaderAsync(allowAudioTags, allowVideoTags, cancellationToken).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -115,7 +115,7 @@ namespace LiveStreamingServerNet.Flv.Internal
         {
             try
             {
-                await _flvWriter.WriteTagAsync(tagType, timestamp, payloadBuffer, cancellationToken);
+                await _flvWriter.WriteTagAsync(tagType, timestamp, payloadBuffer, cancellationToken).ConfigureAwait(false);
             }
             catch (Exception ex)
             {

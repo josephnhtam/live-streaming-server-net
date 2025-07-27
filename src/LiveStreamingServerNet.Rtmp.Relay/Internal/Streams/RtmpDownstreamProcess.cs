@@ -73,7 +73,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Streams
             try
             {
                 var publishStreamContext = CreatePublishStreamContext();
-                var publishingResult = await _streamManager.StartDirectPublishingAsync(publishStreamContext);
+                var publishingResult = await _streamManager.StartDirectPublishingAsync(publishStreamContext).ConfigureAwait(false);
 
                 if (publishingResult.Result == PublishingStreamResult.Succeeded)
                 {
@@ -99,7 +99,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Streams
 
             try
             {
-                await RunDownstreamAsync(_publishStreamContext, cancellationToken);
+                await RunDownstreamAsync(_publishStreamContext, cancellationToken).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -111,7 +111,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Streams
         {
             try
             {
-                var result = await _originResolver.ResolveDownstreamOriginAsync(_streamPath, cancellationToken);
+                var result = await _originResolver.ResolveDownstreamOriginAsync(_streamPath, cancellationToken).ConfigureAwait(false);
 
                 if (result == null)
                 {
@@ -141,7 +141,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Streams
                 var mediaDataProcessorTask = StreamDataProcessorTask(streamDataChannel, publishStreamContext, abortCts);
                 var downstreamClientTask = RunDownstreamClientAsync(streamDataChannel, publishStreamContext, abortCts);
 
-                await Task.WhenAll(downstreamClientTask, mediaDataProcessorTask);
+                await Task.WhenAll(downstreamClientTask, mediaDataProcessorTask).ConfigureAwait(false);
             }
             finally
             {
@@ -160,10 +160,10 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Streams
             {
                 try
                 {
-                    var origin = await ResolveOriginAsync(abortCts.Token);
+                    var origin = await ResolveOriginAsync(abortCts.Token).ConfigureAwait(false);
                     if (origin == null) continue;
 
-                    await DoRunDownstreamClientAsync(origin, publishStreamContext, streamDataChannel, idleChecker, retryCounter, abortCts);
+                    await DoRunDownstreamClientAsync(origin, publishStreamContext, streamDataChannel, idleChecker, retryCounter, abortCts).ConfigureAwait(false);
                 }
                 catch (OperationCanceledException) when (abortCts.IsCancellationRequested) { }
                 catch (Exception ex)
@@ -172,7 +172,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Streams
                 }
                 finally
                 {
-                    await HandleRetryBackoff(abortCts, retryCounter);
+                    await HandleRetryBackoff(abortCts, retryCounter).ConfigureAwait(false);
                 }
             }
 
@@ -198,7 +198,7 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Streams
             try
             {
                 _logger.RtmpDownstreamReconnecting(_streamPath, retryBackoff.Value);
-                await Task.Delay(retryBackoff.Value, abortCts.Token);
+                await Task.Delay(retryBackoff.Value, abortCts.Token).ConfigureAwait(false);
             }
             catch (OperationCanceledException) { }
         }
@@ -209,22 +209,25 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Streams
         {
             var timestampBase = publishStreamContext.TimestampOffset + Math.Min(publishStreamContext.VideoTimestamp, publishStreamContext.AudioTimestamp);
 
-            await using var rtmpClient = CreateDownstreamClient();
-            using var _ = abortCts.Token.Register(rtmpClient.Stop);
+            var rtmpClient = CreateDownstreamClient();
+            await using (rtmpClient.ConfigureAwait(false))
+            {
+                using var _ = abortCts.Token.Register(rtmpClient.Stop);
 
-            _logger.RtmpDownstreamConnecting(_streamPath, origin.EndPoint);
-            await rtmpClient.ConnectAsync(origin.EndPoint, origin.AppName);
+                _logger.RtmpDownstreamConnecting(_streamPath, origin.EndPoint);
+                await rtmpClient.ConnectAsync(origin.EndPoint, origin.AppName).ConfigureAwait(false);
 
-            _logger.RtmpDownstreamCreating(_streamPath);
-            var rtmpStream = await rtmpClient.CreateStreamAsync();
+                _logger.RtmpDownstreamCreating(_streamPath);
+                var rtmpStream = await rtmpClient.CreateStreamAsync().ConfigureAwait(false);
 
-            SubscribeToStreamEvents(rtmpStream, idleChecker, streamDataChannel, abortCts, timestampBase);
-            rtmpStream.Subscribe.Play(origin.StreamName);
+                SubscribeToStreamEvents(rtmpStream, idleChecker, streamDataChannel, abortCts, timestampBase);
+                rtmpStream.Subscribe.Play(origin.StreamName);
 
-            _logger.RtmpDownstreamCreated(_streamPath);
-            retryCounter.Reset();
+                _logger.RtmpDownstreamCreated(_streamPath);
+                retryCounter.Reset();
 
-            await rtmpClient.UntilStoppedAsync(abortCts.Token);
+                await rtmpClient.UntilStoppedAsync(abortCts.Token).ConfigureAwait(false);
+            }
         }
 
         private IRtmpClient CreateDownstreamClient()
@@ -346,15 +349,15 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Streams
 
                 while (!abortCts.IsCancellationRequested)
                 {
-                    var streamData = await DequeueStreamData(channel.Reader, cancellationToken);
+                    var streamData = await DequeueStreamData(channel.Reader, cancellationToken).ConfigureAwait(false);
 
                     if (streamData.MediaData.HasValue)
                     {
-                        await ProcessMediaDataAsync(publishStreamContext, streamData.MediaData.Value, abortCts);
+                        await ProcessMediaDataAsync(publishStreamContext, streamData.MediaData.Value, abortCts).ConfigureAwait(false);
                     }
                     else if (streamData.MetaData.HasValue)
                     {
-                        await _metaDataProcessor.ProcessMetaDataAsync(publishStreamContext, 0u, streamData.MetaData.Value.StreamMetaData);
+                        await _metaDataProcessor.ProcessMetaDataAsync(publishStreamContext, 0u, streamData.MetaData.Value.StreamMetaData).ConfigureAwait(false);
                     }
                 }
             }
@@ -383,10 +386,10 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Streams
                 var success = mediaData.Type switch
                 {
                     MediaType.Audio => await _audioDataProcessor.ProcessAudioDataAsync(
-                        publishStreamContext, mediaData.Timestamp, mediaData.Payload),
+                        publishStreamContext, mediaData.Timestamp, mediaData.Payload).ConfigureAwait(false),
 
                     MediaType.Video => await _videoDataProcessor.ProcessVideoDataAsync(
-                        publishStreamContext, mediaData.Timestamp, mediaData.Payload),
+                        publishStreamContext, mediaData.Timestamp, mediaData.Payload).ConfigureAwait(false),
 
                     _ => false
                 };
@@ -476,12 +479,12 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Streams
             if (_publishStreamContext == null)
                 return;
 
-            var stopPublishingResult = await _streamManager.StopPublishingAsync(_publishStreamContext, false);
+            var stopPublishingResult = await _streamManager.StopPublishingAsync(_publishStreamContext, false).ConfigureAwait(false);
 
             await Task.WhenAll(stopPublishingResult.SubscribeStreamContexts
                 .Select(subscriber => subscriber.StreamContext)
                 .Select(streamContext => _streamDeletion.DeleteStreamAsync(streamContext).AsTask())
-            );
+            ).ConfigureAwait(false);
 
             _publishStreamContext.Dispose();
         }

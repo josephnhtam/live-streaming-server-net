@@ -38,7 +38,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
                 try
                 {
                     foreach (var interceptor in _interceptors)
-                        await interceptor.OnCachePictureAsync(clientId, streamPath, mediaType, rentedBuffer, timestamp);
+                        await interceptor.OnCachePictureAsync(clientId, streamPath, mediaType, rentedBuffer, timestamp).ConfigureAwait(false);
                 }
                 finally
                 {
@@ -60,7 +60,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
             {
                 if (interceptor.FilterCache(clientId, streamPath, mediaType))
                 {
-                    await interceptor.OnCacheSequenceHeaderAsync(clientId, streamPath, mediaType, sequenceHeader);
+                    await interceptor.OnCacheSequenceHeaderAsync(clientId, streamPath, mediaType, sequenceHeader).ConfigureAwait(false);
                 }
             }
         }
@@ -71,7 +71,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
             var streamPath = publishStreamContext.StreamPath;
 
             foreach (var interceptor in _interceptors)
-                await interceptor.OnClearGroupOfPicturesCacheAsync(clientId, streamPath);
+                await interceptor.OnClearGroupOfPicturesCacheAsync(clientId, streamPath).ConfigureAwait(false);
         }
 
         private List<IRtmpMediaCachingInterceptor> GetFilteredInterceptors(uint clientId, string streamPath, MediaType mediaType)

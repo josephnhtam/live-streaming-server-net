@@ -65,7 +65,7 @@ namespace LiveStreamingServerNet.Standalone.Internal.Services
             if (stream == null || stream.Publisher.Id != clientId)
                 throw new ApiException(StatusCodes.Status404NotFound, $"Stream ({streamId}) not found.");
 
-            await stream.Publisher.DisconnectAsync(cancellation);
+            await stream.Publisher.DisconnectAsync(cancellation).ConfigureAwait(false);
         }
     }
 }

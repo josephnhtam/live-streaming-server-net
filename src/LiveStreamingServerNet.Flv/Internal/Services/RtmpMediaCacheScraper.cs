@@ -31,7 +31,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
             if (streamContext == null)
                 return;
 
-            await _mediaTagCacher.CachePictureAsync(streamContext, mediaType, rentedBuffer, timestamp);
+            await _mediaTagCacher.CachePictureAsync(streamContext, mediaType, rentedBuffer, timestamp).ConfigureAwait(false);
         }
 
         public async ValueTask OnClearGroupOfPicturesCacheAsync(uint clientId, string streamPath)
@@ -40,7 +40,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
             if (streamContext == null)
                 return;
 
-            await _mediaTagCacher.ClearGroupOfPicturesCacheAsync(streamContext);
+            await _mediaTagCacher.ClearGroupOfPicturesCacheAsync(streamContext).ConfigureAwait(false);
         }
 
         public async ValueTask OnCacheSequenceHeaderAsync(uint clientId, string streamPath, MediaType mediaType, byte[] sequenceHeader)
@@ -49,7 +49,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
             if (streamContext == null)
                 return;
 
-            await _mediaTagCacher.CacheSequenceHeaderAsync(streamContext, mediaType, sequenceHeader);
+            await _mediaTagCacher.CacheSequenceHeaderAsync(streamContext, mediaType, sequenceHeader).ConfigureAwait(false);
 
             var subscribers = _streamManager.GetSubscribers(streamPath);
             if (!subscribers.Any())
@@ -60,7 +60,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
             try
             {
                 Array.Copy(sequenceHeader, rentedBuffer.Buffer, sequenceHeader.Length);
-                await _mediaTagBroadcaster.BroadcastMediaTagAsync(streamContext, subscribers, mediaType, 0, false, rentedBuffer);
+                await _mediaTagBroadcaster.BroadcastMediaTagAsync(streamContext, subscribers, mediaType, 0, false, rentedBuffer).ConfigureAwait(false);
             }
             finally
             {

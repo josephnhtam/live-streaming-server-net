@@ -28,11 +28,11 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Services
         {
             var syncLock = _syncLocks.Get(manifestPath);
 
-            await syncLock.WaitAsync();
+            await syncLock.WaitAsync().ConfigureAwait(false);
 
             try
             {
-                await ExecuteCleanupAsyncCore(manifestPath);
+                await ExecuteCleanupAsyncCore(manifestPath).ConfigureAwait(false);
             }
             finally
             {
@@ -48,18 +48,18 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Services
             if (!cleanupTask.delayCts.IsCancellationRequested)
                 cleanupTask.delayCts.Cancel();
 
-            await cleanupTask.task;
+            await cleanupTask.task.ConfigureAwait(false);
         }
 
         public async ValueTask ScheduleCleanupAsync(string manifestPath, IList<string> files, TimeSpan cleanupDelay)
         {
             var syncLock = _syncLocks.Get(manifestPath);
 
-            await syncLock.WaitAsync();
+            await syncLock.WaitAsync().ConfigureAwait(false);
 
             try
             {
-                await ExecuteCleanupAsyncCore(manifestPath);
+                await ExecuteCleanupAsyncCore(manifestPath).ConfigureAwait(false);
 
                 var delayCts = new CancellationTokenSource();
                 var cleanupTask = CleanupAsync(manifestPath, files, cleanupDelay, delayCts.Token);
@@ -78,7 +78,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Services
         {
             try
             {
-                await Task.Delay(delay, delayCancellation);
+                await Task.Delay(delay, delayCancellation).ConfigureAwait(false);
             }
             catch (OperationCanceledException) { }
 

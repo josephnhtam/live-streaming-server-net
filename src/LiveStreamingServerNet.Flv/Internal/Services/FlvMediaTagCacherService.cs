@@ -45,7 +45,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
         {
             foreach (var picture in streamContext.GroupOfPicturesCache.Get())
             {
-                await _mediaTagSender.SendMediaTagAsync(client, picture.Type, picture.Payload.Buffer, picture.Payload.Size, picture.Timestamp + streamContext.TimestampOffset, cancellation);
+                await _mediaTagSender.SendMediaTagAsync(client, picture.Type, picture.Payload.Buffer, picture.Payload.Size, picture.Timestamp + streamContext.TimestampOffset, cancellation).ConfigureAwait(false);
                 picture.Payload.Unclaim();
             }
         }
@@ -55,13 +55,13 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
             var audioSequenceHeader = streamContext.AudioSequenceHeader;
             if (audioSequenceHeader != null)
             {
-                await _mediaTagSender.SendMediaTagAsync(client, MediaType.Audio, audioSequenceHeader, audioSequenceHeader.Length, timestamp + streamContext.TimestampOffset, cancellation);
+                await _mediaTagSender.SendMediaTagAsync(client, MediaType.Audio, audioSequenceHeader, audioSequenceHeader.Length, timestamp + streamContext.TimestampOffset, cancellation).ConfigureAwait(false);
             }
 
             var videoSequenceHeader = streamContext.VideoSequenceHeader;
             if (videoSequenceHeader != null)
             {
-                await _mediaTagSender.SendMediaTagAsync(client, MediaType.Video, videoSequenceHeader, videoSequenceHeader.Length, timestamp + streamContext.TimestampOffset, cancellation);
+                await _mediaTagSender.SendMediaTagAsync(client, MediaType.Video, videoSequenceHeader, videoSequenceHeader.Length, timestamp + streamContext.TimestampOffset, cancellation).ConfigureAwait(false);
             }
         }
 

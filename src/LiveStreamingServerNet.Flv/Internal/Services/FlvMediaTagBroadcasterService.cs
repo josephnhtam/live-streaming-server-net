@@ -74,13 +74,13 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
             if (_clientMediaContexts.TryRemove(client, out var context))
             {
                 context.Stop();
-                await context.UntilCompleteAsync();
+                await context.UntilCompleteAsync().ConfigureAwait(false);
             }
         }
 
         public async ValueTask DisposeAsync()
         {
-            await Task.WhenAll(_clientTasks.Values);
+            await Task.WhenAll(_clientTasks.Values).ConfigureAwait(false);
         }
 
         private async Task ClientTask(ClientMediaContext context)
@@ -90,11 +90,11 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
 
             try
             {
-                await client.UntilInitializationCompleteAsync(cancellation);
+                await client.UntilInitializationCompleteAsync(cancellation).ConfigureAwait(false);
 
                 while (!cancellation.IsCancellationRequested)
                 {
-                    var packet = await context.ReadPacketAsync(cancellation);
+                    var packet = await context.ReadPacketAsync(cancellation).ConfigureAwait(false);
 
                     try
                     {
@@ -104,7 +104,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
                             packet.RentedPayload.Buffer,
                             packet.RentedPayload.Size,
                             packet.Timestamp,
-                            cancellation);
+                            cancellation).ConfigureAwait(false);
                     }
                     finally
                     {
@@ -191,7 +191,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
 
             public async ValueTask<ClientMediaPacket> ReadPacketAsync(CancellationToken cancellation)
             {
-                var packet = await _packetChannel.Reader.ReadAsync(cancellation);
+                var packet = await _packetChannel.Reader.ReadAsync(cancellation).ConfigureAwait(false);
                 Interlocked.Add(ref _outstandingPacketsSize, -packet.RentedPayload.Size);
                 Interlocked.Decrement(ref _outstandingPacketCount);
                 return packet;

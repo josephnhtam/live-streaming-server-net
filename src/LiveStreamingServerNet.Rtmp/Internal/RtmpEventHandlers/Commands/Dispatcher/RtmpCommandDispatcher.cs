@@ -51,7 +51,7 @@ namespace LiveStreamingServerNet.Rtmp.Internal.RtmpEventHandlers.Commands.Dispat
             var command = Activator.CreateInstance(commandType, commandParameters)!;
             var commandHandler = GetCommandHandler(commandHandlerType);
 
-            return await commandHandler.HandleAsync(chunkStreamContext, context, command, cancellationToken);
+            return await commandHandler.HandleAsync(chunkStreamContext, context, command, cancellationToken).ConfigureAwait(false);
         }
 
         private object[] ReadParameters(ParameterInfo[] commandParameterInfos, AmfReader reader, bool isUsingAmf3)

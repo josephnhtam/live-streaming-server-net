@@ -308,7 +308,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Containers
                 return null;
 
             var path = GetOutputPath();
-            await FlushAsyncCore(path);
+            await FlushAsyncCore(path).ConfigureAwait(false);
 
             return new SeqSegmentPartial(path, SequenceNumber);
         }
@@ -319,7 +319,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Containers
                 return null;
 
             var path = GetOutputPath();
-            await FlushAsyncCore(path);
+            await FlushAsyncCore(path).ConfigureAwait(false);
 
             return CompleteFlushing(timestamp, path);
         }
@@ -332,7 +332,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Containers
             if (_flushedCount == 0)
                 WriteHeaderPackets(_headerBuffer);
 
-            await FlushBuffersAsync(path);
+            await FlushBuffersAsync(path).ConfigureAwait(false);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -347,11 +347,11 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Containers
 
             if (_flushedCount == 0)
             {
-                await fileStream.WriteAsync(_headerBuffer.AsMemory(0, _headerBuffer.Size));
+                await fileStream.WriteAsync(_headerBuffer.AsMemory(0, _headerBuffer.Size)).ConfigureAwait(false);
                 _headerBuffer.Reset();
             }
 
-            await fileStream.WriteAsync(_payloadBuffer.AsMemory(0, _payloadBuffer.Size));
+            await fileStream.WriteAsync(_payloadBuffer.AsMemory(0, _payloadBuffer.Size)).ConfigureAwait(false);
             _payloadBuffer.Reset();
 
             _flushedCount++;

@@ -22,7 +22,7 @@ namespace LiveStreamingServerNet.KubernetesOperator
 
             app.UseHealthChecks("/healthz");
 
-            await app.RunAsync();
+            await app.RunAsync().ConfigureAwait(false);
         }
     }
 }

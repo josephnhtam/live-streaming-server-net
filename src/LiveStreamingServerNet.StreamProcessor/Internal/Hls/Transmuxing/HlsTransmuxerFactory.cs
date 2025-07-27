@@ -51,10 +51,10 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Transmuxing
         public async Task<IStreamProcessor?> CreateAsync(
             ISessionHandle client, Guid contextIdentifier, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
-            if (!await _config.Condition.IsEnabled(_services, streamPath, streamArguments))
+            if (!await _config.Condition.IsEnabled(_services, streamPath, streamArguments).ConfigureAwait(false))
                 return null;
 
-            var manifestOutputPath = await _config.OutputPathResolver.ResolveOutputPath(_services, contextIdentifier, streamPath, streamArguments);
+            var manifestOutputPath = await _config.OutputPathResolver.ResolveOutputPath(_services, contextIdentifier, streamPath, streamArguments).ConfigureAwait(false);
             var tsSegmentOutputPath = GetTsSegmentOutputPath(manifestOutputPath);
 
             var outputHandlerConfig = new HlsOutputHandler.Configuration(

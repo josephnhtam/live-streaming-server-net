@@ -44,12 +44,12 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
             await HandleAudioPacketCachingAsync(
                 publishStreamContext,
                 aacPacketType,
-                payloadBuffer.MoveTo(0));
+                payloadBuffer.MoveTo(0)).ConfigureAwait(false);
 
             await BroadcastAudioMessageToSubscribersAsync(
                 publishStreamContext,
                 IsSkippable(aacPacketType),
-                payloadBuffer.MoveTo(0));
+                payloadBuffer.MoveTo(0)).ConfigureAwait(false);
 
             return true;
         }
@@ -67,7 +67,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
                 MediaType.Audio,
                 publishStreamContext.AudioTimestamp,
                 isSkippable,
-                payloadBuffer);
+                payloadBuffer).ConfigureAwait(false);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -98,11 +98,11 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
 
             if (aacPacketType == AACPacketType.SequenceHeader)
             {
-                await _cacher.CacheSequenceHeaderAsync(publishStreamContext, MediaType.Audio, payloadBuffer);
+                await _cacher.CacheSequenceHeaderAsync(publishStreamContext, MediaType.Audio, payloadBuffer).ConfigureAwait(false);
             }
             else if (publishStreamContext.GroupOfPicturesCacheActivated)
             {
-                await _cacher.CachePictureAsync(publishStreamContext, MediaType.Audio, payloadBuffer, publishStreamContext.AudioTimestamp);
+                await _cacher.CachePictureAsync(publishStreamContext, MediaType.Audio, payloadBuffer, publishStreamContext.AudioTimestamp).ConfigureAwait(false);
             }
         }
     }

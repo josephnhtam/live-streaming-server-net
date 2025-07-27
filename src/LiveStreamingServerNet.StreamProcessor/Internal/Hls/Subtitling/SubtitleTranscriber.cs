@@ -96,8 +96,8 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Subtitling
         {
             _logger.SubtitleTranscriberStarted(Name, ContextIdentifier, StreamPath);
 
-            await WriteManifestAsync(Enumerable.Empty<SeqSegment>(), CancellationToken.None);
-            await _stream.StartAsync();
+            await WriteManifestAsync(Enumerable.Empty<SeqSegment>(), CancellationToken.None).ConfigureAwait(false);
+            await _stream.StartAsync().ConfigureAwait(false);
 
             _audioPublishingTask = PublishAudioBufferAsync(_cts.Token);
             _transcriptionProcessingTask = ProcessTranscriptionResultsAsync(_cts.Token);
@@ -111,12 +111,12 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Subtitling
 
             if (_audioPublishingTask != null)
             {
-                await _audioPublishingTask;
+                await _audioPublishingTask.ConfigureAwait(false);
             }
 
             if (_transcriptionProcessingTask != null)
             {
-                await _transcriptionProcessingTask;
+                await _transcriptionProcessingTask.ConfigureAwait(false);
             }
 
             _logger.SubtitleTranscriberStopped(Name, ContextIdentifier, StreamPath);
@@ -128,7 +128,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Subtitling
 
             try
             {
-                await _audioBufferChannel.Writer.WriteAsync(new AudioBuffer(rentedBuffer, timestamp));
+                await _audioBufferChannel.Writer.WriteAsync(new AudioBuffer(rentedBuffer, timestamp)).ConfigureAwait(false);
             }
             catch (Exception)
             {
@@ -147,17 +147,17 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Subtitling
             {
                 while (!cancellationToken.IsCancellationRequested)
                 {
-                    await Task.Delay(_config.MinSegmentInterval, cancellationToken);
+                    await Task.Delay(_config.MinSegmentInterval, cancellationToken).ConfigureAwait(false);
 
                     if (!_subtitleCueExtractor.TryExtractSubtitleCues(segmentStart, ref cues, out var segmentEnd))
                     {
                         continue;
                     }
 
-                    var segment = await CreateWebVttSegment(++_sequenceNumber, segmentStart, cues, segmentEnd, cancellationToken);
+                    var segment = await CreateWebVttSegment(++_sequenceNumber, segmentStart, cues, segmentEnd, cancellationToken).ConfigureAwait(false);
                     _segments.Enqueue(segment);
 
-                    await WriteManifestAsync(_segments.ToList(), cancellationToken);
+                    await WriteManifestAsync(_segments.ToList(), cancellationToken).ConfigureAwait(false);
                     segmentStart = segmentEnd;
                 }
             }
@@ -172,7 +172,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Subtitling
             uint sequenceNumber, TimeSpan segmentStart, IReadOnlyList<SubtitleCue> cues, TimeSpan segmentEnd, CancellationToken cancellationToken)
         {
             var outputPath = GetSegmentOutputPath(sequenceNumber);
-            await _webVttWriter.WriteAsync(outputPath, cues, cancellationToken);
+            await _webVttWriter.WriteAsync(outputPath, cues, cancellationToken).ConfigureAwait(false);
 
             var timestamp = (uint)segmentStart.TotalMilliseconds;
             var duration = (uint)(segmentEnd - segmentStart).TotalMilliseconds;
@@ -194,7 +194,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Subtitling
 
         private async Task WriteManifestAsync(IEnumerable<SeqSegment> segments, CancellationToken cancellationToken)
         {
-            await _manifestWriter.WriteAsync(_config.SubtitleManifestOutputPath, segments, _targetDuration, _initialProgramDateTime, cancellationToken);
+            await _manifestWriter.WriteAsync(_config.SubtitleManifestOutputPath, segments, _targetDuration, _initialProgramDateTime, cancellationToken).ConfigureAwait(false);
         }
 
         private async Task PublishAudioBufferAsync(CancellationToken cancellationToken)
@@ -207,7 +207,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Subtitling
                 {
                     try
                     {
-                        await _stream.WriteAsync(audioBuffer.Buffer, audioBuffer.Timestamp, cancellationToken);
+                        await _stream.WriteAsync(audioBuffer.Buffer, audioBuffer.Timestamp, cancellationToken).ConfigureAwait(false);
                     }
                     finally
                     {
@@ -233,8 +233,8 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.Subtitling
 
         public async ValueTask DisposeAsync()
         {
-            await _stream.DisposeAsync();
-            await _subtitleCueExtractor.DisposeAsync();
+            await _stream.DisposeAsync().ConfigureAwait(false);
+            await _subtitleCueExtractor.DisposeAsync().ConfigureAwait(false);
         }
 
         public ValueTask ClearExpiredSegmentsAsync(uint oldestTimestamp)
