@@ -2,6 +2,7 @@
 using LiveStreamingServerNet.Rtmp.Server.Contracts;
 using LiveStreamingServerNet.Standalone.Exceptions;
 using LiveStreamingServerNet.Standalone.Internal.Mappers;
+using LiveStreamingServerNet.Standalone.Internal.Services.Contracts;
 using LiveStreamingServerNet.Standalone.Services.Contracts;
 using Microsoft.AspNetCore.Http;
 
@@ -10,10 +11,12 @@ namespace LiveStreamingServerNet.Standalone.Internal.Services
     internal class RtmpStreamManagerApiService : IRtmpStreamManagerApiService
     {
         private readonly IRtmpStreamInfoManager _streamInfoManager;
+        private readonly IBitrateTrackingService? _bitrateTrackingService;
 
-        public RtmpStreamManagerApiService(IRtmpStreamInfoManager streamInfoManager)
+        public RtmpStreamManagerApiService(IRtmpStreamInfoManager streamInfoManager, IBitrateTrackingService? bitrateTrackingService = null)
         {
             _streamInfoManager = streamInfoManager;
+            _bitrateTrackingService = bitrateTrackingService;
         }
 
         public Task<GetStreamsResponse> GetStreamsAsync(GetStreamsRequest request)
@@ -34,6 +37,20 @@ namespace LiveStreamingServerNet.Standalone.Internal.Services
                 .Select(s => s.ToDto())
                 .ToList();
 
+            if (_bitrateTrackingService != null)
+            {
+                foreach (var stream in result)
+                {
+                    var streamInfo = streams.FirstOrDefault(x => x.StreamPath == stream.StreamPath);
+                    if (streamInfo == null)
+                    {
+                        continue;
+                    }
+                    
+                    stream.AddBitrateInformation(streamInfo, _bitrateTrackingService);
+                }
+            }
+
             return Task.FromResult(new GetStreamsResponse(result, totalCount));
         }
 
@@ -51,6 +68,9 @@ namespace LiveStreamingServerNet.Standalone.Internal.Services
                 throw new ApiException(StatusCodes.Status404NotFound, $"Stream ({streamId}) not found.");
 
             await stream.Publisher.DisconnectAsync(cancellation);
+            
+            // Clean up bitrate tracking data
+            _bitrateTrackingService?.CleanupStream(streamPath);
         }
     }
 }
