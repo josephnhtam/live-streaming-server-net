@@ -17,5 +17,8 @@
         public int AudioCodecId { get; set; } = default!;
         public int AudioSampleRate { get; set; }
         public int AudioChannels { get; set; }
+        
+        public int VideoBitrate { get; set; }
+        public int AudioBitrate { get; set; }
     }
 }
