@@ -18,6 +18,8 @@ import {
   StartTimeColumn,
   StreamOptionsColumn,
   StreamPathColumn,
+  VideoBitrateColumn,
+  AudioBitrateColumn
 } from "./CustomNodes";
 
 const headCells: HeadCell<Stream, IStreamTableContext>[] = [
@@ -42,6 +44,13 @@ const headCells: HeadCell<Stream, IStreamTableContext>[] = [
   },
 
   {
+    id: "videoBitrate",
+    label: "Avg. Video Bitrate",
+    width: "130px",
+    customNode: VideoBitrateColumn,
+  },
+
+  {
     id: "framerate",
     label: "Framerate",
     width: "130px",
@@ -63,6 +72,13 @@ const headCells: HeadCell<Stream, IStreamTableContext>[] = [
     id: "audioChannels",
     label: "Channels",
     width: "130px",
+  },
+
+  {
+    id: "audioBitrate",
+    label: "Avg. Audio Bitrate",
+    width: "130px",
+    customNode: AudioBitrateColumn,
   },
 
   {

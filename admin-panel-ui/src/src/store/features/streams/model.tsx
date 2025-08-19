@@ -12,4 +12,6 @@ export interface Stream {
   subscribersCount: number;
   startTime: string;
   streamArguments: { [key: string]: string };
+  videoBitrate: number;
+  audioBitrate: number;
 }
