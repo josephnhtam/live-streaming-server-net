@@ -47,6 +47,22 @@ export function StartTimeColumn(stream: Stream) {
   );
 }
 
+export function VideoBitrateColumn(stream: Stream) {
+  return (
+    <Typography>
+      {stream.videoBitrate} kbps
+    </Typography>
+  );
+}
+
+export function AudioBitrateColumn(stream: Stream) {
+  return (
+    <Typography>
+      {stream.audioBitrate} kbps
+    </Typography>
+  );
+}
+
 const envConfig = getEnvConfig();
 
 export function StreamOptionsColumn(

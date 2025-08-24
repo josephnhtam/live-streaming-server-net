@@ -57,6 +57,7 @@ namespace LiveStreamingServerNet.StandaloneDemo
                 options =>
                 {
                     options.AddStandaloneServices();
+                    options.AddBitrateTracking();
 
                     if (useHttpFlvPreview)
                     {

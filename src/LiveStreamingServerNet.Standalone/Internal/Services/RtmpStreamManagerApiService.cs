@@ -2,6 +2,7 @@
 using LiveStreamingServerNet.Rtmp.Server.Contracts;
 using LiveStreamingServerNet.Standalone.Exceptions;
 using LiveStreamingServerNet.Standalone.Internal.Mappers;
+using LiveStreamingServerNet.Standalone.Internal.Services.Contracts;
 using LiveStreamingServerNet.Standalone.Services.Contracts;
 using Microsoft.AspNetCore.Http;
 
@@ -10,10 +11,12 @@ namespace LiveStreamingServerNet.Standalone.Internal.Services
     internal class RtmpStreamManagerApiService : IRtmpStreamManagerApiService
     {
         private readonly IRtmpStreamInfoManager _streamInfoManager;
+        private readonly IBitrateTrackingService? _bitrateTrackingService;
 
-        public RtmpStreamManagerApiService(IRtmpStreamInfoManager streamInfoManager)
+        public RtmpStreamManagerApiService(IRtmpStreamInfoManager streamInfoManager, IBitrateTrackingService? bitrateTrackingService = null)
         {
             _streamInfoManager = streamInfoManager;
+            _bitrateTrackingService = bitrateTrackingService;
         }
 
         public Task<GetStreamsResponse> GetStreamsAsync(GetStreamsRequest request)
@@ -31,10 +34,22 @@ namespace LiveStreamingServerNet.Standalone.Internal.Services
                 .OrderByDescending(x => x.StartTime)
                 .Skip(Math.Max(0, page - 1) * pageSize)
                 .Take(pageSize)
-                .Select(s => s.ToDto())
+                .Select(ToDto)
                 .ToList();
 
             return Task.FromResult(new GetStreamsResponse(result, totalCount));
+        }
+
+        private StreamDto ToDto(IRtmpStreamInfo streamInfo)
+        {
+            var dto = streamInfo.ToDto();
+
+            if (_bitrateTrackingService != null)
+            {
+                dto.AddBitrateInformation(streamInfo, _bitrateTrackingService);
+            }
+
+            return dto;
         }
 
         public async Task DeleteStreamAsync(string streamId, CancellationToken cancellation)
