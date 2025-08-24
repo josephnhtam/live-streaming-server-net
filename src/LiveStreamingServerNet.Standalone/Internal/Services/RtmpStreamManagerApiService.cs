@@ -68,9 +68,6 @@ namespace LiveStreamingServerNet.Standalone.Internal.Services
                 throw new ApiException(StatusCodes.Status404NotFound, $"Stream ({streamId}) not found.");
 
             await stream.Publisher.DisconnectAsync(cancellation);
-            
-            // Clean up bitrate tracking data
-            _bitrateTrackingService?.CleanupStream(streamPath);
         }
     }
 }
