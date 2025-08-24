@@ -106,7 +106,7 @@ namespace LiveStreamingServerNet.Standalone.Internal.Services
                 return (int)(totalBytes * 8 / timeSpan.TotalSeconds);
             }
 
-            private record DataPoint(int ByteCount, DateTime Timestamp);
+            private record struct DataPoint(int ByteCount, DateTime Timestamp);
         }
     }
 }
