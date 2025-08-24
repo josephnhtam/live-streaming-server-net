@@ -28,7 +28,7 @@ namespace LiveStreamingServerNet.Standalone.Internal.Services
         public void RecordDataReceived(string streamPath, MediaType mediaType, int byteCount)
         {
             var data = _streamData.GetOrAdd(streamPath, _ => new StreamBitrateData());
-            data.RecordData(mediaType, byteCount, DateTime.UtcNow);
+            data.RecordData(mediaType, byteCount, DateTime.UtcNow, _trackingWindow);
         }
 
         public void CleanupStream(string streamPath)
@@ -42,21 +42,22 @@ namespace LiveStreamingServerNet.Standalone.Internal.Services
             private readonly List<DataPoint> _audioData = new();
             private readonly object _lock = new();
 
-            public void RecordData(MediaType mediaType, int byteCount, DateTime timestamp)
+            public void RecordData(MediaType mediaType, int byteCount, DateTime timestamp, TimeSpan cutoffWindow)
             {
                 lock (_lock)
                 {
                     var dataPoint = new DataPoint(byteCount, timestamp);
-                    
+                    var cutoffTime = timestamp.Subtract(cutoffWindow);
+
                     switch (mediaType)
                     {
                         case MediaType.Video:
                             _videoData.Add(dataPoint);
-                            CleanupOldData(_videoData, timestamp);
+                            CleanupOldData(_videoData, cutoffTime);
                             break;
                         case MediaType.Audio:
                             _audioData.Add(dataPoint);
-                            CleanupOldData(_audioData, timestamp);
+                            CleanupOldData(_audioData, cutoffTime);
                             break;
                     }
                 }
@@ -78,9 +79,8 @@ namespace LiveStreamingServerNet.Standalone.Internal.Services
                 }
             }
 
-            private void CleanupOldData(List<DataPoint> data, DateTime currentTime)
+            private void CleanupOldData(List<DataPoint> data, DateTime cutoffTime)
             {
-                var cutoffTime = currentTime.Subtract(TimeSpan.FromMinutes(1));
                 data.RemoveAll(d => d.Timestamp < cutoffTime);
             }
 
@@ -91,15 +91,15 @@ namespace LiveStreamingServerNet.Standalone.Internal.Services
 
                 var now = DateTime.UtcNow;
                 var cutoffTime = now.Subtract(window);
-                
+
                 var recentData = data.Where(d => d.Timestamp >= cutoffTime).ToList();
-                
+
                 if (recentData.Count < 2)
                     return 0;
 
                 var totalBytes = recentData.Sum(d => d.ByteCount);
                 var timeSpan = now - recentData.Min(d => d.Timestamp);
-                
+
                 if (timeSpan.TotalSeconds == 0)
                     return 0;
 
