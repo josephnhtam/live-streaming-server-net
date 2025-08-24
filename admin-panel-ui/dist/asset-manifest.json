@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/live-streaming-server-net-admin-panel-ui/static/css/main.ab8209f0.css",
-    "main.js": "/live-streaming-server-net-admin-panel-ui/static/js/main.a40cdf60.js",
+    "main.js": "/live-streaming-server-net-admin-panel-ui/static/js/main.856646b2.js",
     "index.html": "/live-streaming-server-net-admin-panel-ui/index.html",
     "main.ab8209f0.css.map": "/live-streaming-server-net-admin-panel-ui/static/css/main.ab8209f0.css.map",
-    "main.a40cdf60.js.map": "/live-streaming-server-net-admin-panel-ui/static/js/main.a40cdf60.js.map"
+    "main.856646b2.js.map": "/live-streaming-server-net-admin-panel-ui/static/js/main.856646b2.js.map"
   },
   "entrypoints": [
     "static/css/main.ab8209f0.css",
-    "static/js/main.a40cdf60.js"
+    "static/js/main.856646b2.js"
   ]
 }
