@@ -34,24 +34,22 @@ namespace LiveStreamingServerNet.Standalone.Internal.Services
                 .OrderByDescending(x => x.StartTime)
                 .Skip(Math.Max(0, page - 1) * pageSize)
                 .Take(pageSize)
-                .Select(s => s.ToDto())
+                .Select(ToDto)
                 .ToList();
+
+            return Task.FromResult(new GetStreamsResponse(result, totalCount));
+        }
+
+        private StreamDto ToDto(IRtmpStreamInfo streamInfo)
+        {
+            var dto = streamInfo.ToDto();
 
             if (_bitrateTrackingService != null)
             {
-                foreach (var stream in result)
-                {
-                    var streamInfo = streams.FirstOrDefault(x => x.StreamPath == stream.StreamPath);
-                    if (streamInfo == null)
-                    {
-                        continue;
-                    }
-                    
-                    stream.AddBitrateInformation(streamInfo, _bitrateTrackingService);
-                }
+                dto.AddBitrateInformation(streamInfo, _bitrateTrackingService);
             }
 
-            return Task.FromResult(new GetStreamsResponse(result, totalCount));
+            return dto;
         }
 
         public async Task DeleteStreamAsync(string streamId, CancellationToken cancellation)
