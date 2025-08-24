@@ -37,6 +37,7 @@ namespace LiveStreamingServerNet.Standalone.Installer
 
             services.AddSingleton<IBitrateTrackingService, BitrateTrackingService>();
             services.AddSingleton<IRtmpMediaMessageInterceptor, BitrateTrackingInterceptor>();
+            services.AddSingleton<IRtmpServerStreamEventHandler, BitrateTrackingStreamEventHandler>();
 
             return configurator;
         }
