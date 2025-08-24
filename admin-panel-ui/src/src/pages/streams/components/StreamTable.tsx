@@ -37,17 +37,17 @@ const headCells: HeadCell<Stream, IStreamTableContext>[] = [
   },
 
   {
+    id: "videoBitrate",
+    label: "Video Bitrate",
+    width: "130px",
+    customNode: VideoBitrateColumn,
+  },
+
+  {
     id: "width",
     label: "Resolution",
     width: "130px",
     customNode: ResolutionColumn,
-  },
-
-  {
-    id: "videoBitrate",
-    label: "Avg. Video Bitrate",
-    width: "130px",
-    customNode: VideoBitrateColumn,
   },
 
   {
@@ -63,6 +63,13 @@ const headCells: HeadCell<Stream, IStreamTableContext>[] = [
   },
 
   {
+    id: "audioBitrate",
+    label: "Audio Bitrate",
+    width: "130px",
+    customNode: AudioBitrateColumn,
+  },
+
+  {
     id: "audioSampleRate",
     label: "Sample Rate",
     width: "130px",
@@ -72,13 +79,6 @@ const headCells: HeadCell<Stream, IStreamTableContext>[] = [
     id: "audioChannels",
     label: "Channels",
     width: "130px",
-  },
-
-  {
-    id: "audioBitrate",
-    label: "Avg. Audio Bitrate",
-    width: "130px",
-    customNode: AudioBitrateColumn,
   },
 
   {
