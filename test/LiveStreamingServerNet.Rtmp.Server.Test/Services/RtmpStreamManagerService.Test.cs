@@ -8,6 +8,7 @@ using LiveStreamingServerNet.Rtmp.Server.Internal.Contracts;
 using LiveStreamingServerNet.Rtmp.Server.Internal.Services;
 using LiveStreamingServerNet.Rtmp.Server.Internal.Services.Contracts;
 using LiveStreamingServerNet.Rtmp.Test.Utilities;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using NSubstitute;
 
@@ -20,6 +21,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
         private readonly IRtmpUserControlMessageSenderService _userControlMessageSender;
         private readonly IRtmpServerStreamEventDispatcher _eventDispatcher;
         private readonly RtmpServerConfiguration _config;
+        private readonly ILogger<RtmpClientSessionContext> _logger;
         private readonly IRtmpStreamManagerService _sut;
 
         public RtmpStreamManagerServiceTest()
@@ -29,6 +31,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
             _userControlMessageSender = Substitute.For<IRtmpUserControlMessageSenderService>();
             _eventDispatcher = Substitute.For<IRtmpServerStreamEventDispatcher>();
             _config = new RtmpServerConfiguration();
+            _logger = Substitute.For<ILogger<RtmpClientSessionContext>>();
             _sut = new RtmpStreamManagerService(_commandMessageSender, _userControlMessageSender, _eventDispatcher, Options.Create(_config));
         }
 
@@ -37,7 +40,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
         {
             // Arrange
             var sessionHandle = Substitute.For<ISessionHandle>();
-            var clientContext = new RtmpClientSessionContext(sessionHandle, null);
+            var clientContext = new RtmpClientSessionContext(sessionHandle, null, _config, _logger);
             var streamPath = _fixture.Create<string>();
             var streamArguments = _fixture.Create<Dictionary<string, string>>();
 
@@ -122,11 +125,11 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
         {
             // Arrange
             var sessionHandle1 = Substitute.For<ISessionHandle>();
-            var clientContext1 = new RtmpClientSessionContext(sessionHandle1, null);
+            var clientContext1 = new RtmpClientSessionContext(sessionHandle1, null, _config, _logger);
             var streamContext1 = clientContext1.CreateStreamContext();
 
             var sessionHandle2 = Substitute.For<ISessionHandle>();
-            var clientContext2 = new RtmpClientSessionContext(sessionHandle2, null);
+            var clientContext2 = new RtmpClientSessionContext(sessionHandle2, null, _config, _logger);
             var streamContext2 = clientContext2.CreateStreamContext();
 
             var streamPath = _fixture.Create<string>();
@@ -146,7 +149,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
         {
             // Arrange
             var sessionHandle = Substitute.For<ISessionHandle>();
-            var clientContext = new RtmpClientSessionContext(sessionHandle, null);
+            var clientContext = new RtmpClientSessionContext(sessionHandle, null, _config, _logger);
             var streamContext = clientContext.CreateStreamContext();
 
             var streamPath = _fixture.Create<string>();
@@ -181,7 +184,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
         {
             // Arrange
             var sessionHandle = Substitute.For<ISessionHandle>();
-            var clientContext = new RtmpClientSessionContext(sessionHandle, null);
+            var clientContext = new RtmpClientSessionContext(sessionHandle, null, _config, _logger);
             var streamContext = clientContext.CreateStreamContext();
 
             var streamPath = _fixture.Create<string>();
@@ -214,7 +217,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
         {
             // Arrange
             var sessionHandle = Substitute.For<ISessionHandle>();
-            var clientContext = new RtmpClientSessionContext(sessionHandle, null);
+            var clientContext = new RtmpClientSessionContext(sessionHandle, null, _config, _logger);
             var streamContext = clientContext.CreateStreamContext();
 
             var streamPath = _fixture.Create<string>();
@@ -233,7 +236,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
         {
             // Arrange
             var sessionHandle = Substitute.For<ISessionHandle>();
-            var clientContext = new RtmpClientSessionContext(sessionHandle, null);
+            var clientContext = new RtmpClientSessionContext(sessionHandle, null, _config, _logger);
             var streamContext = clientContext.CreateStreamContext();
 
             var streamPath = _fixture.Create<string>();
@@ -253,7 +256,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
         {
             // Arrange
             var sessionHandle = Substitute.For<ISessionHandle>();
-            var clientContext = new RtmpClientSessionContext(sessionHandle, null);
+            var clientContext = new RtmpClientSessionContext(sessionHandle, null, _config, _logger);
             var streamContext = clientContext.CreateStreamContext();
 
             var streamPath = _fixture.Create<string>();
@@ -273,7 +276,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
         {
             // Arrange
             var sessionHandle = Substitute.For<ISessionHandle>();
-            var clientContext = new RtmpClientSessionContext(sessionHandle, null);
+            var clientContext = new RtmpClientSessionContext(sessionHandle, null, _config, _logger);
             var streamContext = clientContext.CreateStreamContext();
 
             var streamPath = _fixture.Create<string>();
@@ -309,11 +312,11 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
         {
             // Arrange
             var sessionHandle1 = Substitute.For<ISessionHandle>();
-            var clientContext1 = new RtmpClientSessionContext(sessionHandle1, null);
+            var clientContext1 = new RtmpClientSessionContext(sessionHandle1, null, _config, _logger);
             var streamContext1 = clientContext1.CreateStreamContext();
 
             var sessionHandle2 = Substitute.For<ISessionHandle>();
-            var clientContext2 = new RtmpClientSessionContext(sessionHandle2, null);
+            var clientContext2 = new RtmpClientSessionContext(sessionHandle2, null, _config, _logger);
             var streamContext2 = clientContext2.CreateStreamContext();
 
             var streamPath = _fixture.Create<string>();
@@ -336,15 +339,15 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
         {
             // Arrange
             var sessionHandle1 = Substitute.For<ISessionHandle>();
-            var clientContext1 = new RtmpClientSessionContext(sessionHandle1, null);
+            var clientContext1 = new RtmpClientSessionContext(sessionHandle1, null, _config, _logger);
             var streamContext1 = clientContext1.CreateStreamContext();
 
             var sessionHandle2 = Substitute.For<ISessionHandle>();
-            var clientContext2 = new RtmpClientSessionContext(sessionHandle2, null);
+            var clientContext2 = new RtmpClientSessionContext(sessionHandle2, null, _config, _logger);
             var streamContext2 = clientContext2.CreateStreamContext();
 
             var sessionHandle3 = Substitute.For<ISessionHandle>();
-            var clientContext3 = new RtmpClientSessionContext(sessionHandle3, null);
+            var clientContext3 = new RtmpClientSessionContext(sessionHandle3, null, _config, _logger);
             var streamContext3 = clientContext2.CreateStreamContext();
 
             var streamPath = _fixture.Create<string>();
@@ -365,7 +368,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
         }
 
         [Fact]
-        public async Task StartPublushingAsync_Should_SendBadConnection_If_SubscribeStreamExists()
+        public async Task StartPublishingAsync_Should_SendBadConnection_If_SubscribeStreamExists()
         {
             // Arrange
             var streamPath = _fixture.Create<string>();
@@ -397,7 +400,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
         }
 
         [Fact]
-        public async Task StartPublushingAsync_Should_SendBadConnection_If_PublishStreamExists()
+        public async Task StartPublishingAsync_Should_SendBadConnection_If_PublishStreamExists()
         {
             // Arrange
             var streamPath = _fixture.Create<string>();
@@ -429,7 +432,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
         }
 
         [Fact]
-        public async Task StartPublushingAsync_Should_SendBadName_If_PublishStreamHasBeenRegistered()
+        public async Task StartPublishingAsync_Should_SendBadName_If_PublishStreamHasBeenRegistered()
         {
             // Arrange
             var streamPath = _fixture.Create<string>();
@@ -466,7 +469,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Test.Services
         }
 
         [Fact]
-        public async Task StartDirectPublushingAsync_Should_ReturnAlreadyExists_If_PublishStreamHasBeenRegistered()
+        public async Task StartDirectPublishingAsync_Should_ReturnAlreadyExists_If_PublishStreamHasBeenRegistered()
         {
             // Arrange
             var streamPath = _fixture.Create<string>();

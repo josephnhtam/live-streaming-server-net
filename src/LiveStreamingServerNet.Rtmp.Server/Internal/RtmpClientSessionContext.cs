@@ -1,9 +1,12 @@
 ﻿using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.Rtmp.Internal;
 using LiveStreamingServerNet.Rtmp.Internal.Contracts;
+using LiveStreamingServerNet.Rtmp.Server.Configurations;
 using LiveStreamingServerNet.Rtmp.Server.Internal.Contracts;
+using LiveStreamingServerNet.Rtmp.Server.Internal.Logging;
 using LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers.Handshakes;
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
+using Microsoft.Extensions.Logging;
 using System.Collections.Concurrent;
 
 namespace LiveStreamingServerNet.Rtmp.Server.Internal
@@ -33,11 +36,15 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
         private readonly ConcurrentDictionary<uint, IRtmpStreamContext> _streamContexts = new();
         private readonly ConcurrentDictionary<uint, IRtmpChunkStreamContext> _chunkStreamContexts = new();
         private readonly IBufferPool? _bufferPool;
+        private readonly RtmpServerConfiguration _config;
+        private readonly ILogger<RtmpClientSessionContext> _logger;
 
-        public RtmpClientSessionContext(ISessionHandle client, IBufferPool? bufferPool)
+        public RtmpClientSessionContext(ISessionHandle client, IBufferPool? bufferPool, RtmpServerConfiguration config, ILogger<RtmpClientSessionContext> logger)
         {
             Client = client;
             _bufferPool = bufferPool;
+            _config = config;
+            _logger = logger;
         }
 
         public IRtmpChunkStreamContext GetChunkStreamContext(uint chunkStreamId)
@@ -56,6 +63,12 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
         public IRtmpStreamContext CreateStreamContext()
         {
             var streamId = Interlocked.Increment(ref _lastStreamId);
+
+            if (_streamContexts.Count > _config.MaxStreamsPerClient)
+            {
+                _logger.MaximumStreamsPerClientExceeded(Client.Id, _config.MaxStreamsPerClient);
+                throw new InvalidOperationException($"Maximum number of streams per client ({_config.MaxStreamsPerClient}) exceeded.");
+            }
 
             var streamContext = new RtmpStreamContext(streamId, this, _bufferPool);
             _streamContexts[streamId] = streamContext;

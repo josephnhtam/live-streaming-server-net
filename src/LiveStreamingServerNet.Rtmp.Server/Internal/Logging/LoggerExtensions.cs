@@ -144,5 +144,8 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Logging
 
         [LoggerMessage(LogLevel.Error, "An error occurred while initializing the upstream (StreamPath={StreamPath})")]
         public static partial void RtmpUpstreamInitializationError(this ILogger logger, string streamPath, Exception exception);
+
+        [LoggerMessage(LogLevel.Warning, "Maximum streams per client exceeded (ClientId={ClientId}, MaxStreams={MaxStreams})")]
+        public static partial void MaximumStreamsPerClientExceeded(this ILogger logger, uint clientId, uint maxStreams);
     }
 }

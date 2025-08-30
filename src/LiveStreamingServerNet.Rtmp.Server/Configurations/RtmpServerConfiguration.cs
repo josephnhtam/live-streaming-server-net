@@ -12,6 +12,12 @@
         public uint MaxInChunkSize { get; set; } = 0;
 
         /// <summary>
+        /// Gets or sets the maximum number of concurrent streams allowed per client session.
+        /// Default: 16 streams (0 means no limit).
+        /// </summary>
+        public uint MaxStreamsPerClient { get; set; } = 16;
+
+        /// <summary>
         /// Gets or sets the chunk size for outgoing RTMP messages in bytes.
         /// Default: 60,000 bytes.
         /// </summary>
