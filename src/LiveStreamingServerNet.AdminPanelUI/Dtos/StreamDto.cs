@@ -9,15 +9,15 @@
         public required DateTime StartTime { get; set; }
         public required IReadOnlyDictionary<string, string> StreamArguments { get; set; }
 
-        public int VideoCodecId { get; set; } = default!;
+        public int VideoCodecId { get; set; }
         public int Height { get; set; }
         public int Width { get; set; }
         public int Framerate { get; set; }
 
-        public int AudioCodecId { get; set; } = default!;
+        public int AudioCodecId { get; set; }
         public int AudioSampleRate { get; set; }
         public int AudioChannels { get; set; }
-        
+
         public int VideoBitrate { get; set; }
         public int AudioBitrate { get; set; }
     }

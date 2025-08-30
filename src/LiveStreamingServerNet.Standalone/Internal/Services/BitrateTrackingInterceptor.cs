@@ -1,6 +1,6 @@
 using LiveStreamingServerNet.Rtmp;
 using LiveStreamingServerNet.Rtmp.Server.Contracts;
-using LiveStreamingServerNet.Standalone.Internal.Services.Contracts;
+using LiveStreamingServerNet.Standalone.Services.Contracts;
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 
 namespace LiveStreamingServerNet.Standalone.Internal.Services
@@ -24,7 +24,7 @@ namespace LiveStreamingServerNet.Standalone.Internal.Services
         {
             // Record the data for bitrate calculation
             _bitrateTrackingService.RecordDataReceived(streamPath, mediaType, rentedBuffer.Size);
-            
+
             return ValueTask.CompletedTask;
         }
     }

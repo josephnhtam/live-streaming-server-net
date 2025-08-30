@@ -1,5 +1,5 @@
 using LiveStreamingServerNet.Rtmp;
-using LiveStreamingServerNet.Standalone.Internal.Services.Contracts;
+using LiveStreamingServerNet.Standalone.Services.Contracts;
 using System.Collections.Concurrent;
 
 namespace LiveStreamingServerNet.Standalone.Internal.Services

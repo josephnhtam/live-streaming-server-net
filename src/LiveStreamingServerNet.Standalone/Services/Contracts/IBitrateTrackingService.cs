@@ -1,11 +1,11 @@
 using LiveStreamingServerNet.Rtmp;
 
-namespace LiveStreamingServerNet.Standalone.Internal.Services.Contracts
+namespace LiveStreamingServerNet.Standalone.Services.Contracts
 {
     /// <summary>
     /// Provides bitrate tracking capabilities for RTMP streams.
     /// </summary>
-    internal interface IBitrateTrackingService
+    public interface IBitrateTrackingService
     {
         /// <summary>
         /// Gets the current video bitrate for a stream in bits per second.

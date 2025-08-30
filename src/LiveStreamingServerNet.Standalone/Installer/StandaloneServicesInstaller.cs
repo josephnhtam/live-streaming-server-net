@@ -1,7 +1,6 @@
 ﻿using LiveStreamingServerNet.Rtmp.Server.Contracts;
 using LiveStreamingServerNet.Rtmp.Server.Installer.Contracts;
 using LiveStreamingServerNet.Standalone.Internal.Services;
-using LiveStreamingServerNet.Standalone.Internal.Services.Contracts;
 using LiveStreamingServerNet.Standalone.Services.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 

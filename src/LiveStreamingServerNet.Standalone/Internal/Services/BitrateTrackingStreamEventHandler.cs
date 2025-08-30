@@ -1,5 +1,5 @@
 using LiveStreamingServerNet.Rtmp.Server.Contracts;
-using LiveStreamingServerNet.Standalone.Internal.Services.Contracts;
+using LiveStreamingServerNet.Standalone.Services.Contracts;
 using LiveStreamingServerNet.Utilities.Contracts;
 
 namespace LiveStreamingServerNet.Standalone.Internal.Services
