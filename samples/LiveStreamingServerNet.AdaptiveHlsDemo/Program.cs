@@ -19,8 +19,8 @@ namespace LiveStreamingServerNet.AdaptiveHlsDemo
             builder.Services.AddCors(options =>
                 options.AddDefaultPolicy(policy =>
                     policy.AllowAnyHeader()
-                          .AllowAnyOrigin()
-                          .AllowAnyMethod()
+                        .AllowAnyOrigin()
+                        .AllowAnyMethod()
                 )
             );
 
@@ -47,40 +47,72 @@ namespace LiveStreamingServerNet.AdaptiveHlsDemo
                             new StreamProcessorEventListener(
                                 svc.GetRequiredService<ILogger<StreamProcessorEventListener>>()));
                     })
-                    .AddAdaptiveHlsTranscoder(options =>
-                    {
-                        options.FFmpegPath = ExecutableFinder.FindExecutableFromPATH("ffmpeg")!;
-                        options.FFprobePath = ExecutableFinder.FindExecutableFromPATH("ffprobe")!;
+                    .AddAdaptiveHlsTranscoder(configure =>
+                        configure.ConfigureDefault(config =>
+                        {
+                            config.FFmpegPath = ExecutableFinder.FindExecutableFromPATH("ffmpeg")!;
+                            config.FFprobePath = ExecutableFinder.FindExecutableFromPATH("ffprobe")!;
 
-                        options.DownsamplingFilters =
-                        [
-                            new DownsamplingFilter(
-                                Name: "360p",
-                                Height: 360,
-                                MaxVideoBitrate: "600k",
-                                MaxAudioBitrate: "64k"
-                            ),
+                            config.DownsamplingFilters =
+                            [
+                                new DownsamplingFilter(
+                                    Name: "360p",
+                                    Height: 360,
+                                    MaxVideoBitrate: "600k",
+                                    MaxAudioBitrate: "64k"
+                                ),
 
-                            new DownsamplingFilter(
-                                Name: "480p",
-                                Height: 480,
-                                MaxVideoBitrate: "1500k",
-                                MaxAudioBitrate: "128k"
-                            ),
+                                new DownsamplingFilter(
+                                    Name: "480p",
+                                    Height: 480,
+                                    MaxVideoBitrate: "1500k",
+                                    MaxAudioBitrate: "128k"
+                                ),
 
-                            new DownsamplingFilter(
-                                Name: "720p",
-                                Height: 720,
-                                MaxVideoBitrate: "3000k",
-                                MaxAudioBitrate: "256k"
-                            )
-                        ];
+                                new DownsamplingFilter(
+                                    Name: "720p",
+                                    Height: 720,
+                                    MaxVideoBitrate: "3000k",
+                                    MaxAudioBitrate: "256k"
+                                )
+                            ];
 
-                        // Hardware acceleration 
-                        // options.VideoDecodingArguments = "-hwaccel auto -c:v h264_cuvid";
-                        // options.VideoEncodingArguments = "-c:v h264_nvenc -g 30";
-                    })
+                            // Hardware acceleration
+                            // options.VideoDecodingArguments = "-hwaccel auto -c:v h264_cuvid";
+                            // options.VideoEncodingArguments = "-c:v h264_nvenc -g 30";
+                        }).UseConfigurationResolver(new CustomAdaptiveHlsTranscoderConfigurationResolver())
+                    )
             );
+        }
+
+        private class CustomAdaptiveHlsTranscoderConfigurationResolver : IAdaptiveHlsTranscoderConfigurationResolver
+        {
+            public ValueTask<AdaptiveHlsTranscoderConfiguration?> ResolveAsync(
+                IServiceProvider services, Guid contextIdentifier, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
+            {
+                if (!streamArguments.ContainsKey("lowquality"))
+                {
+                    return ValueTask.FromResult<AdaptiveHlsTranscoderConfiguration?>(null);
+                }
+
+                var config = new AdaptiveHlsTranscoderConfiguration
+                {
+                    FFmpegPath = ExecutableFinder.FindExecutableFromPATH("ffmpeg")!,
+                    FFprobePath = ExecutableFinder.FindExecutableFromPATH("ffprobe")!,
+
+                    DownsamplingFilters =
+                    [
+                        new DownsamplingFilter(
+                            Name: "360p",
+                            Height: 360,
+                            MaxVideoBitrate: "600k",
+                            MaxAudioBitrate: "64k"
+                        )
+                    ]
+                };
+
+                return ValueTask.FromResult<AdaptiveHlsTranscoderConfiguration?>(config);
+            }
         }
 
         private class StreamProcessorEventListener : IStreamProcessorEventHandler
