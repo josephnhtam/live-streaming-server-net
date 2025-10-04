@@ -10,12 +10,10 @@ namespace LiveStreamingServerNet.Standalone.Internal.Services
     internal class RtmpStreamManagerApiService : IRtmpStreamManagerApiService
     {
         private readonly IRtmpStreamInfoManager _streamInfoManager;
-        private readonly IBitrateTrackingService? _bitrateTrackingService;
 
-        public RtmpStreamManagerApiService(IRtmpStreamInfoManager streamInfoManager, IBitrateTrackingService? bitrateTrackingService = null)
+        public RtmpStreamManagerApiService(IRtmpStreamInfoManager streamInfoManager)
         {
             _streamInfoManager = streamInfoManager;
-            _bitrateTrackingService = bitrateTrackingService;
         }
 
         public Task<GetStreamsResponse> GetStreamsAsync(GetStreamsRequest request)
@@ -41,14 +39,7 @@ namespace LiveStreamingServerNet.Standalone.Internal.Services
 
         private StreamDto ToDto(IRtmpStreamInfo streamInfo)
         {
-            var dto = streamInfo.ToDto();
-
-            if (_bitrateTrackingService != null)
-            {
-                dto.AddBitrateInformation(streamInfo, _bitrateTrackingService);
-            }
-
-            return dto;
+            return streamInfo.ToDto();
         }
 
         public async Task DeleteStreamAsync(string streamId, CancellationToken cancellation)

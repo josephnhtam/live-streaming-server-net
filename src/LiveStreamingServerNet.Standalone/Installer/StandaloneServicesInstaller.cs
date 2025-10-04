@@ -1,5 +1,4 @@
-﻿using LiveStreamingServerNet.Rtmp.Server.Contracts;
-using LiveStreamingServerNet.Rtmp.Server.Installer.Contracts;
+﻿using LiveStreamingServerNet.Rtmp.Server.Installer.Contracts;
 using LiveStreamingServerNet.Standalone.Internal.Services;
 using LiveStreamingServerNet.Standalone.Services.Contracts;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,22 +20,6 @@ namespace LiveStreamingServerNet.Standalone.Installer
             var services = configurator.Services;
 
             services.AddSingleton<IRtmpStreamManagerApiService, RtmpStreamManagerApiService>();
-
-            return configurator;
-        }
-
-        /// <summary>
-        /// Adds services required for bitrate tracking functionality.
-        /// </summary>
-        /// <param name="configurator">The RTMP server configurator</param>
-        /// <returns>The configurator for method chaining</returns>
-        public static IRtmpServerConfigurator AddBitrateTracking(this IRtmpServerConfigurator configurator)
-        {
-            var services = configurator.Services;
-
-            services.AddSingleton<IBitrateTrackingService, BitrateTrackingService>();
-            services.AddSingleton<IRtmpMediaMessageInterceptor, BitrateTrackingInterceptor>();
-            services.AddSingleton<IRtmpServerStreamEventHandler, BitrateTrackingStreamEventHandler>();
 
             return configurator;
         }

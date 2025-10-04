@@ -44,7 +44,11 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Contracts
         DateTime StartTime { get; }
 
         uint TimestampOffset { get; }
+        int VideoBitrate { get; }
+        int AudioBitrate { get; }
+
         void SetTimestampOffset(uint timestampOffset);
+        void BytesReceived(int byteCount, MediaType mediaType);
     }
 
     internal interface IRtmpSubscribeStreamContext : IRtmpMediaStreamContext
