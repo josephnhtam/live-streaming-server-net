@@ -1,4 +1,7 @@
-﻿using LiveStreamingServerNet.Rtmp.Server.Internal.Contracts;
+﻿using LiveStreamingServerNet.Rtmp.Internal;
+using LiveStreamingServerNet.Rtmp.Internal.Contracts;
+using LiveStreamingServerNet.Rtmp.Server.Configurations;
+using LiveStreamingServerNet.Rtmp.Server.Internal.Contracts;
 using LiveStreamingServerNet.Utilities.Buffers;
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using LiveStreamingServerNet.Utilities.Extensions;
@@ -14,12 +17,14 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
         public IRtmpPublishStreamContext? PublishContext { get; private set; }
         public IRtmpSubscribeStreamContext? SubscribeContext { get; private set; }
 
+        private readonly RtmpServerConfiguration _config;
         private readonly IBufferPool? _bufferPool;
 
-        public RtmpStreamContext(uint streamId, IRtmpClientSessionContext clientContext, IBufferPool? bufferPool)
+        public RtmpStreamContext(uint streamId, IRtmpClientSessionContext clientContext, RtmpServerConfiguration config, IBufferPool? bufferPool)
         {
             StreamId = streamId;
             ClientContext = clientContext;
+            _config = config;
             _bufferPool = bufferPool;
 
             CommandChunkStreamId = clientContext.GetNextChunkStreamId();
@@ -29,7 +34,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
         {
             ValidateContextCreation();
 
-            PublishContext = new RtmpPublishStreamContext(this, streamPath, streamArguments, _bufferPool);
+            PublishContext = new RtmpPublishStreamContext(this, streamPath, streamArguments, _config.BitrateTrackingWindow, _bufferPool);
             return PublishContext;
         }
 
@@ -136,6 +141,8 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
 
     internal class RtmpPublishStreamContext : RtmpMediaStreamContext, IRtmpPublishStreamContext
     {
+        private readonly IBitrateTracker? _videoBitrateTracker;
+        private readonly IBitrateTracker? _audioBitrateTracker;
         private uint _timestampOffset;
 
         public IRtmpStreamContext? StreamContext { get; }
@@ -147,19 +154,45 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
         public DateTime StartTime { get; }
 
         public uint TimestampOffset => _timestampOffset;
+        public int VideoBitrate => _videoBitrateTracker?.GetBitrateKbps() ?? 0;
+        public int AudioBitrate => _audioBitrateTracker?.GetBitrateKbps() ?? 0;
 
         public RtmpPublishStreamContext(
-            IRtmpStreamContext? streamContext, string streamPath, IReadOnlyDictionary<string, string> streamArguments, IBufferPool? bufferPool) :
+            IRtmpStreamContext? streamContext,
+            string streamPath,
+            IReadOnlyDictionary<string, string> streamArguments,
+            TimeSpan? bitrateTrackingWindow,
+            IBufferPool? bufferPool) :
             base(streamPath, streamArguments)
         {
             StreamContext = streamContext;
             GroupOfPicturesCache = new GroupOfPicturesCache(bufferPool);
             StartTime = DateTime.UtcNow;
+
+            if (bitrateTrackingWindow.HasValue && bitrateTrackingWindow.Value > TimeSpan.Zero)
+            {
+                _videoBitrateTracker = new BitrateTracker(bitrateTrackingWindow.Value);
+                _audioBitrateTracker = new BitrateTracker(bitrateTrackingWindow.Value);
+            }
         }
 
         public void SetTimestampOffset(uint timestampOffset)
         {
             _timestampOffset = timestampOffset;
+        }
+
+        public void BytesReceived(int byteCount, MediaType mediaType)
+        {
+            switch (mediaType)
+            {
+                case MediaType.Video:
+                    _videoBitrateTracker?.AddBytes(byteCount);
+                    break;
+
+                case MediaType.Audio:
+                    _audioBitrateTracker?.AddBytes(byteCount);
+                    break;
+            }
         }
 
         public override void Dispose()

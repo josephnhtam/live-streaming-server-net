@@ -462,7 +462,12 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Streams
 
         private RtmpPublishStreamContext CreatePublishStreamContext()
         {
-            return new RtmpPublishStreamContext(null, _streamPath, new Dictionary<string, string>(), _bufferPool);
+            return new RtmpPublishStreamContext(
+                streamContext: null,
+                streamPath: _streamPath,
+                streamArguments: new Dictionary<string, string>(),
+                bitrateTrackingWindow: null,
+                bufferPool: _bufferPool);
         }
 
         private static Channel<StreamData> CreateStreamDataChannel()

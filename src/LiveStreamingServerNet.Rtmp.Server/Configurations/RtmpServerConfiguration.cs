@@ -57,5 +57,12 @@
         /// Default: TimeSpan.Zero.
         /// </summary>
         public TimeSpan PublishStreamContinuationTimeout { get; set; } = TimeSpan.Zero;
+
+        /// <summary>
+        /// Gets or sets the time span over which to track bitrate.
+        /// A value of Zero disables bitrate tracking.
+        /// Default: 10 seconds.
+        /// </summary>
+        public TimeSpan BitrateTrackingWindow { get; set; } = TimeSpan.FromSeconds(10);
     }
 }

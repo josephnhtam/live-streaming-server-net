@@ -29,6 +29,16 @@ namespace LiveStreamingServerNet.Rtmp.Server.Contracts
         DateTime StartTime { get; }
 
         /// <summary>
+        /// Gets the current video bitrate of the stream in kilobits per second (kbps).
+        /// </summary>
+        int VideoBitrate { get; }
+
+        /// <summary>
+        /// Gets the current audio bitrate of the stream in kilobits per second (kbps).
+        /// </summary>
+        int AudioBitrate { get; }
+
+        /// <summary>
         /// Gets the session control interface for the publishing client.
         /// </summary>
         ISessionControl Publisher { get; }

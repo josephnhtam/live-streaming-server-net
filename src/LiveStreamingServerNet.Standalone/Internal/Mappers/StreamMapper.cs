@@ -1,7 +1,6 @@
 ﻿using LiveStreamingServerNet.AdminPanelUI.Dtos;
 using LiveStreamingServerNet.Networking.Contracts;
 using LiveStreamingServerNet.Rtmp.Server.Contracts;
-using LiveStreamingServerNet.Standalone.Services.Contracts;
 using Riok.Mapperly.Abstractions;
 
 namespace LiveStreamingServerNet.Standalone.Internal.Mappers
@@ -9,6 +8,7 @@ namespace LiveStreamingServerNet.Standalone.Internal.Mappers
     [Mapper]
     internal static partial class StreamMapper
     {
+        [UserMapping]
         public static StreamDto ToDto(this IRtmpStreamInfo stream)
         {
             var dto = ConvertToDto(stream);
@@ -26,28 +26,15 @@ namespace LiveStreamingServerNet.Standalone.Internal.Mappers
 
                 if (dto.AudioChannels == 0 && stream.MetaData.TryGetValue("stereo", out var _stereoValue) && _stereoValue is bool stereoValue)
                     dto.AudioChannels = stereoValue ? 2 : 1;
-                
-                dto.VideoBitrate = stream.MetaData.GetIntValue("videodatarate", 0);
-                dto.AudioBitrate = stream.MetaData.GetIntValue("audiodatarate", 0);
+
+                if (dto.VideoBitrate == 0)
+                    dto.VideoBitrate = stream.MetaData.GetIntValue("videodatarate", 0);
+
+                if (dto.AudioBitrate == 0)
+                    dto.AudioBitrate = stream.MetaData.GetIntValue("audiodatarate", 0);
             }
 
             return dto;
-        }
-        
-        public static void AddBitrateInformation(this StreamDto dto, IRtmpStreamInfo stream, IBitrateTrackingService bitrateTrackingService)
-        {
-            var liveVideoBitrate = bitrateTrackingService.GetCurrentVideoBitrate(stream.StreamPath) / 1000;
-            var liveAudioBitrate = bitrateTrackingService.GetCurrentAudioBitrate(stream.StreamPath) / 1000;
-
-            if (stream.MetaData != null)
-            {
-                dto.VideoBitrate = liveVideoBitrate > 0
-                    ? liveVideoBitrate
-                    : stream.MetaData.GetIntValue("videodatarate", 0);
-                dto.AudioBitrate = liveAudioBitrate > 0
-                    ? liveAudioBitrate
-                    : stream.MetaData.GetIntValue("audiodatarate", 0);
-            }
         }
 
         private static int GetIntValue(this IReadOnlyDictionary<string, object> dictionary, string key, int defaultValue)

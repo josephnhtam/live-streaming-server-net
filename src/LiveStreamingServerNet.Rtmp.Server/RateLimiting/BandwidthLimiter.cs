@@ -5,12 +5,12 @@ namespace LiveStreamingServerNet.Rtmp.Server.RateLimiting
 {
     public sealed class BandwidthLimiter : IBandwidthLimiter
     {
-        private long _bytesPerSecond;
-        private long _bytesLimit;
+        private readonly long _bytesPerSecond;
+        private readonly long _bytesLimit;
+        private readonly object _syncLock = new();
+
         private long _permittedBytes;
         private DateTime _lastReplenishmentTime;
-
-        private object _syncLock = new();
 
         public BandwidthLimiter(long bytesPerSecond, long bytesLimit)
         {

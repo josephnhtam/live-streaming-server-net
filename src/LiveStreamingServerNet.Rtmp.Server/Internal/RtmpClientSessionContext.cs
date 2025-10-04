@@ -70,7 +70,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
                 throw new InvalidOperationException($"Maximum number of streams per client ({_config.MaxStreamsPerClient}) exceeded.");
             }
 
-            var streamContext = new RtmpStreamContext(streamId, this, _bufferPool);
+            var streamContext = new RtmpStreamContext(streamId, this, _config, _bufferPool);
             _streamContexts[streamId] = streamContext;
 
             return streamContext;

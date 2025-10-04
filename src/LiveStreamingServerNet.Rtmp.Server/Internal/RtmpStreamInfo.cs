@@ -11,6 +11,8 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
         public IReadOnlyDictionary<string, object>? MetaData { get; }
 
         public DateTime StartTime { get; }
+        public int VideoBitrate { get; }
+        public int AudioBitrate { get; }
         public ISessionControl Publisher { get; }
         public IReadOnlyList<ISessionControl> Subscribers { get; }
 
@@ -18,6 +20,8 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal
         {
             StreamPath = context.StreamPath;
             StartTime = context.StartTime;
+            VideoBitrate = context.VideoBitrate;
+            AudioBitrate = context.AudioBitrate;
             StreamArguments = context.StreamArguments.ToDictionary(x => x.Key, x => x.Value);
             MetaData = context.StreamMetaData?.ToDictionary(x => x.Key, x => x.Value);
 
