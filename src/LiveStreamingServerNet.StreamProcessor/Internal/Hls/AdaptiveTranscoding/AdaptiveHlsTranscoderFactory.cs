@@ -13,6 +13,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.AdaptiveTranscodin
         private readonly IHlsCleanupManager _cleanupManager;
         private readonly IHlsPathRegistry _pathRegistry;
         private readonly AdaptiveHlsTranscoderConfiguration _config;
+        private readonly IAdaptiveHlsTranscoderConfigurationResolver? _resolver;
         private readonly ILogger<AdaptiveHlsTranscoder> _logger;
 
         public AdaptiveHlsTranscoderFactory(
@@ -20,47 +21,59 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Hls.AdaptiveTranscodin
             IHlsCleanupManager cleanupManager,
             IHlsPathRegistry pathRegistry,
             AdaptiveHlsTranscoderConfiguration config,
+            IAdaptiveHlsTranscoderConfigurationResolver? resolver,
             ILogger<AdaptiveHlsTranscoder> logger)
         {
             _services = services;
             _cleanupManager = cleanupManager;
             _pathRegistry = pathRegistry;
             _config = config;
+            _resolver = resolver;
             _logger = logger;
         }
 
         public async Task<IStreamProcessor?> CreateAsync(
             ISessionHandle client, Guid contextIdentifier, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
         {
-            if (!await _config.Condition.IsEnabled(_services, streamPath, streamArguments).ConfigureAwait(false))
+            var config = await ResolveConfigAsync(contextIdentifier, streamPath, streamArguments).ConfigureAwait(false);
+
+            if (!await config.Condition.IsEnabled(_services, streamPath, streamArguments).ConfigureAwait(false))
                 return null;
 
-            var outputPath = await _config.OutputPathResolver.ResolveOutputPath(
+            var outputPath = await config.OutputPathResolver.ResolveOutputPath(
                 _services, contextIdentifier, streamPath, streamArguments).ConfigureAwait(false);
 
-            var config = new AdaptiveHlsTranscoder.Configuration(
+            var transcoderConfig = new AdaptiveHlsTranscoder.Configuration(
                 ContextIdentifier: contextIdentifier,
-                Name: _config.Name,
+                Name: config.Name,
                 ManifestOutputPath: outputPath,
-                FFmpegPath: _config.FFmpegPath,
-                FFprobeGracefulShutdownTimeoutSeconds: _config.FFmpegGracefulShutdownTimeoutSeconds,
-                FFprobePath: _config.FFprobePath,
-                FFmpegGracefulTerminationSeconds: _config.FFprobeGracefulShutdownTimeoutSeconds,
-                HlsOptions: _config.HlsOptions,
-                PerformanceOptions: _config.PerformanceOptions,
-                DownsamplingFilters: _config.DownsamplingFilters.ToArray(),
-                VideoEncodingArguments: _config.VideoEncodingArguments,
-                AudioEncodingArguments: _config.AudioEncodingArguments,
-                VideoDecodingArguments: _config.VideoDecodingArguments,
-                AudioDecodingArguments: _config.AudioDecodingArguments,
-                VideoFilters: _config.VideoFilters?.ToArray(),
-                AudioFilters: _config.AudioFilters?.ToArray(),
-                AdditionalInputs: _config.AdditionalInputs?.ToArray(),
-                AdditionalComplexFilters: _config.AdditionalComplexFilters?.ToArray(),
-                CleanupDelay: _config.HlsOptions.DeleteOutdatedSegments ? _config.CleanupDelay : null
+                FFmpegPath: config.FFmpegPath,
+                FFprobeGracefulShutdownTimeoutSeconds: config.FFmpegGracefulShutdownTimeoutSeconds,
+                FFprobePath: config.FFprobePath,
+                FFmpegGracefulTerminationSeconds: config.FFprobeGracefulShutdownTimeoutSeconds,
+                HlsOptions: config.HlsOptions,
+                PerformanceOptions: config.PerformanceOptions,
+                DownsamplingFilters: config.DownsamplingFilters.ToArray(),
+                VideoEncodingArguments: config.VideoEncodingArguments,
+                AudioEncodingArguments: config.AudioEncodingArguments,
+                VideoDecodingArguments: config.VideoDecodingArguments,
+                AudioDecodingArguments: config.AudioDecodingArguments,
+                VideoFilters: config.VideoFilters?.ToArray(),
+                AudioFilters: config.AudioFilters?.ToArray(),
+                AdditionalInputs: config.AdditionalInputs?.ToArray(),
+                AdditionalComplexFilters: config.AdditionalComplexFilters?.ToArray(),
+                CleanupDelay: config.HlsOptions.DeleteOutdatedSegments ? config.CleanupDelay : null
             );
 
-            return new AdaptiveHlsTranscoder(streamPath, _cleanupManager, _pathRegistry, config, _logger);
+            return new AdaptiveHlsTranscoder(streamPath, _cleanupManager, _pathRegistry, transcoderConfig, _logger);
+        }
+
+        private async ValueTask<AdaptiveHlsTranscoderConfiguration> ResolveConfigAsync(Guid contextIdentifier, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
+        {
+            if (_resolver == null)
+                return _config;
+
+            return await _resolver.ResolveAsync(_services, contextIdentifier, streamPath, streamArguments).ConfigureAwait(false) ?? _config;
         }
     }
 }

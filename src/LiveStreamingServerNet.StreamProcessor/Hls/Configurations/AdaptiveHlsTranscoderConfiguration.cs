@@ -136,15 +136,6 @@ namespace LiveStreamingServerNet.StreamProcessor.Hls.Configurations
         /// Default: 30 seconds.
         /// </summary>
         public TimeSpan? CleanupDelay { get; set; } = TimeSpan.FromSeconds(30);
-
-        /// <summary>
-        /// Default output path resolver that creates paths in a subdirectory of the current working directory.
-        /// Path format: "./output/{contextIdentifier}/output.m3u8".
-        /// </summary>
-        public static Task<string> DefaultOutputPathResolver(Guid contextIdentifier, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
-        {
-            return Task.FromResult(Path.Combine(Directory.GetCurrentDirectory(), "output", contextIdentifier.ToString(), "output.m3u8"));
-        }
     }
 
     /// <summary>

@@ -17,8 +17,8 @@ namespace LiveStreamingServerNet.AdaptiveHlsWithCustomFiltersDemo
             builder.Services.AddCors(options =>
                 options.AddDefaultPolicy(policy =>
                     policy.AllowAnyHeader()
-                          .AllowAnyOrigin()
-                          .AllowAnyMethod()
+                        .AllowAnyOrigin()
+                        .AllowAnyMethod()
                 )
             );
 
@@ -40,64 +40,67 @@ namespace LiveStreamingServerNet.AdaptiveHlsWithCustomFiltersDemo
                 options => options
                     .Configure(options => options.EnableGopCaching = false)
                     .AddStreamProcessor()
-                    .AddAdaptiveHlsTranscoder(options =>
-                    {
-                        options.FFmpegPath = ExecutableFinder.FindExecutableFromPATH("ffmpeg")!;
-                        options.FFprobePath = ExecutableFinder.FindExecutableFromPATH("ffprobe")!;
+                    .AddAdaptiveHlsTranscoder(configure =>
+                        configure.ConfigureDefault(config =>
+                        {
+                            config.FFmpegPath = ExecutableFinder.FindExecutableFromPATH("ffmpeg")!;
+                            config.FFprobePath = ExecutableFinder.FindExecutableFromPATH("ffprobe")!;
 
-                        // Add an icon as the second input to the FFmpeg command
-                        options.AdditionalInputs = [Path.Combine(Directory.GetCurrentDirectory(), "icon.png")];
+                            // Add an icon as the second input to the FFmpeg command
+                            config.AdditionalInputs = [Path.Combine(Directory.GetCurrentDirectory(), "icon.png")];
 
-                        // Add custom complex filters to scale the icon to different sizes
-                        options.AdditionalComplexFilters = [
-                            "[1:v]scale=-2:64[icon360]",
-                            "[1:v]scale=-2:85[icon480]",
-                            "[1:v]scale=-2:128[icon720]",
-                            "[1:v]scale=-2:128[icon720t]"
-                        ];
+                            // Add custom complex filters to scale the icon to different sizes
+                            config.AdditionalComplexFilters =
+                            [
+                                "[1:v]scale=-2:64[icon360]",
+                                "[1:v]scale=-2:85[icon480]",
+                                "[1:v]scale=-2:128[icon720]",
+                                "[1:v]scale=-2:128[icon720t]"
+                            ];
 
-                        // Add custom audio filters to reduce the volume by half
-                        options.AudioFilters = ["volume=0.5"];
+                            // Add custom audio filters to reduce the volume by half
+                            config.AudioFilters = ["volume=0.5"];
 
-                        options.DownsamplingFilters =
-                        [
-                            new DownsamplingFilter(
-                                Name: "360p",
-                                Height: 360,
-                                MaxVideoBitrate: "600k",
-                                MaxAudioBitrate: "64k",
-                                // Overlay the icon360 on the video
-                                VideoFilter: ["[icon360]overlay"]
-                            ),
+                            config.DownsamplingFilters =
+                            [
+                                new DownsamplingFilter(
+                                    Name: "360p",
+                                    Height: 360,
+                                    MaxVideoBitrate: "600k",
+                                    MaxAudioBitrate: "64k",
+                                    // Overlay the icon360 on the video
+                                    VideoFilter: ["[icon360]overlay"]
+                                ),
 
-                            new DownsamplingFilter(
-                                Name: "480p",
-                                Height: 480,
-                                MaxVideoBitrate: "1500k",
-                                MaxAudioBitrate: "128k",
-                                // Overlay the icon480 on the video
-                                VideoFilter: ["[icon480]overlay"]
-                            ),
+                                new DownsamplingFilter(
+                                    Name: "480p",
+                                    Height: 480,
+                                    MaxVideoBitrate: "1500k",
+                                    MaxAudioBitrate: "128k",
+                                    // Overlay the icon480 on the video
+                                    VideoFilter: ["[icon480]overlay"]
+                                ),
 
-                            new DownsamplingFilter(
-                                Name: "720p",
-                                Height: 720,
-                                MaxVideoBitrate: "3000k",
-                                MaxAudioBitrate: "256k",
-                                // Overlay the icon720 on the video
-                                VideoFilter: ["[icon720]overlay"]
-                            ),
+                                new DownsamplingFilter(
+                                    Name: "720p",
+                                    Height: 720,
+                                    MaxVideoBitrate: "3000k",
+                                    MaxAudioBitrate: "256k",
+                                    // Overlay the icon720 on the video
+                                    VideoFilter: ["[icon720]overlay"]
+                                ),
 
-                            new DownsamplingFilter(
-                                Name: "720p_rotated",
-                                Height: 720,
-                                MaxVideoBitrate: "3000k",
-                                MaxAudioBitrate: "256k",
-                                // Overlay the icon720t on the video, and rotate the video 90 degrees
-                                VideoFilter: ["[icon720t]overlay", "transpose=1"]
-                            ),
-                        ];
-                    })
+                                new DownsamplingFilter(
+                                    Name: "720p_rotated",
+                                    Height: 720,
+                                    MaxVideoBitrate: "3000k",
+                                    MaxAudioBitrate: "256k",
+                                    // Overlay the icon720t on the video, and rotate the video 90 degrees
+                                    VideoFilter: ["[icon720t]overlay", "transpose=1"]
+                                ),
+                            ];
+                        })
+                    )
             );
         }
     }

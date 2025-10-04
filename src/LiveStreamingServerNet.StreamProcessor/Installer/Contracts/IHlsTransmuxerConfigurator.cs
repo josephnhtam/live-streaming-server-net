@@ -19,7 +19,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Installer.Contracts
         /// Configures the HLS transmuxer.
         /// </summary>
         /// <param name="configure">Action to configure the HLS transmuxer.</param>
-        /// <returns>The configurator instance for method chaining.</returns
+        /// <returns>The configurator instance for method chaining.</returns>
         IHlsTransmuxerConfigurator Configure(Action<HlsTransmuxerConfiguration> configure);
 
         /// <summary>

@@ -32,12 +32,13 @@ namespace LiveStreamingServerNet.StreamProcessor.Installer
         /// <param name="configure">Optional action to configure the adaptive HLS transcoder.</param>
         /// <returns>The stream processing builder for method chaining.</returns>
         public static IStreamProcessingBuilder AddAdaptiveHlsTranscoder(
-            this IStreamProcessingBuilder builder, Action<AdaptiveHlsTranscoderConfiguration>? configure)
+            this IStreamProcessingBuilder builder, Action<IAdaptiveHlsTranscoderConfigurator>? configure)
         {
             var services = builder.Services;
 
-            var config = new AdaptiveHlsTranscoderConfiguration();
-            configure?.Invoke(config);
+            var configuratorContext = new AdaptiveHlsTranscoderConfiguratorContext(new AdaptiveHlsTranscoderConfiguration());
+            var configurator = new AdaptiveHlsTranscoderConfigurator(configuratorContext);
+            configure?.Invoke(configurator);
 
             services.TryAddSingleton<IHlsPathRegistry, HlsPathRegistry>();
             services.TryAddSingleton<IHlsPathMapper>(svc => svc.GetRequiredService<IHlsPathRegistry>());
@@ -49,7 +50,8 @@ namespace LiveStreamingServerNet.StreamProcessor.Installer
                     svc,
                     svc.GetRequiredService<IHlsCleanupManager>(),
                     svc.GetRequiredService<IHlsPathRegistry>(),
-                    config,
+                    configuratorContext.Configuration,
+                    configuratorContext.ConfigurationResolver,
                     svc.GetRequiredService<ILogger<AdaptiveHlsTranscoder>>()
                 )
             );

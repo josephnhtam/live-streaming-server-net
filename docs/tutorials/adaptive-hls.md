@@ -37,35 +37,37 @@ var outputDirectory = Path.Combine(Directory.GetCurrentDirectory(), "output");
 using var liveStreamingServer = LiveStreamingServerBuilder.Create()
     .ConfigureRtmpServer(options => options
         .AddStreamProcessor()
-        .AddAdaptiveHlsTranscoder(config =>
-        {
-            config.FFmpegPath = ExecutableFinder.FindExecutableFromPATH("ffmpeg")!;
-            config.FFprobePath = ExecutableFinder.FindExecutableFromPATH("ffprobe")!;
-            config.OutputPathResolver = new HlsOutputPathResolver(outputDirectory);
-
-            config.DownsamplingFilters = new DownsamplingFilter[]{
-                new DownsamplingFilter(
-                    Name: "360p",
-                    Height: 360,
-                    MaxVideoBitrate: "600k",
-                    MaxAudioBitrate: "64k"
-                ),
-
-                new DownsamplingFilter(
-                    Name: "480p",
-                    Height: 480,
-                    MaxVideoBitrate: "1500k",
-                    MaxAudioBitrate: "128k"
-                ),
-
-                new DownsamplingFilter(
-                    Name: "720p",
-                    Height: 720,
-                    MaxVideoBitrate: "3000k",
-                    MaxAudioBitrate: "256k"
-                )
-            };
-        })
+        .AddAdaptiveHlsTranscoder(configure =>
+            configure.ConfigureDefault(config => 
+            {
+                config.FFmpegPath = ExecutableFinder.FindExecutableFromPATH("ffmpeg")!;
+                config.FFprobePath = ExecutableFinder.FindExecutableFromPATH("ffprobe")!;
+                config.OutputPathResolver = new HlsOutputPathResolver(outputDirectory);
+    
+                config.DownsamplingFilters = new DownsamplingFilter[]{
+                    new DownsamplingFilter(
+                        Name: "360p",
+                        Height: 360,
+                        MaxVideoBitrate: "600k",
+                        MaxAudioBitrate: "64k"
+                    ),
+    
+                    new DownsamplingFilter(
+                        Name: "480p",
+                        Height: 480,
+                        MaxVideoBitrate: "1500k",
+                        MaxAudioBitrate: "128k"
+                    ),
+    
+                    new DownsamplingFilter(
+                        Name: "720p",
+                        Height: 720,
+                        MaxVideoBitrate: "3000k",
+                        MaxAudioBitrate: "256k"
+                    )
+                };
+            })
+        )
     )
     .ConfigureLogging(options => options.AddConsole())
     .Build();
