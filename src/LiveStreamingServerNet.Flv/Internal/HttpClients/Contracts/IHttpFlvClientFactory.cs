@@ -5,6 +5,6 @@ namespace LiveStreamingServerNet.Flv.Internal.HttpClients.Contracts
 {
     internal interface IHttpFlvClientFactory
     {
-        IFlvClient CreateClient(HttpContext context, string streamPath, CancellationToken stoppingToken);
+        IFlvClient CreateClient(HttpContext context, string streamPath, IReadOnlyDictionary<string, string> streamArguments, CancellationToken stoppingToken);
     }
 }

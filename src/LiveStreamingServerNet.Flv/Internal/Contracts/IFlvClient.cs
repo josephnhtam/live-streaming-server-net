@@ -1,4 +1,5 @@
-﻿using LiveStreamingServerNet.Rtmp.Utilities.Containers;
+﻿using LiveStreamingServerNet.Flv.Contracts;
+using LiveStreamingServerNet.Rtmp.Utilities.Containers;
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 
 namespace LiveStreamingServerNet.Flv.Internal.Contracts
@@ -7,6 +8,8 @@ namespace LiveStreamingServerNet.Flv.Internal.Contracts
     {
         string ClientId { get; }
         string StreamPath { get; }
+        IReadOnlyDictionary<string, string> StreamArguments { get; }
+        IFlvRequest Request { get; }
         CancellationToken StoppingToken { get; }
         void Stop();
         void CompleteInitialization();

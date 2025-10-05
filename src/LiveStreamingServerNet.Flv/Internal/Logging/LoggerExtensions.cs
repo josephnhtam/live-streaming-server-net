@@ -24,5 +24,11 @@ namespace LiveStreamingServerNet.Flv.Internal.Logging
 
         [LoggerMessage(LogLevel.Error, "An error occurred while running client (StreamPath={StreamPath})")]
         public static partial void RunClientError(this ILogger logger, string streamPath, Exception ex);
+
+        [LoggerMessage(LogLevel.Error, "An error occurred while dispatching FLV stream subscribed event (ClientId={ClientId})")]
+        public static partial void DispatchingFlvStreamSubscribedEventError(this ILogger logger, string clientId, Exception ex);
+
+        [LoggerMessage(LogLevel.Error, "An error occurred while dispatching FLV stream unsubscribed event (ClientId={ClientId})")]
+        public static partial void DispatchingFlvStreamUnsubscribedEventError(this ILogger logger, string clientId, Exception ex);
     }
 }

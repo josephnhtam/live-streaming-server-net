@@ -1,4 +1,5 @@
-﻿using LiveStreamingServerNet.Flv.Internal.Contracts;
+﻿using LiveStreamingServerNet.Flv.Contracts;
+using LiveStreamingServerNet.Flv.Internal.Contracts;
 using LiveStreamingServerNet.Flv.Internal.Services.Contracts;
 using LiveStreamingServerNet.Utilities.Contracts;
 using Microsoft.Extensions.Logging;
@@ -21,10 +22,10 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
             _logger = logger;
         }
 
-        public IFlvClient Create(string clientId, string streamPath, IStreamWriter streamWriter, CancellationToken stoppingToken)
+        public IFlvClient Create(string clientId, string streamPath, IReadOnlyDictionary<string, string> streamArguments, IFlvRequest request, IStreamWriter streamWriter, CancellationToken stoppingToken)
         {
             var flvWriter = _flvWriterFactory.Create(streamWriter);
-            return new FlvClient(clientId, streamPath, _mediaTagBroadcaster, flvWriter, _logger, stoppingToken);
+            return new FlvClient(clientId, streamPath, streamArguments, request, _mediaTagBroadcaster, flvWriter, _logger, stoppingToken);
         }
     }
 }

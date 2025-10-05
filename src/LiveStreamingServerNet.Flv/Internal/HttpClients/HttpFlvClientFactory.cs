@@ -15,11 +15,12 @@ namespace LiveStreamingServerNet.Flv.Internal.HttpClients
             _flvClientFactory = flvClientFactory;
         }
 
-        public IFlvClient CreateClient(HttpContext context, string streamPath, CancellationToken stoppingToken)
+        public IFlvClient CreateClient(HttpContext context, string streamPath, IReadOnlyDictionary<string, string> streamArguments, CancellationToken stoppingToken)
         {
-            var clientId = $"HTTP-{Interlocked.Increment(ref _lastClientId)}";
+            var clientId = $"HTTP:{Interlocked.Increment(ref _lastClientId)}";
             var streamWriter = new HttpResponseStreamWriter(context.Response);
-            return _flvClientFactory.Create(clientId, streamPath, streamWriter, stoppingToken);
+            var request = new FlvRequest(context);
+            return _flvClientFactory.Create(clientId, streamPath, streamArguments, request, streamWriter, stoppingToken);
         }
     }
 }
