@@ -1,6 +1,7 @@
 ﻿using LiveStreamingServerNet.Flv.Internal.Contracts;
 using LiveStreamingServerNet.Flv.Internal.Services.Contracts;
 using LiveStreamingServerNet.Flv.Internal.WebSocketClients.Contracts;
+using Microsoft.AspNetCore.Http;
 using System.Net.WebSockets;
 
 namespace LiveStreamingServerNet.Flv.Internal.WebSocketClients
@@ -15,11 +16,12 @@ namespace LiveStreamingServerNet.Flv.Internal.WebSocketClients
             _flvClientFactory = flvClientFactory;
         }
 
-        public IFlvClient CreateClient(WebSocket webSocket, string streamPath, CancellationToken stoppingToken)
+        public IFlvClient CreateClient(HttpContext context, WebSocket webSocket, string streamPath, IReadOnlyDictionary<string, string> streamArguments, CancellationToken stoppingToken)
         {
-            var clientId = $"WS-{Interlocked.Increment(ref _lastClientId)}";
+            var clientId = $"WS:{Interlocked.Increment(ref _lastClientId)}";
             var streamWriter = new WebSocketStreamWriter(webSocket);
-            return _flvClientFactory.Create(clientId, streamPath, streamWriter, stoppingToken);
+            var request = new FlvRequest(context);
+            return _flvClientFactory.Create(clientId, streamPath, streamArguments, request, streamWriter, stoppingToken);
         }
     }
 }

@@ -15,10 +15,12 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
         private readonly Dictionary<string, List<IFlvClient>> _subscribingClients = new();
         private readonly Dictionary<IFlvClient, string> _subscribedStreamPaths = new();
 
+        private readonly IFlvServerStreamEventDispatcher _eventDispatcher;
         private readonly FlvConfiguration _config;
 
-        public FlvStreamManagerService(IOptions<FlvConfiguration> config)
+        public FlvStreamManagerService(IFlvServerStreamEventDispatcher eventDispatcher, IOptions<FlvConfiguration> config)
         {
+            _eventDispatcher = eventDispatcher;
             _config = config.Value;
         }
 
@@ -104,7 +106,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
                 _streamContinuationContexts[streamPath] = continuationContext;
 
                 continuationContext.SetExpirationCallback(
-                     _config.StreamContinuationTimeout,
+                    _config.StreamContinuationTimeout,
                     () => FinalizeStreamContinuationContext(continuationContext));
             }
         }
@@ -152,7 +154,19 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
             }
         }
 
-        public SubscribingStreamResult StartSubscribingStream(IFlvClient client, string streamPath, bool requireReady)
+        public async ValueTask<SubscribingStreamResult> StartSubscribingStreamAsync(IFlvClient client, string streamPath, bool requireReady)
+        {
+            var result = StartSubscribingStream(client, streamPath, requireReady);
+
+            if (result == SubscribingStreamResult.Succeeded)
+            {
+                await _eventDispatcher.FlvStreamSubscribedAsync(client).ConfigureAwait(false);
+            }
+
+            return result;
+        }
+
+        private SubscribingStreamResult StartSubscribingStream(IFlvClient client, string streamPath, bool requireReady)
         {
             lock (_publishingSyncLock)
             {
@@ -178,7 +192,19 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
             }
         }
 
-        public bool StopSubscribingStream(IFlvClient client)
+        public async ValueTask<bool> StopSubscribingStreamAsync(IFlvClient client)
+        {
+            var result = StopSubscribingStream(client);
+
+            if (result)
+            {
+                await _eventDispatcher.FlvStreamUnsubscribedAsync(client).ConfigureAwait(false);
+            }
+
+            return result;
+        }
+
+        private bool StopSubscribingStream(IFlvClient client)
         {
             lock (_subscribingSyncLock)
             {

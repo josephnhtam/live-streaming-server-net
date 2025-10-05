@@ -13,13 +13,15 @@ namespace LiveStreamingServerNet.Flv.Test.Services
     {
         private readonly IFixture _fixture;
         private readonly FlvConfiguration _config;
+        private readonly IFlvServerStreamEventDispatcher _eventDispatcher;
         private readonly FlvStreamManagerService _sut;
 
         public FlvStreamManagerServiceTest()
         {
             _fixture = new Fixture();
             _config = new FlvConfiguration();
-            _sut = new FlvStreamManagerService(Options.Create(_config));
+            _eventDispatcher = Substitute.For<IFlvServerStreamEventDispatcher>();
+            _sut = new FlvStreamManagerService(_eventDispatcher, Options.Create(_config));
         }
 
         [Fact]
@@ -117,7 +119,7 @@ namespace LiveStreamingServerNet.Flv.Test.Services
         }
 
         [Fact]
-        public void StartSubscribingStream_Should_AddSubscriberAndReturnSucceeded()
+        public async Task StartSubscribingStream_Should_AddSubscriberAndReturnSucceeded()
         {
             // Arrange
             var flvClient = Substitute.For<IFlvClient>();
@@ -129,7 +131,7 @@ namespace LiveStreamingServerNet.Flv.Test.Services
             _sut.StartPublishingStream(streamContext);
 
             // Act
-            var result = _sut.StartSubscribingStream(flvClient, streamPath, true);
+            var result = await _sut.StartSubscribingStreamAsync(flvClient, streamPath, true);
 
             // Assert
             result.Should().Be(SubscribingStreamResult.Succeeded);
@@ -137,7 +139,7 @@ namespace LiveStreamingServerNet.Flv.Test.Services
         }
 
         [Fact]
-        public void StartSubscribingStream_Should_ReturnAlreadySubscribing_When_SubscriberIsAlreadySubscribing()
+        public async Task StartSubscribingStream_Should_ReturnAlreadySubscribing_When_SubscriberIsAlreadySubscribing()
         {
             // Arrange
             var flvClient = Substitute.For<IFlvClient>();
@@ -147,17 +149,17 @@ namespace LiveStreamingServerNet.Flv.Test.Services
             streamContext.IsReady.Returns(true);
 
             _sut.StartPublishingStream(streamContext);
-            _sut.StartSubscribingStream(flvClient, streamPath, true);
+            await _sut.StartSubscribingStreamAsync(flvClient, streamPath, true);
 
             // Act
-            var result = _sut.StartSubscribingStream(flvClient, streamPath, true);
+            var result = await _sut.StartSubscribingStreamAsync(flvClient, streamPath, true);
 
             // Assert
             result.Should().Be(SubscribingStreamResult.AlreadySubscribing);
         }
 
         [Fact]
-        public void StopSubscribingStream_Should_RemoveSubscriberAndReturnTrue()
+        public async Task StopSubscribingStream_Should_RemoveSubscriberAndReturnTrue()
         {
             // Arrange
             var flvClient = Substitute.For<IFlvClient>();
@@ -167,10 +169,10 @@ namespace LiveStreamingServerNet.Flv.Test.Services
             streamContext.IsReady.Returns(true);
 
             _sut.StartPublishingStream(streamContext);
-            _sut.StartSubscribingStream(flvClient, streamPath, true);
+            await _sut.StartSubscribingStreamAsync(flvClient, streamPath, true);
 
             // Act
-            var result = _sut.StopSubscribingStream(flvClient);
+            var result = await _sut.StopSubscribingStreamAsync(flvClient);
 
             // Assert
             result.Should().BeTrue();
@@ -178,20 +180,20 @@ namespace LiveStreamingServerNet.Flv.Test.Services
         }
 
         [Fact]
-        public void StopSubscribingStream_Should_ReturnFalse_When_SubscriberDoesNotExist()
+        public async Task StopSubscribingStream_Should_ReturnFalse_When_SubscriberDoesNotExist()
         {
             // Arrange
             var flvClient = Substitute.For<IFlvClient>();
 
             // Act
-            var result = _sut.StopSubscribingStream(flvClient);
+            var result = await _sut.StopSubscribingStreamAsync(flvClient);
 
             // Assert
             result.Should().BeFalse();
         }
 
         [Fact]
-        public void GetSubscribers_Should_ReturnCorrectSubscribers()
+        public async Task GetSubscribers_Should_ReturnCorrectSubscribers()
         {
             // Arrange
             var flvClient1 = Substitute.For<IFlvClient>();
@@ -203,8 +205,8 @@ namespace LiveStreamingServerNet.Flv.Test.Services
             streamContext.IsReady.Returns(true);
 
             _sut.StartPublishingStream(streamContext);
-            _sut.StartSubscribingStream(flvClient1, streamPath, true);
-            _sut.StartSubscribingStream(flvClient2, streamPath, true);
+            await _sut.StartSubscribingStreamAsync(flvClient1, streamPath, true);
+            await _sut.StartSubscribingStreamAsync(flvClient2, streamPath, true);
 
             // Act
             var result = _sut.GetSubscribers(streamPath);
@@ -216,7 +218,7 @@ namespace LiveStreamingServerNet.Flv.Test.Services
         }
 
         [Fact]
-        public void StartPublishingStream_Should_ReturnCorrectSubscribers()
+        public async Task StartPublishingStream_Should_ReturnCorrectSubscribers()
         {
             // Arrange
             var flvClient1 = Substitute.For<IFlvClient>();
@@ -228,8 +230,8 @@ namespace LiveStreamingServerNet.Flv.Test.Services
             streamContext.IsReady.Returns(true);
 
             _sut.StartPublishingStream(streamContext);
-            _sut.StartSubscribingStream(flvClient1, streamPath, true);
-            _sut.StartSubscribingStream(flvClient2, streamPath, true);
+            await _sut.StartSubscribingStreamAsync(flvClient1, streamPath, true);
+            await _sut.StartSubscribingStreamAsync(flvClient2, streamPath, true);
 
             // Act
             var result = _sut.StopPublishingStream(streamPath, false, out var existingSubscribers);

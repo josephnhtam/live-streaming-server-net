@@ -70,9 +70,9 @@ namespace LiveStreamingServerNet.Flv.Middlewares
             await SubscribeToStreamAsync(context, streamPath, streamArguments).ConfigureAwait(false);
         }
 
-        private IFlvClient CreateClient(WebSocket webSocket, string streamPath, CancellationToken cancellation)
+        private IFlvClient CreateClient(HttpContext context, WebSocket webSocket, string streamPath, IReadOnlyDictionary<string, string> streamArguments, CancellationToken cancellation)
         {
-            return _clientFactory.CreateClient(webSocket, streamPath, cancellation);
+            return _clientFactory.CreateClient(context, webSocket, streamPath, streamArguments, cancellation);
         }
 
         private async Task SubscribeToStreamAsync(HttpContext context, string streamPath, IReadOnlyDictionary<string, string> streamArguments)
@@ -81,12 +81,12 @@ namespace LiveStreamingServerNet.Flv.Middlewares
 
             var webSocket = await context.WebSockets.AcceptWebSocketAsync(_webSocketAcceptContext).ConfigureAwait(false);
 
-            var client = CreateClient(webSocket, streamPath, cancellation);
+            var client = CreateClient(context, webSocket, streamPath, streamArguments, cancellation);
             await using (client.ConfigureAwait(false))
             {
                 using var relaySubscriber = await RequestDownstreamAsync(streamPath, cancellation).ConfigureAwait(false);
 
-                switch (_streamManager.StartSubscribingStream(client, streamPath, !UseRelay()))
+                switch (await _streamManager.StartSubscribingStreamAsync(client, streamPath, !UseRelay()))
                 {
                     case SubscribingStreamResult.Succeeded:
                         await _clientHandler.RunClientAsync(client, cancellation).ConfigureAwait(false);

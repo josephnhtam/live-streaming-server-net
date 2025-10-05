@@ -1,4 +1,5 @@
-﻿using LiveStreamingServerNet.Flv.Internal.Contracts;
+﻿using LiveStreamingServerNet.Flv.Contracts;
+using LiveStreamingServerNet.Flv.Internal.Contracts;
 using LiveStreamingServerNet.Flv.Internal.Logging;
 using LiveStreamingServerNet.Flv.Internal.Services.Contracts;
 using LiveStreamingServerNet.Rtmp.Utilities.Containers;
@@ -13,6 +14,8 @@ namespace LiveStreamingServerNet.Flv.Internal
     {
         public string ClientId { get; }
         public string StreamPath { get; }
+        public IReadOnlyDictionary<string, string> StreamArguments { get; }
+        public IFlvRequest Request { get; }
         public CancellationToken StoppingToken { get; }
 
         private readonly ILogger _logger;
@@ -21,7 +24,6 @@ namespace LiveStreamingServerNet.Flv.Internal
         private readonly TaskCompletionSource _initializationTcs = new();
 
         private readonly CancellationTokenSource _stoppingCts;
-        private readonly TaskCompletionSource _taskCompletionSource;
         private readonly Task _initializationTask;
         private readonly Task _completeTask;
 
@@ -30,6 +32,8 @@ namespace LiveStreamingServerNet.Flv.Internal
         public FlvClient(
             string clientId,
             string streamPath,
+            IReadOnlyDictionary<string, string> streamArguments,
+            IFlvRequest request,
             IFlvMediaTagBroadcasterService mediaTagBroadcaster,
             IFlvWriter flvWriter,
             ILogger<FlvClient> logger,
@@ -41,20 +45,22 @@ namespace LiveStreamingServerNet.Flv.Internal
 
             ClientId = clientId;
             StreamPath = streamPath;
+            StreamArguments = new Dictionary<string, string>(streamArguments);
+            Request = request;
 
             _stoppingCts = CancellationTokenSource.CreateLinkedTokenSource(stoppingToken);
             StoppingToken = _stoppingCts.Token;
 
-            _taskCompletionSource = new TaskCompletionSource();
+            var taskCompletionSource = new TaskCompletionSource();
 
             _stoppingCts.Token.Register(() =>
             {
                 _initializationTcs.TrySetCanceled();
-                _taskCompletionSource.TrySetResult();
+                taskCompletionSource.TrySetResult();
             });
 
             _initializationTask = _initializationTcs.Task;
-            _completeTask = _taskCompletionSource.Task;
+            _completeTask = taskCompletionSource.Task;
 
             _mediaTagBroadcaster.RegisterClient(this);
         }

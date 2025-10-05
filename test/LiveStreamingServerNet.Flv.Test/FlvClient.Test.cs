@@ -1,5 +1,6 @@
 ﻿using AutoFixture;
 using FluentAssertions;
+using LiveStreamingServerNet.Flv.Contracts;
 using LiveStreamingServerNet.Flv.Internal;
 using LiveStreamingServerNet.Flv.Internal.Contracts;
 using LiveStreamingServerNet.Flv.Internal.Services.Contracts;
@@ -17,8 +18,10 @@ namespace LiveStreamingServerNet.Flv.Test
         private readonly IFixture _fixture;
         private readonly string _clientId;
         private readonly string _streamPath;
+        private readonly Dictionary<string, string> _streamArguments;
         private readonly CancellationTokenSource _stoppingCts;
         private readonly CancellationToken _stoppingToken;
+        private readonly IFlvRequest _flvRequest;
         private readonly IFlvMediaTagBroadcasterService _mediaTagBroadcaster;
         private readonly IFlvWriter _flvWriter;
         private readonly ILogger<FlvClient> _logger;
@@ -29,13 +32,15 @@ namespace LiveStreamingServerNet.Flv.Test
             _fixture = new Fixture();
             _clientId = _fixture.Create<string>();
             _streamPath = _fixture.Create<string>();
+            _streamArguments = _fixture.Create<Dictionary<string, string>>();
             _stoppingCts = new CancellationTokenSource();
             _stoppingToken = _stoppingCts.Token;
 
+            _flvRequest = Substitute.For<IFlvRequest>();
             _mediaTagBroadcaster = Substitute.For<IFlvMediaTagBroadcasterService>();
             _flvWriter = Substitute.For<IFlvWriter>();
             _logger = Substitute.For<ILogger<FlvClient>>();
-            _sut = new FlvClient(_clientId, _streamPath, _mediaTagBroadcaster, _flvWriter, _logger, _stoppingToken);
+            _sut = new FlvClient(_clientId, _streamPath, _streamArguments, _flvRequest, _mediaTagBroadcaster, _flvWriter, _logger, _stoppingToken);
         }
 
         [Fact]
@@ -134,7 +139,7 @@ namespace LiveStreamingServerNet.Flv.Test
             var allowVideoTags = _fixture.Create<bool>();
 
             _flvWriter.WriteHeaderAsync(allowAudioTags, allowVideoTags, Arg.Any<CancellationToken>())
-                      .Throws(new Exception());
+                .Throws(new Exception());
 
             // Act
             await _sut.WriteHeaderAsync(allowAudioTags, allowVideoTags, default);

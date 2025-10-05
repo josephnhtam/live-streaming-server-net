@@ -119,12 +119,12 @@ namespace LiveStreamingServerNet.Rtmp.Relay.Internal.Services
                 if (!IsDownstreamNeeded(streamPath))
                     return CreateDownstreamProcessResult.NotCreated;
 
-                CreatetDownstreamProcessTask(streamPath, tcs);
+                CreateDownstreamProcessTask(streamPath, tcs);
             }
 
             return await tcs.Task.ConfigureAwait(false);
 
-            void CreatetDownstreamProcessTask(string streamPath, TaskCompletionSource<CreateDownstreamProcessResult> tcs)
+            void CreateDownstreamProcessTask(string streamPath, TaskCompletionSource<CreateDownstreamProcessResult> tcs)
             {
                 var cts = new CancellationTokenSource();
 

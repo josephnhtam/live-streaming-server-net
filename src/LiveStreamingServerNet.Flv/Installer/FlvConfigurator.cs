@@ -1,4 +1,5 @@
 ﻿using LiveStreamingServerNet.Flv.Configurations;
+using LiveStreamingServerNet.Flv.Contracts;
 using LiveStreamingServerNet.Flv.Installer.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -28,5 +29,19 @@ namespace LiveStreamingServerNet.Flv.Installer
 
             return this;
         }
+
+        public IFlvConfigurator AddStreamEventHandler<TStreamEventHandler>()
+            where TStreamEventHandler : class, IFlvServerStreamEventHandler
+        {
+            _services.AddSingleton<IFlvServerStreamEventHandler, TStreamEventHandler>();
+            return this;
+        }
+
+        public IFlvConfigurator AddStreamEventHandler(Func<IServiceProvider, IFlvServerStreamEventHandler> implementationFactory)
+        {
+            _services.AddSingleton(implementationFactory);
+            return this;
+        }
+
     }
 }

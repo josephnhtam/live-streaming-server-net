@@ -47,7 +47,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
             }
             finally
             {
-                _streamManager.StopSubscribingStream(client);
+                await _streamManager.StopSubscribingStreamAsync(client);
             }
         }
 

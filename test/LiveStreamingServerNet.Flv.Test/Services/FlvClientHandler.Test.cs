@@ -77,7 +77,7 @@ namespace LiveStreamingServerNet.Flv.Test.Services
             await _sut.RunClientAsync(_client, default);
 
             // Assert
-            _streamManager.Received().StopSubscribingStream(_client);
+            _ = _streamManager.Received().StopSubscribingStreamAsync(_client);
         }
     }
 }

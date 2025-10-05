@@ -1,5 +1,8 @@
 ﻿using LiveStreamingServerNet.Flv.Configurations;
+using LiveStreamingServerNet.Flv.Contracts;
 using LiveStreamingServerNet.Flv.Installer.Contracts;
+using LiveStreamingServerNet.Flv.Internal;
+using LiveStreamingServerNet.Flv.Internal.Contracts;
 using LiveStreamingServerNet.Flv.Internal.HttpClients;
 using LiveStreamingServerNet.Flv.Internal.HttpClients.Contracts;
 using LiveStreamingServerNet.Flv.Internal.MediaPacketDiscarders;
@@ -41,22 +44,25 @@ namespace LiveStreamingServerNet.Flv.Installer
             var services = configurator.Services;
 
             configurator.AddStreamEventHandler<RtmpServerStreamEventListener>()
-                        .AddMediaMessageInterceptor<RtmpMediaMessageScraper>()
-                        .AddMediaCachingInterceptor<RtmpMediaCacheScraper>();
+                .AddMediaMessageInterceptor<RtmpMediaMessageScraper>()
+                .AddMediaCachingInterceptor<RtmpMediaCacheScraper>();
 
             services.AddSingleton<IFlvWriterFactory, FlvWriterFactory>()
-                    .AddSingleton<IFlvClientFactory, FlvClientFactory>()
-                    .AddSingleton<IFlvClientHandler, FlvClientHandler>()
-                    .AddSingleton<IMediaPacketDiscarderFactory, MediaPacketDiscarderFactory>();
+                .AddSingleton<IFlvClientFactory, FlvClientFactory>()
+                .AddSingleton<IFlvClientHandler, FlvClientHandler>()
+                .AddSingleton<IMediaPacketDiscarderFactory, MediaPacketDiscarderFactory>();
 
-            services.AddSingleton<IHttpFlvClientFactory, HttpFlvClientFactory>();
-
-            services.AddSingleton<IWebSocketFlvClientFactory, WebSocketFlvClientFactory>();
+            services.AddSingleton<IHttpFlvClientFactory, HttpFlvClientFactory>()
+                .AddSingleton<IWebSocketFlvClientFactory, WebSocketFlvClientFactory>();
 
             services.AddSingleton<IFlvMediaTagSenderService, FlvMediaTagSenderService>()
-                    .AddSingleton<IFlvMediaTagCacherService, FlvMediaTagCacherService>()
-                    .AddSingleton<IFlvStreamManagerService, FlvStreamManagerService>()
-                    .AddSingleton<IFlvMediaTagBroadcasterService, FlvMediaTagBroadcasterService>();
+                .AddSingleton<IFlvMediaTagCacherService, FlvMediaTagCacherService>()
+                .AddSingleton<IFlvStreamManagerService, FlvStreamManagerService>()
+                .AddSingleton<IFlvMediaTagBroadcasterService, FlvMediaTagBroadcasterService>();
+
+            services.AddSingleton<IFlvServerStreamEventDispatcher, FlvServerStreamEventDispatcher>();
+
+            services.AddSingleton<IFlvClientManager, FlvClientManager>();
 
             configure?.Invoke(new FlvConfigurator(services));
 
