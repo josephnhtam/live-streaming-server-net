@@ -307,7 +307,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
             }
         }
 
-        public IReadOnlyList<string> GetStreamPaths()
+        public IList<string> GetStreamPaths()
         {
             lock (_publishingSyncLock)
             {

@@ -62,7 +62,7 @@ namespace LiveStreamingServerNet.Flv.Installer
 
             services.AddSingleton<IFlvServerStreamEventDispatcher, FlvServerStreamEventDispatcher>();
 
-            services.AddSingleton<IFlvClientManager, FlvClientManager>();
+            services.AddSingleton<IFlvStreamInfoManager, FlvStreamInfoManager>();
 
             configure?.Invoke(new FlvConfigurator(services));
 

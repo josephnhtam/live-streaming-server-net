@@ -4,6 +4,7 @@ namespace LiveStreamingServerNet.Flv.Internal.Services.Contracts
 {
     internal interface IFlvStreamManagerService
     {
+        IList<string> GetStreamPaths();
         bool IsStreamPathPublishing(string streamPath, bool requireReady = true);
 
         PublishingStreamResult StartPublishingStream(IFlvStreamContext streamContext);

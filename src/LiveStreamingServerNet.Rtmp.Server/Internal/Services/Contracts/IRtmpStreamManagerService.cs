@@ -11,7 +11,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services.Contracts
         ValueTask<(SubscribingStreamResult Result, IRtmpPublishStreamContext? PublishStreamContext)> StartSubscribingAsync(IRtmpStreamContext streamContext, string streamPath, IReadOnlyDictionary<string, string> streamArguments);
         ValueTask<bool> StopSubscribingAsync(IRtmpSubscribeStreamContext subscribeStreamContext);
 
-        IReadOnlyList<string> GetStreamPaths();
+        IList<string> GetStreamPaths();
         IRtmpPublishStreamContext? GetPublishStreamContext(string streamPath);
         IReadOnlyList<IRtmpSubscribeStreamContext> GetSubscribeStreamContexts(string streamPath);
         bool IsStreamPublishing(string streamPath);
