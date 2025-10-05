@@ -24,6 +24,14 @@ namespace LiveStreamingServerNet.Flv.Internal.Services
             _config = config.Value;
         }
 
+        public IList<string> GetStreamPaths()
+        {
+            lock (_publishingSyncLock)
+            {
+                return _publishingStreamContexts.Keys.ToList().AsReadOnly();
+            }
+        }
+
         public bool IsStreamPathPublishing(string streamPath, bool requireReady)
         {
             lock (_publishingSyncLock)
