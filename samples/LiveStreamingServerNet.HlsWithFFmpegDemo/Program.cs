@@ -23,8 +23,8 @@ namespace LiveStreamingServerNet.HlsWithFFmpegDemo
             builder.Services.AddCors(options =>
                 options.AddDefaultPolicy(policy =>
                     policy.AllowAnyHeader()
-                          .AllowAnyOrigin()
-                          .AllowAnyMethod()
+                        .AllowAnyOrigin()
+                        .AllowAnyMethod()
                 )
             );
 
@@ -61,18 +61,20 @@ namespace LiveStreamingServerNet.HlsWithFFmpegDemo
                     .AddStreamProcessor(options =>
                     {
                         options.AddStreamProcessorEventHandler(svc =>
-                                new StreamProcessorEventListener(outputDir, svc.GetRequiredService<ILogger<StreamProcessorEventListener>>()));
+                            new StreamProcessorEventListener(outputDir, svc.GetRequiredService<ILogger<StreamProcessorEventListener>>()));
                     })
-                    .AddFFmpeg(options =>
-                    {
-                        options.FFmpegArguments =
-                                    "-i {inputPath} -c:v copy -c:a copy " +
-                                    "-preset ultrafast -tune zerolatency -hls_time 1 " +
-                                    "-hls_flags delete_segments -hls_list_size 20 -f hls {outputPath}";
+                    .AddFFmpeg(configure =>
+                        configure.ConfigureDefault(config =>
+                        {
+                            config.FFmpegArguments =
+                                "-i {inputPath} -c:v copy -c:a copy " +
+                                "-preset ultrafast -tune zerolatency -hls_time 1 " +
+                                "-hls_flags delete_segments -hls_list_size 20 -f hls {outputPath}";
 
-                        options.FFmpegPath = ExecutableFinder.FindExecutableFromPATH("ffmpeg")!;
-                        options.OutputPathResolver = new HlsOutputPathResolver(outputDir);
-                    })
+                            config.FFmpegPath = ExecutableFinder.FindExecutableFromPATH("ffmpeg")!;
+                            config.OutputPathResolver = new HlsOutputPathResolver(outputDir);
+                        })
+                    )
             );
         }
 
