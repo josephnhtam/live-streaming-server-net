@@ -23,13 +23,15 @@ using System.Net;
 using var liveStreamingServer = LiveStreamingServerBuilder.Create()
     .ConfigureRtmpServer(options => options
         .AddStreamProcessor()
-        .AddFFmpeg(options =>
-        {
-            options.Name = "mp4-archive";
-            options.FFmpegPath = ExecutableFinder.FindExecutableFromPATH("ffmpeg")!;
-            options.FFmpegArguments = "-i {inputPath} -c:v libx264 -c:a aac -preset ultrafast -f mp4 {outputPath}";
-            options.OutputPathResolver = new Mp4OutputPathResolver(Path.Combine(Directory.GetCurrentDirectory(), "mp4-archive"));
-        })
+        .AddFFmpeg(configure =>
+            configure.ConfigureDefault(config =>
+            {
+                config.Name = "mp4-archive";
+                config.FFmpegPath = ExecutableFinder.FindExecutableFromPATH("ffmpeg")!;
+                config.FFmpegArguments = "-i {inputPath} -c:v libx264 -c:a aac -preset ultrafast -f mp4 {outputPath}";
+                config.OutputPathResolver = new Mp4OutputPathResolver(Path.Combine(Directory.GetCurrentDirectory(), "mp4-archive"));
+            })
+        )
     )
     .ConfigureLogging(options => options.AddConsole().SetMinimumLevel(LogLevel.Debug))
     .Build();

@@ -26,13 +26,18 @@ namespace LiveStreamingServerNet.StreamProcessor.Installer
         /// <param name="builder">The stream processing builder to add services to.</param>
         /// <param name="configure">Optional action to configure the FFmpeg process.</param>
         /// <returns>The stream processing builder for method chaining.</returns>
-        public static IStreamProcessingBuilder AddFFmpeg(this IStreamProcessingBuilder builder, Action<FFmpegProcessConfiguration>? configure)
+        public static IStreamProcessingBuilder AddFFmpeg(this IStreamProcessingBuilder builder, Action<FFmpegProcessConfigurator>? configure)
         {
-            var config = new FFmpegProcessConfiguration();
-            configure?.Invoke(config);
+            var configuratorContext = new FFmpegProcessConfiguratorContext(new FFmpegProcessConfiguration());
+            var configurator = new FFmpegProcessConfigurator(configuratorContext);
+            configure?.Invoke(configurator);
 
             builder.Services.AddSingleton<IStreamProcessorFactory>(svc =>
-                new FFmpegProcessFactory(svc, config, svc.GetRequiredService<ILogger<FFmpegProcess>>()));
+                new FFmpegProcessFactory(
+                    svc,
+                    configuratorContext.Configuration,
+                    configuratorContext.ConfigurationResolver,
+                    svc.GetRequiredService<ILogger<FFmpegProcess>>()));
 
             return builder;
         }

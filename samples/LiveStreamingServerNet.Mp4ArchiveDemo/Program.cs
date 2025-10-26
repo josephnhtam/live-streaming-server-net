@@ -21,13 +21,15 @@ namespace LiveStreamingServerNet.Mp4ArchiveDemo
             return LiveStreamingServerBuilder.Create()
                 .ConfigureRtmpServer(options => options
                     .AddStreamProcessor()
-                    .AddFFmpeg(options =>
-                    {
-                        options.Name = "mp4-archive";
-                        options.FFmpegPath = ExecutableFinder.FindExecutableFromPATH("ffmpeg")!;
-                        options.FFmpegArguments = "-i {inputPath} -c:v libx264 -c:a aac -preset ultrafast -f mp4 {outputPath}";
-                        options.OutputPathResolver = new Mp4OutputPathResolver(Path.Combine(Directory.GetCurrentDirectory(), "mp4-archive"));
-                    })
+                    .AddFFmpeg(configure =>
+                        configure.ConfigureDefault(conifg =>
+                        {
+                            conifg.Name = "mp4-archive";
+                            conifg.FFmpegPath = ExecutableFinder.FindExecutableFromPATH("ffmpeg")!;
+                            conifg.FFmpegArguments = "-i {inputPath} -c:v libx264 -c:a aac -preset ultrafast -f mp4 {outputPath}";
+                            conifg.OutputPathResolver = new Mp4OutputPathResolver(Path.Combine(Directory.GetCurrentDirectory(), "mp4-archive"));
+                        })
+                    )
                 )
                 .ConfigureLogging(options => options.AddConsole().SetMinimumLevel(LogLevel.Debug))
                 .Build();
@@ -49,4 +51,3 @@ namespace LiveStreamingServerNet.Mp4ArchiveDemo
         }
     }
 }
-
