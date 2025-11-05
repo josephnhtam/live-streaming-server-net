@@ -1,6 +1,6 @@
 <Project>
   <PropertyGroup>
-	<VersionPrefix>0.33.0</VersionPrefix>
+	<VersionPrefix>0.33.1</VersionPrefix>
     <PackageVersion Condition="'$(VersionSuffix)' != ''">$(VersionPrefix)-$(VersionSuffix)</PackageVersion>
     <PackageVersion Condition="'$(VersionSuffix)' == ''">$(VersionPrefix)</PackageVersion>
     <IsPackable>true</IsPackable>
