@@ -18,9 +18,12 @@
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
     <PackageReference Include="Riok.Mapperly" />
   </ItemGroup>
-  
+
   <ItemGroup>
-    <ProjectReference Include="..\LiveStreamingServerNet.AdminPanelUI\LiveStreamingServerNet.AdminPanelUI.csproj" />
+    <ProjectReference Include="..\LiveStreamingServerNet.AdminPanelUI\LiveStreamingServerNet.AdminPanelUI.csproj">
+      <PrivateAssets>none</PrivateAssets>
+    </ProjectReference>
+
     <ProjectReference Include="..\LiveStreamingServerNet.Rtmp.Server\LiveStreamingServerNet.Rtmp.Server.csproj" />
   </ItemGroup>
 
