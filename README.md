@@ -11,7 +11,7 @@
 
 Live-Streaming-Server-Net is a high-performance and flexible toolset that allows you to build your own live streaming server using .NET.
 
-Please check the [documentation](https://josephnhtam.github.io/live-streaming-server-net/) for more details.
+Please check the [documentation](https://josephnhtam.github.io/live-streaming-server-net/) and [code wiki](https://codewiki.google/github.com/josephnhtam/live-streaming-server-net) for more details.
 
 ## Features
 
