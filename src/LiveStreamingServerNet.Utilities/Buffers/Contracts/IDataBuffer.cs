@@ -51,6 +51,7 @@
         short ReadInt16BigEndian();
         int ReadInt24BigEndian();
         int ReadInt32BigEndian();
+        string ReadUtf8String(int length);
 
         void Write(bool value);
         void Write(byte value);
@@ -68,11 +69,13 @@
         void Write(ulong value);
         void Write(ushort value);
 
-        void WriteUint16BigEndian(ushort value);
+        void WriteUInt16BigEndian(ushort value);
         void WriteUInt24BigEndian(uint value);
         void WriteUInt32BigEndian(uint value);
         void WriteInt16BigEndian(short value);
         void WriteInt24BigEndian(int value);
         void WriteInt32BigEndian(int value);
+
+        void WriteUtf8String(string value);
     }
 }

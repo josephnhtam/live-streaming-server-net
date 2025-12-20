@@ -243,7 +243,7 @@ namespace LIveStreamingServerNet.Utilities.Test
             // Act
             using var dataBuffer = new DataBuffer();
             dataBuffer.MoveTo(startPos);
-            dataBuffer.WriteUint16BigEndian(expected);
+            dataBuffer.WriteUInt16BigEndian(expected);
 
             // Assert
             var endPos = dataBuffer.Position;

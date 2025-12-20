@@ -74,7 +74,7 @@ namespace LiveStreamingServerNet.Rtmp.Client.Internal.RtmpEventHandlers.UserCont
 
             _chunkMessageSender.Send(basicHeader, messageHeader, dataBuffer =>
             {
-                dataBuffer.WriteUint16BigEndian(RtmpUserControlMessageTypes.PingResponse);
+                dataBuffer.WriteUInt16BigEndian(RtmpUserControlMessageTypes.PingResponse);
                 dataBuffer.WriteUInt32BigEndian(timestamp);
             });
         }

@@ -54,8 +54,8 @@ namespace LiveStreamingServerNet.Networking.Client.Installer
 
             configure?.Invoke(new ClientConfigurator(services));
 
-            services.TryAddSingleton<IDataBufferPool, DataBufferPool>();
-            services.TryAddSingleton<IBufferPool, BufferPool>();
+            services.AddDataBufferPool()
+                    .AddBufferPool();
 
             return services;
         }

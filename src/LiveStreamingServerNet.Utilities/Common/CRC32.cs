@@ -1,6 +1,6 @@
-﻿namespace LiveStreamingServerNet.StreamProcessor.Internal.Containers
+﻿namespace LiveStreamingServerNet.Utilities.Common
 {
-    internal static unsafe class CRC32
+    public static unsafe class CRC32
     {
         private static uint[] _table = new uint[]
         {

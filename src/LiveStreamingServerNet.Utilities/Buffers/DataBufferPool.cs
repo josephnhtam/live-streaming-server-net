@@ -14,11 +14,18 @@ namespace LiveStreamingServerNet.Utilities.Buffers
 
         public IBufferPool? BufferPool => _bufferPool;
 
+        public static IDataBufferPool Shared { get; } = new DataBufferPool(new DataBufferPoolConfiguration());
+
         public DataBufferPool(IOptions<DataBufferPoolConfiguration> config, IBufferPool? bufferPool = null)
+            : this(config.Value, bufferPool)
+        {
+        }
+
+        public DataBufferPool(DataBufferPoolConfiguration config, IBufferPool? bufferPool = null)
         {
             _bufferPool = bufferPool;
-            _initialCapacity = config.Value.BufferInitialCapacity;
-            _maxPoolSize = config.Value.MaxPoolSize;
+            _initialCapacity = config.BufferInitialCapacity;
+            _maxPoolSize = config.MaxPoolSize;
             _pool = new Pool<IDataBuffer>(CreateDataBuffer);
         }
 

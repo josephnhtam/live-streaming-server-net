@@ -56,8 +56,8 @@ namespace LiveStreamingServerNet.Networking.Server.Installer
 
             configure?.Invoke(new ServerConfigurator(services));
 
-            services.TryAddSingleton<IDataBufferPool, DataBufferPool>();
-            services.TryAddSingleton<IBufferPool, BufferPool>();
+            services.AddDataBufferPool()
+                    .AddBufferPool();
 
             return services;
         }

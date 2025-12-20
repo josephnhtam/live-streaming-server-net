@@ -12,9 +12,16 @@ namespace LiveStreamingServerNet.Utilities.Buffers
         private readonly BufferPoolConfiguration _config;
         private readonly ArrayPool<byte> _pool;
 
-        public BufferPool(IOptions<BufferPoolConfiguration> config)
+        public static IBufferPool Shared { get; } = new BufferPool(new BufferPoolConfiguration());
+
+        public BufferPool(IOptions<BufferPoolConfiguration> config) :
+            this(config.Value)
         {
-            _config = config.Value;
+        }
+
+        public BufferPool(BufferPoolConfiguration config)
+        {
+            _config = config;
             _pool = ArrayPool<byte>.Create(_config.MaxBufferSize, _config.MaxBuffersPerBucket);
         }
 

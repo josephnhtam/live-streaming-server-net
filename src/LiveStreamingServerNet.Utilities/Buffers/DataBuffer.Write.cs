@@ -2,6 +2,7 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
+using System.Text;
 
 namespace LiveStreamingServerNet.Utilities.Buffers
 {
@@ -115,7 +116,7 @@ namespace LiveStreamingServerNet.Utilities.Buffers
             WriteUnaligned(value, 2);
         }
 
-        public void WriteUint16BigEndian(ushort value)
+        public void WriteUInt16BigEndian(ushort value)
         {
             WriteUnaligned(BinaryPrimitives.ReverseEndianness(value), 2);
         }
@@ -153,6 +154,16 @@ namespace LiveStreamingServerNet.Utilities.Buffers
         public void WriteInt32BigEndian(int value)
         {
             WriteUnaligned(BinaryPrimitives.ReverseEndianness(value), 4);
+        }
+
+        public void WriteUtf8String(string value)
+        {
+            var maxBytes = Encoding.UTF8.GetMaxByteCount(value.Length);
+            EnsureCapacity(_position + maxBytes);
+
+            var span = _buffer.AsSpan(_startIndex + _position);
+            var written = Encoding.UTF8.GetBytes(value.AsSpan(), span);
+            Advance(written);
         }
     }
 }

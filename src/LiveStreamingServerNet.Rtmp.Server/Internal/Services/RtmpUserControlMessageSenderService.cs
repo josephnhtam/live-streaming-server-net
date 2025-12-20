@@ -22,7 +22,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
 
             _chunkMessageSenderService.Send(subscribeStreamContext.StreamContext.ClientContext, basicHeader, messageHeader, dataBuffer =>
             {
-                dataBuffer.WriteUint16BigEndian(RtmpUserControlMessageTypes.StreamBegin);
+                dataBuffer.WriteUInt16BigEndian(RtmpUserControlMessageTypes.StreamBegin);
                 dataBuffer.WriteUInt32BigEndian(subscribeStreamContext.StreamContext.StreamId);
             });
         }
@@ -39,7 +39,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
 
                 _chunkMessageSenderService.Send(clientContexts, basicHeader, messageHeader, dataBuffer =>
                 {
-                    dataBuffer.WriteUint16BigEndian(RtmpUserControlMessageTypes.StreamBegin);
+                    dataBuffer.WriteUInt16BigEndian(RtmpUserControlMessageTypes.StreamBegin);
                     dataBuffer.WriteUInt32BigEndian(streamId);
                 });
             }
@@ -52,7 +52,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
 
             _chunkMessageSenderService.Send(subscribeStreamContext.StreamContext.ClientContext, basicHeader, messageHeader, dataBuffer =>
             {
-                dataBuffer.WriteUint16BigEndian(RtmpUserControlMessageTypes.StreamEOF);
+                dataBuffer.WriteUInt16BigEndian(RtmpUserControlMessageTypes.StreamEOF);
                 dataBuffer.WriteUInt32BigEndian(subscribeStreamContext.StreamContext.StreamId);
             });
         }
@@ -69,7 +69,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.Services
 
                 _chunkMessageSenderService.Send(clientContexts, basicHeader, messageHeader, dataBuffer =>
                 {
-                    dataBuffer.WriteUint16BigEndian(RtmpUserControlMessageTypes.StreamEOF);
+                    dataBuffer.WriteUInt16BigEndian(RtmpUserControlMessageTypes.StreamEOF);
                     dataBuffer.WriteUInt32BigEndian(streamId);
                 });
             }

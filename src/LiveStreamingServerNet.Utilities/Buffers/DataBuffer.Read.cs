@@ -1,5 +1,6 @@
 ﻿using System.Buffers.Binary;
 using System.Runtime.CompilerServices;
+using System.Text;
 
 namespace LiveStreamingServerNet.Utilities.Buffers
 {
@@ -143,6 +144,14 @@ namespace LiveStreamingServerNet.Utilities.Buffers
             var value = BinaryPrimitives.ReverseEndianness(Unsafe.As<byte, int>(ref _buffer[_startIndex + _position]));
             _position += 4;
             return value;
+        }
+
+        public string ReadUtf8String(int length)
+        {
+            var targetSpan = _buffer.AsSpan(_startIndex + _position, length);
+            var result = Encoding.UTF8.GetString(targetSpan);
+            _position += length;
+            return result;
         }
     }
 }

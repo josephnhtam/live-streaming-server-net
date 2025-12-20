@@ -1,4 +1,5 @@
 ﻿using LiveStreamingServerNet.Utilities.Buffers.Contracts;
+using LiveStreamingServerNet.Utilities.Common;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
@@ -214,7 +215,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Containers
             private void WriteTableHeader(IDataBuffer dataBuffer)
             {
                 dataBuffer.Write(TableId);
-                dataBuffer.WriteUint16BigEndian((ushort)(0x1 << 15 | 0x3 << 12 | (DataSize + TableChecksum.Size)));
+                dataBuffer.WriteUInt16BigEndian((ushort)(0x1 << 15 | 0x3 << 12 | (DataSize + TableChecksum.Size)));
             }
         }
 
@@ -237,7 +238,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Containers
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             private void WriteTablePrefix(IDataBuffer dataBuffer)
             {
-                dataBuffer.WriteUint16BigEndian(TransportStreamIdentifier);
+                dataBuffer.WriteUInt16BigEndian(TransportStreamIdentifier);
                 dataBuffer.Write((byte)((0x3 << 6) | 1));
                 dataBuffer.Write((byte)0x00);
                 dataBuffer.Write((byte)0x00);
@@ -246,8 +247,8 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Containers
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             private void WriteTable(IDataBuffer dataBuffer)
             {
-                dataBuffer.WriteUint16BigEndian(ProgramNumber);
-                dataBuffer.WriteUint16BigEndian((ushort)(0xe000 | ProgramMapPID));
+                dataBuffer.WriteUInt16BigEndian(ProgramNumber);
+                dataBuffer.WriteUInt16BigEndian((ushort)(0xe000 | ProgramMapPID));
             }
         }
 
@@ -258,8 +259,8 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Containers
             public void Write(IDataBuffer dataBuffer)
             {
                 dataBuffer.Write(StreamType);
-                dataBuffer.WriteUint16BigEndian((ushort)(0x07 << 13 | ElementaryPID));
-                dataBuffer.WriteUint16BigEndian(0x0f << 12);
+                dataBuffer.WriteUInt16BigEndian((ushort)(0x07 << 13 | ElementaryPID));
+                dataBuffer.WriteUInt16BigEndian(0x0f << 12);
             }
         }
 
@@ -276,7 +277,7 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Containers
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             private void WriteTablePrefix(IDataBuffer dataBuffer)
             {
-                dataBuffer.WriteUint16BigEndian(ProgramNumber);
+                dataBuffer.WriteUInt16BigEndian(ProgramNumber);
                 dataBuffer.Write((byte)((0x3 << 6) | 1));
                 dataBuffer.Write((byte)0x00);
                 dataBuffer.Write((byte)0x00);
@@ -285,8 +286,8 @@ namespace LiveStreamingServerNet.StreamProcessor.Internal.Containers
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             private void WriteTable(IDataBuffer dataBuffer)
             {
-                dataBuffer.WriteUint16BigEndian((ushort)(0x07 << 13 | PCRPID));
-                dataBuffer.WriteUint16BigEndian(0x0f << 12);
+                dataBuffer.WriteUInt16BigEndian((ushort)(0x07 << 13 | PCRPID));
+                dataBuffer.WriteUInt16BigEndian(0x0f << 12);
 
                 foreach (var info in ElementaryStreamInfos)
                     info.Write(dataBuffer);
