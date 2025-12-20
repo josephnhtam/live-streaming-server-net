@@ -103,6 +103,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveStreamingServerNet.Subt
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveStreamingServerNet.OnDemandStreamCapturingDemo", "samples\LiveStreamingServerNet.OnDemandStreamCapturingDemo\LiveStreamingServerNet.OnDemandStreamCapturingDemo.csproj", "{C4A9F987-606A-4DFA-8943-9F5D1FC84827}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveStreamingServerNet.WebRTC", "src\LiveStreamingServerNet.WebRTC\LiveStreamingServerNet.WebRTC\LiveStreamingServerNet.WebRTC.csproj", "{0C242B4E-0D65-4852-AD33-1B076EBCD2F9}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveStreamingServerNet.CustomStreamKeyDemo", "samples\LiveStreamingServerNet.CustomStreamKeyDemo\LiveStreamingServerNet.CustomStreamKeyDemo.csproj", "{C3080A0E-F204-4FE6-A68A-695687041AF1}"
 EndProject
 Global
@@ -303,6 +305,10 @@ Global
 		{C4A9F987-606A-4DFA-8943-9F5D1FC84827}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C4A9F987-606A-4DFA-8943-9F5D1FC84827}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C4A9F987-606A-4DFA-8943-9F5D1FC84827}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0C242B4E-0D65-4852-AD33-1B076EBCD2F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C242B4E-0D65-4852-AD33-1B076EBCD2F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C242B4E-0D65-4852-AD33-1B076EBCD2F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C242B4E-0D65-4852-AD33-1B076EBCD2F9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C3080A0E-F204-4FE6-A68A-695687041AF1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C3080A0E-F204-4FE6-A68A-695687041AF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C3080A0E-F204-4FE6-A68A-695687041AF1}.Release|Any CPU.ActiveCfg = Release|Any CPU

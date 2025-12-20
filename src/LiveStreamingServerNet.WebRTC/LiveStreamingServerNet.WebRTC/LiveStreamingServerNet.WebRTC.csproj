@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Folder Include="Configurations\"/>
+        <Folder Include="Internal\DtlsSrtp\"/>
+        <Folder Include="Internal\Ice\"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\LiveStreamingServerNet.Utilities\LiveStreamingServerNet.Utilities.csproj"/>
+    </ItemGroup>
+
+</Project>
