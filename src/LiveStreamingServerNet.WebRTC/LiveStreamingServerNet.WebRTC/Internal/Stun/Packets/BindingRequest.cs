@@ -1,9 +1,9 @@
 using LiveStreamingServerNet.Utilities.Buffers;
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
-using LiveStreamingServerNet.WebRTC.Internal.Stun.Packages.Attributes;
-using LiveStreamingServerNet.WebRTC.Internal.Stun.Packages.Attributes.Contracts;
+using LiveStreamingServerNet.WebRTC.Internal.Stun.Packets.Attributes;
+using LiveStreamingServerNet.WebRTC.Internal.Stun.Packets.Attributes.Contracts;
 
-namespace LiveStreamingServerNet.WebRTC.Internal.Stun.Packages
+namespace LiveStreamingServerNet.WebRTC.Internal.Stun.Packets
 {
     internal readonly record struct BindingRequest
     {
@@ -55,7 +55,7 @@ namespace LiveStreamingServerNet.WebRTC.Internal.Stun.Packages
                 buffer.Advance(2);
 
                 var valueStart = buffer.Position;
-                attribute.Write(this, buffer);
+                attribute.WriteValue(this, buffer);
 
                 var valueEnd = buffer.Position;
                 var valueLength = (ushort)(valueEnd - valueStart);

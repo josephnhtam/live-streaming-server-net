@@ -1,6 +1,6 @@
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 
-namespace LiveStreamingServerNet.WebRTC.Internal.Stun.Packages.Attributes.Contracts
+namespace LiveStreamingServerNet.WebRTC.Internal.Stun.Packets.Attributes.Contracts
 {
     internal interface IStunAttribute
     {
