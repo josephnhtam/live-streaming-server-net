@@ -5,19 +5,46 @@ using System.Text;
 
 namespace LiveStreamingServerNet.WebRTC.Internal.Stun.Packets.Attributes
 {
-    [StunAttribute(StunAttributeType.ComprehensionRequired.Userhash)]
-    internal record UserhashAttribute(string Username, string Realm) : IStunAttribute
+    [StunAttributeType(StunAttributeType.ComprehensionRequired.Userhash)]
+    internal class UserhashAttribute : IStunAttribute
     {
         public ushort Type => StunAttributeType.ComprehensionRequired.Userhash;
 
-        public void WriteValue(BindingRequest request, IDataBuffer buffer)
+        private readonly byte[] _hash;
+        public ReadOnlySpan<byte> Hash => _hash;
+
+        public UserhashAttribute(byte[] hash)
+            => _hash = hash;
+
+        public UserhashAttribute(string username, string realm)
+            => _hash = ComputeHash(username, realm);
+
+        public bool Verify(string username, string realm)
         {
-            using var sha256 = SHA256.Create();
-
-            var input = $"{Username}:{Realm}";
-            var hash = sha256.ComputeHash(Encoding.UTF8.GetBytes(input));
-
-            buffer.Write(hash);
+            var computed = ComputeHash(username, realm);
+            return computed.SequenceEqual(_hash);
         }
+
+        private static byte[] ComputeHash(string username, string realm)
+        {
+            var maxCharCount = username.Length + 1 + realm.Length;
+            var maxByteCount = Encoding.UTF8.GetMaxByteCount(maxCharCount);
+
+            Span<char> charBuffer = stackalloc char[maxCharCount];
+            username.CopyTo(charBuffer);
+            charBuffer[username.Length] = ':';
+            realm.CopyTo(charBuffer.Slice(username.Length + 1));
+
+            Span<byte> byteBuffer = stackalloc byte[maxByteCount];
+            var bytesWritten = Encoding.UTF8.GetBytes(charBuffer, byteBuffer);
+            
+            return SHA256.HashData(byteBuffer.Slice(0, bytesWritten));
+        }
+
+        public void WriteValue(TransactionId transactionId, IDataBuffer buffer)
+            => buffer.Write(_hash);
+
+        public static UserhashAttribute ReadValue(TransactionId transactionId, IDataBuffer buffer, ushort length)
+            => new UserhashAttribute(buffer.ReadBytes(length));
     }
 }

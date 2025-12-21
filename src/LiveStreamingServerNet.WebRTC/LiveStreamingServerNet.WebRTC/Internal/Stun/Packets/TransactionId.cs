@@ -3,17 +3,20 @@ using System.Security.Cryptography;
 
 namespace LiveStreamingServerNet.WebRTC.Internal.Stun.Packets
 {
-    internal sealed record TransactionId : IEquatable<TransactionId>, IDisposable
+    internal sealed record TransactionId
     {
         private static readonly RandomNumberGenerator _random = RandomNumberGenerator.Create();
-        private readonly IMemoryOwner<byte> _data;
+        private IMemoryOwner<byte>? _data;
 
-        public ReadOnlySpan<byte> Span => _data.Memory.Span.Slice(0, 12);
+        private int _claimed;
+
+        public ReadOnlySpan<byte> Span => _data != null ? _data.Memory.Span.Slice(0, 12) : [];
 
         private TransactionId()
         {
             _data = MemoryPool<byte>.Shared.Rent(12);
             _random.GetBytes(_data.Memory.Span.Slice(0, 12));
+            _claimed = 1;
         }
 
         public static TransactionId Create() => new TransactionId();
@@ -21,8 +24,22 @@ namespace LiveStreamingServerNet.WebRTC.Internal.Stun.Packets
         public bool Equals(TransactionId? other) =>
             other is not null && Span.SequenceEqual(other.Span);
 
-        public override int GetHashCode() => _data.Memory.GetHashCode();
+        public override int GetHashCode() => _data != null ? _data.Memory.GetHashCode() : 0;
 
-        public void Dispose() => _data.Dispose();
+        public void Claim(int count = 1)
+        {
+            Interlocked.Add(ref _claimed, count);
+        }
+
+        public void Unclaim(int count = 1)
+        {
+            IMemoryOwner<byte>? data;
+
+            if (Interlocked.Add(ref _claimed, -count) <= 0 &&
+                (data = Interlocked.Exchange(ref _data, null)) != null)
+            {
+                data.Dispose();
+            }
+        }
     }
 }
