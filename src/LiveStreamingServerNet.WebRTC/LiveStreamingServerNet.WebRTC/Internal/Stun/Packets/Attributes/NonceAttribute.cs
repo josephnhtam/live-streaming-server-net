@@ -8,7 +8,10 @@ namespace LiveStreamingServerNet.WebRTC.Internal.Stun.Packets.Attributes
     {
         public ushort Type => StunAttributeType.ComprehensionRequired.Nonce;
 
-        public void WriteValue(BindingRequest request, IDataBuffer buffer)
+        public void WriteValue(TransactionId transactionId, IDataBuffer buffer)
             => buffer.WriteUtf8String(Nonce);
+
+        public static NonceAttribute ReadValue(TransactionId transactionId, IDataBuffer buffer, ushort length)
+            => new NonceAttribute(buffer.ReadUtf8String(length));
     }
 }

@@ -3,15 +3,27 @@ using LiveStreamingServerNet.WebRTC.Internal.Stun.Packets.Attributes.Contracts;
 
 namespace LiveStreamingServerNet.WebRTC.Internal.Stun.Packets.Attributes
 {
-    [StunAttribute(StunAttributeType.ComprehensionRequired.UnknownAttributes)]
+    [StunAttributeType(StunAttributeType.ComprehensionRequired.UnknownAttributes)]
     internal record UnknownAttributesAttribute(IList<ushort> Types) : IStunAttribute
     {
         public ushort Type => StunAttributeType.ComprehensionRequired.UnknownAttributes;
 
-        public void WriteValue(BindingRequest request, IDataBuffer buffer)
+        public void WriteValue(TransactionId transactionId, IDataBuffer buffer)
         {
             foreach (var type in Types)
                 buffer.WriteUInt16BigEndian(type);
+        }
+
+        public static UnknownAttributesAttribute ReadValue(TransactionId transactionId, IDataBuffer buffer, ushort length)
+        {
+            var types = new List<ushort>();
+
+            for (var i = 0; i < length / 2; i++)
+            {
+                types.Add(buffer.ReadUInt16BigEndian());
+            }
+
+            return new UnknownAttributesAttribute(types);
         }
     }
 }

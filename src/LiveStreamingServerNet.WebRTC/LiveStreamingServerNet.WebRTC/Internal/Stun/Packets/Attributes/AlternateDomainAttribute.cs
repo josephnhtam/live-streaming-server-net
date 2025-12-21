@@ -8,12 +8,12 @@ namespace LiveStreamingServerNet.WebRTC.Internal.Stun.Packets.Attributes
     {
         public ushort Type => StunAttributeType.ComprehensionOptional.AlternateDomain;
 
-        public void WriteValue(BindingRequest request, IDataBuffer buffer)
+        public void WriteValue(TransactionId transactionId, IDataBuffer buffer)
         {
             buffer.WriteUtf8String(Domain);
         }
 
-        public static AlternateDomainAttribute ReadValue(IDataBuffer buffer, ushort length)
+        public static AlternateDomainAttribute ReadValue(TransactionId transactionId, IDataBuffer buffer, ushort length)
             => new AlternateDomainAttribute(buffer.ReadUtf8String(length));
     }
 }

@@ -8,7 +8,7 @@ namespace LiveStreamingServerNet.WebRTC.Internal.Stun.Packets.Attributes
     {
         public ushort Type => StunAttributeType.ComprehensionRequired.ErrorCode;
 
-        public void WriteValue(BindingRequest request, IDataBuffer buffer)
+        public void WriteValue(TransactionId transactionId, IDataBuffer buffer)
         {
             var classValue = (byte)(Code / 100);
             var numberValue = (byte)(Code % 100);
@@ -21,7 +21,7 @@ namespace LiveStreamingServerNet.WebRTC.Internal.Stun.Packets.Attributes
             buffer.WriteUtf8String(Reason);
         }
 
-        public static ErrorCodeAttribute ReadValue(IDataBuffer buffer, ushort length)
+        public static ErrorCodeAttribute ReadValue(TransactionId transactionId, IDataBuffer buffer, ushort length)
         {
             buffer.ReadUInt16BigEndian();
 

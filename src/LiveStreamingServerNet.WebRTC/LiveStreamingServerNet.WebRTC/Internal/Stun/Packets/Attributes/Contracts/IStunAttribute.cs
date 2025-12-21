@@ -5,6 +5,6 @@ namespace LiveStreamingServerNet.WebRTC.Internal.Stun.Packets.Attributes.Contrac
     internal interface IStunAttribute
     {
         ushort Type { get; }
-        void WriteValue(BindingRequest request, IDataBuffer buffer);
+        void WriteValue(TransactionId transactionId, IDataBuffer buffer);
     }
 }

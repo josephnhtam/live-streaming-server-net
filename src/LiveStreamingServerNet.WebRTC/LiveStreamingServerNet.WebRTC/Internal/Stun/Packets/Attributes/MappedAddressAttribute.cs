@@ -10,7 +10,7 @@ namespace LiveStreamingServerNet.WebRTC.Internal.Stun.Packets.Attributes
     {
         public ushort Type => StunAttributeType.ComprehensionRequired.MappedAddress;
 
-        public void WriteValue(BindingRequest request, IDataBuffer buffer)
+        public void WriteValue(TransactionId transactionId, IDataBuffer buffer)
         {
             buffer.Write((byte)0x00);
 
@@ -43,14 +43,14 @@ namespace LiveStreamingServerNet.WebRTC.Internal.Stun.Packets.Attributes
             }
         }
 
-        public static MappedAddressAttribute ReadValue(IDataBuffer buffer, ushort length)
+        public static MappedAddressAttribute ReadValue(TransactionId transactionId, IDataBuffer buffer, ushort length)
         {
             buffer.ReadUInt16BigEndian();
 
             var familyByte = buffer.ReadByte();
             switch (familyByte)
             {
-                case 0x00:
+                case 0x01:
                     {
                         var port = buffer.ReadUInt16BigEndian();
 
@@ -61,7 +61,7 @@ namespace LiveStreamingServerNet.WebRTC.Internal.Stun.Packets.Attributes
                         return new MappedAddressAttribute(address, port);
                     }
 
-                case 0x01:
+                case 0x02:
                     {
                         var port = buffer.ReadUInt16BigEndian();
 

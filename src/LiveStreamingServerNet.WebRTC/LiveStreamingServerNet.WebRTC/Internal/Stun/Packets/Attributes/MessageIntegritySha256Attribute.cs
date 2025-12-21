@@ -7,7 +7,7 @@ namespace LiveStreamingServerNet.WebRTC.Internal.Stun.Packets.Attributes
     [StunAttributeType(StunAttributeType.ComprehensionRequired.MessageIntegrity)]
     internal class MessageIntegritySha256Attribute : IStunAttribute
     {
-        public const ushort Length = 32;
+        public const ushort Length = HMACSHA256.HashSizeInBytes;
 
         private readonly byte[] _hmac;
         public ReadOnlySpan<byte> Hmac => _hmac;
@@ -39,10 +39,10 @@ namespace LiveStreamingServerNet.WebRTC.Internal.Stun.Packets.Attributes
             HMACSHA256.HashData(password, data, destination);
         }
 
-        public void WriteValue(BindingRequest request, IDataBuffer buffer)
+        public void WriteValue(TransactionId transactionId, IDataBuffer buffer)
             => buffer.Write(_hmac);
 
-        public static MessageIntegrityAttribute ReadValue(IDataBuffer buffer, ushort length)
+        public static MessageIntegrityAttribute ReadValue(TransactionId transactionId, IDataBuffer buffer, ushort length)
             => new(buffer.ReadBytes(length));
     }
 }

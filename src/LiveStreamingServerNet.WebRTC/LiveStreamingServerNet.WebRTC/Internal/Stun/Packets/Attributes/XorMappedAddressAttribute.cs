@@ -1,11 +1,12 @@
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using LiveStreamingServerNet.WebRTC.Internal.Stun.Packets.Attributes.Contracts;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 
 namespace LiveStreamingServerNet.WebRTC.Internal.Stun.Packets.Attributes
 {
-    [StunAttribute(StunAttributeType.ComprehensionRequired.XorMappedAddress)]
+    [StunAttributeType(StunAttributeType.ComprehensionRequired.XorMappedAddress)]
     internal record XorMappedAddressAttribute(IPAddress Address, ushort Port) : IStunAttribute
     {
         private const ushort XorPortMask = 0x2112;
@@ -13,7 +14,7 @@ namespace LiveStreamingServerNet.WebRTC.Internal.Stun.Packets.Attributes
 
         public ushort Type => StunAttributeType.ComprehensionRequired.XorMappedAddress;
 
-        public void WriteValue(BindingRequest request, IDataBuffer buffer)
+        public void WriteValue(TransactionId transactionId, IDataBuffer buffer)
         {
             buffer.Write((byte)0x00);
 
@@ -40,8 +41,7 @@ namespace LiveStreamingServerNet.WebRTC.Internal.Stun.Packets.Attributes
                         buffer.WriteUInt16BigEndian((ushort)(Port ^ XorPortMask));
 
                         Span<byte> mask = stackalloc byte[16];
-                        XorAddressMaskV4.AsSpan().CopyTo(mask.Slice(0, 4));
-                        request.TransactionId.Span.CopyTo(mask.Slice(4));
+                        ConstructIPV6Mask(mask, transactionId);
 
                         Span<byte> addressBytes = stackalloc byte[16];
                         Address.TryWriteBytes(addressBytes, out _);
@@ -55,6 +55,56 @@ namespace LiveStreamingServerNet.WebRTC.Internal.Stun.Packets.Attributes
                 default:
                     throw new ArgumentException("Only IPv4 and IPv6 are allowed.");
             }
+        }
+
+        public static XorMappedAddressAttribute ReadValue(TransactionId transactionId, IDataBuffer buffer, ushort length)
+        {
+            buffer.ReadByte();
+
+            var familyByte = buffer.ReadByte();
+            switch (familyByte)
+            {
+                case 0x01:
+                    {
+                        var port = (ushort)(buffer.ReadUInt16BigEndian() ^ XorPortMask);
+
+                        Span<byte> addressBytes = stackalloc byte[4];
+                        buffer.ReadBytes(addressBytes);
+
+                        var mask = XorAddressMaskV4;
+                        for (int i = 0; i < 4; i++)
+                            addressBytes[i] ^= mask[i];
+
+                        return new XorMappedAddressAttribute(new IPAddress(addressBytes), port);
+                    }
+
+                case 0x02:
+                    {
+                        var port = (ushort)(buffer.ReadUInt16BigEndian() ^ XorPortMask);
+
+                        Span<byte> addressBytes = stackalloc byte[16];
+                        buffer.ReadBytes(addressBytes);
+
+                        Span<byte> mask = stackalloc byte[16];
+                        ConstructIPV6Mask(mask, transactionId);
+
+                        for (int i = 0; i < 4; i++)
+                            addressBytes[i] ^= mask[i];
+
+                        return new XorMappedAddressAttribute(new IPAddress(addressBytes), port);
+                    }
+
+                default:
+                    throw new ArgumentException("Only IPv4 and IPv6 are allowed.");
+            }
+        }
+
+        private static void ConstructIPV6Mask(Span<byte> mask, TransactionId transactionId)
+        {
+            Debug.Assert(mask.Length == 16);
+            
+            XorAddressMaskV4.AsSpan().CopyTo(mask.Slice(0, 4));
+            transactionId.Span.CopyTo(mask.Slice(4));
         }
     }
 }

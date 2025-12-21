@@ -26,10 +26,10 @@ namespace LiveStreamingServerNet.WebRTC.Internal.Stun.Packets.Attributes
         private static uint ComputeFingerprint(IDataBuffer buffer)
             => CRC32.Generate(buffer.AsSpan()) ^ XorValue;
 
-        public void WriteValue(BindingRequest request, IDataBuffer buffer)
+        public void WriteValue(TransactionId transactionId, IDataBuffer buffer)
             => buffer.WriteUInt32BigEndian(Fingerprint);
 
-        public static FingerprintAttribute ReadValue(IDataBuffer buffer, ushort length)
+        public static FingerprintAttribute ReadValue(TransactionId transactionId, IDataBuffer buffer, ushort length)
             => new FingerprintAttribute(buffer.ReadUInt32BigEndian());
     }
 }

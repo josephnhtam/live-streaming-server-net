@@ -8,7 +8,7 @@ namespace LiveStreamingServerNet.WebRTC.Internal.Stun.Packets
 {
     internal class StunAttributesRegistry
     {
-        private delegate IStunAttribute StunAttributeFactoryDelegate(IDataBuffer buffer, ushort length);
+        private delegate IStunAttribute StunAttributeFactoryDelegate(TransactionId transactionId, IDataBuffer buffer, ushort length);
 
         private static readonly IDictionary<ushort, StunAttributeFactoryDelegate> FactoryMethodByType;
 
@@ -36,11 +36,12 @@ namespace LiveStreamingServerNet.WebRTC.Internal.Stun.Packets
             static MethodInfo? GetReadMethod(Type type) =>
                 type.GetMethod(
                     "ReadValue", BindingFlags.Public | BindingFlags.Static,
-                    null, [typeof(IDataBuffer), typeof(ushort)], null
+                    null, [typeof(TransactionId), typeof(IDataBuffer), typeof(ushort)], null
                 );
 
             static StunAttributeFactoryDelegate CreateFactoryMethod(MethodInfo methodInfo)
             {
+                var transactionIdParam = Expression.Parameter(typeof(TransactionId), "transactionId");
                 var bufferParam = Expression.Parameter(typeof(IDataBuffer), "buffer");
                 var lengthParam = Expression.Parameter(typeof(ushort), "length");
 
@@ -48,12 +49,12 @@ namespace LiveStreamingServerNet.WebRTC.Internal.Stun.Packets
                 var castExpression = Expression.Convert(callExpression, typeof(IStunAttribute));
 
                 return Expression.Lambda<StunAttributeFactoryDelegate>(
-                    castExpression, bufferParam, lengthParam
+                    castExpression, transactionIdParam, bufferParam, lengthParam
                 ).Compile();
             }
         }
 
-        public static IStunAttribute? ReadAttributeValue(ushort type, ushort length, IDataBuffer buffer) =>
-            FactoryMethodByType.TryGetValue(type, out var factoryMethod) ? factoryMethod(buffer, length) : null;
+        public static IStunAttribute? ReadAttributeValue(TransactionId transactionId, ushort type, ushort length, IDataBuffer buffer) =>
+            FactoryMethodByType.TryGetValue(type, out var factoryMethod) ? factoryMethod(transactionId, buffer, length) : null;
     }
 }

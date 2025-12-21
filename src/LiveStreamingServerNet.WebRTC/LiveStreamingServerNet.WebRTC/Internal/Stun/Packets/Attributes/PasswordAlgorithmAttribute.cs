@@ -8,13 +8,13 @@ namespace LiveStreamingServerNet.WebRTC.Internal.Stun.Packets.Attributes
     {
         public ushort Type => StunAttributeType.ComprehensionRequired.PasswordAlgorithm;
 
-        public void WriteValue(BindingRequest request, IDataBuffer buffer)
+        public void WriteValue(TransactionId transactionId, IDataBuffer buffer)
         {
             buffer.WriteUInt16BigEndian((ushort)Algorithm);
             buffer.WriteUInt16BigEndian(0);
         }
 
-        public static PasswordAlgorithmAttribute ReadValue(IDataBuffer buffer, ushort length)
+        public static PasswordAlgorithmAttribute ReadValue(TransactionId transactionId, IDataBuffer buffer, ushort length)
         {
             var algorithm = (StunPasswordAlgorithm)buffer.ReadUInt16BigEndian();
             buffer.ReadUInt16BigEndian();

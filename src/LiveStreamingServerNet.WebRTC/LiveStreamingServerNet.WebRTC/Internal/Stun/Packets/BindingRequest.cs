@@ -5,19 +5,28 @@ using LiveStreamingServerNet.WebRTC.Internal.Stun.Packets.Attributes.Contracts;
 
 namespace LiveStreamingServerNet.WebRTC.Internal.Stun.Packets
 {
-    internal readonly record struct BindingRequest
+    internal class BindingRequest : IDisposable
     {
         private const ushort AttributeHeaderLength = 4;
+        private static IDataBufferPool _dataBufferPool => DataBufferPool.Shared;
 
         public TransactionId TransactionId { get; }
-        public IReadOnlyList<IStunAttribute> Attributes { get; }
+        public IReadOnlyList<IStunAttribute> Attributes => _attributes;
 
-        private static IDataBufferPool _dataBufferPool => DataBufferPool.Shared;
+        private readonly List<IStunAttribute> _attributes;
+
+        public BindingRequest(IList<IStunAttribute> attributes)
+        {
+            TransactionId = TransactionId.Create();
+            _attributes = new List<IStunAttribute>(attributes);
+        }
 
         public BindingRequest(TransactionId transactionId, IList<IStunAttribute> attributes)
         {
+            transactionId.Claim();
+
             TransactionId = transactionId;
-            Attributes = new List<IStunAttribute>(attributes);
+            _attributes = new List<IStunAttribute>(attributes);
         }
 
         public void Write(IDataBuffer buffer)
@@ -35,80 +44,64 @@ namespace LiveStreamingServerNet.WebRTC.Internal.Stun.Packets
             buffer.WriteUInt32BigEndian(StunMessageMagicCookies.Value);
             buffer.Write(TransactionId.Span);
 
-            var (bodyStart, bodyEnd) = WriteAttributes(buffer);
-            var bodyLength = bodyEnd - bodyStart;
+            var bodyLength = StunAttributesWriter.Write(buffer, TransactionId, Attributes);
+            var bodyEnd = buffer.Position;
 
             buffer.MoveTo(bodyLengthPos);
             buffer.WriteUInt16BigEndian((ushort)(additionalLength + bodyLength));
             buffer.MoveTo(bodyEnd);
         }
 
-        private (int Start, int End) WriteAttributes(IDataBuffer buffer)
-        {
-            var start = buffer.Position;
-
-            foreach (var attribute in Attributes)
-            {
-                buffer.WriteUInt16BigEndian(attribute.Type);
-
-                var valueLengthPos = buffer.Position;
-                buffer.Advance(2);
-
-                var valueStart = buffer.Position;
-                attribute.WriteValue(this, buffer);
-
-                var valueEnd = buffer.Position;
-                var valueLength = (ushort)(valueEnd - valueStart);
-
-                buffer.MoveTo(valueLengthPos);
-                buffer.WriteUInt16BigEndian(valueLength);
-                buffer.MoveTo(valueEnd);
-
-                var paddingBytes = (4 - (valueLength % 4)) % 4;
-                for (var i = 0; i < paddingBytes; i++)
-                {
-                    buffer.Write((byte)0);
-                }
-            }
-
-            return (start, buffer.Position);
-        }
-
-
         public BindingRequest WithMessageIntegrity(byte[] password) =>
-            WriteSuffixAttribute((original, buffer) =>
+            WriteSuffixAttribute(buffer =>
             {
                 var messageIntegrity = new MessageIntegrityAttribute(buffer, password);
-                return new BindingRequest(original.TransactionId, [..original.Attributes, messageIntegrity]);
+                _attributes.Add(messageIntegrity);
+                return this;
             }, AttributeHeaderLength + MessageIntegrityAttribute.Length);
 
         public BindingRequest WithMessageIntegritySha256(byte[] password) =>
-            WriteSuffixAttribute((original, buffer) =>
+            WriteSuffixAttribute(buffer =>
             {
                 var messageIntegrity = new MessageIntegritySha256Attribute(buffer, password);
-                return new BindingRequest(original.TransactionId, [..original.Attributes, messageIntegrity]);
+                _attributes.Add(messageIntegrity);
+                return this;
             }, AttributeHeaderLength + MessageIntegritySha256Attribute.Length);
 
         public BindingRequest WithFingerprint() =>
-            WriteSuffixAttribute(static (original, buffer) =>
+            WriteSuffixAttribute(buffer =>
             {
                 var fingerprint = new FingerprintAttribute(buffer);
-                return new BindingRequest(original.TransactionId, [..original.Attributes, fingerprint]);
+                _attributes.Add(fingerprint);
+                return this;
             }, AttributeHeaderLength + FingerprintAttribute.Length);
 
         private BindingRequest WriteSuffixAttribute(
-            Func<BindingRequest, IDataBuffer, BindingRequest> factory, ushort suffixLength)
+            Func<IDataBuffer, BindingRequest> factory, ushort suffixLength)
         {
             var buffer = _dataBufferPool.Obtain();
 
             try
             {
                 Write(buffer, suffixLength);
-                return factory(this, buffer);
+                return factory(buffer);
             }
             finally
             {
                 _dataBufferPool.Recycle(buffer);
+            }
+        }
+
+        public void Dispose()
+        {
+            TransactionId.Unclaim();
+
+            foreach (var attribute in Attributes)
+            {
+                if (attribute is IDisposable disposableAttribute)
+                {
+                    disposableAttribute.Dispose();
+                }
             }
         }
     }

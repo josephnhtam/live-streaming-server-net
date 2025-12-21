@@ -10,7 +10,7 @@ namespace LiveStreamingServerNet.WebRTC.Internal.Stun.Packets.Attributes
     {
         public ushort Type => StunAttributeType.ComprehensionOptional.AlternateServer;
 
-        public void WriteValue(BindingRequest request, IDataBuffer buffer)
+        public void WriteValue(TransactionId transactionId, IDataBuffer buffer)
         {
             if (Address.AddressFamily != AddressFamily.InterNetwork)
             {
@@ -25,7 +25,7 @@ namespace LiveStreamingServerNet.WebRTC.Internal.Stun.Packets.Attributes
             buffer.WriteUInt16BigEndian(0x00);
         }
 
-        public static AlternateServerAttribute ReadValue(IDataBuffer buffer, ushort length)
+        public static AlternateServerAttribute ReadValue(TransactionId transactionId, IDataBuffer buffer, ushort length)
         {
             Span<byte> addressBytes = stackalloc byte[4];
             buffer.ReadBytes(addressBytes);
