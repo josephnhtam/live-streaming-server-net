@@ -9,8 +9,6 @@
 
     <ItemGroup>
         <Folder Include="Configurations\"/>
-        <Folder Include="Internal\DtlsSrtp\"/>
-        <Folder Include="Internal\Ice\"/>
     </ItemGroup>
 
     <ItemGroup>

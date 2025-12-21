@@ -1,8 +1,9 @@
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
-using LiveStreamingServerNet.WebRTC.Internal.Stun.Packages.Attributes.Contracts;
+using LiveStreamingServerNet.WebRTC.Internal.Stun.Packets.Attributes.Contracts;
 
-namespace LiveStreamingServerNet.WebRTC.Internal.Stun.Packages.Attributes
+namespace LiveStreamingServerNet.WebRTC.Internal.Stun.Packets.Attributes
 {
+    [StunAttribute(StunAttributeType.ComprehensionRequired.Username)]
     internal record UsernameAttribute(string Username) : IStunAttribute
     {
         public ushort Type => StunAttributeType.ComprehensionRequired.Username;
@@ -10,7 +11,7 @@ namespace LiveStreamingServerNet.WebRTC.Internal.Stun.Packages.Attributes
         public static UsernameAttribute Read(IDataBuffer buffer, int length)
             => new(buffer.ReadUtf8String(length));
 
-        public void Write(BindingRequest request, IDataBuffer buffer)
+        public void WriteValue(BindingRequest request, IDataBuffer buffer)
             => buffer.WriteUtf8String(Username);
     }
 }

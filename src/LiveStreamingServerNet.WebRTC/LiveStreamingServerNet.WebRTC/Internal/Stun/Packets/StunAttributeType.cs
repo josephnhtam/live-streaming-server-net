@@ -1,4 +1,4 @@
-namespace LiveStreamingServerNet.WebRTC.Internal.Stun.Packages.Attributes
+namespace LiveStreamingServerNet.WebRTC.Internal.Stun.Packets.Attributes
 {
     internal static class StunAttributeType
     {
@@ -12,7 +12,7 @@ namespace LiveStreamingServerNet.WebRTC.Internal.Stun.Packages.Attributes
             public const ushort Realm = 0x0014;
             public const ushort Nonce = 0x0015;
             public const ushort MessageIntegritySha256 = 0x001C;
-            public const ushort PasswordAlgorithms = 0x001D;
+            public const ushort PasswordAlgorithm = 0x001D;
             public const ushort Userhash = 0x001E;
             public const ushort XorMappedAddress = 0x0020;
 
@@ -26,10 +26,12 @@ namespace LiveStreamingServerNet.WebRTC.Internal.Stun.Packages.Attributes
                 Realm,
                 Nonce,
                 MessageIntegritySha256,
-                PasswordAlgorithms,
+                PasswordAlgorithm,
                 Userhash,
                 XorMappedAddress
             ];
+
+            public static bool InRange(ushort type) => type <= 0x7FFF;
         }
 
         public static class ComprehensionOptional

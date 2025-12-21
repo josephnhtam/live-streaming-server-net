@@ -1,10 +1,11 @@
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
-using LiveStreamingServerNet.WebRTC.Internal.Stun.Packages.Attributes.Contracts;
+using LiveStreamingServerNet.WebRTC.Internal.Stun.Packets.Attributes.Contracts;
 using System.Net;
 using System.Net.Sockets;
 
-namespace LiveStreamingServerNet.WebRTC.Internal.Stun.Packages.Attributes
+namespace LiveStreamingServerNet.WebRTC.Internal.Stun.Packets.Attributes
 {
+    [StunAttribute(StunAttributeType.ComprehensionRequired.XorMappedAddress)]
     internal record XorMappedAddressAttribute(IPAddress Address, ushort Port) : IStunAttribute
     {
         private const ushort XorPortMask = 0x2112;
@@ -12,7 +13,7 @@ namespace LiveStreamingServerNet.WebRTC.Internal.Stun.Packages.Attributes
 
         public ushort Type => StunAttributeType.ComprehensionRequired.XorMappedAddress;
 
-        public void Write(BindingRequest request, IDataBuffer buffer)
+        public void WriteValue(BindingRequest request, IDataBuffer buffer)
         {
             buffer.Write((byte)0x00);
 
@@ -52,7 +53,7 @@ namespace LiveStreamingServerNet.WebRTC.Internal.Stun.Packages.Attributes
                     }
 
                 default:
-                    throw new NotSupportedException("Only IPv4 and IPv6 are supported.");
+                    throw new ArgumentException("Only IPv4 and IPv6 are allowed.");
             }
         }
     }

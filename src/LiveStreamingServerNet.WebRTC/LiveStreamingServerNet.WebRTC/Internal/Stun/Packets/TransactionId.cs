@@ -1,7 +1,7 @@
 using System.Buffers;
 using System.Security.Cryptography;
 
-namespace LiveStreamingServerNet.WebRTC.Internal.Stun.Packages
+namespace LiveStreamingServerNet.WebRTC.Internal.Stun.Packets
 {
     internal sealed record TransactionId : IEquatable<TransactionId>, IDisposable
     {
