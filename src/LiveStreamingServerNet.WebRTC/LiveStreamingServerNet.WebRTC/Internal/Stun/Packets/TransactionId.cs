@@ -1,3 +1,4 @@
+using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using System.Buffers;
 using System.Security.Cryptography;
 
@@ -7,7 +8,6 @@ namespace LiveStreamingServerNet.WebRTC.Internal.Stun.Packets
     {
         private static readonly RandomNumberGenerator _random = RandomNumberGenerator.Create();
         private IMemoryOwner<byte>? _data;
-
         private int _claimed;
 
         public ReadOnlySpan<byte> Span => _data != null ? _data.Memory.Span.Slice(0, 12) : [];
@@ -15,11 +15,22 @@ namespace LiveStreamingServerNet.WebRTC.Internal.Stun.Packets
         private TransactionId()
         {
             _data = MemoryPool<byte>.Shared.Rent(12);
-            _random.GetBytes(_data.Memory.Span.Slice(0, 12));
-            _claimed = 1;
+            Claim();
         }
 
-        public static TransactionId Create() => new TransactionId();
+        public static TransactionId Create()
+        {
+            var transactionId = new TransactionId();
+            _random.GetBytes(transactionId._data!.Memory.Span.Slice(0, 12));
+            return transactionId;
+        }
+
+        public static TransactionId Read(IDataBuffer buffer)
+        {
+            var transactionId = new TransactionId();
+            buffer.ReadBytes(transactionId._data!.Memory.Span.Slice(0, 12));
+            return transactionId;
+        }
 
         public bool Equals(TransactionId? other) =>
             other is not null && Span.SequenceEqual(other.Span);
