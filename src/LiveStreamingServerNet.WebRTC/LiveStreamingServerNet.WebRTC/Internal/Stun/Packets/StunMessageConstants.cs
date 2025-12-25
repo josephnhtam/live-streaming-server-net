@@ -7,7 +7,7 @@ namespace LiveStreamingServerNet.WebRTC.Internal.Stun.Packets
         SuccessResponse = 2,
         ErrorResponse = 3
     }
-    
+
     internal static class StunMessageMagicCookies
     {
         public const uint Value = 0x2112A442;

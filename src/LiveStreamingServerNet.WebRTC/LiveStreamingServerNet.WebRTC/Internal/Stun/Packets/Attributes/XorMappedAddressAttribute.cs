@@ -102,7 +102,7 @@ namespace LiveStreamingServerNet.WebRTC.Internal.Stun.Packets.Attributes
         private static void ConstructIPV6Mask(Span<byte> mask, TransactionId transactionId)
         {
             Debug.Assert(mask.Length == 16);
-            
+
             XorAddressMaskV4.AsSpan().CopyTo(mask.Slice(0, 4));
             transactionId.Span.CopyTo(mask.Slice(4));
         }

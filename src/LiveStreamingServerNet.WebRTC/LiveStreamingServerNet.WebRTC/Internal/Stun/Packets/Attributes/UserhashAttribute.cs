@@ -37,7 +37,7 @@ namespace LiveStreamingServerNet.WebRTC.Internal.Stun.Packets.Attributes
 
             Span<byte> byteBuffer = stackalloc byte[maxByteCount];
             var bytesWritten = Encoding.UTF8.GetBytes(charBuffer, byteBuffer);
-            
+
             return SHA256.HashData(byteBuffer.Slice(0, bytesWritten));
         }
 
