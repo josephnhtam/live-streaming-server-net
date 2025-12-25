@@ -3,6 +3,7 @@ using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using LiveStreamingServerNet.WebRTC.Internal.Stun.Configurations;
 using LiveStreamingServerNet.WebRTC.Internal.Stun.Contracts;
 using LiveStreamingServerNet.WebRTC.Internal.Stun.Packets;
+using LiveStreamingServerNet.WebRTC.Internal.Stun.Packets.Attributes;
 using LiveStreamingServerNet.WebRTC.Internal.Stun.Packets.Attributes.Contracts;
 using System.Collections.Concurrent;
 using System.Net;
@@ -128,12 +129,12 @@ namespace LiveStreamingServerNet.WebRTC.Internal.Stun
                     return;
                 }
 
-                using var response = await _messageHandler.HandleRequestAsync(
-                    message, unknownAttributes, remoteEndPoint, cancellation);
+                using var response = await CreateResponseAsync();
 
                 if (response.Class is not (StunClass.SuccessResponse or StunClass.ErrorResponse))
                 {
-                    throw new InvalidOperationException("STUN response message must be either Success Response or Error Response.");
+                    throw new InvalidOperationException(
+                        "STUN response message must be either Success Response or Error Response.");
                 }
 
                 using var buffer = _bufferPool.Obtain();
@@ -144,6 +145,26 @@ namespace LiveStreamingServerNet.WebRTC.Internal.Stun
             catch (Exception)
             {
                 // todo: add logs
+            }
+
+            return;
+
+            async ValueTask<StunMessage> CreateResponseAsync()
+            {
+                if (unknownAttributes?.HasUnknownComprehensionRequiredAttributes() == true)
+                {
+                    return new StunMessage(
+                        message.TransactionId,
+                        message.Method,
+                        StunClass.ErrorResponse,
+                        [
+                            new ErrorCodeAttribute(420, "Unknown Comprehension-Required Attribute"),
+                            new UnknownAttributesAttribute(
+                                unknownAttributes.UnknownComprehensionRequiredAttributes().ToList())
+                        ]);
+                }
+
+                return await _messageHandler.HandleRequestAsync(message, unknownAttributes, remoteEndPoint, cancellation);
             }
         }
 
