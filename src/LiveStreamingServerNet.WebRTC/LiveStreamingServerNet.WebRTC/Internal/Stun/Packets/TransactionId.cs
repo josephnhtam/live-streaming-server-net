@@ -22,6 +22,7 @@ namespace LiveStreamingServerNet.WebRTC.Internal.Stun.Packets
         {
             var transactionId = new TransactionId();
             _random.GetBytes(transactionId._data!.Memory.Span.Slice(0, 12));
+
             return transactionId;
         }
 
