@@ -7,34 +7,76 @@ namespace LiveStreamingServerNet.WebRTC.Internal.Stun.Packets
 {
     internal class StunMessage : IDisposable
     {
-        private readonly StunMessageType _type;
         private const ushort AttributeHeaderLength = 4;
         private static IDataBufferPool _dataBufferPool => DataBufferPool.Shared;
 
+        public ushort Method { get; }
+        public StunClass Class { get; }
         public TransactionId TransactionId { get; }
         public IReadOnlyList<IStunAttribute> Attributes => _attributes;
 
         private readonly List<IStunAttribute> _attributes;
 
-        public StunMessage(StunMessageType type, IList<IStunAttribute> attributes)
+        public StunMessage(ushort method, StunClass stunClass, IList<IStunAttribute> attributes)
         {
             TransactionId = TransactionId.Create();
-            _type = type;
+            Method = method;
+            Class = stunClass;
             _attributes = new List<IStunAttribute>(attributes);
         }
 
-        public StunMessage(TransactionId transactionId, StunMessageType type, IList<IStunAttribute> attributes)
+        public StunMessage(TransactionId transactionId, ushort method, StunClass stunClass, IList<IStunAttribute> attributes)
         {
             transactionId.Claim();
 
             TransactionId = transactionId;
-            _type = type;
+            Method = method;
+            Class = stunClass;
             _attributes = new List<IStunAttribute>(attributes);
+        }
+
+        public static bool IsStunMessage(IDataBuffer buffer)
+        {
+            if ((buffer.Size - buffer.Position) < 20)
+            {
+                return false;
+            }
+
+            var initialPosition = buffer.Position;
+
+            try
+            {
+                var firstByte = buffer.ReadByte();
+                if ((firstByte & 0xC0) != 0)
+                {
+                    return false;
+                }
+
+                buffer.Advance(3, false);
+
+                var magicCookie = buffer.ReadUInt32BigEndian();
+                if (magicCookie != StunMessageMagicCookies.Value)
+                {
+                    return false;
+                }
+
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            finally
+            {
+                buffer.MoveTo(initialPosition);
+            }
         }
 
         public static (StunMessage, UnknownAttributes? unknownAttributes) Read(IDataBuffer buffer)
         {
-            var type = (StunMessageType)buffer.ReadUInt16BigEndian();
+            var rawType = buffer.ReadUInt16BigEndian();
+            var (method, stunClass) = StunTypeHelper.GetMethodAndClass(rawType);
+
             var bodyLength = buffer.ReadUInt16BigEndian();
 
             var magicCookie = buffer.ReadUInt32BigEndian();
@@ -48,7 +90,7 @@ namespace LiveStreamingServerNet.WebRTC.Internal.Stun.Packets
             try
             {
                 var (attributes, unknownAttributes) = StunAttributesSerializer.Read(buffer, transactionId, bodyLength);
-                return (new StunMessage(transactionId, type, attributes), unknownAttributes);
+                return (new StunMessage(transactionId, method, stunClass, attributes), unknownAttributes);
             }
             finally
             {
@@ -63,7 +105,8 @@ namespace LiveStreamingServerNet.WebRTC.Internal.Stun.Packets
 
         private void Write(IDataBuffer buffer, ushort additionalLength)
         {
-            buffer.WriteUInt16BigEndian((ushort)_type);
+            var type = StunTypeHelper.CreateType(Method, Class);
+            buffer.WriteUInt16BigEndian(type);
 
             var bodyLengthPos = buffer.Position;
             buffer.Advance(2);

@@ -1,4 +1,4 @@
-namespace LiveStreamingServerNet.WebRTC.Internal.Stun.Packets.Attributes
+namespace LiveStreamingServerNet.WebRTC.Internal.Stun.Packets
 {
     internal static class StunAttributeType
     {

@@ -1,13 +1,13 @@
 namespace LiveStreamingServerNet.WebRTC.Internal.Stun.Packets
 {
-    internal enum StunMessageType : ushort
+    internal enum StunClass : ushort
     {
-        Request = 0x0001,
-        Indication = 0x0011,
-        SuccessResponse = 0x0101,
-        ErrorResponse = 0x0111
+        Request = 0,
+        Indication = 1,
+        SuccessResponse = 2,
+        ErrorResponse = 3
     }
-
+    
     internal static class StunMessageMagicCookies
     {
         public const uint Value = 0x2112A442;

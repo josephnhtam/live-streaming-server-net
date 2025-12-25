@@ -1,8 +1,6 @@
-using LiveStreamingServerNet.WebRTC.Internal.Stun.Packets.Attributes;
-
 namespace LiveStreamingServerNet.WebRTC.Internal.Stun.Packets
 {
-    public class UnknownAttributes : List<ushort>
+    internal class UnknownAttributes : List<ushort>
     {
         public bool HasUnknownComprehensionRequiredAttributes()
             => this.Any(StunAttributeType.ComprehensionRequired.InRange);
