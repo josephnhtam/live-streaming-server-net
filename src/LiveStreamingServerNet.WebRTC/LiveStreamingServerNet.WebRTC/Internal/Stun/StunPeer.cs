@@ -151,7 +151,8 @@ namespace LiveStreamingServerNet.WebRTC.Internal.Stun
 
             async ValueTask<StunMessage> CreateResponseAsync()
             {
-                if (unknownAttributes?.HasUnknownComprehensionRequiredAttributes() == true)
+                if (_config.HandleUnknownComprehensionRequiredAttributes &&
+                    unknownAttributes?.HasUnknownComprehensionRequiredAttributes() == true)
                 {
                     return new StunMessage(
                         message.TransactionId,
