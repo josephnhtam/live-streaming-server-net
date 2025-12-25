@@ -76,7 +76,7 @@ namespace LiveStreamingServerNet.WebRTC.Internal.Stun
             using var buffer = _bufferPool.Obtain();
             indication.Write(buffer);
 
-            await _sender.SendAsync(buffer.AsSpan(), remoteEndPoint, cancellation);
+            await _sender.SendAsync(buffer, remoteEndPoint, cancellation);
         }
 
         public async ValueTask FeedPacketAsync(
@@ -140,7 +140,7 @@ namespace LiveStreamingServerNet.WebRTC.Internal.Stun
                 using var buffer = _bufferPool.Obtain();
                 response.Write(buffer);
 
-                await _sender.SendAsync(buffer.AsSpan(), remoteEndPoint, cancellation);
+                await _sender.SendAsync(buffer, remoteEndPoint, cancellation);
             }
             catch (Exception)
             {
@@ -203,7 +203,7 @@ namespace LiveStreamingServerNet.WebRTC.Internal.Stun
             {
                 cancellation.ThrowIfCancellationRequested();
 
-                await _sender.SendAsync(buffer.AsSpan(), remoteEndPoint, cancellation);
+                await _sender.SendAsync(buffer, remoteEndPoint, cancellation);
 
                 var timeout = Math.Min(
                     _config.RetransmissionTimeout * (int)Math.Pow(2, retries),

@@ -1,5 +1,8 @@
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using System.Buffers;
+using System.Buffers.Binary;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 
 namespace LiveStreamingServerNet.WebRTC.Internal.Stun.Packets
@@ -36,7 +39,17 @@ namespace LiveStreamingServerNet.WebRTC.Internal.Stun.Packets
         public bool Equals(TransactionId? other) =>
             other is not null && Span.SequenceEqual(other.Span);
 
-        public override int GetHashCode() => _data != null ? _data.Memory.GetHashCode() : 0;
+        public override int GetHashCode()
+        {
+            var span = Span;
+            if (span.IsEmpty) return 0;
+
+            var i0 = BinaryPrimitives.ReadInt32LittleEndian(span);
+            var i1 = BinaryPrimitives.ReadInt32LittleEndian(span.Slice(4));
+            var i2 = BinaryPrimitives.ReadInt32LittleEndian(span.Slice(8));
+            return HashCode.Combine(i0, i1, i2);
+        }
+
 
         public void Claim(int count = 1)
         {

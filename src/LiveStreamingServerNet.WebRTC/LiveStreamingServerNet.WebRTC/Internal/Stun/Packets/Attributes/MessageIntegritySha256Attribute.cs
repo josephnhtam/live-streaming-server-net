@@ -4,7 +4,7 @@ using System.Security.Cryptography;
 
 namespace LiveStreamingServerNet.WebRTC.Internal.Stun.Packets.Attributes
 {
-    [StunAttributeType(StunAttributeType.ComprehensionRequired.MessageIntegrity)]
+    [StunAttributeType(StunAttributeType.ComprehensionRequired.MessageIntegritySha256)]
     internal class MessageIntegritySha256Attribute : IStunAttribute
     {
         public const ushort Length = HMACSHA256.HashSizeInBytes;

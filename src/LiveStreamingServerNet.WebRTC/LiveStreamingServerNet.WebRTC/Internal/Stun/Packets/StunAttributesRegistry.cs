@@ -1,6 +1,5 @@
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using LiveStreamingServerNet.WebRTC.Internal.Stun.Packets.Attributes.Contracts;
-using System.Collections.Frozen;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -20,7 +19,7 @@ namespace LiveStreamingServerNet.WebRTC.Internal.Stun.Packets
                 .Select(pair => (pair.Id, FactoryMethodInfo: GetReadMethod(pair.Type)))
                 .Where(pair => pair.FactoryMethodInfo != null)
                 .Select(pair => (pair.Id, FactoryMethod: CreateFactoryMethod(pair.FactoryMethodInfo!)))
-                .ToFrozenDictionary(pair => pair.Id, pair => pair.FactoryMethod);
+                .ToDictionary(pair => pair.Id, pair => pair.FactoryMethod);
 
             return;
 
@@ -45,7 +44,7 @@ namespace LiveStreamingServerNet.WebRTC.Internal.Stun.Packets
                 var bufferParam = Expression.Parameter(typeof(IDataBuffer), "buffer");
                 var lengthParam = Expression.Parameter(typeof(ushort), "length");
 
-                var callExpression = Expression.Call(methodInfo, bufferParam, lengthParam);
+                var callExpression = Expression.Call(methodInfo, transactionIdParam, bufferParam, lengthParam);
                 var castExpression = Expression.Convert(callExpression, typeof(IStunAttribute));
 
                 return Expression.Lambda<StunAttributeFactoryDelegate>(
