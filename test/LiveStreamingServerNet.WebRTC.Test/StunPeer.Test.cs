@@ -1,11 +1,11 @@
 using FluentAssertions;
 using LiveStreamingServerNet.Utilities.Buffers;
 using LiveStreamingServerNet.Utilities.Common;
-using LiveStreamingServerNet.WebRTC.Internal.Stun;
-using LiveStreamingServerNet.WebRTC.Internal.Stun.Configurations;
-using LiveStreamingServerNet.WebRTC.Internal.Stun.Packets;
-using LiveStreamingServerNet.WebRTC.Internal.Stun.Packets.Attributes;
-using LiveStreamingServerNet.WebRTC.Internal.Stun.Packets.Attributes.Contracts;
+using LiveStreamingServerNet.WebRTC.Stun.Configurations;
+using LiveStreamingServerNet.WebRTC.Stun.Internal;
+using LiveStreamingServerNet.WebRTC.Stun.Internal.Packets;
+using LiveStreamingServerNet.WebRTC.Stun.Internal.Packets.Attributes;
+using LiveStreamingServerNet.WebRTC.Stun.Internal.Packets.Attributes.Contracts;
 using System.Net;
 using System.Net.Sockets;
 
