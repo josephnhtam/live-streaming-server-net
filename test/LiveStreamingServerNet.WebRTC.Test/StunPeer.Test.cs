@@ -27,11 +27,7 @@ namespace LiveStreamingServerNet.WebRTC.Test
             udpSocket.Bind(new IPEndPoint(IPAddress.IPv6Any, 0));
 
             var sender = new SocketStunSender(udpSocket);
-            var config = new StunClientConfiguration
-            {
-                RetransmissionTimeout = 500,
-                MaxRetransmissions = 3
-            };
+            var config = new StunClientConfiguration();
 
             using var stunPeer = new StunPeer(sender, config);
 
