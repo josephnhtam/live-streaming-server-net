@@ -6,13 +6,13 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Configurations
         /// Initial retransmission timeout in milliseconds.
         /// Default: 500ms.
         /// </summary>
-        public int RetransmissionTimeout { get; set; } = 500;
+        public TimeSpan RetransmissionTimeout { get; set; } = TimeSpan.FromMilliseconds(500);
 
         /// <summary>
         /// Maximum retransmission timeout in milliseconds.
         /// Default: 1600ms.
         /// </summary>
-        public int MaxRetransmissionTimeout { get; set; } = 1600;
+        public TimeSpan MaxRetransmissionTimeout { get; set; } = TimeSpan.FromMilliseconds(1600);
 
         /// <summary>
         /// Max retransmissions.
