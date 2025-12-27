@@ -13,8 +13,9 @@ namespace LiveStreamingServerNet.WebRTC.Test
 {
     public class StunPeerTest
     {
-        [Fact]
-        public async Task GetBindingResponse_Should_GetSuccessfulResponseFromGoogleStunServer()
+        [Theory, Trait("Network", "External")]
+        [InlineData("stun:stun.l.google.com:19302")]
+        public async Task GetBindingResponse_Should_GetSuccessfulResponseFromStunServer(string stunServerUri)
         {
             // Arrange
             const ushort bindingRequest = 0x0001;
@@ -32,26 +33,14 @@ namespace LiveStreamingServerNet.WebRTC.Test
             using var stunPeer = new StunPeer(sender, config);
 
             var receiveTask = Task.Run(async () =>
-            {
-                var remoteEndPoint = new IPEndPoint(IPAddress.IPv6Any, 0);
-
-                while (!cts.Token.IsCancellationRequested)
-                {
-                    using var buffer = DataBufferPool.Shared.Obtain();
-                    buffer.Size = 2048;
-
-                    var result = await udpSocket.ReceiveFromAsync(buffer.AsMemory(), remoteEndPoint, cts.Token);
-                    await stunPeer.FeedPacketAsync(buffer, (IPEndPoint)result.RemoteEndPoint, cts.Token);
-                }
-            }, cts.Token);
+                await ReceiveUdpPacketAsync(udpSocket, stunPeer, cts.Token), cts.Token);
 
             try
             {
                 // Act
                 var resolver = new StunDnsResolver();
-                var googleStunUri = "stun:stun.l.google.com:19302";
 
-                var endpoints = await resolver.ResolveAsync(googleStunUri, cts.Token);
+                var endpoints = await resolver.ResolveAsync(stunServerUri, cts.Token);
                 var target = endpoints.FirstOrDefault();
 
                 // Assert
@@ -75,6 +64,28 @@ namespace LiveStreamingServerNet.WebRTC.Test
                     await receiveTask;
                 }
                 catch { }
+            }
+        }
+
+        private static async Task ReceiveUdpPacketAsync(Socket udpSocket, StunPeer stunPeer, CancellationToken cancellation)
+        {
+            var remoteEndPoint = new IPEndPoint(IPAddress.IPv6Any, 0);
+
+            while (!cancellation.IsCancellationRequested)
+            {
+                var buffer = DataBufferPool.Shared.Obtain();
+
+                try
+                {
+                    buffer.Size = 2048;
+
+                    var result = await udpSocket.ReceiveFromAsync(buffer.AsMemory(), remoteEndPoint, cancellation);
+                    await stunPeer.FeedPacketAsync(buffer, (IPEndPoint)result.RemoteEndPoint, cancellation);
+                }
+                finally
+                {
+                    DataBufferPool.Shared.Recycle(buffer);
+                }
             }
         }
     }
