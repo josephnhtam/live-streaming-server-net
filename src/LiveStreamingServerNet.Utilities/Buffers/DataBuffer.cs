@@ -311,6 +311,11 @@ namespace LiveStreamingServerNet.Utilities.Buffers
 
         void IPoolObject.OnReturned()
         {
+            if (_isDisposed)
+            {
+                throw new ObjectDisposedException(nameof(Buffer));
+            }
+
             ReturnBuffer();
         }
     }
