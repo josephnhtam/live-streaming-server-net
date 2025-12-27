@@ -43,11 +43,13 @@ namespace LiveStreamingServerNet.WebRTC.Test
                 var endpoints = await resolver.ResolveAsync(stunServerUri, cts.Token);
                 var target = endpoints.FirstOrDefault();
 
+                using var request = new StunMessage(StunClass.Request, bindingRequest, new List<IStunAttribute>());
+
                 // Assert
                 target.Should().NotBeNull();
 
                 // Act
-                var (response, _) = await stunPeer.SendRequestAsync(bindingRequest, new List<IStunAttribute>(), target!, cts.Token);
+                var (response, _) = await stunPeer.SendRequestAsync(request, target!, cts.Token);
 
                 // Assert
                 response.Should().NotBeNull();

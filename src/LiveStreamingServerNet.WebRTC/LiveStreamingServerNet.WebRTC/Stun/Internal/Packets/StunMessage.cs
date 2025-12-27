@@ -7,7 +7,8 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal.Packets
 {
     internal class StunMessage : IDisposable
     {
-        private const ushort AttributeHeaderLength = 4;
+        public const ushort HeaderLength = 20;
+        public const ushort AttributeHeaderLength = 4;
         private static IDataBufferPool _dataBufferPool => DataBufferPool.Shared;
 
         public ushort Method { get; }
@@ -17,7 +18,7 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal.Packets
 
         private readonly List<IStunAttribute> _attributes;
 
-        public StunMessage(ushort method, StunClass stunClass, IList<IStunAttribute> attributes)
+        public StunMessage(StunClass stunClass, ushort method, IList<IStunAttribute> attributes)
         {
             TransactionId = TransactionId.Create();
             Method = method;
@@ -25,7 +26,7 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal.Packets
             _attributes = new List<IStunAttribute>(attributes);
         }
 
-        public StunMessage(TransactionId transactionId, ushort method, StunClass stunClass, IList<IStunAttribute> attributes)
+        public StunMessage(TransactionId transactionId, StunClass stunClass, ushort method, IList<IStunAttribute> attributes)
         {
             transactionId.Claim();
 
@@ -90,7 +91,7 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal.Packets
             try
             {
                 var (attributes, unknownAttributes) = StunAttributesSerializer.Read(buffer, transactionId, bodyLength);
-                return (new StunMessage(transactionId, method, stunClass, attributes), unknownAttributes);
+                return (new StunMessage(transactionId, stunClass, method, attributes), unknownAttributes);
             }
             finally
             {

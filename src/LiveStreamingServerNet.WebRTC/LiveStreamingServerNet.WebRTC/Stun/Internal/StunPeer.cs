@@ -4,18 +4,21 @@ using LiveStreamingServerNet.WebRTC.Stun.Configurations;
 using LiveStreamingServerNet.WebRTC.Stun.Internal.Contracts;
 using LiveStreamingServerNet.WebRTC.Stun.Internal.Packets;
 using LiveStreamingServerNet.WebRTC.Stun.Internal.Packets.Attributes;
-using LiveStreamingServerNet.WebRTC.Stun.Internal.Packets.Attributes.Contracts;
 using System.Collections.Concurrent;
 using System.Net;
 
 namespace LiveStreamingServerNet.WebRTC.Stun.Internal
 {
+    using TransactionDictionary =
+        ConcurrentDictionary<TransactionId, TaskCompletionSource<(StunMessage, UnknownAttributes?)>>;
+
     internal class StunPeer : IStunPeer, IDisposable
     {
         private readonly IStunSender _sender;
         private readonly StunPeerConfiguration _config;
         private readonly IDataBufferPool _bufferPool;
-        private readonly ConcurrentDictionary<TransactionId, TaskCompletionSource<(StunMessage, UnknownAttributes?)>> _pendingTransactions;
+
+        private readonly TransactionDictionary _pendingTransactions;
 
         private IStunMessageHandler? _messageHandler;
 
@@ -27,21 +30,24 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal
             _sender = sender;
             _config = config;
             _bufferPool = bufferPool ?? DataBufferPool.Shared;
-            _pendingTransactions = new ConcurrentDictionary<TransactionId, TaskCompletionSource<(StunMessage, UnknownAttributes?)>>();
+            _pendingTransactions = new TransactionDictionary();
         }
 
         public async Task<(StunMessage, UnknownAttributes?)> SendRequestAsync(
-            ushort method,
-            IList<IStunAttribute> attributes,
+            StunMessage request,
             IPEndPoint remoteEndPoint,
             CancellationToken cancellation = default)
         {
-            using var request = new StunMessage(method, StunClass.Request, attributes);
+            if (request.Class != StunClass.Request)
+            {
+                throw new ArgumentException("STUN message must be of Request class.", nameof(request));
+            }
 
             using var buffer = _bufferPool.Obtain();
             request.Write(buffer);
 
             var tcs = new TaskCompletionSource<(StunMessage, UnknownAttributes?)>();
+
             if (!_pendingTransactions.TryAdd(request.TransactionId, tcs))
             {
                 throw new InvalidOperationException("Transaction ID collision.");
@@ -49,7 +55,11 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal
 
             try
             {
-                return await SendBufferWithRetransmissionAsync(buffer, remoteEndPoint, tcs, cancellation);
+                return await SendBufferWithRetransmissionAsync(
+                    buffer,
+                    remoteEndPoint,
+                    tcs,
+                    cancellation);
             }
             finally
             {
@@ -63,12 +73,16 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal
         }
 
         public async Task SendIndicationAsync(
-            ushort method,
-            IList<IStunAttribute> attributes,
+            StunMessage indication,
             IPEndPoint remoteEndPoint,
             CancellationToken cancellation = default)
         {
-            using var indication = new StunMessage(method, StunClass.Indication, attributes);
+            if (indication.Class != StunClass.Indication)
+            {
+                throw new ArgumentException(
+                    "STUN message must be of Indication class.",
+                    nameof(indication));
+            }
 
             using var buffer = _bufferPool.Obtain();
             indication.Write(buffer);
@@ -87,11 +101,21 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal
             switch (message.Class)
             {
                 case StunClass.Request when messageHandler != null:
-                    await HandleRequestAsync(messageHandler, message, unknownAttributes, remoteEndPoint, cancellation);
+                    await HandleRequestAsync(
+                        messageHandler,
+                        message,
+                        unknownAttributes,
+                        remoteEndPoint,
+                        cancellation);
                     return;
 
                 case StunClass.Indication when messageHandler != null:
-                    await HandleIndicationAsync(messageHandler, message, unknownAttributes, remoteEndPoint, cancellation);
+                    await HandleIndicationAsync(
+                        messageHandler,
+                        message,
+                        unknownAttributes,
+                        remoteEndPoint,
+                        cancellation);
                     return;
 
                 case StunClass.SuccessResponse or StunClass.ErrorResponse:
@@ -100,11 +124,9 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal
                         tcs.TrySetResult((message, unknownAttributes));
                         return;
                     }
-                    else
-                    {
-                        message.Dispose();
-                        return;
-                    }
+
+                    message.Dispose();
+                    return;
 
                 default:
                     message.Dispose();
@@ -132,7 +154,8 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal
 
                 if (response.Class is not (StunClass.SuccessResponse or StunClass.ErrorResponse))
                 {
-                    throw new InvalidOperationException("STUN response message must be either Success Response or Error Response.");
+                    throw new InvalidOperationException(
+                        "STUN response message must be either Success Response or Error Response.");
                 }
 
                 using var buffer = _bufferPool.Obtain();
@@ -154,8 +177,8 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal
                 {
                     return new StunMessage(
                         message.TransactionId,
-                        message.Method,
                         StunClass.ErrorResponse,
+                        message.Method,
                         [
                             new ErrorCodeAttribute(420, "Unknown Comprehension-Required Attribute"),
                             new UnknownAttributesAttribute(
@@ -163,7 +186,11 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal
                         ]);
                 }
 
-                return await messageHandler.HandleRequestAsync(message, unknownAttributes, remoteEndPoint, cancellation);
+                return await messageHandler.HandleRequestAsync(
+                    message,
+                    unknownAttributes,
+                    remoteEndPoint,
+                    cancellation);
             }
         }
 
@@ -179,7 +206,10 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal
             try
             {
                 await messageHandler.HandleIndicationAsync(
-                    message, unknownAttributes, remoteEndPoint, cancellation);
+                    message,
+                    unknownAttributes,
+                    remoteEndPoint,
+                    cancellation);
             }
             catch (Exception)
             {
@@ -212,14 +242,18 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal
                 }
             }
 
-            var transactionTimeout = _config.RetransmissionTimeout * _config.TransactionTimeoutFactor;
+            var transactionTimeout =
+                _config.RetransmissionTimeout * _config.TransactionTimeoutFactor;
+
             var transactionTimeoutTask = Task.Delay(transactionTimeout, cancellation);
+
             if (await Task.WhenAny(tcs.Task, transactionTimeoutTask) == tcs.Task)
             {
                 return await tcs.Task;
             }
 
-            throw new TimeoutException($"STUN transaction timed out after {transactionTimeout} ms.");
+            throw new TimeoutException(
+                $"STUN transaction timed out after {transactionTimeout} ms.");
         }
 
         public void Dispose()
