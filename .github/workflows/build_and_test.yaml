@@ -2,7 +2,7 @@ name: Build and Test
 
 on:
   push:
-    branches: [master, develop, features/**]
+    branches: [master, develop, feature/**, refactor/**]
   pull_request:
     types: [assigned, opened, synchronize, reopened]
 
@@ -24,7 +24,7 @@ jobs:
       - name: Build
         run: dotnet build --configuration Release
       - name: Test
-        run: dotnet test --configuration Release --logger trx --results-directory test-results/${{ matrix.os }} --no-build
+        run: dotnet test --filter "Network!=External" --configuration Release --logger trx --results-directory test-results/${{ matrix.os }} --no-build
       - name: Upload test results
         uses: actions/upload-artifact@v4
         with:
