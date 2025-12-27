@@ -1,3 +1,4 @@
+using LiveStreamingServerNet.Utilities.Buffers;
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using LiveStreamingServerNet.WebRTC.Stun.Internal.Packets.Attributes.Contracts;
 using System.Security.Cryptography;
@@ -5,29 +6,50 @@ using System.Security.Cryptography;
 namespace LiveStreamingServerNet.WebRTC.Stun.Internal.Packets.Attributes
 {
     [StunAttributeType(StunAttributeType.ComprehensionRequired.MessageIntegrity)]
-    internal class MessageIntegrityAttribute : IStunAttribute
+    internal class MessageIntegrityAttribute : IStunAttribute, IDisposable
     {
         public const ushort Length = HMACSHA1.HashSizeInBytes;
+        private static readonly byte[] Placeholder = new byte[Length];
 
         private readonly byte[] _hmac;
-        public ReadOnlySpan<byte> Hmac => _hmac;
+        private readonly IDataBuffer? _cachedBuffer;
+        private bool _disposed;
 
+        public ReadOnlySpan<byte> Hmac => _hmac;
         public ushort Type => StunAttributeType.ComprehensionRequired.MessageIntegrity;
 
         public MessageIntegrityAttribute(IDataBuffer buffer, byte[] password)
         {
             _hmac = new byte[Length];
-            ComputeHmac(buffer, password, _hmac);
+
+            _cachedBuffer = DataBufferPool.Shared.Obtain();
+            WritePlaceholder(buffer, _cachedBuffer);
+            ComputeHmac(_cachedBuffer, password, _hmac);
         }
 
-        public MessageIntegrityAttribute(byte[] hmac) =>
-            _hmac = hmac;
-
-        public bool Verify(IDataBuffer buffer, byte[] password)
+        private void WritePlaceholder(IDataBuffer buffer, IDataBuffer target)
         {
-            Span<byte> computedHmac = stackalloc byte[Length];
+            target.Write(buffer.AsSpan(0, buffer.Position));
+            target.WriteUInt16BigEndian(Type);
+            target.WriteUInt16BigEndian(Length);
+            target.Write(Placeholder);
+        }
 
-            ComputeHmac(buffer, password, computedHmac);
+        private MessageIntegrityAttribute(byte[] hmac, IDataBuffer cachedBuffer)
+        {
+            _hmac = hmac;
+            _cachedBuffer = cachedBuffer;
+        }
+
+        public bool Verify(byte[] password)
+        {
+            if (_cachedBuffer == null)
+            {
+                return false;
+            }
+
+            Span<byte> computedHmac = stackalloc byte[Length];
+            ComputeHmac(_cachedBuffer, password, computedHmac);
             return computedHmac.SequenceEqual(_hmac);
         }
 
@@ -43,6 +65,33 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal.Packets.Attributes
             => buffer.Write(_hmac);
 
         public static MessageIntegrityAttribute ReadValue(TransactionId transactionId, IDataBuffer buffer, ushort length)
-            => new(buffer.ReadBytes(length));
+        {
+            var cachedBuffer = DataBufferPool.Shared.Obtain();
+            cachedBuffer.Write(buffer.AsSpan(0, buffer.Position));
+
+            cachedBuffer.MoveTo(2);
+            cachedBuffer.WriteUInt16BigEndian((ushort)(buffer.Position + Length - StunMessage.HeaderLength));
+
+            cachedBuffer.MoveTo(buffer.Position);
+            cachedBuffer.Write(Placeholder);
+
+            var hmac = buffer.ReadBytes(length);
+            return new MessageIntegrityAttribute(hmac, cachedBuffer);
+        }
+
+        public void Dispose()
+        {
+            if (_disposed)
+            {
+                return;
+            }
+
+            _disposed = true;
+
+            if (_cachedBuffer != null)
+            {
+                DataBufferPool.Shared.Recycle(_cachedBuffer);
+            }
+        }
     }
 }
