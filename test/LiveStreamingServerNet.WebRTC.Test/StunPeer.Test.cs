@@ -28,7 +28,7 @@ namespace LiveStreamingServerNet.WebRTC.Test
             udpSocket.Bind(new IPEndPoint(IPAddress.IPv6Any, 0));
 
             var sender = new SocketStunSender(udpSocket);
-            var config = new StunClientConfiguration();
+            var config = new StunPeerConfiguration();
 
             using var stunPeer = new StunPeer(sender, config);
 
