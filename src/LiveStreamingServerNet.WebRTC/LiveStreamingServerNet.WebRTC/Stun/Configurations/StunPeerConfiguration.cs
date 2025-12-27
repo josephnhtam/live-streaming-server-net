@@ -1,6 +1,6 @@
 namespace LiveStreamingServerNet.WebRTC.Stun.Configurations
 {
-    public class StunClientConfiguration
+    public class StunPeerConfiguration
     {
         /// <summary>
         /// Initial retransmission timeout in milliseconds.
