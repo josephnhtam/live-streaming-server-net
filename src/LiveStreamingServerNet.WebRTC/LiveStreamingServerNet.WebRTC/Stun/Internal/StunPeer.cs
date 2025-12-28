@@ -152,6 +152,12 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal
                     return;
                 }
 
+                if (response.TransactionId != message.TransactionId)
+                {
+                    throw new InvalidOperationException(
+                        "STUN response message must have the same Transaction ID as the request.");
+                }
+
                 if (response.Class is not (StunClass.SuccessResponse or StunClass.ErrorResponse))
                 {
                     throw new InvalidOperationException(
