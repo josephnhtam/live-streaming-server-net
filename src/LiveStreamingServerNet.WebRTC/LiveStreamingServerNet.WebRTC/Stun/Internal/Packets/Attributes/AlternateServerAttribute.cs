@@ -5,10 +5,10 @@ using System.Net.Sockets;
 
 namespace LiveStreamingServerNet.WebRTC.Stun.Internal.Packets.Attributes
 {
-    [StunAttributeType(StunAttributeType.ComprehensionOptional.AlternateServer)]
+    [StunAttributeType(StunAttributeTypes.ComprehensionOptional.AlternateServer)]
     internal record AlternateServerAttribute(IPEndPoint EndPoint) : IStunAttribute
     {
-        public ushort Type => StunAttributeType.ComprehensionOptional.AlternateServer;
+        public ushort Type => StunAttributeTypes.ComprehensionOptional.AlternateServer;
 
         public void WriteValue(TransactionId transactionId, IDataBuffer buffer)
         {

@@ -3,10 +3,10 @@ using LiveStreamingServerNet.WebRTC.Stun.Internal.Packets.Attributes.Contracts;
 
 namespace LiveStreamingServerNet.WebRTC.Stun.Internal.Packets.Attributes
 {
-    [StunAttributeType(StunAttributeType.ComprehensionRequired.Username)]
+    [StunAttributeType(StunAttributeTypes.ComprehensionRequired.Username)]
     internal record UsernameAttribute(string Username) : IStunAttribute
     {
-        public ushort Type => StunAttributeType.ComprehensionRequired.Username;
+        public ushort Type => StunAttributeTypes.ComprehensionRequired.Username;
 
         public void WriteValue(TransactionId transactionId, IDataBuffer buffer)
             => buffer.WriteUtf8String(Username);

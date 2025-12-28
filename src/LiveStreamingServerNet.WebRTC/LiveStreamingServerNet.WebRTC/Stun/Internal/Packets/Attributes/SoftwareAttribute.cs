@@ -3,10 +3,10 @@ using LiveStreamingServerNet.WebRTC.Stun.Internal.Packets.Attributes.Contracts;
 
 namespace LiveStreamingServerNet.WebRTC.Stun.Internal.Packets.Attributes
 {
-    [StunAttributeType(StunAttributeType.ComprehensionOptional.Software)]
+    [StunAttributeType(StunAttributeTypes.ComprehensionOptional.Software)]
     internal record SoftwareAttribute(string Version) : IStunAttribute
     {
-        public ushort Type => StunAttributeType.ComprehensionOptional.Software;
+        public ushort Type => StunAttributeTypes.ComprehensionOptional.Software;
 
         public void WriteValue(TransactionId transactionId, IDataBuffer buffer)
             => buffer.WriteUtf8String(Version);

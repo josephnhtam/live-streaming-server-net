@@ -3,10 +3,10 @@ using LiveStreamingServerNet.WebRTC.Stun.Internal.Packets.Attributes.Contracts;
 
 namespace LiveStreamingServerNet.WebRTC.Stun.Internal.Packets.Attributes
 {
-    [StunAttributeType(StunAttributeType.ComprehensionOptional.AlternateDomain)]
+    [StunAttributeType(StunAttributeTypes.ComprehensionOptional.AlternateDomain)]
     internal record AlternateDomainAttribute(string Domain) : IStunAttribute
     {
-        public ushort Type => StunAttributeType.ComprehensionOptional.AlternateDomain;
+        public ushort Type => StunAttributeTypes.ComprehensionOptional.AlternateDomain;
 
         public void WriteValue(TransactionId transactionId, IDataBuffer buffer)
         {

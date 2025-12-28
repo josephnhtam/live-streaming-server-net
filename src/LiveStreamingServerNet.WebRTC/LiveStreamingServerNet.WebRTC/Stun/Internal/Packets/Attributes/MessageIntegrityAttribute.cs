@@ -5,7 +5,7 @@ using System.Security.Cryptography;
 
 namespace LiveStreamingServerNet.WebRTC.Stun.Internal.Packets.Attributes
 {
-    [StunAttributeType(StunAttributeType.ComprehensionRequired.MessageIntegrity)]
+    [StunAttributeType(StunAttributeTypes.ComprehensionRequired.MessageIntegrity)]
     internal class MessageIntegrityAttribute : IStunAttribute, IDisposable
     {
         public const ushort Length = HMACSHA1.HashSizeInBytes;
@@ -16,7 +16,7 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal.Packets.Attributes
         private bool _disposed;
 
         public ReadOnlySpan<byte> Hmac => _hmac;
-        public ushort Type => StunAttributeType.ComprehensionRequired.MessageIntegrity;
+        public ushort Type => StunAttributeTypes.ComprehensionRequired.MessageIntegrity;
 
         public MessageIntegrityAttribute(IDataBuffer buffer, byte[] password)
         {

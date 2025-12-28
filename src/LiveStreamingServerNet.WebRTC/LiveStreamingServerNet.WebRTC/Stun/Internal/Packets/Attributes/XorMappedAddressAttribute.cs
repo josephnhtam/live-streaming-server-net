@@ -6,13 +6,13 @@ using System.Net.Sockets;
 
 namespace LiveStreamingServerNet.WebRTC.Stun.Internal.Packets.Attributes
 {
-    [StunAttributeType(StunAttributeType.ComprehensionRequired.XorMappedAddress)]
+    [StunAttributeType(StunAttributeTypes.ComprehensionRequired.XorMappedAddress)]
     internal record XorMappedAddressAttribute(IPEndPoint EndPoint) : IStunAttribute
     {
         private const ushort XorPortMask = 0x2112;
         private static readonly byte[] XorAddressMaskV4 = new byte[] { 0x21, 0x12, 0xA4, 0x42 };
 
-        public ushort Type => StunAttributeType.ComprehensionRequired.XorMappedAddress;
+        public ushort Type => StunAttributeTypes.ComprehensionRequired.XorMappedAddress;
 
         public void WriteValue(TransactionId transactionId, IDataBuffer buffer)
         {
