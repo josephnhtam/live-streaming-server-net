@@ -1,20 +1,20 @@
 using LiveStreamingServerNet.Utilities.Buffers;
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using LiveStreamingServerNet.Utilities.Common;
-using LiveStreamingServerNet.WebRTC.Ice.Internal.Contracts;
+using LiveStreamingServerNet.WebRTC.Udp.Internal.Contracts;
 using LiveStreamingServerNet.WebRTC.Utilities;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.Channels;
 
-namespace LiveStreamingServerNet.WebRTC.Ice.Internal
+namespace LiveStreamingServerNet.WebRTC.Udp.Internal
 {
-    public class UdpConnection : IUdpConnection
+    public class UdpTransport : IUdpTransport
     {
         public IPEndPoint LocalEndPoint { get; }
-        public UdpConnectionState State => GetState();
+        public UdpTransportState State => GetState();
 
-        public event EventHandler<UdpConnectionState>? OnStateChanged;
+        public event EventHandler<UdpTransportState>? OnStateChanged;
         public event EventHandler<UdpPacketEventArgs>? OnPacketReceived;
 
         private readonly Socket _socket;
@@ -29,10 +29,10 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
         private Task? _receiveLoopTask;
         private Task? _dispatchLoopTask;
 
-        private UdpConnectionState _state = UdpConnectionState.New;
+        private UdpTransportState _state = UdpTransportState.New;
         private int _isDisposed;
 
-        public UdpConnection(Socket socket, IDataBufferPool? dataBufferPool = null, int maxDatagramSize = 2048)
+        public UdpTransport(Socket socket, IDataBufferPool? dataBufferPool = null, int maxDatagramSize = 2048)
         {
             LocalEndPoint = (socket.LocalEndPoint as IPEndPoint)!;
 
@@ -58,7 +58,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
 
         public bool SendPacket(ReadOnlyMemory<byte> buffer, IPEndPoint remoteEndPoint)
         {
-            if (State != UdpConnectionState.Started)
+            if (State != UdpTransportState.Started)
                 return false;
 
             var dataBuffer = _dataBufferPool.Obtain();
@@ -85,7 +85,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
 
         public bool Start()
         {
-            if (!TryTransitionTo(UdpConnectionState.Started, UdpConnectionState.New))
+            if (!TryTransitionTo(UdpTransportState.Started, UdpTransportState.New))
                 return false;
 
             var token = _cts.Token;
@@ -99,7 +99,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
 
         public bool Close()
         {
-            if (!TryTransitionTo(UdpConnectionState.Closed, UdpConnectionState.New, UdpConnectionState.Started))
+            if (!TryTransitionTo(UdpTransportState.Closed, UdpTransportState.New, UdpTransportState.Started))
                 return false;
 
             _sendChannel.Writer.TryComplete();
@@ -253,7 +253,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
             _cts.Dispose();
         }
 
-        private UdpConnectionState GetState()
+        private UdpTransportState GetState()
         {
             lock (_stateLock)
             {
@@ -261,7 +261,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
             }
         }
 
-        private bool TryTransitionTo(UdpConnectionState newState, params UdpConnectionState[] expected)
+        private bool TryTransitionTo(UdpTransportState newState, params UdpTransportState[] expected)
         {
             lock (_stateLock)
             {
