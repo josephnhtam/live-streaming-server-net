@@ -12,31 +12,33 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
     public class UdpConnection : IUdpConnection
     {
         public IPEndPoint LocalEndPoint { get; }
+        public UdpConnectionState State => GetState();
 
-        public event EventHandler<UdpPacketEventArgs?>? OnPacketReceived;
-
-        private int _state = (int)UdpConnectionState.Created;
-        public UdpConnectionState State => (UdpConnectionState)Volatile.Read(ref _state);
+        public event EventHandler<UdpConnectionState>? OnStateChanged;
+        public event EventHandler<UdpPacketEventArgs>? OnPacketReceived;
 
         private readonly Socket _socket;
         private readonly IDataBufferPool _dataBufferPool;
+        private readonly int _maxDatagramSize;
         private readonly Channel<UdpPacket> _sendChannel;
         private readonly Channel<UdpPacket> _receiveChannel;
         private readonly CancellationTokenSource _cts;
+        private readonly object _stateLock = new();
 
         private Task? _sendLoopTask;
         private Task? _receiveLoopTask;
         private Task? _dispatchLoopTask;
-        private int _isClosedNotified;
 
-        private const int MaxDatagramSize = 2048;
+        private UdpConnectionState _state = UdpConnectionState.New;
+        private int _isDisposed;
 
-        public UdpConnection(Socket socket, IDataBufferPool? dataBufferPool)
+        public UdpConnection(Socket socket, IDataBufferPool? dataBufferPool = null, int maxDatagramSize = 2048)
         {
             LocalEndPoint = (socket.LocalEndPoint as IPEndPoint)!;
 
             _socket = socket;
             _dataBufferPool = dataBufferPool ?? DataBufferPool.Shared;
+            _maxDatagramSize = maxDatagramSize;
 
             _sendChannel = Channel.CreateUnbounded<UdpPacket>(new()
             {
@@ -56,16 +58,8 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
 
         public bool SendPacket(ReadOnlyMemory<byte> buffer, IPEndPoint remoteEndPoint)
         {
-            var state = (UdpConnectionState)Volatile.Read(ref _state);
-            if (state is UdpConnectionState.Closed or UdpConnectionState.Disposed)
-            {
+            if (State != UdpConnectionState.Started)
                 return false;
-            }
-
-            if (Volatile.Read(ref _isClosedNotified) == 1)
-            {
-                return false;
-            }
 
             var dataBuffer = _dataBufferPool.Obtain();
 
@@ -82,7 +76,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
 
                 return true;
             }
-            catch (Exception)
+            catch
             {
                 _dataBufferPool.Recycle(dataBuffer);
                 return false;
@@ -91,33 +85,29 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
 
         public bool Start()
         {
-            var prev = (UdpConnectionState)Interlocked.CompareExchange(
-                ref _state, (int)UdpConnectionState.Started, (int)UdpConnectionState.Created);
-
-            if (prev != UdpConnectionState.Created)
-            {
+            if (!TryTransitionTo(UdpConnectionState.Started, UdpConnectionState.New))
                 return false;
-            }
 
             var token = _cts.Token;
 
             _sendLoopTask = Task.Run(() => ProcessSendLoopAsync(token), token);
             _receiveLoopTask = Task.Run(() => ProcessReceiveLoopAsync(token), token);
             _dispatchLoopTask = Task.Run(() => ProcessDispatchLoopAsync(token), token);
+
             return true;
         }
 
-        private void NotifyClosed()
+        public bool Close()
         {
-            if (Interlocked.Exchange(ref _isClosedNotified, 1) != 0)
-            {
-                return;
-            }
+            if (!TryTransitionTo(UdpConnectionState.Closed, UdpConnectionState.New, UdpConnectionState.Started))
+                return false;
 
-            Interlocked.CompareExchange(ref _state, (int)UdpConnectionState.Closed, (int)UdpConnectionState.Created);
-            Interlocked.CompareExchange(ref _state, (int)UdpConnectionState.Closed, (int)UdpConnectionState.Started);
+            _sendChannel.Writer.TryComplete();
+            _receiveChannel.Writer.TryComplete();
+            _cts.Cancel();
 
-            ErrorBoundary.Execute(() => OnPacketReceived?.Invoke(this, null));
+            ErrorBoundary.Execute(() => _socket.Close());
+            return true;
         }
 
         private async Task ProcessSendLoopAsync(CancellationToken cancellation)
@@ -131,9 +121,13 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                     try
                     {
                         await _socket.SendToAsync(
-                            buffer.AsMemory(0, buffer.Position), SocketFlags.None, remoteEndPoint, cancellation);
+                            buffer.AsMemory(0, buffer.Position),
+                            SocketFlags.None,
+                            remoteEndPoint,
+                            cancellation);
                     }
                     catch (SocketException ex) when (!ex.SocketErrorCode.IsFatal()) { }
+                    catch (ObjectDisposedException) { }
                     finally
                     {
                         _dataBufferPool.Recycle(buffer);
@@ -142,13 +136,9 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
             }
             catch (OperationCanceledException) { }
             catch (ChannelClosedException) { }
-            catch (Exception)
-            {
-                _socket.Close();
-            }
             finally
             {
-                NotifyClosed();
+                Close();
             }
         }
 
@@ -163,12 +153,15 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                 while (!cancellation.IsCancellationRequested)
                 {
                     var buffer = _dataBufferPool.Obtain();
-                    buffer.Size = MaxDatagramSize;
+                    buffer.Size = _maxDatagramSize;
 
                     try
                     {
                         var result = await _socket.ReceiveFromAsync(
-                            buffer.AsMemory(0, MaxDatagramSize), SocketFlags.None, remoteEndPoint, cancellation);
+                            buffer.AsMemory(0, _maxDatagramSize),
+                            SocketFlags.None,
+                            remoteEndPoint,
+                            cancellation);
 
                         var receivedBytes = result.ReceivedBytes;
                         if (receivedBytes == 0)
@@ -181,15 +174,18 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
 
                         var packet = new UdpPacket(buffer, (IPEndPoint)result.RemoteEndPoint);
                         if (!_receiveChannel.Writer.TryWrite(packet))
-                        {
                             throw new ChannelClosedException();
-                        }
                     }
                     catch (SocketException ex) when (!ex.SocketErrorCode.IsFatal())
                     {
                         _dataBufferPool.Recycle(buffer);
                     }
-                    catch (Exception)
+                    catch (ObjectDisposedException)
+                    {
+                        _dataBufferPool.Recycle(buffer);
+                        break;
+                    }
+                    catch
                     {
                         _dataBufferPool.Recycle(buffer);
                         throw;
@@ -198,13 +194,9 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
             }
             catch (OperationCanceledException) { }
             catch (ChannelClosedException) { }
-            catch (Exception)
-            {
-                _socket.Close();
-            }
             finally
             {
-                NotifyClosed();
+                Close();
             }
         }
 
@@ -221,7 +213,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                     {
                         OnPacketReceived?.Invoke(this, new UdpPacketEventArgs(rentedBuffer, remoteEndPoint));
                     }
-                    catch (Exception) { }
+                    catch { }
                     finally
                     {
                         rentedBuffer.Unclaim();
@@ -231,52 +223,61 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
             }
             catch (OperationCanceledException) { }
             catch (ChannelClosedException) { }
-            catch (Exception)
-            {
-                _socket.Close();
-            }
             finally
             {
-                NotifyClosed();
+                Close();
             }
         }
 
         public async ValueTask DisposeAsync()
         {
-            if (Interlocked.Exchange(ref _state, (int)UdpConnectionState.Disposed) == (int)UdpConnectionState.Disposed)
-            {
+            if (Interlocked.Exchange(ref _isDisposed, 1) != 0)
                 return;
-            }
 
-            _sendChannel.Writer.TryComplete();
-            _receiveChannel.Writer.TryComplete();
+            Close();
 
-            _cts.Cancel();
+            var tasks = new[] { _sendLoopTask, _receiveLoopTask, _dispatchLoopTask }
+                .Where(t => t != null)
+                .Select(t => t!);
 
-            List<Task?> tasks = [_sendLoopTask, _receiveLoopTask, _dispatchLoopTask];
-            await ErrorBoundary.ExecuteAsync(async () =>
-                await Task.WhenAll(tasks.Where(t => t != null)!)
-            );
+            await ErrorBoundary.ExecuteAsync(async () => await Task.WhenAll(tasks));
 
             while (_sendChannel.Reader.TryRead(out var packet))
-            {
                 _dataBufferPool.Recycle(packet.Buffer);
-            }
 
             while (_receiveChannel.Reader.TryRead(out var packet))
-            {
                 _dataBufferPool.Recycle(packet.Buffer);
-            }
 
-            ErrorBoundary.Execute(() =>
-            {
-                _socket.Close();
-                _socket.Dispose();
-            });
-
-            NotifyClosed();
+            ErrorBoundary.Execute(() => _socket.Dispose());
 
             _cts.Dispose();
+        }
+
+        private UdpConnectionState GetState()
+        {
+            lock (_stateLock)
+            {
+                return _state;
+            }
+        }
+
+        private bool TryTransitionTo(UdpConnectionState newState, params UdpConnectionState[] expected)
+        {
+            lock (_stateLock)
+            {
+                var current = _state;
+
+                if (expected is { Length: > 0 } && Array.IndexOf(expected, current) < 0)
+                    return false;
+
+                if (current == newState)
+                    return false;
+
+                _state = newState;
+            }
+
+            ErrorBoundary.Execute(() => OnStateChanged?.Invoke(this, newState));
+            return true;
         }
 
         private record struct UdpPacket(IDataBuffer Buffer, IPEndPoint RemoteEndPoint);
