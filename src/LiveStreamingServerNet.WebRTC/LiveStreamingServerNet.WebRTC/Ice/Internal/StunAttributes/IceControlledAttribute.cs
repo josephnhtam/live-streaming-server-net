@@ -4,10 +4,10 @@ using LiveStreamingServerNet.WebRTC.Stun.Internal.Packets.Attributes.Contracts;
 
 namespace LiveStreamingServerNet.WebRTC.Ice.Internal.StunAttributes
 {
-    [StunAttributeType(IceStunAttributeType.ComprehensionOptional.IceControlled)]
+    [StunAttributeType(IceStunAttributeTypes.ComprehensionOptional.IceControlled)]
     internal record IceControlledAttribute(ulong TieBreaker) : IStunAttribute
     {
-        public ushort Type => IceStunAttributeType.ComprehensionOptional.IceControlled;
+        public ushort Type => IceStunAttributeTypes.ComprehensionOptional.IceControlled;
 
         public void WriteValue(TransactionId transactionId, IDataBuffer buffer)
             => buffer.WriteUInt64BigEndian(TieBreaker);

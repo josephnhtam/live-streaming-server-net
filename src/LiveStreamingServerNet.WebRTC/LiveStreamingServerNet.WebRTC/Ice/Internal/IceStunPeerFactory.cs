@@ -7,12 +7,12 @@ using System.Net.Sockets;
 
 namespace LiveStreamingServerNet.WebRTC.Ice.Internal
 {
-    internal class IceIceStunPeerFactory : IIceStunPeerFactory
+    internal class IceStunPeerFactory : IIceStunPeerFactory
     {
         private readonly StunPeerConfiguration _config;
         private readonly IDataBufferPool? _bufferPool;
 
-        public IceIceStunPeerFactory(StunPeerConfiguration config, IDataBufferPool? bufferPool)
+        public IceStunPeerFactory(StunPeerConfiguration config, IDataBufferPool? bufferPool)
         {
             _config = config;
             _bufferPool = bufferPool;
