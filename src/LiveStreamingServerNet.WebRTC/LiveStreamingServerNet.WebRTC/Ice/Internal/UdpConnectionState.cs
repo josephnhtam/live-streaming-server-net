@@ -4,7 +4,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
     {
         Created = 0,
         Started = 1,
-        Disconnected = 2,
+        Closed = 2,
         Disposed = 3
     }
 }
