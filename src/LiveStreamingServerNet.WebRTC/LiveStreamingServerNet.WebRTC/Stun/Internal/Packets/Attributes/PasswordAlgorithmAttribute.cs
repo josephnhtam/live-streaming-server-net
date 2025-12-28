@@ -3,10 +3,10 @@ using LiveStreamingServerNet.WebRTC.Stun.Internal.Packets.Attributes.Contracts;
 
 namespace LiveStreamingServerNet.WebRTC.Stun.Internal.Packets.Attributes
 {
-    [StunAttributeType(StunAttributeType.ComprehensionRequired.PasswordAlgorithm)]
+    [StunAttributeType(StunAttributeTypes.ComprehensionRequired.PasswordAlgorithm)]
     internal record PasswordAlgorithmAttribute(StunPasswordAlgorithm Algorithm) : IStunAttribute
     {
-        public ushort Type => StunAttributeType.ComprehensionRequired.PasswordAlgorithm;
+        public ushort Type => StunAttributeTypes.ComprehensionRequired.PasswordAlgorithm;
 
         public void WriteValue(TransactionId transactionId, IDataBuffer buffer)
         {

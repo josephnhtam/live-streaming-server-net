@@ -5,10 +5,10 @@ using System.Text;
 
 namespace LiveStreamingServerNet.WebRTC.Stun.Internal.Packets.Attributes
 {
-    [StunAttributeType(StunAttributeType.ComprehensionRequired.Userhash)]
+    [StunAttributeType(StunAttributeTypes.ComprehensionRequired.Userhash)]
     internal class UserhashAttribute : IStunAttribute
     {
-        public ushort Type => StunAttributeType.ComprehensionRequired.Userhash;
+        public ushort Type => StunAttributeTypes.ComprehensionRequired.Userhash;
 
         private readonly byte[] _hash;
         public ReadOnlySpan<byte> Hash => _hash;

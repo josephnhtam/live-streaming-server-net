@@ -5,7 +5,7 @@ using LiveStreamingServerNet.WebRTC.Stun.Internal.Packets.Attributes.Contracts;
 
 namespace LiveStreamingServerNet.WebRTC.Stun.Internal.Packets.Attributes
 {
-    [StunAttributeType(StunAttributeType.ComprehensionOptional.Fingerprint)]
+    [StunAttributeType(StunAttributeTypes.ComprehensionOptional.Fingerprint)]
     internal class FingerprintAttribute : IStunAttribute
     {
         public const ushort Length = 4;
@@ -15,7 +15,7 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal.Packets.Attributes
         private readonly bool _verified;
         public uint Fingerprint { get; }
 
-        public ushort Type => StunAttributeType.ComprehensionOptional.Fingerprint;
+        public ushort Type => StunAttributeTypes.ComprehensionOptional.Fingerprint;
 
         public FingerprintAttribute(IDataBuffer buffer)
         {

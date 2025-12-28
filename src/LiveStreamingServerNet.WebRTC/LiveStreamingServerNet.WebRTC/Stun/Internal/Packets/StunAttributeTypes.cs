@@ -1,6 +1,6 @@
 namespace LiveStreamingServerNet.WebRTC.Stun.Internal.Packets
 {
-    internal static class StunAttributeType
+    internal static class StunAttributeTypes
     {
         public static class ComprehensionRequired
         {

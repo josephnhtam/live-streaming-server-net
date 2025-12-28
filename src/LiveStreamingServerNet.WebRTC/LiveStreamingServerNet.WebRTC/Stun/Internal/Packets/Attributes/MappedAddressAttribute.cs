@@ -5,10 +5,10 @@ using System.Net.Sockets;
 
 namespace LiveStreamingServerNet.WebRTC.Stun.Internal.Packets.Attributes
 {
-    [StunAttributeType(StunAttributeType.ComprehensionRequired.MappedAddress)]
+    [StunAttributeType(StunAttributeTypes.ComprehensionRequired.MappedAddress)]
     internal record MappedAddressAttribute(IPEndPoint EndPoint) : IStunAttribute
     {
-        public ushort Type => StunAttributeType.ComprehensionRequired.MappedAddress;
+        public ushort Type => StunAttributeTypes.ComprehensionRequired.MappedAddress;
 
         public void WriteValue(TransactionId transactionId, IDataBuffer buffer)
         {

@@ -18,8 +18,6 @@ namespace LiveStreamingServerNet.WebRTC.Test
         public async Task GetBindingResponse_Should_GetSuccessfulResponseFromStunServer(string stunServerUri)
         {
             // Arrange
-            const ushort bindingRequest = 0x0001;
-
             using var cts = new CancellationTokenSource();
 
             using var udpSocket = new Socket(AddressFamily.InterNetworkV6, SocketType.Dgram, ProtocolType.Udp);
@@ -43,7 +41,7 @@ namespace LiveStreamingServerNet.WebRTC.Test
                 var endpoints = await resolver.ResolveAsync(stunServerUri, cts.Token);
                 var target = endpoints.FirstOrDefault();
 
-                using var request = new StunMessage(StunClass.Request, bindingRequest, new List<IStunAttribute>());
+                using var request = new StunMessage(StunClass.Request, StunConstants.BindingRequestMethod, new List<IStunAttribute>());
 
                 // Assert
                 target.Should().NotBeNull();
