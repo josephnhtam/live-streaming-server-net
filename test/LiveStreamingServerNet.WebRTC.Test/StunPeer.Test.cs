@@ -1,8 +1,10 @@
 using FluentAssertions;
 using LiveStreamingServerNet.Utilities.Buffers;
+using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using LiveStreamingServerNet.Utilities.Common;
 using LiveStreamingServerNet.WebRTC.Stun.Configurations;
 using LiveStreamingServerNet.WebRTC.Stun.Internal;
+using LiveStreamingServerNet.WebRTC.Stun.Internal.Contracts;
 using LiveStreamingServerNet.WebRTC.Stun.Internal.Packets;
 using LiveStreamingServerNet.WebRTC.Stun.Internal.Packets.Attributes;
 using LiveStreamingServerNet.WebRTC.Stun.Internal.Packets.Attributes.Contracts;
@@ -52,7 +54,7 @@ namespace LiveStreamingServerNet.WebRTC.Test
                 // Assert
                 response.Should().NotBeNull();
                 response.Class.Should().Be(StunClass.SuccessResponse);
-                response.Method.Should().Be(bindingRequest);
+                response.Method.Should().Be(StunConstants.BindingRequestMethod);
                 response.Attributes.Should().ContainItemsAssignableTo<XorMappedAddressAttribute>();
             }
             finally
@@ -86,6 +88,21 @@ namespace LiveStreamingServerNet.WebRTC.Test
                 {
                     DataBufferPool.Shared.Recycle(buffer);
                 }
+            }
+        }
+
+        private class SocketStunSender : IStunSender
+        {
+            private readonly Socket _socket;
+
+            public SocketStunSender(Socket socket)
+            {
+                _socket = socket;
+            }
+
+            public async ValueTask SendAsync(IDataBuffer buffer, IPEndPoint remoteEndpoint, CancellationToken cancellation)
+            {
+                await _socket.SendToAsync(buffer.AsMemory(), SocketFlags.None, remoteEndpoint, cancellation);
             }
         }
     }
