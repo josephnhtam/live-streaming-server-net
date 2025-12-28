@@ -30,7 +30,7 @@ namespace LiveStreamingServerNet.WebRTC.Udp.Internal
         private Task? _dispatchLoopTask;
 
         private UdpTransportState _state = UdpTransportState.New;
-        private int _isDisposed;
+        private volatile int _isDisposed;
 
         public UdpTransport(Socket socket, IDataBufferPool? dataBufferPool = null, int maxDatagramSize = 2048)
         {
@@ -144,7 +144,7 @@ namespace LiveStreamingServerNet.WebRTC.Udp.Internal
 
         private async Task ProcessReceiveLoopAsync(CancellationToken cancellation)
         {
-            EndPoint remoteEndPoint = _socket.AddressFamily == AddressFamily.InterNetworkV6
+            var remoteEndPoint = _socket.AddressFamily == AddressFamily.InterNetworkV6
                 ? new IPEndPoint(IPAddress.IPv6Any, 0)
                 : new IPEndPoint(IPAddress.Any, 0);
 
