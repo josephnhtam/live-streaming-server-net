@@ -235,9 +235,9 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal
 
                 await _sender.SendAsync(buffer, remoteEndPoint, cancellation);
 
-                var timeout = Math.Min(
-                    _config.RetransmissionTimeout.Milliseconds * (int)Math.Pow(2, retries),
-                    _config.MaxRetransmissionTimeout.Milliseconds);
+                var timeout = (int)Math.Min(
+                    _config.RetransmissionTimeout.TotalMilliseconds * (int)Math.Pow(2, retries),
+                    _config.MaxRetransmissionTimeout.TotalMilliseconds);
 
                 var timeoutTask = Task.Delay(timeout, cancellation);
                 var resultTask = await Task.WhenAny(tcs.Task, timeoutTask);
