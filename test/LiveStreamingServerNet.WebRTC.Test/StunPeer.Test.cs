@@ -8,6 +8,7 @@ using LiveStreamingServerNet.WebRTC.Stun.Internal.Contracts;
 using LiveStreamingServerNet.WebRTC.Stun.Internal.Packets;
 using LiveStreamingServerNet.WebRTC.Stun.Internal.Packets.Attributes;
 using LiveStreamingServerNet.WebRTC.Stun.Internal.Packets.Attributes.Contracts;
+using LiveStreamingServerNet.WebRTC.Udp.Internal;
 using System.Net;
 using System.Net.Sockets;
 
@@ -20,89 +21,69 @@ namespace LiveStreamingServerNet.WebRTC.Test
         public async Task GetBindingResponse_Should_GetSuccessfulResponseFromStunServer(string stunServerUri)
         {
             // Arrange
-            using var cts = new CancellationTokenSource();
-
             using var udpSocket = new Socket(AddressFamily.InterNetworkV6, SocketType.Dgram, ProtocolType.Udp);
             ErrorBoundary.Execute(() => udpSocket.DontFragment = true);
             udpSocket.DualMode = true;
             udpSocket.Bind(new IPEndPoint(IPAddress.IPv6Any, 0));
 
-            var sender = new SocketStunSender(udpSocket);
+            await using var udpTransport = new UdpTransport(udpSocket);
+
+            var sender = new SocketStunSender(udpTransport);
             var config = new StunPeerConfiguration();
 
             using var stunPeer = new StunPeer(sender, config);
 
-            var receiveTask = Task.Run(async () =>
-                await ReceiveUdpPacketAsync(udpSocket, stunPeer, cts.Token), cts.Token);
-
-            try
-            {
-                // Act
-                var resolver = new StunDnsResolver();
-
-                var endpoints = await resolver.ResolveAsync(stunServerUri, cts.Token);
-                var target = endpoints.FirstOrDefault();
-
-                using var request = new StunMessage(StunClass.Request, StunConstants.BindingRequestMethod, new List<IStunAttribute>());
-
-                // Assert
-                target.Should().NotBeNull();
-
-                // Act
-                var (response, _) = await stunPeer.SendRequestAsync(request, target!, cts.Token);
-
-                // Assert
-                response.Should().NotBeNull();
-                response.Class.Should().Be(StunClass.SuccessResponse);
-                response.Method.Should().Be(StunConstants.BindingRequestMethod);
-                response.Attributes.Should().ContainItemsAssignableTo<XorMappedAddressAttribute>();
-            }
-            finally
-            {
-                cts.Cancel();
-
-                try
-                {
-                    await receiveTask;
-                }
-                catch { }
-            }
-        }
-
-        private static async Task ReceiveUdpPacketAsync(Socket udpSocket, StunPeer stunPeer, CancellationToken cancellation)
-        {
-            var remoteEndPoint = new IPEndPoint(IPAddress.IPv6Any, 0);
-
-            while (!cancellation.IsCancellationRequested)
+            udpTransport.OnPacketReceived += (_, args) =>
             {
                 var buffer = DataBufferPool.Shared.Obtain();
+                buffer.FromRentedBuffer(args.RentedBuffer);
 
                 try
                 {
-                    buffer.Size = 2048;
-
-                    var result = await udpSocket.ReceiveFromAsync(buffer.AsMemory(), remoteEndPoint, cancellation);
-                    await stunPeer.FeedPacketAsync(buffer, (IPEndPoint)result.RemoteEndPoint, cancellation);
+                    stunPeer.FeedPacketAsync(buffer, args.RemoteEndPoint).GetAwaiter().GetResult();
                 }
                 finally
                 {
                     DataBufferPool.Shared.Recycle(buffer);
                 }
-            }
+            };
+
+            // Act
+            var started = udpTransport.Start();
+            var resolver = new StunDnsResolver();
+
+            var endpoints = await resolver.ResolveAsync(stunServerUri);
+            var target = endpoints.FirstOrDefault();
+
+            using var request = new StunMessage(StunClass.Request, StunConstants.BindingRequestMethod, new List<IStunAttribute>());
+
+            // Assert
+            started.Should().BeTrue();
+            target.Should().NotBeNull();
+
+            // Act
+            var (response, _) = await stunPeer.SendRequestAsync(request, target!);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Class.Should().Be(StunClass.SuccessResponse);
+            response.Method.Should().Be(StunConstants.BindingRequestMethod);
+            response.Attributes.Should().ContainItemsAssignableTo<XorMappedAddressAttribute>();
         }
 
         private class SocketStunSender : IStunSender
         {
-            private readonly Socket _socket;
+            private readonly UdpTransport _transport;
 
-            public SocketStunSender(Socket socket)
+            public SocketStunSender(UdpTransport transport)
             {
-                _socket = socket;
+                _transport = transport;
             }
 
-            public async ValueTask SendAsync(IDataBuffer buffer, IPEndPoint remoteEndpoint, CancellationToken cancellation)
+            public ValueTask SendAsync(IDataBuffer buffer, IPEndPoint remoteEndpoint, CancellationToken cancellation)
             {
-                await _socket.SendToAsync(buffer.AsMemory(), SocketFlags.None, remoteEndpoint, cancellation);
+                _transport.SendPacket(buffer.AsMemory(), remoteEndpoint);
+                return ValueTask.CompletedTask;
             }
         }
     }
