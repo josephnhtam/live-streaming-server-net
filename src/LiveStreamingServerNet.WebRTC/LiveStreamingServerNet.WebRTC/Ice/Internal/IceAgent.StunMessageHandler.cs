@@ -18,7 +18,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
             {
                 _agent = agent;
                 _credential = agent._credentials;
-                _expectedUsername = $"{_credential.UFragRemote}:{_credential.UFragLocal}";
+                _expectedUsername = $"{_credential.UFragLocal}:{_credential.UFragRemote}";
             }
 
             public async ValueTask<StunMessage?> HandleRequestAsync(
