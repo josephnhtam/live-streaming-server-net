@@ -27,7 +27,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
         private Task? _sendLoopTask;
         private Task? _receiveLoopTask;
         private Task? _dispatchLoopTask;
-        private int _isDisconnectedNotified;
+        private int _isClosedNotified;
 
         private const int MaxDatagramSize = 2048;
 
@@ -57,12 +57,12 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
         public bool SendPacket(ReadOnlyMemory<byte> buffer, IPEndPoint remoteEndPoint)
         {
             var state = (UdpConnectionState)Volatile.Read(ref _state);
-            if (state is UdpConnectionState.Disconnected or UdpConnectionState.Disposed)
+            if (state is UdpConnectionState.Closed or UdpConnectionState.Disposed)
             {
                 return false;
             }
 
-            if (Volatile.Read(ref _isDisconnectedNotified) == 1)
+            if (Volatile.Read(ref _isClosedNotified) == 1)
             {
                 return false;
             }
@@ -89,14 +89,14 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
             }
         }
 
-        public void Start()
+        public bool Start()
         {
             var prev = (UdpConnectionState)Interlocked.CompareExchange(
                 ref _state, (int)UdpConnectionState.Started, (int)UdpConnectionState.Created);
 
             if (prev != UdpConnectionState.Created)
             {
-                return;
+                return false;
             }
 
             var token = _cts.Token;
@@ -104,17 +104,18 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
             _sendLoopTask = Task.Run(() => ProcessSendLoopAsync(token), token);
             _receiveLoopTask = Task.Run(() => ProcessReceiveLoopAsync(token), token);
             _dispatchLoopTask = Task.Run(() => ProcessDispatchLoopAsync(token), token);
+            return true;
         }
 
-        private void NotifyDisconnected()
+        private void NotifyClosed()
         {
-            if (Interlocked.Exchange(ref _isDisconnectedNotified, 1) != 0)
+            if (Interlocked.Exchange(ref _isClosedNotified, 1) != 0)
             {
                 return;
             }
 
-            Interlocked.CompareExchange(ref _state, (int)UdpConnectionState.Disconnected, (int)UdpConnectionState.Created);
-            Interlocked.CompareExchange(ref _state, (int)UdpConnectionState.Disconnected, (int)UdpConnectionState.Started);
+            Interlocked.CompareExchange(ref _state, (int)UdpConnectionState.Closed, (int)UdpConnectionState.Created);
+            Interlocked.CompareExchange(ref _state, (int)UdpConnectionState.Closed, (int)UdpConnectionState.Started);
 
             ErrorBoundary.Execute(() => OnPacketReceived?.Invoke(this, null));
         }
@@ -147,7 +148,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
             }
             finally
             {
-                NotifyDisconnected();
+                NotifyClosed();
             }
         }
 
@@ -203,7 +204,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
             }
             finally
             {
-                NotifyDisconnected();
+                NotifyClosed();
             }
         }
 
@@ -236,7 +237,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
             }
             finally
             {
-                NotifyDisconnected();
+                NotifyClosed();
             }
         }
 
@@ -273,7 +274,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                 _socket.Dispose();
             });
 
-            NotifyDisconnected();
+            NotifyClosed();
 
             _cts.Dispose();
         }

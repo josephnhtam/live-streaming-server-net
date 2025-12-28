@@ -8,6 +8,6 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal.Contracts
         bool SendPacket(ReadOnlyMemory<byte> buffer, IPEndPoint remoteEndPoint);
         event EventHandler<UdpPacketEventArgs?>? OnPacketReceived;
 
-        void Start();
+        bool Start();
     }
 }
