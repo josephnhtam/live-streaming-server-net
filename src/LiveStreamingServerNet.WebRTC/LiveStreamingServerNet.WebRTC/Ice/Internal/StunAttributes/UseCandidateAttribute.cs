@@ -4,10 +4,10 @@ using LiveStreamingServerNet.WebRTC.Stun.Internal.Packets.Attributes.Contracts;
 
 namespace LiveStreamingServerNet.WebRTC.Ice.Internal.StunAttributes
 {
-    [StunAttributeType(IceStunAttributeType.ComprehensionRequired.UseCandidate)]
+    [StunAttributeType(IceStunAttributeTypes.ComprehensionRequired.UseCandidate)]
     internal record UseCandidateAttribute() : IStunAttribute
     {
-        public ushort Type => IceStunAttributeType.ComprehensionRequired.UseCandidate;
+        public ushort Type => IceStunAttributeTypes.ComprehensionRequired.UseCandidate;
 
         public void WriteValue(TransactionId transactionId, IDataBuffer buffer) { }
 

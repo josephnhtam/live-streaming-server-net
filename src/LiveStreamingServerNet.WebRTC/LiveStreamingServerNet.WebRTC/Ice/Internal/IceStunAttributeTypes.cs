@@ -1,6 +1,6 @@
 namespace LiveStreamingServerNet.WebRTC.Ice.Internal
 {
-    public static class IceStunAttributeType
+    public static class IceStunAttributeTypes
     {
         public static class ComprehensionRequired
         {

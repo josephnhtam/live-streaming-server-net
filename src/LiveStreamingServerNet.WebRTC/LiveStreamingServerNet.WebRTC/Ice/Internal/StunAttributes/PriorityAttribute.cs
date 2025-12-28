@@ -4,10 +4,10 @@ using LiveStreamingServerNet.WebRTC.Stun.Internal.Packets.Attributes.Contracts;
 
 namespace LiveStreamingServerNet.WebRTC.Ice.Internal.StunAttributes
 {
-    [StunAttributeType(IceStunAttributeType.ComprehensionRequired.Priority)]
+    [StunAttributeType(IceStunAttributeTypes.ComprehensionRequired.Priority)]
     internal record PriorityAttribute(uint Priority) : IStunAttribute
     {
-        public ushort Type => IceStunAttributeType.ComprehensionRequired.Priority;
+        public ushort Type => IceStunAttributeTypes.ComprehensionRequired.Priority;
 
         public void WriteValue(TransactionId transactionId, IDataBuffer buffer)
             => buffer.WriteUInt32BigEndian(Priority);

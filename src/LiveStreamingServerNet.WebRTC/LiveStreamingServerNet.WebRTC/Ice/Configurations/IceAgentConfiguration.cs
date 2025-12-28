@@ -4,12 +4,20 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Configurations
     {
         /// <summary>
         /// Interval for connectivity checks.
+        /// Default: 50 milliseconds.
         /// </summary>
         public TimeSpan ConnectivityCheckInterval { get; set; } = TimeSpan.FromMilliseconds(50);
 
         /// <summary>
         /// Interval for keeping alive.
+        /// Default: 15 seconds.
         /// </summary>
         public TimeSpan KeepAliveInterval { get; set; } = TimeSpan.FromSeconds(15);
+
+        /// <summary>
+        /// Maximum size of the checklist.
+        /// Default: 100.
+        /// </summary>
+        public int MaxCheckListSize { get; set; } = 100;
     }
 }
