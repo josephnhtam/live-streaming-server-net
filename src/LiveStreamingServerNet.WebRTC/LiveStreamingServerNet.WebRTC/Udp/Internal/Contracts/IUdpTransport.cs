@@ -1,13 +1,13 @@
 using System.Net;
 
-namespace LiveStreamingServerNet.WebRTC.Ice.Internal.Contracts
+namespace LiveStreamingServerNet.WebRTC.Udp.Internal.Contracts
 {
-    public interface IUdpConnection
+    public interface IUdpTransport
     {
         IPEndPoint LocalEndPoint { get; }
-        UdpConnectionState State { get; }
+        UdpTransportState State { get; }
 
-        event EventHandler<UdpConnectionState>? OnStateChanged;
+        event EventHandler<UdpTransportState>? OnStateChanged;
         event EventHandler<UdpPacketEventArgs>? OnPacketReceived;
 
         bool Start();
