@@ -64,10 +64,10 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal.Packets.Attributes
         public void WriteValue(TransactionId transactionId, IDataBuffer buffer)
             => buffer.Write(_hmac);
 
-        public static MessageIntegritySha256Attribute ReadValue(TransactionId transactionId, IDataBuffer buffer, ushort length)
+        public static MessageIntegritySha256Attribute ReadValue(TransactionId transactionId, IDataBufferReader buffer, ushort length)
         {
             var cachedBuffer = DataBufferPool.Shared.Obtain();
-            cachedBuffer.Write(buffer.AsSpan(0, buffer.Position));
+            cachedBuffer.Write(buffer.AsReadOnlySpan(0, buffer.Position));
 
             cachedBuffer.MoveTo(2);
             cachedBuffer.WriteUInt16BigEndian((ushort)(buffer.Position + Length - StunMessage.HeaderLength));

@@ -8,7 +8,7 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal.Contracts
     {
         Task<(StunMessage, UnknownAttributes?)> SendRequestAsync(StunMessage request, IPEndPoint remoteEndPoint, CancellationToken cancellation = default);
         Task SendIndicationAsync(StunMessage indication, IPEndPoint remoteEndPoint, CancellationToken cancellation = default);
-        void FeedPacket(IDataBuffer buffer, IPEndPoint remoteEndPoint);
+        void FeedPacket(IDataBufferReader buffer, IPEndPoint remoteEndPoint);
         void SetMessageHandler(IStunMessageHandler? handler);
     }
 }

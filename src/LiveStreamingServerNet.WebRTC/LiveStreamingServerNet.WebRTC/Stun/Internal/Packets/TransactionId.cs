@@ -27,7 +27,7 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal.Packets
             return transactionId;
         }
 
-        public static TransactionId Read(IDataBuffer buffer)
+        public static TransactionId Read(IDataBufferReader buffer)
         {
             var transactionId = new TransactionId();
             buffer.ReadBytes(transactionId._data!.Memory.Span.Slice(0, 12));

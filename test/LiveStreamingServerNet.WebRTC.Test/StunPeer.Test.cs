@@ -35,17 +35,8 @@ namespace LiveStreamingServerNet.WebRTC.Test
 
             EventHandler<UdpPacketEventArgs> packetHandler = (_, args) =>
             {
-                var buffer = DataBufferPool.Shared.Obtain();
-                buffer.FromRentedBuffer(args.RentedBuffer);
-
-                try
-                {
-                    stunPeer.FeedPacket(buffer, args.RemoteEndPoint);
-                }
-                finally
-                {
-                    DataBufferPool.Shared.Recycle(buffer);
-                }
+                using var bufferReader = new RentedBufferReader(args.RentedBuffer);
+                stunPeer.FeedPacket(bufferReader, args.RemoteEndPoint);
             };
 
             udpTransport.OnPacketReceived += packetHandler;

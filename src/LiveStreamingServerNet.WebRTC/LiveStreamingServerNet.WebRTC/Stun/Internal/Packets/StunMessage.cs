@@ -73,7 +73,7 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal.Packets
             }
         }
 
-        public static (StunMessage, UnknownAttributes? unknownAttributes) Read(IDataBuffer buffer)
+        public static (StunMessage, UnknownAttributes? unknownAttributes) Read(IDataBufferReader buffer)
         {
             var rawType = buffer.ReadUInt16BigEndian();
             var (method, stunClass) = StunTypeHelper.GetMethodAndClass(rawType);

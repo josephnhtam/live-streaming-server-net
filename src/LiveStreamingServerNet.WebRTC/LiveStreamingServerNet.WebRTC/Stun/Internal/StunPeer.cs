@@ -116,7 +116,7 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal
             await _sender.SendAsync(buffer, remoteEndPoint, cancellation);
         }
 
-        public void FeedPacket(IDataBuffer buffer, IPEndPoint remoteEndPoint)
+        public void FeedPacket(IDataBufferReader buffer, IPEndPoint remoteEndPoint)
         {
             if (_isDisposed == 1)
                 return;

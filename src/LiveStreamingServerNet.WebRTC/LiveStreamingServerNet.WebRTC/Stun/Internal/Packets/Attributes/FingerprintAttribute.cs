@@ -56,13 +56,13 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal.Packets.Attributes
         public void WriteValue(TransactionId transactionId, IDataBuffer buffer)
             => buffer.WriteUInt32BigEndian(Fingerprint);
 
-        public static FingerprintAttribute ReadValue(TransactionId transactionId, IDataBuffer buffer, ushort length)
+        public static FingerprintAttribute ReadValue(TransactionId transactionId, IDataBufferReader buffer, ushort length)
         {
             var tempBuffer = DataBufferPool.Shared.Obtain();
 
             try
             {
-                tempBuffer.Write(buffer.AsSpan(0, buffer.Position));
+                tempBuffer.Write(buffer.AsReadOnlySpan(0, buffer.Position));
                 tempBuffer.Write(Placeholder);
 
                 var computedFingerprint = ComputeFingerprint(tempBuffer);

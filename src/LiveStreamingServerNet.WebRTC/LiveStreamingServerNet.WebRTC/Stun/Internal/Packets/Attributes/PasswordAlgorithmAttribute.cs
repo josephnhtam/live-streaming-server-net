@@ -14,7 +14,7 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal.Packets.Attributes
             buffer.WriteUInt16BigEndian(0);
         }
 
-        public static PasswordAlgorithmAttribute ReadValue(TransactionId transactionId, IDataBuffer buffer, ushort length)
+        public static PasswordAlgorithmAttribute ReadValue(TransactionId transactionId, IDataBufferReader buffer, ushort length)
         {
             var algorithm = (StunPasswordAlgorithm)buffer.ReadUInt16BigEndian();
             buffer.ReadUInt16BigEndian();

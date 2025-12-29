@@ -60,7 +60,7 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal.Packets.Attributes
             }
         }
 
-        public static XorMappedAddressAttribute ReadValue(TransactionId transactionId, IDataBuffer buffer, ushort length)
+        public static XorMappedAddressAttribute ReadValue(TransactionId transactionId, IDataBufferReader buffer, ushort length)
         {
             buffer.ReadByte();
 

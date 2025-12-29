@@ -37,7 +37,7 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal.Packets
             return buffer.Position - start;
         }
 
-        public static (List<IStunAttribute> attributes, UnknownAttributes? unknownAttributes) Read(IDataBuffer buffer, TransactionId transactionId, int bodyLength)
+        public static (List<IStunAttribute> attributes, UnknownAttributes? unknownAttributes) Read(IDataBufferReader buffer, TransactionId transactionId, int bodyLength)
         {
             UnknownAttributes? unknownAttributes = null;
 
@@ -66,11 +66,11 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal.Packets
                     unknownAttributes ??= new UnknownAttributes();
                     unknownAttributes.Add(type);
 
-                    buffer.Advance(valueLength, false);
+                    buffer.Position += valueLength;
                 }
 
                 var paddingBytes = CalculatePaddingBytes(valueLength);
-                buffer.Advance(paddingBytes, false);
+                buffer.Position += paddingBytes;
             }
 
             return (attributes, unknownAttributes);
