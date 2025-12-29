@@ -17,13 +17,16 @@
 
         void TrimStart(int count);
         void Advance(int count);
+        void Advance(int count, bool allowExpand);
         IDataBuffer MoveTo(int position);
+        IDataBuffer MoveTo(int position, bool allowExpand);
         void Reset();
         Task FlushAsync(Stream output);
         void Flush(Stream output);
         void Flush(IDataBuffer output);
         void CopyAllTo(IDataBuffer targetBuffer);
         void ReadAndWriteTo(IDataBuffer targetBuffer, int bytesCount);
+        void FromRentedBuffer(IRentedBuffer rentedBuffer);
         ValueTask FromStreamData(Stream stream, int bytesCount, CancellationToken cancellationToken = default);
         ValueTask AppendStreamData(Stream stream, int bytesCount, CancellationToken cancellationToken = default);
         ValueTask FromStreamData(IStreamReader stream, int bytesCount, CancellationToken cancellationToken = default);
@@ -35,6 +38,7 @@
         bool ReadBoolean();
         byte ReadByte();
         void ReadBytes(byte[] buffer, int index, int count);
+        void ReadBytes(Span<byte> buffer);
         byte[] ReadBytes(int count);
         char ReadChar();
         double ReadDouble();
@@ -48,9 +52,11 @@
         ushort ReadUInt16BigEndian();
         uint ReadUInt24BigEndian();
         uint ReadUInt32BigEndian();
+        ulong ReadUInt64BigEndian();
         short ReadInt16BigEndian();
         int ReadInt24BigEndian();
         int ReadInt32BigEndian();
+        long ReadInt64BigEndian();
         string ReadUtf8String(int length);
 
         void Write(bool value);
@@ -72,9 +78,11 @@
         void WriteUInt16BigEndian(ushort value);
         void WriteUInt24BigEndian(uint value);
         void WriteUInt32BigEndian(uint value);
+        void WriteUInt64BigEndian(ulong value);
         void WriteInt16BigEndian(short value);
         void WriteInt24BigEndian(int value);
         void WriteInt32BigEndian(int value);
+        void WriteInt64BigEndian(long value);
 
         void WriteUtf8String(string value);
     }

@@ -16,7 +16,7 @@ namespace LiveStreamingServerNet.Utilities.Buffers
         private int _position;
         private int _size;
 
-        private bool _isDisposed;
+        private int _isDisposed;
 
         public int Position
         {
@@ -74,7 +74,7 @@ namespace LiveStreamingServerNet.Utilities.Buffers
             if ((_startIndex + capacity) <= Capacity)
                 return;
 
-            if (capacity < Capacity)
+            if (capacity <= Capacity)
             {
                 _buffer.AsSpan(_startIndex, _size).CopyTo(_buffer);
                 _startIndex = 0;
@@ -116,17 +116,37 @@ namespace LiveStreamingServerNet.Utilities.Buffers
 
             _startIndex += count;
             _size -= count;
-            _position -= count;
+            _position = _position >= count ? _position - count : 0;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public IDataBuffer MoveTo(int position)
         {
             Position = position;
             return this;
         }
 
+        public IDataBuffer MoveTo(int position, bool allowExpand)
+        {
+            if (!allowExpand && position > _size)
+                throw new ArgumentOutOfRangeException(nameof(position));
+
+            Position = position;
+            return this;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Advance(int count)
         {
+            Position += count;
+            _size = Math.Max(_size, Position);
+        }
+
+        public void Advance(int count, bool allowExpand)
+        {
+            if (!allowExpand && (_position + count > _size))
+                throw new ArgumentOutOfRangeException(nameof(count));
+
             Position += count;
             _size = Math.Max(_size, Position);
         }
@@ -168,6 +188,14 @@ namespace LiveStreamingServerNet.Utilities.Buffers
 
             targetBuffer.Write(_buffer, _startIndex + _position, bytesCount);
             _position += bytesCount;
+        }
+
+        public void FromRentedBuffer(IRentedBuffer rentedBuffer)
+        {
+            _startIndex = 0;
+            _position = 0;
+            Size = rentedBuffer.Size;
+            rentedBuffer.AsSpan().CopyTo(_buffer);
         }
 
         public ValueTask FromStreamData(Stream stream, int bytesCount, CancellationToken cancellationToken = default)
@@ -229,7 +257,13 @@ namespace LiveStreamingServerNet.Utilities.Buffers
 
         public Span<byte> AsSpan(int offset)
         {
-            return _buffer.AsSpan(_startIndex + offset, _size);
+            if (offset < 0)
+                throw new ArgumentOutOfRangeException(nameof(offset));
+
+            if (offset > _size)
+                throw new ArgumentOutOfRangeException(nameof(offset));
+
+            return _buffer.AsSpan(_startIndex + offset, _size - offset);
         }
 
         public Span<byte> AsSpan(int offset, int length)
@@ -253,7 +287,13 @@ namespace LiveStreamingServerNet.Utilities.Buffers
 
         public Memory<byte> AsMemory(int offset)
         {
-            return _buffer.AsMemory(_startIndex + offset, _size);
+            if (offset < 0)
+                throw new ArgumentOutOfRangeException(nameof(offset));
+
+            if (offset > _size)
+                throw new ArgumentOutOfRangeException(nameof(offset));
+
+            return _buffer.AsMemory(_startIndex + offset, _size - offset);
         }
 
         public Memory<byte> AsMemory(int offset, int length)
@@ -277,7 +317,13 @@ namespace LiveStreamingServerNet.Utilities.Buffers
 
         public ArraySegment<byte> AsSegment(int offset)
         {
-            return new ArraySegment<byte>(_buffer, _startIndex + offset, _size);
+            if (offset < 0)
+                throw new ArgumentOutOfRangeException(nameof(offset));
+
+            if (offset > _size)
+                throw new ArgumentOutOfRangeException(nameof(offset));
+
+            return new ArraySegment<byte>(_buffer, _startIndex + offset, _size - offset);
         }
 
         public ArraySegment<byte> AsSegment(int offset, int length)
@@ -296,26 +342,22 @@ namespace LiveStreamingServerNet.Utilities.Buffers
 
         public virtual void Dispose()
         {
-            if (_isDisposed)
+            if (Interlocked.Exchange(ref _isDisposed, 1) == 1)
                 return;
 
-            _isDisposed = true;
             ReturnBuffer();
         }
 
         void IPoolObject.OnObtained()
         {
+            _isDisposed = 0;
+
             RentBuffer(_initialCapacity);
             Reset();
         }
 
         void IPoolObject.OnReturned()
         {
-            if (_isDisposed)
-            {
-                throw new ObjectDisposedException(nameof(Buffer));
-            }
-
             ReturnBuffer();
         }
     }

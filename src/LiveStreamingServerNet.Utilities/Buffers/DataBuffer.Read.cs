@@ -1,6 +1,4 @@
-﻿using System.Buffers.Binary;
-using System.Runtime.CompilerServices;
-using System.Text;
+﻿using LiveStreamingServerNet.Utilities.Buffers.Internal;
 
 namespace LiveStreamingServerNet.Utilities.Buffers
 {
@@ -8,150 +6,117 @@ namespace LiveStreamingServerNet.Utilities.Buffers
     {
         public void ReadBytes(byte[] buffer, int index, int count)
         {
-            var targetSpan = buffer.AsSpan(index, count);
-            _buffer.AsSpan(_startIndex + _position, count).CopyTo(targetSpan);
-            Advance(count);
+            DataBufferRead.ReadBytes(_buffer, _startIndex, _size, ref _position, buffer, index, count);
+        }
+
+        public void ReadBytes(Span<byte> buffer)
+        {
+            DataBufferRead.ReadBytes(_buffer, _startIndex, _size, ref _position, buffer);
         }
 
         public byte[] ReadBytes(int count)
         {
-            var result = new byte[count];
-            ReadBytes(result, 0, count);
-            return result;
+            return DataBufferRead.ReadBytes(_buffer, _startIndex, _size, ref _position, count);
         }
 
         public byte ReadByte()
         {
-            return _buffer[_startIndex + _position++];
+            return DataBufferRead.ReadByte(_buffer, _startIndex, _size, ref _position);
         }
 
         public short ReadInt16()
         {
-            var value = Unsafe.As<byte, short>(ref _buffer[_startIndex + _position]);
-            _position += 2;
-            return value;
+            return DataBufferRead.ReadInt16(_buffer, _startIndex, _size, ref _position);
         }
 
         public int ReadInt32()
         {
-            var value = Unsafe.As<byte, int>(ref _buffer[_startIndex + _position]);
-            _position += 4;
-            return value;
+            return DataBufferRead.ReadInt32(_buffer, _startIndex, _size, ref _position);
         }
 
         public long ReadInt64()
         {
-            var value = Unsafe.As<byte, long>(ref _buffer[_startIndex + _position]);
-            _position += 8;
-            return value;
+            return DataBufferRead.ReadInt64(_buffer, _startIndex, _size, ref _position);
         }
 
         public ushort ReadUInt16()
         {
-            var value = Unsafe.As<byte, ushort>(ref _buffer[_startIndex + _position]);
-            _position += 2;
-            return value;
+            return DataBufferRead.ReadUInt16(_buffer, _startIndex, _size, ref _position);
         }
 
         public uint ReadUInt32()
         {
-            var value = Unsafe.As<byte, uint>(ref _buffer[_startIndex + _position]);
-            _position += 4;
-            return value;
+            return DataBufferRead.ReadUInt32(_buffer, _startIndex, _size, ref _position);
         }
 
         public ulong ReadUInt64()
         {
-            var value = Unsafe.As<byte, ulong>(ref _buffer[_startIndex + _position]);
-            _position += 8;
-            return value;
+            return DataBufferRead.ReadUInt64(_buffer, _startIndex, _size, ref _position);
         }
 
         public float ReadSingle()
         {
-            var value = Unsafe.As<byte, float>(ref _buffer[_startIndex + _position]);
-            _position += 4;
-            return value;
+            return DataBufferRead.ReadSingle(_buffer, _startIndex, _size, ref _position);
         }
 
         public double ReadDouble()
         {
-            var value = Unsafe.As<byte, double>(ref _buffer[_startIndex + _position]);
-            _position += 8;
-            return value;
+            return DataBufferRead.ReadDouble(_buffer, _startIndex, _size, ref _position);
         }
 
         public bool ReadBoolean()
         {
-            return Unsafe.As<byte, bool>(ref _buffer[_startIndex + _position++]);
+            return DataBufferRead.ReadBoolean(_buffer, _startIndex, _size, ref _position);
         }
 
         public char ReadChar()
         {
-            var value = Unsafe.As<byte, char>(ref _buffer[_startIndex + _position]);
-            _position += 2;
-            return value;
+            return DataBufferRead.ReadChar(_buffer, _startIndex, _size, ref _position);
         }
 
         public ushort ReadUInt16BigEndian()
         {
-            var value = BinaryPrimitives.ReverseEndianness(Unsafe.As<byte, ushort>(ref _buffer[_startIndex + _position]));
-            _position += 2;
-            return value;
+            return DataBufferRead.ReadUInt16BigEndian(_buffer, _startIndex, _size, ref _position);
         }
 
         public uint ReadUInt24BigEndian()
         {
-            var value =
-                _buffer[_startIndex + _position] << 16 |
-                _buffer[_startIndex + _position + 1] << 8 |
-                _buffer[_startIndex + _position + 2];
-
-            _position += 3;
-            return (uint)value;
+            return DataBufferRead.ReadUInt24BigEndian(_buffer, _startIndex, _size, ref _position);
         }
 
         public uint ReadUInt32BigEndian()
         {
-            var value = BinaryPrimitives.ReverseEndianness(Unsafe.As<byte, uint>(ref _buffer[_startIndex + _position]));
-            _position += 4;
-            return value;
+            return DataBufferRead.ReadUInt32BigEndian(_buffer, _startIndex, _size, ref _position);
+        }
+
+        public ulong ReadUInt64BigEndian()
+        {
+            return DataBufferRead.ReadUInt64BigEndian(_buffer, _startIndex, _size, ref _position);
         }
 
         public short ReadInt16BigEndian()
         {
-            var value = BinaryPrimitives.ReverseEndianness(Unsafe.As<byte, short>(ref _buffer[_startIndex + _position]));
-            _position += 2;
-            return value;
+            return DataBufferRead.ReadInt16BigEndian(_buffer, _startIndex, _size, ref _position);
         }
 
         public int ReadInt24BigEndian()
         {
-            var value =
-                _buffer[_startIndex + _position] << 16 |
-                _buffer[_startIndex + _position + 1] << 8 |
-                _buffer[_startIndex + _position + 2];
-
-            if ((value & 0x800000) != 0)
-                value |= unchecked((int)0xff000000);
-
-            _position += 3;
-            return value;
+            return DataBufferRead.ReadInt24BigEndian(_buffer, _startIndex, _size, ref _position);
         }
 
         public int ReadInt32BigEndian()
         {
-            var value = BinaryPrimitives.ReverseEndianness(Unsafe.As<byte, int>(ref _buffer[_startIndex + _position]));
-            _position += 4;
-            return value;
+            return DataBufferRead.ReadInt32BigEndian(_buffer, _startIndex, _size, ref _position);
+        }
+
+        public long ReadInt64BigEndian()
+        {
+            return DataBufferRead.ReadInt64BigEndian(_buffer, _startIndex, _size, ref _position);
         }
 
         public string ReadUtf8String(int length)
         {
-            var targetSpan = _buffer.AsSpan(_startIndex + _position, length);
-            var result = Encoding.UTF8.GetString(targetSpan);
-            _position += length;
-            return result;
+            return DataBufferRead.ReadUtf8String(_buffer, _startIndex, _size, ref _position, length);
         }
     }
 }
