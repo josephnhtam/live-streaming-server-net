@@ -11,7 +11,7 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal.Packets.Attributes
         public void WriteValue(TransactionId transactionId, IDataBuffer buffer)
             => buffer.WriteUtf8String(Version);
 
-        public static SoftwareAttribute ReadValue(TransactionId transactionId, IDataBuffer buffer, ushort length)
+        public static SoftwareAttribute ReadValue(TransactionId transactionId, IDataBufferReader buffer, ushort length)
             => new SoftwareAttribute(buffer.ReadUtf8String(length));
     }
 }

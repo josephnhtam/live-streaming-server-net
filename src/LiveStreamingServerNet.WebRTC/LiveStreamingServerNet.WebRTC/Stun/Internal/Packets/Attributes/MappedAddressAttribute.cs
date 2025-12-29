@@ -46,7 +46,7 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal.Packets.Attributes
             }
         }
 
-        public static MappedAddressAttribute ReadValue(TransactionId transactionId, IDataBuffer buffer, ushort length)
+        public static MappedAddressAttribute ReadValue(TransactionId transactionId, IDataBufferReader buffer, ushort length)
         {
             buffer.ReadUInt16BigEndian();
 

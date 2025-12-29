@@ -28,7 +28,7 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal.Packets.Attributes
             buffer.WriteUInt16BigEndian(0x00);
         }
 
-        public static AlternateServerAttribute ReadValue(TransactionId transactionId, IDataBuffer buffer, ushort length)
+        public static AlternateServerAttribute ReadValue(TransactionId transactionId, IDataBufferReader buffer, ushort length)
         {
             Span<byte> addressBytes = stackalloc byte[4];
             buffer.ReadBytes(addressBytes);

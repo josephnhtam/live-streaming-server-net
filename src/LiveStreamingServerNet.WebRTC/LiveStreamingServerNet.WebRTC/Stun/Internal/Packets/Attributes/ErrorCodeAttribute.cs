@@ -21,7 +21,7 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal.Packets.Attributes
             buffer.WriteUtf8String(Reason);
         }
 
-        public static ErrorCodeAttribute ReadValue(TransactionId transactionId, IDataBuffer buffer, ushort length)
+        public static ErrorCodeAttribute ReadValue(TransactionId transactionId, IDataBufferReader buffer, ushort length)
         {
             buffer.ReadUInt16BigEndian();
 

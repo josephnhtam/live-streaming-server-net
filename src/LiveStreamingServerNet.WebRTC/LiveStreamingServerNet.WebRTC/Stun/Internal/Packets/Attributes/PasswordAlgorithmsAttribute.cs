@@ -17,7 +17,7 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal.Packets.Attributes
             }
         }
 
-        public static PasswordAlgorithmsAttribute ReadValue(TransactionId transactionId, IDataBuffer buffer, ushort length)
+        public static PasswordAlgorithmsAttribute ReadValue(TransactionId transactionId, IDataBufferReader buffer, ushort length)
         {
             var algorithms = new List<StunPasswordAlgorithm>();
 

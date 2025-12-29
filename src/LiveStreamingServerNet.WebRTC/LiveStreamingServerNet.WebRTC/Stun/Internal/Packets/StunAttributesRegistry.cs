@@ -7,7 +7,7 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal.Packets
 {
     internal class StunAttributesRegistry
     {
-        private delegate IStunAttribute StunAttributeFactoryDelegate(TransactionId transactionId, IDataBuffer buffer, ushort length);
+        private delegate IStunAttribute StunAttributeFactoryDelegate(TransactionId transactionId, IDataBufferReader buffer, ushort length);
 
         private static readonly IDictionary<ushort, StunAttributeFactoryDelegate> FactoryMethodByType;
 
@@ -35,13 +35,13 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal.Packets
             static MethodInfo? GetReadMethod(Type type) =>
                 type.GetMethod(
                     "ReadValue", BindingFlags.Public | BindingFlags.Static,
-                    null, [typeof(TransactionId), typeof(IDataBuffer), typeof(ushort)], null
+                    null, [typeof(TransactionId), typeof(IDataBufferReader), typeof(ushort)], null
                 );
 
             static StunAttributeFactoryDelegate CreateFactoryMethod(MethodInfo methodInfo)
             {
                 var transactionIdParam = Expression.Parameter(typeof(TransactionId), "transactionId");
-                var bufferParam = Expression.Parameter(typeof(IDataBuffer), "buffer");
+                var bufferParam = Expression.Parameter(typeof(IDataBufferReader), "buffer");
                 var lengthParam = Expression.Parameter(typeof(ushort), "length");
 
                 var callExpression = Expression.Call(methodInfo, transactionIdParam, bufferParam, lengthParam);
@@ -53,7 +53,7 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal.Packets
             }
         }
 
-        public static IStunAttribute? ReadAttributeValue(TransactionId transactionId, ushort type, ushort length, IDataBuffer buffer) =>
+        public static IStunAttribute? ReadAttributeValue(TransactionId transactionId, ushort type, ushort length, IDataBufferReader buffer) =>
             FactoryMethodByType.TryGetValue(type, out var factoryMethod) ? factoryMethod(transactionId, buffer, length) : null;
     }
 }

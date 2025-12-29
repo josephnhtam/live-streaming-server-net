@@ -13,7 +13,7 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal.Packets.Attributes
             buffer.WriteUtf8String(Domain);
         }
 
-        public static AlternateDomainAttribute ReadValue(TransactionId transactionId, IDataBuffer buffer, ushort length)
+        public static AlternateDomainAttribute ReadValue(TransactionId transactionId, IDataBufferReader buffer, ushort length)
             => new AlternateDomainAttribute(buffer.ReadUtf8String(length));
     }
 }
