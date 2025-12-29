@@ -4,7 +4,7 @@ using System.Net;
 
 namespace LiveStreamingServerNet.WebRTC.Stun.Internal.Contracts
 {
-    internal interface IStunPeer : IAsyncDisposable
+    internal interface IStunAgent : IAsyncDisposable
     {
         Task<(StunMessage, UnknownAttributes?)> SendRequestAsync(StunMessage request, IPEndPoint remoteEndPoint, CancellationToken cancellation = default);
         Task SendIndicationAsync(StunMessage indication, IPEndPoint remoteEndPoint, CancellationToken cancellation = default);
