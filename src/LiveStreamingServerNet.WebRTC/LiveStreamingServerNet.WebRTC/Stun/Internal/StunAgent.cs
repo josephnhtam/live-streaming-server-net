@@ -14,10 +14,10 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal
     using TransactionDictionary =
         ConcurrentDictionary<TransactionId, TaskCompletionSource<(StunMessage, UnknownAttributes?)>>;
 
-    internal class StunPeer : IStunPeer
+    internal class StunAgent : IStunAgent
     {
         private readonly IStunSender _sender;
-        private readonly StunPeerConfiguration _config;
+        private readonly StunAgentConfiguration _config;
         private readonly IDataBufferPool _bufferPool;
 
         private readonly TransactionDictionary _pendingTransactions;
@@ -29,9 +29,9 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal
         private IStunMessageHandler? _messageHandler;
         private volatile int _isDisposed;
 
-        public StunPeer(
+        public StunAgent(
             IStunSender sender,
-            StunPeerConfiguration config,
+            StunAgentConfiguration config,
             IDataBufferPool? bufferPool = null)
         {
             _sender = sender;
@@ -56,7 +56,7 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal
         {
             if (_isDisposed == 1)
             {
-                throw new ObjectDisposedException(nameof(StunPeer));
+                throw new ObjectDisposedException(nameof(StunAgent));
             }
 
             if (request.Class != StunClass.Request)
@@ -80,7 +80,7 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal
                     buffer,
                     remoteEndPoint,
                     tcs,
-                    cancellation);
+                    cancellation).ConfigureAwait(false);
             }
             finally
             {
@@ -100,7 +100,7 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal
         {
             if (_isDisposed == 1)
             {
-                throw new ObjectDisposedException(nameof(StunPeer));
+                throw new ObjectDisposedException(nameof(StunAgent));
             }
 
             if (indication.Class != StunClass.Indication)
@@ -113,7 +113,7 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal
             using var buffer = _bufferPool.Obtain();
             indication.Write(buffer);
 
-            await _sender.SendAsync(buffer, remoteEndPoint, cancellation);
+            await _sender.SendAsync(buffer, remoteEndPoint, cancellation).ConfigureAwait(false);
         }
 
         public void FeedPacket(IDataBufferReader buffer, IPEndPoint remoteEndPoint)
@@ -161,7 +161,7 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal
 
             try
             {
-                using var response = await CreateResponseAsync();
+                using var response = await CreateResponseAsync().ConfigureAwait(false);
 
                 if (response == null)
                 {
@@ -183,7 +183,7 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal
                 using var buffer = _bufferPool.Obtain();
                 response.Write(buffer);
 
-                await _sender.SendAsync(buffer, remoteEndPoint, cancellation);
+                await _sender.SendAsync(buffer, remoteEndPoint, cancellation).ConfigureAwait(false);
             }
             catch (Exception)
             {
@@ -212,7 +212,7 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal
                     message,
                     unknownAttributes,
                     remoteEndPoint,
-                    cancellation);
+                    cancellation).ConfigureAwait(false);
             }
         }
 
@@ -231,7 +231,7 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal
                     message,
                     unknownAttributes,
                     remoteEndPoint,
-                    cancellation);
+                    cancellation).ConfigureAwait(false);
             }
             catch (Exception)
             {
@@ -249,18 +249,18 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal
             {
                 cancellation.ThrowIfCancellationRequested();
 
-                await _sender.SendAsync(buffer, remoteEndPoint, cancellation);
+                await _sender.SendAsync(buffer, remoteEndPoint, cancellation).ConfigureAwait(false);
 
                 var timeout = (int)Math.Min(
                     _config.RetransmissionTimeout.TotalMilliseconds * (int)Math.Pow(2, retries),
                     _config.MaxRetransmissionTimeout.TotalMilliseconds);
 
                 var timeoutTask = Task.Delay(timeout, cancellation);
-                var resultTask = await Task.WhenAny(tcs.Task, timeoutTask);
+                var resultTask = await Task.WhenAny(tcs.Task, timeoutTask).ConfigureAwait(false);
 
                 if (resultTask == tcs.Task)
                 {
-                    return await tcs.Task;
+                    return await tcs.Task.ConfigureAwait(false);
                 }
             }
 
@@ -269,9 +269,9 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal
 
             var transactionTimeoutTask = Task.Delay(transactionTimeout, cancellation);
 
-            if (await Task.WhenAny(tcs.Task, transactionTimeoutTask) == tcs.Task)
+            if (await Task.WhenAny(tcs.Task, transactionTimeoutTask).ConfigureAwait(false) == tcs.Task)
             {
-                return await tcs.Task;
+                return await tcs.Task.ConfigureAwait(false);
             }
 
             throw new TimeoutException(
@@ -282,7 +282,7 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal
         {
             try
             {
-                await foreach (var incoming in _messageChannel.Reader.ReadAllAsync(cancellation))
+                await foreach (var incoming in _messageChannel.Reader.ReadAllAsync(cancellation).ConfigureAwait(false))
                 {
                     var messageHandler = _messageHandler;
                     var (message, unknownAttributes, remoteEndPoint) = incoming;
@@ -297,7 +297,7 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal
                                     message,
                                     unknownAttributes,
                                     remoteEndPoint,
-                                    cancellation);
+                                    cancellation).ConfigureAwait(false);
                                 break;
 
                             case StunClass.Indication when messageHandler != null:
@@ -306,7 +306,7 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal
                                     message,
                                     unknownAttributes,
                                     remoteEndPoint,
-                                    cancellation);
+                                    cancellation).ConfigureAwait(false);
                                 break;
 
                             default:
@@ -333,7 +333,7 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal
 
             _cts.Cancel();
 
-            await ErrorBoundary.ExecuteAsync(async () => await _loopTask);
+            await ErrorBoundary.ExecuteAsync(async () => await _loopTask.ConfigureAwait(false)).ConfigureAwait(false);
 
             _messageChannel.Writer.TryComplete();
             while (_messageChannel.Reader.TryRead(out var incomingMessage))

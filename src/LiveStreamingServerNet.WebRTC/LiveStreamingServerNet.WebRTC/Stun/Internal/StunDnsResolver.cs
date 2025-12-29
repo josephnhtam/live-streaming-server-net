@@ -44,7 +44,7 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal
 
             try
             {
-                var addresses = await Dns.GetHostAddressesAsync(host, cancellationToken);
+                var addresses = await Dns.GetHostAddressesAsync(host, cancellationToken).ConfigureAwait(false);
                 return addresses.Select(address => new IPEndPoint(address, port)).ToArray();
             }
             catch (SocketException)

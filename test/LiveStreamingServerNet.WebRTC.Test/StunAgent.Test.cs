@@ -14,7 +14,7 @@ using System.Net.Sockets;
 
 namespace LiveStreamingServerNet.WebRTC.Test
 {
-    public class StunPeerTest
+    public class StunAgentTest
     {
         [Theory, Trait("Network", "External")]
         [InlineData("stun:stun.l.google.com:19302")]
@@ -29,14 +29,14 @@ namespace LiveStreamingServerNet.WebRTC.Test
             await using var udpTransport = new UdpTransport(udpSocket);
 
             var sender = new SocketStunSender(udpTransport);
-            var config = new StunPeerConfiguration();
+            var config = new StunAgentConfiguration();
 
-            await using var stunPeer = new StunPeer(sender, config);
+            await using var stunAgent = new StunAgent(sender, config);
 
             EventHandler<UdpPacketEventArgs> packetHandler = (_, args) =>
             {
                 using var bufferReader = new RentedBufferReader(args.RentedBuffer);
-                stunPeer.FeedPacket(bufferReader, args.RemoteEndPoint);
+                stunAgent.FeedPacket(bufferReader, args.RemoteEndPoint);
             };
 
             udpTransport.OnPacketReceived += packetHandler;
@@ -57,7 +57,7 @@ namespace LiveStreamingServerNet.WebRTC.Test
                 target.Should().NotBeNull();
 
                 // Act
-                var (response, _) = await stunPeer.SendRequestAsync(request, target!);
+                var (response, _) = await stunAgent.SendRequestAsync(request, target!);
 
                 // Assert
                 response.Should().NotBeNull();

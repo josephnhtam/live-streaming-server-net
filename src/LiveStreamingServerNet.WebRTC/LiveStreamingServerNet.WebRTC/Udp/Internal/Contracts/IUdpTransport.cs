@@ -2,7 +2,7 @@ using System.Net;
 
 namespace LiveStreamingServerNet.WebRTC.Udp.Internal.Contracts
 {
-    public interface IUdpTransport
+    public interface IUdpTransport : IAsyncDisposable
     {
         IPEndPoint LocalEndPoint { get; }
         UdpTransportState State { get; }

@@ -114,7 +114,7 @@ namespace LiveStreamingServerNet.WebRTC.Udp.Internal
         {
             try
             {
-                await foreach (var packet in _sendChannel.Reader.ReadAllAsync(cancellation))
+                await foreach (var packet in _sendChannel.Reader.ReadAllAsync(cancellation).ConfigureAwait(false))
                 {
                     var (buffer, remoteEndPoint) = packet;
 
@@ -124,7 +124,7 @@ namespace LiveStreamingServerNet.WebRTC.Udp.Internal
                             buffer.AsMemory(0, buffer.Position),
                             SocketFlags.None,
                             remoteEndPoint,
-                            cancellation);
+                            cancellation).ConfigureAwait(false);
                     }
                     catch (SocketException ex) when (!ex.SocketErrorCode.IsFatal()) { }
                     catch (ObjectDisposedException) { }
@@ -161,7 +161,7 @@ namespace LiveStreamingServerNet.WebRTC.Udp.Internal
                             buffer.AsMemory(0, _maxDatagramSize),
                             SocketFlags.None,
                             remoteEndPoint,
-                            cancellation);
+                            cancellation).ConfigureAwait(false);
 
                         var receivedBytes = result.ReceivedBytes;
                         if (receivedBytes == 0)
@@ -204,7 +204,7 @@ namespace LiveStreamingServerNet.WebRTC.Udp.Internal
         {
             try
             {
-                await foreach (var packet in _receiveChannel.Reader.ReadAllAsync(cancellation))
+                await foreach (var packet in _receiveChannel.Reader.ReadAllAsync(cancellation).ConfigureAwait(false))
                 {
                     var (buffer, remoteEndPoint) = packet;
                     var rentedBuffer = buffer.ToRentedBuffer();
@@ -240,7 +240,7 @@ namespace LiveStreamingServerNet.WebRTC.Udp.Internal
                 .Where(t => t != null)
                 .Select(t => t!);
 
-            await ErrorBoundary.ExecuteAsync(async () => await Task.WhenAll(tasks));
+            await ErrorBoundary.ExecuteAsync(async () => await Task.WhenAll(tasks)).ConfigureAwait(false);
 
             while (_sendChannel.Reader.TryRead(out var packet))
                 _dataBufferPool.Recycle(packet.Buffer);
