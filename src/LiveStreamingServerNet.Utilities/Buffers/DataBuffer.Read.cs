@@ -58,15 +58,6 @@ namespace LiveStreamingServerNet.Utilities.Buffers
         public ulong ReadUInt64BigEndian()
             => DataBufferRead.ReadUInt64BigEndian(_buffer, _startIndex, _size, ref _position);
 
-        public ulong ReadUInt64BigEndian()
-        {
-            EnsureRemainingSize(8);
-
-            var value = BinaryPrimitives.ReverseEndianness(Unsafe.As<byte, ulong>(ref _buffer[_startIndex + _position]));
-            _position += 8;
-            return value;
-        }
-
         public short ReadInt16BigEndian()
             => DataBufferRead.ReadInt16BigEndian(_buffer, _startIndex, _size, ref _position);
 
@@ -78,15 +69,6 @@ namespace LiveStreamingServerNet.Utilities.Buffers
 
         public long ReadInt64BigEndian()
             => DataBufferRead.ReadInt64BigEndian(_buffer, _startIndex, _size, ref _position);
-
-        public long ReadInt64BigEndian()
-        {
-            EnsureRemainingSize(8);
-
-            var value = BinaryPrimitives.ReverseEndianness(Unsafe.As<byte, long>(ref _buffer[_startIndex + _position]));
-            _position += 8;
-            return value;
-        }
 
         public string ReadUtf8String(int length)
             => DataBufferRead.ReadUtf8String(_buffer, _startIndex, _size, ref _position, length);

@@ -100,15 +100,6 @@ namespace LiveStreamingServerNet.Utilities.Buffers
             _buffer = buffer;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void EnsureRemainingSize(int length)
-        {
-            if (_startIndex + _position + length > _size)
-            {
-                throw new IndexOutOfRangeException();
-            }
-        }
-
         public void TrimStart(int count)
         {
             if (count < 0)
