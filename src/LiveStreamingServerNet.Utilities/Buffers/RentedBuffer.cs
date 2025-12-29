@@ -49,6 +49,11 @@ namespace LiveStreamingServerNet.Utilities.Buffers
             return _buffer.AsSpan(0, Size);
         }
 
+        public Memory<byte> AsMemory()
+        {
+            return _buffer.AsMemory(0, Size);
+        }
+
         public IRentedBuffer Clone(int initialClaim = 1)
         {
             var clone = new RentedBuffer(_bufferPool, Size, initialClaim);

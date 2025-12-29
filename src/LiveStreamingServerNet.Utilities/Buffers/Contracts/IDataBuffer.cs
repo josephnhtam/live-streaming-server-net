@@ -1,9 +1,8 @@
 ﻿namespace LiveStreamingServerNet.Utilities.Buffers.Contracts
 {
-    public interface IDataBuffer : IDisposable
+    public interface IDataBuffer : IDataBufferReader
     {
-        int Position { get; set; }
-        int Size { get; set; }
+        new int Size { get; set; }
 
         Span<byte> AsSpan();
         Span<byte> AsSpan(int offset);
@@ -35,30 +34,6 @@
         IRentedBuffer ToRentedBuffer(int initialClaim = 1);
 
         void WriteRandomBytes(int count);
-        bool ReadBoolean();
-        byte ReadByte();
-        void ReadBytes(byte[] buffer, int index, int count);
-        void ReadBytes(Span<byte> buffer);
-        byte[] ReadBytes(int count);
-        char ReadChar();
-        double ReadDouble();
-        short ReadInt16();
-        int ReadInt32();
-        long ReadInt64();
-        float ReadSingle();
-        ushort ReadUInt16();
-        uint ReadUInt32();
-        ulong ReadUInt64();
-        ushort ReadUInt16BigEndian();
-        uint ReadUInt24BigEndian();
-        uint ReadUInt32BigEndian();
-        ulong ReadUInt64BigEndian();
-        short ReadInt16BigEndian();
-        int ReadInt24BigEndian();
-        int ReadInt32BigEndian();
-        long ReadInt64BigEndian();
-        string ReadUtf8String(int length);
-
         void Write(bool value);
         void Write(byte value);
         void Write(byte[] buffer);

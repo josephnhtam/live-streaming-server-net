@@ -10,6 +10,7 @@
         void Unclaim(int count = 1);
 
         ReadOnlySpan<byte> AsSpan();
+        Memory<byte> AsMemory();
         IRentedBuffer Clone(int initialClaim = 1);
     }
 }
