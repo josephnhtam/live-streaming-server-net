@@ -103,9 +103,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveStreamingServerNet.Subt
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveStreamingServerNet.OnDemandStreamCapturingDemo", "samples\LiveStreamingServerNet.OnDemandStreamCapturingDemo\LiveStreamingServerNet.OnDemandStreamCapturingDemo.csproj", "{C4A9F987-606A-4DFA-8943-9F5D1FC84827}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveStreamingServerNet.WebRTC", "src\LiveStreamingServerNet.WebRTC\LiveStreamingServerNet.WebRTC\LiveStreamingServerNet.WebRTC.csproj", "{0C242B4E-0D65-4852-AD33-1B076EBCD2F9}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveStreamingServerNet.WebRTC.Test", "test\LiveStreamingServerNet.WebRTC.Test\LiveStreamingServerNet.WebRTC.Test.csproj", "{13D16429-D9DF-4F31-ABA1-FB0A994653B7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveStreamingServerNet.WebRTC", "src\LiveStreamingServerNet.WebRTC\LiveStreamingServerNet.WebRTC.csproj", "{3127D162-3B38-4D24-BE84-2863F38427BE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveStreamingServerNet.CustomStreamKeyDemo", "samples\LiveStreamingServerNet.CustomStreamKeyDemo\LiveStreamingServerNet.CustomStreamKeyDemo.csproj", "{C3080A0E-F204-4FE6-A68A-695687041AF1}"
 EndProject
@@ -307,14 +307,14 @@ Global
 		{C4A9F987-606A-4DFA-8943-9F5D1FC84827}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C4A9F987-606A-4DFA-8943-9F5D1FC84827}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C4A9F987-606A-4DFA-8943-9F5D1FC84827}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0C242B4E-0D65-4852-AD33-1B076EBCD2F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0C242B4E-0D65-4852-AD33-1B076EBCD2F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0C242B4E-0D65-4852-AD33-1B076EBCD2F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0C242B4E-0D65-4852-AD33-1B076EBCD2F9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{13D16429-D9DF-4F31-ABA1-FB0A994653B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{13D16429-D9DF-4F31-ABA1-FB0A994653B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{13D16429-D9DF-4F31-ABA1-FB0A994653B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{13D16429-D9DF-4F31-ABA1-FB0A994653B7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3127D162-3B38-4D24-BE84-2863F38427BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3127D162-3B38-4D24-BE84-2863F38427BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3127D162-3B38-4D24-BE84-2863F38427BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3127D162-3B38-4D24-BE84-2863F38427BE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C3080A0E-F204-4FE6-A68A-695687041AF1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C3080A0E-F204-4FE6-A68A-695687041AF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C3080A0E-F204-4FE6-A68A-695687041AF1}.Release|Any CPU.ActiveCfg = Release|Any CPU

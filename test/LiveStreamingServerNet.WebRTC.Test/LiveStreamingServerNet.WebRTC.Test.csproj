@@ -9,7 +9,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\LiveStreamingServerNet.WebRTC\LiveStreamingServerNet.WebRTC\LiveStreamingServerNet.WebRTC.csproj" />
+      <ProjectReference Include="..\..\src\LiveStreamingServerNet.WebRTC\LiveStreamingServerNet.WebRTC.csproj" />
     </ItemGroup>
 
 
