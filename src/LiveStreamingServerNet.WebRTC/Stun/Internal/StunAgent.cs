@@ -68,14 +68,17 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal
             request.Write(buffer);
 
             var tcs = new TaskCompletionSource<(StunMessage, UnknownAttributes?)>();
+            var transactionId = request.TransactionId;
 
-            if (!_pendingTransactions.TryAdd(request.TransactionId, tcs))
+            if (!_pendingTransactions.TryAdd(transactionId, tcs))
             {
                 throw new InvalidOperationException("Transaction ID collision.");
             }
 
             try
             {
+                transactionId.Claim();
+
                 return await SendBufferWithRetransmissionAsync(
                     buffer,
                     remoteEndPoint,
@@ -84,7 +87,8 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal
             }
             finally
             {
-                _pendingTransactions.TryRemove(request.TransactionId, out _);
+                _pendingTransactions.TryRemove(transactionId, out _);
+                transactionId.Unclaim();
             }
         }
 
