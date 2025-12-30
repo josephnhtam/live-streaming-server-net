@@ -48,7 +48,7 @@ namespace LiveStreamingServerNet.WebRTC.Test
                 var endpoints = await resolver.ResolveAsync(stunServerUri);
                 var target = endpoints.FirstOrDefault();
 
-                using var request = new StunMessage(StunClass.Request, StunConstants.BindingRequestMethod, new List<IStunAttribute>());
+                using var request = new StunMessage(StunClass.Request, StunMethods.BindingRequest, new List<IStunAttribute>());
 
                 // Assert
                 started.Should().BeTrue();
@@ -60,7 +60,7 @@ namespace LiveStreamingServerNet.WebRTC.Test
                 // Assert
                 response.Should().NotBeNull();
                 response.Class.Should().Be(StunClass.SuccessResponse);
-                response.Method.Should().Be(StunConstants.BindingRequestMethod);
+                response.Method.Should().Be(StunMethods.BindingRequest);
                 response.Attributes.Should().ContainItemsAssignableTo<XorMappedAddressAttribute>();
             }
             finally
