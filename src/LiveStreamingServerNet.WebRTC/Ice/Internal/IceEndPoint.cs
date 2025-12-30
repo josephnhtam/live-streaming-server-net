@@ -21,9 +21,9 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
 
         public UdpTransportState State => _udpTransport.State;
 
-        public IceEndPoint(IUdpTransport udpTransport, IStunAgentFactory stunAgentFactory)
+        public IceEndPoint(Socket socket, IUdpTransportFactory transportFactory, IStunAgentFactory stunAgentFactory)
         {
-            _udpTransport = udpTransport;
+            _udpTransport = transportFactory.Create(socket);
             _udpTransport.OnStateChanged += OnUdpStateChanged;
             _udpTransport.OnPacketReceived += OnUdpPacketReceived;
 

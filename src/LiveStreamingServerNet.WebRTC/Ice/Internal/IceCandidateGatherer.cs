@@ -5,7 +5,6 @@ using LiveStreamingServerNet.WebRTC.Stun.Internal;
 using LiveStreamingServerNet.WebRTC.Stun.Internal.Contracts;
 using LiveStreamingServerNet.WebRTC.Stun.Internal.Packets;
 using LiveStreamingServerNet.WebRTC.Stun.Internal.Packets.Attributes;
-using LiveStreamingServerNet.WebRTC.Udp.Internal;
 using LiveStreamingServerNet.WebRTC.Utilities;
 using Polly;
 using Polly.Retry;
@@ -19,6 +18,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
 {
     internal class IceCandidateGatherer : IIceCandidateGatherer
     {
+        private readonly IUdpTransportFactory _transportFactory;
         private readonly IStunAgentFactory _stunAgentFactory;
         private readonly IStunDnsResolver _stunDnsResolver;
         private readonly IceGathererConfiguration _config;
@@ -32,10 +32,12 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
         public event EventHandler<LocalIceCandidate?>? OnGathered;
 
         public IceCandidateGatherer(
+            IUdpTransportFactory transportFactory,
             IStunAgentFactory stunAgentFactory,
             IStunDnsResolver stunDnsResolver,
             IceGathererConfiguration config)
         {
+            _transportFactory = transportFactory;
             _stunAgentFactory = stunAgentFactory;
             _stunDnsResolver = stunDnsResolver;
             _config = config;
@@ -291,8 +293,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
 
         private IIceEndPoint CreateIceEndPoint(Socket socket)
         {
-            var udpTransport = new UdpTransport(socket);
-            return new IceEndPoint(udpTransport, _stunAgentFactory);
+            return new IceEndPoint(socket, _transportFactory, _stunAgentFactory);
         }
 
         private void NotifyCandidateGathered(LocalIceCandidate candidate)
