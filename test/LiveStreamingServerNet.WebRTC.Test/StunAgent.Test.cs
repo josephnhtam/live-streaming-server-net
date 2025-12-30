@@ -1,10 +1,8 @@
 using FluentAssertions;
 using LiveStreamingServerNet.Utilities.Buffers;
-using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using LiveStreamingServerNet.Utilities.Common;
 using LiveStreamingServerNet.WebRTC.Stun.Configurations;
 using LiveStreamingServerNet.WebRTC.Stun.Internal;
-using LiveStreamingServerNet.WebRTC.Stun.Internal.Contracts;
 using LiveStreamingServerNet.WebRTC.Stun.Internal.Packets;
 using LiveStreamingServerNet.WebRTC.Stun.Internal.Packets.Attributes;
 using LiveStreamingServerNet.WebRTC.Stun.Internal.Packets.Attributes.Contracts;
@@ -28,7 +26,7 @@ namespace LiveStreamingServerNet.WebRTC.Test
 
             await using var udpTransport = new UdpTransport(udpSocket);
 
-            var sender = new SocketStunSender(udpTransport);
+            var sender = new UdpStunSender(udpTransport);
             var config = new StunAgentConfiguration();
 
             await using var stunAgent = new StunAgent(sender, config);
@@ -68,22 +66,6 @@ namespace LiveStreamingServerNet.WebRTC.Test
             finally
             {
                 udpTransport.OnPacketReceived -= packetHandler;
-            }
-        }
-
-        private class SocketStunSender : IStunSender
-        {
-            private readonly UdpTransport _transport;
-
-            public SocketStunSender(UdpTransport transport)
-            {
-                _transport = transport;
-            }
-
-            public ValueTask SendAsync(IDataBuffer buffer, IPEndPoint remoteEndpoint, CancellationToken cancellation)
-            {
-                _transport.SendPacket(buffer.AsMemory(), remoteEndpoint);
-                return ValueTask.CompletedTask;
             }
         }
     }

@@ -58,7 +58,7 @@ namespace LiveStreamingServerNet.WebRTC.Udp.Internal
 
         public bool SendPacket(ReadOnlyMemory<byte> buffer, IPEndPoint remoteEndPoint)
         {
-            if (State != UdpTransportState.Started)
+            if (_isDisposed == 1 || State == UdpTransportState.Closed)
                 return false;
 
             var dataBuffer = _dataBufferPool.Obtain();
