@@ -3,7 +3,7 @@ using LiveStreamingServerNet.WebRTC.Udp.Internal.Contracts;
 
 namespace LiveStreamingServerNet.WebRTC.Ice.Internal.Contracts
 {
-    internal interface IStunAgenFactory
+    internal interface IStunAgentFactory
     {
         IStunAgent Create(IUdpTransport transport);
     }
