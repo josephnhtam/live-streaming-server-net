@@ -80,7 +80,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
 
             foreach (var address in localAddresses)
             {
-                var candidate = CreateHostCandidate(address);
+                var candidate = TryCreateHostCandidate(address);
                 if (candidate == null)
                     continue;
 
@@ -90,7 +90,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
 
             return hostCandidates;
 
-            LocalIceCandidate? CreateHostCandidate(IPAddress address)
+            LocalIceCandidate? TryCreateHostCandidate(IPAddress address)
             {
                 try
                 {
@@ -190,7 +190,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                         MaxDegreeOfParallelism = _config.StunBindingMaxConcurrency,
                         CancellationToken = cancellation
                     },
-                    SendCandidateBindingRequestAsync
+                    TryCreateServerReflexiveCandidateAsync
                 ).ConfigureAwait(false);
             }
             catch (OperationCanceledException) when (cancellation.IsCancellationRequested)
@@ -204,7 +204,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
 
             return;
 
-            async ValueTask SendCandidateBindingRequestAsync(LocalIceCandidate hostCandidate, CancellationToken token)
+            async ValueTask TryCreateServerReflexiveCandidateAsync(LocalIceCandidate hostCandidate, CancellationToken token)
             {
                 try
                 {
