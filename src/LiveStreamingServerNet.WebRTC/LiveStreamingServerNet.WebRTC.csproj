@@ -21,4 +21,8 @@
         <InternalsVisibleTo Include="LiveStreamingServerNet.WebRTC.Test"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Polly" />
+    </ItemGroup>
+
 </Project>
