@@ -76,23 +76,35 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
             IceCandidateGatheringContext context,
             IEnumerable<IPAddress> localAddresses)
         {
-            try
-            {
-                var hostCandidates = new List<LocalIceCandidate>();
+            var hostCandidates = new List<LocalIceCandidate>();
 
-                foreach (var address in localAddresses)
+            foreach (var address in localAddresses)
+            {
+                var candidate = CreateHostCandidate(address);
+                if (candidate == null)
+                    continue;
+
+                hostCandidates.Add(candidate);
+                NotifyCandidateGathered(candidate);
+            }
+
+            return hostCandidates;
+
+            LocalIceCandidate? CreateHostCandidate(IPAddress address)
+            {
+                try
                 {
                     var socket = CreateBoundUdpSocket(address);
 
                     if (socket == null)
-                        continue;
+                        return null;
 
                     var endPoint = (socket.LocalEndPoint as IPEndPoint)!;
 
                     var iceEndPoint = CreateIceEndPoint(socket);
                     iceEndPoint.Start();
 
-                    var candidate = new LocalIceCandidate
+                    return new LocalIceCandidate
                     (
                         IceEndPoint: iceEndPoint,
                         BoundEndPoint: endPoint,
@@ -100,17 +112,12 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                         Type: IceCandidateType.Host,
                         Foundation: IceFoundation.Create(IceCandidateType.Host, address)
                     );
-
-                    hostCandidates.Add(candidate);
-                    NotifyCandidateGathered(candidate);
                 }
-
-                return hostCandidates;
-            }
-            catch (Exception)
-            {
-                // todo: add logs
-                return [];
+                catch (Exception ex)
+                {
+                    // todo: add logs
+                    return null;
+                }
             }
         }
 
