@@ -79,11 +79,22 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal
             {
                 transactionId.Claim();
 
-                return await SendBufferWithRetransmissionAsync(
+                var (response, unknownAttributes) = await SendBufferWithRetransmissionAsync(
                     buffer,
                     remoteEndPoint,
                     tcs,
                     cancellation).ConfigureAwait(false);
+
+                try
+                {
+                    cancellation.ThrowIfCancellationRequested();
+                    return (response, unknownAttributes);
+                }
+                catch (OperationCanceledException)
+                {
+                    response.Dispose();
+                    throw;
+                }
             }
             finally
             {
