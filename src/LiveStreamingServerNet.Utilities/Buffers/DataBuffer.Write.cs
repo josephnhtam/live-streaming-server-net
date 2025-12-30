@@ -136,6 +136,11 @@ namespace LiveStreamingServerNet.Utilities.Buffers
             WriteUnaligned(BinaryPrimitives.ReverseEndianness(value), 4);
         }
 
+        public void WriteUInt64BigEndian(ulong value)
+        {
+            WriteUnaligned(BinaryPrimitives.ReverseEndianness(value), 8);
+        }
+
         public void WriteInt16BigEndian(short value)
         {
             WriteUnaligned(BinaryPrimitives.ReverseEndianness(value), 2);
@@ -154,6 +159,11 @@ namespace LiveStreamingServerNet.Utilities.Buffers
         public void WriteInt32BigEndian(int value)
         {
             WriteUnaligned(BinaryPrimitives.ReverseEndianness(value), 4);
+        }
+
+        public void WriteInt64BigEndian(long value)
+        {
+            WriteUnaligned(BinaryPrimitives.ReverseEndianness(value), 8);
         }
 
         public void WriteUtf8String(string value)
