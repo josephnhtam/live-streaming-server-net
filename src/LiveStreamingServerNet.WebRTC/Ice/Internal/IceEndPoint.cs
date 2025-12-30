@@ -30,11 +30,6 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
             _stunAgent = stunAgentFactory.Create(_udpTransport);
         }
 
-        public IceEndPoint(Socket socket, IStunAgentFactory stunAgentFactory, IDataBufferPool? bufferPool = null)
-            : this(new UdpTransport(socket, bufferPool), stunAgentFactory)
-        {
-        }
-
         public bool Start()
         {
             return _udpTransport.Start();

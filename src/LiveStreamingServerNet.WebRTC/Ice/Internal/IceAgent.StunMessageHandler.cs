@@ -29,7 +29,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
             {
                 return message.Method switch
                 {
-                    StunConstants.BindingRequestMethod =>
+                    StunMethods.BindingRequest =>
                         await HandleBindingRequestAsync(message, remoteEndPoint).ConfigureAwait(false),
 
                     _ => null
