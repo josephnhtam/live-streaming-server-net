@@ -93,7 +93,7 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal
             _messageHandler = handler;
         }
 
-        public async Task SendIndicationAsync(
+        public async ValueTask SendIndicationAsync(
             StunMessage indication,
             IPEndPoint remoteEndPoint,
             CancellationToken cancellation = default)
