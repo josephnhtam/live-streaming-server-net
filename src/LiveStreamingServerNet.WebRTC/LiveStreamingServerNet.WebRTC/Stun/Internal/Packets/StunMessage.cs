@@ -36,7 +36,7 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal.Packets
             _attributes = new List<IStunAttribute>(attributes);
         }
 
-        public static bool IsStunMessage(IDataBuffer buffer)
+        public static bool ValidateHeader(IDataBufferReader buffer)
         {
             if ((buffer.Size - buffer.Position) < 20)
             {
@@ -53,7 +53,7 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal.Packets
                     return false;
                 }
 
-                buffer.Advance(3, false);
+                buffer.Position += 3;
 
                 var magicCookie = buffer.ReadUInt32BigEndian();
                 if (magicCookie != StunMessageMagicCookies.Value)
@@ -69,7 +69,7 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal.Packets
             }
             finally
             {
-                buffer.MoveTo(initialPosition);
+                buffer.Position = initialPosition;
             }
         }
 

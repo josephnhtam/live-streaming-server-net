@@ -8,7 +8,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
     internal partial class IceAgent : IIceAgent
     {
         private readonly IceCredentials _credentials;
-        private readonly IIceStunPeerFactory _stunPeerFactory;
+        private readonly IIceStunAgentFactory _stunAgentFactory;
         private readonly IceAgentConfiguration _config;
         private readonly ulong _tieBreaker;
         private readonly object _syncLock = new object();
@@ -20,13 +20,13 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
         public IceAgent(
             IceRole role,
             IceCredentials credentials,
-            IIceStunPeerFactory stunPeerFactory,
+            IIceStunAgentFactory stunAgentFactory,
             IceAgentConfiguration config,
             ulong? tieBreaker = null)
         {
             Role = role;
             _credentials = credentials;
-            _stunPeerFactory = stunPeerFactory;
+            _stunAgentFactory = stunAgentFactory;
             _config = config;
 
             _tieBreaker = tieBreaker ?? RandomNumberUtility.GetRandomUInt64();
@@ -45,12 +45,12 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
             }
         }
 
-        public void OnLocalCandidateGathered(IceCandidate candidate, Socket socket)
+        public void OnLocalCandidateGathered(RemoteIceCandidate candidate, Socket socket)
         {
 
         }
 
-        public void OnRemoteCandidateReceived(IceCandidate candidate)
+        public void OnRemoteCandidateReceived(RemoteIceCandidate candidate)
         {
 
         }

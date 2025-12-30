@@ -25,7 +25,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
             return (1UL << 32) * Math.Min(g, d) + 2 * Math.Max(g, d) + (g > d ? 1UL : 0UL);
         }
 
-        public static bool CanCandidatesPair(IceCandidate local, IceCandidate remote)
+        public static bool CanCandidatesPair(RemoteIceCandidate local, RemoteIceCandidate remote)
         {
             if (local.EndPoint.AddressFamily != remote.EndPoint.AddressFamily)
             {

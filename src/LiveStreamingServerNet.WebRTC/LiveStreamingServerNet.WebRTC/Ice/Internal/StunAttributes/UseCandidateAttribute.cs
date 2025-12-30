@@ -11,7 +11,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal.StunAttributes
 
         public void WriteValue(TransactionId transactionId, IDataBuffer buffer) { }
 
-        public static UseCandidateAttribute ReadValue(TransactionId transactionId, IDataBuffer buffer, ushort length)
+        public static UseCandidateAttribute ReadValue(TransactionId transactionId, IDataBufferReader buffer, ushort length)
             => new UseCandidateAttribute();
     }
 }

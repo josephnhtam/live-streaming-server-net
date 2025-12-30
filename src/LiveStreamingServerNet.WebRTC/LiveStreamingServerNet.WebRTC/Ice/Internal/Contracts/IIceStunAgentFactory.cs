@@ -3,8 +3,8 @@ using System.Net.Sockets;
 
 namespace LiveStreamingServerNet.WebRTC.Ice.Internal.Contracts
 {
-    internal interface IIceStunPeerFactory
+    internal interface IIceStunAgentFactory
     {
-        IStunPeer Create(Socket socket);
+        IStunAgent Create(Socket socket);
     }
 }

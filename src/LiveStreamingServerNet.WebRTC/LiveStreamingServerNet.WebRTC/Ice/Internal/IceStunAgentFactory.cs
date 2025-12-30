@@ -1,27 +1,25 @@
 using LiveStreamingServerNet.Utilities.Buffers.Contracts;
 using LiveStreamingServerNet.WebRTC.Ice.Internal.Contracts;
 using LiveStreamingServerNet.WebRTC.Stun.Configurations;
-using LiveStreamingServerNet.WebRTC.Stun.Internal;
 using LiveStreamingServerNet.WebRTC.Stun.Internal.Contracts;
 using System.Net.Sockets;
 
 namespace LiveStreamingServerNet.WebRTC.Ice.Internal
 {
-    internal class IceStunPeerFactory : IIceStunPeerFactory
+    internal class IceStunAgentFactory : IIceStunAgentFactory
     {
-        private readonly StunPeerConfiguration _config;
+        private readonly StunAgentConfiguration _config;
         private readonly IDataBufferPool? _bufferPool;
 
-        public IceStunPeerFactory(StunPeerConfiguration config, IDataBufferPool? bufferPool)
+        public IceStunAgentFactory(StunAgentConfiguration config, IDataBufferPool? bufferPool)
         {
             _config = config;
             _bufferPool = bufferPool;
         }
 
-        public IStunPeer Create(Socket socket)
+        public IStunAgent Create(Socket socket)
         {
-            var sender = new SocketStunSender(socket);
-            return new StunPeer(sender, _config, _bufferPool);
+            throw new NotImplementedException();
         }
     }
 }
