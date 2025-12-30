@@ -5,6 +5,6 @@ namespace LiveStreamingServerNet.WebRTC.Ice
         Host,
         ServerReflexive,
         PeerReflexive,
-        // Relayed (not supported yet)
+        Relayed
     }
 }

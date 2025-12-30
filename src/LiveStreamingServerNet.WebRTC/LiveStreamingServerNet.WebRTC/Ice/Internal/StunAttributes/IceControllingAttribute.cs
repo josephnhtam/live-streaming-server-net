@@ -12,7 +12,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal.StunAttributes
         public void WriteValue(TransactionId transactionId, IDataBuffer buffer)
             => buffer.WriteUInt64BigEndian(TieBreaker);
 
-        public static IceControllingAttribute ReadValue(TransactionId transactionId, IDataBuffer buffer, ushort length)
+        public static IceControllingAttribute ReadValue(TransactionId transactionId, IDataBufferReader buffer, ushort length)
             => new IceControllingAttribute(buffer.ReadUInt64BigEndian());
     }
 }
