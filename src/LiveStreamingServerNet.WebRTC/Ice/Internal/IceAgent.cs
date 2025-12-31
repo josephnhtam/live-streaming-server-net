@@ -8,7 +8,6 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
     internal partial class IceAgent : IIceAgent
     {
         private readonly IceCredentials _credentials;
-        private readonly IIceStunAgentFactory _stunAgentFactory;
         private readonly IceAgentConfiguration _config;
         private readonly ulong _tieBreaker;
         private readonly object _syncLock = new object();
@@ -20,13 +19,11 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
         public IceAgent(
             IceRole role,
             IceCredentials credentials,
-            IIceStunAgentFactory stunAgentFactory,
             IceAgentConfiguration config,
             ulong? tieBreaker = null)
         {
             Role = role;
             _credentials = credentials;
-            _stunAgentFactory = stunAgentFactory;
             _config = config;
 
             _tieBreaker = tieBreaker ?? RandomNumberUtility.GetRandomUInt64();
