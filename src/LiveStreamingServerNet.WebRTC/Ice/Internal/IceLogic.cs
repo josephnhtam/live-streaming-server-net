@@ -2,7 +2,7 @@ using System.Net.Sockets;
 
 namespace LiveStreamingServerNet.WebRTC.Ice.Internal
 {
-    internal static class IceUtility
+    internal static class IceLogic
     {
         public static ulong CalculateCandidatePriority(IceCandidateType type, ushort localPreference = 65535, int componentId = 1)
         {
@@ -25,15 +25,15 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
             return (1UL << 32) * Math.Min(g, d) + 2 * Math.Max(g, d) + (g > d ? 1UL : 0UL);
         }
 
-        public static bool CanCandidatesPair(RemoteIceCandidate local, RemoteIceCandidate remote)
+        public static bool CanPairCandidates(LocalIceCandidate local, RemoteIceCandidate remote)
         {
-            if (local.EndPoint.AddressFamily != remote.EndPoint.AddressFamily)
+            if (local.BoundEndPoint.AddressFamily != remote.EndPoint.AddressFamily)
             {
                 return false;
             }
 
-            if (local.EndPoint is { AddressFamily: AddressFamily.InterNetworkV6, Address.IsIPv6LinkLocal: true } &&
-                !remote.EndPoint.Address.IsIPv6LinkLocal)
+            if (local.BoundEndPoint.AddressFamily == AddressFamily.InterNetworkV6 &&
+                local.BoundEndPoint.Address.IsIPv6LinkLocal != remote.EndPoint.Address.IsIPv6LinkLocal)
             {
                 return false;
             }
