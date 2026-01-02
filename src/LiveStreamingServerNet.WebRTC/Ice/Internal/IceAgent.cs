@@ -7,6 +7,7 @@ using LiveStreamingServerNet.WebRTC.Stun.Internal.Packets;
 using LiveStreamingServerNet.WebRTC.Stun.Internal.Packets.Attributes;
 using LiveStreamingServerNet.WebRTC.Stun.Internal.Packets.Attributes.Contracts;
 using System.Collections.Concurrent;
+using System.Net;
 
 namespace LiveStreamingServerNet.WebRTC.Ice.Internal
 {
@@ -20,6 +21,8 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
 
         private readonly IIceCandidateGatherer _candidateGatherer;
         private readonly CheckList _checkList;
+        private readonly StunMessageHandler _stunMessageHandler;
+
         private readonly CancellationTokenSource _cts;
         private readonly HashSet<IceCandidatePair> _validPairs;
         private readonly ConcurrentDictionary<Task, object?> _connectivityCheckTasks;
@@ -54,6 +57,8 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
             _candidateGatherer.OnGathered += OnLocalCandidateGathered;
 
             _checkList = new CheckList(this);
+            _stunMessageHandler = new StunMessageHandler(this);
+
             _cts = new CancellationTokenSource();
             _validPairs = new HashSet<IceCandidatePair>();
             _connectivityCheckTasks = new ConcurrentDictionary<Task, object?>();
@@ -284,7 +289,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
         {
             var attributes = new List<IStunAttribute>
             {
-                new UsernameAttribute($"{_credentials.UFragRemote}:{_credentials.UFragLocal}"),
+                new UsernameAttribute(_credentials.RequesterUsername),
                 new PriorityAttribute(pair.LocalCandidate.Priority),
                 Role == IceRole.Controlling ? new IceControllingAttribute(_tieBreaker) : new IceControlledAttribute(_tieBreaker),
             };
@@ -303,8 +308,9 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
 
             try
             {
-                var (response, _) = await pair.SendStunRequestAsync(request, cancellation);
-                using var _ = response;
+                using var result = await pair.SendStunRequestAsync(request, cancellation);
+                var response = result.Message;
+                var remoteEndPoint = result.RemoteEndPoint;
 
                 if (response is not { Class: StunClass.SuccessResponse, Method: StunMethods.BindingRequest })
                 {
@@ -312,7 +318,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                     return;
                 }
 
-                AdoptPeerReflexiveCandidate(pair, response);
+                AdoptPeerReflexiveCandidate(pair.LocalCandidate.IceEndPoint, remoteEndPoint);
 
                 OnCheckSucceeded(pair, reason);
             }
@@ -322,7 +328,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
             }
         }
 
-        private void AdoptPeerReflexiveCandidate(IceCandidatePair pair, StunMessage bindingResponse)
+        private void AdoptPeerReflexiveCandidate(IIceEndPoint endPoint, IPEndPoint remoteEndPoint)
         {
             throw new NotImplementedException();
         }
@@ -385,9 +391,14 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
 
                 if (_checkList.AddLocalCandidate(candidate))
                 {
-                    candidate.IceEndPoint.SetStunMessageHandler(new StunMessageHandler(this));
+                    candidate.IceEndPoint.SetStunMessageHandler(_stunMessageHandler);
                 }
             }
+        }
+
+        private BindingResult HandleIncomingBindingRequest(StunMessage request, IIceEndPoint endPoint, IPEndPoint remoteEndPoint)
+        {
+            return BindingResult.Success;
         }
 
         public void AddRemoteCandidate(RemoteIceCandidate? candidate)
@@ -415,10 +426,10 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                 if (ConnectionState == newState)
                     return false;
 
-                if (expected.HasValue && ((int)newState & (int)expected) != 0)
+                if (expected.HasValue && ((int)newState & (int)expected) == 0)
                     return false;
 
-                if (excluded.HasValue && ((int)newState & (int)excluded) == 0)
+                if (excluded.HasValue && ((int)newState & (int)excluded) != 0)
                     return false;
 
                 ConnectionState = newState;
@@ -446,6 +457,12 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
             Check,
             KeepAlive,
             Nomination
+        }
+
+        private enum BindingResult
+        {
+            Success,
+            RoleConflict
         }
     }
 }

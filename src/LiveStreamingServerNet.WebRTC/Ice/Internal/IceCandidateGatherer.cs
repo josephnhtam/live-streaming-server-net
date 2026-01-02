@@ -220,11 +220,11 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
 
                         using var bindingRequest = CreateBindingRequest();
 
-                        var (bindingResponse, _) = await hostCandidate.IceEndPoint
+                        using var result = await hostCandidate.IceEndPoint
                             .SendStunRequestAsync(bindingRequest, stunServerEndPoint, ct)
                             .ConfigureAwait(false);
 
-                        using var _ = bindingResponse;
+                        var bindingResponse = result.Message;
                         var mappedEndPoint = GetMappedEndPoint(bindingResponse);
 
                         if (mappedEndPoint == null)

@@ -6,5 +6,8 @@ namespace LiveStreamingServerNet.WebRTC.Ice
     {
         public byte[] PwdLocalBytes { get; } = Encoding.UTF8.GetBytes(PwdLocal);
         public byte[] PwdRemoteBytes { get; } = Encoding.UTF8.GetBytes(PwdRemote);
+
+        public string RequesterUsername = $"{UFragRemote}:{UFragLocal}";
+        public string ResponderUsername = $"{UFragLocal}:{UFragRemote}";
     }
 }

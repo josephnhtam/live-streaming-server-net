@@ -50,14 +50,14 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
 
             if (StunMessage.ValidateHeader(buffer))
             {
-                _stunAgent.FeedPacket(buffer, args.RemoteEndPoint);
+                _stunAgent.FeedPacket(buffer, args.RemoteEndPoint, state: this);
                 return;
             }
 
             OnPacketReceived?.Invoke(this, new IcePacketEventArgs(args.RentedBuffer, args.RemoteEndPoint));
         }
 
-        public Task<(StunMessage, UnknownAttributes?)> SendStunRequestAsync(
+        public Task<StunResponse> SendStunRequestAsync(
             StunMessage request, IPEndPoint remoteEndPoint, CancellationToken cancellation = default)
         {
             return _stunAgent.SendRequestAsync(request, remoteEndPoint, cancellation);

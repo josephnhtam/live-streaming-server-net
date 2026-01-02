@@ -55,8 +55,8 @@ namespace LiveStreamingServerNet.WebRTC.Test
                 target.Should().NotBeNull();
 
                 // Act
-                var (response, _) = await stunAgent.SendRequestAsync(request, target!);
-                using var _ = response;
+                using var result = await stunAgent.SendRequestAsync(request, target!);
+                var response = result.Message;
 
                 // Assert
                 response.Should().NotBeNull();

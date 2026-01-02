@@ -12,7 +12,7 @@ using System.Threading.Channels;
 namespace LiveStreamingServerNet.WebRTC.Stun.Internal
 {
     using TransactionDictionary =
-        ConcurrentDictionary<TransactionId, TaskCompletionSource<(StunMessage, UnknownAttributes?)>>;
+        ConcurrentDictionary<TransactionId, TaskCompletionSource<StunResponse>>;
 
     internal class StunAgent : IStunAgent
     {
@@ -49,7 +49,7 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal
             _loopTask = Task.Run(() => IncomingMessageLoopAsync(_cts.Token));
         }
 
-        public async Task<(StunMessage, UnknownAttributes?)> SendRequestAsync(
+        public async Task<StunResponse> SendRequestAsync(
             StunMessage request,
             IPEndPoint remoteEndPoint,
             CancellationToken cancellation = default)
@@ -67,7 +67,7 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal
             using var buffer = _bufferPool.Obtain();
             request.Write(buffer);
 
-            var tcs = new TaskCompletionSource<(StunMessage, UnknownAttributes?)>();
+            var tcs = new TaskCompletionSource<StunResponse>();
             var transactionId = request.TransactionId;
 
             if (!_pendingTransactions.TryAdd(transactionId, tcs))
@@ -79,7 +79,7 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal
             {
                 transactionId.Claim();
 
-                var (response, unknownAttributes) = await SendBufferWithRetransmissionAsync(
+                var result = await SendBufferWithRetransmissionAsync(
                     buffer,
                     remoteEndPoint,
                     tcs,
@@ -88,11 +88,11 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal
                 try
                 {
                     cancellation.ThrowIfCancellationRequested();
-                    return (response, unknownAttributes);
+                    return result;
                 }
                 catch (OperationCanceledException)
                 {
-                    response.Dispose();
+                    result.Dispose();
                     throw;
                 }
             }
@@ -131,7 +131,7 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal
             await _sender.SendAsync(buffer, remoteEndPoint, cancellation).ConfigureAwait(false);
         }
 
-        public void FeedPacket(IDataBufferReader buffer, IPEndPoint remoteEndPoint)
+        public void FeedPacket(IDataBufferReader buffer, IPEndPoint remoteEndPoint, object? state = null)
         {
             if (_isDisposed == 1)
                 return;
@@ -142,7 +142,7 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal
             switch (message.Class)
             {
                 case StunClass.Request or StunClass.Indication when messageHandler != null:
-                    if (!_messageChannel.Writer.TryWrite(new(message, unknownAttributes, remoteEndPoint)))
+                    if (!_messageChannel.Writer.TryWrite(new(message, unknownAttributes, remoteEndPoint, state)))
                     {
                         message.Dispose();
                     }
@@ -152,7 +152,7 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal
                 case StunClass.SuccessResponse or StunClass.ErrorResponse:
                     if (_pendingTransactions.TryGetValue(message.TransactionId, out var tcs))
                     {
-                        tcs.TrySetResult((message, unknownAttributes));
+                        tcs.TrySetResult(new StunResponse(message, unknownAttributes, remoteEndPoint, state));
                         return;
                     }
 
@@ -170,6 +170,7 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal
             StunMessage message,
             UnknownAttributes? unknownAttributes,
             IPEndPoint remoteEndPoint,
+            object? state,
             CancellationToken cancellation)
         {
             using var _ = message;
@@ -227,6 +228,7 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal
                     message,
                     unknownAttributes,
                     remoteEndPoint,
+                    state,
                     cancellation).ConfigureAwait(false);
             }
         }
@@ -236,6 +238,7 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal
             StunMessage message,
             UnknownAttributes? unknownAttributes,
             IPEndPoint remoteEndPoint,
+            object? state,
             CancellationToken cancellation)
         {
             using var _ = message;
@@ -246,6 +249,7 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal
                     message,
                     unknownAttributes,
                     remoteEndPoint,
+                    state,
                     cancellation).ConfigureAwait(false);
             }
             catch (Exception)
@@ -254,10 +258,10 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal
             }
         }
 
-        private async Task<(StunMessage, UnknownAttributes?)> SendBufferWithRetransmissionAsync(
+        private async Task<StunResponse> SendBufferWithRetransmissionAsync(
             IDataBuffer buffer,
             IPEndPoint remoteEndPoint,
-            TaskCompletionSource<(StunMessage, UnknownAttributes?)> tcs,
+            TaskCompletionSource<StunResponse> tcs,
             CancellationToken cancellation)
         {
             for (var retries = 0; retries <= _config.MaxRetransmissions; retries++)
@@ -300,7 +304,7 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal
                 await foreach (var incoming in _messageChannel.Reader.ReadAllAsync(cancellation).ConfigureAwait(false))
                 {
                     var messageHandler = _messageHandler;
-                    var (message, unknownAttributes, remoteEndPoint) = incoming;
+                    var (message, unknownAttributes, remoteEndPoint, state) = incoming;
 
                     try
                     {
@@ -312,6 +316,7 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal
                                     message,
                                     unknownAttributes,
                                     remoteEndPoint,
+                                    state,
                                     cancellation).ConfigureAwait(false);
                                 break;
 
@@ -321,6 +326,7 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal
                                     message,
                                     unknownAttributes,
                                     remoteEndPoint,
+                                    state,
                                     cancellation).ConfigureAwait(false);
                                 break;
 
@@ -369,6 +375,7 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal
         private record struct IncomingStunMessage(
             StunMessage Message,
             UnknownAttributes? UnknownAttributes,
-            IPEndPoint RemoteEndPoint);
+            IPEndPoint RemoteEndPoint,
+            object? State);
     }
 }
