@@ -12,6 +12,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
         public IceCandidatePairState State { get; set; }
         public IceCandidateNominationState NominationState { get; set; }
         public bool IsTriggered { get; set; }
+        public bool UseCandidateReceived { get; set; }
 
         public IceCandidatePair(LocalIceCandidate localCandidate, RemoteIceCandidate remoteCandidate, bool isLocalControlling)
         {
@@ -55,6 +56,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
         None,
         ControllingNominating,
         ControlledNominating,
-        Nominated
+        Nominated,
+        WasNominated
     }
 }

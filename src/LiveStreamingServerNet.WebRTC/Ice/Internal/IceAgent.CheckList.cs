@@ -109,12 +109,17 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
             {
                 lock (_syncLock)
                 {
-                    var triggeredPair = _triggeredChecks.FirstOrDefault();
-
-                    if (triggeredPair != null)
+                    while (_triggeredChecks.TryDequeue(out var pair))
                     {
-                        triggeredPair.IsTriggered = false;
-                        return triggeredPair;
+                        pair.IsTriggered = false;
+
+                        if (pair.State is IceCandidatePairState.InProgress)
+                            continue;
+
+                        if (pair.State is IceCandidatePairState.Failed)
+                            pair.State = IceCandidatePairState.Waiting;
+
+                        return pair;
                     }
 
                     UnfreezePairs();
@@ -146,12 +151,17 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
             {
                 lock (_syncLock)
                 {
-                    if (!_triggeredChecks.Contains(pair))
-                    {
-                        pair.IsTriggered = true;
+                    if (pair.IsTriggered || pair.State == IceCandidatePairState.InProgress)
+                        return;
 
-                        _triggeredChecks.Enqueue(pair);
-                    }
+                    if (pair.State == IceCandidatePairState.Frozen)
+                        pair.State = IceCandidatePairState.Waiting;
+
+                    if (pair.State == IceCandidatePairState.Failed)
+                        pair.State = IceCandidatePairState.Waiting;
+
+                    pair.IsTriggered = true;
+                    _triggeredChecks.Enqueue(pair);
                 }
             }
 
@@ -179,6 +189,16 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
 
                     foreach (var pair in _pairs)
                     {
+                        if (pair.NominationState is IceCandidateNominationState.ControllingNominating or IceCandidateNominationState.ControlledNominating)
+                        {
+                            pair.NominationState = IceCandidateNominationState.None;
+                        }
+
+                        if (isControlling)
+                        {
+                            pair.UseCandidateReceived = false;
+                        }
+
                         pair.RefreshPriority(isControlling);
                     }
                 }
