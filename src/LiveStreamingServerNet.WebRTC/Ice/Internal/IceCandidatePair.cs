@@ -1,3 +1,5 @@
+using LiveStreamingServerNet.WebRTC.Stun.Internal.Packets;
+
 namespace LiveStreamingServerNet.WebRTC.Ice.Internal
 {
     internal class IceCandidatePair
@@ -5,9 +7,11 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
         public LocalIceCandidate LocalCandidate { get; }
         public RemoteIceCandidate RemoteCandidate { get; }
         public string Foundation { get; }
-        public ulong Priority { get; set; }
+        public ulong Priority { get; }
 
         public IceCandidatePairState State { get; set; }
+        public IceCandidateNominationState NominationState { get; set; }
+        public bool IsTriggered { get; set; }
 
         public IceCandidatePair(LocalIceCandidate localCandidate, RemoteIceCandidate remoteCandidate, bool isLocalControlling)
         {
@@ -18,6 +22,17 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
             Priority = IceLogic.CalculateCandidatePairPriority(localCandidate.Priority, remoteCandidate.Priority, isLocalControlling);
 
             State = IceCandidatePairState.Frozen;
+            NominationState = IceCandidateNominationState.None;
+        }
+
+        public Task<(StunMessage, UnknownAttributes?)> SendStunRequestAsync(StunMessage request, CancellationToken cancellation = default)
+        {
+            return LocalCandidate.IceEndPoint.SendStunRequestAsync(request, RemoteCandidate.EndPoint, cancellation);
+        }
+
+        public ValueTask SendStunIndicationAsync(StunMessage indication, CancellationToken cancellation = default)
+        {
+            return LocalCandidate.IceEndPoint.SendStunIndicationAsync(indication, RemoteCandidate.EndPoint, cancellation);
         }
     }
 
@@ -28,5 +43,12 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
         InProgress,
         Succeeded,
         Failed
+    }
+
+    internal enum IceCandidateNominationState
+    {
+        None,
+        Nominating,
+        Nominated
     }
 }

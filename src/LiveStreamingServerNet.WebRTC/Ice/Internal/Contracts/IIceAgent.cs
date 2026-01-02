@@ -1,6 +1,6 @@
 namespace LiveStreamingServerNet.WebRTC.Ice.Internal.Contracts
 {
-    internal interface IIceAgent
+    internal interface IIceAgent : IAsyncDisposable
     {
     }
 }
