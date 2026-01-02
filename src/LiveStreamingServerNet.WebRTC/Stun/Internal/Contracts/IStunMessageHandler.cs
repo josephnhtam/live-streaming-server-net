@@ -5,7 +5,7 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal.Contracts
 {
     internal interface IStunMessageHandler
     {
-        ValueTask<StunMessage?> HandleRequestAsync(StunMessage message, UnknownAttributes? unknownAttributes, IPEndPoint remoteEndPoint, CancellationToken cancellation = default);
-        ValueTask HandleIndicationAsync(StunMessage message, UnknownAttributes? unknownAttributes, IPEndPoint remoteEndPoint, CancellationToken cancellation = default);
+        ValueTask<StunMessage?> HandleRequestAsync(StunMessage message, UnknownAttributes? unknownAttributes, IPEndPoint remoteEndPoint, object? state, CancellationToken cancellation = default);
+        ValueTask HandleIndicationAsync(StunMessage message, UnknownAttributes? unknownAttributes, IPEndPoint remoteEndPoint, object? state, CancellationToken cancellation = default);
     }
 }

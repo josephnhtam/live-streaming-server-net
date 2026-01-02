@@ -1,7 +1,9 @@
+using LiveStreamingServerNet.WebRTC.Ice.Internal.Contracts;
 using LiveStreamingServerNet.WebRTC.Stun.Internal;
 using LiveStreamingServerNet.WebRTC.Stun.Internal.Contracts;
 using LiveStreamingServerNet.WebRTC.Stun.Internal.Packets;
 using LiveStreamingServerNet.WebRTC.Stun.Internal.Packets.Attributes;
+using System.Diagnostics;
 using System.Net;
 
 namespace LiveStreamingServerNet.WebRTC.Ice.Internal
@@ -12,25 +14,26 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
         {
             private readonly IceAgent _agent;
             private readonly IceCredentials _credential;
-            private readonly string _expectedUsername;
 
             public StunMessageHandler(IceAgent agent)
             {
                 _agent = agent;
                 _credential = agent._credentials;
-                _expectedUsername = $"{_credential.UFragLocal}:{_credential.UFragRemote}";
             }
 
-            public async ValueTask<StunMessage?> HandleRequestAsync(
-                StunMessage message,
+            public async ValueTask<StunMessage?> HandleRequestAsync(StunMessage message,
                 UnknownAttributes? unknownAttributes,
                 IPEndPoint remoteEndPoint,
+                object? state,
                 CancellationToken cancellation = default)
             {
+                var endPoint = state as IIceEndPoint;
+                Debug.Assert(endPoint != null);
+
                 return message.Method switch
                 {
                     StunMethods.BindingRequest =>
-                        await HandleBindingRequestAsync(message, remoteEndPoint).ConfigureAwait(false),
+                        await HandleBindingRequestAsync(message, endPoint, remoteEndPoint).ConfigureAwait(false),
 
                     _ => null
                 };
@@ -38,6 +41,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
 
             private ValueTask<StunMessage?> HandleBindingRequestAsync(
                 StunMessage request,
+                IIceEndPoint endPoint,
                 IPEndPoint remoteEndPoint)
             {
                 if (!VerifyRequest(request))
@@ -46,17 +50,31 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                         CreateErrorResponse(request, 400, "Bad Request"));
                 }
 
-                var response = new StunMessage(
-                    request.TransactionId,
-                    StunClass.SuccessResponse,
-                    request.Method,
-                    [new XorMappedAddressAttribute(remoteEndPoint)]);
+                var bindingResult = _agent.HandleIncomingBindingRequest(request, endPoint, remoteEndPoint);
 
-                response = request.Attributes.OfType<MessageIntegritySha256Attribute>().Any()
-                    ? response.WithMessageIntegritySha256(_credential.PwdLocalBytes)
-                    : response.WithMessageIntegrity(_credential.PwdLocalBytes);
+                switch (bindingResult)
+                {
+                    case BindingResult.RoleConflict:
+                        return ValueTask.FromResult<StunMessage?>(
+                            CreateErrorResponse(request, 487, "Role Conflict"));
 
-                return ValueTask.FromResult<StunMessage?>(response.WithFingerprint());
+                    case BindingResult.Success:
+                        var response = new StunMessage(
+                            request.TransactionId,
+                            StunClass.SuccessResponse,
+                            request.Method,
+                            [new XorMappedAddressAttribute(remoteEndPoint)]);
+
+                        response = request.Attributes.OfType<MessageIntegritySha256Attribute>().Any()
+                            ? response.WithMessageIntegritySha256(_credential.PwdLocalBytes)
+                            : response.WithMessageIntegrity(_credential.PwdLocalBytes);
+
+                        return ValueTask.FromResult<StunMessage?>(response.WithFingerprint());
+
+                    default:
+                        return ValueTask.FromResult<StunMessage?>(
+                            CreateErrorResponse(request, 500, "Unexpected Error"));
+                }
             }
 
             private bool VerifyRequest(StunMessage request)
@@ -67,7 +85,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                         .OfType<UsernameAttribute>()
                         .FirstOrDefault();
 
-                    if (usernameAttribute == null || usernameAttribute.Username != _expectedUsername)
+                    if (usernameAttribute == null || usernameAttribute.Username != _credential.ResponderUsername)
                     {
                         return false;
                     }
@@ -128,10 +146,10 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                     .WithFingerprint();
             }
 
-            public ValueTask HandleIndicationAsync(
-                StunMessage message,
+            public ValueTask HandleIndicationAsync(StunMessage message,
                 UnknownAttributes? unknownAttributes,
                 IPEndPoint remoteEndPoint,
+                object? state,
                 CancellationToken cancellation = default)
             {
                 return ValueTask.CompletedTask;

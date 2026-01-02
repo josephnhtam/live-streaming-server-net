@@ -25,7 +25,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
             NominationState = IceCandidateNominationState.None;
         }
 
-        public Task<(StunMessage, UnknownAttributes?)> SendStunRequestAsync(StunMessage request, CancellationToken cancellation = default)
+        public Task<StunResponse> SendStunRequestAsync(StunMessage request, CancellationToken cancellation = default)
         {
             return LocalCandidate.IceEndPoint.SendStunRequestAsync(request, RemoteCandidate.EndPoint, cancellation);
         }

@@ -267,7 +267,7 @@ namespace LiveStreamingServerNet.WebRTC.Udp.Internal
             {
                 var current = _state;
 
-                if (expected.HasValue && ((int)current & (int)expected) != 0)
+                if (expected.HasValue && ((int)current & (int)expected) == 0)
                     return false;
 
                 if (current == newState)
