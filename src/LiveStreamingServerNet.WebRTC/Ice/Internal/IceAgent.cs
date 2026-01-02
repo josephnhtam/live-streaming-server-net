@@ -242,7 +242,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                 if (ConnectionState is IceConnectionState.Completed or IceConnectionState.Failed or IceConnectionState.Closed)
                     return;
 
-                if (_validPairs.Any(p => p.NominationState == IceCandidateNominationState.Nominating))
+                if (_validPairs.Any(p => p.NominationState == IceCandidateNominationState.ControllingNominating))
                     return;
 
                 var toNominate = _validPairs
@@ -252,8 +252,8 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                 if (toNominate is not { NominationState: IceCandidateNominationState.None })
                     return;
 
-                toNominate.NominationState = IceCandidateNominationState.Nominating;
-                ScheduleConnectivityCheck(toNominate, ConnectivityCheckReason.Nomination);
+                toNominate.NominationState = IceCandidateNominationState.ControllingNominating;
+                _checkList.TriggerCheck(toNominate);
             }
         }
 
@@ -294,7 +294,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                 Role == IceRole.Controlling ? new IceControllingAttribute(_tieBreaker) : new IceControlledAttribute(_tieBreaker),
             };
 
-            if (Role == IceRole.Controlling && reason == ConnectivityCheckReason.Nomination)
+            if (Role == IceRole.Controlling && pair.NominationState == IceCandidateNominationState.ControllingNominating && reason == ConnectivityCheckReason.Check)
             {
                 attributes.Add(new UseCandidateAttribute());
             }
@@ -308,29 +308,70 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
 
             try
             {
-                using var result = await pair.SendStunRequestAsync(request, cancellation);
+                using var result = await pair.SendStunRequestAsync(request, cancellation).ConfigureAwait(false);
+
                 var response = result.Message;
                 var remoteEndPoint = result.RemoteEndPoint;
 
-                if (response is not { Class: StunClass.SuccessResponse, Method: StunMethods.BindingRequest })
+                lock (_syncLock)
                 {
-                    OnCheckFailed(pair, reason);
-                    return;
+                    if (TryHandleRoleConflictError(pair, reason, response))
+                    {
+                        ScheduleConnectivityCheck(pair, reason);
+                        return;
+                    }
+
+                    if (response is not { Class: StunClass.SuccessResponse, Method: StunMethods.BindingRequest })
+                    {
+                        OnCheckFailed(pair, reason);
+                        return;
+                    }
+
+                    TryAdoptPeerReflexiveCandidate(pair.LocalCandidate.IceEndPoint, remoteEndPoint);
+
+                    OnCheckSucceeded(pair, reason);
                 }
-
-                AdoptPeerReflexiveCandidate(pair.LocalCandidate.IceEndPoint, remoteEndPoint);
-
-                OnCheckSucceeded(pair, reason);
             }
             catch (Exception ex)
             {
                 OnCheckFailed(pair, reason);
             }
+
+            return;
+
+            bool TryHandleRoleConflictError(IceCandidatePair pair, ConnectivityCheckReason reason, StunMessage response)
+            {
+                if (response.Class != StunClass.ErrorResponse)
+                    return false;
+
+                var errorCodeAttr = response.Attributes.OfType<ErrorCodeAttribute>().FirstOrDefault();
+                if (errorCodeAttr?.Code != 487)
+                    return false;
+
+                var newRole = (Role == IceRole.Controlling) ? IceRole.Controlled : IceRole.Controlling;
+                SwitchRole(newRole);
+                return true;
+            }
         }
 
-        private void AdoptPeerReflexiveCandidate(IIceEndPoint endPoint, IPEndPoint remoteEndPoint)
+        private void TryAdoptPeerReflexiveCandidate(IIceEndPoint endPoint, IPEndPoint remoteEndPoint)
         {
-            throw new NotImplementedException();
+            lock (_syncLock)
+            {
+                if (ConnectionState is (IceConnectionState.Completed or IceConnectionState.Failed or IceConnectionState.Closed))
+                    return;
+
+                if (_checkList.HasRemoteCandidate(remoteEndPoint))
+                    return;
+
+                var prflxCandidate = new RemoteIceCandidate(
+                    EndPoint: remoteEndPoint,
+                    Type: IceCandidateType.PeerReflexive,
+                    Foundation: IceFoundation.Create(IceCandidateType.PeerReflexive, remoteEndPoint.Address)
+                );
+
+                _checkList.AddRemoteCandidate(prflxCandidate, isTriggered: true);
+            }
         }
 
         private void OnCheckSucceeded(IceCandidatePair pair, ConnectivityCheckReason reason)
@@ -340,16 +381,30 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                 pair.State = IceCandidatePairState.Succeeded;
                 _validPairs.Add(pair);
 
-                if (reason == ConnectivityCheckReason.Nomination &&
-                    pair.NominationState == IceCandidateNominationState.Nominating)
+                if (reason == ConnectivityCheckReason.Check)
                 {
-                    if (Role == IceRole.Controlling)
+                    if (pair.NominationState == IceCandidateNominationState.ControllingNominating)
                     {
-                        SelectPair(pair);
+                        if (Role == IceRole.Controlling)
+                        {
+                            SelectPair(pair);
+                        }
+                        else
+                        {
+                            pair.NominationState = IceCandidateNominationState.None;
+                        }
                     }
-                    else
+
+                    if (pair.NominationState == IceCandidateNominationState.ControlledNominating)
                     {
-                        pair.NominationState = IceCandidateNominationState.None;
+                        if (Role == IceRole.Controlled)
+                        {
+                            SelectPair(pair);
+                        }
+                        else
+                        {
+                            pair.NominationState = IceCandidateNominationState.None;
+                        }
                     }
                 }
 
@@ -396,9 +451,101 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
             }
         }
 
-        private BindingResult HandleIncomingBindingRequest(StunMessage request, IIceEndPoint endPoint, IPEndPoint remoteEndPoint)
+        private BindingResult HandleIncomingBindingRequest(
+            StunMessage request, IIceEndPoint endPoint, IPEndPoint remoteEndPoint)
         {
-            return BindingResult.Success;
+            lock (_syncLock)
+            {
+                TryAdoptPeerReflexiveCandidate(endPoint, remoteEndPoint);
+
+                var roleConflictResult = TryHandleRoleConflict(request);
+                if (roleConflictResult.HasValue)
+                {
+                    return roleConflictResult.Value;
+                }
+
+                var pair = _checkList.FindPair(endPoint, remoteEndPoint);
+                if (pair == null)
+                {
+                    return BindingResult.Error;
+                }
+
+                TryHandlePriorityUpdate(request, pair);
+
+                TryHandleUseCandidate(request, pair);
+
+                TriggerConnectivityCheck(pair);
+
+                return BindingResult.Success;
+            }
+
+            BindingResult? TryHandleRoleConflict(StunMessage request)
+            {
+                var iceControlling = request.Attributes.OfType<IceControllingAttribute>().FirstOrDefault();
+                var iceControlled = request.Attributes.OfType<IceControlledAttribute>().FirstOrDefault();
+
+                if (iceControlled == null && iceControlling == null)
+                {
+                    return BindingResult.Error;
+                }
+
+                if (Role == IceRole.Controlling && iceControlling != null)
+                {
+                    if (iceControlling.TieBreaker >= _tieBreaker)
+                    {
+                        SwitchRole(IceRole.Controlled);
+                        return null;
+                    }
+
+                    return BindingResult.RoleConflict;
+                }
+
+                if (Role == IceRole.Controlled && iceControlled != null)
+                {
+                    return BindingResult.RoleConflict;
+                }
+
+                return null;
+            }
+
+            void TryHandlePriorityUpdate(StunMessage request, IceCandidatePair pair)
+            {
+                var priorityAttr = request.Attributes.OfType<PriorityAttribute>().FirstOrDefault();
+
+                if (priorityAttr == null)
+                    return;
+
+                pair.RemoteCandidate.Priority = priorityAttr.Priority;
+                pair.RefreshPriority(Role == IceRole.Controlling);
+            }
+
+            void TryHandleUseCandidate(StunMessage request, IceCandidatePair pair)
+            {
+                if (Role != IceRole.Controlled)
+                    return;
+
+                var useCandidateAttr = request.Attributes.OfType<UseCandidateAttribute>().FirstOrDefault();
+
+                if (useCandidateAttr == null)
+                    return;
+
+                if (pair.State == IceCandidatePairState.Succeeded)
+                {
+                    SelectPair(pair);
+                    return;
+                }
+
+                pair.NominationState = IceCandidateNominationState.ControlledNominating;
+                _checkList.TriggerCheck(pair);
+            }
+
+            void TriggerConnectivityCheck(IceCandidatePair pair)
+            {
+                if (pair.State == IceCandidatePairState.Succeeded)
+                    return;
+
+                _checkList.TriggerCheck(pair);
+            }
         }
 
         public void AddRemoteCandidate(RemoteIceCandidate? candidate)
@@ -415,7 +562,19 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                     return;
                 }
 
-                _checkList.AddRemoteCandidate(candidate);
+                _checkList.AddRemoteCandidate(candidate, isTriggered: false);
+            }
+        }
+
+        private void SwitchRole(IceRole role)
+        {
+            lock (_syncLock)
+            {
+                if (Role == role)
+                    return;
+
+                Role = role;
+                _checkList.UpdatePairsForRoleSwitch();
             }
         }
 
@@ -455,14 +614,14 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
         private enum ConnectivityCheckReason
         {
             Check,
-            KeepAlive,
-            Nomination
+            KeepAlive
         }
 
         private enum BindingResult
         {
             Success,
-            RoleConflict
+            RoleConflict,
+            Error
         }
     }
 }
