@@ -154,9 +154,9 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
             {
                 lock (_syncLock)
                 {
-                    foreach (var pair in _validPairs)
+                    if (_selectedPair != null)
                     {
-                        ScheduleConnectivityCheck(pair, ConnectivityCheckReason.KeepAlive);
+                        ScheduleConnectivityCheck(_selectedPair, ConnectivityCheckReason.KeepAlive);
                     }
                 }
             }
@@ -214,6 +214,12 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                 _selectedPair == null && _checkList.AllPairsChecked() && !_validPairs.Any();
         }
 
+        private bool ShouldNominatePair(IceCandidatePair pair)
+        {
+            var selectedPriority = _selectedPair?.Priority ?? 0UL;
+            return pair.Priority > selectedPriority;
+        }
+
         private void SelectPair(IceCandidatePair pair)
         {
             lock (_syncLock)
@@ -221,7 +227,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                 foreach (var validPair in _validPairs.Where(p =>
                     p != pair && p.NominationState == IceCandidateNominationState.Nominated))
                 {
-                    validPair.NominationState = IceCandidateNominationState.None;
+                    validPair.NominationState = IceCandidateNominationState.WasNominated;
                 }
 
                 pair.NominationState = IceCandidateNominationState.Nominated;
@@ -242,14 +248,16 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                 if (ConnectionState is IceConnectionState.Completed or IceConnectionState.Failed or IceConnectionState.Closed)
                     return;
 
-                if (_validPairs.Any(p => p.NominationState == IceCandidateNominationState.ControllingNominating))
+                if (_validPairs.Any(p => p.NominationState is IceCandidateNominationState.ControllingNominating))
                     return;
 
                 var toNominate = _validPairs
+                    .Where(p => p.NominationState is IceCandidateNominationState.None or IceCandidateNominationState.Nominated)
+                    .Where(ShouldNominatePair)
                     .OrderByDescending(p => p.Priority)
                     .FirstOrDefault();
 
-                if (toNominate is not { NominationState: IceCandidateNominationState.None })
+                if (toNominate == null)
                     return;
 
                 toNominate.NominationState = IceCandidateNominationState.ControllingNominating;
@@ -347,7 +355,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                 var errorCodeAttr = response.Attributes.OfType<ErrorCodeAttribute>().FirstOrDefault();
                 if (errorCodeAttr?.Code != 487)
                     return false;
-
+                
                 var newRole = (Role == IceRole.Controlling) ? IceRole.Controlled : IceRole.Controlling;
                 SwitchRole(newRole);
                 return true;
@@ -397,7 +405,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
 
                     if (pair.NominationState == IceCandidateNominationState.ControlledNominating)
                     {
-                        if (Role == IceRole.Controlled)
+                        if (Role == IceRole.Controlled && pair.UseCandidateReceived)
                         {
                             SelectPair(pair);
                         }
@@ -417,8 +425,11 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
             lock (_syncLock)
             {
                 pair.State = IceCandidatePairState.Failed;
-                pair.NominationState = IceCandidateNominationState.None;
-                _validPairs.Remove(pair);
+
+                if (pair.NominationState is IceCandidateNominationState.ControllingNominating or IceCandidateNominationState.ControlledNominating)
+                {
+                    pair.NominationState = IceCandidateNominationState.None;
+                }
 
                 if (_selectedPair == pair)
                 {
@@ -426,17 +437,19 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                     TryTransitionTo(IceConnectionState.Checking, expected: IceConnectionStateFlag.Connected | IceConnectionStateFlag.Completed);
                 }
 
+                _validPairs.Remove(pair);
+
                 CheckCompletion();
             }
         }
 
         private void OnLocalCandidateGathered(object gatherer, LocalIceCandidate? candidate)
         {
-            if (ConnectionState is (IceConnectionState.Completed or IceConnectionState.Failed or IceConnectionState.Closed))
-                return;
-
             lock (_syncLock)
             {
+                if (ConnectionState is (IceConnectionState.Completed or IceConnectionState.Failed or IceConnectionState.Closed))
+                    return;
+
                 if (candidate == null)
                 {
                     _localGatheringComplete = true;
@@ -524,10 +537,11 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                 if (Role != IceRole.Controlled)
                     return;
 
-                var useCandidateAttr = request.Attributes.OfType<UseCandidateAttribute>().FirstOrDefault();
-
-                if (useCandidateAttr == null)
+                if (!request.Attributes.OfType<UseCandidateAttribute>().Any())
                     return;
+
+                pair.UseCandidateReceived = true;
+                pair.NominationState = IceCandidateNominationState.ControlledNominating;
 
                 if (pair.State == IceCandidatePairState.Succeeded)
                 {
@@ -535,7 +549,6 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                     return;
                 }
 
-                pair.NominationState = IceCandidateNominationState.ControlledNominating;
                 _checkList.TriggerCheck(pair);
             }
 
@@ -550,11 +563,11 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
 
         public void AddRemoteCandidate(RemoteIceCandidate? candidate)
         {
-            if (ConnectionState is (IceConnectionState.Completed or IceConnectionState.Failed or IceConnectionState.Closed))
-                return;
-
             lock (_syncLock)
             {
+                if (ConnectionState is (IceConnectionState.Completed or IceConnectionState.Failed or IceConnectionState.Closed))
+                    return;
+
                 if (candidate == null)
                 {
                     _remoteGatheringComplete = true;
