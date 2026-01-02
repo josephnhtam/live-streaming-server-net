@@ -109,7 +109,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                         return triggeredPair;
                     }
 
-                    return _pairs.OrderByDescending(p => p.Priority).FirstOrDefault();
+                    return _pairs.Where(p => p.State == IceCandidatePairState.Waiting).OrderByDescending(p => p.Priority).FirstOrDefault();
                 }
 
                 void UnfreezePairs()
