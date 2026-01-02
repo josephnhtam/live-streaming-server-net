@@ -50,9 +50,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                         CreateErrorResponse(request, 400, "Bad Request"));
                 }
 
-                var bindingResult = _agent.HandleIncomingBindingRequest(request, endPoint, remoteEndPoint);
-
-                switch (bindingResult)
+                switch (GetBindingResult())
                 {
                     case BindingResult.RoleConflict:
                         return ValueTask.FromResult<StunMessage?>(
@@ -73,7 +71,20 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
 
                     default:
                         return ValueTask.FromResult<StunMessage?>(
-                            CreateErrorResponse(request, 500, "Unexpected Error"));
+                            CreateErrorResponse(request, 400, "Bad Request"));
+                }
+
+                BindingResult GetBindingResult()
+                {
+                    try
+                    {
+                        return _agent.HandleIncomingBindingRequest(request, endPoint, remoteEndPoint);
+                    }
+                    catch (Exception ex)
+                    {
+                        // todo: add logs
+                        return BindingResult.Error;
+                    }
                 }
             }
 

@@ -1,3 +1,7 @@
+using LiveStreamingServerNet.WebRTC.Ice.Internal.Contracts;
+using LiveStreamingServerNet.WebRTC.Utilities;
+using System.Net;
+
 namespace LiveStreamingServerNet.WebRTC.Ice.Internal
 {
     internal partial class IceAgent
@@ -11,6 +15,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
             private readonly List<LocalIceCandidate> _localCandidates = new();
             private readonly List<RemoteIceCandidate> _remoteCandidates = new();
             private readonly List<IceCandidatePair> _pairs = new();
+            private readonly Queue<IceCandidatePair> _triggeredChecks = new();
 
             public CheckList(IceAgent agent)
             {
@@ -40,7 +45,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                 }
             }
 
-            public bool AddRemoteCandidate(RemoteIceCandidate remoteCandidate)
+            public bool AddRemoteCandidate(RemoteIceCandidate remoteCandidate, bool isTriggered)
             {
                 lock (_syncLock)
                 {
@@ -54,6 +59,11 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
 
                         var pair = new IceCandidatePair(localCandidate, remoteCandidate, isControlling);
                         _pairs.Add(pair);
+
+                        if (isTriggered)
+                        {
+                            TriggerCheck(pair);
+                        }
                     }
 
                     PrunePairs();
@@ -73,6 +83,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                     }
 
                     var removables = _pairs
+                        .Where(p => !p.IsTriggered)
                         .Where(p => p.State is IceCandidatePairState.Failed or IceCandidatePairState.Frozen or IceCandidatePairState.Waiting)
                         .OrderBy(p =>
                         {
@@ -98,16 +109,15 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
             {
                 lock (_syncLock)
                 {
-                    UnfreezePairs();
-
-                    var triggeredPair = _pairs
-                        .FirstOrDefault(p => p is { IsTriggered: true, State: IceCandidatePairState.Waiting or IceCandidatePairState.Frozen });
+                    var triggeredPair = _triggeredChecks.FirstOrDefault();
 
                     if (triggeredPair != null)
                     {
                         triggeredPair.IsTriggered = false;
                         return triggeredPair;
                     }
+
+                    UnfreezePairs();
 
                     return _pairs.Where(p => p.State == IceCandidatePairState.Waiting).OrderByDescending(p => p.Priority).FirstOrDefault();
                 }
@@ -132,11 +142,55 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                 }
             }
 
+            public void TriggerCheck(IceCandidatePair pair)
+            {
+                lock (_syncLock)
+                {
+                    if (!_triggeredChecks.Contains(pair))
+                    {
+                        pair.IsTriggered = true;
+
+                        _triggeredChecks.Enqueue(pair);
+                    }
+                }
+            }
+
             public bool AllPairsChecked()
             {
                 lock (_syncLock)
                 {
                     return _pairs.All(p => p.State is IceCandidatePairState.Succeeded or IceCandidatePairState.Failed);
+                }
+            }
+
+            public bool HasRemoteCandidate(IPEndPoint remoteEndPoint)
+            {
+                lock (_syncLock)
+                {
+                    return _pairs.Any(p => p.RemoteCandidate.EndPoint.IsEquivalent(remoteEndPoint));
+                }
+            }
+
+            public void UpdatePairsForRoleSwitch()
+            {
+                lock (_syncLock)
+                {
+                    var isControlling = _agent.Role == IceRole.Controlling;
+
+                    foreach (var pair in _pairs)
+                    {
+                        pair.RefreshPriority(isControlling);
+                    }
+                }
+            }
+
+            public IceCandidatePair? FindPair(IIceEndPoint localEndPoint, IPEndPoint remoteEndPoint)
+            {
+                lock (_syncLock)
+                {
+                    return _pairs.FirstOrDefault(p =>
+                        p.LocalCandidate.IceEndPoint == localEndPoint &&
+                        p.RemoteCandidate.EndPoint.IsEquivalent(remoteEndPoint));
                 }
             }
         }
