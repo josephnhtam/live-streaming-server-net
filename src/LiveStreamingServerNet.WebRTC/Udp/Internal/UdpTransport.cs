@@ -85,7 +85,7 @@ namespace LiveStreamingServerNet.WebRTC.Udp.Internal
 
         public bool Start()
         {
-            if (!TryTransitionTo(UdpTransportState.Started, UdpTransportState.New))
+            if (!TryTransitionTo(UdpTransportState.Started, UdpTransportStateFlag.New))
                 return false;
 
             var token = _cts.Token;
@@ -99,7 +99,7 @@ namespace LiveStreamingServerNet.WebRTC.Udp.Internal
 
         public bool Close()
         {
-            if (!TryTransitionTo(UdpTransportState.Closed, UdpTransportState.New, UdpTransportState.Started))
+            if (!TryTransitionTo(UdpTransportState.Closed, UdpTransportStateFlag.New | UdpTransportStateFlag.Started))
                 return false;
 
             _sendChannel.Writer.TryComplete();
@@ -261,13 +261,13 @@ namespace LiveStreamingServerNet.WebRTC.Udp.Internal
             }
         }
 
-        private bool TryTransitionTo(UdpTransportState newState, params UdpTransportState[] expected)
+        private bool TryTransitionTo(UdpTransportState newState, UdpTransportStateFlag? expected = null)
         {
             lock (_stateLock)
             {
                 var current = _state;
 
-                if (expected is { Length: > 0 } && Array.IndexOf(expected, current) < 0)
+                if (expected.HasValue && ((int)current & (int)expected) != 0)
                     return false;
 
                 if (current == newState)

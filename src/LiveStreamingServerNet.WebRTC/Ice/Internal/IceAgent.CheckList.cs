@@ -8,47 +8,21 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
             private readonly int _maxCheckListSize;
             private readonly object _syncLock;
 
-            private readonly List<LocalIceCandidate> _localCandidates;
-            private readonly List<RemoteIceCandidate> _remoteCandidates;
-            private readonly List<IceCandidatePair> _pairs;
-
-            private bool _localGatheringComplete;
-            private bool _remoteGatheringComplete;
+            private readonly List<LocalIceCandidate> _localCandidates = new();
+            private readonly List<RemoteIceCandidate> _remoteCandidates = new();
+            private readonly List<IceCandidatePair> _pairs = new();
 
             public CheckList(IceAgent agent)
             {
                 _agent = agent;
                 _maxCheckListSize = agent._config.MaxCheckListSize;
                 _syncLock = agent._syncLock;
-
-                _localCandidates = new List<LocalIceCandidate>();
-                _remoteCandidates = new List<RemoteIceCandidate>();
-                _pairs = new List<IceCandidatePair>();
             }
 
-            public bool AddLocalCandidate(LocalIceCandidate? candidate)
+            public bool AddLocalCandidate(LocalIceCandidate localCandidate)
             {
                 lock (_syncLock)
                 {
-                    if (_localGatheringComplete)
-                    {
-                        return false;
-                    }
-
-                    if (candidate == null)
-                    {
-                        _localGatheringComplete = true;
-                        CheckCompletion();
-                        return false;
-                    }
-
-                    DoAddLocalCandidate(candidate);
-                    return true;
-                }
-
-                void DoAddLocalCandidate(LocalIceCandidate localCandidate)
-                {
-                    var pairAdded = false;
                     var isControlling = _agent.Role == IceRole.Controlling;
 
                     _localCandidates.Add(localCandidate);
@@ -59,39 +33,17 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
 
                         var pair = new IceCandidatePair(localCandidate, remoteCandidate, isControlling);
                         _pairs.Add(pair);
-                        pairAdded = true;
                     }
 
-                    if (pairAdded)
-                    {
-                        RefreshPairs();
-                    }
+                    PrunePairs();
+                    return true;
                 }
             }
 
-            public bool AddRemoteCandidate(RemoteIceCandidate? candidate)
+            public bool AddRemoteCandidate(RemoteIceCandidate remoteCandidate)
             {
                 lock (_syncLock)
                 {
-                    if (_remoteGatheringComplete)
-                    {
-                        return false;
-                    }
-
-                    if (candidate == null)
-                    {
-                        _remoteGatheringComplete = true;
-                        CheckCompletion();
-                        return false;
-                    }
-
-                    DoAddRemoteCandidate(candidate);
-                    return true;
-                }
-
-                void DoAddRemoteCandidate(RemoteIceCandidate remoteCandidate)
-                {
-                    var pairAdded = false;
                     var isControlling = _agent.Role == IceRole.Controlling;
 
                     _remoteCandidates.Add(remoteCandidate);
@@ -102,71 +54,89 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
 
                         var pair = new IceCandidatePair(localCandidate, remoteCandidate, isControlling);
                         _pairs.Add(pair);
-                        pairAdded = true;
                     }
 
-                    if (pairAdded)
-                    {
-                        RefreshPairs();
-                    }
+                    PrunePairs();
+                    return true;
                 }
             }
 
-            private void RefreshPairs()
+            private void PrunePairs()
             {
                 lock (_syncLock)
                 {
-                    PrunePairs();
-                    UnfreezePairs();
-                }
-
-                return;
-
-                void PrunePairs()
-                {
                     var toRemoveCount = _pairs.Count - _maxCheckListSize;
 
-                    if (toRemoveCount > 0)
+                    if (toRemoveCount <= 0)
+                    {
                         return;
+                    }
 
                     var removables = _pairs
-                        .Where(p => p.State is IceCandidatePairState.Frozen or IceCandidatePairState.Waiting)
-                        .OrderBy(p => p.Priority)
-                        .Take(toRemoveCount);
+                        .Where(p => p.State is IceCandidatePairState.Failed or IceCandidatePairState.Frozen or IceCandidatePairState.Waiting)
+                        .OrderBy(p =>
+                        {
+                            return p.State switch
+                            {
+                                IceCandidatePairState.Failed => 0,
+                                IceCandidatePairState.Frozen => 1,
+                                _ => 2
+                            };
+                        })
+                        .ThenBy(p => p.Priority)
+                        .Take(toRemoveCount)
+                        .ToList();
 
                     foreach (var toRemove in removables)
                     {
                         _pairs.Remove(toRemove);
                     }
                 }
+            }
+
+            public IceCandidatePair? GetNextPair()
+            {
+                lock (_syncLock)
+                {
+                    UnfreezePairs();
+
+                    var triggeredPair = _pairs
+                        .FirstOrDefault(p => p is { IsTriggered: true, State: IceCandidatePairState.Waiting or IceCandidatePairState.Frozen });
+
+                    if (triggeredPair != null)
+                    {
+                        triggeredPair.IsTriggered = false;
+                        return triggeredPair;
+                    }
+
+                    return _pairs.OrderByDescending(p => p.Priority).FirstOrDefault();
+                }
 
                 void UnfreezePairs()
                 {
-                    var firstPairByFoundation = _pairs
-                        .GroupBy(p => p.Foundation)
-                        .ToDictionary(g => g.Key, g => g.OrderByDescending(p => p.Priority).First());
-
-                    foreach (var pair in firstPairByFoundation.Values)
+                    lock (_syncLock)
                     {
-                        if (pair.State == IceCandidatePairState.Frozen)
+                        if (!_pairs.Any(p => p.State is IceCandidatePairState.Waiting or IceCandidatePairState.InProgress))
                         {
-                            pair.State = IceCandidatePairState.Waiting;
+                            var nextFrozen = _pairs
+                                .Where(p => p.State == IceCandidatePairState.Frozen)
+                                .OrderByDescending(p => p.Priority)
+                                .FirstOrDefault();
+
+                            if (nextFrozen != null)
+                            {
+                                nextFrozen.State = IceCandidatePairState.Waiting;
+                            }
                         }
                     }
                 }
             }
 
-            private void CheckCompletion()
+            public bool AllPairsChecked()
             {
                 lock (_syncLock)
                 {
-                    if (!_localGatheringComplete || !_remoteGatheringComplete)
-                        return;
-
-                    var allPairsChecked = _pairs.All(p => p.State is IceCandidatePairState.Succeeded or IceCandidatePairState.Failed);
-
-                    // _agent.TryTransitionTo(IceConnectionState.Completed);
-                    // _agent.TryTransitionTo(IceConnectionState.Failed);
+                    return _pairs.All(p => p.State is IceCandidatePairState.Succeeded or IceCandidatePairState.Failed);
                 }
             }
         }

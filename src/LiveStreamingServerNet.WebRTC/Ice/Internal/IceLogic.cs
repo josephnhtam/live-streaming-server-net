@@ -4,20 +4,20 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
 {
     internal static class IceLogic
     {
-        public static ulong CalculateCandidatePriority(IceCandidateType type, ushort localPreference = 65535, int componentId = 1)
+        public static uint CalculateCandidatePriority(IceCandidateType type, ushort localPreference = 65535, int componentId = 1)
         {
             var typePreference = type switch
             {
-                IceCandidateType.Host => 126UL,
-                IceCandidateType.PeerReflexive => 110UL,
-                IceCandidateType.ServerReflexive => 100UL,
-                _ => 0UL
+                IceCandidateType.Host => 126,
+                IceCandidateType.PeerReflexive => 110,
+                IceCandidateType.ServerReflexive => 100,
+                _ => 0
             };
 
-            return ((1UL << 24) * typePreference) + ((256UL << 8) * localPreference) + ((256UL << 8) - (ulong)componentId);
+            return (uint)(((1 << 24) * typePreference) + ((256 << 8) * localPreference) + ((256 << 8) - componentId));
         }
 
-        public static ulong CalculateCandidatePairPriority(ulong localPriority, ulong remotePriority, bool isControlling)
+        public static ulong CalculateCandidatePairPriority(uint localPriority, uint remotePriority, bool isControlling)
         {
             var g = isControlling ? localPriority : remotePriority;
             var d = isControlling ? remotePriority : localPriority;

@@ -1,6 +1,6 @@
 namespace LiveStreamingServerNet.WebRTC.Ice.Internal.Contracts
 {
-    internal interface IceCandidateGatherFactory
+    internal interface IceCandidateGathererFactory
     {
         IIceCandidateGatherer Create();
     }
