@@ -149,12 +149,17 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                 ushort errorCode,
                 string reason)
             {
-                return new StunMessage(
-                        request.TransactionId,
-                        StunClass.ErrorResponse,
-                        request.Method,
-                        [new ErrorCodeAttribute(errorCode, reason)])
-                    .WithFingerprint();
+                var response = new StunMessage(
+                    request.TransactionId,
+                    StunClass.ErrorResponse,
+                    request.Method,
+                    [new ErrorCodeAttribute(errorCode, reason)]);
+
+                response = request.Attributes.OfType<MessageIntegritySha256Attribute>().Any()
+                    ? response.WithMessageIntegritySha256(_credential.PwdLocalBytes)
+                    : response.WithMessageIntegrity(_credential.PwdLocalBytes);
+
+                return response.WithFingerprint();
             }
 
             public ValueTask HandleIndicationAsync(StunMessage message,
