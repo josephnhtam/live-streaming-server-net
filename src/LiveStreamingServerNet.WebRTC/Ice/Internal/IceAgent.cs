@@ -252,7 +252,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                     return;
 
                 var toNominate = _validPairs
-                    .Where(p => p.NominationState is IceCandidateNominationState.None or IceCandidateNominationState.Nominated)
+                    .Where(p => p.NominationState is IceCandidateNominationState.None or IceCandidateNominationState.WasNominated)
                     .Where(ShouldNominatePair)
                     .OrderByDescending(p => p.Priority)
                     .FirstOrDefault();
@@ -295,17 +295,20 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
 
         private async Task PerformConnectivityCheckAsync(IceCandidatePair pair, ConnectivityCheckReason reason, CancellationToken cancellation)
         {
-            var attributes = new List<IStunAttribute>
-            {
-                new UsernameAttribute(_credentials.RequesterUsername),
-                new PriorityAttribute(pair.LocalCandidate.Priority),
-                Role == IceRole.Controlling ? new IceControllingAttribute(_tieBreaker) : new IceControlledAttribute(_tieBreaker),
-            };
+            IceRole requestRole;
+            bool isControllingNominating;
 
-            if (Role == IceRole.Controlling && pair.NominationState == IceCandidateNominationState.ControllingNominating && reason == ConnectivityCheckReason.Check)
+            lock (_syncLock)
             {
-                attributes.Add(new UseCandidateAttribute());
+                requestRole = Role;
+
+                isControllingNominating =
+                    Role == IceRole.Controlling &&
+                    reason == ConnectivityCheckReason.Check &&
+                    pair.NominationState == IceCandidateNominationState.ControllingNominating;
             }
+
+            var attributes = CreateStunAttributes(requestRole, isControllingNominating);
 
             using var request = new StunMessage(
                     StunClass.Request,
@@ -323,7 +326,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
 
                 lock (_syncLock)
                 {
-                    if (TryHandleRoleConflictError(pair, reason, response))
+                    if (TryHandleRoleConflictError(requestRole, response))
                     {
                         ScheduleConnectivityCheck(pair, reason);
                         return;
@@ -347,7 +350,24 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
 
             return;
 
-            bool TryHandleRoleConflictError(IceCandidatePair pair, ConnectivityCheckReason reason, StunMessage response)
+            List<IStunAttribute> CreateStunAttributes(IceRole requestRole, bool isControllingNominating)
+            {
+                var stunAttributes = new List<IStunAttribute>
+                {
+                    new UsernameAttribute(_credentials.RequesterUsername),
+                    new PriorityAttribute(pair.LocalCandidate.Priority),
+                    requestRole == IceRole.Controlling ? new IceControllingAttribute(_tieBreaker) : new IceControlledAttribute(_tieBreaker),
+                };
+
+                if (isControllingNominating)
+                {
+                    stunAttributes.Add(new UseCandidateAttribute());
+                }
+
+                return stunAttributes;
+            }
+
+            bool TryHandleRoleConflictError(IceRole requestRole, StunMessage response)
             {
                 if (response.Class != StunClass.ErrorResponse)
                     return false;
@@ -355,8 +375,8 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                 var errorCodeAttr = response.Attributes.OfType<ErrorCodeAttribute>().FirstOrDefault();
                 if (errorCodeAttr?.Code != 487)
                     return false;
-                
-                var newRole = (Role == IceRole.Controlling) ? IceRole.Controlled : IceRole.Controlling;
+
+                var newRole = (requestRole == IceRole.Controlling) ? IceRole.Controlled : IceRole.Controlling;
                 SwitchRole(newRole);
                 return true;
             }
@@ -598,10 +618,10 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                 if (ConnectionState == newState)
                     return false;
 
-                if (expected.HasValue && ((int)newState & (int)expected) == 0)
+                if (expected.HasValue && ((int)ConnectionState & (int)expected) == 0)
                     return false;
 
-                if (excluded.HasValue && ((int)newState & (int)excluded) != 0)
+                if (excluded.HasValue && ((int)ConnectionState & (int)excluded) != 0)
                     return false;
 
                 ConnectionState = newState;
@@ -617,7 +637,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
 
             _cts.Cancel();
 
-            List<Task?> tasks = [_checkerTask, _keepaliveTask, _nominatingTask, .._connectivityCheckTasks.Keys];
+            List<Task?> tasks = [_checkerTask, _keepaliveTask, _nominatingTask, .. _connectivityCheckTasks.Keys];
             await ErrorBoundary.ExecuteAsync(async () =>
                 await Task.WhenAll(tasks.Where(t => t != null)!).ConfigureAwait(false)).ConfigureAwait(false);
 
