@@ -28,6 +28,10 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
             {
                 lock (_syncLock)
                 {
+                    if (_localCandidates.Any(c => c.EndPoint.IsEquivalent(localCandidate.EndPoint)))
+                        return false;
+
+                    var newPairs = new List<IceCandidatePair>();
                     var isControlling = _agent.Role == IceRole.Controlling;
 
                     _localCandidates.Add(localCandidate);
@@ -37,9 +41,12 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                             continue;
 
                         var pair = new IceCandidatePair(localCandidate, remoteCandidate, isControlling);
+
                         _pairs.Add(pair);
+                        newPairs.Add(pair);
                     }
 
+                    UnfreezeNewPairs(newPairs);
                     PrunePairs();
                     return true;
                 }
@@ -49,7 +56,11 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
             {
                 lock (_syncLock)
                 {
+                    if (_remoteCandidates.Any(c => c.EndPoint.IsEquivalent(remoteCandidate.EndPoint)))
+                        return false;
+
                     var isControlling = _agent.Role == IceRole.Controlling;
+                    var newPairs = new List<IceCandidatePair>();
 
                     _remoteCandidates.Add(remoteCandidate);
                     foreach (var localCandidate in _localCandidates)
@@ -59,11 +70,17 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
 
                         var pair = new IceCandidatePair(localCandidate, remoteCandidate, isControlling);
                         _pairs.Add(pair);
+                        newPairs.Add(pair);
 
                         if (isTriggered)
                         {
                             TriggerCheck(pair);
                         }
+                    }
+
+                    if (!isTriggered)
+                    {
+                        UnfreezeNewPairs(newPairs);
                     }
 
                     PrunePairs();
@@ -126,22 +143,73 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
 
                     return _pairs.Where(p => p.State == IceCandidatePairState.Waiting).OrderByDescending(p => p.Priority).FirstOrDefault();
                 }
+            }
 
-                void UnfreezePairs()
+            private void UnfreezePairs()
+            {
+                lock (_syncLock)
                 {
-                    lock (_syncLock)
-                    {
-                        if (!_pairs.Any(p => p.State is IceCandidatePairState.Waiting or IceCandidatePairState.InProgress))
-                        {
-                            var nextFrozen = _pairs
-                                .Where(p => p.State == IceCandidatePairState.Frozen)
-                                .OrderByDescending(p => p.Priority)
-                                .FirstOrDefault();
+                    if (_pairs.Any(p => p.State is IceCandidatePairState.Waiting or IceCandidatePairState.InProgress))
+                        return;
 
-                            if (nextFrozen != null)
+                    var frozenByFoundation = _pairs
+                        .Where(p => p.State == IceCandidatePairState.Frozen)
+                        .GroupBy(p => p.Foundation);
+
+                    foreach (var group in frozenByFoundation)
+                    {
+                        var highestPriority = group.OrderByDescending(p => p.Priority).First();
+                        highestPriority.State = IceCandidatePairState.Waiting;
+                    }
+                }
+            }
+
+            private void UnfreezeNewPairs(List<IceCandidatePair> newPairs)
+            {
+                lock (_syncLock)
+                {
+                    if (!newPairs.Any())
+                        return;
+
+                    var activeFoundations = _pairs
+                        .Where(p => !newPairs.Contains(p))
+                        .Where(p => p.State is IceCandidatePairState.Waiting or IceCandidatePairState.InProgress)
+                        .Select(p => p.Foundation)
+                        .ToHashSet();
+
+                    var newPairsByFoundation = newPairs
+                        .Where(p => p.State == IceCandidatePairState.Frozen)
+                        .GroupBy(p => p.Foundation);
+
+                    foreach (var group in newPairsByFoundation)
+                    {
+                        var foundation = group.Key;
+
+                        if (activeFoundations.Contains(foundation))
+                        {
+                            foreach (var pair in group)
                             {
-                                nextFrozen.State = IceCandidatePairState.Waiting;
+                                pair.State = IceCandidatePairState.Waiting;
                             }
+                        }
+                        else
+                        {
+                            var highestPriority = group.OrderByDescending(p => p.Priority).First();
+                            highestPriority.State = IceCandidatePairState.Waiting;
+                        }
+                    }
+                }
+            }
+
+            public void UnfreezePairsWithFoundation(string foundation)
+            {
+                lock (_syncLock)
+                {
+                    foreach (var pair in _pairs)
+                    {
+                        if (pair.State == IceCandidatePairState.Frozen && pair.Foundation == foundation)
+                        {
+                            pair.State = IceCandidatePairState.Waiting;
                         }
                     }
                 }
