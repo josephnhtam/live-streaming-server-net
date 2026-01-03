@@ -8,6 +8,9 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal.Logging
         [LoggerMessage(LogLevel.Debug, "Candidate pair added (Identifier={Identifier}, Role={Role}, Local={LocalEndPoint}, Remote={RemoteEndPoint}, LocalType={LocalType}, RemoteType={RemoteType}, State={State}, Priority={Priority})")]
         public static partial void CandidatePairAdded(this ILogger logger, string identifier, IceRole role, IPEndPoint localEndPoint, IPEndPoint remoteEndPoint, IceCandidateType localType, IceCandidateType remoteType, IceCandidatePairState state, ulong priority);
 
+        [LoggerMessage(LogLevel.Trace, "Sending connectivity check (Identifier={Identifier}, Role={Role}, Local={LocalEndPoint}, Remote={RemoteEndPoint}, Nominating={IsNominating})")]
+        public static partial void SendingConnectivityCheck(this ILogger logger, string identifier, IceRole role, IPEndPoint localEndPoint, IPEndPoint remoteEndPoint, bool isNominating);
+
         [LoggerMessage(LogLevel.Debug, "Connectivity check succeeded (Identifier={Identifier}, Role={Role}, Local={LocalEndPoint}, Remote={RemoteEndPoint}, Nominating={IsNominating})")]
         public static partial void ConnectivityCheckSucceeded(this ILogger logger, string identifier, IceRole role, IPEndPoint localEndPoint, IPEndPoint remoteEndPoint, bool isNominating);
 

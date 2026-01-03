@@ -333,6 +333,12 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                 .WithMessageIntegrity(_credentials.PwdRemoteBytes)
                 .WithFingerprint();
 
+            _logger.SendingConnectivityCheck(
+                Identifier, requestRole,
+                pair.LocalCandidate.EndPoint,
+                pair.RemoteCandidate.EndPoint,
+                isControllingNominating);
+
             try
             {
                 using var result = await pair.SendStunRequestAsync(request, cancellation).ConfigureAwait(false);
