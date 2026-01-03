@@ -325,7 +325,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                     StunClass.Request,
                     StunMethods.BindingRequest,
                     attributes)
-                .WithMessageIntegrity(_credentials.PwdLocalBytes)
+                .WithMessageIntegrity(_credentials.PwdRemoteBytes)
                 .WithFingerprint();
 
             try
