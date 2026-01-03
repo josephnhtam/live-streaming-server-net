@@ -264,6 +264,8 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal
             TaskCompletionSource<StunResponse> tcs,
             CancellationToken cancellation)
         {
+            var startTime = DateTime.UtcNow;
+
             for (var retries = 0; retries <= _config.MaxRetransmissions; retries++)
             {
                 cancellation.ThrowIfCancellationRequested();
@@ -293,8 +295,7 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal
                 return await tcs.Task.ConfigureAwait(false);
             }
 
-            throw new TimeoutException(
-                $"STUN transaction timed out after {transactionTimeout} ms.");
+            throw new TimeoutException($"STUN transaction timed out after {DateTime.UtcNow - startTime} ms.");
         }
 
         private async Task IncomingMessageLoopAsync(CancellationToken cancellation)
