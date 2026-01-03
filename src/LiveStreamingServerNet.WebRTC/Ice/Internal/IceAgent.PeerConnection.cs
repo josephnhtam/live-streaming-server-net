@@ -16,6 +16,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
             };
 
             _logger.CandidatePairAdded(
+                Identifier, Role,
                 pair.LocalCandidate.EndPoint,
                 pair.RemoteCandidate.EndPoint,
                 pair.LocalCandidate.Type,
