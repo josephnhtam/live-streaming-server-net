@@ -1,5 +1,6 @@
 using LiveStreamingServerNet.WebRTC.Ice.Internal.Contracts;
 using LiveStreamingServerNet.WebRTC.Ice.Internal.Exceptions;
+using LiveStreamingServerNet.WebRTC.Ice.Internal.Logging;
 
 namespace LiveStreamingServerNet.WebRTC.Ice.Internal
 {
@@ -13,6 +14,15 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
             {
                 OnPacketReceived(pair, args);
             };
+
+            _logger.CandidatePairAdded(
+                pair.LocalCandidate.EndPoint,
+                pair.RemoteCandidate.EndPoint,
+                pair.LocalCandidate.Type,
+                pair.RemoteCandidate.Type,
+                pair.State,
+                pair.Priority
+            );
         }
 
         private bool SendPacket(IceCandidatePair pair, ReadOnlyMemory<byte> packet)
