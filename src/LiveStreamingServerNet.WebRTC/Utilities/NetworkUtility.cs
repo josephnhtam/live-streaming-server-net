@@ -45,5 +45,18 @@ namespace LiveStreamingServerNet.WebRTC.Utilities
 
             return socket;
         }
+
+        public static bool IsPrivateIPv4Address(IPAddress address)
+        {
+            if (address.AddressFamily != AddressFamily.InterNetwork)
+                return false;
+
+            Span<byte> bytes = stackalloc byte[4];
+            address.TryWriteBytes(bytes, out _);
+
+            return bytes[0] == 10 ||
+                (bytes[0] == 172 && bytes[1] >= 16 && bytes[1] <= 31) ||
+                (bytes[0] == 192 && bytes[1] == 168);
+        }
     }
 }

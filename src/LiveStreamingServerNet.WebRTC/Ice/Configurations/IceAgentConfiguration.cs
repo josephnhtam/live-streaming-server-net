@@ -22,8 +22,8 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Configurations
 
         /// <summary>
         /// Maximum number of concurrent connectivity checks.
-        /// Default: 256.
+        /// Default: 0. (0 means no limit).
         /// </summary>
-        public int MaxConcurrentConnectivityChecks { get; set; } = 256;
+        public int MaxConcurrentConnectivityChecks { get; set; } = 0;
     }
 }

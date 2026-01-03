@@ -296,6 +296,9 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
         {
             lock (_syncLock)
             {
+                if (_config.MaxConcurrentConnectivityChecks <= 0)
+                    return false;
+
                 return _connectivityCheckTasks.Count >= _config.MaxConcurrentConnectivityChecks;
             }
         }
@@ -337,6 +340,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                 Identifier, requestRole,
                 pair.LocalCandidate.EndPoint,
                 pair.RemoteCandidate.EndPoint,
+                pair.Foundation,
                 isControllingNominating);
 
             try
@@ -427,6 +431,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                         Identifier, Role,
                         pair.LocalCandidate.EndPoint,
                         pair.RemoteCandidate.EndPoint,
+                        pair.Foundation,
                         isControllingNominating
                     );
 
@@ -494,6 +499,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                         Identifier, Role,
                         pair.LocalCandidate.EndPoint,
                         pair.RemoteCandidate.EndPoint,
+                        pair.Foundation,
                         isControllingNominating,
                         failureReason
                     );

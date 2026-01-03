@@ -8,14 +8,14 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal.Logging
         [LoggerMessage(LogLevel.Debug, "Candidate pair added (Identifier={Identifier}, Role={Role}, Local={LocalEndPoint}, Remote={RemoteEndPoint}, LocalType={LocalType}, RemoteType={RemoteType}, State={State}, Priority={Priority})")]
         public static partial void CandidatePairAdded(this ILogger logger, string identifier, IceRole role, IPEndPoint localEndPoint, IPEndPoint remoteEndPoint, IceCandidateType localType, IceCandidateType remoteType, IceCandidatePairState state, ulong priority);
 
-        [LoggerMessage(LogLevel.Trace, "Sending connectivity check (Identifier={Identifier}, Role={Role}, Local={LocalEndPoint}, Remote={RemoteEndPoint}, Nominating={IsNominating})")]
-        public static partial void SendingConnectivityCheck(this ILogger logger, string identifier, IceRole role, IPEndPoint localEndPoint, IPEndPoint remoteEndPoint, bool isNominating);
+        [LoggerMessage(LogLevel.Trace, "Sending connectivity check (Identifier={Identifier}, Role={Role}, Local={LocalEndPoint}, Remote={RemoteEndPoint}, Foundation={Foundation}, Nominating={IsNominating})")]
+        public static partial void SendingConnectivityCheck(this ILogger logger, string identifier, IceRole role, IPEndPoint localEndPoint, IPEndPoint remoteEndPoint, string foundation, bool isNominating);
 
-        [LoggerMessage(LogLevel.Debug, "Connectivity check succeeded (Identifier={Identifier}, Role={Role}, Local={LocalEndPoint}, Remote={RemoteEndPoint}, Nominating={IsNominating})")]
-        public static partial void ConnectivityCheckSucceeded(this ILogger logger, string identifier, IceRole role, IPEndPoint localEndPoint, IPEndPoint remoteEndPoint, bool isNominating);
+        [LoggerMessage(LogLevel.Debug, "Connectivity check succeeded (Identifier={Identifier}, Role={Role}, Local={LocalEndPoint}, Remote={RemoteEndPoint}, Foundation={Foundation}, Nominating={IsNominating})")]
+        public static partial void ConnectivityCheckSucceeded(this ILogger logger, string identifier, IceRole role, IPEndPoint localEndPoint, IPEndPoint remoteEndPoint, string foundation, bool isNominating);
 
-        [LoggerMessage(LogLevel.Debug, "Connectivity check failed (Identifier={Identifier}, Role={Role}, Local={LocalEndPoint}, Remote={RemoteEndPoint}, Nominating={IsNominating}, Reason={Reason})")]
-        public static partial void ConnectivityCheckFailed(this ILogger logger, string identifier, IceRole role, IPEndPoint localEndPoint, IPEndPoint remoteEndPoint, bool isNominating, string reason);
+        [LoggerMessage(LogLevel.Debug, "Connectivity check failed (Identifier={Identifier}, Role={Role}, Local={LocalEndPoint}, Remote={RemoteEndPoint}, Foundation={Foundation}, Nominating={IsNominating}, Reason={Reason})")]
+        public static partial void ConnectivityCheckFailed(this ILogger logger, string identifier, IceRole role, IPEndPoint localEndPoint, IPEndPoint remoteEndPoint, string foundation, bool isNominating, string reason);
 
         [LoggerMessage(LogLevel.Debug, "Nominating pair (Identifier={Identifier}, Role={Role}, Local={LocalEndPoint}, Remote={RemoteEndPoint})")]
         public static partial void NominatingPair(this ILogger logger, string identifier, IceRole role, IPEndPoint localEndPoint, IPEndPoint remoteEndPoint);
