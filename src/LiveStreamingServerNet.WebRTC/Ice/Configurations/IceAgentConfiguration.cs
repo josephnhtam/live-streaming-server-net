@@ -10,9 +10,9 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Configurations
 
         /// <summary>
         /// Interval for keeping alive.
-        /// Default: 15 seconds.
+        /// Default: 5 seconds.
         /// </summary>
-        public TimeSpan KeepAliveInterval { get; set; } = TimeSpan.FromSeconds(15);
+        public TimeSpan KeepAliveInterval { get; set; } = TimeSpan.FromSeconds(5);
 
         /// <summary>
         /// Maximum size of the checklist.
