@@ -436,6 +436,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                     }
                 }
 
+                _checkList.UnfreezePairsWithFoundation(pair.Foundation);
                 CheckCompletion();
             }
         }
