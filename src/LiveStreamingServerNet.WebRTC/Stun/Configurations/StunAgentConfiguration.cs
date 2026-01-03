@@ -16,9 +16,9 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Configurations
 
         /// <summary>
         /// Max retransmissions.
-        /// Default: 7.
+        /// Default: 14.
         /// </summary>
-        public int MaxRetransmissions { get; set; } = 7;
+        public int MaxRetransmissions { get; set; } = 14;
 
         /// <summary>
         /// Transaction timeout factor.
