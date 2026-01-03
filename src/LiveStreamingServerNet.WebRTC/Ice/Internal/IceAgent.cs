@@ -37,7 +37,8 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
 
         public IceRole Role { get; private set; }
         public IceConnectionState ConnectionState { get; private set; }
-        public event Action<IceConnectionState>? OnStateChanged;
+        public event EventHandler<IceConnectionState>? OnStateChanged;
+        public event EventHandler<IceCandidate?>? OnLocalCandidateGathered;
 
         public IceAgent(
             IceRole role,
@@ -54,7 +55,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
             ConnectionState = IceConnectionState.New;
 
             _candidateGatherer = candidateGathererFactory.Create();
-            _candidateGatherer.OnGathered += OnLocalCandidateGathered;
+            _candidateGatherer.OnGathered += LocalCandidateGathered;
 
             _checkList = new CheckList(this);
             _stunMessageHandler = new StunMessageHandler(this);
@@ -497,12 +498,14 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
             }
         }
 
-        private void OnLocalCandidateGathered(object gatherer, LocalIceCandidate? candidate)
+        private void LocalCandidateGathered(object gatherer, LocalIceCandidate? candidate)
         {
             lock (_syncLock)
             {
                 if (ConnectionState is (IceConnectionState.Completed or IceConnectionState.Failed or IceConnectionState.Closed))
                     return;
+
+                OnLocalCandidateGathered?.Invoke(this, candidate);
 
                 if (candidate == null)
                 {
@@ -654,7 +657,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                     return false;
 
                 ConnectionState = newState;
-                OnStateChanged?.Invoke(newState);
+                OnStateChanged?.Invoke(this, newState);
                 return true;
             }
         }
