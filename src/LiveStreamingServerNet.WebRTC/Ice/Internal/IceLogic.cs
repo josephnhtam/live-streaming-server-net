@@ -14,7 +14,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                 _ => 0
             };
 
-            return (uint)(((1 << 24) * typePreference) + ((256 << 8) * localPreference) + ((256 << 8) - componentId));
+            return (uint)(((1 << 24) * typePreference) + ((1 << 8) * localPreference) + (256 - componentId));
         }
 
         public static ulong CalculateCandidatePairPriority(uint localPriority, uint remotePriority, bool isControlling)
