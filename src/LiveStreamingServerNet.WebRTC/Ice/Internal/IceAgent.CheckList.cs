@@ -1,6 +1,7 @@
 using LiveStreamingServerNet.WebRTC.Ice.Internal.Contracts;
 using LiveStreamingServerNet.WebRTC.Ice.Internal.Logging;
 using LiveStreamingServerNet.WebRTC.Utilities;
+using Microsoft.Extensions.Logging;
 using System.Net;
 
 namespace LiveStreamingServerNet.WebRTC.Ice.Internal
@@ -291,7 +292,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
             {
                 lock (_syncLock)
                 {
-                    return _pairs.All(p => p.State is IceCandidatePairState.Succeeded or IceCandidatePairState.Failed);
+                    return _pairs.All(p => p is { IsTriggered: false, State: IceCandidatePairState.Succeeded or IceCandidatePairState.Failed });
                 }
             }
 
