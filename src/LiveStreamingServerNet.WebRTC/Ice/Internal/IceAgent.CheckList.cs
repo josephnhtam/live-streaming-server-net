@@ -55,13 +55,14 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                 }
             }
 
-            public bool AddRemoteCandidate(RemoteIceCandidate remoteCandidate, bool isTriggered)
+            public bool AddRemoteCandidate(RemoteIceCandidate remoteCandidate, IIceEndPoint? triggeredEndPoint = null)
             {
                 lock (_syncLock)
                 {
                     if (_remoteCandidates.Any(c => c.EndPoint.IsEquivalent(remoteCandidate.EndPoint)))
                         return false;
 
+                    var isTriggered = false;
                     var isControlling = _agent.Role == IceRole.Controlling;
                     var newPairs = new List<IceCandidatePair>();
 
@@ -79,9 +80,10 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
 
                         _agent.OnCandidatePairCreated(pair);
 
-                        if (isTriggered)
+                        if (localCandidate.IceEndPoint == triggeredEndPoint)
                         {
                             TriggerCheck(pair, "RemoteCandidateAdded");
+                            isTriggered = true;
                         }
                     }
 

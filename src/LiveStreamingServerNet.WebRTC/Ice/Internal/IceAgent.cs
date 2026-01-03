@@ -538,7 +538,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                     Foundation: IceFoundation.Create(IceCandidateType.PeerReflexive, remoteEndPoint.Address)
                 );
 
-                _checkList.AddRemoteCandidate(prflxCandidate, isTriggered: true);
+                _checkList.AddRemoteCandidate(prflxCandidate, triggeredEndPoint: endPoint);
             }
         }
 
@@ -693,7 +693,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                 }
 
                 _logger.RemoteCandidateAdded(Identifier, Role, candidate.EndPoint, candidate.Type);
-                _checkList.AddRemoteCandidate(candidate, isTriggered: false);
+                _checkList.AddRemoteCandidate(candidate);
             }
         }
 
