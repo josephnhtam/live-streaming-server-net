@@ -29,7 +29,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
         {
             var tcs = new TaskCompletionSource<IIcePeerConnection>();
 
-            void StateChanged(IceConnectionState state)
+            void StateChanged(object? sender, IceConnectionState state)
             {
                 try
                 {
