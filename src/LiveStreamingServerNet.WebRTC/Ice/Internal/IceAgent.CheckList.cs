@@ -1,4 +1,5 @@
 using LiveStreamingServerNet.WebRTC.Ice.Internal.Contracts;
+using LiveStreamingServerNet.WebRTC.Ice.Internal.Logging;
 using LiveStreamingServerNet.WebRTC.Utilities;
 using System.Net;
 
@@ -77,7 +78,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
 
                         if (isTriggered)
                         {
-                            TriggerCheck(pair);
+                            TriggerCheck(pair, "RemoteCandidateAdded");
                         }
                     }
 
@@ -129,7 +130,9 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
             {
                 lock (_syncLock)
                 {
-                    var attempts = _triggeredChecks.Count;
+                    var triggeredCount = _triggeredChecks.Count;
+                    var attempts = triggeredCount;
+
                     while (attempts-- > 0 && _triggeredChecks.TryDequeue(out var pair))
                     {
                         if (pair.State is IceCandidatePairState.InProgress)
@@ -138,16 +141,42 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                             continue;
                         }
 
-                        if (pair.State is IceCandidatePairState.Failed)
+                        if (pair.State != IceCandidatePairState.Succeeded)
                             pair.State = IceCandidatePairState.Waiting;
 
                         pair.IsTriggered = false;
+
+                        _agent._logger.GetNextPair(
+                            pair.LocalCandidate.EndPoint,
+                            pair.RemoteCandidate.EndPoint,
+                            pair.State,
+                            pair.NominationState,
+                            isTriggered: true,
+                            triggeredCount,
+                            _pairs.Count
+                        );
+
                         return pair;
                     }
 
                     UnfreezePairs();
 
-                    return _pairs.Where(p => p.State == IceCandidatePairState.Waiting).OrderByDescending(p => p.Priority).FirstOrDefault();
+                    var result = _pairs.Where(p => p.State == IceCandidatePairState.Waiting).OrderByDescending(p => p.Priority).FirstOrDefault();
+
+                    if (result != null)
+                    {
+                        _agent._logger.GetNextPair(
+                            result.LocalCandidate.EndPoint,
+                            result.RemoteCandidate.EndPoint,
+                            result.State,
+                            result.NominationState,
+                            isTriggered: false,
+                            triggeredCount,
+                            _pairs.Count
+                        );
+                    }
+
+                    return result;
                 }
             }
 
@@ -221,21 +250,27 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                 }
             }
 
-            public void TriggerCheck(IceCandidatePair pair)
+            public void TriggerCheck(IceCandidatePair pair, string reason)
             {
                 lock (_syncLock)
                 {
-                    if (pair.IsTriggered)
+                    if (pair.IsTriggered || pair.State == IceCandidatePairState.InProgress)
                         return;
 
-                    if (pair.State == IceCandidatePairState.Frozen)
-                        pair.State = IceCandidatePairState.Waiting;
-
-                    if (pair.State == IceCandidatePairState.Failed)
+                    if (pair.State != IceCandidatePairState.Succeeded)
                         pair.State = IceCandidatePairState.Waiting;
 
                     pair.IsTriggered = true;
                     _triggeredChecks.Enqueue(pair);
+
+                    _agent._logger.TriggerCheck(
+                        pair.LocalCandidate.EndPoint,
+                        pair.RemoteCandidate.EndPoint,
+                        pair.State,
+                        pair.NominationState,
+                        _triggeredChecks.Count,
+                        reason
+                    );
                 }
             }
 

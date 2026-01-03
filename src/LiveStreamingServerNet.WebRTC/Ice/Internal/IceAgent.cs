@@ -1,11 +1,13 @@
 using LiveStreamingServerNet.Utilities.Common;
 using LiveStreamingServerNet.WebRTC.Ice.Configurations;
 using LiveStreamingServerNet.WebRTC.Ice.Internal.Contracts;
+using LiveStreamingServerNet.WebRTC.Ice.Internal.Logging;
 using LiveStreamingServerNet.WebRTC.Ice.Internal.StunAttributes;
 using LiveStreamingServerNet.WebRTC.Stun.Internal;
 using LiveStreamingServerNet.WebRTC.Stun.Internal.Packets;
 using LiveStreamingServerNet.WebRTC.Stun.Internal.Packets.Attributes;
 using LiveStreamingServerNet.WebRTC.Stun.Internal.Packets.Attributes.Contracts;
+using Microsoft.Extensions.Logging;
 using System.Collections.Concurrent;
 using System.Net;
 
@@ -15,6 +17,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
     {
         private readonly IceCredentials _credentials;
         private readonly IceAgentConfiguration _config;
+        private readonly ILogger _logger;
 
         private readonly ulong _tieBreaker;
         private readonly object _syncLock = new object();
@@ -45,11 +48,13 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
             IceCredentials credentials,
             IceAgentConfiguration config,
             IIceCandidateGathererFactory candidateGathererFactory,
+            ILogger<IceAgent> logger,
             ulong? tieBreaker = null)
         {
             Role = role;
             _credentials = credentials;
             _config = config;
+            _logger = logger;
 
             _tieBreaker = tieBreaker ?? RandomNumberUtility.GetRandomUInt64();
             ConnectionState = IceConnectionState.New;
@@ -246,6 +251,8 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                     IceConnectionStateFlag.Checking |
                     IceConnectionStateFlag.Disconnected);
 
+                _logger.PairSelected(pair.LocalCandidate.EndPoint, pair.RemoteCandidate.EndPoint);
+
                 CheckCompletion();
             }
         }
@@ -273,7 +280,9 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                     return;
 
                 toNominate.NominationState = IceCandidateNominationState.ControllingNominating;
-                _checkList.TriggerCheck(toNominate);
+                _checkList.TriggerCheck(toNominate, "ControllingNomination");
+
+                _logger.NominatingPair(toNominate.LocalCandidate.EndPoint, toNominate.RemoteCandidate.EndPoint);
             }
         }
 
@@ -347,17 +356,34 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                     if (response is not { Class: StunClass.SuccessResponse, Method: StunMethods.BindingRequest })
                     {
                         OnCheckFailed(pair, reason, sentUseCandidate);
+                        _logger.ConnectivityCheckFailed(
+                            pair.LocalCandidate.EndPoint,
+                            pair.RemoteCandidate.EndPoint,
+                            sentUseCandidate,
+                            $"Invalid response: {response?.Class}"
+                        );
                         return;
                     }
 
                     TryAdoptPeerReflexiveCandidate(pair.LocalCandidate.IceEndPoint, remoteEndPoint);
 
                     OnCheckSucceeded(pair, reason, sentUseCandidate);
+                    _logger.ConnectivityCheckSucceeded(
+                        pair.LocalCandidate.EndPoint,
+                        pair.RemoteCandidate.EndPoint,
+                        sentUseCandidate
+                    );
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 OnCheckFailed(pair, reason, sentUseCandidate);
+                _logger.ConnectivityCheckFailed(
+                    pair.LocalCandidate.EndPoint,
+                    pair.RemoteCandidate.EndPoint,
+                    sentUseCandidate,
+                    ex.Message
+                );
             }
 
             return;
@@ -455,7 +481,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                     }
                     else
                     {
-                        _checkList.TriggerCheck(pair);
+                        _checkList.TriggerCheck(pair, "ControllingNominationRetry");
                     }
                 }
             }
@@ -601,7 +627,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                     return;
 
                 pair.NominationState = IceCandidateNominationState.ControlledNominating;
-                _checkList.TriggerCheck(pair);
+                _checkList.TriggerCheck(pair, "ControlledNomination");
             }
 
             void TriggerConnectivityCheck(IceCandidatePair pair)
@@ -609,7 +635,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                 if (pair.State == IceCandidatePairState.Succeeded)
                     return;
 
-                _checkList.TriggerCheck(pair);
+                _checkList.TriggerCheck(pair, "StunRequest");
             }
         }
 
