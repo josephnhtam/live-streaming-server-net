@@ -155,6 +155,42 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                     TryNominateValidPair();
                 }
             }
+
+            bool CheckCompletion()
+            {
+                lock (_syncLock)
+                {
+                    if (IsFailed())
+                    {
+                        TryTransitionTo(IceConnectionState.Failed, expected:
+                            IceConnectionStateFlag.Checking |
+                            IceConnectionStateFlag.Connected |
+                            IceConnectionStateFlag.Disconnected);
+
+                        return true;
+                    }
+
+                    if (IsCompleted())
+                    {
+                        TryTransitionTo(IceConnectionState.Completed, expected:
+                            IceConnectionStateFlag.Checking |
+                            IceConnectionStateFlag.Connected |
+                            IceConnectionStateFlag.Disconnected);
+
+                        return true;
+                    }
+
+                    return false;
+                }
+
+                bool IsCompleted() =>
+                    _localGatheringComplete && _remoteGatheringComplete &&
+                    _selectedPair != null && _checkList.AllPairsChecked();
+
+                bool IsFailed() =>
+                    _localGatheringComplete && _remoteGatheringComplete &&
+                    _selectedPair == null && _checkList.AllPairsChecked() && !_validPairs.Any();
+            }
         }
 
         private async Task KeepaliveLoopAsync(CancellationToken cancellation)
@@ -200,42 +236,6 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
             }
         }
 
-        private bool CheckCompletion()
-        {
-            lock (_syncLock)
-            {
-                if (IsFailed())
-                {
-                    TryTransitionTo(IceConnectionState.Failed, expected:
-                        IceConnectionStateFlag.Checking |
-                        IceConnectionStateFlag.Connected |
-                        IceConnectionStateFlag.Disconnected);
-
-                    return true;
-                }
-
-                if (IsCompleted())
-                {
-                    TryTransitionTo(IceConnectionState.Completed, expected:
-                        IceConnectionStateFlag.Checking |
-                        IceConnectionStateFlag.Connected |
-                        IceConnectionStateFlag.Disconnected);
-
-                    return true;
-                }
-
-                return false;
-            }
-
-            bool IsCompleted() =>
-                _localGatheringComplete && _remoteGatheringComplete &&
-                _selectedPair != null && _checkList.AllPairsChecked();
-
-            bool IsFailed() =>
-                _localGatheringComplete && _remoteGatheringComplete &&
-                _selectedPair == null && _checkList.AllPairsChecked() && !_validPairs.Any();
-        }
-
         private bool ShouldNominatePair(IceCandidatePair pair)
         {
             var selectedPriority = _selectedPair?.Priority ?? 0UL;
@@ -260,8 +260,6 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                     IceConnectionStateFlag.Disconnected);
 
                 _logger.PairSelected(Identifier, Role, pair.LocalCandidate.EndPoint, pair.RemoteCandidate.EndPoint);
-
-                CheckCompletion();
             }
         }
 
@@ -346,7 +344,8 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                 {
                     if (TryHandleRoleConflictError(response))
                     {
-                        ScheduleConnectivityCheck(pair, reason);
+                        OnCheckFailed("Role switched");
+                        _checkList.TriggerCheck(pair, "RoleConflictRetry");
                         return;
                     }
 
@@ -441,7 +440,6 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                     }
 
                     _checkList.UnfreezePairsWithFoundation(pair.Foundation);
-                    CheckCompletion();
                 }
 
                 return;
@@ -508,7 +506,6 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                     }
 
                     _validPairs.Remove(pair);
-                    CheckCompletion();
                 }
             }
         }
@@ -543,9 +540,9 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                 if (candidate == null)
                 {
                     _localGatheringComplete = true;
+
                     _logger.LocalGatheringComplete(Identifier, Role);
                     OnLocalCandidateGathered?.Invoke(this, null);
-                    CheckCompletion();
                     return;
                 }
 
@@ -680,7 +677,6 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                 {
                     _remoteGatheringComplete = true;
                     _logger.RemoteGatheringComplete(Identifier, Role);
-                    CheckCompletion();
                     return;
                 }
 
