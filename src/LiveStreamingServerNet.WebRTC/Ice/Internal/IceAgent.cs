@@ -192,13 +192,21 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
             {
                 if (IsFailed())
                 {
-                    TryTransitionTo(IceConnectionState.Failed, expected: IceConnectionStateFlag.Checking | IceConnectionStateFlag.Connected);
+                    TryTransitionTo(IceConnectionState.Failed, expected:
+                        IceConnectionStateFlag.Checking |
+                        IceConnectionStateFlag.Connected |
+                        IceConnectionStateFlag.Disconnected);
+
                     return true;
                 }
 
                 if (IsCompleted())
                 {
-                    TryTransitionTo(IceConnectionState.Completed, expected: IceConnectionStateFlag.Checking | IceConnectionStateFlag.Connected);
+                    TryTransitionTo(IceConnectionState.Completed, expected:
+                        IceConnectionStateFlag.Checking |
+                        IceConnectionStateFlag.Connected |
+                        IceConnectionStateFlag.Disconnected);
+
                     return true;
                 }
 
@@ -233,7 +241,10 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                 pair.NominationState = IceCandidateNominationState.Nominated;
                 _selectedPair = pair;
 
-                TryTransitionTo(IceConnectionState.Connected, expected: IceConnectionStateFlag.Checking);
+                TryTransitionTo(IceConnectionState.Connected, expected:
+                    IceConnectionStateFlag.Checking |
+                    IceConnectionStateFlag.Disconnected);
+
                 CheckCompletion();
             }
         }
@@ -411,33 +422,48 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
 
                 if (reason == ConnectivityCheckReason.Check)
                 {
-                    if (pair.NominationState == IceCandidateNominationState.ControllingNominating)
+                    if (Role == IceRole.Controlling)
                     {
-                        if (Role == IceRole.Controlling)
-                        {
-                            SelectPair(pair);
-                        }
-                        else
-                        {
-                            pair.NominationState = IceCandidateNominationState.None;
-                        }
+                        OnControllingCheckSucceeded();
                     }
-
-                    if (pair.NominationState == IceCandidateNominationState.ControlledNominating)
+                    else
                     {
-                        if (Role == IceRole.Controlled && pair.UseCandidateReceived)
-                        {
-                            SelectPair(pair);
-                        }
-                        else
-                        {
-                            pair.NominationState = IceCandidateNominationState.None;
-                        }
+                        OnControlledCheckSucceeded();
                     }
                 }
 
                 _checkList.UnfreezePairsWithFoundation(pair.Foundation);
                 CheckCompletion();
+            }
+
+            return;
+
+            void OnControllingCheckSucceeded()
+            {
+                if (pair.NominationState == IceCandidateNominationState.ControlledNominating)
+                {
+                    pair.NominationState = IceCandidateNominationState.None;
+                    return;
+                }
+
+                if (pair.NominationState == IceCandidateNominationState.ControllingNominating)
+                {
+                    SelectPair(pair);
+                }
+            }
+
+            void OnControlledCheckSucceeded()
+            {
+                if (pair.NominationState == IceCandidateNominationState.ControllingNominating)
+                {
+                    pair.NominationState = IceCandidateNominationState.None;
+                    return;
+                }
+
+                if (pair.UseCandidateReceived)
+                {
+                    SelectPair(pair);
+                }
             }
         }
 
@@ -447,7 +473,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
             {
                 pair.State = IceCandidatePairState.Failed;
 
-                if (pair.NominationState is IceCandidateNominationState.ControllingNominating or IceCandidateNominationState.ControlledNominating)
+                if (pair.NominationState is IceCandidateNominationState.ControllingNominating)
                 {
                     pair.NominationState = IceCandidateNominationState.None;
                 }
@@ -455,7 +481,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                 if (_selectedPair == pair)
                 {
                     _selectedPair = null;
-                    TryTransitionTo(IceConnectionState.Checking, expected: IceConnectionStateFlag.Connected | IceConnectionStateFlag.Completed);
+                    TryTransitionTo(IceConnectionState.Disconnected, expected: IceConnectionStateFlag.Connected | IceConnectionStateFlag.Completed);
                 }
 
                 _validPairs.Remove(pair);

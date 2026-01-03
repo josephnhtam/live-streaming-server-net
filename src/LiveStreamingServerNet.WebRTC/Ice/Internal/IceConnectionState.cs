@@ -6,8 +6,9 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
         Checking = 1 << 1,
         Connected = 1 << 2,
         Completed = 1 << 3,
-        Failed = 1 << 4,
-        Closed = 1 << 5
+        Disconnected = 1 << 4,
+        Failed = 1 << 5,
+        Closed = 1 << 6
     }
 
     [Flags]
@@ -17,7 +18,8 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
         Checking = 1 << 1,
         Connected = 1 << 2,
         Completed = 1 << 3,
-        Failed = 1 << 4,
-        Closed = 1 << 5
+        Disconnected = 1 << 4,
+        Failed = 1 << 5,
+        Closed = 1 << 6
     }
 }
