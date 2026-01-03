@@ -65,6 +65,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                     var newPairs = new List<IceCandidatePair>();
 
                     _remoteCandidates.Add(remoteCandidate);
+
                     foreach (var localCandidate in _localCandidates)
                     {
                         if (!IceLogic.CanPairCandidates(localCandidate, remoteCandidate))
@@ -74,6 +75,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
 
                         _pairs.Add(pair);
                         newPairs.Add(pair);
+
                         _agent.OnCandidatePairCreated(pair);
 
                         if (isTriggered)
@@ -105,7 +107,10 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
 
                     var removables = _pairs
                         .Where(p => !p.IsTriggered)
-                        .Where(p => p.State is IceCandidatePairState.Failed or IceCandidatePairState.Frozen or IceCandidatePairState.Waiting)
+                        .Where(p => p.State is
+                            IceCandidatePairState.Failed or
+                            IceCandidatePairState.Frozen or
+                            IceCandidatePairState.Waiting)
                         .OrderBy(p =>
                         {
                             return p.State switch
@@ -147,6 +152,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                         pair.IsTriggered = false;
 
                         _agent._logger.GetNextPair(
+                            _agent.Identifier, _agent.Role,
                             pair.LocalCandidate.EndPoint,
                             pair.RemoteCandidate.EndPoint,
                             pair.State,
@@ -161,11 +167,15 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
 
                     UnfreezePairs();
 
-                    var result = _pairs.Where(p => p.State == IceCandidatePairState.Waiting).OrderByDescending(p => p.Priority).FirstOrDefault();
+                    var result = _pairs
+                        .Where(p => p.State == IceCandidatePairState.Waiting)
+                        .OrderByDescending(p => p.Priority)
+                        .FirstOrDefault();
 
                     if (result != null)
                     {
                         _agent._logger.GetNextPair(
+                            _agent.Identifier, _agent.Role,
                             result.LocalCandidate.EndPoint,
                             result.RemoteCandidate.EndPoint,
                             result.State,
@@ -208,7 +218,9 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
 
                     var activeFoundations = _pairs
                         .Where(p => !newPairs.Contains(p))
-                        .Where(p => p.State is IceCandidatePairState.Waiting or IceCandidatePairState.InProgress)
+                        .Where(p => p.State is
+                            IceCandidatePairState.Waiting or
+                            IceCandidatePairState.InProgress)
                         .Select(p => p.Foundation)
                         .ToHashSet();
 
@@ -264,6 +276,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                     _triggeredChecks.Enqueue(pair);
 
                     _agent._logger.TriggerCheck(
+                        _agent.Identifier, _agent.Role,
                         pair.LocalCandidate.EndPoint,
                         pair.RemoteCandidate.EndPoint,
                         pair.State,
@@ -298,7 +311,9 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
 
                     foreach (var pair in _pairs)
                     {
-                        if (pair.NominationState is IceCandidateNominationState.ControllingNominating or IceCandidateNominationState.ControlledNominating)
+                        if (pair.NominationState is
+                            IceCandidateNominationState.ControllingNominating or
+                            IceCandidateNominationState.ControlledNominating)
                         {
                             pair.NominationState = IceCandidateNominationState.None;
                         }

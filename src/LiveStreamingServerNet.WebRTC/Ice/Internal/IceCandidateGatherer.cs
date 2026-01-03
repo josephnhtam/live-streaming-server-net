@@ -1,11 +1,13 @@
 using LiveStreamingServerNet.Utilities.Common;
 using LiveStreamingServerNet.WebRTC.Ice.Configurations;
 using LiveStreamingServerNet.WebRTC.Ice.Internal.Contracts;
+using LiveStreamingServerNet.WebRTC.Ice.Internal.Logging;
 using LiveStreamingServerNet.WebRTC.Stun.Internal;
 using LiveStreamingServerNet.WebRTC.Stun.Internal.Contracts;
 using LiveStreamingServerNet.WebRTC.Stun.Internal.Packets;
 using LiveStreamingServerNet.WebRTC.Stun.Internal.Packets.Attributes;
 using LiveStreamingServerNet.WebRTC.Utilities;
+using Microsoft.Extensions.Logging;
 using Polly;
 using Polly.Retry;
 using Polly.Timeout;
@@ -18,10 +20,12 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
 {
     internal class IceCandidateGatherer : IIceCandidateGatherer
     {
+        private readonly string _identifier;
         private readonly IUdpTransportFactory _transportFactory;
         private readonly IStunAgentFactory _stunAgentFactory;
         private readonly IStunDnsResolver _stunDnsResolver;
         private readonly IceGathererConfiguration _config;
+        private readonly ILogger _logger;
 
         private readonly ResiliencePipeline _bindingPipeline;
 
@@ -32,15 +36,19 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
         public event EventHandler<LocalIceCandidate?>? OnGathered;
 
         public IceCandidateGatherer(
+            string identifier,
             IUdpTransportFactory transportFactory,
             IStunAgentFactory stunAgentFactory,
             IStunDnsResolver stunDnsResolver,
-            IceGathererConfiguration config)
+            IceGathererConfiguration config,
+            ILogger<IceCandidateGatherer> logger)
         {
+            _identifier = identifier;
             _transportFactory = transportFactory;
             _stunAgentFactory = stunAgentFactory;
             _stunDnsResolver = stunDnsResolver;
             _config = config;
+            _logger = logger;
 
             _bindingPipeline = CreateStunBindingPipeline(_config);
         }
@@ -51,6 +59,8 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
         {
             try
             {
+                _logger.GatheringStarted(_identifier);
+
                 var localAddresses = NetworkUtility.GetLocalIPAddresses();
 
                 var hostCandidates = GatherHostCandidates(context, localAddresses);
@@ -68,9 +78,9 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                 NotifyEndOfGathering();
             }
             catch (OperationCanceledException) when (cancellation.IsCancellationRequested) { }
-            catch (Exception)
+            catch (Exception ex)
             {
-                // todo: add logs
+                _logger.GatheringError(_identifier, ex);
             }
         }
 
@@ -87,6 +97,8 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                     continue;
 
                 hostCandidates.Add(candidate);
+
+                _logger.HostCandidateCreated(_identifier, candidate.EndPoint);
                 NotifyCandidateGathered(candidate);
             }
 
@@ -117,7 +129,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                 }
                 catch (Exception ex)
                 {
-                    // todo: add logs
+                    _logger.FailedToCreateHostCandidate(_identifier, address, ex);
                     return null;
                 }
             }
@@ -149,9 +161,9 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
             {
                 throw;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                // todo: add logs
+                _logger.GatheringError(_identifier, ex);
             }
 
             return;
@@ -164,6 +176,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
 
                     foreach (var endPoint in endPoints)
                     {
+                        _logger.StunServerResolved(_identifier, stunServer, endPoint);
                         allEndPoints.Add(endPoint);
                     }
                 }
@@ -171,9 +184,9 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                 {
                     throw;
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    // todo: add logs
+                    _logger.FailedToResolveStunServer(_identifier, stunServer, ex);
                 }
             }
         }
@@ -199,9 +212,9 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
             {
                 throw;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                // todo: add logs
+                _logger.GatheringError(_identifier, ex);
             }
 
             return;
@@ -239,6 +252,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                                 IceCandidateType.ServerReflexive, hostCandidate.BoundEndPoint.Address)
                         );
 
+                        _logger.ServerReflexiveCandidateCreated(_identifier, mappedEndPoint, hostCandidate.BoundEndPoint);
                         NotifyCandidateGathered(serverReflexiveCandidate);
                     }, token).ConfigureAwait(false);
                 }
@@ -246,9 +260,9 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                 {
                     throw;
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    // todo: add logs
+                    _logger.FailedToCreateServerReflexiveCandidate(_identifier, hostCandidate.BoundEndPoint, ex);
                 }
             }
         }
@@ -302,9 +316,9 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
             {
                 OnGathered?.Invoke(this, candidate);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                // todo: add logs
+                _logger.GatheringError(_identifier, ex);
             }
         }
 
@@ -312,11 +326,12 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
         {
             try
             {
+                _logger.GatheringComplete(_identifier);
                 OnGathered?.Invoke(this, null);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                // todo: add logs
+                _logger.GatheringError(_identifier, ex);
             }
         }
 
