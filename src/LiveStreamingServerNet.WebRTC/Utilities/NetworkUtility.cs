@@ -18,7 +18,7 @@ namespace LiveStreamingServerNet.WebRTC.Utilities
                     continue;
                 }
 
-                if (includeLoopback &&
+                if (!includeLoopback &&
                     adapter.NetworkInterfaceType == NetworkInterfaceType.Loopback)
                 {
                     continue;
