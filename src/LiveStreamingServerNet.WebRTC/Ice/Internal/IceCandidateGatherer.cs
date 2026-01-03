@@ -90,9 +90,15 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
         {
             var hostCandidates = new List<LocalIceCandidate>();
 
-            foreach (var address in localAddresses)
+            var sortedAddresses = localAddresses
+                .OrderByDescending(IceLogic.GetLocalPreferenceScore)
+                .ToList();
+
+            ushort localPreference = 65535;
+
+            foreach (var address in sortedAddresses)
             {
-                var candidate = TryCreateHostCandidate(address);
+                var candidate = TryCreateHostCandidate(address, localPreference);
                 if (candidate == null)
                     continue;
 
@@ -100,11 +106,14 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
 
                 _logger.HostCandidateCreated(_identifier, candidate.EndPoint);
                 NotifyCandidateGathered(candidate);
+
+                if (localPreference > 0)
+                    localPreference--;
             }
 
             return hostCandidates;
 
-            LocalIceCandidate? TryCreateHostCandidate(IPAddress address)
+            LocalIceCandidate? TryCreateHostCandidate(IPAddress address, ushort preference)
             {
                 try
                 {
@@ -124,7 +133,8 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                         BoundEndPoint: endPoint,
                         EndPoint: endPoint,
                         Type: IceCandidateType.Host,
-                        Foundation: IceFoundation.Create(IceCandidateType.Host, address)
+                        Foundation: IceFoundation.Create(IceCandidateType.Host, address),
+                        LocalPreference: preference
                     );
                 }
                 catch (Exception ex)
@@ -249,7 +259,8 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                             EndPoint: mappedEndPoint,
                             Type: IceCandidateType.ServerReflexive,
                             Foundation: IceFoundation.Create(
-                                IceCandidateType.ServerReflexive, hostCandidate.BoundEndPoint.Address)
+                                IceCandidateType.ServerReflexive, hostCandidate.BoundEndPoint.Address),
+                            LocalPreference: hostCandidate.LocalPreference
                         );
 
                         _logger.ServerReflexiveCandidateCreated(_identifier, mappedEndPoint, hostCandidate.BoundEndPoint);
