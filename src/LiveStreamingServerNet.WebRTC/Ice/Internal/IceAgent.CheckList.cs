@@ -44,6 +44,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
 
                         _pairs.Add(pair);
                         newPairs.Add(pair);
+                        _agent.OnCandidatePairCreated(pair);
                     }
 
                     UnfreezeNewPairs(newPairs);
@@ -69,8 +70,10 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                             continue;
 
                         var pair = new IceCandidatePair(localCandidate, remoteCandidate, isControlling);
+
                         _pairs.Add(pair);
                         newPairs.Add(pair);
+                        _agent.OnCandidatePairCreated(pair);
 
                         if (isTriggered)
                         {

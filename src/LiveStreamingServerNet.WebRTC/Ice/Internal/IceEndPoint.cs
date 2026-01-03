@@ -69,6 +69,11 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
             return _stunAgent.SendIndicationAsync(indication, remoteEndPoint, cancellation);
         }
 
+        public bool SendPacket(ReadOnlyMemory<byte> packet, IPEndPoint remoteEndPoint)
+        {
+            return _udpTransport.SendPacket(packet, remoteEndPoint);
+        }
+
         public void SetStunMessageHandler(IStunMessageHandler? handler)
         {
             _stunAgent.SetMessageHandler(handler);

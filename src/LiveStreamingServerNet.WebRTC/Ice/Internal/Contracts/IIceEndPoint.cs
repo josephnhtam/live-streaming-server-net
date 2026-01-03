@@ -14,6 +14,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal.Contracts
 
         Task<StunResponse> SendStunRequestAsync(StunMessage request, IPEndPoint remoteEndPoint, CancellationToken cancellation = default);
         ValueTask SendStunIndicationAsync(StunMessage indication, IPEndPoint remoteEndPoint, CancellationToken cancellation = default);
+        bool SendPacket(ReadOnlyMemory<byte> packet, IPEndPoint remoteEndPoint);
         void SetStunMessageHandler(IStunMessageHandler? handler);
 
         event EventHandler<UdpTransportState> OnStateChanged;

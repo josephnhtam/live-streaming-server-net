@@ -43,7 +43,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
             IceRole role,
             IceCredentials credentials,
             IceAgentConfiguration config,
-            IceCandidateGathererFactory candidateGathererFactory,
+            IIceCandidateGathererFactory candidateGathererFactory,
             ulong? tieBreaker = null)
         {
             Role = role;
