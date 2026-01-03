@@ -126,16 +126,19 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
             {
                 lock (_syncLock)
                 {
-                    while (_triggeredChecks.TryDequeue(out var pair))
+                    var attempts = _triggeredChecks.Count;
+                    while (attempts-- > 0 && _triggeredChecks.TryDequeue(out var pair))
                     {
-                        pair.IsTriggered = false;
-
                         if (pair.State is IceCandidatePairState.InProgress)
+                        {
+                            _triggeredChecks.Enqueue(pair);
                             continue;
+                        }
 
                         if (pair.State is IceCandidatePairState.Failed)
                             pair.State = IceCandidatePairState.Waiting;
 
+                        pair.IsTriggered = false;
                         return pair;
                     }
 
@@ -219,7 +222,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
             {
                 lock (_syncLock)
                 {
-                    if (pair.IsTriggered || pair.State == IceCandidatePairState.InProgress)
+                    if (pair.IsTriggered)
                         return;
 
                     if (pair.State == IceCandidatePairState.Frozen)
@@ -260,11 +263,6 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                         if (pair.NominationState is IceCandidateNominationState.ControllingNominating or IceCandidateNominationState.ControlledNominating)
                         {
                             pair.NominationState = IceCandidateNominationState.None;
-                        }
-
-                        if (isControlling)
-                        {
-                            pair.UseCandidateReceived = false;
                         }
 
                         pair.RefreshPriority(isControlling);
