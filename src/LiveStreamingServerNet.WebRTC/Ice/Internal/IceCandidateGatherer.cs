@@ -1,5 +1,6 @@
 using LiveStreamingServerNet.Utilities.Common;
 using LiveStreamingServerNet.WebRTC.Ice.Configurations;
+using LiveStreamingServerNet.WebRTC.Ice.Contracts;
 using LiveStreamingServerNet.WebRTC.Ice.Internal.Contracts;
 using LiveStreamingServerNet.WebRTC.Ice.Internal.Logging;
 using LiveStreamingServerNet.WebRTC.Stun.Internal;
@@ -27,6 +28,8 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
         private readonly IceGathererConfiguration _config;
         private readonly ILogger _logger;
 
+        private readonly bool _gatherLoopbackCandidates;
+        private readonly ILocalPreferenceScoreProvider _localPreferenceScoreProvider;
         private readonly ResiliencePipeline _bindingPipeline;
 
         private volatile int _isGathering;
@@ -50,6 +53,9 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
             _config = config;
             _logger = logger;
 
+            _gatherLoopbackCandidates = _config.GatherLoopbackCandidates;
+            _localPreferenceScoreProvider = _config.LocalPreferenceScoreProvider ??
+                DefaultLocalPreferenceScoreProvider.Instance;
             _bindingPipeline = CreateStunBindingPipeline(_config);
         }
 
@@ -61,8 +67,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
             {
                 _logger.GatheringStarted(_identifier);
 
-                var localAddresses = NetworkUtility.GetLocalIPAddresses();
-
+                var localAddresses = NetworkUtility.GetLocalIPAddresses(_gatherLoopbackCandidates);
                 var hostCandidates = GatherHostCandidates(context, localAddresses);
 
                 if (!hostCandidates.Any())
@@ -86,17 +91,17 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
 
         private List<LocalIceCandidate> GatherHostCandidates(
             IceCandidateGatheringContext context,
-            IEnumerable<IPAddress> localAddresses)
+            IEnumerable<LocalIPAddressInfo> localAddressInfos)
         {
             var hostCandidates = new List<LocalIceCandidate>();
 
-            var sortedAddresses = localAddresses
-                .OrderByDescending(IceLogic.GetLocalPreferenceScore)
+            var sortedAddressInfos = localAddressInfos
+                .OrderByDescending(_localPreferenceScoreProvider.ProvideLocalPreferenceScore)
                 .ToList();
 
             ushort localPreference = 65535;
 
-            foreach (var address in sortedAddresses)
+            foreach (var (address, _) in sortedAddressInfos)
             {
                 var candidate = TryCreateHostCandidate(address, localPreference);
                 if (candidate == null)

@@ -4,12 +4,12 @@ using System.Net.Sockets;
 
 namespace LiveStreamingServerNet.WebRTC.Utilities
 {
+    public record struct LocalIPAddressInfo(IPAddress Address, NetworkInterface NetworkInterface);
+
     public static class NetworkUtility
     {
-        public static List<IPAddress> GetLocalIPAddresses(bool includeLoopback = true)
+        public static IEnumerable<LocalIPAddressInfo> GetLocalIPAddresses(bool includeLoopback = true)
         {
-            var result = new List<IPAddress>();
-
             foreach (var adapter in NetworkInterface.GetAllNetworkInterfaces())
             {
                 if (adapter.OperationalStatus != OperationalStatus.Up &&
@@ -25,10 +25,12 @@ namespace LiveStreamingServerNet.WebRTC.Utilities
                 }
 
                 var properties = adapter.GetIPProperties();
-                result.AddRange(properties.UnicastAddresses.Select(info => info.Address));
-            }
 
-            return result;
+                foreach (var info in properties.UnicastAddresses)
+                {
+                    yield return new LocalIPAddressInfo(info.Address, adapter);
+                }
+            }
         }
 
         public static Socket CreateBoundUdpSocket(IPAddress ipAddress, int port = 0)
