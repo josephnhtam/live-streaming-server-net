@@ -56,7 +56,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers
             var clientContext = @event.ClientContext;
             var client = clientContext.Client;
 
-            var complexHandshake0 = new ComplexHandshake(incomingBuffer, ComplexHandshakeType.Schema0);
+            var complexHandshake0 = new ComplexHandshake(incomingBuffer.MoveTo(0), ComplexHandshakeType.Schema0);
             if (complexHandshake0.ValidateC1())
             {
                 clientContext.HandshakeType = HandshakeType.ComplexHandshake0;
@@ -65,7 +65,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers
                 return true;
             }
 
-            var complexHandshake1 = new ComplexHandshake(incomingBuffer, ComplexHandshakeType.Schema1);
+            var complexHandshake1 = new ComplexHandshake(incomingBuffer.MoveTo(0), ComplexHandshakeType.Schema1);
             if (complexHandshake1.ValidateC1())
             {
                 clientContext.HandshakeType = HandshakeType.ComplexHandshake1;
@@ -74,7 +74,7 @@ namespace LiveStreamingServerNet.Rtmp.Server.Internal.RtmpEventHandlers
                 return true;
             }
 
-            var simpleHandshake = new SimpleHandshake(incomingBuffer);
+            var simpleHandshake = new SimpleHandshake(incomingBuffer.MoveTo(0));
             if (simpleHandshake.ValidateC1())
             {
                 clientContext.HandshakeType = HandshakeType.SimpleHandshake;
