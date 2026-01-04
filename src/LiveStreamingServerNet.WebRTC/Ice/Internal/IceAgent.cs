@@ -36,9 +36,9 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
 
         private Task? _checkerTask;
         private Task? _keepaliveTask;
-        private Task? _nominatingTask;
 
         public string Identifier { get; private set; }
+        public IceAgentMode Mode { get; private set; }
         public IceRole Role { get; private set; }
         public IceConnectionState ConnectionState { get; private set; }
         public event EventHandler<IceConnectionState>? OnStateChanged;
@@ -51,10 +51,52 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
             IceAgentConfiguration config,
             IIceCandidateGathererFactory candidateGathererFactory,
             ILogger<IceAgent> logger,
+            ulong? tieBreaker = null) :
+            this(
+                identifier,
+                role,
+                IceAgentMode.Full,
+                credentials,
+                config,
+                candidateGathererFactory,
+                logger,
+                tieBreaker)
+        {
+        }
+
+        public IceAgent(
+            string identifier,
+            IceAgentMode mode,
+            IceCredentials credentials,
+            IceAgentConfiguration config,
+            IIceCandidateGathererFactory candidateGathererFactory,
+            ILogger<IceAgent> logger,
+            ulong? tieBreaker = null) :
+            this(
+                identifier,
+                DetermineInitialRole(mode),
+                mode,
+                credentials,
+                config,
+                candidateGathererFactory,
+                logger,
+                tieBreaker)
+        {
+        }
+
+        private IceAgent(
+            string identifier,
+            IceRole role,
+            IceAgentMode mode,
+            IceCredentials credentials,
+            IceAgentConfiguration config,
+            IIceCandidateGathererFactory candidateGathererFactory,
+            ILogger<IceAgent> logger,
             ulong? tieBreaker = null)
         {
             Identifier = identifier;
             Role = role;
+            Mode = mode;
 
             _credentials = credentials;
             _config = config;
@@ -63,7 +105,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
             _tieBreaker = tieBreaker ?? RandomNumberUtility.GetRandomUInt64();
             ConnectionState = IceConnectionState.New;
 
-            _candidateGatherer = candidateGathererFactory.Create(identifier);
+            _candidateGatherer = candidateGathererFactory.Create(identifier, DetermineCandidateTypes(mode));
             _candidateGatherer.OnGathered += LocalCandidateGathered;
 
             _checkList = new CheckList(this);
@@ -74,6 +116,25 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
             _connectivityCheckTasks = new ConcurrentDictionary<Task, object?>();
         }
 
+        private static IceRole DetermineInitialRole(IceAgentMode mode)
+        {
+            return mode switch
+            {
+                IceAgentMode.Lite => IceRole.Controlled,
+                IceAgentMode.RemoteLite => IceRole.Controlling,
+                _ => IceRole.Controlled
+            };
+        }
+
+        private static IceCandidateTypeFlag DetermineCandidateTypes(IceAgentMode mode)
+        {
+            return mode switch
+            {
+                IceAgentMode.Lite => IceCandidateTypeFlag.Host,
+                _ => IceCandidateTypeFlag.All
+            };
+        }
+
         public bool Start()
         {
             if (!TryTransitionTo(IceConnectionState.Checking, expected: IceConnectionStateFlag.New))
@@ -82,8 +143,13 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
             _logger.IceAgentStarted(Identifier, Role);
 
             StartGathering();
-            _checkerTask = Task.Run(() => CheckerLoopAsync(_cts.Token));
-            _keepaliveTask = Task.Run(() => KeepaliveLoopAsync(_cts.Token));
+
+            if (Mode != IceAgentMode.Lite)
+            {
+                _checkerTask = Task.Run(() => CheckerLoopAsync(_cts.Token));
+                _keepaliveTask = Task.Run(() => KeepaliveLoopAsync(_cts.Token));
+            }
+
             return true;
         }
 
@@ -252,7 +318,10 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                     validPair.NominationState = IceCandidateNominationState.WasNominated;
                 }
 
+                pair.State = IceCandidatePairState.Succeeded;
                 pair.NominationState = IceCandidateNominationState.Nominated;
+
+                _validPairs.Add(pair);
                 _selectedPair = pair;
 
                 TryTransitionTo(IceConnectionState.Connected, expected:
@@ -260,6 +329,8 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                     IceConnectionStateFlag.Disconnected);
 
                 _logger.PairSelected(Identifier, Role, pair.LocalCandidate.EndPoint, pair.RemoteCandidate.EndPoint);
+
+
             }
         }
 
@@ -422,6 +493,9 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
 
                 _logger.RoleConflictErrorReceived(Identifier, Role);
 
+                if (!CanSwitchRole())
+                    return true;
+
                 var newRole = (requestRole == IceRole.Controlling) ? IceRole.Controlled : IceRole.Controlling;
                 SwitchRole(newRole);
                 return true;
@@ -563,6 +637,9 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                     return;
                 }
 
+                if (Mode == IceAgentMode.Lite && candidate.Type != IceCandidateType.Host)
+                    return;
+
                 _logger.LocalCandidateGathered(Identifier, Role, candidate.EndPoint, candidate.Type);
                 OnLocalCandidateGathered?.Invoke(this, candidate);
 
@@ -606,16 +683,27 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                 var iceControlling = request.Attributes.OfType<IceControllingAttribute>().FirstOrDefault();
                 var iceControlled = request.Attributes.OfType<IceControlledAttribute>().FirstOrDefault();
 
-                if (iceControlled == null && iceControlling == null)
+                if ((iceControlled == null && iceControlling == null) ||
+                    (iceControlled != null && iceControlling != null))
                 {
                     return BindingResult.Error;
+                }
+
+                if (Mode == IceAgentMode.RemoteLite)
+                {
+                    return iceControlling != null ? BindingResult.RoleConflict : null;
+                }
+
+                if (Mode == IceAgentMode.Lite)
+                {
+                    return iceControlled != null ? BindingResult.RoleConflict : null;
                 }
 
                 if (Role == IceRole.Controlling && iceControlling != null)
                 {
                     _logger.RoleConflictDetected(Identifier, Role, iceControlling.TieBreaker, _tieBreaker);
 
-                    if (iceControlling.TieBreaker >= _tieBreaker)
+                    if (iceControlling.TieBreaker > _tieBreaker)
                     {
                         SwitchRole(IceRole.Controlled);
                         return null;
@@ -627,6 +715,13 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                 if (Role == IceRole.Controlled && iceControlled != null)
                 {
                     _logger.RoleConflictDetected(Identifier, Role, iceControlled.TieBreaker, _tieBreaker);
+
+                    if (_tieBreaker > iceControlled.TieBreaker)
+                    {
+                        SwitchRole(IceRole.Controlling);
+                        return null;
+                    }
+
                     return BindingResult.RoleConflict;
                 }
 
@@ -670,6 +765,12 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                 if (Role != IceRole.Controlled)
                     return;
 
+                if (Mode == IceAgentMode.Lite)
+                {
+                    SelectPair(pair);
+                    return;
+                }
+
                 pair.NominationState = IceCandidateNominationState.ControlledNominating;
                 _checkList.TriggerCheck(pair, "ControlledNomination");
             }
@@ -702,10 +803,18 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
             }
         }
 
+        private bool CanSwitchRole()
+        {
+            return Mode == IceAgentMode.Full;
+        }
+
         private void SwitchRole(IceRole newRole)
         {
             lock (_syncLock)
             {
+                if (!CanSwitchRole())
+                    return;
+
                 if (Role == newRole)
                     return;
 
@@ -744,7 +853,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
 
             _cts.Cancel();
 
-            List<Task?> tasks = [_checkerTask, _keepaliveTask, _nominatingTask, .. _connectivityCheckTasks.Keys];
+            List<Task?> tasks = [_checkerTask, _keepaliveTask, .. _connectivityCheckTasks.Keys];
             await ErrorBoundary.ExecuteAsync(async () =>
                 await Task.WhenAll(tasks.Where(t => t != null)!).ConfigureAwait(false)).ConfigureAwait(false);
 

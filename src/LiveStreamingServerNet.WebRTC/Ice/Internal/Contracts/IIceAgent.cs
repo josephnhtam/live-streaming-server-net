@@ -3,6 +3,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal.Contracts
     internal interface IIceAgent : IAsyncDisposable
     {
         string Identifier { get; }
+        IceAgentMode Mode { get; }
         IceRole Role { get; }
 
         bool Start();

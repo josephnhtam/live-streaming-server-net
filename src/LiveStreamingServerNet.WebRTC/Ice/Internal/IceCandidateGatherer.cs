@@ -22,6 +22,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
     internal class IceCandidateGatherer : IIceCandidateGatherer
     {
         private readonly string _identifier;
+        private readonly IceCandidateTypeFlag _candidateTypes;
         private readonly IUdpTransportFactory _transportFactory;
         private readonly IStunAgentFactory _stunAgentFactory;
         private readonly IStunDnsResolver _stunDnsResolver;
@@ -40,6 +41,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
 
         public IceCandidateGatherer(
             string identifier,
+            IceCandidateTypeFlag candidateTypes,
             IUdpTransportFactory transportFactory,
             IStunAgentFactory stunAgentFactory,
             IStunDnsResolver stunDnsResolver,
@@ -47,6 +49,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
             ILogger<IceCandidateGatherer> logger)
         {
             _identifier = identifier;
+            _candidateTypes = candidateTypes;
             _transportFactory = transportFactory;
             _stunAgentFactory = stunAgentFactory;
             _stunDnsResolver = stunDnsResolver;
@@ -76,9 +79,11 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                     return;
                 }
 
-                await ResolveStunServerEndPointsAsync(context, cancellation).ConfigureAwait(false);
-
-                await GatherServerReflexiveCandidatesAsync(context, hostCandidates, cancellation).ConfigureAwait(false);
+                if ((_candidateTypes & IceCandidateTypeFlag.ServerReflexive) != 0)
+                {
+                    await ResolveStunServerEndPointsAsync(context, cancellation).ConfigureAwait(false);
+                    await GatherServerReflexiveCandidatesAsync(context, hostCandidates, cancellation).ConfigureAwait(false);
+                }
 
                 NotifyEndOfGathering();
             }
@@ -337,7 +342,10 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
         {
             try
             {
-                OnGathered?.Invoke(this, candidate);
+                if ((_candidateTypes & (IceCandidateTypeFlag)candidate.Type) != 0)
+                {
+                    OnGathered?.Invoke(this, candidate);
+                }
             }
             catch (Exception ex)
             {

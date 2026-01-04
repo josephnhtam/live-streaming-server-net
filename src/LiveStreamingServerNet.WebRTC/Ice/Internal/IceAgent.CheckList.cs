@@ -137,6 +137,9 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
             {
                 lock (_syncLock)
                 {
+                    if (_agent.Mode == IceAgentMode.Lite)
+                        return null;
+
                     var triggeredCount = _triggeredChecks.Count;
                     var attempts = triggeredCount;
 
@@ -196,6 +199,9 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
             {
                 lock (_syncLock)
                 {
+                    if (_agent.Mode == IceAgentMode.Lite)
+                        return;
+
                     if (_pairs.Any(p => p.State is IceCandidatePairState.Waiting or IceCandidatePairState.InProgress))
                         return;
 
@@ -215,6 +221,9 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
             {
                 lock (_syncLock)
                 {
+                    if (_agent.Mode == IceAgentMode.Lite)
+                        return;
+
                     if (!newPairs.Any())
                         return;
 
@@ -254,6 +263,9 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
             {
                 lock (_syncLock)
                 {
+                    if (_agent.Mode == IceAgentMode.Lite)
+                        return;
+
                     foreach (var pair in _pairs)
                     {
                         if (pair.State == IceCandidatePairState.Frozen && pair.Foundation == foundation)
@@ -268,6 +280,9 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
             {
                 lock (_syncLock)
                 {
+                    if (_agent.Mode == IceAgentMode.Lite)
+                        return;
+
                     if (pair.IsTriggered || pair.State == IceCandidatePairState.InProgress)
                         return;
 
@@ -293,6 +308,9 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
             {
                 lock (_syncLock)
                 {
+                    if (_agent.Mode == IceAgentMode.Lite)
+                        return true;
+
                     return _pairs.All(p => p is { IsTriggered: false, State: IceCandidatePairState.Succeeded or IceCandidatePairState.Failed });
                 }
             }
