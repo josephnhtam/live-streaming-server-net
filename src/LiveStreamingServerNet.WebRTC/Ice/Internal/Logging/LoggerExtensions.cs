@@ -23,10 +23,10 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal.Logging
         [LoggerMessage(LogLevel.Debug, "Pair selected (Identifier={Identifier}, Role={Role}, Local={LocalEndPoint}, Remote={RemoteEndPoint})")]
         public static partial void PairSelected(this ILogger logger, string identifier, IceRole role, IPEndPoint localEndPoint, IPEndPoint remoteEndPoint);
 
-        [LoggerMessage(LogLevel.Trace, "GetNextPair (Identifier={Identifier}, Role={Role}, Local={LocalEndPoint}, Remote={RemoteEndPoint}, State={State}, NominationState={NominationState}, IsTriggered={IsTriggered}, TriggeredQueueCount={TriggeredQueueCount}, TotalPairs={TotalPairs})")]
+        [LoggerMessage(LogLevel.Trace, "Get next pair (Identifier={Identifier}, Role={Role}, Local={LocalEndPoint}, Remote={RemoteEndPoint}, State={State}, NominationState={NominationState}, IsTriggered={IsTriggered}, TriggeredQueueCount={TriggeredQueueCount}, TotalPairs={TotalPairs})")]
         public static partial void GetNextPair(this ILogger logger, string identifier, IceRole role, IPEndPoint localEndPoint, IPEndPoint remoteEndPoint, IceCandidatePairState state, IceCandidateNominationState nominationState, bool isTriggered, int triggeredQueueCount, int totalPairs);
 
-        [LoggerMessage(LogLevel.Trace, "TriggerCheck (Identifier={Identifier}, Role={Role}, Local={LocalEndPoint}, Remote={RemoteEndPoint}, State={State}, NominationState={NominationState}, TriggeredQueueCount={TriggeredQueueCount}, Reason={Reason})")]
+        [LoggerMessage(LogLevel.Trace, "Trigger check (Identifier={Identifier}, Role={Role}, Local={LocalEndPoint}, Remote={RemoteEndPoint}, State={State}, NominationState={NominationState}, TriggeredQueueCount={TriggeredQueueCount}, Reason={Reason})")]
         public static partial void TriggerCheck(this ILogger logger, string identifier, IceRole role, IPEndPoint localEndPoint, IPEndPoint remoteEndPoint, IceCandidatePairState state, IceCandidateNominationState nominationState, int triggeredQueueCount, string reason);
 
         [LoggerMessage(LogLevel.Debug, "State changed (Identifier={Identifier}, Role={Role}, NewState={NewState})")]
@@ -40,6 +40,9 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal.Logging
 
         [LoggerMessage(LogLevel.Debug, "Remote candidate added (Identifier={Identifier}, Role={Role}, EndPoint={EndPoint}, Type={Type})")]
         public static partial void RemoteCandidateAdded(this ILogger logger, string identifier, IceRole role, IPEndPoint endPoint, IceCandidateType type);
+
+        [LoggerMessage(LogLevel.Debug, "Peer reflexive candidate adopted (Identifier={Identifier}, Role={Role}, EndPoint={EndPoint}, Foundation={Foundation}, Reason={Reason})")]
+        public static partial void PeerReflexiveCandidateAdopted(this ILogger logger, string identifier, IceRole role, IPEndPoint endPoint, string foundation, string reason);
 
         [LoggerMessage(LogLevel.Debug, "Remote gathering complete (Identifier={Identifier}, Role={Role})")]
         public static partial void RemoteGatheringComplete(this ILogger logger, string identifier, IceRole role);
@@ -68,7 +71,6 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal.Logging
         [LoggerMessage(LogLevel.Debug, "Use candidate received (Identifier={Identifier}, Role={Role}, Local={LocalEndPoint}, Remote={RemoteEndPoint})")]
         public static partial void UseCandidateReceived(this ILogger logger, string identifier, IceRole role, IPEndPoint localEndPoint, IPEndPoint remoteEndPoint);
 
-        // IceCandidateGatherer logging
         [LoggerMessage(LogLevel.Debug, "Gathering started (Identifier={Identifier})")]
         public static partial void GatheringStarted(this ILogger logger, string identifier);
 

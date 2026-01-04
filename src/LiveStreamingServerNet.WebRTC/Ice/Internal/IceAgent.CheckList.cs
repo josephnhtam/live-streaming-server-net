@@ -1,7 +1,6 @@
 using LiveStreamingServerNet.WebRTC.Ice.Internal.Contracts;
 using LiveStreamingServerNet.WebRTC.Ice.Internal.Logging;
 using LiveStreamingServerNet.WebRTC.Utilities;
-using Microsoft.Extensions.Logging;
 using System.Net;
 
 namespace LiveStreamingServerNet.WebRTC.Ice.Internal
@@ -55,7 +54,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                 }
             }
 
-            public bool AddRemoteCandidate(RemoteIceCandidate remoteCandidate, IIceEndPoint? triggeredEndPoint = null)
+            public bool AddRemoteCandidate(RemoteIceCandidate remoteCandidate, IIceEndPoint? peerReflexiveEndPoint = null)
             {
                 lock (_syncLock)
                 {
@@ -80,9 +79,9 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
 
                         _agent.OnCandidatePairCreated(pair);
 
-                        if (localCandidate.IceEndPoint == triggeredEndPoint)
+                        if (localCandidate.IceEndPoint == peerReflexiveEndPoint)
                         {
-                            TriggerCheck(pair, "RemoteCandidateAdded");
+                            TriggerCheck(pair, "PeerReflexiveCandidateAdded");
                             isTriggered = true;
                         }
                     }

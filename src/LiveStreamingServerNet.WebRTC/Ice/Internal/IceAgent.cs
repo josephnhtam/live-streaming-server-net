@@ -327,7 +327,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
         {
             var (requestRole, isControllingNominating) = GetRequestRoleAndNominatingState();
 
-            var attributes = CreateStunAttributes();
+            var attributes = CreateStunAttributes(pair, requestRole, isControllingNominating);
 
             using var request = new StunMessage(
                     StunClass.Request,
@@ -352,27 +352,27 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
 
                 lock (_syncLock)
                 {
-                    if (TryHandleRoleConflictError(response))
+                    if (TryHandleRoleConflictError(response, requestRole))
                     {
-                        OnCheckFailed("Role switched");
+                        OnCheckFailed(pair, isControllingNominating, "Role switched");
                         _checkList.TriggerCheck(pair, "RoleConflictRetry");
                         return;
                     }
 
                     if (response is not { Class: StunClass.SuccessResponse, Method: StunMethods.BindingRequest })
                     {
-                        OnCheckFailed($"Invalid response: {response.Class}");
+                        OnCheckFailed(pair, isControllingNominating, $"Invalid response: {response.Class}");
                         return;
                     }
 
-                    TryAdoptPeerReflexiveCandidate(pair.LocalCandidate.IceEndPoint, remoteEndPoint);
+                    TryAdoptPeerReflexiveCandidate(pair.LocalCandidate.IceEndPoint, remoteEndPoint, reason: "ConnectivityCheckSucceeded");
 
-                    OnCheckSucceeded();
+                    OnCheckSucceeded(pair, reason);
                 }
             }
             catch (Exception ex)
             {
-                OnCheckFailed(ex.Message);
+                OnCheckFailed(pair, isControllingNominating, ex.Message);
             }
 
             return;
@@ -390,7 +390,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                 }
             }
 
-            List<IStunAttribute> CreateStunAttributes()
+            List<IStunAttribute> CreateStunAttributes(IceCandidatePair pair, IceRole requestRole, bool isControllingNominating)
             {
                 var stunAttributes = new List<IStunAttribute>
                 {
@@ -407,7 +407,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                 return stunAttributes;
             }
 
-            bool TryHandleRoleConflictError(StunMessage response)
+            bool TryHandleRoleConflictError(StunMessage response, IceRole requestRole)
             {
                 if (response.Class != StunClass.ErrorResponse)
                     return false;
@@ -423,7 +423,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                 return true;
             }
 
-            void OnCheckSucceeded()
+            void OnCheckSucceeded(IceCandidatePair pair, ConnectivityCheckReason reason)
             {
                 lock (_syncLock)
                 {
@@ -442,11 +442,11 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                     {
                         if (Role == IceRole.Controlling)
                         {
-                            OnControllingCheckSucceeded();
+                            OnControllingCheckSucceeded(pair);
                         }
                         else
                         {
-                            OnControlledCheckSucceeded();
+                            OnControlledCheckSucceeded(pair);
                         }
                     }
 
@@ -455,7 +455,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
 
                 return;
 
-                void OnControllingCheckSucceeded()
+                void OnControllingCheckSucceeded(IceCandidatePair pair)
                 {
                     if (pair.NominationState == IceCandidateNominationState.ControlledNominating)
                     {
@@ -476,7 +476,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                     }
                 }
 
-                void OnControlledCheckSucceeded()
+                void OnControlledCheckSucceeded(IceCandidatePair pair)
                 {
                     if (pair.NominationState == IceCandidateNominationState.ControllingNominating)
                     {
@@ -491,7 +491,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                 }
             }
 
-            void OnCheckFailed(string failureReason)
+            void OnCheckFailed(IceCandidatePair pair, bool isControllingNominating, string failureReason)
             {
                 lock (_syncLock)
                 {
@@ -522,7 +522,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
             }
         }
 
-        private void TryAdoptPeerReflexiveCandidate(IIceEndPoint endPoint, IPEndPoint remoteEndPoint)
+        private void TryAdoptPeerReflexiveCandidate(IIceEndPoint endPoint, IPEndPoint remoteEndPoint, string reason)
         {
             lock (_syncLock)
             {
@@ -538,7 +538,8 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                     Foundation: IceFoundation.Create(IceCandidateType.PeerReflexive, remoteEndPoint.Address)
                 );
 
-                _checkList.AddRemoteCandidate(prflxCandidate, triggeredEndPoint: endPoint);
+                _logger.PeerReflexiveCandidateAdopted(Identifier, Role, remoteEndPoint, prflxCandidate.Foundation, reason);
+                _checkList.AddRemoteCandidate(prflxCandidate, peerReflexiveEndPoint: endPoint);
             }
         }
 
@@ -573,7 +574,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
         {
             lock (_syncLock)
             {
-                TryAdoptPeerReflexiveCandidate(endPoint, remoteEndPoint);
+                TryAdoptPeerReflexiveCandidate(endPoint, remoteEndPoint, reason: "IncomingBindingRequest");
 
                 var roleConflictResult = TryHandleRoleConflict(request);
                 if (roleConflictResult.HasValue)
@@ -674,7 +675,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                 if (pair.State == IceCandidatePairState.Succeeded)
                     return;
 
-                _checkList.TriggerCheck(pair, "StunRequest");
+                _checkList.TriggerCheck(pair, "BindingRequestReceived");
             }
         }
 
