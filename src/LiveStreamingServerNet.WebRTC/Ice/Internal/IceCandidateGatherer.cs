@@ -115,9 +115,11 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
 
             LocalIceCandidate? TryCreateHostCandidate(IPAddress address, ushort preference)
             {
+                Socket? socket = null;
+
                 try
                 {
-                    var socket = CreateBoundUdpSocket(address);
+                    socket = CreateBoundUdpSocket(address);
 
                     if (socket == null)
                         return null;
@@ -139,6 +141,11 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                 }
                 catch (Exception ex)
                 {
+                    if (socket != null)
+                    {
+                        ErrorBoundary.Execute(() => socket.Dispose());
+                    }
+
                     _logger.FailedToCreateHostCandidate(_identifier, address, ex);
                     return null;
                 }
@@ -367,12 +374,12 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
             Debug.Assert(_gatheringTask != null);
 
             _cts.Cancel();
-            _cts.Dispose();
-            _cts = null;
 
             await ErrorBoundary.ExecuteAsync(async () => await _gatheringTask.ConfigureAwait(false))
                 .ConfigureAwait(false);
 
+            _cts.Dispose();
+            _cts = null;
             _gatheringTask = null;
 
             _isGathering = 0;
