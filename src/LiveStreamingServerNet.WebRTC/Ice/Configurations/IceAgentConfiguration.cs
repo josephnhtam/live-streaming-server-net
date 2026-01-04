@@ -36,7 +36,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Configurations
             {
                 RetransmissionTimeout = TimeSpan.FromMilliseconds(50),
                 MaxRetransmissionTimeout = TimeSpan.FromMilliseconds(1600),
-                MaxRetransmissions = 5,
+                MaxRetransmissions = 7,
                 TransactionTimeoutFactor = 16
             };
 
