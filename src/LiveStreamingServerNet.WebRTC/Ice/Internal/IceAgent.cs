@@ -345,7 +345,11 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
 
             try
             {
-                using var result = await pair.SendStunRequestAsync(request, cancellation).ConfigureAwait(false);
+                var options = reason == ConnectivityCheckReason.Check
+                    ? _config.ConnectivityCheckRetransmissionOptions
+                    : _config.KeepAliveRetransmissionOptions;
+
+                using var result = await pair.SendStunRequestAsync(request, options, cancellation).ConfigureAwait(false);
 
                 var response = result.Message;
                 var remoteEndPoint = result.RemoteEndPoint;

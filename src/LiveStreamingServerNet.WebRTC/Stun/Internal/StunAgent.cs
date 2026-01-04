@@ -52,6 +52,7 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal
         public async Task<StunResponse> SendRequestAsync(
             StunMessage request,
             IPEndPoint remoteEndPoint,
+            StunRetransmissionOptions? retransmissionOptions = null,
             CancellationToken cancellation = default)
         {
             if (_isDisposed == 1)
@@ -83,6 +84,7 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal
                     buffer,
                     remoteEndPoint,
                     tcs,
+                    retransmissionOptions ?? _config.RetransmissionOptions,
                     cancellation).ConfigureAwait(false);
 
                 try
@@ -262,19 +264,25 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal
             IDataBuffer buffer,
             IPEndPoint remoteEndPoint,
             TaskCompletionSource<StunResponse> tcs,
+            StunRetransmissionOptions retransmissionOptions,
             CancellationToken cancellation)
         {
             var startTime = DateTime.UtcNow;
 
-            for (var retries = 0; retries <= _config.MaxRetransmissions; retries++)
+            var maxRetransmissions = retransmissionOptions.MaxRetransmissions;
+            var retransmissionTimeout = retransmissionOptions.RetransmissionTimeout;
+            var maxRetransmissionTimeout = retransmissionOptions.MaxRetransmissionTimeout;
+            var transactionTimeoutFactor = retransmissionOptions.TransactionTimeoutFactor;
+
+            for (var retries = 0; retries <= maxRetransmissions; retries++)
             {
                 cancellation.ThrowIfCancellationRequested();
 
                 await _sender.SendAsync(buffer, remoteEndPoint, cancellation).ConfigureAwait(false);
 
                 var timeout = (int)Math.Min(
-                    _config.RetransmissionTimeout.TotalMilliseconds * (int)Math.Pow(2, retries),
-                    _config.MaxRetransmissionTimeout.TotalMilliseconds);
+                    retransmissionTimeout.TotalMilliseconds * (int)Math.Pow(2, retries),
+                    maxRetransmissionTimeout.TotalMilliseconds);
 
                 var timeoutTask = Task.Delay(timeout, cancellation);
                 var resultTask = await Task.WhenAny(tcs.Task, timeoutTask).ConfigureAwait(false);
@@ -286,7 +294,7 @@ namespace LiveStreamingServerNet.WebRTC.Stun.Internal
             }
 
             var transactionTimeout =
-                _config.RetransmissionTimeout * _config.TransactionTimeoutFactor;
+                retransmissionTimeout * transactionTimeoutFactor;
 
             var transactionTimeoutTask = Task.Delay(transactionTimeout, cancellation);
 

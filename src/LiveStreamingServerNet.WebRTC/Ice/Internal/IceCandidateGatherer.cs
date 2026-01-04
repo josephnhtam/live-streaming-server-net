@@ -244,7 +244,7 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
                         using var bindingRequest = CreateBindingRequest();
 
                         using var result = await hostCandidate.IceEndPoint
-                            .SendStunRequestAsync(bindingRequest, stunServerEndPoint, ct)
+                            .SendStunRequestAsync(bindingRequest, stunServerEndPoint, null, ct)
                             .ConfigureAwait(false);
 
                         var bindingResponse = result.Message;

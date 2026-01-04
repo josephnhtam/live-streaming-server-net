@@ -1,3 +1,5 @@
+using LiveStreamingServerNet.WebRTC.Stun;
+
 namespace LiveStreamingServerNet.WebRTC.Ice.Configurations
 {
     public class IceAgentConfiguration
@@ -25,5 +27,29 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Configurations
         /// Default: 0. (0 means no limit).
         /// </summary>
         public int MaxConcurrentConnectivityChecks { get; set; } = 0;
+
+        /// <summary>
+        /// Connectivity check retransmission options.
+        /// </summary>
+        public StunRetransmissionOptions ConnectivityCheckRetransmissionOptions { get; set; } =
+            new StunRetransmissionOptions
+            {
+                RetransmissionTimeout = TimeSpan.FromMilliseconds(50),
+                MaxRetransmissionTimeout = TimeSpan.FromMilliseconds(1600),
+                MaxRetransmissions = 5,
+                TransactionTimeoutFactor = 16
+            };
+
+        /// <summary>
+        /// Keep-alive retransmission options.
+        /// </summary>
+        public StunRetransmissionOptions KeepAliveRetransmissionOptions { get; set; } =
+            new StunRetransmissionOptions
+            {
+                RetransmissionTimeout = TimeSpan.FromMilliseconds(50),
+                MaxRetransmissionTimeout = TimeSpan.FromMilliseconds(1600),
+                MaxRetransmissions = 14,
+                TransactionTimeoutFactor = 16
+            };
     }
 }

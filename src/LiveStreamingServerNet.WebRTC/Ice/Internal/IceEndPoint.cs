@@ -1,5 +1,6 @@
 using LiveStreamingServerNet.Utilities.Buffers;
 using LiveStreamingServerNet.WebRTC.Ice.Internal.Contracts;
+using LiveStreamingServerNet.WebRTC.Stun;
 using LiveStreamingServerNet.WebRTC.Stun.Internal.Contracts;
 using LiveStreamingServerNet.WebRTC.Stun.Internal.Packets;
 using LiveStreamingServerNet.WebRTC.Udp.Internal;
@@ -58,9 +59,9 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
         }
 
         public Task<StunResponse> SendStunRequestAsync(
-            StunMessage request, IPEndPoint remoteEndPoint, CancellationToken cancellation = default)
+            StunMessage request, IPEndPoint remoteEndPoint, StunRetransmissionOptions? retransmissionOptions = null, CancellationToken cancellation = default)
         {
-            return _stunAgent.SendRequestAsync(request, remoteEndPoint, cancellation);
+            return _stunAgent.SendRequestAsync(request, remoteEndPoint, retransmissionOptions, cancellation);
         }
 
         public ValueTask SendStunIndicationAsync(

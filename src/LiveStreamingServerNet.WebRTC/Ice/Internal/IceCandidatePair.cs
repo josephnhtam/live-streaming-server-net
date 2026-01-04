@@ -1,3 +1,4 @@
+using LiveStreamingServerNet.WebRTC.Stun;
 using LiveStreamingServerNet.WebRTC.Stun.Internal.Packets;
 
 namespace LiveStreamingServerNet.WebRTC.Ice.Internal
@@ -31,9 +32,9 @@ namespace LiveStreamingServerNet.WebRTC.Ice.Internal
             Priority = IceLogic.CalculateCandidatePairPriority(LocalCandidate.Priority, RemoteCandidate.Priority, isLocalControlling);
         }
 
-        public Task<StunResponse> SendStunRequestAsync(StunMessage request, CancellationToken cancellation = default)
+        public Task<StunResponse> SendStunRequestAsync(StunMessage request, StunRetransmissionOptions? retransmissionOptions = null, CancellationToken cancellation = default)
         {
-            return LocalCandidate.IceEndPoint.SendStunRequestAsync(request, RemoteCandidate.EndPoint, cancellation);
+            return LocalCandidate.IceEndPoint.SendStunRequestAsync(request, RemoteCandidate.EndPoint, retransmissionOptions, cancellation);
         }
 
         public ValueTask SendStunIndicationAsync(StunMessage indication, CancellationToken cancellation = default)
