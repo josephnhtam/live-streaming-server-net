@@ -10,6 +10,7 @@
 
     <ItemGroup>
         <Folder Include="Configurations\"/>
+        <Folder Include="Sdp\Attributes\Contracts\" />
     </ItemGroup>
 
     <ItemGroup>

@@ -5,6 +5,17 @@ using System.Reflection;
 
 namespace LiveStreamingServerNet.WebRTC.Stun.Internal.Packets
 {
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, Inherited = false)]
+    internal class StunAttributeTypeAttribute : Attribute
+    {
+        public readonly ushort Type;
+
+        public StunAttributeTypeAttribute(ushort type)
+        {
+            Type = type;
+        }
+    }
+
     internal class StunAttributesRegistry
     {
         private delegate IStunAttribute StunAttributeFactoryDelegate(TransactionId transactionId, IDataBufferReader buffer, ushort length);
