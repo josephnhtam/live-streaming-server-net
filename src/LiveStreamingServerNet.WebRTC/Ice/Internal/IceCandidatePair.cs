@@ -1,0 +1,63 @@
+using LiveStreamingServerNet.WebRTC.Stun;
+using LiveStreamingServerNet.WebRTC.Stun.Internal.Packets;
+
+namespace LiveStreamingServerNet.WebRTC.Ice.Internal
+{
+    internal class IceCandidatePair
+    {
+        public LocalIceCandidate LocalCandidate { get; }
+        public RemoteIceCandidate RemoteCandidate { get; }
+        public string Foundation { get; }
+        public ulong Priority { get; private set; }
+
+        public IceCandidatePairState State { get; set; }
+        public IceCandidateNominationState NominationState { get; set; }
+        public bool IsTriggered { get; set; }
+        public bool UseCandidateReceived { get; set; }
+
+        public IceCandidatePair(LocalIceCandidate localCandidate, RemoteIceCandidate remoteCandidate, bool isLocalControlling)
+        {
+            LocalCandidate = localCandidate;
+            RemoteCandidate = remoteCandidate;
+
+            Foundation = $"{localCandidate.Foundation}:{remoteCandidate.Foundation}";
+            Priority = IceLogic.CalculateCandidatePairPriority(localCandidate.Priority, remoteCandidate.Priority, isLocalControlling);
+
+            State = IceCandidatePairState.Frozen;
+            NominationState = IceCandidateNominationState.None;
+        }
+
+        public void RefreshPriority(bool isLocalControlling)
+        {
+            Priority = IceLogic.CalculateCandidatePairPriority(LocalCandidate.Priority, RemoteCandidate.Priority, isLocalControlling);
+        }
+
+        public Task<StunResponse> SendStunRequestAsync(StunMessage request, StunRetransmissionOptions? retransmissionOptions = null, CancellationToken cancellation = default)
+        {
+            return LocalCandidate.IceEndPoint.SendStunRequestAsync(request, RemoteCandidate.EndPoint, retransmissionOptions, cancellation);
+        }
+
+        public ValueTask SendStunIndicationAsync(StunMessage indication, CancellationToken cancellation = default)
+        {
+            return LocalCandidate.IceEndPoint.SendStunIndicationAsync(indication, RemoteCandidate.EndPoint, cancellation);
+        }
+    }
+
+    internal enum IceCandidatePairState
+    {
+        Frozen,
+        Waiting,
+        InProgress,
+        Succeeded,
+        Failed
+    }
+
+    internal enum IceCandidateNominationState
+    {
+        None,
+        ControllingNominating,
+        ControlledNominating,
+        Nominated,
+        WasNominated
+    }
+}

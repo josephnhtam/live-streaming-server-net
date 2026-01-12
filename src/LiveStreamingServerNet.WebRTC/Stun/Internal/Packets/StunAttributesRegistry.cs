@@ -1,0 +1,70 @@
+using LiveStreamingServerNet.Utilities.Buffers.Contracts;
+using LiveStreamingServerNet.WebRTC.Stun.Internal.Packets.Attributes.Contracts;
+using System.Linq.Expressions;
+using System.Reflection;
+
+namespace LiveStreamingServerNet.WebRTC.Stun.Internal.Packets
+{
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, Inherited = false)]
+    internal class StunAttributeTypeAttribute : Attribute
+    {
+        public readonly ushort Type;
+
+        public StunAttributeTypeAttribute(ushort type)
+        {
+            Type = type;
+        }
+    }
+
+    internal class StunAttributesRegistry
+    {
+        private delegate IStunAttribute StunAttributeFactoryDelegate(TransactionId transactionId, IDataBufferReader buffer, ushort length);
+
+        private static readonly IDictionary<ushort, StunAttributeFactoryDelegate> FactoryMethodByType;
+
+        static StunAttributesRegistry()
+        {
+            var attributes = GetStunAttributes();
+
+            FactoryMethodByType = attributes
+                .Select(pair => (pair.Id, FactoryMethodInfo: GetReadMethod(pair.Type)))
+                .Where(pair => pair.FactoryMethodInfo != null)
+                .Select(pair => (pair.Id, FactoryMethod: CreateFactoryMethod(pair.FactoryMethodInfo!)))
+                .ToDictionary(pair => pair.Id, pair => pair.FactoryMethod);
+
+            return;
+
+            static (Type Type, ushort Id)[] GetStunAttributes() =>
+                typeof(StunAttributesRegistry).Assembly.GetTypes()
+                    .Where(type => typeof(IStunAttribute).IsAssignableFrom(type))
+                    .Where(type => type is { IsInterface: false, IsAbstract: false })
+                    .Select(type => (Type: type, Id: type.GetCustomAttribute<StunAttributeTypeAttribute>()?.Type))
+                    .Where(pair => pair.Id.HasValue)
+                    .Select(pair => (pair.Type, pair.Id!.Value))
+                    .ToArray();
+
+            static MethodInfo? GetReadMethod(Type type) =>
+                type.GetMethod(
+                    "ReadValue", BindingFlags.Public | BindingFlags.Static,
+                    null, [typeof(TransactionId), typeof(IDataBufferReader), typeof(ushort)], null
+                );
+
+            static StunAttributeFactoryDelegate CreateFactoryMethod(MethodInfo methodInfo)
+            {
+                var transactionIdParam = Expression.Parameter(typeof(TransactionId), "transactionId");
+                var bufferParam = Expression.Parameter(typeof(IDataBufferReader), "buffer");
+                var lengthParam = Expression.Parameter(typeof(ushort), "length");
+
+                var callExpression = Expression.Call(methodInfo, transactionIdParam, bufferParam, lengthParam);
+                var castExpression = Expression.Convert(callExpression, typeof(IStunAttribute));
+
+                return Expression.Lambda<StunAttributeFactoryDelegate>(
+                    castExpression, transactionIdParam, bufferParam, lengthParam
+                ).Compile();
+            }
+        }
+
+        public static IStunAttribute? ReadAttributeValue(TransactionId transactionId, ushort type, ushort length, IDataBufferReader buffer) =>
+            FactoryMethodByType.TryGetValue(type, out var factoryMethod) ? factoryMethod(transactionId, buffer, length) : null;
+    }
+}
